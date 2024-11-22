@@ -43,7 +43,7 @@ export function useAuth() {
 }
 
 export function login() {
-  const minWidth = 768 // Minimum width for desktop devices
+  const minWidth = 768
   const isMobile = window.innerWidth < minWidth || screen.width < minWidth
 
   const provider = new GoogleAuthProvider()
