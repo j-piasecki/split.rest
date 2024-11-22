@@ -1,54 +1,59 @@
-import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signInWithRedirect } from "firebase/auth";
-import { auth } from "./firebase";
-import { AuthListener, User } from "@type/auth";
-import { useEffect, useState } from "react";
+import { auth } from './firebase'
+import { AuthListener, User } from '@type/auth'
+import {
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithPopup,
+  signInWithRedirect,
+} from 'firebase/auth'
+import { useEffect, useState } from 'react'
 
 auth.useDeviceLanguage()
 
-const listeners: AuthListener[] = [];
+const listeners: AuthListener[] = []
 
 export function addAuthListener(listener: AuthListener) {
-  listeners.push(listener);
+  listeners.push(listener)
 
   return () => {
-    const index = listeners.indexOf(listener);
-    listeners.splice(index, 1);
-  };
+    const index = listeners.indexOf(listener)
+    listeners.splice(index, 1)
+  }
 }
 
 onAuthStateChanged(auth, (user) => {
   let result = null
   if (user) {
-    const uid = user.uid;
-    const name = user.displayName || 'Anonymous';
-    result = { name };
+    const uid = user.uid
+    const name = user.displayName || 'Anonymous'
+    result = { name }
   }
 
-  listeners.forEach(listener => listener(result));
-});
+  listeners.forEach((listener) => listener(result))
+})
 
 export function useAuth() {
-  const [user, setUser] = useState<User | null | undefined>(undefined);
+  const [user, setUser] = useState<User | null | undefined>(undefined)
 
   useEffect(() => {
-    return addAuthListener(setUser);
-  }, []);
+    return addAuthListener(setUser)
+  }, [])
 
-  return user;
+  return user
 }
 
 export function login() {
-  const minWidth = 768; // Minimum width for desktop devices
-  const isMobile = window.innerWidth < minWidth || screen.width < minWidth;
+  const minWidth = 768 // Minimum width for desktop devices
+  const isMobile = window.innerWidth < minWidth || screen.width < minWidth
 
-  const provider = new GoogleAuthProvider();
+  const provider = new GoogleAuthProvider()
   if (isMobile) {
-    signInWithRedirect(auth, provider);
+    signInWithRedirect(auth, provider)
   } else {
-    signInWithPopup(auth, provider);
+    signInWithPopup(auth, provider)
   }
 }
 
 export function logout() {
-  auth.signOut();
+  auth.signOut()
 }

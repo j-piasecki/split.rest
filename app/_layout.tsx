@@ -1,7 +1,7 @@
-import "utils/firebase";
-import { ThemeProvider } from "@styling/theme";
-import { Stack } from "expo-router";
-import React from "react";
+import { ThemeProvider } from '@styling/theme'
+import { Stack } from 'expo-router'
+import React from 'react'
+import 'utils/firebase'
 
 function Content() {
   return (
@@ -20,7 +20,7 @@ function Content() {
         options={{ title: 'Settings', ...headerStyle, ...modalStyle }}
       /> */}
     </Stack>
-  );
+  )
 }
 
 export default function App() {
@@ -28,5 +28,5 @@ export default function App() {
     <ThemeProvider>
       <Content />
     </ThemeProvider>
-  );
+  )
 }
