@@ -1,3 +1,4 @@
+import "utils/firebase";
 import { ThemeProvider } from "@styling/theme";
 import { Stack } from "expo-router";
 import React from "react";
