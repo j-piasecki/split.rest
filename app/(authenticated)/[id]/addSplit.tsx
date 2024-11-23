@@ -1,5 +1,6 @@
 import ModalScreen from "@components/ModalScreen";
 import { createSplit } from "@database/createSplit";
+import { findUserIdByEmail } from "@database/findUserByEmail";
 import { BalanceChange } from "@type/group";
 import { useAuth } from "@utils/auth";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -48,7 +49,7 @@ function Form() {
   const [title, setTitle] = useState('');
   const [waiting, setWaiting] = useState(false);
 
-  function save() {
+  async function save() {
     const toSave = entries.filter((entry) => entry.email !== '' && entry.amount !== '');
 
     if (toSave.length < 2) {
@@ -69,13 +70,13 @@ function Form() {
       return;
     }
 
-    const balanceChange: BalanceChange[] = toSave.map((entry) => {
+    const balanceChange: BalanceChange[] = await Promise.all(toSave.map(async (entry) => {
       const change = entry.email === user!.email ? paid - Number(entry.amount) : -Number(entry.amount);
       return {
-        email: entry.email,
+        id: await findUserIdByEmail(entry.email),
         change: change,
       }
-    })
+    }))
 
     setWaiting(true);
     setError('');

@@ -20,7 +20,7 @@ export interface Member {
 }
 
 export interface BalanceChange {
-  email: string;
+  id: string;
   change: number;
 }
 
