@@ -1,7 +1,15 @@
 import { createGroup } from '@database/createGroup'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
-import { ActivityIndicator, Button, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Button,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 
 function Form() {
@@ -21,24 +29,44 @@ function Form() {
       return
     }
 
-    createGroup(name, currency).then((group) => {
-      router.navigate('/group/' + group.id)
-      setWaiting(false)
-    }).catch((error) => {
-      setError(error.message)
-      setWaiting(false)
-    })
+    createGroup(name, currency)
+      .then((group) => {
+        router.navigate('/group/' + group.id, { withAnchor: true })
+        setWaiting(false)
+      })
+      .catch((error) => {
+        setError(error.message)
+        setWaiting(false)
+      })
   }
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <TextInput placeholder='Name' value={name} onChangeText={setName} style={{padding: 8, borderWidth: 1, borderColor: 'black', margin: 4, borderRadius: 8}} />
-      <TextInput placeholder='Currency' value={currency} onChangeText={setCurrency} editable={false} style={{padding: 8, borderWidth: 1, borderColor: 'black', margin: 4, borderRadius: 8, opacity: 0.5}} />
-      
+      <TextInput
+        placeholder='Name'
+        value={name}
+        onChangeText={setName}
+        style={{ padding: 8, borderWidth: 1, borderColor: 'black', margin: 4, borderRadius: 8 }}
+      />
+      <TextInput
+        placeholder='Currency'
+        value={currency}
+        onChangeText={setCurrency}
+        editable={false}
+        style={{
+          padding: 8,
+          borderWidth: 1,
+          borderColor: 'black',
+          margin: 4,
+          borderRadius: 8,
+          opacity: 0.5,
+        }}
+      />
+
       {!waiting && <Button title='Create' onPress={handlePress} />}
       {waiting && <ActivityIndicator size='small' />}
 
-      {error && <Text style={{ color: 'red' }}>{error}</Text>}
+      {error.length > 0 && <Text style={{ color: 'red' }}>{error}</Text>}
     </View>
   )
 }
@@ -60,7 +88,7 @@ export default function Modal() {
       <Pressable
         style={StyleSheet.absoluteFill}
         onPress={() => {
-          router.back()
+          router.canGoBack() ? router.back() : router.navigate('/home')
         }}
       />
       <Animated.View
@@ -84,7 +112,12 @@ export default function Modal() {
           }}
         >
           <Text style={{ fontSize: 20 }}>Create Group</Text>
-          <Button title='Close' onPress={() => router.back()} />
+          <Button
+            title='Close'
+            onPress={() => {
+              router.canGoBack() ? router.back() : router.navigate('/home')
+            }}
+          />
         </View>
         <Form />
       </Animated.View>

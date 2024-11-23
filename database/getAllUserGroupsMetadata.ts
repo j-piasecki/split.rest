@@ -2,7 +2,7 @@ import { GroupMetadata } from '@type/group'
 import { auth, db } from '@utils/firebase'
 import { collection, getDocs, limit, query } from 'firebase/firestore'
 
-export async function getAllGroups() {
+export async function getAllUserGroupsMetadata() {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get all groups')
   }
