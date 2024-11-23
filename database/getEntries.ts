@@ -12,6 +12,7 @@ export async function getEntries(groupId: string): Promise<Entry[]> {
   )
 
   const result: Entry[] = []
+
   entriesSnapshot.forEach((doc) => {
     const data = doc.data()
     result.push({
@@ -20,6 +21,7 @@ export async function getEntries(groupId: string): Promise<Entry[]> {
       total: data.total,
       timestamp: data.timestamp,
       paidById: data.paidBy,
+      changes: data.changes,
     })
   })
 

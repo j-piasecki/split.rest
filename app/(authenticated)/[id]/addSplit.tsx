@@ -1,10 +1,15 @@
 import ModalScreen from "@components/ModalScreen";
 import { createSplit } from "@database/createSplit";
-import { EntryData } from "@type/group";
+import { BalanceChange } from "@type/group";
 import { useAuth } from "@utils/auth";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Button, ScrollView, TextInput, View, Text } from "react-native";
+
+interface EntryData {
+  email: string;
+  amount: string;
+}
 
 function Entry({ email, amount, update }: { email: string, amount: string, update: (data: EntryData) => void }) {
   return (
@@ -44,7 +49,7 @@ function Form() {
   const [waiting, setWaiting] = useState(false);
 
   function save() {
-    let toSave = entries.filter((entry) => entry.email !== '' && entry.amount !== '');
+    const toSave = entries.filter((entry) => entry.email !== '' && entry.amount !== '');
 
     if (toSave.length < 2) {
       setError('At least two entries are required');
@@ -64,18 +69,18 @@ function Form() {
       return;
     }
 
-    toSave = toSave.map((entry) => {
-      const amount = entry.email === user!.email ? paid - Number(entry.amount) : -Number(entry.amount);
+    const balanceChange: BalanceChange[] = toSave.map((entry) => {
+      const change = entry.email === user!.email ? paid - Number(entry.amount) : -Number(entry.amount);
       return {
         email: entry.email,
-        amount: amount,
+        change: change,
       }
     })
 
     setWaiting(true);
     setError('');
 
-    createSplit(id as string, title, paid, toSave).then(() => {
+    createSplit(id as string, title, paid, balanceChange).then(() => {
       if (router.canGoBack()) {
         router.back();
       } else {

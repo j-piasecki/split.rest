@@ -19,9 +19,9 @@ export interface Member {
   balance: number
 }
 
-export interface EntryData {
+export interface BalanceChange {
   email: string;
-  amount: string | number;
+  change: number;
 }
 
 export interface Entry {
@@ -30,4 +30,5 @@ export interface Entry {
   total: number;
   timestamp: number;
   paidById: string;
+  changes: BalanceChange[];
 }
