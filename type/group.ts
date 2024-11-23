@@ -1,19 +1,21 @@
 export interface GroupMetadata {
   id: string
   hidden: boolean
-  admin: boolean
 }
 
 export interface GroupInfo extends GroupMetadata {
   name: string
   currency: string
   memberCount: number
+  isAdmin: boolean
+  hasAccess: boolean
 }
 
 export interface Member {
   id: string
   name: string
   email: string
+  photoURL: string
   balance: number
 }
 
@@ -27,4 +29,5 @@ export interface Entry {
   title: string;
   total: number;
   timestamp: number;
+  paidById: string;
 }

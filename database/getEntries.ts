@@ -19,6 +19,7 @@ export async function getEntries(groupId: string): Promise<Entry[]> {
       title: data.title,
       total: data.total,
       timestamp: data.timestamp,
+      paidById: data.paidBy,
     })
   })
 

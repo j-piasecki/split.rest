@@ -1,6 +1,6 @@
 import { GroupInfo } from "@type/group"
 import { db, auth } from "@utils/firebase"
-import { addDoc, collection, setDoc, doc } from "firebase/firestore"
+import { addDoc, collection, setDoc, doc, updateDoc, arrayUnion } from "firebase/firestore"
 
 export async function createGroup(name: string, currency: string): Promise<GroupInfo> {
   if (!auth.currentUser) {
@@ -10,17 +10,18 @@ export async function createGroup(name: string, currency: string): Promise<Group
   const docRef = await addDoc(collection(db, 'groups'), {
     name: name,
     currency: currency,
-    members: 1,
+    memberCount: 1,
   })
 
   await setDoc(doc(docRef, 'users', auth.currentUser.uid), {
     admin: true,
+    access: true,
+    hidden: false,
     balance: 0,
   })
 
-  await setDoc(doc(db, 'users', auth.currentUser.uid, 'groups', docRef.id), {
-    hidden: false,
-    admin: true,
+  await updateDoc(doc(db, 'users', auth.currentUser.uid, 'data', 'groups'), {
+    groups: arrayUnion(docRef.id),
   })
 
   return {
@@ -28,7 +29,8 @@ export async function createGroup(name: string, currency: string): Promise<Group
     name: name,
     currency: currency,
     hidden: false,
-    admin: true,
+    isAdmin: true,
+    hasAccess: true,
     memberCount: 1,
   }
 }

@@ -13,5 +13,11 @@ export const createUser = functions.auth.user().onCreate(async (user) => {
     createdAt: FieldValue.serverTimestamp(),
   })
 
+  const userGroupsRef = userRef.collection('data').doc('groups')
+
+  await userGroupsRef.set({
+    groups: [],
+  })
+
   logger.info(`User ${user.uid} created`)
 })

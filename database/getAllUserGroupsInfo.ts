@@ -19,8 +19,9 @@ export async function getAllUserGroupsInfo(metadata: GroupMetadata[]) {
         name: data.name,
         currency: data.currency,
         hidden: group.hidden,
-        admin: group.admin,
-        memberCount: data.members,
+        memberCount: data.memberCount,
+        isAdmin: data.admin,
+        hasAccess: data.access,
       })
     } else {
       console.error(`Group with id ${group.id} not found`)

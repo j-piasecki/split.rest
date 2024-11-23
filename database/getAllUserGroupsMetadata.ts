@@ -1,25 +1,25 @@
 import { GroupMetadata } from '@type/group'
 import { auth, db } from '@utils/firebase'
-import { collection, getDocs, limit, query } from 'firebase/firestore'
+import { doc, getDoc } from 'firebase/firestore'
 
-export async function getAllUserGroupsMetadata() {
+export async function getAllUserGroupsMetadata(): Promise<GroupMetadata[]> {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get all groups')
   }
 
-  const querySnapshot = await getDocs(
-    query(collection(db, 'users', auth.currentUser.uid, 'groups'), limit(10))
-  )
+  const userGroupsRef = doc(db, 'users', auth.currentUser.uid, 'data', 'groups')
+  const data = (await getDoc(userGroupsRef)).data()
 
   const result: GroupMetadata[] = []
-  querySnapshot.forEach((doc) => {
-    const data = doc.data()
-    result.push({
-      id: doc.id,
-      hidden: data.hidden,
-      admin: data.admin,
+
+  if (data) {
+    data.groups.forEach((groupId: string) => {
+      result.push({
+        id: groupId,
+        hidden: data.hidden.includes(groupId),
+      })
     })
-  })
+  }
 
   return result
 }

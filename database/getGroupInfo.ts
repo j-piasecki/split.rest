@@ -4,23 +4,21 @@ import { getDoc, doc } from "firebase/firestore"
 
 export async function getGroupInfo(id: string): Promise<GroupInfo | null> {
   if (!auth.currentUser) {
-    throw new Error('You must be logged in to get all groups')
+    throw new Error('You must be logged in to get group info')
   }
 
-  const groupDoc = await getDoc(doc(db, 'groups', id))
-  const groupMeta = await getDoc(doc(db, 'users', auth.currentUser.uid, 'groups', id))
+  const groupData = (await getDoc(doc(db, 'groups', id))).data()
+  const groupUserData = (await getDoc(doc(db, 'groups', id, 'users', auth.currentUser.uid))).data()
 
-  const data = groupDoc.data()
-  const metaData = groupMeta.data()
-
-  if (data && metaData) {
+  if (groupData && groupUserData) {
     return {
       id: id,
-      name: data.name,
-      currency: data.currency,
-      hidden: metaData.hidden,
-      admin: metaData.admin,
-      memberCount: data.members,
+      name: groupData.name,
+      currency: groupData.currency,
+      hidden: groupUserData.hidden,
+      isAdmin: groupUserData.admin,
+      memberCount: groupData.memberCount,
+      hasAccess: groupUserData.access,
     }
   } else {
     console.error(`Group with id ${id} not found`)

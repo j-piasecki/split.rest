@@ -32,6 +32,7 @@ export async function getMembers(groupId: string): Promise<Member[]> {
         id: member.id!,
         name: userData.name,
         email: userData.email,
+        photoURL: userData.photoURL,
         balance: member.balance!,
       })
     }

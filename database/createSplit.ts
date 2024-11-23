@@ -18,13 +18,13 @@ export async function createSplit(groupId: string, title: string, total: number,
 
   for (const entry of balances) {
     const groupUserDoc = doc(db, 'groups', groupId, 'users', entry.id)
-    const userData = (await getDoc(groupUserDoc)).data()
+    const groupUserData = (await getDoc(groupUserDoc)).data()
 
-    if (!userData) {
+    if (!groupUserData) {
       throw new Error(`User ${entry.email} not part of the group`)
     }
 
-    const newBalance = userData.balance + entry.amount
+    const newBalance = groupUserData.balance + entry.amount
 
     await updateDoc(groupUserDoc, {
       balance: newBalance
@@ -35,6 +35,7 @@ export async function createSplit(groupId: string, title: string, total: number,
     title: title,
     total: total,
     timestamp: Date.now(),
+    paidBy: auth.currentUser.uid,
     changes: balances.map((entry) => {
       return {
         id: entry.id,

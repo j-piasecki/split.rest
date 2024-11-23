@@ -19,7 +19,8 @@ function createUser(user: FirebaseUser | null): User | null {
   if (user) {
     const uid = user.uid
     const name = user.displayName || 'Anonymous'
-    return { name, email: user.email!, uid }
+    const photoURL = user.photoURL || ''
+    return { name, email: user.email!, uid, photoURL }
   }
 
   return null
