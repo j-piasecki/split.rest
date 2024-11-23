@@ -6,7 +6,7 @@ import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD1wsW6_XCS3xymhiG0euK60xiDxNZHIoY',
-  authDomain: 'split-6ed94.firebaseapp.com',
+  authDomain: 'split.rest',
   projectId: 'split-6ed94',
   storageBucket: 'split-6ed94.firebasestorage.app',
   messagingSenderId: '461804772528',
