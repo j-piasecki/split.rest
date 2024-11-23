@@ -21,3 +21,10 @@ export interface EntryData {
   email: string;
   amount: string | number;
 }
+
+export interface Entry {
+  id: string;
+  title: string;
+  total: number;
+  timestamp: number;
+}

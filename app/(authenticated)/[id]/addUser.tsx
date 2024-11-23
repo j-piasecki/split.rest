@@ -26,7 +26,6 @@ function Form() {
       addUserToGroup(groupId as string, id).then(() => {
         setWaiting(false);
 
-
         if (router.canGoBack()) {
           router.back();
         } else {

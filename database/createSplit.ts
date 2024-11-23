@@ -34,6 +34,7 @@ export async function createSplit(groupId: string, title: string, total: number,
   await addDoc(collection(db, 'groups', groupId, 'entries'), {
     title: title,
     total: total,
+    timestamp: Date.now(),
     changes: balances.map((entry) => {
       return {
         id: entry.id,
