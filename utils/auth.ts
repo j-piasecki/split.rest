@@ -19,7 +19,7 @@ function createUser(user: FirebaseUser | null): User | null {
   if (user) {
     const uid = user.uid
     const name = user.displayName || 'Anonymous'
-    return { name }
+    return { name, email: user.email!, uid }
   }
 
   return null
@@ -50,7 +50,7 @@ onAuthStateChanged(auth, (user) => {
 export function useAuth() {
   const path = usePathname()
   const router = useRouter()
-  const [user, setUser] = useState<User | null | undefined>(undefined)
+  const [user, setUser] = useState<User | null | undefined>(authReady ? createUser(auth.currentUser) : undefined)
 
   useEffect(() => {
     return addAuthListener(setUser)
@@ -62,7 +62,7 @@ export function useAuth() {
         router.navigate('/')
       }
     }
-  }, [user])
+  }, [path, router, user])
 
   return user
 }

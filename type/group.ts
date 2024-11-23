@@ -16,3 +16,8 @@ export interface Member {
   email: string
   balance: number
 }
+
+export interface EntryData {
+  email: string;
+  amount: string | number;
+}
