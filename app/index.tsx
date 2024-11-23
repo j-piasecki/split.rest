@@ -1,4 +1,5 @@
-import { login, logout, useAuth } from '@utils/auth'
+import { login, useAuth } from '@utils/auth'
+import { Redirect } from 'expo-router'
 import { Button, Text, View } from 'react-native'
 
 export default function Screen() {
@@ -6,9 +7,10 @@ export default function Screen() {
 
   return (
     <View style={{ flex: 1 }}>
+      <Text style={{ fontSize: 20 }}>Split</Text>
       {user === undefined && <Text>Loading...</Text>}
       {user === null && <Button title='Login' onPress={login} />}
-      {user && <Button title='Logout' onPress={logout} />}
+      {user && <Redirect href='/home' withAnchor />}
     </View>
   )
 }
