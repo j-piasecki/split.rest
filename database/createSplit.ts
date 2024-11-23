@@ -3,7 +3,7 @@ import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore"
 import { findUserIdByEmail } from "./findUserByEmail"
 import { EntryData } from "@type/group"
 
-export async function createSplit(groupId: string, title: string, entries: EntryData[]) {
+export async function createSplit(groupId: string, title: string, total: number, entries: EntryData[]) {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to verify users')
   }
@@ -33,6 +33,7 @@ export async function createSplit(groupId: string, title: string, entries: Entry
 
   await addDoc(collection(db, 'groups', groupId, 'entries'), {
     title: title,
+    total: total,
     changes: balances.map((entry) => {
       return {
         id: entry.id,

@@ -75,7 +75,7 @@ function Form() {
     setWaiting(true);
     setError('');
 
-    createSplit(id as string, title, toSave).then(() => {
+    createSplit(id as string, title, paid, toSave).then(() => {
       if (router.canGoBack()) {
         router.back();
       } else {
