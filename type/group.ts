@@ -9,3 +9,10 @@ export interface GroupInfo extends GroupMetadata {
   currency: string
   memberCount: number
 }
+
+export interface Member {
+  id: string
+  name: string
+  email: string
+  balance: number
+}

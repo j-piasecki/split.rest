@@ -1,6 +1,6 @@
 import { GroupInfo, GroupMetadata } from '@type/group'
 import { auth, db } from '@utils/firebase'
-import { collection, doc, getDoc, getDocs, limit, query } from 'firebase/firestore'
+import { doc, getDoc } from 'firebase/firestore'
 
 export async function getAllUserGroupsInfo(metadata: GroupMetadata[]) {
   if (!auth.currentUser) {

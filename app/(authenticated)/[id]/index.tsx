@@ -1,6 +1,7 @@
 import { getGroupBalance } from "@database/getGroupBalance";
 import { getGroupInfo } from "@database/getGroupInfo";
-import { GroupInfo } from "@type/group";
+import { getMembers } from "@database/getMembers";
+import { GroupInfo, Member } from "@type/group";
 import { Link, useFocusEffect, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, Button } from "react-native";
@@ -10,11 +11,14 @@ export default function Group() {
   const { id } = useLocalSearchParams();
   const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
   const [balance, setBalance] = useState<number | null>(null);
+  const [members, setMembers] = useState<Member[] | null>(null);
 
   useEffect(() => {
     const groupId = typeof id === 'string' ? id : id[0];
     getGroupInfo(groupId).then(setGroupInfo);
     getGroupBalance(groupId).then(setBalance);
+
+    getMembers(groupId).then(setMembers);
   }, [id]);
 
   useFocusEffect(() => {
@@ -32,6 +36,16 @@ export default function Group() {
       <Link href={`/${groupInfo?.id}/addSplit`} asChild>
         <Button title='Add split' />
       </Link>
+
+      {members && members.map((member) => {
+        return (
+          <View key={member.id} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text>{member.name}</Text>
+            <Text>{member.email}</Text>
+            <Text>{member.balance} {groupInfo?.currency}</Text>
+          </View>
+        )
+      })}
     </View>
   )
 }
