@@ -18,6 +18,8 @@ export async function getMembers(groupId: string): Promise<Member[]> {
     data.push({
       id: member.id,
       balance: memberData.balance,
+      isAdmin: memberData.admin,
+      hasAccess: memberData.access,
     })
   })
 
@@ -34,6 +36,8 @@ export async function getMembers(groupId: string): Promise<Member[]> {
         email: userData.email,
         photoURL: userData.photoURL,
         balance: member.balance!,
+        isAdmin: member.isAdmin!,
+        hasAccess: member.hasAccess!,
       })
     }
   }

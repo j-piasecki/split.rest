@@ -1,13 +1,16 @@
+import { deleteSplit } from "@database/deleteSplit";
 import { getEntries } from "@database/getEntries";
 import { getGroupBalance } from "@database/getGroupBalance";
 import { getGroupInfo } from "@database/getGroupInfo";
 import { getMembers } from "@database/getMembers";
 import { Entry, GroupInfo, Member } from "@type/group";
+import { useAuth } from "@utils/auth";
 import { Link, useFocusEffect, useLocalSearchParams, useNavigation } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { View, Text, Button } from "react-native";
 
 export default function Group() {
+  const user = useAuth();
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
   const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
@@ -15,13 +18,16 @@ export default function Group() {
   const [members, setMembers] = useState<Member[] | null>(null);
   const [entries, setEntries] = useState<Entry[] | null>(null);
 
+  const [counter, reloadData] = useReducer(count => count + 1, 0);
+
+  const groupId = typeof id === 'string' ? id : id[0];
+
   useEffect(() => {
-    const groupId = typeof id === 'string' ? id : id[0];
     getGroupInfo(groupId).then(setGroupInfo);
     getGroupBalance(groupId).then(setBalance);
     getMembers(groupId).then(setMembers);
     getEntries(groupId).then(setEntries);
-  }, [id]);
+  }, [groupId, counter]);
 
   useFocusEffect(() => {
     navigation.setOptions({ title: `Group ${groupInfo?.name}` });
@@ -39,22 +45,39 @@ export default function Group() {
         <Button title='Add split' />
       </Link>
 
+      <Button title="Hide this group" onPress={() => {}} />
+
+      <Text style={{fontSize: 20}}>10 Members:</Text>
       {members && members.map((member) => {
         return (
-          <View key={member.id} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View key={member.id} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderColor: 'gray', borderBottomWidth: 1, padding: 8 }}>
             <Text>{member.name}</Text>
             <Text>{member.email}</Text>
             <Text>{member.balance} {groupInfo?.currency}</Text>
+
+            {groupInfo?.isAdmin && member.id !== user?.uid && member.hasAccess && <Button title="Revoke access" onPress={() => {}} />}
+            {groupInfo?.isAdmin && member.id !== user?.uid && !member.hasAccess && <Button title="Give access" onPress={() => {}} />}
+
+            {groupInfo?.isAdmin && member.id !== user?.uid && member.isAdmin && <Button title="Revoke admin" onPress={() => {}} />}
+            {groupInfo?.isAdmin && member.id !== user?.uid && !member.isAdmin && <Button title="Make admin" onPress={() => {}} />}
           </View>
         )
       })}
 
+      <Text style={{fontSize: 20}}>10 Entries:</Text>
       {entries && entries.map((entry) => {
         return (
-          <View key={entry.id} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View key={entry.id} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderColor: 'gray', borderBottomWidth: 1, padding: 8 }}>
             <Text>{entry.title}</Text>
             <Text>{new Date(entry.timestamp).toISOString()}</Text>
             <Text>{entry.total} {groupInfo?.currency}</Text>
+            {(entry.paidById === user?.uid || groupInfo?.isAdmin) && <Button title="Delete" onPress={() => {
+              deleteSplit(groupId, entry.id).then(() => {
+                reloadData();
+              }).catch((e) => {
+                alert(e.message);
+              })
+            }} />}
           </View>
         )
       })}

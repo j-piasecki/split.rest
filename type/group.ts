@@ -17,6 +17,8 @@ export interface Member {
   email: string
   photoURL: string
   balance: number
+  isAdmin: boolean
+  hasAccess: boolean
 }
 
 export interface BalanceChange {

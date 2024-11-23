@@ -12,6 +12,7 @@ export async function createSplit(groupId: string, title: string, total: number,
     const groupUserData = (await getDoc(groupUserDoc)).data()
 
     if (!groupUserData) {
+      // TODO: can this be done in other way, so that `increment` can be used?
       const userData = (await getDoc(doc(db, 'users', entry.id))).data()!
       throw new Error(`User ${userData.email} not part of the group`)
     }
