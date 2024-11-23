@@ -22,7 +22,7 @@ export default function ModalScreen({ returnPath, title, children }: ModalScreen
     if (router.canGoBack()) {
       router.back()
     } else {
-      router.navigate(returnPath)
+      router.replace(returnPath)
     }
   }, [router, returnPath])
 
