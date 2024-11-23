@@ -1,19 +1,36 @@
 import { auth } from './firebase'
 import { AuthListener, User } from '@type/auth'
+import { usePathname, useRouter } from 'expo-router'
 import {
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
   signInWithRedirect,
+  User as FirebaseUser,
 } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 
 auth.useDeviceLanguage()
 
+let authReady = false
 const listeners: AuthListener[] = []
+
+function createUser(user: FirebaseUser | null): User | null {
+  if (user) {
+    const uid = user.uid
+    const name = user.displayName || 'Anonymous'
+    return { name }
+  }
+
+  return null
+}
 
 export function addAuthListener(listener: AuthListener) {
   listeners.push(listener)
+
+  if (authReady) {
+    listener(createUser(auth.currentUser))
+  }
 
   return () => {
     const index = listeners.indexOf(listener)
@@ -22,22 +39,30 @@ export function addAuthListener(listener: AuthListener) {
 }
 
 onAuthStateChanged(auth, (user) => {
-  let result = null
-  if (user) {
-    const uid = user.uid
-    const name = user.displayName || 'Anonymous'
-    result = { name }
-  }
-
+  let result = createUser(user)
   listeners.forEach((listener) => listener(result))
+
+  if (!authReady) {
+    authReady = true
+  }
 })
 
 export function useAuth() {
+  const path = usePathname()
+  const router = useRouter()
   const [user, setUser] = useState<User | null | undefined>(undefined)
 
   useEffect(() => {
     return addAuthListener(setUser)
   }, [])
+
+  useEffect(() => {
+    if (user === null) {
+      if (path !== '/') {
+        router.navigate('/')
+      }
+    }
+  }, [user])
 
   return user
 }

@@ -17,6 +17,7 @@ export async function getAllGroups() {
     result.push({
       id: doc.id,
       hidden: data.hidden,
+      admin: data.admin,
     })
   })
 
