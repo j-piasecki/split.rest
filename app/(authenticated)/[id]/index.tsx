@@ -3,6 +3,9 @@ import { getEntries } from "@database/getEntries";
 import { getGroupBalance } from "@database/getGroupBalance";
 import { getGroupInfo } from "@database/getGroupInfo";
 import { getMembers } from "@database/getMembers";
+import { setGroupAccess } from "@database/setGroupAccess";
+import { setGroupAdmin } from "@database/setGroupAdmin";
+import { setGroupHidden } from "@database/setGroupHidden";
 import { Entry, GroupInfo, Member } from "@type/group";
 import { useAuth } from "@utils/auth";
 import { Link, useFocusEffect, useLocalSearchParams, useNavigation } from "expo-router";
@@ -45,7 +48,17 @@ export default function Group() {
         <Button title='Add split' />
       </Link>
 
-      <Button title="Hide this group" onPress={() => {}} />
+      {groupInfo?.hidden && <Button title='Show group' onPress={() => {
+        setGroupHidden(groupId, false).then(reloadData).catch((e) => {
+          alert(e.message);
+        })
+      }} />}
+
+      {groupInfo?.hidden === false && <Button title='Hide group' onPress={() => {
+        setGroupHidden(groupId, true).then(reloadData).catch((e) => {
+          alert(e.message);
+        })
+      }} />}
 
       <Text style={{fontSize: 20}}>10 Members:</Text>
       {members && members.map((member) => {
@@ -55,11 +68,27 @@ export default function Group() {
             <Text>{member.email}</Text>
             <Text>{member.balance} {groupInfo?.currency}</Text>
 
-            {groupInfo?.isAdmin && member.id !== user?.uid && member.hasAccess && <Button title="Revoke access" onPress={() => {}} />}
-            {groupInfo?.isAdmin && member.id !== user?.uid && !member.hasAccess && <Button title="Give access" onPress={() => {}} />}
+            {groupInfo?.isAdmin && member.id !== user?.uid && member.hasAccess && <Button title="Revoke access" onPress={() => {
+              setGroupAccess(groupId, member.id, false).then(reloadData).catch((e) => {
+                alert(e.message);
+              })
+            }} />}
+            {groupInfo?.isAdmin && member.id !== user?.uid && !member.hasAccess && <Button title="Give access" onPress={() => {
+              setGroupAccess(groupId, member.id, true).then(reloadData).catch((e) => {
+                alert(e.message);
+              })
+            }} />}
 
-            {groupInfo?.isAdmin && member.id !== user?.uid && member.isAdmin && <Button title="Revoke admin" onPress={() => {}} />}
-            {groupInfo?.isAdmin && member.id !== user?.uid && !member.isAdmin && <Button title="Make admin" onPress={() => {}} />}
+            {groupInfo?.isAdmin && member.id !== user?.uid && member.isAdmin && <Button title="Revoke admin" onPress={() => {
+              setGroupAdmin(groupId, member.id, false).then(reloadData).catch((e) => {
+                alert(e.message);
+              })
+            }} />}
+            {groupInfo?.isAdmin && member.id !== user?.uid && !member.isAdmin && member.hasAccess && <Button title="Make admin" onPress={() => {
+              setGroupAdmin(groupId, member.id, true).then(reloadData).catch((e) => {
+                alert(e.message);
+              })
+            }} />}
           </View>
         )
       })}
@@ -72,9 +101,7 @@ export default function Group() {
             <Text>{new Date(entry.timestamp).toISOString()}</Text>
             <Text>{entry.total} {groupInfo?.currency}</Text>
             {(entry.paidById === user?.uid || groupInfo?.isAdmin) && <Button title="Delete" onPress={() => {
-              deleteSplit(groupId, entry.id).then(() => {
-                reloadData();
-              }).catch((e) => {
+              deleteSplit(groupId, entry.id).then(reloadData).catch((e) => {
                 alert(e.message);
               })
             }} />}
