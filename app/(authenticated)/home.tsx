@@ -17,8 +17,8 @@ function GroupList() {
     <View style={{ flex: 1 }}>
       {groups === null && <Text>Loading...</Text>}
       {groups && groups.map((group) => (
-        <Link key={group.id} href={`/group/${group.id}`} asChild>
-          <Text style={{ fontSize: 20 }}>{group.name} <Text style={{opacity: 0.5}}>({group.currency})</Text></Text>
+        <Link key={group.id} href={`/${group.id}`} asChild>
+          <Text style={{ fontSize: 20 }}>{group.name} <Text style={{opacity: 0.5}}>({group.currency}), members: {group.memberCount}</Text></Text>
         </Link>
       ))}
     </View>

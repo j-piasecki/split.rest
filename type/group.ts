@@ -7,4 +7,5 @@ export interface GroupMetadata {
 export interface GroupInfo extends GroupMetadata {
   name: string
   currency: string
+  memberCount: number
 }

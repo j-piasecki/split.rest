@@ -9,19 +9,25 @@ export default function App() {
     return <Text>Loading...</Text>
   }
 
+  const modalOptions: Record<string, unknown> = {
+    presentation: 'transparentModal',
+    animation: 'fade',
+    headerShown: false,
+  }
+
   return (
     <Stack>
       <Stack.Screen name='home' options={{ title: 'Split' }} />
-      <Stack.Screen name='group/[group]' options={{ title: 'Group' }} />
       <Stack.Screen
         name='createGroup'
         options={{
           title: 'Split - create group',
-          presentation: 'transparentModal',
-          animation: 'fade',
-          headerShown: false,
+          ...modalOptions,
         }}
       />
+      <Stack.Screen name='[id]' options={{ title: 'Group' }} />
+      <Stack.Screen name='[id]/addUser' options={{ title: 'Add user', ...modalOptions }} />
+      <Stack.Screen name='[id]/addSplit' options={{ title: 'Add split', ...modalOptions }} />
     </Stack>
   )
 }

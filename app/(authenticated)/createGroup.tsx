@@ -1,16 +1,14 @@
+import ModalScreen from '@components/ModalScreen'
 import { createGroup } from '@database/createGroup'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import {
   ActivityIndicator,
   Button,
-  Pressable,
-  StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native'
-import Animated, { FadeIn } from 'react-native-reanimated'
 
 function Form() {
   const router = useRouter()
@@ -31,7 +29,7 @@ function Form() {
 
     createGroup(name, currency)
       .then((group) => {
-        router.navigate('/group/' + group.id, { withAnchor: true })
+        router.navigate('/' + group.id, { withAnchor: true })
         setWaiting(false)
       })
       .catch((error) => {
@@ -72,55 +70,9 @@ function Form() {
 }
 
 export default function Modal() {
-  const router = useRouter()
-
   return (
-    <Animated.View
-      entering={FadeIn.duration(100)}
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#00000040',
-      }}
-    >
-      {/* Dismiss modal when pressing outside */}
-      <Pressable
-        style={StyleSheet.absoluteFill}
-        onPress={() => {
-          router.canGoBack() ? router.back() : router.navigate('/home')
-        }}
-      />
-      <Animated.View
-        style={{
-          width: '90%',
-          height: '80%',
-          maxWidth: 768,
-          maxHeight: 600,
-          backgroundColor: 'white',
-          borderRadius: 16,
-          overflow: 'hidden',
-        }}
-      >
-        <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            alignItems: 'center',
-            padding: 16,
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text style={{ fontSize: 20 }}>Create Group</Text>
-          <Button
-            title='Close'
-            onPress={() => {
-              router.canGoBack() ? router.back() : router.navigate('/home')
-            }}
-          />
-        </View>
-        <Form />
-      </Animated.View>
-    </Animated.View>
+    <ModalScreen returnPath='/home' title='Create Group'>
+      <Form />
+    </ModalScreen>
   )
 }

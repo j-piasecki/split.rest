@@ -15,6 +15,7 @@ export async function createGroup(name: string, currency: string): Promise<Group
 
   await setDoc(doc(docRef, 'users', auth.currentUser.uid), {
     admin: true,
+    balance: 0,
   })
 
   await setDoc(doc(db, 'users', auth.currentUser.uid, 'groups', docRef.id), {
@@ -28,5 +29,6 @@ export async function createGroup(name: string, currency: string): Promise<Group
     currency: currency,
     hidden: false,
     admin: true,
+    memberCount: 1,
   }
 }
