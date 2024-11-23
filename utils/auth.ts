@@ -2,11 +2,11 @@ import { auth } from './firebase'
 import { AuthListener, User } from '@type/auth'
 import { usePathname, useRouter } from 'expo-router'
 import {
+  User as FirebaseUser,
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
   signInWithRedirect,
-  User as FirebaseUser,
 } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 
@@ -51,7 +51,9 @@ onAuthStateChanged(auth, (user) => {
 export function useAuth() {
   const path = usePathname()
   const router = useRouter()
-  const [user, setUser] = useState<User | null | undefined>(authReady ? createUser(auth.currentUser) : undefined)
+  const [user, setUser] = useState<User | null | undefined>(
+    authReady ? createUser(auth.currentUser) : undefined
+  )
 
   useEffect(() => {
     return addAuthListener(setUser)

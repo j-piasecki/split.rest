@@ -1,12 +1,12 @@
-import { Entry } from "@type/group";
-import { auth, db } from "@utils/firebase";
-import { getDocs, query, collection, limit } from "firebase/firestore";
+import { Entry } from '@type/group'
+import { auth, db } from '@utils/firebase'
+import { collection, getDocs, limit, query } from 'firebase/firestore'
 
 export async function getEntries(groupId: string): Promise<Entry[]> {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get the entries')
   }
-  
+
   const entriesSnapshot = await getDocs(
     query(collection(db, 'groups', groupId, 'entries'), limit(10))
   )

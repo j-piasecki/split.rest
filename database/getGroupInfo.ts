@@ -1,6 +1,6 @@
-import { GroupInfo } from "@type/group"
-import { db, auth } from "@utils/firebase"
-import { getDoc, doc } from "firebase/firestore"
+import { GroupInfo } from '@type/group'
+import { auth, db } from '@utils/firebase'
+import { doc, getDoc } from 'firebase/firestore'
 
 export async function getGroupInfo(id: string): Promise<GroupInfo | null> {
   if (!auth.currentUser) {

@@ -1,5 +1,5 @@
-import { db, auth } from "@utils/firebase"
-import { getDoc, doc } from "firebase/firestore"
+import { auth, db } from '@utils/firebase'
+import { doc, getDoc } from 'firebase/firestore'
 
 export async function getGroupBalance(id: string) {
   if (!auth.currentUser) {

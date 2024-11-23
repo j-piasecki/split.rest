@@ -17,18 +17,34 @@ function GroupList() {
     <View style={{ flex: 1 }}>
       {groups === null && <Text>Loading...</Text>}
       <Text style={{ fontSize: 20 }}>Groups:</Text>
-      {groups && groups.filter(g => !g.hidden).map((group) => (
-        <Link key={group.id} href={`/${group.id}`} asChild>
-          <Text style={{ fontSize: 20 }}>{group.name} <Text style={{opacity: 0.5}}>({group.currency}), members: {group.memberCount}</Text></Text>
-        </Link>
-      ))}
+      {groups &&
+        groups
+          .filter((g) => !g.hidden)
+          .map((group) => (
+            <Link key={group.id} href={`/${group.id}`} asChild>
+              <Text style={{ fontSize: 20 }}>
+                {group.name}{' '}
+                <Text style={{ opacity: 0.5 }}>
+                  ({group.currency}), members: {group.memberCount}
+                </Text>
+              </Text>
+            </Link>
+          ))}
 
       <Text style={{ fontSize: 20 }}>Hidden groups:</Text>
-      {groups && groups.filter(g => g.hidden).map((group) => (
-        <Link key={group.id} href={`/${group.id}`} asChild>
-          <Text style={{ fontSize: 20 }}>{group.name} <Text style={{opacity: 0.5}}>({group.currency}), members: {group.memberCount}</Text></Text>
-        </Link>
-      ))}
+      {groups &&
+        groups
+          .filter((g) => g.hidden)
+          .map((group) => (
+            <Link key={group.id} href={`/${group.id}`} asChild>
+              <Text style={{ fontSize: 20 }}>
+                {group.name}{' '}
+                <Text style={{ opacity: 0.5 }}>
+                  ({group.currency}), members: {group.memberCount}
+                </Text>
+              </Text>
+            </Link>
+          ))}
     </View>
   )
 }
@@ -44,7 +60,7 @@ export default function Home() {
         <Button title='Create Group' />
       </Link>
 
-      {user && <GroupList /> }
+      {user && <GroupList />}
     </View>
   )
 }

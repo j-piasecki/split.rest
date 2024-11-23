@@ -1,12 +1,18 @@
-import { db, auth } from "@utils/firebase"
-import { getDoc, doc, updateDoc } from "firebase/firestore"
+import { auth, db } from '@utils/firebase'
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
 
-export async function setGroupAdmin(groupId: string, userId: string, admin: boolean): Promise<void> {
+export async function setGroupAdmin(
+  groupId: string,
+  userId: string,
+  admin: boolean
+): Promise<void> {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to change admin rights')
   }
 
-  const groupUserData = (await getDoc(doc(db, 'groups', groupId, 'users', auth.currentUser.uid))).data()
+  const groupUserData = (
+    await getDoc(doc(db, 'groups', groupId, 'users', auth.currentUser.uid))
+  ).data()
 
   if (!groupUserData?.admin) {
     throw new Error('You do not have permission to change admin rights')
@@ -21,6 +27,6 @@ export async function setGroupAdmin(groupId: string, userId: string, admin: bool
   }
 
   await updateDoc(doc(db, 'groups', groupId, 'users', userId), {
-    admin: admin
+    admin: admin,
   })
 }

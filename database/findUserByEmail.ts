@@ -1,5 +1,5 @@
-import { auth, db } from "@utils/firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { auth, db } from '@utils/firebase'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 
 export async function findUserIdByEmail(email: string): Promise<string> {
   if (!auth.currentUser) {

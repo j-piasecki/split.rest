@@ -1,15 +1,13 @@
-import { Member } from "@type/group";
-import { auth, db } from "@utils/firebase";
-import { getDocs, query, collection, limit, getDoc, doc } from "firebase/firestore";
+import { Member } from '@type/group'
+import { auth, db } from '@utils/firebase'
+import { collection, doc, getDoc, getDocs, limit, query } from 'firebase/firestore'
 
 export async function getMembers(groupId: string): Promise<Member[]> {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get all groups')
   }
 
-  const groupMembers = await getDocs(
-    query(collection(db, 'groups', groupId, 'users'), limit(10))
-  )
+  const groupMembers = await getDocs(query(collection(db, 'groups', groupId, 'users'), limit(10)))
 
   const data: Partial<Member>[] = []
 

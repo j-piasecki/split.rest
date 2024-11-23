@@ -1,6 +1,6 @@
-import { useAuth } from "@utils/auth";
-import { Stack } from "expo-router";
-import { Text } from "react-native";
+import { useAuth } from '@utils/auth'
+import { Stack } from 'expo-router'
+import { Text } from 'react-native'
 
 export default function App() {
   const user = useAuth()

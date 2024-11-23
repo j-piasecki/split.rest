@@ -1,5 +1,5 @@
-import { db, auth } from "@utils/firebase"
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore"
+import { auth, db } from '@utils/firebase'
+import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore'
 
 export async function setGroupHidden(groupId: string, hidden: boolean): Promise<void> {
   if (!auth.currentUser) {
@@ -7,10 +7,10 @@ export async function setGroupHidden(groupId: string, hidden: boolean): Promise<
   }
 
   await updateDoc(doc(db, 'groups', groupId, 'users', auth.currentUser.uid), {
-    hidden: hidden
+    hidden: hidden,
   })
 
   await updateDoc(doc(db, 'users', auth.currentUser.uid, 'data', 'groups'), {
-    hidden: hidden ? arrayUnion(groupId) : arrayRemove(groupId)
+    hidden: hidden ? arrayUnion(groupId) : arrayRemove(groupId),
   })
 }

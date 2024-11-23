@@ -1,8 +1,13 @@
-import { auth, db } from "@utils/firebase"
-import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore"
-import { BalanceChange } from "@type/group"
+import { BalanceChange } from '@type/group'
+import { auth, db } from '@utils/firebase'
+import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore'
 
-export async function createSplit(groupId: string, title: string, total: number, balances: BalanceChange[]) {
+export async function createSplit(
+  groupId: string,
+  title: string,
+  total: number,
+  balances: BalanceChange[]
+) {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to verify users')
   }
@@ -20,7 +25,7 @@ export async function createSplit(groupId: string, title: string, total: number,
     const newBalance = groupUserData.balance + entry.change
 
     await updateDoc(groupUserDoc, {
-      balance: newBalance
+      balance: newBalance,
     })
   }
 
@@ -32,8 +37,8 @@ export async function createSplit(groupId: string, title: string, total: number,
     changes: balances.map((entry) => {
       return {
         id: entry.id,
-        change: entry.change
+        change: entry.change,
       }
-    })
+    }),
   })
 }

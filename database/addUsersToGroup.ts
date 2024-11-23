@@ -1,5 +1,5 @@
-import { auth, db } from "@utils/firebase"
-import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore"
+import { auth, db } from '@utils/firebase'
+import { arrayUnion, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 
 export async function addUserToGroup(groupId: string, userId: string) {
   if (!auth.currentUser) {
@@ -12,7 +12,9 @@ export async function addUserToGroup(groupId: string, userId: string) {
     throw new Error(`Group not found`)
   }
 
-  const groupUserData = (await getDoc(doc(db, 'groups', groupId, 'users', auth.currentUser.uid))).data()
+  const groupUserData = (
+    await getDoc(doc(db, 'groups', groupId, 'users', auth.currentUser.uid))
+  ).data()
 
   if (!groupUserData?.admin) {
     throw new Error(`You do not have permission to add users to this group`)

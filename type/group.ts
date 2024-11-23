@@ -22,15 +22,15 @@ export interface Member {
 }
 
 export interface BalanceChange {
-  id: string;
-  change: number;
+  id: string
+  change: number
 }
 
 export interface Entry {
-  id: string;
-  title: string;
-  total: number;
-  timestamp: number;
-  paidById: string;
-  changes: BalanceChange[];
+  id: string
+  title: string
+  total: number
+  timestamp: number
+  paidById: string
+  changes: BalanceChange[]
 }

@@ -1,12 +1,6 @@
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
-import {
-  Button,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import { Button, Pressable, StyleSheet, Text, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 
 export interface ModalScreenProps {
@@ -36,10 +30,7 @@ export default function ModalScreen({ returnPath, title, children }: ModalScreen
         backgroundColor: '#00000040',
       }}
     >
-      <Pressable
-        style={StyleSheet.absoluteFill}
-        onPress={goBack}
-      />
+      <Pressable style={StyleSheet.absoluteFill} onPress={goBack} />
       <Animated.View
         style={{
           width: '90%',
@@ -61,10 +52,7 @@ export default function ModalScreen({ returnPath, title, children }: ModalScreen
           }}
         >
           <Text style={{ fontSize: 20 }}>{title}</Text>
-          <Button
-            title='Close'
-            onPress={goBack}
-          />
+          <Button title='Close' onPress={goBack} />
         </View>
         {children}
       </Animated.View>

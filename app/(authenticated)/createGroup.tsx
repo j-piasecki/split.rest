@@ -2,13 +2,7 @@ import ModalScreen from '@components/ModalScreen'
 import { createGroup } from '@database/createGroup'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
-import {
-  ActivityIndicator,
-  Button,
-  Text,
-  TextInput,
-  View,
-} from 'react-native'
+import { ActivityIndicator, Button, Text, TextInput, View } from 'react-native'
 
 function Form() {
   const router = useRouter()
