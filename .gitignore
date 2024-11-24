@@ -18,6 +18,7 @@ expo-env.d.ts
 *.mobileprovision
 
 .yarn
+.firebase
 
 # Metro
 .metro-health-check*
