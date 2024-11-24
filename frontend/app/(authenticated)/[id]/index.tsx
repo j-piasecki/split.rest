@@ -1,5 +1,5 @@
 import { deleteSplit } from '@database/deleteSplit'
-import { getEntries } from '@database/getEntries'
+import { getSplits } from '@database/getSplits'
 import { getGroupBalance } from '@database/getGroupBalance'
 import { getGroupInfo } from '@database/getGroupInfo'
 import { getMembers } from '@database/getMembers'
@@ -29,7 +29,7 @@ export default function Group() {
     getGroupInfo(groupId).then(setGroupInfo)
     getGroupBalance(groupId).then(setBalance)
     getMembers(groupId).then(setMembers)
-    getEntries(groupId).then(setEntries)
+    getSplits(groupId).then(setEntries)
   }, [groupId, counter])
 
   useFocusEffect(() => {

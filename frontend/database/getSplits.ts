@@ -4,7 +4,7 @@ import { GetGroupSplitsArguments, Split } from 'shared'
 
 const remoteGetSplits = httpsCallable(functions, 'getGroupSplits')
 
-export async function getEntries(groupId: string, startAfterTimestamp?: number): Promise<Split[]> {
+export async function getSplits(groupId: string, startAfterTimestamp?: number): Promise<Split[]> {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get the entries')
   }
