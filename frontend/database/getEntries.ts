@@ -1,6 +1,6 @@
-import { Entry } from '@type/group'
 import { auth, db } from '@utils/firebase'
 import { collection, getDocs, limit, query } from 'firebase/firestore'
+import { Entry } from 'shared'
 
 export async function getEntries(groupId: string): Promise<Entry[]> {
   if (!auth.currentUser) {

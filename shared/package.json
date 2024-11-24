@@ -1,0 +1,7 @@
+{
+  "name": "shared",
+  "main": "src/index.ts",
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  }
+}

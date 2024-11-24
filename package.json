@@ -11,6 +11,7 @@
   },
   "workspaces": [
     "functions",
-    "frontend"
+    "frontend",
+    "shared"
   ]
 }

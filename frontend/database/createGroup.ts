@@ -1,8 +1,8 @@
-import { GroupInfo } from '@type/group'
 import { auth, functions } from '@utils/firebase'
 import { httpsCallable } from 'firebase/functions'
+import { GroupInfo } from 'shared'
 
-const remoteCreateGroup = httpsCallable(functions, 'createGroup');
+const remoteCreateGroup = httpsCallable(functions, 'createGroup')
 
 export async function createGroup(name: string, currency: string): Promise<GroupInfo> {
   if (!auth.currentUser) {

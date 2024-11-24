@@ -1,10 +1,10 @@
 import { getAllUserGroupsInfo } from '@database/getAllUserGroupsInfo'
 import { getAllUserGroupsMetadata } from '@database/getAllUserGroupsMetadata'
-import { GroupInfo } from '@type/group'
 import { logout, useAuth } from '@utils/auth'
 import { Link } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Button, Text, View } from 'react-native'
+import { GroupInfo } from 'shared'
 
 function GroupList() {
   const [groups, setGroups] = useState<GroupInfo[] | null>(null)

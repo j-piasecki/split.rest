@@ -6,11 +6,11 @@ import { getMembers } from '@database/getMembers'
 import { setGroupAccess } from '@database/setGroupAccess'
 import { setGroupAdmin } from '@database/setGroupAdmin'
 import { setGroupHidden } from '@database/setGroupHidden'
-import { Entry, GroupInfo, Member } from '@type/group'
 import { useAuth } from '@utils/auth'
 import { Link, useFocusEffect, useLocalSearchParams, useNavigation } from 'expo-router'
 import { useEffect, useReducer, useState } from 'react'
 import { Button, Text, View } from 'react-native'
+import { Entry, GroupInfo, Member } from 'shared'
 
 export default function Group() {
   const user = useAuth()

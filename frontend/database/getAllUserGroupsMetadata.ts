@@ -1,6 +1,6 @@
-import { GroupMetadata } from '@type/group'
 import { auth, db } from '@utils/firebase'
 import { doc, getDoc } from 'firebase/firestore'
+import { GroupMetadata } from 'shared'
 
 export async function getAllUserGroupsMetadata(): Promise<GroupMetadata[]> {
   if (!auth.currentUser) {

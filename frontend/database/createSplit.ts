@@ -1,6 +1,6 @@
-import { BalanceChange } from '@type/group'
 import { auth, db } from '@utils/firebase'
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { BalanceChange } from 'shared'
 
 export async function createSplit(
   groupId: string,

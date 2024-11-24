@@ -11212,6 +11212,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"shared@workspace:shared":
+  version: 0.0.0-use.local
+  resolution: "shared@workspace:shared"
+  dependencies:
+    prettier: ^3.3.3
+  languageName: unknown
+  linkType: soft
+
 "shebang-command@npm:^1.2.0":
   version: 1.2.0
   resolution: "shebang-command@npm:1.2.0"

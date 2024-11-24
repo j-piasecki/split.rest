@@ -1,11 +1,11 @@
 import ModalScreen from '@components/ModalScreen'
 import { createSplit } from '@database/createSplit'
 import { findUserIdByEmail } from '@database/findUserByEmail'
-import { BalanceChange } from '@type/group'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { ActivityIndicator, Button, ScrollView, Text, TextInput, View } from 'react-native'
+import { BalanceChange } from 'shared'
 
 interface EntryData {
   email: string

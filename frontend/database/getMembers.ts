@@ -1,6 +1,6 @@
-import { Member } from '@type/group'
 import { auth, db } from '@utils/firebase'
 import { collection, doc, getDoc, getDocs, limit, query } from 'firebase/firestore'
+import { Member } from 'shared'
 
 export async function getMembers(groupId: string): Promise<Member[]> {
   if (!auth.currentUser) {

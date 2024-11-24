@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin'
 import { HttpsError, onCall } from 'firebase-functions/https'
+import { GroupInfo } from 'shared'
 
 export const createGroup = onCall(
   {
@@ -7,7 +8,7 @@ export const createGroup = onCall(
     cors: true,
     enforceAppCheck: true,
   },
-  async (request) => {
+  async (request): Promise<GroupInfo> => {
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'The function must be called while authenticated.')
     }
