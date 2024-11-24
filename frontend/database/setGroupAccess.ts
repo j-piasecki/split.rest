@@ -18,6 +18,7 @@ export async function setGroupAccess(
     throw new Error('You do not have permission to change group access')
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const change: Record<string, any> = {
     access: access,
   }

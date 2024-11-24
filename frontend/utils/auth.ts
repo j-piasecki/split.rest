@@ -40,7 +40,7 @@ export function addAuthListener(listener: AuthListener) {
 }
 
 onAuthStateChanged(auth, (user) => {
-  let result = createUser(user)
+  const result = createUser(user)
   listeners.forEach((listener) => listener(result))
 
   if (!authReady) {

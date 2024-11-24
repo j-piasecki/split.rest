@@ -1,40 +1,16 @@
 {
+  "private": true,
   "name": "split",
-  "version": "1.0.0",
-  "main": "expo-router/entry",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "format": "prettier --write --list-different . && cd functions && yarn format",
-    "lint": "eslint ."
+    "start": "yarn workspace frontend start",
+    "build": "yarn workspace frontend build:web",
+    "format": "yarn workspace frontend format && yarn workspace functions format",
+    "lint": "yarn workspace frontend lint && yarn workspace functions lint",
+    "deploy:web": "yarn build && firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions"
   },
-  "dependencies": {
-    "@expo/metro-runtime": "~4.0.0",
-    "expo": "~52.0.11",
-    "expo-constants": "~17.0.3",
-    "expo-linking": "~7.0.3",
-    "expo-router": "~4.0.9",
-    "expo-status-bar": "~2.0.0",
-    "firebase": "^11.0.2",
-    "firebaseui": "^6.1.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-native": "0.76.3",
-    "react-native-reanimated": "^3.16.2",
-    "react-native-safe-area-context": "4.12.0",
-    "react-native-screens": "~4.1.0",
-    "react-native-web": "~0.19.13"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
-    "@types/react": "~18.3.12",
-    "eslint": "^8.57.0",
-    "eslint-config-expo": "~8.0.1",
-    "prettier": "^3.3.3",
-    "typescript": "^5.3.3"
-  },
-  "private": true
+  "workspaces": [
+    "functions",
+    "frontend"
+  ]
 }

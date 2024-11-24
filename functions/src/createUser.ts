@@ -17,6 +17,7 @@ export const createUser = functions.auth.user().onCreate(async (user) => {
 
   await userGroupsRef.set({
     groups: [],
+    hidden: [],
   })
 
   logger.info(`User ${user.uid} created`)
