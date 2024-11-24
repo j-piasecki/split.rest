@@ -1,6 +1,6 @@
 import { auth, functions } from '@utils/firebase'
 import { httpsCallable } from 'firebase/functions'
-import { GroupInfo } from 'shared'
+import { CreateGroupArguments, GroupInfo } from 'shared'
 
 const remoteCreateGroup = httpsCallable(functions, 'createGroup')
 
@@ -9,7 +9,9 @@ export async function createGroup(name: string, currency: string): Promise<Group
     throw new Error('You must be logged in to create a group')
   }
 
-  return remoteCreateGroup({ name, currency }).then((result) => {
+  const args: CreateGroupArguments = { name, currency }
+
+  return remoteCreateGroup(args).then((result) => {
     const groupInfo = result.data as GroupInfo
 
     return groupInfo

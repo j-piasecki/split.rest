@@ -10,7 +10,7 @@ import { useAuth } from '@utils/auth'
 import { Link, useFocusEffect, useLocalSearchParams, useNavigation } from 'expo-router'
 import { useEffect, useReducer, useState } from 'react'
 import { Button, Text, View } from 'react-native'
-import { Entry, GroupInfo, Member } from 'shared'
+import { Split, GroupInfo, Member } from 'shared'
 
 export default function Group() {
   const user = useAuth()
@@ -19,7 +19,7 @@ export default function Group() {
   const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null)
   const [balance, setBalance] = useState<number | null>(null)
   const [members, setMembers] = useState<Member[] | null>(null)
-  const [entries, setEntries] = useState<Entry[] | null>(null)
+  const [entries, setEntries] = useState<Split[] | null>(null)
 
   const [counter, reloadData] = useReducer((count) => count + 1, 0)
 

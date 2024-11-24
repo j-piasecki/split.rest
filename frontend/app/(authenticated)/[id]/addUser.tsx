@@ -1,5 +1,5 @@
 import ModalScreen from '@components/ModalScreen'
-import { addUserToGroup } from '@database/addUsersToGroup'
+import { addUserToGroup } from '@database/addUserToGroup'
 import { findUserIdByEmail } from '@database/findUserByEmail'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'

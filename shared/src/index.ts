@@ -26,11 +26,28 @@ export interface BalanceChange {
   change: number
 }
 
-export interface Entry {
+export interface Split {
   id: string
   title: string
   total: number
   timestamp: number
   paidById: string
   changes: BalanceChange[]
+}
+
+export interface CreateGroupArguments {
+  name: string
+  currency: string
+}
+
+export interface AddUserToGroupArguments {
+  groupId: string
+  userId: string
+}
+
+export interface CreateSplitArguments {
+  groupId: string
+  title: string
+  total: number
+  balances: BalanceChange[]
 }

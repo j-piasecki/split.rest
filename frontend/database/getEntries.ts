@@ -1,8 +1,8 @@
 import { auth, db } from '@utils/firebase'
 import { collection, getDocs, limit, query } from 'firebase/firestore'
-import { Entry } from 'shared'
+import { Split } from 'shared'
 
-export async function getEntries(groupId: string): Promise<Entry[]> {
+export async function getEntries(groupId: string): Promise<Split[]> {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get the entries')
   }
@@ -11,7 +11,7 @@ export async function getEntries(groupId: string): Promise<Entry[]> {
     query(collection(db, 'groups', groupId, 'entries'), limit(10))
   )
 
-  const result: Entry[] = []
+  const result: Split[] = []
 
   entriesSnapshot.forEach((doc) => {
     const data = doc.data()

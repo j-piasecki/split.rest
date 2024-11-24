@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin'
 import { HttpsError, onCall } from 'firebase-functions/https'
-import { GroupInfo } from 'shared'
+import { CreateGroupArguments, GroupInfo } from 'shared'
 
 export const createGroup = onCall(
   {
@@ -13,13 +13,15 @@ export const createGroup = onCall(
       throw new HttpsError('unauthenticated', 'The function must be called while authenticated.')
     }
 
-    if (!request.data || !request.data.name || !request.data.currency) {
+    const data = request.data as Partial<CreateGroupArguments> | null
+
+    if (!data || !data.name || !data.currency) {
       throw new HttpsError('invalid-argument', 'Invalid arguments')
     }
 
     const uid = request.auth.uid
-    const name = request.data.name
-    const currency = request.data.currency
+    const name = data.name
+    const currency = data.currency
 
     const db = admin.firestore()
 
