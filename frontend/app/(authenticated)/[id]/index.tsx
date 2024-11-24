@@ -1,5 +1,5 @@
+import Header from '@components/Header'
 import { deleteSplit } from '@database/deleteSplit'
-import { getGroupBalance } from '@database/getGroupBalance'
 import { getGroupInfo } from '@database/getGroupInfo'
 import { getMembers } from '@database/getMembers'
 import { getSplits } from '@database/getSplits'
@@ -7,55 +7,76 @@ import { setGroupAccess } from '@database/setGroupAccess'
 import { setGroupAdmin } from '@database/setGroupAdmin'
 import { setGroupHidden } from '@database/setGroupHidden'
 import { useAuth } from '@utils/auth'
-import { Link, useFocusEffect, useLocalSearchParams, useNavigation } from 'expo-router'
-import { useEffect, useReducer, useState } from 'react'
-import { Button, Text, View } from 'react-native'
-import { GroupInfo, Member, Split } from 'shared'
+import { Link, useLocalSearchParams } from 'expo-router'
+import { useEffect, useRef, useState } from 'react'
+import { ActivityIndicator, Button, Pressable, ScrollView, Text, View } from 'react-native'
+import { GroupInfoWithBalance, Member, Split } from 'shared'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { isCloseToBottom } from '@utils/isScrollViewCloseToBottom'
 
-export default function Group() {
-  const user = useAuth()
-  const navigation = useNavigation()
-  const { id } = useLocalSearchParams()
-  const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null)
-  const [balance, setBalance] = useState<number | null>(null)
-  const [members, setMembers] = useState<Member[] | null>(null)
-  const [entries, setEntries] = useState<Split[] | null>(null)
 
-  const [counter, reloadData] = useReducer((count) => count + 1, 0)
+function InfoCard({ info }: { info: GroupInfoWithBalance | null }) {
+  return (
+    <View
+      style={{
+        width: '100%',
+        maxWidth: 500,
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        padding: 16,
+        borderRadius: 16,
+      }}
+    >
+      {info === null && <ActivityIndicator size='small' />}
+      {info !== null && (
+        <>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontSize: 30 }}>{info.name}</Text>
+            <Text
+              style={{
+                fontSize: 30,
+                color: info.balance === 0 ? 'gray' : info.balance > 0 ? 'green' : 'red',
+              }}
+            >
+              {info.balance > 0 && '+'}
+              {info.balance} <Text style={{ color: 'darkgray' }}>{info.currency}</Text>
+            </Text>
+          </View>
 
-  const groupId = typeof id === 'string' ? id : id[0]
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 16, marginTop: 8}}>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+              <Text style={{color: 'gray', fontSize: 20}}>{info?.memberCount}</Text>
+              <FontAwesome name='users' size={20} color={'gray'} />
+            </View>
 
-  useEffect(() => {
-    getGroupInfo(groupId).then(setGroupInfo)
-    getGroupBalance(groupId).then(setBalance)
-    getMembers(groupId).then(setMembers)
-    getSplits(groupId).then(setEntries)
-  }, [groupId, counter])
+            {!info.hasAccess && <FontAwesome name='lock' size={24} color={'gray'} />}
+            {info.isAdmin && <FontAwesome name='wrench' size={24} color={'gray'} />}
+          </View>
+        </>
+      )}
+    </View>
+  )
+}
 
-  useFocusEffect(() => {
-    navigation.setOptions({ title: `Group ${groupInfo?.name}` })
-  })
+function ActionButtons({info}: {info: GroupInfoWithBalance | null}) {
+  if (!info) {
+    return null
+  }
 
   return (
-    <View style={{ flex: 1 }}>
-      <Text style={{ fontSize: 20 }}>
-        Split {groupInfo?.name} balance: {balance} {groupInfo?.currency}
-      </Text>
-
-      <Link href={`/${groupInfo?.id}/addUser`} asChild>
+    <View style={{ marginVertical: 16, flexDirection: 'row', gap: 8}}>
+      <Link href={`/${info.id}/addUser`} asChild>
         <Button title='Add user' />
       </Link>
 
-      <Link href={`/${groupInfo?.id}/addSplit`} asChild>
+      <Link href={`/${info.id}/addSplit`} asChild>
         <Button title='Add split' />
       </Link>
 
-      {groupInfo?.hidden && (
+      {info.hidden && (
         <Button
           title='Show group'
           onPress={() => {
-            setGroupHidden(groupId, false)
-              .then(reloadData)
+            setGroupHidden(info.id, false)
               .catch((e) => {
                 alert(e.message)
               })
@@ -63,58 +84,125 @@ export default function Group() {
         />
       )}
 
-      {groupInfo?.hidden === false && (
+      {info.hidden === false && (
         <Button
           title='Hide group'
           onPress={() => {
-            setGroupHidden(groupId, true)
-              .then(reloadData)
+            setGroupHidden(info.id, true)
               .catch((e) => {
                 alert(e.message)
               })
           }}
         />
       )}
+    </View>
+  )
+}
 
-      <Text style={{ fontSize: 20 }}>10 Members:</Text>
-      {members &&
-        members.map((member) => {
-          return (
-            <View
-              key={member.id}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderColor: 'gray',
-                borderBottomWidth: 1,
-                padding: 8,
-              }}
-            >
-              <Text>{member.name}</Text>
-              <Text>{member.email}</Text>
-              <Text>
-                {member.balance} {groupInfo?.currency}
-              </Text>
+function SplitList({info, scrollEndHandler}: {info: GroupInfoWithBalance | null, scrollEndHandler: React.MutableRefObject<() => void>}) {
+  const user = useAuth()
+  const [splits, setSplits] = useState<Split[] | null>(null)
+  const loadingMoreRef = useRef(false)
 
-              {groupInfo?.isAdmin && member.id !== user?.uid && member.hasAccess && (
+  scrollEndHandler.current = () => {
+    if (splits && splits.length > 0 && !loadingMoreRef.current && info) {
+      loadingMoreRef.current = true
+      
+      getSplits(info.id, splits[splits.length - 1].timestamp).then((newSplits) => {
+        setSplits([...splits, ...newSplits])
+        loadingMoreRef.current = false
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (user && info?.id) {
+      getSplits(info?.id).then(setSplits)
+    }
+  }, [user, info?.id, setSplits])
+
+  return (
+    <View style={{width: '100%'}}>
+      {!splits && <ActivityIndicator size='small' style={{padding: 32}} />}
+      {splits && splits.map((split) => {
+        return (
+          <View key={split.id} style={{padding: 16, flexDirection: 'row', justifyContent: 'space-between', borderColor: 'lightgray', borderBottomWidth: 1}}>
+            <Text style={{fontSize: 20, fontWeight: 'bold'}}>{split.title}</Text>
+            <Text style={{fontSize: 20}}>{split.total} {info?.currency}</Text>
+            <Text style={{fontSize: 20, color: 'gray'}}>{new Date(split.timestamp).toLocaleDateString()}</Text>
+
+            {(split.paidById === user?.uid || info?.isAdmin) && (
+                <Button
+                  title='Delete'
+                  onPress={() => {
+                    if (info) {
+                      deleteSplit(info.id, split.id)
+                        .catch((e) => {
+                          alert(e.message)
+                        })
+                    }
+                  }}
+                />
+              )}
+          </View>
+        )
+      })}
+    </View>
+  )
+}
+
+function MembersList({info, scrollEndHandler}: {info: GroupInfoWithBalance | null, scrollEndHandler: React.MutableRefObject<() => void>}) {
+  const user = useAuth()
+  const [members, setMembers] = useState<Member[] | null>(null)
+  const loadingMoreRef = useRef(false)
+
+  scrollEndHandler.current = () => {
+    if (members) {
+      if (members && members.length > 0 && !loadingMoreRef.current && info) {
+        loadingMoreRef.current = true
+        
+        getMembers(info.id, members[members.length - 1].id).then((newMembers) => {
+          setMembers([...members, ...newMembers])
+          loadingMoreRef.current = false
+        })
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (user && info?.id) {
+      getMembers(info?.id).then(setMembers)
+    }
+  }, [user, info?.id, setMembers])
+
+  if (!info) {
+    return null
+  }
+
+  return (
+    <View style={{width: '100%'}}>
+      {!members && <ActivityIndicator size='small' style={{padding: 32}} />}
+      {members && members.map((member) => {
+        return (
+          <View key={member.id} style={{padding: 16, flexDirection: 'row', justifyContent: 'space-between', borderColor: 'lightgray', borderBottomWidth: 1}}>
+            <Text style={{fontSize: 20, fontWeight: 'bold'}}>{member.name}</Text>
+            <View style={{flexDirection: 'row', gap: 4}}>
+            {info.isAdmin && member.id !== user?.uid && member.hasAccess && (
                 <Button
                   title='Revoke access'
                   onPress={() => {
-                    setGroupAccess(groupId, member.id, false)
-                      .then(reloadData)
+                    setGroupAccess(info.id, member.id, false)
                       .catch((e) => {
                         alert(e.message)
                       })
                   }}
                 />
               )}
-              {groupInfo?.isAdmin && member.id !== user?.uid && !member.hasAccess && (
+              {info?.isAdmin && member.id !== user?.uid && !member.hasAccess && (
                 <Button
                   title='Give access'
                   onPress={() => {
-                    setGroupAccess(groupId, member.id, true)
-                      .then(reloadData)
+                    setGroupAccess(info.id, member.id, true)
                       .catch((e) => {
                         alert(e.message)
                       })
@@ -122,27 +210,25 @@ export default function Group() {
                 />
               )}
 
-              {groupInfo?.isAdmin && member.id !== user?.uid && member.isAdmin && (
+              {info.isAdmin && member.id !== user?.uid && member.isAdmin && (
                 <Button
                   title='Revoke admin'
                   onPress={() => {
-                    setGroupAdmin(groupId, member.id, false)
-                      .then(reloadData)
+                    setGroupAdmin(info.id, member.id, false)
                       .catch((e) => {
                         alert(e.message)
                       })
                   }}
                 />
               )}
-              {groupInfo?.isAdmin &&
+              {info.isAdmin &&
                 member.id !== user?.uid &&
                 !member.isAdmin &&
                 member.hasAccess && (
                   <Button
                     title='Make admin'
                     onPress={() => {
-                      setGroupAdmin(groupId, member.id, true)
-                        .then(reloadData)
+                      setGroupAdmin(info.id, member.id, true)
                         .catch((e) => {
                           alert(e.message)
                         })
@@ -150,44 +236,97 @@ export default function Group() {
                   />
                 )}
             </View>
-          )
-        })}
+            <Text style={{fontSize: 20, color: member.balance === 0 ? 'gray' : member.balance > 0 ? 'green' : 'red'}}>{member.balance > 0 && '+'}{member.balance}</Text>
+          </View>
+        )
+      })}
+    </View>
+  )
+}
 
-      <Text style={{ fontSize: 20 }}>10 Entries:</Text>
-      {entries &&
-        entries.map((entry) => {
-          return (
-            <View
-              key={entry.id}
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderColor: 'gray',
-                borderBottomWidth: 1,
-                padding: 8,
-              }}
-            >
-              <Text>{entry.title}</Text>
-              <Text>{new Date(entry.timestamp).toISOString()}</Text>
-              <Text>
-                {entry.total} {groupInfo?.currency}
-              </Text>
-              {(entry.paidById === user?.uid || groupInfo?.isAdmin) && (
-                <Button
-                  title='Delete'
-                  onPress={() => {
-                    deleteSplit(groupId, entry.id)
-                      .then(reloadData)
-                      .catch((e) => {
-                        alert(e.message)
-                      })
-                  }}
-                />
-              )}
-            </View>
-          )
-        })}
+function ContentSwitcher({info, scrollEndHandler}: {info: GroupInfoWithBalance | null, scrollEndHandler: React.MutableRefObject<() => void>}) {
+  const [listSelected, setListSelected] = useState(true)
+
+  return (
+    <View style={{width: '100%'}}>
+      <View style={{width: '100%', height: 40, flexDirection: 'row'}}>
+        <Pressable style={({pressed}) => {
+          return {backgroundColor: pressed ? 'darkgray' : listSelected ? 'lightgray' : 'transparent', flex: 1, justifyContent: 'center', alignItems: 'center'}
+        }} onPress={() => {setListSelected(true)}}>
+          <FontAwesome name='list-ul' size={20} color='gray' />
+        </Pressable>
+
+        <Pressable style={({pressed}) => {
+          return {backgroundColor: pressed ? 'darkgray' : !listSelected ? 'lightgray' : 'transparent', flex: 1, justifyContent: 'center', alignItems: 'center'}
+        }} onPress={() => {setListSelected(false)}}>
+          <FontAwesome name='users' size={20} color='gray'/>
+        </Pressable>
+      </View>
+
+      {listSelected && <SplitList info={info} scrollEndHandler={scrollEndHandler} />}
+      {!listSelected && <MembersList info={info} scrollEndHandler={scrollEndHandler} />}
+    </View>
+  )
+}
+
+export default function GroupScreen() {
+  const user = useAuth()
+  const { id } = useLocalSearchParams()
+  const groupId = id as string
+
+  const scrollViewInfo = useRef({
+    contentSize: {width: 0, height: 0},
+    layout: {x: 0, y: 0, width: 0, height: 0},
+    contentOffset: {x: 0, y: 0},
+  })
+
+  const scrollEndHandler = useRef(() => {})
+
+  const [groupInfo, setGroupInfo] = useState<GroupInfoWithBalance | null>(null)
+
+  useEffect(() => {
+    if (user) {
+      getGroupInfo(groupId).then(setGroupInfo)
+    }
+  }, [user, setGroupInfo, groupId])
+
+  function onScrollUpdate() {
+    if (isCloseToBottom(scrollViewInfo.current)) {
+      scrollEndHandler.current()
+    }
+  }
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Header />
+
+      <View style={{ flex: 1, alignItems: 'center' }}>
+        <ScrollView
+          style={{ flex: 1, width: '100%', maxWidth: 768 }}
+          contentContainerStyle={{
+            alignItems: 'center',
+            paddingVertical: 24,
+            paddingHorizontal: 32,
+          }}
+          scrollEventThrottle={500}
+          onScroll={(e) => {
+            scrollViewInfo.current.contentOffset = e.nativeEvent.contentOffset
+            onScrollUpdate()
+          }}
+          onContentSizeChange={(w, h) => {
+            scrollViewInfo.current.contentSize = {width: w, height: h}
+            onScrollUpdate()
+          }}
+          onLayout={(e) => {
+            scrollViewInfo.current.layout = e.nativeEvent.layout
+            onScrollUpdate()
+          }}
+        >
+          <InfoCard info={groupInfo} />
+          <ActionButtons info={groupInfo} />
+          <ContentSwitcher info={groupInfo} scrollEndHandler={scrollEndHandler} />
+        </ScrollView>
+      </View>
     </View>
   )
 }

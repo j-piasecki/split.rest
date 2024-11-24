@@ -1,10 +1,10 @@
 import { auth, db } from '@utils/firebase'
 import { doc, getDoc } from 'firebase/firestore'
-import { GroupInfo } from 'shared'
+import { GroupInfoWithBalance } from 'shared'
 
 // TODO: rules
 
-export async function getGroupInfo(id: string): Promise<GroupInfo | null> {
+export async function getGroupInfo(id: string): Promise<GroupInfoWithBalance | null> {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get group info')
   }
@@ -21,6 +21,7 @@ export async function getGroupInfo(id: string): Promise<GroupInfo | null> {
       isAdmin: groupUserData.admin,
       memberCount: groupData.memberCount,
       hasAccess: groupUserData.access,
+      balance: groupUserData.balance,
     }
   } else {
     console.error(`Group with id ${id} not found`)

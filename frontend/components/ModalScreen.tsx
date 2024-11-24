@@ -35,7 +35,13 @@ function FullscreenModal({ children, title }: { children: React.ReactNode; title
   )
 }
 
-function ModalScreen({ returnPath, title, children, maxWidth = 768, maxHeight = 600 }: ModalScreenProps) {
+function ModalScreen({
+  returnPath,
+  title,
+  children,
+  maxWidth = 768,
+  maxHeight = 600,
+}: ModalScreenProps) {
   const router = useRouter()
 
   const goBack = useCallback(() => {
@@ -92,8 +98,6 @@ export default function Modal(props: ModalScreenProps) {
   if (isSmallScreen(windowSize.width)) {
     return <FullscreenModal title={props.title}>{props.children}</FullscreenModal>
   } else {
-    return (
-      <ModalScreen {...props} />
-    )
+    return <ModalScreen {...props} />
   }
 }

@@ -1,29 +1,56 @@
 import Header from '@components/Header'
 import { getAllUserGroupsInfo } from '@database/getAllUserGroupsInfo'
 import { getAllUserGroupsMetadata } from '@database/getAllUserGroupsMetadata'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useAuth } from '@utils/auth'
 import { Link } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, Button, Pressable, ScrollView, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 function Group({ info }: { info: GroupInfo }) {
   const offColor = 'darkgray'
 
   return (
     <Link key={info.id} href={`/${info.id}`} asChild>
-      <View style={{ flex: 1, padding: 16, borderRadius: 16, marginVertical: 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', overflow:'visible', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'}}>
+      <View
+        style={{
+          flex: 1,
+          padding: 16,
+          borderRadius: 16,
+          marginVertical: 4,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          overflow: 'visible',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        }}
+      >
         <Text style={{ fontSize: 20 }}>{info.name}</Text>
-        
-        <View style={{flexDirection: 'row', gap: 8}}>
-          <View style={{flexDirection: 'row', gap: 4}}>
+
+        <View style={{ flexDirection: 'row', gap: 8 }}>
+          <View style={{ flexDirection: 'row', gap: 4 }}>
             <Text style={{ fontSize: 16, color: offColor }}>{info.memberCount}</Text>
-            <FontAwesome name="users" size={16} color={offColor} style={{ transform: [{translateY: 2 }]}} />
+            <FontAwesome
+              name='users'
+              size={16}
+              color={offColor}
+              style={{ transform: [{ translateY: 2 }] }}
+            />
           </View>
-          
-          <FontAwesome name="lock" size={16} color={info.hasAccess ? 'transparent' : offColor} style={{ transform: [{translateY: 2 }]}} />
-          <FontAwesome name="wrench" size={16} color={info.isAdmin ? offColor : 'transparent'} style={{ transform: [{translateY: 2 }]}} />
+
+          <FontAwesome
+            name='lock'
+            size={16}
+            color={info.hasAccess ? 'transparent' : offColor}
+            style={{ transform: [{ translateY: 2 }] }}
+          />
+          <FontAwesome
+            name='wrench'
+            size={16}
+            color={info.isAdmin ? offColor : 'transparent'}
+            style={{ transform: [{ translateY: 2 }] }}
+          />
 
           <Text style={{ fontSize: 16, color: offColor }}>{info.currency}</Text>
         </View>
@@ -80,21 +107,26 @@ export default function Home() {
 
   useEffect(() => {
     if (user) {
-      getAllUserGroupsMetadata().then(getAllUserGroupsInfo).then((groups) => {
-        setGroups(groups.filter(g => !g.hidden))
-        setHiddenGroups(groups.filter(g => g.hidden))
-      })
+      getAllUserGroupsMetadata()
+        .then(getAllUserGroupsInfo)
+        .then((groups) => {
+          setGroups(groups.filter((g) => !g.hidden))
+          setHiddenGroups(groups.filter((g) => g.hidden))
+        })
     }
   }, [user, setGroups, setHiddenGroups])
 
   return (
     <View style={{ flex: 1 }}>
-      <Header title='Split' />
+      <Header />
 
       <View style={{ flex: 1, alignItems: 'center' }}>
         <View style={{ flex: 1, width: '100%', maxWidth: 768 }}>
           {groups && hiddenGroups && (
-            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingVertical: 24, paddingHorizontal: 32 }}>
+            <ScrollView
+              style={{ flex: 1 }}
+              contentContainerStyle={{ paddingVertical: 24, paddingHorizontal: 32 }}
+            >
               <View
                 style={{
                   flex: 1,
@@ -110,7 +142,9 @@ export default function Home() {
               </View>
               <GroupList groups={groups} />
 
-              {Boolean(hiddenGroups?.length) && <HiddenGroupsButton showHidden={showHidden} setShowHidden={setShowHidden} />}
+              {Boolean(hiddenGroups?.length) && (
+                <HiddenGroupsButton showHidden={showHidden} setShowHidden={setShowHidden} />
+              )}
               {showHidden && (
                 <>
                   <Text style={{ fontSize: 28 }}>Hidden groups</Text>

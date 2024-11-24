@@ -57,6 +57,10 @@ export const addUserToGroup = onCall(
         throw new HttpsError('already-exists', 'User is already a member of the group')
       }
 
+      transaction.update(db.collection('groups').doc(groupId), {
+        memberCount: admin.firestore.FieldValue.increment(1),
+      })
+
       transaction.set(db.collection('groups').doc(groupId).collection('users').doc(userId), {
         balance: 0,
         admin: false,

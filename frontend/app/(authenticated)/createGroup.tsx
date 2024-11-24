@@ -33,12 +33,28 @@ function Form() {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 32, paddingHorizontal: 48 }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 32,
+        paddingHorizontal: 48,
+      }}
+    >
       <TextInput
         placeholder='Name'
         value={name}
         onChangeText={setName}
-        style={{ width: '100%', maxWidth: 300, padding: 8, borderWidth: 1, borderColor: 'black', margin: 4, borderRadius: 8 }}
+        style={{
+          width: '100%',
+          maxWidth: 300,
+          padding: 8,
+          borderWidth: 1,
+          borderColor: 'black',
+          margin: 4,
+          borderRadius: 8,
+        }}
       />
       <TextInput
         placeholder='Currency'

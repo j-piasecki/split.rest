@@ -3,10 +3,10 @@ import { Link } from 'expo-router'
 import { Button, Text, View } from 'react-native'
 
 export interface HeaderProps {
-  title: string
+  title?: string
 }
 
-export default function Header(props: HeaderProps) {
+export default function Header({ title = 'Split' }: HeaderProps) {
   return (
     <View
       style={{
@@ -27,7 +27,7 @@ export default function Header(props: HeaderProps) {
             fontWeight: 'bold',
           }}
         >
-          Split
+          {title}
         </Text>
       </Link>
 

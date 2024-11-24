@@ -11,6 +11,10 @@ export interface GroupInfo extends GroupMetadata {
   hasAccess: boolean
 }
 
+export interface GroupInfoWithBalance extends GroupInfo {
+  balance: number
+}
+
 export interface Member {
   id: string
   name: string
