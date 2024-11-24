@@ -1,16 +1,18 @@
 import { useAuth } from '@utils/auth'
+import { isSmallScreen } from '@utils/isSmallScreen'
 import { Stack } from 'expo-router'
-import { Text } from 'react-native'
+import { Text, useWindowDimensions } from 'react-native'
 
 export default function App() {
   const user = useAuth()
+  const windowSize = useWindowDimensions()
 
   if (user === undefined) {
     return <Text>Loading...</Text>
   }
 
   const modalOptions: Record<string, unknown> = {
-    presentation: 'transparentModal',
+    presentation: isSmallScreen(windowSize.width) ? 'card' : 'transparentModal',
     animation: 'fade',
   }
 
@@ -24,7 +26,7 @@ export default function App() {
           ...modalOptions,
         }}
       />
-      <Stack.Screen name='[id]' options={{ title: 'Group' }} />
+      <Stack.Screen name='[id]/index' options={{ title: 'Group' }} />
       <Stack.Screen name='[id]/addUser' options={{ title: 'Add user', ...modalOptions }} />
       <Stack.Screen name='[id]/addSplit' options={{ title: 'Add split', ...modalOptions }} />
     </Stack>

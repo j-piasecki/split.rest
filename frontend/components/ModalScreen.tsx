@@ -1,6 +1,7 @@
+import { isSmallScreen } from '@utils/isSmallScreen'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
-import { Button, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Button, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 
 export interface ModalScreenProps {
@@ -9,7 +10,30 @@ export interface ModalScreenProps {
   children: React.ReactNode
 }
 
-export default function ModalScreen({ returnPath, title, children }: ModalScreenProps) {
+function FullscreenModal({ children, title }: { children: React.ReactNode, title: string }) {
+  return (
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          padding: 16,
+          justifyContent: 'space-between',
+        }}
+      >
+        <Text style={{ fontSize: 20 }}>{title}</Text>
+      </View>
+      {children}
+    </View>
+  )
+}
+
+function ModalScreen({ returnPath, title, children }: ModalScreenProps) {
   const router = useRouter()
 
   const goBack = useCallback(() => {
@@ -58,4 +82,14 @@ export default function ModalScreen({ returnPath, title, children }: ModalScreen
       </Animated.View>
     </Animated.View>
   )
+}
+
+export default function Modal({ returnPath, title, children }: ModalScreenProps) {
+  const windowSize = useWindowDimensions()
+
+  if (isSmallScreen(windowSize.width)) {
+    return <FullscreenModal title={title}>{children}</FullscreenModal>
+  } else {
+    return <ModalScreen returnPath={returnPath} title={title}>{children}</ModalScreen>
+  }
 }
