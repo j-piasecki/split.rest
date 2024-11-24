@@ -33,12 +33,12 @@ function Form() {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 32, paddingHorizontal: 48 }}>
       <TextInput
         placeholder='Name'
         value={name}
         onChangeText={setName}
-        style={{ padding: 8, borderWidth: 1, borderColor: 'black', margin: 4, borderRadius: 8 }}
+        style={{ width: '100%', maxWidth: 300, padding: 8, borderWidth: 1, borderColor: 'black', margin: 4, borderRadius: 8 }}
       />
       <TextInput
         placeholder='Currency'
@@ -46,6 +46,8 @@ function Form() {
         onChangeText={setCurrency}
         editable={false}
         style={{
+          width: '100%',
+          maxWidth: 300,
           padding: 8,
           borderWidth: 1,
           borderColor: 'black',
@@ -65,7 +67,7 @@ function Form() {
 
 export default function Modal() {
   return (
-    <ModalScreen returnPath='/home' title='Create Group'>
+    <ModalScreen returnPath='/home' title='Create Group' maxWidth={600} maxHeight={300}>
       <Form />
     </ModalScreen>
   )

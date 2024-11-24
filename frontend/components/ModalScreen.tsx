@@ -1,16 +1,18 @@
 import { isSmallScreen } from '@utils/isSmallScreen'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
-import { Button, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native'
+import { Button, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 
 export interface ModalScreenProps {
   returnPath: string
   title: string
   children: React.ReactNode
+  maxWidth?: number
+  maxHeight?: number
 }
 
-function FullscreenModal({ children, title }: { children: React.ReactNode, title: string }) {
+function FullscreenModal({ children, title }: { children: React.ReactNode; title: string }) {
   return (
     <View
       style={{
@@ -33,7 +35,7 @@ function FullscreenModal({ children, title }: { children: React.ReactNode, title
   )
 }
 
-function ModalScreen({ returnPath, title, children }: ModalScreenProps) {
+function ModalScreen({ returnPath, title, children, maxWidth = 768, maxHeight = 600 }: ModalScreenProps) {
   const router = useRouter()
 
   const goBack = useCallback(() => {
@@ -59,8 +61,8 @@ function ModalScreen({ returnPath, title, children }: ModalScreenProps) {
         style={{
           width: '90%',
           height: '80%',
-          maxWidth: 768,
-          maxHeight: 600,
+          maxWidth: maxWidth,
+          maxHeight: maxHeight,
           backgroundColor: 'white',
           borderRadius: 16,
           overflow: 'hidden',
@@ -84,12 +86,14 @@ function ModalScreen({ returnPath, title, children }: ModalScreenProps) {
   )
 }
 
-export default function Modal({ returnPath, title, children }: ModalScreenProps) {
+export default function Modal(props: ModalScreenProps) {
   const windowSize = useWindowDimensions()
 
   if (isSmallScreen(windowSize.width)) {
-    return <FullscreenModal title={title}>{children}</FullscreenModal>
+    return <FullscreenModal title={props.title}>{props.children}</FullscreenModal>
   } else {
-    return <ModalScreen returnPath={returnPath} title={title}>{children}</ModalScreen>
+    return (
+      <ModalScreen {...props} />
+    )
   }
 }
