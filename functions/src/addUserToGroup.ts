@@ -64,12 +64,9 @@ export const addUserToGroup = onCall(
         hidden: false,
       })
 
-      transaction.update(
-        db.collection('users').doc(userId).collection('data').doc('groups'),
-        {
-          groups: admin.firestore.FieldValue.arrayUnion(groupId),
-        }
-      )
+      transaction.update(db.collection('users').doc(userId).collection('data').doc('groups'), {
+        groups: admin.firestore.FieldValue.arrayUnion(groupId),
+      })
     })
   }
 )

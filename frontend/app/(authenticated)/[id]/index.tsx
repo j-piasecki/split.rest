@@ -10,7 +10,7 @@ import { useAuth } from '@utils/auth'
 import { Link, useFocusEffect, useLocalSearchParams, useNavigation } from 'expo-router'
 import { useEffect, useReducer, useState } from 'react'
 import { Button, Text, View } from 'react-native'
-import { Split, GroupInfo, Member } from 'shared'
+import { GroupInfo, Member, Split } from 'shared'
 
 export default function Group() {
   const user = useAuth()

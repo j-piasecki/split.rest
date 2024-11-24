@@ -1,4 +1,5 @@
 import { auth } from './firebase'
+import { isSmallScreen } from './isSmallScreen'
 import { AuthListener, User } from '@type/auth'
 import { usePathname, useRouter } from 'expo-router'
 import {
@@ -69,13 +70,9 @@ export function useAuth() {
 
   return user
 }
-
 export function login() {
-  const minWidth = 768
-  const isMobile = window.innerWidth < minWidth || screen.width < minWidth
-
   const provider = new GoogleAuthProvider()
-  if (isMobile) {
+  if (isSmallScreen()) {
     signInWithRedirect(auth, provider)
   } else {
     signInWithPopup(auth, provider)

@@ -12,11 +12,10 @@ export default function App() {
   const modalOptions: Record<string, unknown> = {
     presentation: 'transparentModal',
     animation: 'fade',
-    headerShown: false,
   }
 
   return (
-    <Stack>
+    <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name='home' options={{ title: 'Split' }} />
       <Stack.Screen
         name='createGroup'
