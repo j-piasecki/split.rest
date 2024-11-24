@@ -69,10 +69,8 @@ export const getGroupMembers = onCall(
           }
         })
       )
-    )
+    ).filter((member): member is Member => member !== undefined)
 
-    const filtered = result.filter((member) => member !== undefined) as Member[]
-
-    return filtered
+    return result
   }
 )
