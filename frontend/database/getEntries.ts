@@ -2,6 +2,8 @@ import { auth, db } from '@utils/firebase'
 import { collection, getDocs, limit, query } from 'firebase/firestore'
 import { Split } from 'shared'
 
+// TODO: function and pagination
+
 export async function getEntries(groupId: string): Promise<Split[]> {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get the entries')

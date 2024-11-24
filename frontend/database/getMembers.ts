@@ -2,6 +2,8 @@ import { auth, db } from '@utils/firebase'
 import { collection, doc, getDoc, getDocs, limit, query } from 'firebase/firestore'
 import { Member } from 'shared'
 
+// TODO: function and pagination
+
 export async function getMembers(groupId: string): Promise<Member[]> {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get all groups')

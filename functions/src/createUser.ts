@@ -20,5 +20,10 @@ export const createUser = functions.auth.user().onCreate(async (user) => {
     hidden: [],
   })
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  await db.collection('email2uid').doc(user.email!).set({
+    email: user.uid,
+  })
+
   logger.info(`User ${user.uid} created`)
 })

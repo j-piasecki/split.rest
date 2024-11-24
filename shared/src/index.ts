@@ -51,3 +51,25 @@ export interface CreateSplitArguments {
   total: number
   balances: BalanceChange[]
 }
+
+export interface DeleteSplitArguments {
+  groupId: string
+  splitId: string
+}
+
+export interface SetGroupAccessArguments {
+  groupId: string
+  userId: string
+  access: boolean
+}
+
+export interface SetGroupAdminArguments {
+  groupId: string
+  userId: string
+  admin: boolean
+}
+
+export interface SetGroupHiddenArguments {
+  groupId: string
+  hidden: boolean
+}

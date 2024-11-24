@@ -1,5 +1,8 @@
-import { auth, db } from '@utils/firebase'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { auth, functions } from '@utils/firebase'
+import { httpsCallable } from 'firebase/functions'
+import { SetGroupAccessArguments } from 'shared'
+
+const remoteSetGroupAccess = httpsCallable(functions, 'setGroupAccess')
 
 export async function setGroupAccess(
   groupId: string,
@@ -10,23 +13,7 @@ export async function setGroupAccess(
     throw new Error('You must be logged in to change group access')
   }
 
-  const groupUserData = (
-    await getDoc(doc(db, 'groups', groupId, 'users', auth.currentUser.uid))
-  ).data()
+  const args: SetGroupAccessArguments = { groupId, userId, access }
 
-  if (!groupUserData?.admin) {
-    throw new Error('You do not have permission to change group access')
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const change: Record<string, any> = {
-    access: access,
-  }
-
-  if (!access) {
-    // If access is being removed, remove admin status as well
-    change.admin = false
-  }
-
-  await updateDoc(doc(db, 'groups', groupId, 'users', userId), change)
+  return remoteSetGroupAccess(args).then(() => void 0)
 }

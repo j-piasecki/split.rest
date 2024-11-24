@@ -2,6 +2,8 @@ import { auth, db } from '@utils/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 import { GroupInfo } from 'shared'
 
+// TODO: rules
+
 export async function getGroupInfo(id: string): Promise<GroupInfo | null> {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get group info')

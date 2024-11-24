@@ -1,6 +1,8 @@
 import { auth, db } from '@utils/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 
+// this should be fine, needs a rule
+
 export async function getGroupBalance(id: string) {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get the balance')

@@ -1,5 +1,8 @@
-import { auth, db } from '@utils/firebase'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { auth, functions } from '@utils/firebase'
+import { httpsCallable } from 'firebase/functions'
+import { SetGroupAdminArguments } from 'shared'
+
+const remoteSetGroupAdmin = httpsCallable(functions, 'setGroupAdmin')
 
 export async function setGroupAdmin(
   groupId: string,
@@ -10,23 +13,7 @@ export async function setGroupAdmin(
     throw new Error('You must be logged in to change admin rights')
   }
 
-  const groupUserData = (
-    await getDoc(doc(db, 'groups', groupId, 'users', auth.currentUser.uid))
-  ).data()
+  const args: SetGroupAdminArguments = { groupId, userId, admin }
 
-  if (!groupUserData?.admin) {
-    throw new Error('You do not have permission to change admin rights')
-  }
-
-  if (admin) {
-    const targetUserData = (await getDoc(doc(db, 'groups', groupId, 'users', userId))).data()
-
-    if (!targetUserData || !targetUserData.access) {
-      throw new Error('User does not have access to the group')
-    }
-  }
-
-  await updateDoc(doc(db, 'groups', groupId, 'users', userId), {
-    admin: admin,
-  })
+  return remoteSetGroupAdmin(args).then(() => void 0)
 }

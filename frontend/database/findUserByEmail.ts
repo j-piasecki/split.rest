@@ -1,16 +1,18 @@
 import { auth, db } from '@utils/firebase'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { doc, getDoc } from 'firebase/firestore'
+
+// TODO: needs a rule to prevent entire collection read
 
 export async function findUserIdByEmail(email: string): Promise<string> {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to add query users')
   }
 
-  const user = await getDocs(query(collection(db, 'users'), where('email', '==', email)))
+  const data = (await getDoc(doc(db, 'email2uid', email))).data()
 
-  if (user.empty) {
+  if (!data) {
     throw new Error(`User with email ${email} not found`)
   }
 
-  return user.docs[0].id
+  return data.uid
 }
