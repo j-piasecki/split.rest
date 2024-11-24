@@ -36,5 +36,6 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'],
     'max-len': ['error', { code: 100 }],
     'operator-linebreak': ['error', 'before'],
+    '@typescript-eslint/no-non-null-assertion': 0,
   },
 }

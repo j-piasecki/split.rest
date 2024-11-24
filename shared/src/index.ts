@@ -73,3 +73,13 @@ export interface SetGroupHiddenArguments {
   groupId: string
   hidden: boolean
 }
+
+export interface GetGroupMembersArguments {
+  groupId: string
+  startAfter?: string
+}
+
+export interface GetGroupSplitsArguments {
+  groupId: string
+  startAfterTimestamp?: number
+}
