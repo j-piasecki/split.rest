@@ -2,8 +2,6 @@ import { auth, db } from '@utils/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 import { GroupInfo, GroupMetadata } from 'shared'
 
-// TODO: idk, shouldn't this be per-group? or paginated?
-
 export async function getAllUserGroupsInfo(metadata: GroupMetadata[]) {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get all groups')
