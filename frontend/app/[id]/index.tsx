@@ -11,7 +11,7 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { isCloseToBottom } from '@utils/isScrollViewCloseToBottom'
 import { Link, useLocalSearchParams } from 'expo-router'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useReducer, useRef, useState } from 'react'
 import { ActivityIndicator, Button, Pressable, ScrollView, Text, View } from 'react-native'
 import { GroupInfoWithBalance, Member, Split } from 'shared'
 
@@ -119,8 +119,10 @@ function SplitList({
   const [splits, setSplits] = useState<Split[] | null>(null)
   const loadingMoreRef = useRef(false)
 
+  const [counter, forceReload] = useReducer((x) => x + 1, 0)
+
   scrollEndHandler.current = () => {
-    if (splits && splits.length > 0 && !loadingMoreRef.current && info) {
+    if (user && splits && splits.length > 0 && !loadingMoreRef.current && info) {
       loadingMoreRef.current = true
 
       getSplits(info.id, splits[splits.length - 1].timestamp).then((newSplits) => {
@@ -134,7 +136,7 @@ function SplitList({
     if (user && info?.id) {
       getSplits(info?.id).then(setSplits)
     }
-  }, [user, info?.id, setSplits])
+  }, [user, info?.id, setSplits, counter])
 
   return (
     <View style={{ width: '100%' }}>
@@ -167,9 +169,11 @@ function SplitList({
                   title='Delete'
                   onPress={() => {
                     if (info) {
-                      deleteSplit(info.id, split.id).catch((e) => {
-                        alert(e.message)
-                      })
+                      deleteSplit(info.id, split.id)
+                        .then(forceReload)
+                        .catch((e) => {
+                          alert(e.message)
+                        })
                     }
                   }}
                 />
@@ -193,16 +197,16 @@ function MembersList({
   const [members, setMembers] = useState<Member[] | null>(null)
   const loadingMoreRef = useRef(false)
 
-  scrollEndHandler.current = () => {
-    if (members) {
-      if (members && members.length > 0 && !loadingMoreRef.current && info) {
-        loadingMoreRef.current = true
+  const [counter, forceReload] = useReducer((x) => x + 1, 0)
 
-        getMembers(info.id, members[members.length - 1].id).then((newMembers) => {
-          setMembers([...members, ...newMembers])
-          loadingMoreRef.current = false
-        })
-      }
+  scrollEndHandler.current = () => {
+    if (user && members && members.length > 0 && !loadingMoreRef.current && info) {
+      loadingMoreRef.current = true
+
+      getMembers(info.id, members[members.length - 1].id).then((newMembers) => {
+        setMembers([...members, ...newMembers])
+        loadingMoreRef.current = false
+      })
     }
   }
 
@@ -210,7 +214,7 @@ function MembersList({
     if (user && info?.id) {
       getMembers(info?.id).then(setMembers)
     }
-  }, [user, info?.id, setMembers])
+  }, [user, info?.id, setMembers, counter])
 
   if (!info) {
     return null
@@ -240,9 +244,11 @@ function MembersList({
                   <Button
                     title='Revoke access'
                     onPress={() => {
-                      setGroupAccess(info.id, member.id, false).catch((e) => {
-                        alert(e.message)
-                      })
+                      setGroupAccess(info.id, member.id, false)
+                        .then(forceReload)
+                        .catch((e) => {
+                          alert(e.message)
+                        })
                     }}
                   />
                 )}
@@ -250,9 +256,11 @@ function MembersList({
                   <Button
                     title='Give access'
                     onPress={() => {
-                      setGroupAccess(info.id, member.id, true).catch((e) => {
-                        alert(e.message)
-                      })
+                      setGroupAccess(info.id, member.id, true)
+                        .then(forceReload)
+                        .catch((e) => {
+                          alert(e.message)
+                        })
                     }}
                   />
                 )}
@@ -261,9 +269,11 @@ function MembersList({
                   <Button
                     title='Revoke admin'
                     onPress={() => {
-                      setGroupAdmin(info.id, member.id, false).catch((e) => {
-                        alert(e.message)
-                      })
+                      setGroupAdmin(info.id, member.id, false)
+                        .then(forceReload)
+                        .catch((e) => {
+                          alert(e.message)
+                        })
                     }}
                   />
                 )}
@@ -271,9 +281,11 @@ function MembersList({
                   <Button
                     title='Make admin'
                     onPress={() => {
-                      setGroupAdmin(info.id, member.id, true).catch((e) => {
-                        alert(e.message)
-                      })
+                      setGroupAdmin(info.id, member.id, true)
+                        .then(forceReload)
+                        .catch((e) => {
+                          alert(e.message)
+                        })
                     }}
                   />
                 )}

@@ -120,6 +120,9 @@ function Form() {
         }
 
         setWaiting(false)
+        setTimeout(() => {
+          location.reload()
+        }, 100)
       })
       .catch((error) => {
         setError(error.message)
