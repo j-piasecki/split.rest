@@ -7,6 +7,7 @@ import { setGroupAccess } from '@database/setGroupAccess'
 import { setGroupAdmin } from '@database/setGroupAdmin'
 import { setGroupHidden } from '@database/setGroupHidden'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { isCloseToBottom } from '@utils/isScrollViewCloseToBottom'
 import { Link, useLocalSearchParams } from 'expo-router'
@@ -15,12 +16,14 @@ import { ActivityIndicator, Button, Pressable, ScrollView, Text, View } from 're
 import { GroupInfoWithBalance, Member, Split } from 'shared'
 
 function InfoCard({ info }: { info: GroupInfoWithBalance | null }) {
+  const theme = useTheme()
+  
   return (
     <View
       style={{
         width: '100%',
         maxWidth: 500,
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        boxShadow: '0 2px 8px rgba(255, 255, 255, 0.1)',
         padding: 16,
         borderRadius: 16,
       }}
@@ -29,7 +32,7 @@ function InfoCard({ info }: { info: GroupInfoWithBalance | null }) {
       {info !== null && (
         <>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 30 }}>{info.name}</Text>
+            <Text style={{ fontSize: 30, color: theme.colors.text }}>{info.name}</Text>
             <Text
               style={{
                 fontSize: 30,
@@ -112,6 +115,7 @@ function SplitList({
   scrollEndHandler: React.MutableRefObject<() => void>
 }) {
   const user = useAuth()
+  const theme = useTheme()
   const [splits, setSplits] = useState<Split[] | null>(null)
   const loadingMoreRef = useRef(false)
 
@@ -148,8 +152,8 @@ function SplitList({
                 borderBottomWidth: 1,
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{split.title}</Text>
-              <Text style={{ fontSize: 20 }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.text }}>{split.title}</Text>
+              <Text style={{ fontSize: 20, color: theme.colors.text }}>
                 {split.total} {info?.currency}
               </Text>
               <Text style={{ fontSize: 20, color: 'gray' }}>
@@ -183,6 +187,7 @@ function MembersList({
   scrollEndHandler: React.MutableRefObject<() => void>
 }) {
   const user = useAuth()
+  const theme = useTheme()
   const [members, setMembers] = useState<Member[] | null>(null)
   const loadingMoreRef = useRef(false)
 
@@ -225,7 +230,7 @@ function MembersList({
                 borderBottomWidth: 1,
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{member.name}</Text>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.text }}>{member.name}</Text>
               <View style={{ flexDirection: 'row', gap: 4 }}>
                 {info.isAdmin && member.id !== user?.uid && member.hasAccess && (
                   <Button
@@ -292,6 +297,7 @@ function ContentSwitcher({
   info: GroupInfoWithBalance | null
   scrollEndHandler: React.MutableRefObject<() => void>
 }) {
+  const theme = useTheme()
   const [listSelected, setListSelected] = useState(true)
 
   return (
@@ -338,6 +344,7 @@ function ContentSwitcher({
 
 export default function GroupScreen() {
   const user = useAuth()
+  const theme = useTheme()
   const { id } = useLocalSearchParams()
   const groupId = id as string
 
@@ -364,7 +371,7 @@ export default function GroupScreen() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <Header />
 
       <View style={{ flex: 1, alignItems: 'center' }}>

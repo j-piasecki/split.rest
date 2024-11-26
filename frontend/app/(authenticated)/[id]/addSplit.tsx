@@ -1,6 +1,7 @@
 import ModalScreen from '@components/ModalScreen'
 import { createSplit } from '@database/createSplit'
 import { findUserIdByEmail } from '@database/findUserByEmail'
+import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
@@ -21,6 +22,8 @@ function Entry({
   amount: string
   update: (data: EntryData) => void
 }) {
+  const theme = useTheme()
+
   return (
     <View style={{ flexDirection: 'row' }}>
       <TextInput
@@ -32,10 +35,11 @@ function Entry({
         style={{
           flex: 2,
           borderWidth: 1,
-          borderColor: 'black',
+          borderColor: theme.colors.text,
           borderRadius: 8,
           padding: 8,
           margin: 4,
+          color: theme.colors.text
         }}
       />
       <TextInput
@@ -47,10 +51,11 @@ function Entry({
         style={{
           flex: 1,
           borderWidth: 1,
-          borderColor: 'black',
+          borderColor: theme.colors.text,
           borderRadius: 8,
           padding: 8,
           margin: 4,
+          color: theme.colors.text
         }}
       />
     </View>
@@ -61,6 +66,7 @@ function Form() {
   const { id } = useLocalSearchParams()
   const user = useAuth()
   const router = useRouter()
+  const theme = useTheme()
   const [entries, setEntries] = useState<EntryData[]>([
     { email: user!.email, amount: '' },
     { email: '', amount: '' },
@@ -157,7 +163,7 @@ function Form() {
           marginHorizontal: 16,
         }}
       >
-        <Text style={{ flex: 1 }}>Title:</Text>
+        <Text style={{ flex: 1, color: theme.colors.text }}>Title:</Text>
         <TextInput
           placeholder='Title'
           value={title}
@@ -165,10 +171,11 @@ function Form() {
           style={{
             flex: 1,
             borderWidth: 1,
-            borderColor: 'black',
+            borderColor: theme.colors.text,
             borderRadius: 8,
             padding: 8,
             margin: 4,
+            color: theme.colors.text
           }}
         />
       </View>
@@ -181,7 +188,7 @@ function Form() {
           marginHorizontal: 16,
         }}
       >
-        <Text style={{ flex: 1 }}>Total paid:</Text>
+        <Text style={{ flex: 1, color: theme.colors.text }}>Total paid:</Text>
         <TextInput
           placeholder='Amount'
           value={amountPaid}
@@ -195,16 +202,17 @@ function Form() {
           style={{
             flex: 1,
             borderWidth: 1,
-            borderColor: 'black',
+            borderColor: theme.colors.text,
             borderRadius: 8,
             padding: 8,
             margin: 4,
+            color: theme.colors.text
           }}
         />
       </View>
 
       <View style={{ margin: 16 }}>
-        {waiting && <ActivityIndicator size='small' />}
+        {waiting && <ActivityIndicator size='small' color={theme.colors.text} />}
         {!waiting && <Button title='Save' onPress={save} />}
         {error !== '' && <Text style={{ color: 'red' }}>{error}</Text>}
       </View>

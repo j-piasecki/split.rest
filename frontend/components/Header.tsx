@@ -1,3 +1,4 @@
+import { useTheme } from '@styling/theme'
 import { logout } from '@utils/auth'
 import { Link } from 'expo-router'
 import { Button, Text, View } from 'react-native'
@@ -7,16 +8,16 @@ export interface HeaderProps {
 }
 
 export default function Header({ title = 'Split' }: HeaderProps) {
+  const theme = useTheme()
+
   return (
     <View
       style={{
-        backgroundColor: '#eee',
+        backgroundColor: theme.colors.backgroundElevated,
         height: 60,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderBottomWidth: 1,
-        borderBottomColor: '#e0e0e0',
         paddingHorizontal: 32,
       }}
     >
@@ -25,6 +26,7 @@ export default function Header({ title = 'Split' }: HeaderProps) {
           style={{
             fontSize: 20,
             fontWeight: 'bold',
+            color: theme.colors.text,
           }}
         >
           {title}

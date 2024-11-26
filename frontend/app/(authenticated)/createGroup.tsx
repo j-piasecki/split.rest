@@ -1,11 +1,13 @@
 import ModalScreen from '@components/ModalScreen'
 import { createGroup } from '@database/createGroup'
+import { useTheme } from '@styling/theme'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { ActivityIndicator, Button, Text, TextInput, View } from 'react-native'
 
 function Form() {
   const router = useRouter()
+  const theme = useTheme()
   const [name, setName] = useState('')
   const [currency, setCurrency] = useState('PLN')
   const [error, setError] = useState('')
@@ -51,9 +53,10 @@ function Form() {
           maxWidth: 300,
           padding: 8,
           borderWidth: 1,
-          borderColor: 'black',
+          borderColor: theme.colors.text,
           margin: 4,
           borderRadius: 8,
+          color: theme.colors.text,
         }}
       />
       <TextInput
@@ -66,15 +69,16 @@ function Form() {
           maxWidth: 300,
           padding: 8,
           borderWidth: 1,
-          borderColor: 'black',
+          borderColor: theme.colors.text,
           margin: 4,
           borderRadius: 8,
           opacity: 0.5,
+          color: theme.colors.text,
         }}
       />
 
       {!waiting && <Button title='Create' onPress={handlePress} />}
-      {waiting && <ActivityIndicator size='small' />}
+      {waiting && <ActivityIndicator size='small' color={theme.colors.text} />}
 
       {error.length > 0 && <Text style={{ color: 'red' }}>{error}</Text>}
     </View>

@@ -1,3 +1,4 @@
+import { useTheme } from '@styling/theme'
 import { isSmallScreen } from '@utils/isSmallScreen'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
@@ -43,6 +44,7 @@ function ModalScreen({
   maxHeight = 600,
 }: ModalScreenProps) {
   const router = useRouter()
+  const theme = useTheme()
 
   const goBack = useCallback(() => {
     if (router.canGoBack()) {
@@ -69,7 +71,7 @@ function ModalScreen({
           height: '80%',
           maxWidth: maxWidth,
           maxHeight: maxHeight,
-          backgroundColor: 'white',
+          backgroundColor: theme.colors.backgroundElevated,
           borderRadius: 16,
           overflow: 'hidden',
         }}
@@ -83,7 +85,7 @@ function ModalScreen({
             justifyContent: 'space-between',
           }}
         >
-          <Text style={{ fontSize: 20 }}>{title}</Text>
+          <Text style={{ fontSize: 20, color: theme.colors.text }}>{title}</Text>
           <Button title='Close' onPress={goBack} />
         </View>
         {children}

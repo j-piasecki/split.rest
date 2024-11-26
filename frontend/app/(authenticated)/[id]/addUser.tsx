@@ -1,12 +1,14 @@
 import ModalScreen from '@components/ModalScreen'
 import { addUserToGroup } from '@database/addUserToGroup'
 import { findUserIdByEmail } from '@database/findUserByEmail'
+import { useTheme } from '@styling/theme'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { ActivityIndicator, Button, Text, TextInput, View } from 'react-native'
 
 function Form() {
   const router = useRouter()
+  const theme = useTheme()
   const { id: groupId } = useLocalSearchParams()
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
@@ -51,10 +53,10 @@ function Form() {
         placeholder='E-mail'
         value={email}
         onChangeText={setEmail}
-        style={{ padding: 8, borderWidth: 1, borderColor: 'black', margin: 4, borderRadius: 8 }}
+        style={{ padding: 8, borderWidth: 1, borderColor: theme.colors.text, margin: 4, borderRadius: 8, color: theme.colors.text }}
       />
       {!waiting && <Button title='Add user' onPress={handlePress} />}
-      {waiting && <ActivityIndicator size='small' />}
+      {waiting && <ActivityIndicator size='small' color={theme.colors.text} />}
 
       {error !== '' && <Text style={{ color: 'red' }}>{error}</Text>}
     </View>
@@ -65,7 +67,7 @@ export default function Modal() {
   const { id } = useLocalSearchParams()
 
   return (
-    <ModalScreen returnPath={`/${id}`} title='Add user'>
+    <ModalScreen returnPath={`/${id}`} title='Add user' maxWidth={400} maxHeight={250}>
       <Form />
     </ModalScreen>
   )

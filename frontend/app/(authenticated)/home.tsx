@@ -2,6 +2,7 @@ import Header from '@components/Header'
 import { getAllUserGroupsInfo } from '@database/getAllUserGroupsInfo'
 import { getAllUserGroupsMetadata } from '@database/getAllUserGroupsMetadata'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { Link } from 'expo-router'
 import { useEffect, useState } from 'react'
@@ -9,6 +10,7 @@ import { ActivityIndicator, Button, Pressable, ScrollView, Text, View } from 're
 import { GroupInfo } from 'shared'
 
 function Group({ info }: { info: GroupInfo }) {
+  const theme = useTheme()
   const offColor = 'darkgray'
 
   return (
@@ -23,10 +25,11 @@ function Group({ info }: { info: GroupInfo }) {
           alignItems: 'center',
           justifyContent: 'space-between',
           overflow: 'visible',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          backgroundColor: theme.colors.backgroundElevated,
+          boxShadow: '0 2px 8px rgba(255, 255, 255, 0.1)',
         }}
       >
-        <Text style={{ fontSize: 20 }}>{info.name}</Text>
+        <Text style={{ fontSize: 20, color: theme.colors.text }}>{info.name}</Text>
 
         <View style={{ flexDirection: 'row', gap: 8 }}>
           <View style={{ flexDirection: 'row', gap: 4 }}>
@@ -76,6 +79,8 @@ function HiddenGroupsButton({
   showHidden: boolean
   setShowHidden: (val: boolean) => void
 }) {
+  const theme = useTheme()
+
   return (
     <Pressable
       onPress={() => {
@@ -88,11 +93,11 @@ function HiddenGroupsButton({
       }}
     >
       <View style={{ flex: 1, paddingVertical: 16, flexDirection: 'row', alignItems: 'center' }}>
-        <View style={{ borderTopWidth: 1, flex: 1, borderColor: 'black' }} />
-        <Text style={{ marginHorizontal: 8, fontSize: 16 }} selectable={false}>
+        <View style={{ borderTopWidth: 1, flex: 1, borderColor: theme.colors.text }} />
+        <Text style={{ marginHorizontal: 8, fontSize: 16, color: theme.colors.text }} selectable={false}>
           {showHidden ? 'Hide hidden groups' : 'Show hidden groups'}
         </Text>
-        <View style={{ borderTopWidth: 1, flex: 1, borderColor: 'black' }} />
+        <View style={{ borderTopWidth: 1, flex: 1, borderColor: theme.colors.text }} />
       </View>
     </Pressable>
   )
@@ -100,6 +105,7 @@ function HiddenGroupsButton({
 
 export default function Home() {
   const user = useAuth()
+  const theme = useTheme()
   const [groups, setGroups] = useState<GroupInfo[] | null>(null)
   const [hiddenGroups, setHiddenGroups] = useState<GroupInfo[] | null>(null)
 
@@ -117,7 +123,7 @@ export default function Home() {
   }, [user, setGroups, setHiddenGroups])
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <Header />
 
       <View style={{ flex: 1, alignItems: 'center' }}>
@@ -135,7 +141,7 @@ export default function Home() {
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ fontSize: 28 }}>Groups</Text>
+                <Text style={{ fontSize: 28, color: theme.colors.text }}>Groups</Text>
                 <Link href='/createGroup' asChild>
                   <Button title='Create group' />
                 </Link>
@@ -147,7 +153,7 @@ export default function Home() {
               )}
               {showHidden && (
                 <>
-                  <Text style={{ fontSize: 28 }}>Hidden groups</Text>
+                  <Text style={{ fontSize: 28, color: theme.colors.text }}>Hidden groups</Text>
                   <GroupList groups={hiddenGroups} />
                 </>
               )}
@@ -156,8 +162,8 @@ export default function Home() {
 
           {(!groups || !hiddenGroups) && (
             <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }}>
-              <ActivityIndicator size='small' />
-              <Text style={{ textAlign: 'center' }}>Loading splits</Text>
+              <ActivityIndicator size='small' color={theme.colors.text} />
+              <Text style={{ textAlign: 'center', color: theme.colors.text }}>Loading splits</Text>
             </View>
           )}
         </View>
