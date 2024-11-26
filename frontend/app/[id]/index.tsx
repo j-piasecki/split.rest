@@ -310,7 +310,11 @@ function ContentSwitcher({
         <Pressable
           style={({ pressed }) => {
             return {
-              backgroundColor: pressed ? 'darkgray' : listSelected ? 'lightgray' : 'transparent',
+              backgroundColor: pressed
+                ? theme.colors.tabHeaderPressed
+                : listSelected
+                  ? theme.colors.tabHeaderSelected
+                  : theme.colors.tabHeader,
               flex: 1,
               justifyContent: 'center',
               alignItems: 'center',
@@ -326,7 +330,11 @@ function ContentSwitcher({
         <Pressable
           style={({ pressed }) => {
             return {
-              backgroundColor: pressed ? 'darkgray' : !listSelected ? 'lightgray' : 'transparent',
+              backgroundColor: pressed
+                ? theme.colors.tabHeaderPressed
+                : !listSelected
+                  ? theme.colors.tabHeaderSelected
+                  : theme.colors.tabHeader,
               flex: 1,
               justifyContent: 'center',
               alignItems: 'center',

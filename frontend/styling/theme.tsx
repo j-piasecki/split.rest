@@ -7,6 +7,10 @@ const darkColors: Colors = {
   background: '#121212',
   backgroundElevated: '#181818',
   text: '#ffffff',
+
+  tabHeader: 'transparent',
+  tabHeaderPressed: '#333333',
+  tabHeaderSelected: '#222222',
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
