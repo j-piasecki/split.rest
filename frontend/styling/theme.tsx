@@ -12,7 +12,11 @@ const darkColors: Colors = {
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = React.useState<ThemeType>('dark')
 
-  return <ThemeContext.Provider value={{ theme, setTheme, colors: darkColors }}>{children}</ThemeContext.Provider>
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme, colors: darkColors }}>
+      {children}
+    </ThemeContext.Provider>
+  )
 }
 
 export function useTheme() {

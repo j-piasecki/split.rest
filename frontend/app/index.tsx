@@ -8,11 +8,18 @@ export default function Screen() {
   const theme = useTheme()
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: theme.colors.background,
+      }}
+    >
       {user === undefined && (
         <View>
           <ActivityIndicator size='small' color={theme.colors.text} />
-          <Text style={{margin: 8, color: theme.colors.text}}>Checking if you're logged in</Text>
+          <Text style={{ margin: 8, color: theme.colors.text }}>Checking if you're logged in</Text>
         </View>
       )}
       {user === null && <Button title='Login' onPress={login} />}

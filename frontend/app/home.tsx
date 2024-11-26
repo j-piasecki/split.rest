@@ -94,7 +94,10 @@ function HiddenGroupsButton({
     >
       <View style={{ flex: 1, paddingVertical: 16, flexDirection: 'row', alignItems: 'center' }}>
         <View style={{ borderTopWidth: 1, flex: 1, borderColor: theme.colors.text }} />
-        <Text style={{ marginHorizontal: 8, fontSize: 16, color: theme.colors.text }} selectable={false}>
+        <Text
+          style={{ marginHorizontal: 8, fontSize: 16, color: theme.colors.text }}
+          selectable={false}
+        >
           {showHidden ? 'Hide hidden groups' : 'Show hidden groups'}
         </Text>
         <View style={{ borderTopWidth: 1, flex: 1, borderColor: theme.colors.text }} />

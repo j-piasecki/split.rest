@@ -17,7 +17,7 @@ import { GroupInfoWithBalance, Member, Split } from 'shared'
 
 function InfoCard({ info }: { info: GroupInfoWithBalance | null }) {
   const theme = useTheme()
-  
+
   return (
     <View
       style={{
@@ -152,7 +152,9 @@ function SplitList({
                 borderBottomWidth: 1,
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.text }}>{split.title}</Text>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.text }}>
+                {split.title}
+              </Text>
               <Text style={{ fontSize: 20, color: theme.colors.text }}>
                 {split.total} {info?.currency}
               </Text>
@@ -230,7 +232,9 @@ function MembersList({
                 borderBottomWidth: 1,
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.text }}>{member.name}</Text>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.text }}>
+                {member.name}
+              </Text>
               <View style={{ flexDirection: 'row', gap: 4 }}>
                 {info.isAdmin && member.id !== user?.uid && member.hasAccess && (
                   <Button

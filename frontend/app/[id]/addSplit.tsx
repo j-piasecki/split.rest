@@ -39,7 +39,7 @@ function Entry({
           borderRadius: 8,
           padding: 8,
           margin: 4,
-          color: theme.colors.text
+          color: theme.colors.text,
         }}
       />
       <TextInput
@@ -55,7 +55,7 @@ function Entry({
           borderRadius: 8,
           padding: 8,
           margin: 4,
-          color: theme.colors.text
+          color: theme.colors.text,
         }}
       />
     </View>
@@ -175,7 +175,7 @@ function Form() {
             borderRadius: 8,
             padding: 8,
             margin: 4,
-            color: theme.colors.text
+            color: theme.colors.text,
           }}
         />
       </View>
@@ -206,7 +206,7 @@ function Form() {
             borderRadius: 8,
             padding: 8,
             margin: 4,
-            color: theme.colors.text
+            color: theme.colors.text,
           }}
         />
       </View>

@@ -53,7 +53,14 @@ function Form() {
         placeholder='E-mail'
         value={email}
         onChangeText={setEmail}
-        style={{ padding: 8, borderWidth: 1, borderColor: theme.colors.text, margin: 4, borderRadius: 8, color: theme.colors.text }}
+        style={{
+          padding: 8,
+          borderWidth: 1,
+          borderColor: theme.colors.text,
+          margin: 4,
+          borderRadius: 8,
+          color: theme.colors.text,
+        }}
       />
       {!waiting && <Button title='Add user' onPress={handlePress} />}
       {waiting && <ActivityIndicator size='small' color={theme.colors.text} />}

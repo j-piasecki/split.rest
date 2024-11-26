@@ -1,6 +1,6 @@
 import { auth, functions } from '@utils/firebase'
 import { httpsCallable } from 'firebase/functions'
-import { BalanceChange, UpdateSplitArguments, Split } from 'shared'
+import { BalanceChange, Split, UpdateSplitArguments } from 'shared'
 
 const remoteUpdateSplit = httpsCallable(functions, 'updateSplit')
 
