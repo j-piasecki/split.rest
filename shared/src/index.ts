@@ -61,6 +61,14 @@ export interface DeleteSplitArguments {
   splitId: string
 }
 
+export interface UpdateSplitArguments {
+  groupId: string
+  splitId: string
+  title: string
+  total: number
+  balances: BalanceChange[]
+}
+
 export interface SetGroupAccessArguments {
   groupId: string
   userId: string
