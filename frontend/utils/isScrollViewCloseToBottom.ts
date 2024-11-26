@@ -4,11 +4,7 @@ interface Args {
   contentSize: { height: number }
 }
 
-export const isCloseToBottom = ({
-  layout,
-  contentOffset,
-  contentSize,
-}: Args) => {
+export const isCloseToBottom = ({ layout, contentOffset, contentSize }: Args) => {
   const paddingToBottom = 20
   return layout.height + contentOffset.y >= contentSize.height - paddingToBottom
 }
