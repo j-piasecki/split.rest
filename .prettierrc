@@ -8,5 +8,6 @@
   "trailingComma": "es5",
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
-  "quoteProps": "consistent"
+  "quoteProps": "consistent",
+  "importOrderParserPlugins": ["typescript", "jsx", "decorators"]
 }

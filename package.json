@@ -12,6 +12,7 @@
   "workspaces": [
     "functions",
     "frontend",
-    "shared"
+    "shared",
+    "backend"
   ]
 }
