@@ -57,6 +57,7 @@ export const createSplit = onCall(
           total: total,
           timestamp: Date.now(),
           paidBy: uid,
+          createdBy: uid,
           changes: balances.map((entry) => {
             return {
               id: entry.id,
