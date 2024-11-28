@@ -9,5 +9,5 @@
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "quoteProps": "consistent",
-  "importOrderParserPlugins": ["typescript", "jsx", "decorators"]
+  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"]
 }

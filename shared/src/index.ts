@@ -1,3 +1,10 @@
+export interface User {
+  id: string
+  name: string
+  email: string
+  photoURL: string
+}
+
 export interface GroupMetadata {
   id: string
   hidden: boolean
