@@ -4,6 +4,12 @@ import * as jwt from 'jsonwebtoken'
 
 const CERTIFICATE_LIFETIME = 1000 * 60 * 30
 
+declare module 'express' {
+  interface Request {
+    user: jwt.JwtPayload
+  }
+}
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   private certificates: Record<string, string> | null = null

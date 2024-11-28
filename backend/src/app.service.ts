@@ -1,6 +1,6 @@
 import { DatabaseService } from './database.service'
 import { Injectable } from '@nestjs/common'
-import { User } from 'shared'
+import { CreateGroupArguments, User } from 'shared'
 
 @Injectable()
 export class AppService {
@@ -8,5 +8,9 @@ export class AppService {
 
   async createOrUpdateUser(user: User) {
     return this.databaseService.createOrUpdateUser(user)
+  }
+
+  async createGroup(userId: string, args: CreateGroupArguments) {
+    return this.databaseService.createGroup(userId, args)
   }
 }
