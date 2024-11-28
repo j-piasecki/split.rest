@@ -68,6 +68,11 @@ export interface DeleteSplitArguments {
   splitId: string
 }
 
+export interface RestoreSplitArguments {
+  groupId: string
+  splitId: string
+}
+
 export interface UpdateSplitArguments {
   groupId: string
   splitId: string
@@ -101,4 +106,53 @@ export interface GetGroupMembersArguments {
 export interface GetGroupSplitsArguments {
   groupId: string
   startAfterTimestamp?: number
+}
+
+
+export function isUser(obj: any): obj is User {
+  return obj.id && obj.name && obj.email && obj.photoURL
+}
+
+export function isCreateGroupArguments(obj: any): obj is CreateGroupArguments {
+  return obj.name && obj.currency
+}
+
+export function isAddUserToGroupArguments(obj: any): obj is AddUserToGroupArguments {
+  return obj.groupId && obj.userId
+}
+
+export function isCreateSplitArguments(obj: any): obj is CreateSplitArguments {
+  return obj.groupId && obj.title && obj.total && obj.balances
+}
+
+export function isDeleteSplitArguments(obj: any): obj is DeleteSplitArguments {
+  return obj.groupId && obj.splitId
+}
+
+export function isRestoreSplitArguments(obj: any): obj is RestoreSplitArguments {
+  return obj.groupId && obj.splitId
+}
+
+export function isUpdateSplitArguments(obj: any): obj is UpdateSplitArguments {
+  return obj.groupId && obj.splitId && obj.title && obj.total && obj.balances
+}
+
+export function isSetGroupAccessArguments(obj: any): obj is SetGroupAccessArguments {
+  return obj.groupId && obj.userId && obj.access
+}
+
+export function isSetGroupAdminArguments(obj: any): obj is SetGroupAdminArguments {
+  return obj.groupId && obj.userId && obj.admin
+}
+
+export function isSetGroupHiddenArguments(obj: any): obj is SetGroupHiddenArguments {
+  return obj.groupId && obj.hidden
+}
+
+export function isGetGroupMembersArguments(obj: any): obj is GetGroupMembersArguments {
+  return obj.groupId
+}
+
+export function isGetGroupSplitsArguments(obj: any): obj is GetGroupSplitsArguments {
+  return obj.groupId
 }
