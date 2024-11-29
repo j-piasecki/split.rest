@@ -7,6 +7,9 @@ import {
   CreateGroupArguments,
   CreateSplitArguments,
   DeleteSplitArguments,
+  GetGroupMembersArguments,
+  GetGroupSplitsArguments,
+  GetUserGroupsArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -17,6 +20,9 @@ import {
   isCreateGroupArguments,
   isCreateSplitArguments,
   isDeleteSplitArguments,
+  isGetGroupMembersArguments,
+  isGetGroupSplitsArguments,
+  isGetUserGroupsArguments,
   isRestoreSplitArguments,
   isSetGroupAccessArguments,
   isSetGroupAdminArguments,
@@ -127,5 +133,35 @@ export class AppController {
     }
 
     return await this.appService.setGroupHidden(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('getGroupMembers')
+  async getGroupMembers(@Req() request: Request, @Body() args: Partial<GetGroupMembersArguments>) {
+    if (!isGetGroupMembersArguments(args)) {
+      throw new Error('Invalid arguments')
+    }
+
+    return await this.appService.getGroupMembers(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('getUserGroups')
+  async getUserGroups(@Req() request: Request, @Body() args: Partial<GetUserGroupsArguments>) {
+    if (!isGetUserGroupsArguments(args)) {
+      throw new Error('Invalid arguments')
+    }
+
+    return await this.appService.getUserGroups(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('getGroupSplits')
+  async getGroupSplits(@Req() request: Request, @Body() args: Partial<GetGroupSplitsArguments>) {
+    if (!isGetGroupSplitsArguments(args)) {
+      throw new Error('Invalid arguments')
+    }
+
+    return await this.appService.getGroupSplits(request.user.sub, args)
   }
 }

@@ -5,6 +5,9 @@ import {
   CreateGroupArguments,
   CreateSplitArguments,
   DeleteSplitArguments,
+  GetGroupMembersArguments,
+  GetGroupSplitsArguments,
+  GetUserGroupsArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
@@ -54,5 +57,17 @@ export class AppService {
 
   async setGroupHidden(callerId: string, args: SetGroupHiddenArguments) {
     return await this.databaseService.setGroupHidden(callerId, args)
+  }
+
+  async getGroupMembers(callerId: string, args: GetGroupMembersArguments) {
+    return await this.databaseService.getGroupMembers(callerId, args)
+  }
+
+  async getGroupSplits(callerId: string, args: GetGroupSplitsArguments) {
+    return await this.databaseService.getGroupSplits(callerId, args)
+  }
+
+  async getUserGroups(callerId: string, args: GetUserGroupsArguments) {
+    return await this.databaseService.getUserGroups(callerId, args)
   }
 }

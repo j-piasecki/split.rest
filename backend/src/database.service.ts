@@ -4,6 +4,9 @@ import { createGroup } from './database/createGroup'
 import { createOrUpdateUser } from './database/createOrUpdateUser'
 import { createSplit } from './database/createSplit'
 import { deleteSplit } from './database/deleteSplit'
+import { getGroupMembers } from './database/getGroupMembers'
+import { getGroupSplits } from './database/getGroupSplits'
+import { getUserGroups } from './database/getUserGroups'
 import { restoreSplit } from './database/restoreSplit'
 import { setGroupAccess } from './database/setGroupAccess'
 import { setGroupAdmin } from './database/setGroupAdmin'
@@ -16,6 +19,9 @@ import {
   CreateGroupArguments,
   CreateSplitArguments,
   DeleteSplitArguments,
+  GetGroupMembersArguments,
+  GetGroupSplitsArguments,
+  GetUserGroupsArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -82,5 +88,17 @@ export class DatabaseService {
 
   async setGroupHidden(callerId: string, args: SetGroupHiddenArguments) {
     return await setGroupHidden(this.pool, callerId, args)
+  }
+
+  async getGroupSplits(callerId: string, args: GetGroupSplitsArguments) {
+    return await getGroupSplits(this.pool, callerId, args)
+  }
+
+  async getUserGroups(callerId: string, args: GetUserGroupsArguments) {
+    return await getUserGroups(this.pool, callerId, args)
+  }
+
+  async getGroupMembers(callerId: string, args: GetGroupMembersArguments) {
+    return await getGroupMembers(this.pool, callerId, args)
   }
 }

@@ -37,12 +37,16 @@ export interface BalanceChange {
   change: number
 }
 
-export interface Split {
+export interface SplitInfo {
   id: string
   title: string
   total: number
   timestamp: number
   paidById: string
+  createdById: string
+}
+
+export interface Split extends SplitInfo {
   changes: BalanceChange[]
 }
 
@@ -108,6 +112,11 @@ export interface GetGroupSplitsArguments {
   startAfterTimestamp?: number
 }
 
+export interface GetUserGroupsArguments {
+  startAfter?: number
+  hidden: boolean
+}
+
 
 export function isUser(obj: any): obj is User {
   return obj.id && obj.name && obj.email && obj.photoURL
@@ -155,4 +164,8 @@ export function isGetGroupMembersArguments(obj: any): obj is GetGroupMembersArgu
 
 export function isGetGroupSplitsArguments(obj: any): obj is GetGroupSplitsArguments {
   return obj.groupId
+}
+
+export function isGetUserGroupsArguments(obj: any): obj is GetUserGroupsArguments {
+  return obj.hidden
 }
