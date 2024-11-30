@@ -5,8 +5,10 @@ import {
   CreateGroupArguments,
   CreateSplitArguments,
   DeleteSplitArguments,
+  GetGroupInfoArguments,
   GetGroupMembersArguments,
   GetGroupSplitsArguments,
+  GetUserByEmailArguments,
   GetUserGroupsArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -69,5 +71,13 @@ export class AppService {
 
   async getUserGroups(callerId: string, args: GetUserGroupsArguments) {
     return await this.databaseService.getUserGroups(callerId, args)
+  }
+
+  async getUserByEmail(callerId: string, args: GetUserByEmailArguments) {
+    return await this.databaseService.getUserByEmail(callerId, args)
+  }
+
+  async getGroupInfo(callerId: string, args: GetGroupInfoArguments) {
+    return await this.databaseService.getGroupInfo(callerId, args)
   }
 }

@@ -1,3 +1,4 @@
+import { ConflictException, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { AddUserToGroupArguments } from 'shared'
 
@@ -14,14 +15,14 @@ export async function addUserToGroup(pool: Pool, callerId: string, args: AddUser
     ).rows[0]?.is_admin
 
     if (!isCallerAdmin) {
-      throw new Error('You do not have permission to add users to this group')
+      throw new UnauthorizedException('You do not have permission to add users to this group')
     }
 
     const userExists = (await client.query('SELECT 1 FROM users WHERE id = $1', [args.userId]))
       .rowCount
 
     if (!userExists) {
-      throw new Error('User not found')
+      throw new NotFoundException('User not found')
     }
 
     const userAlreadyAMember = (
@@ -32,13 +33,13 @@ export async function addUserToGroup(pool: Pool, callerId: string, args: AddUser
     ).rowCount
 
     if (userAlreadyAMember) {
-      throw new Error('User is already a member of the group')
+      throw new ConflictException('User is already a member of the group')
     }
 
-    await client.query('INSERT INTO group_members (group_id, user_id) VALUES ($1, $2)', [
-      args.groupId,
-      args.userId,
-    ])
+    await client.query(
+      'INSERT INTO group_members (group_id, user_id, balance, is_admin, has_access, is_hidden) VALUES ($1, $2, $3, $4, $5, $6)',
+      [args.groupId, args.userId, 0, false, true, false]
+    )
 
     await client.query('COMMIT')
   } catch (e) {

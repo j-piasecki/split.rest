@@ -6,7 +6,7 @@ export interface User {
 }
 
 export interface GroupMetadata {
-  id: string
+  id: number
   hidden: boolean
 }
 
@@ -16,10 +16,7 @@ export interface GroupInfo extends GroupMetadata {
   memberCount: number
   isAdmin: boolean
   hasAccess: boolean
-}
-
-export interface GroupInfoWithBalance extends GroupInfo {
-  balance: number
+  balance: string
 }
 
 export interface Member {
@@ -27,7 +24,7 @@ export interface Member {
   name: string
   email: string
   photoURL: string
-  balance: number
+  balance: string
   isAdmin: boolean
   hasAccess: boolean
 }
@@ -38,9 +35,9 @@ export interface BalanceChange {
 }
 
 export interface SplitInfo {
-  id: string
+  id: number
   title: string
-  total: number
+  total: string
   timestamp: number
   paidById: string
   createdById: string
@@ -56,116 +53,132 @@ export interface CreateGroupArguments {
 }
 
 export interface AddUserToGroupArguments {
-  groupId: string
+  groupId: number
   userId: string
 }
 
 export interface CreateSplitArguments {
-  groupId: string
+  groupId: number
   title: string
   total: number
   balances: BalanceChange[]
 }
 
 export interface DeleteSplitArguments {
-  groupId: string
-  splitId: string
+  groupId: number
+  splitId: number
 }
 
 export interface RestoreSplitArguments {
-  groupId: string
-  splitId: string
+  groupId: number
+  splitId: number
 }
 
 export interface UpdateSplitArguments {
-  groupId: string
-  splitId: string
+  groupId: number
+  splitId: number
   title: string
   total: number
   balances: BalanceChange[]
 }
 
 export interface SetGroupAccessArguments {
-  groupId: string
+  groupId: number
   userId: string
   access: boolean
 }
 
 export interface SetGroupAdminArguments {
-  groupId: string
+  groupId: number
   userId: string
   admin: boolean
 }
 
 export interface SetGroupHiddenArguments {
-  groupId: string
+  groupId: number
   hidden: boolean
 }
 
 export interface GetGroupMembersArguments {
-  groupId: string
+  groupId: number
   startAfter?: string
 }
 
 export interface GetGroupSplitsArguments {
-  groupId: string
+  groupId: number
   startAfterTimestamp?: number
 }
 
-export interface GetUserGroupsArguments {
+export interface GetUserGroupsArguments  {
   startAfter?: number
   hidden: boolean
 }
 
+export interface GetUserByEmailArguments {
+  email: string
+}
+
+export interface GetGroupInfoArguments {
+  groupId: number
+}
+
 
 export function isUser(obj: any): obj is User {
-  return obj.id && obj.name && obj.email && obj.photoURL
+  return obj.id !== undefined && obj.name !== undefined && obj.email !== undefined && obj.photoURL !== undefined
 }
 
 export function isCreateGroupArguments(obj: any): obj is CreateGroupArguments {
-  return obj.name && obj.currency
+  return obj.name !== undefined && obj.currency !== undefined
 }
 
 export function isAddUserToGroupArguments(obj: any): obj is AddUserToGroupArguments {
-  return obj.groupId && obj.userId
+  return obj.groupId !== undefined && obj.userId !== undefined
 }
 
 export function isCreateSplitArguments(obj: any): obj is CreateSplitArguments {
-  return obj.groupId && obj.title && obj.total && obj.balances
+  return obj.groupId !== undefined && obj.title !== undefined && obj.total !== undefined && obj.balances !== undefined
 }
 
 export function isDeleteSplitArguments(obj: any): obj is DeleteSplitArguments {
-  return obj.groupId && obj.splitId
+  return obj.groupId !== undefined && obj.splitId !== undefined
 }
 
 export function isRestoreSplitArguments(obj: any): obj is RestoreSplitArguments {
-  return obj.groupId && obj.splitId
+  return obj.groupId !== undefined && obj.splitId !== undefined
 }
 
 export function isUpdateSplitArguments(obj: any): obj is UpdateSplitArguments {
-  return obj.groupId && obj.splitId && obj.title && obj.total && obj.balances
+  return obj.groupId !== undefined && obj.splitId !== undefined && obj.title !== undefined && obj.total !== undefined && obj.balances !== undefined
 }
 
 export function isSetGroupAccessArguments(obj: any): obj is SetGroupAccessArguments {
-  return obj.groupId && obj.userId && obj.access
+  return obj.groupId !== undefined && obj.userId !== undefined && obj.access !== undefined
 }
 
 export function isSetGroupAdminArguments(obj: any): obj is SetGroupAdminArguments {
-  return obj.groupId && obj.userId && obj.admin
+  return obj.groupId !== undefined && obj.userId !== undefined && obj.admin !== undefined
 }
 
 export function isSetGroupHiddenArguments(obj: any): obj is SetGroupHiddenArguments {
-  return obj.groupId && obj.hidden
+  return obj.groupId !== undefined && obj.hidden !== undefined
 }
 
 export function isGetGroupMembersArguments(obj: any): obj is GetGroupMembersArguments {
-  return obj.groupId
+  return obj.groupId !== undefined
 }
 
 export function isGetGroupSplitsArguments(obj: any): obj is GetGroupSplitsArguments {
-  return obj.groupId
+  return obj.groupId !== undefined
 }
 
 export function isGetUserGroupsArguments(obj: any): obj is GetUserGroupsArguments {
-  return obj.hidden
+  return obj.hidden !== undefined
+}
+
+export function isGetUserByEmailArguments(obj: any): obj is GetUserByEmailArguments {
+  return obj.email !== undefined
+}
+
+export function isGetGroupInfoArguments(obj: any): obj is GetGroupInfoArguments {
+  return obj.groupId !== undefined
 }

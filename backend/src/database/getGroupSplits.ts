@@ -1,10 +1,10 @@
 import { Pool } from 'pg'
-import { GetGroupMembersArguments, SplitInfo } from 'shared'
+import { GetGroupSplitsArguments, SplitInfo } from 'shared'
 
 export async function getGroupSplits(
   pool: Pool,
   callerId: string,
-  args: GetGroupMembersArguments
+  args: GetGroupSplitsArguments
 ): Promise<SplitInfo[]> {
   const hasAccess = (
     await pool.query('SELECT has_access FROM group_members WHERE group_id = $1 AND user_id = $2', [
@@ -19,8 +19,8 @@ export async function getGroupSplits(
 
   const rows = (
     await pool.query(
-      'SELECT id, name, total, paid_by, created_by, timestamp, updated_at, deleted FROM splits WHERE group_id = $1 AND deleted = false AND id > $2 ORDER BY id LIMIT 20',
-      [args.groupId, args.startAfter ?? '']
+      'SELECT id, name, total, paid_by, created_by, timestamp, updated_at, deleted FROM splits WHERE group_id = $1 AND deleted = false AND timestamp > $2 ORDER BY id LIMIT 20',
+      [args.groupId, args.startAfterTimestamp ?? '0']
     )
   ).rows
 
@@ -30,6 +30,6 @@ export async function getGroupSplits(
     total: row.total,
     paidById: row.paid_by,
     createdById: row.created_by,
-    timestamp: row.timestamp,
+    timestamp: Number(row.timestamp),
   }))
 }

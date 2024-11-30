@@ -1,15 +1,8 @@
-import { auth, functions } from '@utils/firebase'
-import { httpsCallable } from 'firebase/functions'
 import { SetGroupHiddenArguments } from 'shared'
+import { makeRequest } from './makeRequest'
 
-const remoteSetGroupHidden = httpsCallable(functions, 'setGroupHidden')
-
-export async function setGroupHidden(groupId: string, hidden: boolean): Promise<void> {
-  if (!auth.currentUser) {
-    throw new Error('You must be logged in to change group visibility')
-  }
-
+export async function setGroupHidden(groupId: number, hidden: boolean): Promise<void> {
   const args: SetGroupHiddenArguments = { groupId, hidden }
 
-  return remoteSetGroupHidden(args).then(() => void 0)
+  await makeRequest('POST', 'setGroupHidden', args)
 }

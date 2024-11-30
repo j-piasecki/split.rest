@@ -1,15 +1,8 @@
-import { auth, functions } from '@utils/firebase'
-import { httpsCallable } from 'firebase/functions'
 import { GetGroupMembersArguments, Member } from 'shared'
+import { makeRequest } from './makeRequest'
 
-const remoteGetMembers = httpsCallable(functions, 'getGroupMembers')
-
-export async function getMembers(groupId: string, startAfter?: string): Promise<Member[]> {
-  if (!auth.currentUser) {
-    throw new Error('You must be logged in to get all groups')
-  }
-
+export async function getMembers(groupId: number, startAfter?: string): Promise<Member[]> {
   const args: GetGroupMembersArguments = { groupId, startAfter }
 
-  return await remoteGetMembers(args).then((result) => result.data as Member[])
+  return await makeRequest('GET', 'getGroupMembers', args) ?? []
 }

@@ -2,8 +2,6 @@ import { getAnalytics } from 'firebase/analytics'
 import { initializeApp } from 'firebase/app'
 import { ReCaptchaV3Provider, initializeAppCheck } from 'firebase/app-check'
 import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
-import { getFunctions } from 'firebase/functions'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD1wsW6_XCS3xymhiG0euK60xiDxNZHIoY',
@@ -18,12 +16,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const analytics = getAnalytics(app)
 const auth = getAuth(app)
-const db = getFirestore(app)
-const functions = getFunctions(app, 'europe-west1')
 
 const appCheck = initializeAppCheck(app, {
   provider: new ReCaptchaV3Provider('6LcRp4cqAAAAADoaZ_lxCnRyYZlEtKiqU1y18icK'),
   isTokenAutoRefreshEnabled: true,
 })
 
-export { app, analytics, auth, appCheck, db, functions }
+export { app, analytics, auth, appCheck }

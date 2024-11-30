@@ -1,25 +1,19 @@
-import { auth, functions } from '@utils/firebase'
-import { httpsCallable } from 'firebase/functions'
 import { BalanceChange, Split, UpdateSplitArguments } from 'shared'
-
-const remoteUpdateSplit = httpsCallable(functions, 'updateSplit')
+import { makeRequest } from './makeRequest'
 
 export async function updateSplit(
-  splitId: string,
-  groupId: string,
+  splitId: number,
+  groupId: number,
   title: string,
   total: number,
   balances: BalanceChange[]
 ): Promise<Split> {
-  if (!auth.currentUser) {
-    throw new Error('You must be logged in to verify users')
+  const args: UpdateSplitArguments = { splitId, groupId, title, total, balances }
+  const result = await makeRequest<UpdateSplitArguments, Split>('POST', 'updateSplit', args)
+
+  if (!result) {
+    throw new Error('Failed to update split')
   }
 
-  const args: UpdateSplitArguments = { splitId, groupId, title, total, balances }
-
-  return remoteUpdateSplit(args).then((result) => {
-    const split = result.data as Split
-
-    return split
-  })
+  return result
 }

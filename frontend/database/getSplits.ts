@@ -1,15 +1,8 @@
-import { auth, functions } from '@utils/firebase'
-import { httpsCallable } from 'firebase/functions'
-import { GetGroupSplitsArguments, Split } from 'shared'
+import { GetGroupSplitsArguments, SplitInfo } from 'shared'
+import { makeRequest } from './makeRequest'
 
-const remoteGetSplits = httpsCallable(functions, 'getGroupSplits')
-
-export async function getSplits(groupId: string, startAfterTimestamp?: number): Promise<Split[]> {
-  if (!auth.currentUser) {
-    throw new Error('You must be logged in to get the entries')
-  }
-
+export async function getSplits(groupId: number, startAfterTimestamp?: number): Promise<SplitInfo[]> {
   const args: GetGroupSplitsArguments = { groupId, startAfterTimestamp }
 
-  return await remoteGetSplits(args).then((result) => result.data as Split[])
+  return await makeRequest('GET', 'getGroupSplits', args) ?? []
 }

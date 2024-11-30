@@ -24,10 +24,17 @@ export async function setGroupAccess(pool: Pool, callerId: string, args: SetGrou
       throw new Error('User not found')
     }
 
-    await client.query(
-      'UPDATE group_members SET has_access = $1 WHERE group_id = $2 AND user_id = $3',
-      [args.access, args.groupId, args.userId]
-    )
+    if (args.access) {
+      await client.query(
+        'UPDATE group_members SET has_access = $1 WHERE group_id = $2 AND user_id = $3',
+        [args.access, args.groupId, args.userId]
+      )
+    } else {
+      await client.query(
+        'UPDATE group_members SET has_access = $1, is_admin = false WHERE group_id = $2 AND user_id = $3',
+        [args.access, args.groupId, args.userId]
+      )
+    }
 
     await client.query('COMMIT')
   } catch (e) {

@@ -1,3 +1,4 @@
+import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { auth } from './firebase'
 import { isSmallScreen } from './isSmallScreen'
 import { AuthListener, User } from '@type/auth'
@@ -40,7 +41,11 @@ export function addAuthListener(listener: AuthListener) {
   }
 }
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    await createOrUpdateUser()
+  }
+
   const result = createUser(user)
   listeners.forEach((listener) => listener(result))
 

@@ -1,6 +1,6 @@
 import ModalScreen from '@components/ModalScreen'
 import { addUserToGroup } from '@database/addUserToGroup'
-import { findUserIdByEmail } from '@database/findUserByEmail'
+import { getUserByEmail } from '@database/getUserByEmail'
 import { useTheme } from '@styling/theme'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
@@ -24,9 +24,15 @@ function Form() {
       return
     }
 
-    findUserIdByEmail(email)
-      .then((id) => {
-        addUserToGroup(groupId as string, id)
+    getUserByEmail(email)
+      .then((user) => {
+        if (user === null) {
+          setError('User not found')
+          setWaiting(false)
+          return
+        }
+
+        addUserToGroup(Number(groupId as string), user.id)
           .then(() => {
             setWaiting(false)
 

@@ -1,6 +1,5 @@
 import Header from '@components/Header'
-import { getAllUserGroupsInfo } from '@database/getAllUserGroupsInfo'
-import { getAllUserGroupsMetadata } from '@database/getAllUserGroupsMetadata'
+import { getAllUserGroups } from '@database/getAllUserGroups'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -116,12 +115,9 @@ export default function Home() {
 
   useEffect(() => {
     if (user) {
-      getAllUserGroupsMetadata()
-        .then(getAllUserGroupsInfo)
-        .then((groups) => {
-          setGroups(groups.filter((g) => !g.hidden))
-          setHiddenGroups(groups.filter((g) => g.hidden))
-        })
+      // TODO: pagination
+      getAllUserGroups(false).then(setGroups)
+      getAllUserGroups(true).then(setHiddenGroups)
     }
   }, [user, setGroups, setHiddenGroups])
 

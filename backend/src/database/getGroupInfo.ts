@@ -1,12 +1,30 @@
+import { UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
-import { GetUserGroupsArguments, GroupInfo } from 'shared'
+import { GetGroupInfoArguments, GroupInfo } from 'shared'
 
-export async function getUserGroups(
+export async function getGroupInfo(
   pool: Pool,
   callerId: string,
-  args: GetUserGroupsArguments
-): Promise<GroupInfo[]> {
-  const rows = (
+  args: GetGroupInfoArguments
+): Promise<GroupInfo | null> {
+  const isMember =
+    (
+      await pool.query(
+        `
+        SELECT 
+          1
+        FROM group_members
+        WHERE group_members.group_id = $1 AND group_members.user_id = $2
+      `,
+        [args.groupId, callerId]
+      )
+    ).rowCount === 1
+
+  if (!isMember) {
+    throw new UnauthorizedException()
+  }
+
+  const row = (
     await pool.query(
       `
         SELECT 
@@ -19,16 +37,17 @@ export async function getUserGroups(
           group_members.has_access,
           (SELECT COUNT(*) FROM group_members WHERE group_members.group_id = groups.id) AS member_count
         FROM groups JOIN group_members ON groups.id = group_members.group_id
-        WHERE group_members.user_id = $1 AND group_members.is_hidden = $2 AND groups.id > $3
-        ORDER BY
-          groups.id
-        LIMIT 20;
+        WHERE groups.id = $1
       `,
-      [callerId, args.hidden, args.startAfter ?? 0]
+      [args.groupId]
     )
-  ).rows
+  ).rows[0]
 
-  return rows.map((row) => ({
+  if (!row) {
+    return null
+  }
+
+  return {
     id: row.id,
     name: row.name,
     currency: row.currency,
@@ -37,5 +56,5 @@ export async function getUserGroups(
     isAdmin: row.is_admin,
     hasAccess: row.has_access,
     memberCount: row.member_count,
-  }))
+  }
 }

@@ -1,6 +1,6 @@
 import ModalScreen from '@components/ModalScreen'
 import { createSplit } from '@database/createSplit'
-import { findUserIdByEmail } from '@database/findUserByEmail'
+import { getUserByEmail } from '@database/getUserByEmail'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -101,8 +101,16 @@ function Form() {
       toSave.map(async (entry) => {
         const change =
           entry.email === user!.email ? paid - Number(entry.amount) : -Number(entry.amount)
+        const userData = await getUserByEmail(entry.email)
+
+        if (!userData) {
+          setWaiting(false)
+          setError('User ' + entry.email + ' not found')
+          throw new Error('User ' + entry.email + ' not found')
+        }
+
         return {
-          id: await findUserIdByEmail(entry.email),
+          id: userData.id,
           change: change,
         }
       })
@@ -111,7 +119,7 @@ function Form() {
     setWaiting(true)
     setError('')
 
-    createSplit(id as string, title, paid, balanceChange)
+    createSplit(Number(id as string), title, paid, balanceChange)
       .then(() => {
         if (router.canGoBack()) {
           router.back()

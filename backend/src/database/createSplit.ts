@@ -48,6 +48,8 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
     }
 
     await client.query('COMMIT')
+
+    return splitId
   } catch (e) {
     await client.query('ROLLBACK')
     throw e

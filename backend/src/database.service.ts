@@ -4,8 +4,10 @@ import { createGroup } from './database/createGroup'
 import { createOrUpdateUser } from './database/createOrUpdateUser'
 import { createSplit } from './database/createSplit'
 import { deleteSplit } from './database/deleteSplit'
+import { getGroupInfo } from './database/getGroupInfo'
 import { getGroupMembers } from './database/getGroupMembers'
 import { getGroupSplits } from './database/getGroupSplits'
+import { getUserByEmail } from './database/getUserByEmail'
 import { getUserGroups } from './database/getUserGroups'
 import { restoreSplit } from './database/restoreSplit'
 import { setGroupAccess } from './database/setGroupAccess'
@@ -19,8 +21,10 @@ import {
   CreateGroupArguments,
   CreateSplitArguments,
   DeleteSplitArguments,
+  GetGroupInfoArguments,
   GetGroupMembersArguments,
   GetGroupSplitsArguments,
+  GetUserByEmailArguments,
   GetUserGroupsArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
@@ -100,5 +104,13 @@ export class DatabaseService {
 
   async getGroupMembers(callerId: string, args: GetGroupMembersArguments) {
     return await getGroupMembers(this.pool, callerId, args)
+  }
+
+  async getUserByEmail(callerId: string, args: GetUserByEmailArguments) {
+    return await getUserByEmail(this.pool, callerId, args)
+  }
+
+  async getGroupInfo(callerId: string, args: GetGroupInfoArguments) {
+    return await getGroupInfo(this.pool, callerId, args)
   }
 }

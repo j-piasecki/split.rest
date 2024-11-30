@@ -13,9 +13,9 @@ import { isCloseToBottom } from '@utils/isScrollViewCloseToBottom'
 import { Link, useLocalSearchParams } from 'expo-router'
 import { useEffect, useReducer, useRef, useState } from 'react'
 import { ActivityIndicator, Button, Pressable, ScrollView, Text, View } from 'react-native'
-import { GroupInfoWithBalance, Member, Split } from 'shared'
+import { GroupInfo, Member, SplitInfo } from 'shared'
 
-function InfoCard({ info }: { info: GroupInfoWithBalance | null }) {
+function InfoCard({ info }: { info: GroupInfo | null }) {
   const theme = useTheme()
 
   return (
@@ -36,10 +36,10 @@ function InfoCard({ info }: { info: GroupInfoWithBalance | null }) {
             <Text
               style={{
                 fontSize: 30,
-                color: info.balance === 0 ? 'gray' : info.balance > 0 ? 'green' : 'red',
+                color: Number(info.balance) === 0 ? 'gray' : Number(info.balance) > 0 ? 'green' : 'red',
               }}
             >
-              {info.balance > 0 && '+'}
+              {Number(info.balance) > 0 && '+'}
               {info.balance} <Text style={{ color: 'darkgray' }}>{info.currency}</Text>
             </Text>
           </View>
@@ -67,7 +67,7 @@ function InfoCard({ info }: { info: GroupInfoWithBalance | null }) {
   )
 }
 
-function ActionButtons({ info }: { info: GroupInfoWithBalance | null }) {
+function ActionButtons({ info }: { info: GroupInfo | null }) {
   if (!info) {
     return null
   }
@@ -111,12 +111,12 @@ function SplitList({
   info,
   scrollEndHandler,
 }: {
-  info: GroupInfoWithBalance | null
+  info: GroupInfo | null
   scrollEndHandler: React.MutableRefObject<() => void>
 }) {
   const user = useAuth()
   const theme = useTheme()
-  const [splits, setSplits] = useState<Split[] | null>(null)
+  const [splits, setSplits] = useState<SplitInfo[] | null>(null)
   const loadingMoreRef = useRef(false)
 
   const [counter, forceReload] = useReducer((x) => x + 1, 0)
@@ -189,7 +189,7 @@ function MembersList({
   info,
   scrollEndHandler,
 }: {
-  info: GroupInfoWithBalance | null
+  info: GroupInfo | null
   scrollEndHandler: React.MutableRefObject<() => void>
 }) {
   const user = useAuth()
@@ -293,10 +293,10 @@ function MembersList({
               <Text
                 style={{
                   fontSize: 20,
-                  color: member.balance === 0 ? 'gray' : member.balance > 0 ? 'green' : 'red',
+                  color: Number(member.balance) === 0 ? 'gray' : Number(member.balance) > 0 ? 'green' : 'red',
                 }}
               >
-                {member.balance > 0 && '+'}
+                {Number(member.balance) > 0 && '+'}
                 {member.balance}
               </Text>
             </View>
@@ -310,7 +310,7 @@ function ContentSwitcher({
   info,
   scrollEndHandler,
 }: {
-  info: GroupInfoWithBalance | null
+  info: GroupInfo | null
   scrollEndHandler: React.MutableRefObject<() => void>
 }) {
   const theme = useTheme()
@@ -370,7 +370,7 @@ export default function GroupScreen() {
   const user = useAuth()
   const theme = useTheme()
   const { id } = useLocalSearchParams()
-  const groupId = id as string
+  const groupId = Number(id as string)
 
   const scrollViewInfo = useRef({
     contentSize: { width: 0, height: 0 },
@@ -380,7 +380,7 @@ export default function GroupScreen() {
 
   const scrollEndHandler = useRef(() => {})
 
-  const [groupInfo, setGroupInfo] = useState<GroupInfoWithBalance | null>(null)
+  const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null)
 
   useEffect(() => {
     if (user) {

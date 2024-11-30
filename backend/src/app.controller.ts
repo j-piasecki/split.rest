@@ -1,14 +1,16 @@
 import { AppService } from './app.service'
 import { AuthGuard } from './auth.guard'
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common'
 import { Request } from 'express'
 import {
   AddUserToGroupArguments,
   CreateGroupArguments,
   CreateSplitArguments,
   DeleteSplitArguments,
+  GetGroupInfoArguments,
   GetGroupMembersArguments,
   GetGroupSplitsArguments,
+  GetUserByEmailArguments,
   GetUserGroupsArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
@@ -20,8 +22,10 @@ import {
   isCreateGroupArguments,
   isCreateSplitArguments,
   isDeleteSplitArguments,
+  isGetGroupInfoArguments,
   isGetGroupMembersArguments,
   isGetGroupSplitsArguments,
+  isGetUserByEmailArguments,
   isGetUserGroupsArguments,
   isRestoreSplitArguments,
   isSetGroupAccessArguments,
@@ -136,8 +140,8 @@ export class AppController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('getGroupMembers')
-  async getGroupMembers(@Req() request: Request, @Body() args: Partial<GetGroupMembersArguments>) {
+  @Get('getGroupMembers')
+  async getGroupMembers(@Req() request: Request, @Query() args: Partial<GetGroupMembersArguments>) {
     if (!isGetGroupMembersArguments(args)) {
       throw new Error('Invalid arguments')
     }
@@ -146,8 +150,8 @@ export class AppController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('getUserGroups')
-  async getUserGroups(@Req() request: Request, @Body() args: Partial<GetUserGroupsArguments>) {
+  @Get('getUserGroups')
+  async getUserGroups(@Req() request: Request, @Query() args: Partial<GetUserGroupsArguments>) {
     if (!isGetUserGroupsArguments(args)) {
       throw new Error('Invalid arguments')
     }
@@ -156,12 +160,32 @@ export class AppController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('getGroupSplits')
-  async getGroupSplits(@Req() request: Request, @Body() args: Partial<GetGroupSplitsArguments>) {
+  @Get('getGroupSplits')
+  async getGroupSplits(@Req() request: Request, @Query() args: Partial<GetGroupSplitsArguments>) {
     if (!isGetGroupSplitsArguments(args)) {
       throw new Error('Invalid arguments')
     }
 
     return await this.appService.getGroupSplits(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getUserByEmail')
+  async getUserByEmail(@Req() request: Request, @Query() args: GetUserByEmailArguments) {
+    if (!isGetUserByEmailArguments(args)) {
+      throw new Error('Invalid arguments')
+    }
+
+    return await this.appService.getUserByEmail(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getGroupInfo')
+  async getGroupInfo(@Req() request: Request, @Query() args: GetGroupInfoArguments) {
+    if (!isGetGroupInfoArguments(args)) {
+      throw new Error('Invalid arguments')
+    }
+
+    return await this.appService.getGroupInfo(request.user.sub, args)
   }
 }

@@ -1,7 +1,11 @@
 import { Pool } from 'pg'
-import { CreateGroupArguments } from 'shared'
+import { CreateGroupArguments, GroupInfo } from 'shared'
 
-export async function createGroup(pool: Pool, callerId: string, args: CreateGroupArguments) {
+export async function createGroup(
+  pool: Pool,
+  callerId: string,
+  args: CreateGroupArguments
+): Promise<GroupInfo> {
   const client = await pool.connect()
 
   try {
@@ -27,6 +31,17 @@ export async function createGroup(pool: Pool, callerId: string, args: CreateGrou
     )
 
     await client.query('COMMIT')
+
+    return {
+      id: groupId,
+      name: args.name,
+      currency: args.currency,
+      hidden: false,
+      isAdmin: true,
+      hasAccess: true,
+      memberCount: 1,
+      balance: 0,
+    }
   } catch (e) {
     await client.query('ROLLBACK')
     throw e
