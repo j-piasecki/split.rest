@@ -1,9 +1,10 @@
 import ModalScreen from '@components/ModalScreen'
+import { TextInput } from '@components/TextInput'
 import { createGroup } from '@database/createGroup'
 import { useTheme } from '@styling/theme'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
-import { ActivityIndicator, Button, Text, TextInput, View } from 'react-native'
+import { ActivityIndicator, Button, Text, View } from 'react-native'
 
 function Form() {
   const router = useRouter()
@@ -40,6 +41,7 @@ function Form() {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        gap: 16,
         paddingBottom: 32,
         paddingHorizontal: 48,
       }}
@@ -51,12 +53,6 @@ function Form() {
         style={{
           width: '100%',
           maxWidth: 300,
-          padding: 8,
-          borderWidth: 1,
-          borderColor: theme.colors.onSurface,
-          margin: 4,
-          borderRadius: 8,
-          color: theme.colors.onSurface,
         }}
       />
       <TextInput
@@ -64,16 +60,11 @@ function Form() {
         value={currency}
         onChangeText={setCurrency}
         editable={false}
+        focusable={false}
         style={{
           width: '100%',
           maxWidth: 300,
-          padding: 8,
-          borderWidth: 1,
-          borderColor: theme.colors.onSurface,
-          margin: 4,
-          borderRadius: 8,
           opacity: 0.5,
-          color: theme.colors.onSurface,
         }}
       />
 

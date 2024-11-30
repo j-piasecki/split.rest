@@ -1,10 +1,11 @@
 import ModalScreen from '@components/ModalScreen'
+import { TextInput } from '@components/TextInput'
 import { addUserToGroup } from '@database/addUserToGroup'
 import { getUserByEmail } from '@database/getUserByEmail'
 import { useTheme } from '@styling/theme'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
-import { ActivityIndicator, Button, Text, TextInput, View } from 'react-native'
+import { ActivityIndicator, Button, Text, View } from 'react-native'
 
 function Form() {
   const router = useRouter()
@@ -54,19 +55,11 @@ function Form() {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16, paddingBottom: 32 }}>
       <TextInput
         placeholder='E-mail'
         value={email}
         onChangeText={setEmail}
-        style={{
-          padding: 8,
-          borderWidth: 1,
-          borderColor: theme.colors.onSurface,
-          margin: 4,
-          borderRadius: 8,
-          color: theme.colors.onSurface,
-        }}
       />
       {!waiting && <Button title='Add user' onPress={handlePress} />}
       {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
