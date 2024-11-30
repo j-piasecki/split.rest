@@ -153,34 +153,43 @@ function SplitList({
                 padding: 16,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                alignItems: 'center',
                 borderColor: 'lightgray',
                 borderBottomWidth: 1,
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
-                {split.title}
-              </Text>
-              <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>
-                {split.total} {info?.currency}
-              </Text>
-              <Text style={{ fontSize: 20, color: 'gray' }}>
-                {new Date(split.timestamp).toLocaleDateString()}
-              </Text>
+              <View style={{ flex: 2 }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
+                  {split.title}
+                </Text>
+              </View>
+              <View style={{ flex: 2 }}>
+                <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>
+                  {split.total} {info?.currency}
+                </Text>
+              </View>
+              <View style={{ flex: 2 }}>
+                <Text style={{ fontSize: 20, color: 'gray' }}>
+                  {new Date(split.timestamp).toLocaleDateString()}
+                </Text>
+              </View>
 
-              {(split.paidById === user?.uid || info?.isAdmin) && (
-                <Button
-                  title='Delete'
-                  onPress={() => {
-                    if (info) {
-                      deleteSplit(info.id, split.id)
-                        .then(forceReload)
-                        .catch((e) => {
-                          alert(e.message)
-                        })
-                    }
-                  }}
-                />
-              )}
+              <View style={{ flex: 1 }}>
+                {(split.paidById === user?.uid || info?.isAdmin) && (
+                  <Button
+                    title='Delete'
+                    onPress={() => {
+                      if (info) {
+                        deleteSplit(info.id, split.id)
+                          .then(forceReload)
+                          .catch((e) => {
+                            alert(e.message)
+                          })
+                      }
+                    }}
+                  />
+                )}
+              </View>
             </View>
           )
         })}
@@ -239,10 +248,20 @@ function MembersList({
                 borderBottomWidth: 1,
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
-                {member.name}
-              </Text>
-              <View style={{ flexDirection: 'row', gap: 4 }}>
+              <View style={{ flex: 1, justifyContent: 'center' }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
+                  {member.name}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  gap: 4,
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                }}
+              >
                 {info.isAdmin && member.id !== user?.uid && member.hasAccess && (
                   <Button
                     title='Revoke access'
@@ -293,20 +312,22 @@ function MembersList({
                   />
                 )}
               </View>
-              <Text
-                style={{
-                  fontSize: 20,
-                  color:
-                    Number(member.balance) === 0
-                      ? 'gray'
-                      : Number(member.balance) > 0
-                        ? 'green'
-                        : 'red',
-                }}
-              >
-                {Number(member.balance) > 0 && '+'}
-                {member.balance}
-              </Text>
+              <View style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: 100 }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color:
+                      Number(member.balance) === 0
+                        ? 'gray'
+                        : Number(member.balance) > 0
+                          ? 'green'
+                          : 'red',
+                  }}
+                >
+                  {Number(member.balance) > 0 && '+'}
+                  {member.balance}
+                </Text>
+              </View>
             </View>
           )
         })}

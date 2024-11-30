@@ -1,8 +1,8 @@
+import { Button } from './Button'
 import { useTheme } from '@styling/theme'
 import { logout } from '@utils/auth'
 import { Link } from 'expo-router'
 import { Text, View } from 'react-native'
-import { Button } from './Button'
 
 export interface HeaderProps {
   title?: string

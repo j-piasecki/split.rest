@@ -11,7 +11,14 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Pressable, ScrollView, Text, TextInput as TextInputRN, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput as TextInputRN,
+  View,
+} from 'react-native'
 import { BalanceChange } from 'shared'
 
 interface EntryData {
@@ -75,18 +82,30 @@ function Entry({
         suggestionsVisible={showSuggestions}
         renderSuggestion={(user) => {
           return (
-            <Pressable onPointerDown={() => {
-              setTimeout(() => {
-                ref.current?.focus()
-              })
-            }} onPress={() => {
-              update({ email: user.email, amount })
-              setShowSuggestions(false)
-            }}>
-              <View style={{ flexDirection: 'row', padding: 8, borderBottomWidth: 1, borderBottomColor: theme.colors.outline }}>
+            <Pressable
+              onPointerDown={() => {
+                setTimeout(() => {
+                  ref.current?.focus()
+                })
+              }}
+              onPress={() => {
+                update({ email: user.email, amount })
+                setShowSuggestions(false)
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  padding: 8,
+                  borderBottomWidth: 1,
+                  borderBottomColor: theme.colors.outline,
+                }}
+              >
                 <View style={{ flex: 1 }}>
-                  <Text style={{color: theme.colors.onSurface, fontSize: 16}}>{user.name}</Text>
-                  <Text style={{color: theme.colors.onSurfaceVariant, fontSize: 10}}>{user.email}</Text>
+                  <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>{user.name}</Text>
+                  <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}>
+                    {user.email}
+                  </Text>
                 </View>
               </View>
             </Pressable>

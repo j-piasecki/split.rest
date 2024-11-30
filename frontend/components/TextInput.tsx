@@ -8,17 +8,10 @@ export interface Props extends TextInputProps {
   resetError?: () => void
 }
 
-export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput({
-  style,
-  placeholder,
-  value,
-  onChangeText,
-  error,
-  resetError,
-  onFocus,
-  onBlur,
-  ...rest
-}: Props, ref) {
+export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput(
+  { style, placeholder, value, onChangeText, error, resetError, onFocus, onBlur, ...rest }: Props,
+  ref
+) {
   const theme = useTheme()
   const isFocused = useSharedValue(false)
 

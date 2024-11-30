@@ -1,7 +1,7 @@
 import { Props, TextInput } from './TextInput'
 import { useTheme } from '@styling/theme'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { ScrollView, View, TextInput as TextInputRN } from 'react-native'
+import { ScrollView, TextInput as TextInputRN, View } from 'react-native'
 import { useDebounce } from 'use-debounce'
 
 export interface TextInputWithSuggestionsProps<T> extends Props {
@@ -67,25 +67,29 @@ export function TextInputWithSuggestions<T>({
           onBlur?.(e)
         }}
       />
-      {isFocusedDebounced && value !== undefined && value.length > 0 && suggestions.length > 0 && suggestionsVisible && (
-        <View
-          ref={suggestionBoxRef}
-          style={{
-            position: 'absolute',
-            left: 8,
-            bottom: -suggestionBoxHeight,
-            width: inputLayout.width - 16,
-            maxHeight: 150,
-            backgroundColor: theme.colors.surfaceContainer,
-          }}
-        >
-          <ScrollView style={{ flex: 1 }}>
-            {suggestions.map((suggestion, index) => (
-              <View key={index}>{renderSuggestion(suggestion)}</View>
-            ))}
-          </ScrollView>
-        </View>
-      )}
+      {isFocusedDebounced &&
+        value !== undefined &&
+        value.length > 0 &&
+        suggestions.length > 0 &&
+        suggestionsVisible && (
+          <View
+            ref={suggestionBoxRef}
+            style={{
+              position: 'absolute',
+              left: 8,
+              bottom: -suggestionBoxHeight,
+              width: inputLayout.width - 16,
+              maxHeight: 150,
+              backgroundColor: theme.colors.surfaceContainer,
+            }}
+          >
+            <ScrollView style={{ flex: 1 }}>
+              {suggestions.map((suggestion, index) => (
+                <View key={index}>{renderSuggestion(suggestion)}</View>
+              ))}
+            </ScrollView>
+          </View>
+        )}
     </View>
   )
 }

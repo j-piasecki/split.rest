@@ -56,12 +56,16 @@ function Form() {
   }
 
   return (
-    <View style={{ flex: 1, gap: 16, justifyContent: 'center', paddingBottom: 32, paddingHorizontal: 48 }}>
-      <TextInput
-        placeholder='E-mail'
-        value={email}
-        onChangeText={setEmail}
-      />
+    <View
+      style={{
+        flex: 1,
+        gap: 16,
+        justifyContent: 'center',
+        paddingBottom: 32,
+        paddingHorizontal: 48,
+      }}
+    >
+      <TextInput placeholder='E-mail' value={email} onChangeText={setEmail} />
       {!waiting && <Button title='Add user' onPress={handlePress} />}
       {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
 
