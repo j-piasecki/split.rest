@@ -1,21 +1,39 @@
 import { useTheme } from '@styling/theme'
+import React from 'react'
 import { TextInputProps, TextInput as TextInputRN } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-interface Props extends TextInputProps {
+export interface Props extends TextInputProps {
   error?: boolean
   resetError?: () => void
 }
 
-export function TextInput({ style, placeholder, value, onChangeText, error, resetError, ...rest }: Props) {
+export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput({
+  style,
+  placeholder,
+  value,
+  onChangeText,
+  error,
+  resetError,
+  onFocus,
+  onBlur,
+  ...rest
+}: Props, ref) {
   const theme = useTheme()
   const isFocused = useSharedValue(false)
 
   const wrapperStyle = useAnimatedStyle(() => {
     return {
-      borderBottomColor: withTiming(error ? theme.colors.errorContainer : isFocused.value ? theme.colors.primary : theme.colors.outline, {
-        duration: 200,
-      }),
+      borderBottomColor: withTiming(
+        error
+          ? theme.colors.errorContainer
+          : isFocused.value
+            ? theme.colors.primary
+            : theme.colors.outline,
+        {
+          duration: 200,
+        }
+      ),
     }
   })
 
@@ -33,6 +51,7 @@ export function TextInput({ style, placeholder, value, onChangeText, error, rese
   return (
     <Animated.View style={[style, { borderBottomWidth: 1, borderRadius: 4 }, wrapperStyle]}>
       <TextInputRN
+        ref={ref}
         style={{
           flex: 1,
           paddingHorizontal: 8,
@@ -47,11 +66,13 @@ export function TextInput({ style, placeholder, value, onChangeText, error, rese
           resetError?.()
           onChangeText?.(value)
         }}
-        onFocus={() => {
+        onFocus={(e) => {
           isFocused.value = true
+          onFocus?.(e)
         }}
-        onBlur={() => {
+        onBlur={(e) => {
           isFocused.value = false
+          onBlur?.(e)
         }}
         {...rest}
       />
@@ -60,4 +81,4 @@ export function TextInput({ style, placeholder, value, onChangeText, error, rese
       </Animated.Text>
     </Animated.View>
   )
-}
+})

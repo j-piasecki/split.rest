@@ -1,16 +1,17 @@
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
+import { TextInputWithSuggestions } from '@components/TextInputWithSuggestions'
 import { createSplit } from '@database/createSplit'
+import { getGroupInfo } from '@database/getGroupInfo'
 import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocompletions'
 import { getUserByEmail } from '@database/getUserByEmail'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Button, Pressable, ScrollView, Text, View } from 'react-native'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { ActivityIndicator, Button, Pressable, ScrollView, Text, TextInput as TextInputRN, View } from 'react-native'
 import { BalanceChange } from 'shared'
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { getGroupInfo } from '@database/getGroupInfo'
 
 interface EntryData {
   email: string
@@ -33,25 +34,66 @@ function Entry({
   update: (data: EntryData) => void
 }) {
   const theme = useTheme()
+  const ref = useRef<TextInputRN>(null)
+  const [isFocused, setIsFocused] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(true)
+
+  const getSuggestions = useCallback(
+    (val: string) => getGroupMemberAutocompletions(groupId, val),
+    [groupId]
+  )
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <Pressable onPress={setPaidByIndex} style={{marginRight: 8}}>
-        {paidByThis && <MaterialCommunityIcons name='cash-fast' size={24} color={theme.colors.secondary} />}
-        {!paidByThis && <MaterialCommunityIcons name='cash' size={24} color={theme.colors.outlineVariant} />}
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'relative',
+        zIndex: isFocused ? 10 : 1,
+      }}
+    >
+      <Pressable onPress={setPaidByIndex} style={{ marginRight: 8 }}>
+        {paidByThis && (
+          <MaterialCommunityIcons name='cash-fast' size={24} color={theme.colors.secondary} />
+        )}
+        {!paidByThis && (
+          <MaterialCommunityIcons name='cash' size={24} color={theme.colors.outlineVariant} />
+        )}
       </Pressable>
 
-      <TextInput
+      <TextInputWithSuggestions
+        inputRef={ref}
         placeholder='E-mail'
         value={email}
         keyboardType='email-address'
         onChangeText={(val) => {
           update({ email: val, amount })
-          getGroupMemberAutocompletions(groupId, val).then((users) => {
-            console.log(users)
-          })
+          setShowSuggestions(true)
+        }}
+        getSuggestions={getSuggestions}
+        suggestionsVisible={showSuggestions}
+        renderSuggestion={(user) => {
+          return (
+            <Pressable onPointerDown={() => {
+              setTimeout(() => {
+                ref.current?.focus()
+              })
+            }} onPress={() => {
+              update({ email: user.email, amount })
+              setShowSuggestions(false)
+            }}>
+              <View style={{ flexDirection: 'row', padding: 8, borderBottomWidth: 1, borderBottomColor: theme.colors.outline }}>
+                <View style={{ flex: 1 }}>
+                  <Text style={{color: theme.colors.onSurface, fontSize: 16}}>{user.name}</Text>
+                  <Text style={{color: theme.colors.onSurfaceVariant, fontSize: 10}}>{user.email}</Text>
+                </View>
+              </View>
+            </Pressable>
+          )
         }}
         style={{ flex: 3, margin: 4 }}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       />
       <TextInput
         placeholder='Amount'
@@ -80,7 +122,7 @@ function Form() {
   const [waiting, setWaiting] = useState(false)
   const [paidByIndex, setPaidByIndex] = useState(0)
   const [currency, setCurrency] = useState('')
-  
+
   const [titleError, setTitleError] = useState(false)
 
   const toBePaid = useRef(0)
@@ -124,6 +166,12 @@ function Form() {
       return
     }
 
+    const emails = toSave.map((entry) => entry.email)
+    if (new Set(emails).size !== emails.length) {
+      setError('Duplicate e-mails are not allowed')
+      return
+    }
+
     let payerId: string | undefined
 
     const balanceChange: (BalanceChange | undefined)[] = await Promise.all(
@@ -162,7 +210,14 @@ function Form() {
     setWaiting(true)
     setError('')
 
-    createSplit(Number(id as string), payerId, title, sumToSave, Date.now(), balanceChange as BalanceChange[])
+    createSplit(
+      Number(id as string),
+      payerId,
+      title,
+      sumToSave,
+      Date.now(),
+      balanceChange as BalanceChange[]
+    )
       .then(() => {
         if (router.canGoBack()) {
           router.back()
@@ -234,10 +289,18 @@ function Form() {
           marginHorizontal: 4,
         }}
       >
-        <Text style={{ flex: 1, textAlign: 'center', color: theme.colors.outline, fontSize: 20, opacity: 0.7 }}>
-          <Text style={{color: theme.colors.primary}}>{entries[paidByIndex].email} </Text>
+        <Text
+          style={{
+            flex: 1,
+            textAlign: 'center',
+            color: theme.colors.outline,
+            fontSize: 20,
+            opacity: 0.7,
+          }}
+        >
+          <Text style={{ color: theme.colors.primary }}>{entries[paidByIndex].email} </Text>
           will pay
-          <Text style={{color: theme.colors.primary}}> {toBePaid.current} </Text>
+          <Text style={{ color: theme.colors.primary }}> {toBePaid.current} </Text>
           {currency}
         </Text>
       </View>
@@ -258,7 +321,11 @@ export default function Modal() {
 
   return (
     <ModalScreen returnPath={`/${id}`} title='Add split' maxWidth={500}>
-      {!user && (<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}><ActivityIndicator color={theme.colors.onSurface} /></View>)}
+      {!user && (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator color={theme.colors.onSurface} />
+        </View>
+      )}
       {user && <Form />}
     </ModalScreen>
   )
