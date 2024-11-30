@@ -21,7 +21,7 @@ function FullscreenModal({ children, title }: { children: React.ReactNode; title
     <View
       style={{
         flex: 1,
-        backgroundColor: theme.colors.backgroundElevated,
+        backgroundColor: theme.colors.surface,
       }}
     >
       <View
@@ -75,7 +75,7 @@ function ModalScreen({
           height: '80%',
           maxWidth: maxWidth,
           maxHeight: maxHeight,
-          backgroundColor: theme.colors.backgroundElevated,
+          backgroundColor: theme.colors.surface,
           borderRadius: 16,
           overflow: 'hidden',
         }}
@@ -85,24 +85,26 @@ function ModalScreen({
             width: '100%',
             flexDirection: 'row',
             alignItems: 'center',
-            padding: 16,
+            paddingHorizontal: 16,
+            paddingTop: 16,
+            paddingBottom: 4,
             justifyContent: 'space-between',
           }}
         >
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.text }}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
             {title}
           </Text>
           <Pressable
             onPress={goBack}
             style={({ pressed }) => {
               return {
-                backgroundColor: pressed ? theme.colors.highlight : 'transparent',
+                backgroundColor: pressed ? theme.colors.surfaceBright : 'transparent',
                 borderRadius: 22,
                 padding: 4,
               }
             }}
           >
-            <AntDesign name='close' size={28} color={theme.colors.text} />
+            <AntDesign name='close' size={28} color={theme.colors.onSurface} />
           </Pressable>
         </View>
         {children}

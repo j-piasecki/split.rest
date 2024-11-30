@@ -13,7 +13,7 @@ export default function Header({ title = 'Split' }: HeaderProps) {
   return (
     <View
       style={{
-        backgroundColor: theme.colors.backgroundElevated,
+        backgroundColor: theme.colors.surfaceContainer,
         height: 60,
         flexDirection: 'row',
         alignItems: 'center',
@@ -26,7 +26,7 @@ export default function Header({ title = 'Split' }: HeaderProps) {
           style={{
             fontSize: 20,
             fontWeight: 'bold',
-            color: theme.colors.text,
+            color: theme.colors.onSurface,
           }}
         >
           {title}

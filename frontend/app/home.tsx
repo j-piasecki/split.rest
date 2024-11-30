@@ -24,11 +24,10 @@ function Group({ info }: { info: GroupInfo }) {
           alignItems: 'center',
           justifyContent: 'space-between',
           overflow: 'visible',
-          backgroundColor: theme.colors.backgroundElevated,
-          boxShadow: '0 2px 8px rgba(255, 255, 255, 0.1)',
+          backgroundColor: theme.colors.surfaceContainer,
         }}
       >
-        <Text style={{ fontSize: 20, color: theme.colors.text }}>{info.name}</Text>
+        <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>{info.name}</Text>
 
         <View style={{ flexDirection: 'row', gap: 8 }}>
           <View style={{ flexDirection: 'row', gap: 4 }}>
@@ -87,19 +86,19 @@ function HiddenGroupsButton({
       }}
       style={({ pressed }) => {
         return {
-          opacity: pressed ? 0.3 : 0.5,
+          opacity: pressed ? 0.4 : 0.5,
         }
       }}
     >
       <View style={{ flex: 1, paddingVertical: 16, flexDirection: 'row', alignItems: 'center' }}>
-        <View style={{ borderTopWidth: 1, flex: 1, borderColor: theme.colors.text }} />
+        <View style={{ borderTopWidth: 1, flex: 1, borderColor: theme.colors.onSurfaceVariant }} />
         <Text
-          style={{ marginHorizontal: 8, fontSize: 16, color: theme.colors.text }}
+          style={{ marginHorizontal: 8, fontSize: 16, color: theme.colors.onSurfaceVariant }}
           selectable={false}
         >
           {showHidden ? 'Hide hidden groups' : 'Show hidden groups'}
         </Text>
-        <View style={{ borderTopWidth: 1, flex: 1, borderColor: theme.colors.text }} />
+        <View style={{ borderTopWidth: 1, flex: 1, borderColor: theme.colors.onSurfaceVariant }} />
       </View>
     </Pressable>
   )
@@ -122,7 +121,7 @@ export default function Home() {
   }, [user, setGroups, setHiddenGroups])
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.surfaceDim }}>
       <Header />
 
       <View style={{ flex: 1, alignItems: 'center' }}>
@@ -140,7 +139,7 @@ export default function Home() {
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ fontSize: 28, color: theme.colors.text }}>Groups</Text>
+                <Text style={{ fontSize: 28, color: theme.colors.onSurface }}>Groups</Text>
                 <Link href='/createGroup' asChild>
                   <Button title='Create group' />
                 </Link>
@@ -152,7 +151,7 @@ export default function Home() {
               )}
               {showHidden && (
                 <>
-                  <Text style={{ fontSize: 28, color: theme.colors.text }}>Hidden groups</Text>
+                  <Text style={{ fontSize: 28, color: theme.colors.onSurface }}>Hidden groups</Text>
                   <GroupList groups={hiddenGroups} />
                 </>
               )}
@@ -161,8 +160,10 @@ export default function Home() {
 
           {(!groups || !hiddenGroups) && (
             <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }}>
-              <ActivityIndicator size='small' color={theme.colors.text} />
-              <Text style={{ textAlign: 'center', color: theme.colors.text }}>Loading splits</Text>
+              <ActivityIndicator size='small' color={theme.colors.onSurface} />
+              <Text style={{ textAlign: 'center', color: theme.colors.onSurface }}>
+                Loading splits
+              </Text>
             </View>
           )}
         </View>

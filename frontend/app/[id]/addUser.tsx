@@ -62,14 +62,14 @@ function Form() {
         style={{
           padding: 8,
           borderWidth: 1,
-          borderColor: theme.colors.text,
+          borderColor: theme.colors.onSurface,
           margin: 4,
           borderRadius: 8,
-          color: theme.colors.text,
+          color: theme.colors.onSurface,
         }}
       />
       {!waiting && <Button title='Add user' onPress={handlePress} />}
-      {waiting && <ActivityIndicator size='small' color={theme.colors.text} />}
+      {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
 
       {error !== '' && <Text style={{ color: 'red' }}>{error}</Text>}
     </View>

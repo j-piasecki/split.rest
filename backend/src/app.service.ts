@@ -35,6 +35,7 @@ export class AppService {
   }
 
   async createSplit(callerId: string, args: CreateSplitArguments) {
+    // TODO: validate that the payer gets back euqal amount as sum others lose
     return await this.databaseService.createSplit(callerId, args)
   }
 
@@ -47,6 +48,7 @@ export class AppService {
   }
 
   async updateSplit(callerId: string, args: UpdateSplitArguments) {
+    // TODO: validate that the payer gets back euqal amount as sum others lose
     return await this.databaseService.updateSplit(callerId, args)
   }
 

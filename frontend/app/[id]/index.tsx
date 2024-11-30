@@ -23,6 +23,7 @@ function InfoCard({ info }: { info: GroupInfo | null }) {
       style={{
         width: '100%',
         maxWidth: 500,
+        backgroundColor: theme.colors.surfaceContainer,
         boxShadow: '0 2px 8px rgba(255, 255, 255, 0.1)',
         padding: 16,
         borderRadius: 16,
@@ -32,7 +33,7 @@ function InfoCard({ info }: { info: GroupInfo | null }) {
       {info !== null && (
         <>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 30, color: theme.colors.text }}>{info.name}</Text>
+            <Text style={{ fontSize: 30, color: theme.colors.onSurface }}>{info.name}</Text>
             <Text
               style={{
                 fontSize: 30,
@@ -155,10 +156,10 @@ function SplitList({
                 borderBottomWidth: 1,
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.text }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
                 {split.title}
               </Text>
-              <Text style={{ fontSize: 20, color: theme.colors.text }}>
+              <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>
                 {split.total} {info?.currency}
               </Text>
               <Text style={{ fontSize: 20, color: 'gray' }}>
@@ -237,7 +238,7 @@ function MembersList({
                 borderBottomWidth: 1,
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.text }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
                 {member.name}
               </Text>
               <View style={{ flexDirection: 'row', gap: 4 }}>
@@ -329,10 +330,10 @@ function ContentSwitcher({
           style={({ pressed }) => {
             return {
               backgroundColor: pressed
-                ? theme.colors.tabHeaderPressed
+                ? theme.colors.surfaceContainer
                 : listSelected
-                  ? theme.colors.tabHeaderSelected
-                  : theme.colors.tabHeader,
+                  ? theme.colors.surfaceContainerLow
+                  : theme.colors.transparent,
               flex: 1,
               justifyContent: 'center',
               alignItems: 'center',
@@ -349,10 +350,10 @@ function ContentSwitcher({
           style={({ pressed }) => {
             return {
               backgroundColor: pressed
-                ? theme.colors.tabHeaderPressed
+                ? theme.colors.surfaceContainer
                 : !listSelected
-                  ? theme.colors.tabHeaderSelected
-                  : theme.colors.tabHeader,
+                  ? theme.colors.surfaceContainerLow
+                  : theme.colors.transparent,
               flex: 1,
               justifyContent: 'center',
               alignItems: 'center',
@@ -401,7 +402,7 @@ export default function GroupScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
       <Header />
 
       <View style={{ flex: 1, alignItems: 'center' }}>

@@ -13,13 +13,15 @@ export default function Screen() {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: theme.colors.background,
+        backgroundColor: theme.colors.surface,
       }}
     >
       {user === undefined && (
         <View>
-          <ActivityIndicator size='small' color={theme.colors.text} />
-          <Text style={{ margin: 8, color: theme.colors.text }}>Checking if you're logged in</Text>
+          <ActivityIndicator size='small' color={theme.colors.onSurface} />
+          <Text style={{ margin: 8, color: theme.colors.onSurface }}>
+            Checking if you're logged in
+          </Text>
         </View>
       )}
       {user === null && <Button title='Login' onPress={login} />}

@@ -18,10 +18,10 @@ function Content() {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: theme.colors.background,
+          backgroundColor: theme.colors.surfaceDim,
         }}
       >
-        <ActivityIndicator size='small' color={theme.colors.text} />
+        <ActivityIndicator size='small' color={theme.colors.onSurface} />
       </View>
     )
   }
@@ -32,7 +32,7 @@ function Content() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.surfaceContainerLowest }}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name='index' options={{ title: 'Split' }} />
         <Stack.Screen name='home' options={{ title: 'Split' }} />
