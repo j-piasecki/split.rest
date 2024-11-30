@@ -1,3 +1,4 @@
+import { Button } from '@components/Button'
 import Header from '@components/Header'
 import { deleteSplit } from '@database/deleteSplit'
 import { getGroupInfo } from '@database/getGroupInfo'
@@ -12,7 +13,7 @@ import { useAuth } from '@utils/auth'
 import { isCloseToBottom } from '@utils/isScrollViewCloseToBottom'
 import { Link, useLocalSearchParams } from 'expo-router'
 import { useEffect, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, Button, Pressable, ScrollView, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
 import { GroupInfo, Member, SplitInfo } from 'shared'
 
 function InfoCard({ info }: { info: GroupInfo | null }) {

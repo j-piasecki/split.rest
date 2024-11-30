@@ -1,3 +1,4 @@
+import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
 import { TextInputWithSuggestions } from '@components/TextInputWithSuggestions'
@@ -10,7 +11,7 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Button, Pressable, ScrollView, Text, TextInput as TextInputRN, View } from 'react-native'
+import { ActivityIndicator, Pressable, ScrollView, Text, TextInput as TextInputRN, View } from 'react-native'
 import { BalanceChange } from 'shared'
 
 interface EntryData {

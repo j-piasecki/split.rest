@@ -1,3 +1,4 @@
+import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
 import { addUserToGroup } from '@database/addUserToGroup'
@@ -5,7 +6,7 @@ import { getUserByEmail } from '@database/getUserByEmail'
 import { useTheme } from '@styling/theme'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
-import { ActivityIndicator, Button, Text, View } from 'react-native'
+import { ActivityIndicator, Text, View } from 'react-native'
 
 function Form() {
   const router = useRouter()
@@ -55,7 +56,7 @@ function Form() {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16, paddingBottom: 32 }}>
+    <View style={{ flex: 1, gap: 16, justifyContent: 'center', paddingBottom: 32, paddingHorizontal: 48 }}>
       <TextInput
         placeholder='E-mail'
         value={email}

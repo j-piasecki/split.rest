@@ -1,3 +1,4 @@
+import { Button } from '@components/Button'
 import Header from '@components/Header'
 import { getAllUserGroups } from '@database/getAllUserGroups'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
@@ -5,7 +6,7 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { Link } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Button, Pressable, ScrollView, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function Group({ info }: { info: GroupInfo }) {
