@@ -59,8 +59,10 @@ export interface AddUserToGroupArguments {
 
 export interface CreateSplitArguments {
   groupId: number
+  paidBy: string
   title: string
   total: number
+  timestamp: number
   balances: BalanceChange[]
 }
 
@@ -77,8 +79,10 @@ export interface RestoreSplitArguments {
 export interface UpdateSplitArguments {
   groupId: number
   splitId: number
+  paidBy: string
   title: string
   total: number
+  timestamp: number
   balances: BalanceChange[]
 }
 
@@ -141,7 +145,7 @@ export function isAddUserToGroupArguments(obj: any): obj is AddUserToGroupArgume
 }
 
 export function isCreateSplitArguments(obj: any): obj is CreateSplitArguments {
-  return obj.groupId !== undefined && obj.title !== undefined && obj.total !== undefined && obj.balances !== undefined
+  return obj.groupId !== undefined && obj.title !== undefined && obj.total !== undefined && obj.balances !== undefined && obj.paidBy !== undefined && obj.timestamp !== undefined
 }
 
 export function isDeleteSplitArguments(obj: any): obj is DeleteSplitArguments {
@@ -153,7 +157,7 @@ export function isRestoreSplitArguments(obj: any): obj is RestoreSplitArguments 
 }
 
 export function isUpdateSplitArguments(obj: any): obj is UpdateSplitArguments {
-  return obj.groupId !== undefined && obj.splitId !== undefined && obj.title !== undefined && obj.total !== undefined && obj.balances !== undefined
+  return obj.groupId !== undefined && obj.splitId !== undefined && obj.title !== undefined && obj.total !== undefined && obj.balances !== undefined && obj.paidBy !== undefined && obj.timestamp !== undefined
 }
 
 export function isSetGroupAccessArguments(obj: any): obj is SetGroupAccessArguments {

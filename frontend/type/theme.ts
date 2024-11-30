@@ -4,6 +4,7 @@ export interface Colors {
   background: string
   backgroundElevated: string
   text: string
+  highlight: string
 
   tabHeader: string
   tabHeaderPressed: string

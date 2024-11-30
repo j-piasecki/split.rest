@@ -1,12 +1,15 @@
 import ModalScreen from '@components/ModalScreen'
 import { createSplit } from '@database/createSplit'
+import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocompletions'
 import { getUserByEmail } from '@database/getUserByEmail'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
-import { ActivityIndicator, Button, ScrollView, Text, TextInput, View } from 'react-native'
+import { TextInput } from '@components/TextInput'
+import { ActivityIndicator, Button, ScrollView, Text, View } from 'react-native'
 import { BalanceChange } from 'shared'
+import { auth } from '@utils/firebase'
 
 interface EntryData {
   email: string
@@ -14,10 +17,12 @@ interface EntryData {
 }
 
 function Entry({
+  groupId,
   email,
   amount,
   update,
 }: {
+  groupId: number
   email: string
   amount: string
   update: (data: EntryData) => void
@@ -31,6 +36,9 @@ function Entry({
         value={email}
         onChangeText={(val) => {
           update({ email: val, amount })
+          getGroupMemberAutocompletions(groupId, val).then((users) => {
+            console.log(users)
+          })
         }}
         style={{
           flex: 2,
@@ -119,7 +127,7 @@ function Form() {
     setWaiting(true)
     setError('')
 
-    createSplit(Number(id as string), title, paid, balanceChange)
+    createSplit(Number(id as string), auth.currentUser!.uid, title, paid, Date.now(), balanceChange)
       .then(() => {
         if (router.canGoBack()) {
           router.back()
@@ -139,11 +147,12 @@ function Form() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, paddingHorizontal: 16 }}>
       <ScrollView style={{ flex: 1 }}>
         {entries.map((entry, index) => (
           <Entry
             key={index}
+            groupId={Number(id as string)}
             email={entry.email}
             amount={String(entry.amount)}
             update={(data) => {
@@ -171,7 +180,7 @@ function Form() {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          marginHorizontal: 16,
+          marginHorizontal: 4,
         }}
       >
         <Text style={{ flex: 1, color: theme.colors.text }}>Title:</Text>
@@ -196,7 +205,7 @@ function Form() {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          marginHorizontal: 16,
+          marginHorizontal: 4,
         }}
       >
         <Text style={{ flex: 1, color: theme.colors.text }}>Total paid:</Text>
@@ -235,7 +244,7 @@ export default function Modal() {
   const { id } = useLocalSearchParams()
 
   return (
-    <ModalScreen returnPath={`/${id}`} title='Add split'>
+    <ModalScreen returnPath={`/${id}`} title='Add split' maxWidth={500}>
       <Form />
     </ModalScreen>
   )

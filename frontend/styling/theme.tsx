@@ -7,6 +7,7 @@ const darkColors: Colors = {
   background: '#121212',
   backgroundElevated: '#181818',
   text: '#ffffff',
+  highlight: '#ffffff33',
 
   tabHeader: 'transparent',
   tabHeaderPressed: '#333333',
