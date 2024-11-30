@@ -203,4 +203,13 @@ export class AppController {
 
     return await this.appService.getGroupMembersAutocompletions(request.user.sub, args)
   }
+
+  @UseGuards(AuthGuard)
+  @Get('getProfilePicture')
+  async profilePicture(@Req() request: Request, @Query() args: { photoURL: string }) {
+    const photo = await this.appService.getProfilePicture(args.photoURL)
+    return {
+      photo: photo,
+    }
+  }
 }

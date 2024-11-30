@@ -20,6 +20,8 @@ import {
 
 @Injectable()
 export class AppService {
+  private profilePictureCache: { [photoURL: string]: string } = {}
+
   constructor(private readonly databaseService: DatabaseService) {}
 
   async createOrUpdateUser(user: User) {
@@ -89,5 +91,34 @@ export class AppService {
     args: GetGroupMembersAutocompletionsArguments
   ) {
     return await this.databaseService.getGroupMembersAutocompletions(callerId, args)
+  }
+
+  async getProfilePicture(photoURL: string) {
+    if (this.profilePictureCache[photoURL] !== undefined) {
+      return this.profilePictureCache[photoURL]
+    }
+
+    const imageUrlToBase64 = async (url: string): Promise<string | null> =>
+      url
+        ? fetch(url)
+            .then(async (res) => ({
+              contentType: res.headers.get('content-type'),
+              buffer: await res.arrayBuffer(),
+            }))
+            .then(
+              ({ contentType, buffer }) =>
+                'data:' + contentType + ';base64,' + Buffer.from(buffer).toString('base64')
+            )
+        : null
+
+    this.profilePictureCache[photoURL] = await imageUrlToBase64(photoURL)
+    setTimeout(
+      () => {
+        delete this.profilePictureCache[photoURL]
+      },
+      1000 * 60 * 60 * 24
+    )
+
+    return await imageUrlToBase64(photoURL)
   }
 }

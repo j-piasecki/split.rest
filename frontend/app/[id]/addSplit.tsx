@@ -5,6 +5,7 @@ import { TextInputWithSuggestions } from '@components/TextInputWithSuggestions'
 import { createSplit } from '@database/createSplit'
 import { getGroupInfo } from '@database/getGroupInfo'
 import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocompletions'
+import { getProfilePicture } from '@database/getProfilePicture'
 import { getUserByEmail } from '@database/getUserByEmail'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { useTheme } from '@styling/theme'
@@ -13,17 +14,73 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
+  Image,
   Pressable,
   ScrollView,
   Text,
   TextInput as TextInputRN,
   View,
 } from 'react-native'
-import { BalanceChange } from 'shared'
+import { BalanceChange, User } from 'shared'
 
 interface EntryData {
   email: string
   amount: string
+}
+
+function Suggestion({
+  user,
+  update,
+  textInputRef,
+  amount,
+  setShowSuggestions,
+}: {
+  user: User
+  update: (data: EntryData) => void
+  textInputRef: React.RefObject<TextInputRN>
+  amount: string
+  setShowSuggestions: (show: boolean) => void
+}) {
+  const theme = useTheme()
+  const [profilePicture, setProfilePicture] = useState<string | null>(null)
+
+  useEffect(() => {
+    getProfilePicture(user.photoURL).then(setProfilePicture)
+  }, [user.photoURL])
+
+  return (
+    <Pressable
+      onPointerDown={() => {
+        setTimeout(() => {
+          textInputRef.current?.focus()
+        })
+      }}
+      onPress={() => {
+        update({ email: user.email, amount })
+        setShowSuggestions(false)
+      }}
+    >
+      <View
+        style={{
+          flexDirection: 'row',
+          padding: 8,
+          borderBottomWidth: 1,
+          borderBottomColor: theme.colors.outline,
+          alignItems: 'center',
+          gap: 8,
+        }}
+      >
+        <Image
+          source={{ uri: profilePicture ?? undefined }}
+          style={{ width: 24, height: 24, borderRadius: 12 }}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>{user.name}</Text>
+          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}>{user.email}</Text>
+        </View>
+      </View>
+    </Pressable>
+  )
 }
 
 function Entry({
@@ -82,33 +139,13 @@ function Entry({
         suggestionsVisible={showSuggestions}
         renderSuggestion={(user) => {
           return (
-            <Pressable
-              onPointerDown={() => {
-                setTimeout(() => {
-                  ref.current?.focus()
-                })
-              }}
-              onPress={() => {
-                update({ email: user.email, amount })
-                setShowSuggestions(false)
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  padding: 8,
-                  borderBottomWidth: 1,
-                  borderBottomColor: theme.colors.outline,
-                }}
-              >
-                <View style={{ flex: 1 }}>
-                  <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>{user.name}</Text>
-                  <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}>
-                    {user.email}
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
+            <Suggestion
+              user={user}
+              update={update}
+              textInputRef={ref}
+              amount={amount}
+              setShowSuggestions={setShowSuggestions}
+            />
           )
         }}
         style={{ flex: 3, margin: 4 }}

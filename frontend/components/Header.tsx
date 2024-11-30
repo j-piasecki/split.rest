@@ -1,8 +1,10 @@
+import { getProfilePicture } from '@database/getProfilePicture'
 import { Button } from './Button'
 import { useTheme } from '@styling/theme'
-import { logout } from '@utils/auth'
+import { logout, useAuth } from '@utils/auth'
 import { Link } from 'expo-router'
-import { Text, View } from 'react-native'
+import { useEffect, useState } from 'react'
+import { Text, View, Image } from 'react-native'
 
 export interface HeaderProps {
   title?: string
@@ -10,6 +12,14 @@ export interface HeaderProps {
 
 export default function Header({ title = 'Split' }: HeaderProps) {
   const theme = useTheme()
+  const user = useAuth()
+  const [profilePicture, setProfilePicture] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (user) {
+      getProfilePicture(user.photoURL).then(setProfilePicture)
+    }
+  }, [user])
 
   return (
     <View
@@ -34,7 +44,16 @@ export default function Header({ title = 'Split' }: HeaderProps) {
         </Text>
       </Link>
 
-      <Button title='Logout' onPress={logout} />
+      <View style={{flexDirection: 'row', gap: 16}}>
+        <Button title='Logout' onPress={logout} />
+        <Image
+          source={{ uri: profilePicture ?? undefined }}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+          }} />
+      </View>
     </View>
   )
 }
