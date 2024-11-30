@@ -7,6 +7,7 @@ import {
   DeleteSplitArguments,
   GetGroupInfoArguments,
   GetGroupMembersArguments,
+  GetGroupMembersAutocompletionsArguments,
   GetGroupSplitsArguments,
   GetUserByEmailArguments,
   GetUserGroupsArguments,
@@ -79,5 +80,12 @@ export class AppService {
 
   async getGroupInfo(callerId: string, args: GetGroupInfoArguments) {
     return await this.databaseService.getGroupInfo(callerId, args)
+  }
+
+  async getGroupMembersAutocompletions(
+    callerId: string,
+    args: GetGroupMembersAutocompletionsArguments
+  ) {
+    return await this.databaseService.getGroupMembersAutocompletions(callerId, args)
   }
 }

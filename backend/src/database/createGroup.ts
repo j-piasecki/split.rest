@@ -40,7 +40,7 @@ export async function createGroup(
       isAdmin: true,
       hasAccess: true,
       memberCount: 1,
-      balance: 0,
+      balance: '0',
     }
   } catch (e) {
     await client.query('ROLLBACK')

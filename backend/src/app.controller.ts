@@ -9,6 +9,7 @@ import {
   DeleteSplitArguments,
   GetGroupInfoArguments,
   GetGroupMembersArguments,
+  GetGroupMembersAutocompletionsArguments,
   GetGroupSplitsArguments,
   GetUserByEmailArguments,
   GetUserGroupsArguments,
@@ -24,6 +25,7 @@ import {
   isDeleteSplitArguments,
   isGetGroupInfoArguments,
   isGetGroupMembersArguments,
+  isGetGroupMembersAutocompletionsArguments,
   isGetGroupSplitsArguments,
   isGetUserByEmailArguments,
   isGetUserGroupsArguments,
@@ -187,5 +189,18 @@ export class AppController {
     }
 
     return await this.appService.getGroupInfo(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getGroupMemberAutocompletions')
+  async getGroupMemberAutocompletions(
+    @Req() request: Request,
+    @Query() args: GetGroupMembersAutocompletionsArguments
+  ) {
+    if (!isGetGroupMembersAutocompletionsArguments(args)) {
+      throw new Error('Invalid arguments')
+    }
+
+    return await this.appService.getGroupMembersAutocompletions(request.user.sub, args)
   }
 }

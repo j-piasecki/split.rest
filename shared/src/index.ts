@@ -122,6 +122,11 @@ export interface GetGroupInfoArguments {
   groupId: number
 }
 
+export interface GetGroupMembersAutocompletionsArguments {
+  groupId: number
+  query: string
+}
+
 
 export function isUser(obj: any): obj is User {
   return obj.id !== undefined && obj.name !== undefined && obj.email !== undefined && obj.photoURL !== undefined
@@ -181,4 +186,8 @@ export function isGetUserByEmailArguments(obj: any): obj is GetUserByEmailArgume
 
 export function isGetGroupInfoArguments(obj: any): obj is GetGroupInfoArguments {
   return obj.groupId !== undefined
+}
+
+export function isGetGroupMembersAutocompletionsArguments(obj: any): obj is GetGroupMembersAutocompletionsArguments {
+  return obj.groupId !== undefined && obj.query !== undefined
 }
