@@ -2,8 +2,9 @@ import { useTheme } from '@styling/theme'
 import { isSmallScreen } from '@utils/isSmallScreen'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
-import { Button, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
+import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 export interface ModalScreenProps {
   returnPath: string
@@ -14,10 +15,13 @@ export interface ModalScreenProps {
 }
 
 function FullscreenModal({ children, title }: { children: React.ReactNode; title: string }) {
+  const theme = useTheme()
+
   return (
     <View
       style={{
         flex: 1,
+        backgroundColor: theme.colors.backgroundElevated,
       }}
     >
       <View
@@ -85,8 +89,16 @@ function ModalScreen({
             justifyContent: 'space-between',
           }}
         >
-          <Text style={{ fontSize: 20, color: theme.colors.text }}>{title}</Text>
-          <Button title='Close' onPress={goBack} />
+          <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.text }}>{title}</Text>
+          <Pressable onPress={goBack} style={({pressed}) => {
+            return {
+              backgroundColor: pressed ? theme.colors.highlight : 'transparent',
+              borderRadius: 22,
+              padding: 4,
+            }
+          }}>
+            <AntDesign name="close" size={28} color={theme.colors.text} />
+          </Pressable>
         </View>
         {children}
       </Animated.View>
