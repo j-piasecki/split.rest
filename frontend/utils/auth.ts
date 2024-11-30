@@ -1,6 +1,6 @@
-import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { auth } from './firebase'
 import { isSmallScreen } from './isSmallScreen'
+import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { AuthListener, User } from '@type/auth'
 import { usePathname, useRouter } from 'expo-router'
 import {

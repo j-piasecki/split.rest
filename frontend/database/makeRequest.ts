@@ -1,7 +1,11 @@
-import { auth } from "@utils/firebase";
-import { ENDPOINT } from "./endpoint";
+import { ENDPOINT } from './endpoint'
+import { auth } from '@utils/firebase'
 
-export async function makeRequest<TArgs, TReturn>(method: 'POST' | 'GET', name: string, args: {[K in keyof TArgs]: TArgs[K]}) {
+export async function makeRequest<TArgs, TReturn>(
+  method: 'POST' | 'GET',
+  name: string,
+  args: { [K in keyof TArgs]: TArgs[K] }
+) {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to make a request')
   }
@@ -9,7 +13,7 @@ export async function makeRequest<TArgs, TReturn>(method: 'POST' | 'GET', name: 
   if (__DEV__) {
     console.log('Making request to', name, 'with', args)
   }
-  
+
   const url = new URL(`${ENDPOINT}/${name}`)
 
   if (method === 'GET') {
@@ -17,7 +21,7 @@ export async function makeRequest<TArgs, TReturn>(method: 'POST' | 'GET', name: 
 
     for (const [key, value] of Object.entries(args)) {
       if (value !== undefined && value !== null) {
-        cleanedArgs[key] = String(value);
+        cleanedArgs[key] = String(value)
       }
     }
 
@@ -29,9 +33,9 @@ export async function makeRequest<TArgs, TReturn>(method: 'POST' | 'GET', name: 
     method: method,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`
+      'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`,
     },
-    body: method === 'POST' ? JSON.stringify(args) : undefined
+    body: method === 'POST' ? JSON.stringify(args) : undefined,
   })
 
   if (__DEV__) {

@@ -1,5 +1,5 @@
-import { SetGroupAccessArguments } from 'shared'
 import { makeRequest } from './makeRequest'
+import { SetGroupAccessArguments } from 'shared'
 
 export async function setGroupAccess(
   groupId: number,

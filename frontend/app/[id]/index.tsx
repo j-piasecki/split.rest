@@ -36,7 +36,8 @@ function InfoCard({ info }: { info: GroupInfo | null }) {
             <Text
               style={{
                 fontSize: 30,
-                color: Number(info.balance) === 0 ? 'gray' : Number(info.balance) > 0 ? 'green' : 'red',
+                color:
+                  Number(info.balance) === 0 ? 'gray' : Number(info.balance) > 0 ? 'green' : 'red',
               }}
             >
               {Number(info.balance) > 0 && '+'}
@@ -293,7 +294,12 @@ function MembersList({
               <Text
                 style={{
                   fontSize: 20,
-                  color: Number(member.balance) === 0 ? 'gray' : Number(member.balance) > 0 ? 'green' : 'red',
+                  color:
+                    Number(member.balance) === 0
+                      ? 'gray'
+                      : Number(member.balance) > 0
+                        ? 'green'
+                        : 'red',
                 }}
               >
                 {Number(member.balance) > 0 && '+'}

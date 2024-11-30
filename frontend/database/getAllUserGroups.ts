@@ -1,6 +1,6 @@
+import { makeRequest } from './makeRequest'
 import { auth } from '@utils/firebase'
 import { GetUserGroupsArguments, GroupInfo } from 'shared'
-import { makeRequest } from './makeRequest'
 
 export async function getAllUserGroups(hidden: boolean, startAfter?: number): Promise<GroupInfo[]> {
   if (!auth.currentUser) {
@@ -9,5 +9,5 @@ export async function getAllUserGroups(hidden: boolean, startAfter?: number): Pr
 
   const args: GetUserGroupsArguments = { hidden: hidden, startAfter: startAfter }
 
-  return await makeRequest('GET', 'getUserGroups', args) ?? [];
+  return (await makeRequest('GET', 'getUserGroups', args)) ?? []
 }

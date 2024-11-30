@@ -1,5 +1,5 @@
-import { BalanceChange, Split, UpdateSplitArguments } from 'shared'
 import { makeRequest } from './makeRequest'
+import { BalanceChange, Split, UpdateSplitArguments } from 'shared'
 
 export async function updateSplit(
   splitId: number,

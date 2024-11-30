@@ -1,5 +1,5 @@
-import { SetGroupAdminArguments } from 'shared'
 import { makeRequest } from './makeRequest'
+import { SetGroupAdminArguments } from 'shared'
 
 export async function setGroupAdmin(
   groupId: number,

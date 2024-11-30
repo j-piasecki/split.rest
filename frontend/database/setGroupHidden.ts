@@ -1,5 +1,5 @@
-import { SetGroupHiddenArguments } from 'shared'
 import { makeRequest } from './makeRequest'
+import { SetGroupHiddenArguments } from 'shared'
 
 export async function setGroupHidden(groupId: number, hidden: boolean): Promise<void> {
   const args: SetGroupHiddenArguments = { groupId, hidden }

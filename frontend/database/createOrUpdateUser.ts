@@ -1,6 +1,6 @@
+import { makeRequest } from './makeRequest'
 import { auth } from '@utils/firebase'
 import { User } from 'shared'
-import { makeRequest } from './makeRequest'
 
 export async function createOrUpdateUser() {
   if (!auth.currentUser) {

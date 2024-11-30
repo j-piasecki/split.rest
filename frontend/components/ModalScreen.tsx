@@ -1,10 +1,10 @@
+import AntDesign from '@expo/vector-icons/AntDesign'
 import { useTheme } from '@styling/theme'
 import { isSmallScreen } from '@utils/isSmallScreen'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
-import AntDesign from '@expo/vector-icons/AntDesign';
 
 export interface ModalScreenProps {
   returnPath: string
@@ -65,7 +65,7 @@ function ModalScreen({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#00000040',
+        backgroundColor: '#000000a0',
       }}
     >
       <Pressable style={StyleSheet.absoluteFill} onPress={goBack} />
@@ -89,15 +89,20 @@ function ModalScreen({
             justifyContent: 'space-between',
           }}
         >
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.text }}>{title}</Text>
-          <Pressable onPress={goBack} style={({pressed}) => {
-            return {
-              backgroundColor: pressed ? theme.colors.highlight : 'transparent',
-              borderRadius: 22,
-              padding: 4,
-            }
-          }}>
-            <AntDesign name="close" size={28} color={theme.colors.text} />
+          <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.text }}>
+            {title}
+          </Text>
+          <Pressable
+            onPress={goBack}
+            style={({ pressed }) => {
+              return {
+                backgroundColor: pressed ? theme.colors.highlight : 'transparent',
+                borderRadius: 22,
+                padding: 4,
+              }
+            }}
+          >
+            <AntDesign name='close' size={28} color={theme.colors.text} />
           </Pressable>
         </View>
         {children}
