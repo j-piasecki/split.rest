@@ -13,7 +13,7 @@ admin.initializeApp({
 const backupName = `backup-${new Date().toISOString()}.sql`
 const backupPath = `backups/${backupName}`
 
-exec(`pg_dump -U postgres -d split -f ${backupPath}`, (err) => {
+exec(`pg_dump -U postgres -h localhost -d split -f ${backupPath}`, (err) => {
   if (err) {
     console.error('Failed to backup database', err)
     return
