@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import Header from '@components/Header'
+import { TabView } from '@components/TabView'
 import { deleteSplit } from '@database/deleteSplit'
 import { getGroupInfo } from '@database/getGroupInfo'
 import { getMembers } from '@database/getMembers'
@@ -13,7 +14,7 @@ import { useAuth } from '@utils/auth'
 import { isCloseToBottom } from '@utils/isScrollViewCloseToBottom'
 import { Link, useLocalSearchParams } from 'expo-router'
 import { useEffect, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
 import { GroupInfo, Member, SplitInfo } from 'shared'
 
 function InfoCard({ info }: { info: GroupInfo | null }) {
@@ -39,7 +40,11 @@ function InfoCard({ info }: { info: GroupInfo | null }) {
               style={{
                 fontSize: 30,
                 color:
-                  Number(info.balance) === 0 ? 'gray' : Number(info.balance) > 0 ? 'green' : 'red',
+                  Number(info.balance) === 0
+                    ? theme.colors.outline
+                    : Number(info.balance) > 0
+                      ? 'green'
+                      : 'red',
               }}
             >
               {Number(info.balance) > 0 && '+'}
@@ -57,12 +62,12 @@ function InfoCard({ info }: { info: GroupInfo | null }) {
             }}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-              <Text style={{ color: 'gray', fontSize: 20 }}>{info?.memberCount}</Text>
-              <FontAwesome name='users' size={20} color={'gray'} />
+              <Text style={{ color: theme.colors.outline, fontSize: 20 }}>{info?.memberCount}</Text>
+              <FontAwesome name='users' size={20} color={theme.colors.outline} />
             </View>
 
-            {!info.hasAccess && <FontAwesome name='lock' size={24} color={'gray'} />}
-            {info.isAdmin && <FontAwesome name='wrench' size={24} color={'gray'} />}
+            {!info.hasAccess && <FontAwesome name='lock' size={24} color={theme.colors.outline} />}
+            {info.isAdmin && <FontAwesome name='wrench' size={24} color={theme.colors.outline} />}
           </View>
         </>
       )}
@@ -169,7 +174,7 @@ function SplitList({
                 </Text>
               </View>
               <View style={{ flex: 2 }}>
-                <Text style={{ fontSize: 20, color: 'gray' }}>
+                <Text style={{ fontSize: 20, color: theme.colors.outline }}>
                   {new Date(split.timestamp).toLocaleDateString()}
                 </Text>
               </View>
@@ -318,7 +323,7 @@ function MembersList({
                     fontSize: 20,
                     color:
                       Number(member.balance) === 0
-                        ? 'gray'
+                        ? theme.colors.outline
                         : Number(member.balance) > 0
                           ? 'green'
                           : 'red',
@@ -343,55 +348,21 @@ function ContentSwitcher({
   scrollEndHandler: React.MutableRefObject<() => void>
 }) {
   const theme = useTheme()
-  const [listSelected, setListSelected] = useState(true)
 
   return (
-    <View style={{ width: '100%' }}>
-      <View style={{ width: '100%', height: 40, flexDirection: 'row' }}>
-        <Pressable
-          style={({ pressed }) => {
-            return {
-              backgroundColor: pressed
-                ? theme.colors.surfaceContainer
-                : listSelected
-                  ? theme.colors.surfaceContainerLow
-                  : theme.colors.transparent,
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }
-          }}
-          onPress={() => {
-            setListSelected(true)
-          }}
-        >
-          <FontAwesome name='list-ul' size={20} color='gray' />
-        </Pressable>
-
-        <Pressable
-          style={({ pressed }) => {
-            return {
-              backgroundColor: pressed
-                ? theme.colors.surfaceContainer
-                : !listSelected
-                  ? theme.colors.surfaceContainerLow
-                  : theme.colors.transparent,
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }
-          }}
-          onPress={() => {
-            setListSelected(false)
-          }}
-        >
-          <FontAwesome name='users' size={20} color='gray' />
-        </Pressable>
-      </View>
-
-      {listSelected && <SplitList info={info} scrollEndHandler={scrollEndHandler} />}
-      {!listSelected && <MembersList info={info} scrollEndHandler={scrollEndHandler} />}
-    </View>
+    <TabView
+      openedTab={0}
+      tabs={[
+        {
+          header: () => <FontAwesome name='list-ul' size={20} color={theme.colors.outline} />,
+          content: () => <SplitList info={info} scrollEndHandler={scrollEndHandler} />,
+        },
+        {
+          header: () => <FontAwesome name='users' size={20} color={theme.colors.outline} />,
+          content: () => <MembersList info={info} scrollEndHandler={scrollEndHandler} />,
+        },
+      ]}
+    />
   )
 }
 
