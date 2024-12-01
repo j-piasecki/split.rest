@@ -26,7 +26,7 @@ export function TextInputWithSuggestions<T>({
   const suggestionBoxRef = useRef<View>(null)
   const [suggestions, setSuggestions] = useState<T[]>([])
   const [isFocused, setIsFocused] = useState(false)
-  const [debouncedValue] = useDebounce(value, 500)
+  const [debouncedValue] = useDebounce(value, 300)
   const [inputLayout, setInputLayout] = useState({ x: 0, y: 0, width: 0, height: 0 })
   const [suggestionBoxHeight, setSuggestionBoxHeight] = useState(0)
   const [isFocusedDebounced] = useDebounce(isFocused, 100)
