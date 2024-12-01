@@ -1,5 +1,6 @@
 import { auth } from './firebase'
 import { isSmallScreen } from './isSmallScreen'
+import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { AuthListener, User } from '@type/auth'
 import { usePathname, useRouter } from 'expo-router'
@@ -41,9 +42,22 @@ export function addAuthListener(listener: AuthListener) {
   }
 }
 
+let createUserRetries = 5
+async function tryToCreateUser() {
+  try {
+    await createOrUpdateUser()
+  } catch {
+    if (createUserRetries > 0) {
+      createUserRetries--
+      await sleep(100)
+      await tryToCreateUser()
+    }
+  }
+}
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    await createOrUpdateUser()
+    await tryToCreateUser()
   }
 
   const result = createUser(user)
