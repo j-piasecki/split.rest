@@ -35,7 +35,8 @@ function InfoCard({ info }: { info: GroupInfo }) {
         backgroundColor: theme.colors.surfaceContainer,
         borderRadius: 16,
         gap: 8,
-        padding: threeBarLayout ? 0 : 16,
+        paddingHorizontal: threeBarLayout ? 0 : 16,
+        paddingVertical: threeBarLayout ? 0 : 32,
         marginTop: threeBarLayout ? 0 : 16,
       }}
     >

@@ -36,8 +36,8 @@ export default function Header({ title = 'Split' }: HeaderProps) {
       <Link href='/'>
         <Text
           style={{
-            fontSize: 20,
-            fontWeight: 'bold',
+            fontSize: 28,
+            fontWeight: '500',
             color: theme.colors.onPrimaryContainer,
           }}
         >

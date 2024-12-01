@@ -149,7 +149,7 @@ function Entry({
             />
           )
         }}
-        style={{ flex: 3, margin: 4 }}
+        style={{ flex: 4, margin: 4 }}
       />
       <TextInput
         placeholder='Amount'

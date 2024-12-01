@@ -29,11 +29,11 @@ function FullscreenModal({ children, title }: { children: React.ReactNode; title
           width: '100%',
           flexDirection: 'row',
           alignItems: 'center',
-          padding: 16,
+          padding: 24,
           justifyContent: 'space-between',
         }}
       >
-        <Text style={{ fontSize: 20 }}>{title}</Text>
+        <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>{title}</Text>
       </View>
       {children}
     </View>
