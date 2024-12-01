@@ -30,7 +30,8 @@ export async function getGroupInfo(
         SELECT 
           groups.id, 
           groups.name, 
-          groups.currency, 
+          groups.currency,
+          groups.owner,
           group_members.balance, 
           group_members.is_hidden, 
           group_members.is_admin, 
@@ -51,6 +52,7 @@ export async function getGroupInfo(
     id: row.id,
     name: row.name,
     currency: row.currency,
+    owner: row.owner,
     balance: row.balance,
     hidden: row.is_hidden,
     isAdmin: row.is_admin,

@@ -14,6 +14,7 @@ export interface GroupInfo extends GroupMetadata {
   name: string
   currency: string
   memberCount: number
+  owner: string
   isAdmin: boolean
   hasAccess: boolean
   balance: string

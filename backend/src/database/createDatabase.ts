@@ -16,7 +16,10 @@ export async function createDatabase(pool: Pool) {
       id SERIAL PRIMARY KEY,
       name VARCHAR(128),
       created_at bigint,
-      currency VARCHAR(8)
+      currency VARCHAR(8),
+      owner VARCHAR(32),
+
+      FOREIGN KEY (owner) REFERENCES users(id)
     )
   `)
 

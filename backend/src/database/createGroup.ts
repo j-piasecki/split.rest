@@ -13,11 +13,11 @@ export async function createGroup(
 
     const { rows } = await client.query(
       `
-        INSERT INTO groups(name, created_at, currency)
-        VALUES ($1, $2, $3)
+        INSERT INTO groups(name, created_at, currency, owner)
+        VALUES ($1, $2, $3, $4)
         RETURNING id
       `,
-      [args.name, Date.now(), args.currency]
+      [args.name, Date.now(), args.currency, callerId]
     )
 
     const groupId = rows[0].id
@@ -36,6 +36,7 @@ export async function createGroup(
       id: groupId,
       name: args.name,
       currency: args.currency,
+      owner: callerId,
       hidden: false,
       isAdmin: true,
       hasAccess: true,
