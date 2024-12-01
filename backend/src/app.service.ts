@@ -1,5 +1,5 @@
 import { DatabaseService } from './database.service'
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import {
   AddUserToGroupArguments,
   CreateGroupArguments,
@@ -37,7 +37,21 @@ export class AppService {
   }
 
   async createSplit(callerId: string, args: CreateSplitArguments) {
-    // TODO: validate that the payer gets back euqal amount as sum others lose
+    const changeSum = args.balances.reduce((sum, { change }) => sum + change, 0)
+    if (Math.abs(changeSum) > 0.01) {
+      throw new BadRequestException('Sum of changes must be 0')
+    }
+
+    const payerGetsBack = args.balances.find(({ id }) => id === args.paidBy)?.change
+    const othersLose = args.balances.reduce(
+      (sum, { id, change }) => (id !== args.paidBy ? sum + change : sum),
+      0
+    )
+
+    if (Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
+      throw new BadRequestException('Payer must get back equal amount as sum others lose')
+    }
+
     return await this.databaseService.createSplit(callerId, args)
   }
 
@@ -50,7 +64,21 @@ export class AppService {
   }
 
   async updateSplit(callerId: string, args: UpdateSplitArguments) {
-    // TODO: validate that the payer gets back euqal amount as sum others lose
+    const changeSum = args.balances.reduce((sum, { change }) => sum + change, 0)
+    if (Math.abs(changeSum) > 0.01) {
+      throw new BadRequestException('Sum of changes must be 0')
+    }
+
+    const payerGetsBack = args.balances.find(({ id }) => id === args.paidBy)?.change
+    const othersLose = args.balances.reduce(
+      (sum, { id, change }) => (id !== args.paidBy ? sum + change : sum),
+      0
+    )
+
+    if (Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
+      throw new BadRequestException('Payer must get back equal amount as sum others lose')
+    }
+
     return await this.databaseService.updateSplit(callerId, args)
   }
 

@@ -242,6 +242,12 @@ function Form() {
           return
         }
 
+        if (Number(entry.amount) < 0) {
+          setWaiting(false)
+          setError('Amounts cannot be negative')
+          return
+        }
+
         if (entry.email === paidBy.email) {
           payerId = userData.id
         }
@@ -356,7 +362,7 @@ function Form() {
           }}
         >
           <Text style={{ color: theme.colors.primary }}>{entries[paidByIndex].email} </Text>
-          will pay
+          has paid
           <Text style={{ color: theme.colors.primary }}> {toBePaid.current} </Text>
           {currency}
         </Text>
