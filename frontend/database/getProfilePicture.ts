@@ -1,10 +1,10 @@
 import { makeRequest } from './makeRequest'
-
-const cache = new Map<string, string>()
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export async function getProfilePicture(url: string): Promise<string | null> {
-  if (cache.has(url)) {
-    return cache.get(url)!
+  const cached = await AsyncStorage.getItem(`photo/${url}`)
+  if (cached) {
+    return cached
   }
 
   try {
@@ -13,7 +13,7 @@ export async function getProfilePicture(url: string): Promise<string | null> {
       string
     >
 
-    cache.set(url, result.photo)
+    await AsyncStorage.setItem(`photo/${url}`, result.photo)
 
     return result.photo
   } catch {
