@@ -24,13 +24,14 @@ export function TabView(props: TabViewProps) {
   const Content = props.tabs[selectedItem].content
 
   return (
-    <View style={{ width: '100%' }}>
+    <View style={{ width: '100%', flex: 1 }}>
       <View style={{ width: '100%', height: 40, flexDirection: 'row' }}>
         {props.tabs.map((tab, index) => {
           const Header = props.tabs[index].header
 
           return (
             <Pressable
+              key={index}
               style={({ pressed }) => {
                 return {
                   backgroundColor: pressed

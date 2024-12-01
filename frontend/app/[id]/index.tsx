@@ -11,10 +11,9 @@ import { setGroupHidden } from '@database/setGroupHidden'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { isCloseToBottom } from '@utils/isScrollViewCloseToBottom'
 import { Link, useLocalSearchParams } from 'expo-router'
 import { useEffect, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, Text, View } from 'react-native'
 import { GroupInfo, Member, SplitInfo } from 'shared'
 
 function InfoCard({ info }: { info: GroupInfo | null }) {
@@ -29,6 +28,7 @@ function InfoCard({ info }: { info: GroupInfo | null }) {
         boxShadow: '0 2px 8px rgba(255, 255, 255, 0.1)',
         padding: 16,
         borderRadius: 16,
+        marginTop: 24,
       }}
     >
       {info === null && <ActivityIndicator size='small' />}
@@ -115,13 +115,7 @@ function ActionButtons({ info }: { info: GroupInfo | null }) {
   )
 }
 
-function SplitList({
-  info,
-  scrollEndHandler,
-}: {
-  info: GroupInfo | null
-  scrollEndHandler: React.MutableRefObject<() => void>
-}) {
+function SplitList({ info }: { info: GroupInfo | null }) {
   const user = useAuth()
   const theme = useTheme()
   const [splits, setSplits] = useState<SplitInfo[] | null>(null)
@@ -129,7 +123,7 @@ function SplitList({
 
   const [counter, forceReload] = useReducer((x) => x + 1, 0)
 
-  scrollEndHandler.current = () => {
+  const loadMore = () => {
     if (user && splits && splits.length > 0 && !loadingMoreRef.current && info) {
       loadingMoreRef.current = true
 
@@ -141,16 +135,33 @@ function SplitList({
   }
 
   useEffect(() => {
-    if (user && info?.id) {
-      getSplits(info?.id).then(setSplits)
+    if (user?.uid && info?.id && !loadingMoreRef.current) {
+      loadingMoreRef.current = true
+
+      getSplits(info?.id)
+        .then(setSplits)
+        .then(() => {
+          loadingMoreRef.current = false
+        })
     }
-  }, [user, info?.id, setSplits, counter])
+  }, [user?.uid, info?.id, setSplits, counter])
 
   return (
-    <View style={{ width: '100%' }}>
-      {!splits && <ActivityIndicator size='small' style={{ padding: 32 }} />}
-      {splits &&
-        splits.map((split) => {
+    <View style={{ width: '100%', flex: 1 }}>
+      <FlatList
+        contentContainerStyle={{ flex: 1, height: '100%' }}
+        ListEmptyComponent={
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            {splits === null && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
+            {splits !== null && splits.length === 0 && (
+              <Text style={{ fontSize: 20, color: theme.colors.outline }}>No splits</Text>
+            )}
+          </View>
+        }
+        data={splits}
+        onEndReachedThreshold={50}
+        onEndReached={loadMore}
+        renderItem={({ item: split }) => {
           return (
             <View
               key={split.id}
@@ -159,7 +170,7 @@ function SplitList({
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                borderColor: 'lightgray',
+                borderColor: theme.colors.outlineVariant,
                 borderBottomWidth: 1,
               }}
             >
@@ -197,18 +208,13 @@ function SplitList({
               </View>
             </View>
           )
-        })}
+        }}
+      />
     </View>
   )
 }
 
-function MembersList({
-  info,
-  scrollEndHandler,
-}: {
-  info: GroupInfo | null
-  scrollEndHandler: React.MutableRefObject<() => void>
-}) {
+function MembersList({ info }: { info: GroupInfo | null }) {
   const user = useAuth()
   const theme = useTheme()
   const [members, setMembers] = useState<Member[] | null>(null)
@@ -216,7 +222,7 @@ function MembersList({
 
   const [counter, forceReload] = useReducer((x) => x + 1, 0)
 
-  scrollEndHandler.current = () => {
+  const loadMore = () => {
     if (user && members && members.length > 0 && !loadingMoreRef.current && info) {
       loadingMoreRef.current = true
 
@@ -228,20 +234,37 @@ function MembersList({
   }
 
   useEffect(() => {
-    if (user && info?.id) {
-      getMembers(info?.id).then(setMembers)
+    if (user?.uid && info?.id) {
+      loadingMoreRef.current = true
+
+      getMembers(info?.id)
+        .then(setMembers)
+        .then(() => {
+          loadingMoreRef.current = false
+        })
     }
-  }, [user, info?.id, setMembers, counter])
+  }, [user?.uid, info?.id, setMembers, counter])
 
   if (!info) {
     return null
   }
 
   return (
-    <View style={{ width: '100%' }}>
-      {!members && <ActivityIndicator size='small' style={{ padding: 32 }} />}
-      {members &&
-        members.map((member) => {
+    <View style={{ width: '100%', flex: 1 }}>
+      <FlatList
+        contentContainerStyle={{ flex: 1, height: '100%' }}
+        ListEmptyComponent={
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            {members === null && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
+            {members !== null && members.length === 0 && (
+              <Text style={{ fontSize: 20, color: theme.colors.outline }}>No members</Text>
+            )}
+          </View>
+        }
+        data={members}
+        onEndReachedThreshold={50}
+        onEndReached={loadMore}
+        renderItem={({ item: member }) => {
           return (
             <View
               key={member.id}
@@ -335,18 +358,13 @@ function MembersList({
               </View>
             </View>
           )
-        })}
+        }}
+      />
     </View>
   )
 }
 
-function ContentSwitcher({
-  info,
-  scrollEndHandler,
-}: {
-  info: GroupInfo | null
-  scrollEndHandler: React.MutableRefObject<() => void>
-}) {
+function ContentSwitcher({ info }: { info: GroupInfo | null }) {
   const theme = useTheme()
 
   return (
@@ -355,11 +373,11 @@ function ContentSwitcher({
       tabs={[
         {
           header: () => <FontAwesome name='list-ul' size={20} color={theme.colors.outline} />,
-          content: () => <SplitList info={info} scrollEndHandler={scrollEndHandler} />,
+          content: () => <SplitList info={info} />,
         },
         {
           header: () => <FontAwesome name='users' size={20} color={theme.colors.outline} />,
-          content: () => <MembersList info={info} scrollEndHandler={scrollEndHandler} />,
+          content: () => <MembersList info={info} />,
         },
       ]}
     />
@@ -371,15 +389,6 @@ export default function GroupScreen() {
   const theme = useTheme()
   const { id } = useLocalSearchParams()
   const groupId = Number(id as string)
-
-  const scrollViewInfo = useRef({
-    contentSize: { width: 0, height: 0 },
-    layout: { x: 0, y: 0, width: 0, height: 0 },
-    contentOffset: { x: 0, y: 0 },
-  })
-
-  const scrollEndHandler = useRef(() => {})
-
   const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null)
 
   useEffect(() => {
@@ -388,44 +397,18 @@ export default function GroupScreen() {
     }
   }, [user, setGroupInfo, groupId])
 
-  function onScrollUpdate() {
-    if (isCloseToBottom(scrollViewInfo.current)) {
-      scrollEndHandler.current()
-    }
-  }
-
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
       <Header />
 
       <View style={{ flex: 1, alignItems: 'center' }}>
-        <ScrollView
-          style={{ flex: 1, width: '100%', maxWidth: 768 }}
-          contentContainerStyle={{
-            alignItems: 'center',
-            paddingVertical: 24,
-            paddingHorizontal: 32,
-          }}
-          scrollEventThrottle={500}
-          onScroll={(e) => {
-            scrollViewInfo.current.contentOffset = e.nativeEvent.contentOffset
-            onScrollUpdate()
-          }}
-          onContentSizeChange={(w, h) => {
-            scrollViewInfo.current.contentSize = { width: w, height: h }
-            onScrollUpdate()
-          }}
-          onLayout={(e) => {
-            scrollViewInfo.current.layout = e.nativeEvent.layout
-            onScrollUpdate()
-          }}
-        >
-          <View style={{width: '100%', alignItems: 'center'}}>
-            <InfoCard info={groupInfo} />
-            <ActionButtons info={groupInfo} />
-          </View>
-          <ContentSwitcher info={groupInfo} scrollEndHandler={scrollEndHandler} />
-        </ScrollView>
+        <View style={{ width: '100%', alignItems: 'center' }}>
+          <InfoCard info={groupInfo} />
+          <ActionButtons info={groupInfo} />
+        </View>
+        <View style={{ width: '100%', maxWidth: 768, flex: 1 }}>
+          <ContentSwitcher info={groupInfo} />
+        </View>
       </View>
     </View>
   )
