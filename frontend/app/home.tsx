@@ -145,7 +145,7 @@ export default function Home() {
                 <Link href='/createGroup' asChild>
                   <Button
                     title='Create group'
-                    icon={<Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />}
+                    leftIcon={<Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />}
                   />
                 </Link>
               </View>

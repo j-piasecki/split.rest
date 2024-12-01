@@ -168,12 +168,12 @@ function SplitList({
                   {split.title}
                 </Text>
               </View>
-              <View style={{ flex: 2 }}>
+              <View style={{ minWidth: 132, alignItems: 'flex-end' }}>
                 <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>
                   {split.total} {info?.currency}
                 </Text>
               </View>
-              <View style={{ flex: 2 }}>
+              <View style={{ flex: 2, alignItems: 'center' }}>
                 <Text style={{ fontSize: 20, color: theme.colors.outline }}>
                   {new Date(split.timestamp).toLocaleDateString()}
                 </Text>
@@ -420,8 +420,10 @@ export default function GroupScreen() {
             onScrollUpdate()
           }}
         >
-          <InfoCard info={groupInfo} />
-          <ActionButtons info={groupInfo} />
+          <View style={{width: '100%', alignItems: 'center'}}>
+            <InfoCard info={groupInfo} />
+            <ActionButtons info={groupInfo} />
+          </View>
           <ContentSwitcher info={groupInfo} scrollEndHandler={scrollEndHandler} />
         </ScrollView>
       </View>
