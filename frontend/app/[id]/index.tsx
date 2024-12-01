@@ -121,14 +121,16 @@ function ActionButtons({ info }: { info: GroupInfo }) {
         </Link>
       )}
 
-      <Link href={`/${info.id}/addSplit`} asChild>
-        <Button
-          title='Add split'
-          leftIcon={
-            <MaterialIcons name='call-split' size={20} color={theme.colors.onPrimaryContainer} />
-          }
-        />
-      </Link>
+      {info.hasAccess && (
+        <Link href={`/${info.id}/addSplit`} asChild>
+          <Button
+            title='Add split'
+            leftIcon={
+              <MaterialIcons name='call-split' size={20} color={theme.colors.onPrimaryContainer} />
+            }
+          />
+        </Link>
+      )}
 
       {info.hidden && (
         <Button

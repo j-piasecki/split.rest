@@ -1,3 +1,4 @@
+import { UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { GetGroupSplitsArguments, SplitInfo } from 'shared'
 
@@ -14,7 +15,7 @@ export async function getGroupSplits(
   ).rows[0]?.has_access
 
   if (!hasAccess) {
-    throw new Error('You do not have permission to restore splits in this group')
+    throw new UnauthorizedException('You do not have permission to get splits in this group')
   }
 
   const rows = (

@@ -7,5 +7,10 @@ export async function getSplits(
 ): Promise<SplitInfo[]> {
   const args: GetGroupSplitsArguments = { groupId, startAfterTimestamp }
 
-  return (await makeRequest('GET', 'getGroupSplits', args)) ?? []
+  try {
+    return (await makeRequest('GET', 'getGroupSplits', args)) ?? []
+  } catch (e) {
+    console.error(e)
+    return []
+  }
 }
