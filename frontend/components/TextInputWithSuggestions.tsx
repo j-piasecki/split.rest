@@ -40,7 +40,7 @@ export function TextInputWithSuggestions<T>({
   }, [debouncedValue, getSuggestions, isFocusedDebounced])
 
   useLayoutEffect(() => {
-    if (isFocused && suggestionBoxRef.current) {
+    if (suggestionBoxRef.current) {
       suggestionBoxRef.current.measure((x, y, width, height) => {
         setSuggestionBoxHeight(height)
       })
@@ -81,6 +81,7 @@ export function TextInputWithSuggestions<T>({
               width: inputLayout.width - 16,
               maxHeight: 150,
               backgroundColor: theme.colors.surfaceContainer,
+              opacity: suggestionBoxHeight > 0 ? 1 : 0,
             }}
           >
             <ScrollView style={{ flex: 1 }}>

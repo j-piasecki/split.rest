@@ -90,6 +90,7 @@ function Entry({
   email,
   amount,
   update,
+  zIndex,
 }: {
   groupId: number
   paidByThis: boolean
@@ -97,10 +98,10 @@ function Entry({
   email: string
   amount: string
   update: (data: EntryData) => void
+  zIndex: number
 }) {
   const theme = useTheme()
   const ref = useRef<TextInputRN>(null)
-  const [isFocused, setIsFocused] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(true)
 
   const getSuggestions = useCallback(
@@ -114,7 +115,7 @@ function Entry({
         flexDirection: 'row',
         alignItems: 'center',
         position: 'relative',
-        zIndex: isFocused ? 10 : 1,
+        zIndex: zIndex,
       }}
     >
       <Pressable onPress={setPaidByIndex} style={{ marginRight: 8 }}>
@@ -149,8 +150,6 @@ function Entry({
           )
         }}
         style={{ flex: 3, margin: 4 }}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
       />
       <TextInput
         placeholder='Amount'
@@ -313,6 +312,7 @@ function Form() {
             setPaidByIndex={() => setPaidByIndex(index)}
             email={entry.email}
             amount={String(entry.amount)}
+            zIndex={entries.length - index}
             update={(data) => {
               let newEntries = [...entries]
               newEntries[index] = data
