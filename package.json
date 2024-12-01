@@ -4,13 +4,15 @@
   "scripts": {
     "start": "yarn workspace frontend start",
     "build": "yarn workspace frontend build:web",
-    "format": "yarn workspace frontend format && yarn workspace backend format",
+    "format": "yarn workspace frontend format && yarn workspace backend format && yarn workspace backups format",
     "lint": "yarn workspace frontend lint && yarn workspace backend lint",
+    "backup": "yarn workspace backups backup",
     "deploy:web": "yarn build && firebase deploy --only hosting"
   },
   "workspaces": [
     "frontend",
     "shared",
-    "backend"
+    "backend",
+    "backups"
   ]
 }
