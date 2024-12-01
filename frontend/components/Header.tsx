@@ -1,11 +1,11 @@
 import { Button } from './Button'
 import { getProfilePicture } from '@database/getProfilePicture'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { logout, useAuth } from '@utils/auth'
 import { Link } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Image, Text, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export interface HeaderProps {
   title?: string
@@ -46,7 +46,11 @@ export default function Header({ title = 'Split' }: HeaderProps) {
       </Link>
 
       <View style={{ flexDirection: 'row', gap: 16 }}>
-        <Button title='Logout' onPress={logout} icon={<MaterialIcons name="logout" size={20} color={theme.colors.onPrimaryContainer} />} />
+        <Button
+          title='Logout'
+          onPress={logout}
+          icon={<MaterialIcons name='logout' size={20} color={theme.colors.onPrimaryContainer} />}
+        />
         <Image
           source={{ uri: profilePicture ?? undefined }}
           style={{

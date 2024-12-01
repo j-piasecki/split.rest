@@ -1,6 +1,7 @@
 import { Button } from '@components/Button'
 import Header from '@components/Header'
 import { getAllUserGroups } from '@database/getAllUserGroups'
+import Entypo from '@expo/vector-icons/Entypo'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -8,7 +9,6 @@ import { Link } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
-import Entypo from '@expo/vector-icons/Entypo';
 
 function Group({ info }: { info: GroupInfo }) {
   const theme = useTheme()
@@ -143,7 +143,10 @@ export default function Home() {
               >
                 <Text style={{ fontSize: 28, color: theme.colors.onSurface }}>Groups</Text>
                 <Link href='/createGroup' asChild>
-                  <Button title='Create group' icon={<Entypo name="plus" size={20} color={theme.colors.onPrimaryContainer} />} />
+                  <Button
+                    title='Create group'
+                    icon={<Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />}
+                  />
                 </Link>
               </View>
               <GroupList groups={groups} />
