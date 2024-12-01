@@ -2,8 +2,8 @@ import { useTheme } from '@styling/theme'
 import React, { useEffect, useState } from 'react'
 import { Pressable, View } from 'react-native'
 
-interface Tab {
-  header: () => React.ReactNode
+export interface Tab {
+  header: (props: { selected: boolean }) => React.ReactNode
   content: () => React.ReactNode
 }
 
@@ -11,6 +11,7 @@ export interface TabViewProps {
   openedTab: number
   tabs: Tab[]
   onTabChange?: (index: number) => void
+  maxContentWidth?: number
 }
 
 export function TabView(props: TabViewProps) {
@@ -21,11 +22,13 @@ export function TabView(props: TabViewProps) {
     setSelectedItem(props.openedTab)
   }, [props.openedTab])
 
-  const Content = props.tabs[selectedItem].content
+  const item = Math.max(0, Math.min(selectedItem, props.tabs.length - 1))
+
+  const Content = props.tabs[item].content
 
   return (
-    <View style={{ width: '100%', flex: 1 }}>
-      <View style={{ width: '100%', height: 40, flexDirection: 'row' }}>
+    <View style={{ width: '100%', flex: 1, alignItems: 'center' }}>
+      <View style={{ width: '100%', height: 48, flexDirection: 'row' }}>
         {props.tabs.map((tab, index) => {
           const Header = props.tabs[index].header
 
@@ -35,9 +38,9 @@ export function TabView(props: TabViewProps) {
               style={({ pressed }) => {
                 return {
                   backgroundColor: pressed
-                    ? theme.colors.surfaceContainer
-                    : index === selectedItem
-                      ? theme.colors.surfaceContainerLow
+                    ? theme.colors.surfaceContainerHigh
+                    : index === item
+                      ? theme.colors.surfaceContainer
                       : theme.colors.transparent,
                   flex: 1,
                   justifyContent: 'center',
@@ -49,13 +52,15 @@ export function TabView(props: TabViewProps) {
                 props.onTabChange?.(index)
               }}
             >
-              <Header />
+              <Header selected={index === item} />
             </Pressable>
           )
         })}
       </View>
 
-      <Content />
+      <View style={{ width: '100%', flex: 1, maxWidth: props.maxContentWidth }}>
+        <Content />
+      </View>
     </View>
   )
 }

@@ -1,6 +1,6 @@
 import { Button } from '@components/Button'
 import Header from '@components/Header'
-import { TabView } from '@components/TabView'
+import { Tab, TabView } from '@components/TabView'
 import { deleteSplit } from '@database/deleteSplit'
 import { getGroupInfo } from '@database/getGroupInfo'
 import { getMembers } from '@database/getMembers'
@@ -8,86 +8,125 @@ import { getSplits } from '@database/getSplits'
 import { setGroupAccess } from '@database/setGroupAccess'
 import { setGroupAdmin } from '@database/setGroupAdmin'
 import { setGroupHidden } from '@database/setGroupHidden'
+import Entypo from '@expo/vector-icons/Entypo'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { isSmallScreen } from '@utils/isSmallScreen'
 import { Link, useLocalSearchParams } from 'expo-router'
 import { useEffect, useReducer, useRef, useState } from 'react'
-import { ActivityIndicator, FlatList, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native'
 import { GroupInfo, Member, SplitInfo } from 'shared'
 
-function InfoCard({ info }: { info: GroupInfo | null }) {
+function useThreeBarLayout() {
+  return useWindowDimensions().width > 1024
+}
+
+function InfoCard({ info }: { info: GroupInfo }) {
   const theme = useTheme()
+  const threeBarLayout = useThreeBarLayout()
 
   return (
     <View
       style={{
         width: '100%',
-        maxWidth: 500,
+        justifyContent: 'center',
         backgroundColor: theme.colors.surfaceContainer,
-        boxShadow: '0 2px 8px rgba(255, 255, 255, 0.1)',
-        padding: 16,
         borderRadius: 16,
-        marginTop: 24,
+        gap: 8,
+        padding: threeBarLayout ? 0 : 16,
+        marginTop: threeBarLayout ? 0 : 16,
       }}
     >
-      {info === null && <ActivityIndicator size='small' />}
-      {info !== null && (
-        <>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 30, color: theme.colors.onSurface }}>{info.name}</Text>
-            <Text
-              style={{
-                fontSize: 30,
-                color:
-                  Number(info.balance) === 0
-                    ? theme.colors.outline
-                    : Number(info.balance) > 0
-                      ? 'green'
-                      : 'red',
-              }}
-            >
-              {Number(info.balance) > 0 && '+'}
-              {info.balance} <Text style={{ color: 'darkgray' }}>{info.currency}</Text>
+      <Text style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 32 }}>
+        {info.name}
+      </Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>Your balance:</Text>
+        <Text
+          style={{
+            fontSize: 24,
+            color:
+              Number(info.balance) === 0
+                ? theme.colors.outline
+                : Number(info.balance) > 0
+                  ? 'green'
+                  : 'red',
+          }}
+        >
+          {Number(info.balance) > 0 && '+'}
+          {info.balance} <Text style={{ color: 'darkgray' }}>{info.currency}</Text>
+        </Text>
+      </View>
+
+      <View
+        style={{
+          justifyContent: 'center',
+          gap: 16,
+          marginTop: 8,
+        }}
+      >
+        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+          <View style={{ width: 24, alignItems: 'center' }}>
+            <FontAwesome name='users' size={20} color={theme.colors.outline} />
+          </View>
+          <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
+            {info.memberCount} Members
+          </Text>
+        </View>
+
+        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+          <View style={{ width: 24, alignItems: 'center' }}>
+            <FontAwesome
+              name={info.hasAccess ? 'unlock-alt' : 'lock'}
+              size={20}
+              color={theme.colors.outline}
+            />
+          </View>
+          <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
+            {info.hasAccess
+              ? 'You have access to this group'
+              : "You don't have access to this group"}
+          </Text>
+        </View>
+
+        {info.isAdmin && (
+          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <View style={{ width: 24, alignItems: 'center' }}>
+              <FontAwesome name='wrench' size={20} color={theme.colors.outline} />
+            </View>
+            <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
+              You are administrator of this group
             </Text>
           </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 16,
-              marginTop: 8,
-            }}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-              <Text style={{ color: theme.colors.outline, fontSize: 20 }}>{info?.memberCount}</Text>
-              <FontAwesome name='users' size={20} color={theme.colors.outline} />
-            </View>
-
-            {!info.hasAccess && <FontAwesome name='lock' size={24} color={theme.colors.outline} />}
-            {info.isAdmin && <FontAwesome name='wrench' size={24} color={theme.colors.outline} />}
-          </View>
-        </>
-      )}
+        )}
+      </View>
     </View>
   )
 }
 
-function ActionButtons({ info }: { info: GroupInfo | null }) {
-  if (!info) {
-    return null
-  }
+function ActionButtons({ info }: { info: GroupInfo }) {
+  const theme = useTheme()
 
   return (
-    <View style={{ marginVertical: 16, flexDirection: 'row', gap: 8 }}>
-      <Link href={`/${info.id}/addUser`} asChild>
-        <Button title='Add user' />
-      </Link>
+    <View style={{ marginVertical: 16, flexDirection: 'column', gap: 8 }}>
+      {info.isAdmin && (
+        <Link href={`/${info.id}/addUser`} asChild>
+          <Button
+            title='Add user'
+            leftIcon={<Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />}
+          />
+        </Link>
+      )}
 
       <Link href={`/${info.id}/addSplit`} asChild>
-        <Button title='Add split' />
+        <Button
+          title='Add split'
+          leftIcon={
+            <MaterialIcons name='call-split' size={20} color={theme.colors.onPrimaryContainer} />
+          }
+        />
       </Link>
 
       {info.hidden && (
@@ -98,6 +137,9 @@ function ActionButtons({ info }: { info: GroupInfo | null }) {
               alert(e.message)
             })
           }}
+          leftIcon={
+            <MaterialIcons name='visibility' size={240} color={theme.colors.onPrimaryContainer} />
+          }
         />
       )}
 
@@ -109,8 +151,46 @@ function ActionButtons({ info }: { info: GroupInfo | null }) {
               alert(e.message)
             })
           }}
+          leftIcon={
+            <MaterialIcons
+              name='visibility-off'
+              size={20}
+              color={theme.colors.onPrimaryContainer}
+            />
+          }
         />
       )}
+    </View>
+  )
+}
+
+function GroupInfoPage({ info }: { info: GroupInfo | null }) {
+  const theme = useTheme()
+  const threeBarLayout = useThreeBarLayout()
+
+  if (!info) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator color={theme.colors.onSurface} />
+      </View>
+    )
+  }
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        justifyContent: threeBarLayout ? 'center' : 'flex-start',
+        paddingHorizontal: 16,
+        paddingBottom: 96,
+        maxWidth: 500,
+        alignSelf: 'center',
+      }}
+    >
+      <InfoCard info={info} />
+      <ActionButtons info={info} />
     </View>
   )
 }
@@ -147,9 +227,9 @@ function SplitList({ info }: { info: GroupInfo | null }) {
   }, [user?.uid, info?.id, setSplits, counter])
 
   return (
-    <View style={{ width: '100%', flex: 1 }}>
+    <View style={{ width: '100%', flex: 1, maxWidth: 768, alignSelf: 'center' }}>
       <FlatList
-        contentContainerStyle={{ flex: 1, height: '100%' }}
+        contentContainerStyle={{ flex: 1, paddingHorizontal: 16 }}
         ListEmptyComponent={
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             {splits === null && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
@@ -193,7 +273,13 @@ function SplitList({ info }: { info: GroupInfo | null }) {
               <View style={{ flex: 1 }}>
                 {(split.paidById === user?.uid || info?.isAdmin) && (
                   <Button
-                    title='Delete'
+                    leftIcon={
+                      <MaterialIcons
+                        name='delete'
+                        size={20}
+                        color={theme.colors.onPrimaryContainer}
+                      />
+                    }
                     onPress={() => {
                       if (info) {
                         deleteSplit(info.id, split.id)
@@ -250,9 +336,9 @@ function MembersList({ info }: { info: GroupInfo | null }) {
   }
 
   return (
-    <View style={{ width: '100%', flex: 1 }}>
+    <View style={{ width: '100%', flex: 1, maxWidth: 768, alignSelf: 'center' }}>
       <FlatList
-        contentContainerStyle={{ flex: 1, height: '100%' }}
+        contentContainerStyle={{ flex: 1, paddingHorizontal: 16 }}
         ListEmptyComponent={
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             {members === null && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
@@ -272,7 +358,7 @@ function MembersList({ info }: { info: GroupInfo | null }) {
                 padding: 16,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                borderColor: 'lightgray',
+                borderColor: theme.colors.outlineVariant,
                 borderBottomWidth: 1,
               }}
             >
@@ -366,27 +452,98 @@ function MembersList({ info }: { info: GroupInfo | null }) {
 
 function ContentSwitcher({ info }: { info: GroupInfo | null }) {
   const theme = useTheme()
+  const threeBarLayout = useThreeBarLayout()
+  const smallScreen = isSmallScreen(useWindowDimensions().width)
+  const [openedTab, setOpenedTab] = useState(0)
 
-  return (
-    <TabView
-      openedTab={0}
-      tabs={[
-        {
-          header: () => <FontAwesome name='list-ul' size={20} color={theme.colors.outline} />,
-          content: () => <SplitList info={info} />,
-        },
-        {
-          header: () => <FontAwesome name='users' size={20} color={theme.colors.outline} />,
-          content: () => <MembersList info={info} />,
-        },
-      ]}
-    />
-  )
+  useEffect(() => {
+    if (threeBarLayout && openedTab === 2) {
+      setOpenedTab(0)
+    }
+  }, [openedTab, threeBarLayout])
+
+  const tabs: Tab[] = [
+    {
+      header: ({ selected }) => (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <FontAwesome
+            name='list-ul'
+            size={20}
+            color={selected ? theme.colors.primary : theme.colors.outline}
+          />
+          {(selected || !smallScreen) && (
+            <Text
+              style={{
+                color: selected ? theme.colors.primary : theme.colors.outline,
+                marginLeft: 8,
+                fontSize: 16,
+              }}
+            >
+              Splits
+            </Text>
+          )}
+        </View>
+      ),
+      content: () => <SplitList info={info} />,
+    },
+    {
+      header: ({ selected }) => (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <FontAwesome
+            name='users'
+            size={20}
+            color={selected ? theme.colors.primary : theme.colors.outline}
+          />
+          {(selected || !smallScreen) && (
+            <Text
+              style={{
+                color: selected ? theme.colors.primary : theme.colors.outline,
+                marginLeft: 8,
+                fontSize: 16,
+              }}
+            >
+              Members
+            </Text>
+          )}
+        </View>
+      ),
+      content: () => <MembersList info={info} />,
+    },
+  ]
+
+  if (!threeBarLayout) {
+    tabs.unshift({
+      header: ({ selected }) => (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Entypo
+            name='home'
+            size={20}
+            color={selected ? theme.colors.primary : theme.colors.outline}
+          />
+          {(selected || !smallScreen) && (
+            <Text
+              style={{
+                color: selected ? theme.colors.primary : theme.colors.outline,
+                marginLeft: 8,
+                fontSize: 16,
+              }}
+            >
+              Group
+            </Text>
+          )}
+        </View>
+      ),
+      content: () => <GroupInfoPage info={info} />,
+    })
+  }
+
+  return <TabView openedTab={openedTab} tabs={tabs} onTabChange={setOpenedTab} />
 }
 
 export default function GroupScreen() {
   const user = useAuth()
   const theme = useTheme()
+  const threeBarLayout = useThreeBarLayout()
   const { id } = useLocalSearchParams()
   const groupId = Number(id as string)
   const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null)
@@ -401,12 +558,13 @@ export default function GroupScreen() {
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
       <Header />
 
-      <View style={{ flex: 1, alignItems: 'center' }}>
-        <View style={{ width: '100%', alignItems: 'center' }}>
-          <InfoCard info={groupInfo} />
-          <ActionButtons info={groupInfo} />
-        </View>
-        <View style={{ width: '100%', maxWidth: 768, flex: 1 }}>
+      <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}>
+        {threeBarLayout && (
+          <View style={{ flex: 1, height: '100%', backgroundColor: theme.colors.surfaceContainer }}>
+            <GroupInfoPage info={groupInfo} />
+          </View>
+        )}
+        <View style={{ flex: 2, height: '100%', alignItems: 'center' }}>
           <ContentSwitcher info={groupInfo} />
         </View>
       </View>

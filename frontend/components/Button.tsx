@@ -3,7 +3,7 @@ import React from 'react'
 import { Pressable, Text } from 'react-native'
 
 export interface ButtonProps {
-  title: string
+  title?: string
   onPress?: () => void
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
@@ -30,9 +30,11 @@ export function Button({ title, onPress, leftIcon, rightIcon }: ButtonProps) {
       }}
     >
       {leftIcon && leftIcon}
-      <Text selectable={false} style={{ color: theme.colors.onPrimaryContainer }}>
-        {title}
-      </Text>
+      {title && (
+        <Text selectable={false} style={{ color: theme.colors.onPrimaryContainer }}>
+          {title}
+        </Text>
+      )}
       {rightIcon && rightIcon}
     </Pressable>
   )

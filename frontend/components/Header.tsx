@@ -49,7 +49,9 @@ export default function Header({ title = 'Split' }: HeaderProps) {
         <Button
           title='Logout'
           onPress={logout}
-          rightIcon={<MaterialIcons name='logout' size={20} color={theme.colors.onPrimaryContainer} />}
+          rightIcon={
+            <MaterialIcons name='logout' size={20} color={theme.colors.onPrimaryContainer} />
+          }
         />
         <Image
           source={{ uri: profilePicture ?? undefined }}
