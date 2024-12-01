@@ -170,7 +170,7 @@ export default function Home() {
             <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }}>
               <ActivityIndicator size='small' color={theme.colors.onSurface} />
               <Text style={{ textAlign: 'center', color: theme.colors.onSurface }}>
-                Loading splits
+                Loading groups
               </Text>
             </View>
           )}
