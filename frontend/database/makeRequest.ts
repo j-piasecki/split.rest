@@ -1,5 +1,6 @@
-import { ENDPOINT } from './endpoint'
 import { auth } from '@utils/firebase'
+
+export const ENDPOINT = __DEV__ ? 'http://localhost:3000' : 'https://api.split.rest'
 
 export async function makeRequest<TArgs, TReturn>(
   method: 'POST' | 'GET',
