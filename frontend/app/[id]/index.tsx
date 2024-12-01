@@ -10,6 +10,7 @@ import { setGroupAdmin } from '@database/setGroupAdmin'
 import { setGroupHidden } from '@database/setGroupHidden'
 import Entypo from '@expo/vector-icons/Entypo'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -36,11 +37,12 @@ function InfoCard({ info }: { info: GroupInfo }) {
         borderRadius: 16,
         gap: 8,
         paddingHorizontal: threeBarLayout ? 0 : 16,
-        paddingVertical: threeBarLayout ? 0 : 32,
+        paddingTop: threeBarLayout ? 0 : 16,
+        paddingBottom: threeBarLayout ? 0 : 24,
         marginTop: threeBarLayout ? 0 : 16,
       }}
     >
-      <Text style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 32 }}>
+      <Text style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 24 }}>
         {info.name}
       </Text>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -95,7 +97,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
         {info.isAdmin && (
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
             <View style={{ width: 24, alignItems: 'center' }}>
-              <FontAwesome name='wrench' size={20} color={theme.colors.outline} />
+              <FontAwesome5 name='shield-alt' size={20} color={theme.colors.outline} />
             </View>
             <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
               You are administrator of this group
@@ -111,7 +113,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
   const theme = useTheme()
 
   return (
-    <View style={{ marginVertical: 16, flexDirection: 'column', gap: 8 }}>
+    <View style={{ marginVertical: 16, flexDirection: 'column', gap: 12 }}>
       {info.isAdmin && (
         <Link href={`/${info.id}/addUser`} asChild>
           <Button
@@ -185,9 +187,9 @@ function GroupInfoPage({ info }: { info: GroupInfo | null }) {
         flex: 1,
         width: '100%',
         height: '100%',
-        justifyContent: threeBarLayout ? 'center' : 'flex-start',
+        justifyContent: 'flex-start',
         paddingHorizontal: 16,
-        paddingBottom: 96,
+        paddingTop: threeBarLayout ? 8 : 0,
         maxWidth: 500,
         alignSelf: 'center',
       }}

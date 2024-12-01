@@ -38,7 +38,7 @@ export default function Header({ title = 'Split' }: HeaderProps) {
           style={{
             fontSize: 28,
             fontWeight: '500',
-            color: theme.colors.onPrimaryContainer,
+            color: theme.colors.primary,
           }}
         >
           {title}
