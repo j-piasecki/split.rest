@@ -41,9 +41,8 @@ export function TextInputWithSuggestions<T>({
 
   useLayoutEffect(() => {
     if (suggestionBoxRef.current) {
-      suggestionBoxRef.current.measure((x, y, width, height) => {
-        setSuggestionBoxHeight(height)
-      })
+      // @ts-expect-error - TODO: getBoundingClientRect will not work on mobile
+      setSuggestionBoxHeight(suggestionBoxRef.current.getBoundingClientRect().height)
     }
   }, [suggestions, isFocused, suggestionsVisible, value, isFocusedDebounced])
 
