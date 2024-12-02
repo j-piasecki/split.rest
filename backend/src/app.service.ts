@@ -11,6 +11,7 @@ import {
   GetGroupSplitsArguments,
   GetSplitInfoArguments,
   GetUserByEmailArguments,
+  GetUserByIdArguments,
   GetUserGroupsArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -117,6 +118,10 @@ export class AppService {
 
   async getUserByEmail(callerId: string, args: GetUserByEmailArguments) {
     return await this.databaseService.getUserByEmail(callerId, args)
+  }
+
+  async getUserById(callerId: string, args: GetUserByIdArguments) {
+    return await this.databaseService.getUserById(callerId, args)
   }
 
   async getGroupInfo(callerId: string, args: GetGroupInfoArguments) {

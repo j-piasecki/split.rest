@@ -22,6 +22,7 @@ import {
   GetGroupSplitsArguments,
   GetSplitInfoArguments,
   GetUserByEmailArguments,
+  GetUserByIdArguments,
   GetUserGroupsArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
@@ -39,6 +40,7 @@ import {
   isGetGroupSplitsArguments,
   isGetSplitInfoArguments,
   isGetUserByEmailArguments,
+  isGetUserByIdArguments,
   isGetUserGroupsArguments,
   isRestoreSplitArguments,
   isSetGroupAccessArguments,
@@ -190,6 +192,16 @@ export class AppController {
     }
 
     return await this.appService.getUserByEmail(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getUserById')
+  async getUserById(@Req() request: Request, @Query() args: GetUserByIdArguments) {
+    if (!isGetUserByIdArguments(args)) {
+      throw new BadRequestException('Invalid arguments')
+    }
+
+    return await this.appService.getUserById(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

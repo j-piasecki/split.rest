@@ -127,6 +127,10 @@ export interface GetUserByEmailArguments {
   email: string
 }
 
+export interface GetUserByIdArguments {
+  userId: string
+}
+
 export interface GetGroupInfoArguments {
   groupId: number
 }
@@ -196,6 +200,10 @@ export function isGetUserGroupsArguments(obj: any): obj is GetUserGroupsArgument
 
 export function isGetUserByEmailArguments(obj: any): obj is GetUserByEmailArguments {
   return obj.email !== undefined
+}
+
+export function isGetUserByIdArguments(obj: any): obj is GetUserByIdArguments {
+  return obj.userId !== undefined
 }
 
 export function isGetGroupInfoArguments(obj: any): obj is GetGroupInfoArguments {

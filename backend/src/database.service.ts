@@ -10,6 +10,7 @@ import { getGroupMembersAutocompletions } from './database/getGroupMembersAutoco
 import { getGroupSplits } from './database/getGroupSplits'
 import { getSplitInfo } from './database/getSplitInfo'
 import { getUserByEmail } from './database/getUserByEmail'
+import { getUserById } from './database/getUserById'
 import { getUserGroups } from './database/getUserGroups'
 import { restoreSplit } from './database/restoreSplit'
 import { setGroupAccess } from './database/setGroupAccess'
@@ -29,6 +30,7 @@ import {
   GetGroupSplitsArguments,
   GetSplitInfoArguments,
   GetUserByEmailArguments,
+  GetUserByIdArguments,
   GetUserGroupsArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
@@ -112,6 +114,10 @@ export class DatabaseService {
 
   async getUserByEmail(callerId: string, args: GetUserByEmailArguments) {
     return await getUserByEmail(this.pool, callerId, args)
+  }
+
+  async getUserById(callerId: string, args: GetUserByIdArguments) {
+    return await getUserById(this.pool, callerId, args)
   }
 
   async getGroupInfo(callerId: string, args: GetGroupInfoArguments) {

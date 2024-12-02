@@ -41,7 +41,7 @@ export async function getSplitInfo(
     id: splitRow.id,
     title: splitRow.name,
     total: splitRow.total,
-    timestamp: splitRow.timestamp,
+    timestamp: Number(splitRow.timestamp),
     paidById: splitRow.paid_by,
     createdById: splitRow.created_by,
     users: participants.map((p) => ({
