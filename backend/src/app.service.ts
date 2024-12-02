@@ -38,6 +38,10 @@ export class AppService {
   }
 
   async createSplit(callerId: string, args: CreateSplitArguments) {
+    if (args.balances.findIndex(({ id }) => id === args.paidBy) === -1) {
+      throw new BadRequestException('Payer must be in the transaction')
+    }
+
     const changeSum = args.balances.reduce((sum, { change }) => sum + change, 0)
     if (Math.abs(changeSum) > 0.01) {
       throw new BadRequestException('Sum of changes must be 0')
@@ -65,6 +69,10 @@ export class AppService {
   }
 
   async updateSplit(callerId: string, args: UpdateSplitArguments) {
+    if (args.balances.findIndex(({ id }) => id === args.paidBy) === -1) {
+      throw new BadRequestException('Payer must be in the transaction')
+    }
+
     const changeSum = args.balances.reduce((sum, { change }) => sum + change, 0)
     if (Math.abs(changeSum) > 0.01) {
       throw new BadRequestException('Sum of changes must be 0')
