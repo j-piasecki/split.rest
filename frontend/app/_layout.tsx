@@ -1,15 +1,15 @@
 import { ThemeProvider, useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { isSmallScreen } from '@utils/isSmallScreen'
+import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { Stack } from 'expo-router'
 import React from 'react'
-import { ActivityIndicator, View, useWindowDimensions } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import 'utils/firebase'
 
 function Content() {
   const user = useAuth()
   const theme = useTheme()
-  const windowSize = useWindowDimensions()
+  const isSmallScreen = useIsSmallScreen()
 
   if (user === undefined) {
     return (
@@ -27,7 +27,7 @@ function Content() {
   }
 
   const modalOptions: Record<string, unknown> = {
-    presentation: isSmallScreen(windowSize.width) ? 'card' : 'transparentModal',
+    presentation: isSmallScreen ? 'card' : 'transparentModal',
     animation: 'fade',
   }
 

@@ -1,5 +1,5 @@
+import { isSmallScreen } from './dimensionUtils'
 import { auth } from './firebase'
-import { isSmallScreen } from './isSmallScreen'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { AuthListener, User } from '@type/auth'
@@ -89,6 +89,7 @@ export function useAuth() {
 
   return user
 }
+
 export function login() {
   const provider = new GoogleAuthProvider()
   if (isSmallScreen()) {

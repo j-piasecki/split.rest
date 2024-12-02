@@ -1,9 +1,9 @@
 import AntDesign from '@expo/vector-icons/AntDesign'
 import { useTheme } from '@styling/theme'
-import { isSmallScreen } from '@utils/isSmallScreen'
+import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
-import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 
 export interface ModalScreenProps {
@@ -114,9 +114,9 @@ function ModalScreen({
 }
 
 export default function Modal(props: ModalScreenProps) {
-  const windowSize = useWindowDimensions()
+  const isSmallScreen = useIsSmallScreen()
 
-  if (isSmallScreen(windowSize.width)) {
+  if (isSmallScreen) {
     return <FullscreenModal title={props.title}>{props.children}</FullscreenModal>
   } else {
     return <ModalScreen {...props} />

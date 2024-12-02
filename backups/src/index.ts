@@ -1,5 +1,5 @@
+import { exec } from 'child_process'
 import { getStorage } from 'firebase-admin/storage'
-import { exec } from "child_process";
 
 import admin = require('firebase-admin')
 
@@ -30,15 +30,3 @@ exec(`pg_dump -U postgres -h localhost -d split -f ${backupPath}`, (err) => {
       console.error('Upload failed', e)
     })
 })
-
-// const bucket = getStorage().bucket()
-
-// if (process.argv.length < 3) {
-//   console.error('Usage: node backup.js <path>')
-//   process.exit(1)
-// }
-
-// const path = process.argv[2]
-// const name = path.split('/').pop()
-
-

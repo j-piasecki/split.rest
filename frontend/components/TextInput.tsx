@@ -50,7 +50,7 @@ export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput
           paddingHorizontal: 8,
           paddingBottom: 8,
           paddingTop: 16,
-          color: theme.colors.onSurface
+          color: theme.colors.onSurface,
         }}
         value={value}
         onChangeText={(value) => {
