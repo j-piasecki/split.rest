@@ -50,9 +50,7 @@ export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput
           paddingHorizontal: 8,
           paddingBottom: 8,
           paddingTop: 16,
-          color: theme.colors.onSurface,
-          // @ts-expect-error outlineWidth is from react-native-web to disable the default outline
-          outlineWidth: 0,
+          color: theme.colors.onSurface
         }}
         value={value}
         onChangeText={(value) => {
