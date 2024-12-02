@@ -31,7 +31,10 @@ export function Button({ title, onPress, leftIcon, rightIcon }: ButtonProps) {
     >
       {leftIcon && leftIcon}
       {title && (
-        <Text selectable={false} style={{ color: theme.colors.onPrimaryContainer }}>
+        <Text
+          selectable={false}
+          style={{ fontSize: 16, fontWeight: '600', color: theme.colors.onPrimaryContainer }}
+        >
           {title}
         </Text>
       )}
