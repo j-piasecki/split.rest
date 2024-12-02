@@ -9,6 +9,7 @@ import {
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupSplitsArguments,
+  GetSplitInfoArguments,
   GetUserByEmailArguments,
   GetUserGroupsArguments,
   SetGroupAccessArguments,
@@ -119,6 +120,10 @@ export class AppService {
     args: GetGroupMembersAutocompletionsArguments
   ) {
     return await this.databaseService.getGroupMembersAutocompletions(callerId, args)
+  }
+
+  async getSplitInfo(callerId: string, args: GetSplitInfoArguments) {
+    return await this.databaseService.getSplitInfo(callerId, args)
   }
 
   async getProfilePicture(photoURL: string) {

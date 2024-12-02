@@ -20,6 +20,7 @@ import {
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupSplitsArguments,
+  GetSplitInfoArguments,
   GetUserByEmailArguments,
   GetUserGroupsArguments,
   RestoreSplitArguments,
@@ -36,6 +37,7 @@ import {
   isGetGroupMembersArguments,
   isGetGroupMembersAutocompletionsArguments,
   isGetGroupSplitsArguments,
+  isGetSplitInfoArguments,
   isGetUserByEmailArguments,
   isGetUserGroupsArguments,
   isRestoreSplitArguments,
@@ -211,6 +213,16 @@ export class AppController {
     }
 
     return await this.appService.getGroupMembersAutocompletions(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getSplitInfo')
+  async getSplitInfo(@Req() request: Request, @Query() args: GetSplitInfoArguments) {
+    if (!isGetSplitInfoArguments(args)) {
+      throw new BadRequestException('Invalid arguments')
+    }
+
+    return await this.appService.getSplitInfo(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

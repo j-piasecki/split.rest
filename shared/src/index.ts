@@ -20,11 +20,7 @@ export interface GroupInfo extends GroupMetadata {
   balance: string
 }
 
-export interface Member {
-  id: string
-  name: string
-  email: string
-  photoURL: string
+export interface Member extends User {
   balance: string
   isAdmin: boolean
   hasAccess: boolean
@@ -33,6 +29,10 @@ export interface Member {
 export interface BalanceChange {
   id: string
   change: number
+}
+
+export interface UserWithBalanceChange extends User {
+  change: string
 }
 
 export interface SplitInfo {
@@ -44,8 +44,12 @@ export interface SplitInfo {
   createdById: string
 }
 
-export interface Split extends SplitInfo {
+export interface SplitWithChanges extends SplitInfo {
   changes: BalanceChange[]
+}
+
+export interface SplitWithUsers extends SplitInfo {
+  users: UserWithBalanceChange[]
 }
 
 export interface CreateGroupArguments {
@@ -132,6 +136,11 @@ export interface GetGroupMembersAutocompletionsArguments {
   query: string
 }
 
+export interface GetSplitInfoArguments {
+  groupId: number
+  splitId: number
+}
+
 
 export function isUser(obj: any): obj is User {
   return obj.id !== undefined && obj.name !== undefined && obj.email !== undefined && obj.photoURL !== undefined
@@ -195,4 +204,8 @@ export function isGetGroupInfoArguments(obj: any): obj is GetGroupInfoArguments 
 
 export function isGetGroupMembersAutocompletionsArguments(obj: any): obj is GetGroupMembersAutocompletionsArguments {
   return obj.groupId !== undefined && obj.query !== undefined
+}
+
+export function isGetSplitInfoArguments(obj: any): obj is GetSplitInfoArguments {
+  return obj.groupId !== undefined && obj.splitId !== undefined
 }
