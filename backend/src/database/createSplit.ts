@@ -20,7 +20,7 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
     const splitId = (
       await client.query(
         'INSERT INTO splits (group_id, total, paid_by, created_by, name, timestamp, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
-        [args.groupId, args.total, callerId, args.paidBy, args.title, args.timestamp, Date.now()]
+        [args.groupId, args.total, args.paidBy, callerId, args.title, args.timestamp, Date.now()]
       )
     ).rows[0].id
 
