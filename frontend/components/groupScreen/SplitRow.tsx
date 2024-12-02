@@ -4,7 +4,8 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
-import { Text, View } from 'react-native'
+import { useRouter } from 'expo-router'
+import { Pressable, Text, View } from 'react-native'
 import { GroupInfo, SplitInfo } from 'shared'
 
 export interface SplitRowProps {
@@ -54,13 +55,17 @@ function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo | null
 export function SplitRow({ split, info, forceReload }: SplitRowProps) {
   const user = useAuth()
   const theme = useTheme()
+  const router = useRouter()
   const isSmallScreen = useIsSmallScreen()
 
   const showDeteteButton = split.paidById === user?.uid || info?.isAdmin
 
   return (
-    <View
+    <Pressable
       key={split.id}
+      onPress={() => {
+        router.navigate(`${info?.id}/split/${split.id}`)
+      }}
       style={{
         paddingVertical: 16,
         paddingHorizontal: isSmallScreen ? 0 : 16,
@@ -98,6 +103,6 @@ export function SplitRow({ split, info, forceReload }: SplitRowProps) {
           />
         )}
       </View>
-    </View>
+    </Pressable>
   )
 }

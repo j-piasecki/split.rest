@@ -46,6 +46,7 @@ function Content() {
         <Stack.Screen name='[id]/index' options={{ title: 'Group' }} />
         <Stack.Screen name='[id]/addUser' options={{ title: 'Add user', ...modalOptions }} />
         <Stack.Screen name='[id]/addSplit' options={{ title: 'Add split', ...modalOptions }} />
+        <Stack.Screen name='[id]/split/[splitId]' options={{ title: 'Split', ...modalOptions }} />
       </Stack>
     </View>
   )
