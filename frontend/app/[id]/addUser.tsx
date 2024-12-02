@@ -26,6 +26,12 @@ function Form() {
       return
     }
 
+    if (email.length > 512) {
+      setError('E-mail is too long')
+      setWaiting(false)
+      return
+    }
+
     getUserByEmail(email)
       .then((user) => {
         if (user === null) {

@@ -23,7 +23,7 @@ import {
 } from 'react-native'
 import { BalanceChange, User } from 'shared'
 
-interface EntryData {
+export interface EntryData {
   email: string
   amount: string
 }
@@ -196,6 +196,17 @@ function Form() {
   }, [user, id])
 
   async function save() {
+    for (const { email, amount } of entries) {
+      if (email === '' && amount === '') {
+        continue
+      }
+
+      if (email === '' || amount === '') {
+        setError('You need to fill both fields in the row')
+        return
+      }
+    }
+
     const paidBy = entries[paidByIndex]
     const toSave = entries.filter((entry) => entry.email !== '' && entry.amount !== '')
 
@@ -213,6 +224,12 @@ function Form() {
 
     if (!title) {
       setError('Title is required')
+      setTitleError(true)
+      return
+    }
+
+    if (title.length > 512) {
+      setError('Title is too long')
       setTitleError(true)
       return
     }

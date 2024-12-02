@@ -25,6 +25,12 @@ function Form() {
       return
     }
 
+    if (name.length > 128) {
+      setError('Name is too long')
+      setWaiting(false)
+      return
+    }
+
     createGroup(name, currency)
       .then((group) => {
         router.navigate('/' + group.id, { withAnchor: true })
