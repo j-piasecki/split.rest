@@ -3,6 +3,7 @@ import { deleteSplit } from '@database/deleteSplit'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { Text, View } from 'react-native'
 import { GroupInfo, SplitInfo } from 'shared'
 
@@ -12,15 +13,57 @@ export interface SplitRowProps {
   forceReload: () => void
 }
 
+function LinearInfo({ split, info }: { split: SplitInfo; info: GroupInfo | null }) {
+  const theme = useTheme()
+
+  return (
+    <>
+      <View style={{ minWidth: 132, alignItems: 'flex-end' }}>
+        <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>
+          {split.total} {info?.currency}
+        </Text>
+      </View>
+      <View style={{ flex: 2, alignItems: 'center', overflow: 'hidden' }}>
+        <Text style={{ fontSize: 20, color: theme.colors.outline }}>
+          {new Date(split.timestamp).toLocaleDateString()}
+        </Text>
+      </View>
+    </>
+  )
+}
+
+function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo | null }) {
+  const theme = useTheme()
+
+  return (
+    <View style={{ paddingHorizontal: 16, alignItems: 'center' }}>
+      <View style={{ alignItems: 'flex-end' }}>
+        <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>
+          {split.total} {info?.currency}
+        </Text>
+      </View>
+      <View style={{ alignItems: 'flex-end' }}>
+        <Text style={{ fontSize: 16, color: theme.colors.outline }}>
+          {new Date(split.timestamp).toLocaleDateString()}
+        </Text>
+      </View>
+    </View>
+  )
+}
+
 export function SplitRow({ split, info, forceReload }: SplitRowProps) {
   const user = useAuth()
   const theme = useTheme()
+  const isSmallScreen = useIsSmallScreen()
+
+  const showDeteteButton = split.paidById === user?.uid || info?.isAdmin
 
   return (
     <View
       key={split.id}
       style={{
-        padding: 16,
+        paddingVertical: 16,
+        paddingHorizontal: isSmallScreen ? 0 : 16,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -33,19 +76,12 @@ export function SplitRow({ split, info, forceReload }: SplitRowProps) {
           {split.title}
         </Text>
       </View>
-      <View style={{ minWidth: 132, alignItems: 'flex-end' }}>
-        <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>
-          {split.total} {info?.currency}
-        </Text>
-      </View>
-      <View style={{ flex: 2, alignItems: 'center' }}>
-        <Text style={{ fontSize: 20, color: theme.colors.outline }}>
-          {new Date(split.timestamp).toLocaleDateString()}
-        </Text>
-      </View>
 
-      <View style={{ flex: 1 }}>
-        {(split.paidById === user?.uid || info?.isAdmin) && (
+      {isSmallScreen && <StackedInfo split={split} info={info} />}
+      {!isSmallScreen && <LinearInfo split={split} info={info} />}
+
+      <View style={{ width: 48 }}>
+        {showDeteteButton && (
           <Button
             leftIcon={
               <MaterialIcons name='delete' size={20} color={theme.colors.onPrimaryContainer} />

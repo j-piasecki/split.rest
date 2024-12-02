@@ -3,6 +3,7 @@ import { setGroupAccess } from '@database/setGroupAccess'
 import { setGroupAdmin } from '@database/setGroupAdmin'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { Text, View } from 'react-native'
 import { GroupInfo, Member } from 'shared'
 
@@ -15,12 +16,14 @@ export interface MemberRowProps {
 export function MemberRow({ member, info, forceReload }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
+  const isSmallScreen = useIsSmallScreen()
 
   return (
     <View
       key={member.id}
       style={{
-        padding: 16,
+        paddingVertical: 16,
+        paddingHorizontal: isSmallScreen ? 0 : 16,
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderColor: theme.colors.outlineVariant,
