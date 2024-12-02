@@ -1,4 +1,4 @@
-import AntDesign from '@expo/vector-icons/AntDesign'
+import Ionicons from '@expo/vector-icons/Ionicons'
 import { useTheme } from '@styling/theme'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
@@ -6,15 +6,13 @@ import React, { useCallback } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 
-export interface ModalScreenProps {
-  returnPath: string
+export interface FullscreenModalProps {
+  goBack: () => void
   title: string
   children: React.ReactNode
-  maxWidth?: number
-  maxHeight?: number
 }
 
-function FullscreenModal({ children, title }: { children: React.ReactNode; title: string }) {
+function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
   const theme = useTheme()
 
   return (
@@ -30,9 +28,13 @@ function FullscreenModal({ children, title }: { children: React.ReactNode; title
           flexDirection: 'row',
           alignItems: 'center',
           padding: 24,
-          justifyContent: 'space-between',
+          justifyContent: 'flex-start',
+          gap: 16,
         }}
       >
+        <Pressable onPress={goBack}>
+          <Ionicons name='chevron-back' size={28} color={theme.colors.onSurface} />
+        </Pressable>
         <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>{title}</Text>
       </View>
       {children}
@@ -40,23 +42,22 @@ function FullscreenModal({ children, title }: { children: React.ReactNode; title
   )
 }
 
+export interface ModalScreenProps {
+  goBack: () => void
+  title: string
+  children: React.ReactNode
+  maxWidth?: number
+  maxHeight?: number
+}
+
 function ModalScreen({
-  returnPath,
+  goBack,
   title,
   children,
   maxWidth = 768,
   maxHeight = 600,
 }: ModalScreenProps) {
-  const router = useRouter()
   const theme = useTheme()
-
-  const goBack = useCallback(() => {
-    if (router.canGoBack()) {
-      router.back()
-    } else {
-      router.replace(returnPath)
-    }
-  }, [router, returnPath])
 
   return (
     <Animated.View
@@ -104,7 +105,7 @@ function ModalScreen({
               }
             }}
           >
-            <AntDesign name='close' size={28} color={theme.colors.onSurface} />
+            <Ionicons name='close' size={28} color={theme.colors.onSurface} />
           </Pressable>
         </View>
         {children}
@@ -113,12 +114,33 @@ function ModalScreen({
   )
 }
 
-export default function Modal(props: ModalScreenProps) {
+export interface ModalProps {
+  returnPath: string
+  title: string
+  children: React.ReactNode
+  maxWidth?: number
+  maxHeight?: number
+}
+
+export default function Modal({ returnPath, ...props }: ModalProps) {
+  const router = useRouter()
   const isSmallScreen = useIsSmallScreen()
 
+  const goBack = useCallback(() => {
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace(returnPath)
+    }
+  }, [router, returnPath])
+
   if (isSmallScreen) {
-    return <FullscreenModal title={props.title}>{props.children}</FullscreenModal>
+    return (
+      <FullscreenModal title={props.title} goBack={goBack}>
+        {props.children}
+      </FullscreenModal>
+    )
   } else {
-    return <ModalScreen {...props} />
+    return <ModalScreen {...props} goBack={goBack} />
   }
 }
