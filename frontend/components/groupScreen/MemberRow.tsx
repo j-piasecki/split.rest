@@ -1,10 +1,12 @@
 import { Button } from '@components/Button'
+import { getProfilePicture } from '@database/getProfilePicture'
 import { setGroupAccess } from '@database/setGroupAccess'
 import { setGroupAdmin } from '@database/setGroupAdmin'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
-import { Text, View } from 'react-native'
+import { useEffect, useState } from 'react'
+import { Image, Text, View } from 'react-native'
 import { GroupInfo, Member } from 'shared'
 
 export interface MemberRowProps {
@@ -17,6 +19,13 @@ export function MemberRow({ member, info, forceReload }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
   const isSmallScreen = useIsSmallScreen()
+  const [photo, setPhoto] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (member.photoURL) {
+      getProfilePicture(member.photoURL).then(setPhoto)
+    }
+  }, [member.photoURL])
 
   return (
     <View
@@ -30,70 +39,78 @@ export function MemberRow({ member, info, forceReload }: MemberRowProps) {
         borderBottomWidth: 1,
       }}
     >
+      <View style={{ justifyContent: 'center', marginRight: 16 }}>
+        <Image
+          source={{ uri: photo ?? undefined }}
+          style={{ width: 32, height: 32, borderRadius: 16 }}
+        />
+      </View>
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
           {member.name}
         </Text>
       </View>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          gap: 4,
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}
-      >
-        {info.isAdmin && member.id !== user?.uid && member.hasAccess && (
-          <Button
-            title='Revoke access'
-            onPress={() => {
-              setGroupAccess(info.id, member.id, false)
-                .then(forceReload)
-                .catch((e) => {
-                  alert(e.message)
-                })
-            }}
-          />
-        )}
-        {info?.isAdmin && member.id !== user?.uid && !member.hasAccess && (
-          <Button
-            title='Give access'
-            onPress={() => {
-              setGroupAccess(info.id, member.id, true)
-                .then(forceReload)
-                .catch((e) => {
-                  alert(e.message)
-                })
-            }}
-          />
-        )}
+      {info.isAdmin && member.id !== user?.uid && (
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            gap: 4,
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}
+        >
+          {member.hasAccess && (
+            <Button
+              title='Revoke access'
+              onPress={() => {
+                setGroupAccess(info.id, member.id, false)
+                  .then(forceReload)
+                  .catch((e) => {
+                    alert(e.message)
+                  })
+              }}
+            />
+          )}
+          {!member.hasAccess && (
+            <Button
+              title='Give access'
+              onPress={() => {
+                setGroupAccess(info.id, member.id, true)
+                  .then(forceReload)
+                  .catch((e) => {
+                    alert(e.message)
+                  })
+              }}
+            />
+          )}
 
-        {info.isAdmin && member.id !== user?.uid && member.isAdmin && (
-          <Button
-            title='Revoke admin'
-            onPress={() => {
-              setGroupAdmin(info.id, member.id, false)
-                .then(forceReload)
-                .catch((e) => {
-                  alert(e.message)
-                })
-            }}
-          />
-        )}
-        {info.isAdmin && member.id !== user?.uid && !member.isAdmin && member.hasAccess && (
-          <Button
-            title='Make admin'
-            onPress={() => {
-              setGroupAdmin(info.id, member.id, true)
-                .then(forceReload)
-                .catch((e) => {
-                  alert(e.message)
-                })
-            }}
-          />
-        )}
-      </View>
+          {member.isAdmin && (
+            <Button
+              title='Revoke admin'
+              onPress={() => {
+                setGroupAdmin(info.id, member.id, false)
+                  .then(forceReload)
+                  .catch((e) => {
+                    alert(e.message)
+                  })
+              }}
+            />
+          )}
+          {!member.isAdmin && member.hasAccess && (
+            <Button
+              title='Make admin'
+              onPress={() => {
+                setGroupAdmin(info.id, member.id, true)
+                  .then(forceReload)
+                  .catch((e) => {
+                    alert(e.message)
+                  })
+              }}
+            />
+          )}
+        </View>
+      )}
       <View style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: 100 }}>
         <Text
           style={{

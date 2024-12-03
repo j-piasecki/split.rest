@@ -1,4 +1,3 @@
-import 'utils/firebase'
 import { ThemeProvider, useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
@@ -6,6 +5,7 @@ import { Stack } from 'expo-router'
 import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import 'utils/firebase'
 
 function Content() {
   const user = useAuth()
