@@ -43,7 +43,7 @@ function UserRow({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 8,
-        paddingVertical: 8,
+        paddingVertical: 12,
         borderBottomWidth: 1,
         borderColor: theme.colors.outlineVariant,
       }}
@@ -53,7 +53,7 @@ function UserRow({
         style={{ width: 32, height: 32, borderRadius: 16 }}
       />
       <View style={{ flex: 1 }}>
-        <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>{user.name}</Text>
+        <Text style={{ color: theme.colors.onSurface, fontSize: 20 }}>{user.name}</Text>
         <Text style={{ color: theme.colors.outline, fontSize: 12 }}>{user.email}</Text>
       </View>
       <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 20 }}>
