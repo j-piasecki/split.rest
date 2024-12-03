@@ -6,7 +6,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
-import { Link } from 'expo-router'
+import { router } from 'expo-router'
 import { ActivityIndicator, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
@@ -101,23 +101,25 @@ function ActionButtons({ info }: { info: GroupInfo }) {
   return (
     <View style={{ marginVertical: 16, flexDirection: 'column', gap: 12 }}>
       {info.isAdmin && (
-        <Link href={`/${info.id}/addUser`} asChild>
-          <Button
-            title='Add user'
-            leftIcon={<Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />}
-          />
-        </Link>
+        <Button
+          onPress={() => {
+            router.navigate(`/${info.id}/addUser`)
+          }}
+          title='Add user'
+          leftIcon={<Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />}
+        />
       )}
 
       {info.hasAccess && (
-        <Link href={`/${info.id}/addSplit`} asChild>
-          <Button
-            title='Add split'
-            leftIcon={
-              <MaterialIcons name='call-split' size={20} color={theme.colors.onPrimaryContainer} />
-            }
-          />
-        </Link>
+        <Button
+          onPress={() => {
+            router.navigate(`/${info.id}/addSplit`)
+          }}
+          title='Add split'
+          leftIcon={
+            <MaterialIcons name='call-split' size={20} color={theme.colors.onPrimaryContainer} />
+          }
+        />
       )}
 
       {info.hidden && (

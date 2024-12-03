@@ -4,6 +4,7 @@ import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { Stack } from 'expo-router'
 import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import 'utils/firebase'
 
 function Content() {
@@ -32,7 +33,7 @@ function Content() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.surfaceContainerLowest }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.surfaceContainerLowest }}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name='index' options={{ title: 'Split' }} />
         <Stack.Screen name='home' options={{ title: 'Split' }} />
@@ -48,7 +49,7 @@ function Content() {
         <Stack.Screen name='[id]/addSplit' options={{ title: 'Add split', ...modalOptions }} />
         <Stack.Screen name='[id]/split/[splitId]' options={{ title: 'Split', ...modalOptions }} />
       </Stack>
-    </View>
+    </SafeAreaView>
   )
 }
 

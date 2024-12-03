@@ -5,7 +5,7 @@ import Entypo from '@expo/vector-icons/Entypo'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { Link } from 'expo-router'
+import { router } from 'expo-router'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
@@ -16,50 +16,51 @@ function Group({ info }: { info: GroupInfo }) {
   const offColor = 'darkgray'
 
   return (
-    <Link key={info.id} href={`/${info.id}`} asChild>
-      <View
-        style={{
-          flex: 1,
-          padding: 16,
-          borderRadius: 16,
-          marginVertical: 4,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          overflow: 'visible',
-          backgroundColor: theme.colors.surfaceContainer,
-        }}
-      >
-        <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>{info.name}</Text>
+    <Pressable
+      onPress={() => {
+        router.navigate(`/${info.id}`)
+      }}
+      style={{
+        flex: 1,
+        padding: 16,
+        borderRadius: 16,
+        marginVertical: 4,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        overflow: 'visible',
+        backgroundColor: theme.colors.surfaceContainer,
+      }}
+    >
+      <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>{info.name}</Text>
 
-        <View style={{ flexDirection: 'row', gap: 8 }}>
-          <View style={{ flexDirection: 'row', gap: 4 }}>
-            <Text style={{ fontSize: 16, color: offColor }}>{info.memberCount}</Text>
-            <FontAwesome
-              name='users'
-              size={16}
-              color={offColor}
-              style={{ transform: [{ translateY: 2 }] }}
-            />
-          </View>
-
+      <View style={{ flexDirection: 'row', gap: 8 }}>
+        <View style={{ flexDirection: 'row', gap: 4 }}>
+          <Text style={{ fontSize: 16, color: offColor }}>{info.memberCount}</Text>
           <FontAwesome
-            name='lock'
+            name='users'
             size={16}
-            color={info.hasAccess ? 'transparent' : offColor}
+            color={offColor}
             style={{ transform: [{ translateY: 2 }] }}
           />
-          <FontAwesome
-            name='wrench'
-            size={16}
-            color={info.isAdmin ? offColor : 'transparent'}
-            style={{ transform: [{ translateY: 2 }] }}
-          />
-
-          <Text style={{ fontSize: 16, color: offColor }}>{info.currency}</Text>
         </View>
+
+        <FontAwesome
+          name='lock'
+          size={16}
+          color={info.hasAccess ? 'transparent' : offColor}
+          style={{ transform: [{ translateY: 2 }] }}
+        />
+        <FontAwesome
+          name='wrench'
+          size={16}
+          color={info.isAdmin ? offColor : 'transparent'}
+          style={{ transform: [{ translateY: 2 }] }}
+        />
+
+        <Text style={{ fontSize: 16, color: offColor }}>{info.currency}</Text>
       </View>
-    </Link>
+    </Pressable>
   )
 }
 
@@ -143,14 +144,15 @@ export default function Home() {
                 }}
               >
                 <Text style={{ fontSize: 28, color: theme.colors.onSurface }}>Groups</Text>
-                <Link href='/createGroup' asChild>
-                  <Button
-                    title='Create group'
-                    leftIcon={
-                      <Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />
-                    }
-                  />
-                </Link>
+                <Button
+                  onPress={() => {
+                    router.navigate('/createGroup')
+                  }}
+                  title='Create group'
+                  leftIcon={
+                    <Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />
+                  }
+                />
               </View>
               <GroupList groups={groups} />
 
