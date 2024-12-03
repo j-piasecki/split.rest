@@ -29,7 +29,7 @@ function Content() {
 
   const modalOptions: Record<string, unknown> = {
     presentation: isSmallScreen ? 'card' : 'transparentModal',
-    animation: 'fade',
+    animation: isSmallScreen ? undefined : 'fade',
   }
 
   return (

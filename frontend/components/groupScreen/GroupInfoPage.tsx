@@ -56,7 +56,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
           marginTop: 8,
         }}
       >
-        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
           <View style={{ width: 24, alignItems: 'center' }}>
             <FontAwesome name='users' size={20} color={theme.colors.outline} />
           </View>
@@ -65,7 +65,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
           </Text>
         </View>
 
-        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
           <View style={{ width: 24, alignItems: 'center' }}>
             <FontAwesome
               name={info.hasAccess ? 'unlock-alt' : 'lock'}
@@ -81,7 +81,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
         </View>
 
         {info.isAdmin && (
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
             <View style={{ width: 24, alignItems: 'center' }}>
               <FontAwesome5 name='shield-alt' size={20} color={theme.colors.outline} />
             </View>

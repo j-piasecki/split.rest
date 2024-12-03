@@ -18,7 +18,7 @@ export function Button({ title, onPress, leftIcon, rightIcon }: ButtonProps) {
       style={(state) => {
         return {
           paddingVertical: 12,
-          paddingHorizontal: 24,
+          paddingHorizontal: title ? 24 : 12,
           borderRadius: 12,
           backgroundColor: theme.colors.primaryContainer,
           opacity: state.pressed ? 0.7 : 1,
