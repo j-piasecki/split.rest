@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "461804772528",
+    "project_id": "split-6ed94",
+    "storage_bucket": "split-6ed94.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461804772528:android:f8adff8e814bddebc1af75",
+        "android_client_info": {
+          "package_name": "com.jpiasecki.Split"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461804772528-nlsf24kbqq46eatjr9hl8au9fj75j8nt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jpiasecki.Split",
+            "certificate_hash": "9345ea1d0aa204d6a3b46807c45dfbf079d8deb2"
+          }
+        },
+        {
+          "client_id": "461804772528-ci5dbjajrcrlv2lsgdap364ki2r2nnkb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZWuZfivpj1tA57LHfgCsUF_l-OhPtpIs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461804772528-ci5dbjajrcrlv2lsgdap364ki2r2nnkb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "461804772528-f16if3utcv3dd0r3pmmk7ero259q7ft1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jpiasecki.Split"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

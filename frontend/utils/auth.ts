@@ -1,24 +1,19 @@
-import { isSmallScreen } from './dimensionUtils'
-import { auth } from './firebase'
+import { auth, authObj } from './firebase'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
-import { AuthListener, User } from '@type/auth'
+import { FirebaseAuthTypes } from '@react-native-firebase/auth'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import { User } from '@type/auth'
 import { usePathname, useRouter } from 'expo-router'
-import {
-  User as FirebaseUser,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithPopup,
-  signInWithRedirect,
-} from 'firebase/auth'
 import { useEffect, useState } from 'react'
 
-auth.useDeviceLanguage()
+GoogleSignin.configure({
+  webClientId: '461804772528-nlsf24kbqq46eatjr9hl8au9fj75j8nt.apps.googleusercontent.com',
+})
 
 let authReady = false
-const listeners: AuthListener[] = []
 
-function createUser(user: FirebaseUser | null): User | null {
+function createUser(user: FirebaseAuthTypes.User | null): User | null {
   if (user) {
     const uid = user.uid
     const name = user.displayName || 'Anonymous'
@@ -27,19 +22,6 @@ function createUser(user: FirebaseUser | null): User | null {
   }
 
   return null
-}
-
-export function addAuthListener(listener: AuthListener) {
-  listeners.push(listener)
-
-  if (authReady) {
-    listener(createUser(auth.currentUser))
-  }
-
-  return () => {
-    const index = listeners.indexOf(listener)
-    listeners.splice(index, 1)
-  }
 }
 
 let createUserRetries = 5
@@ -55,19 +37,6 @@ async function tryToCreateUser() {
   }
 }
 
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    await tryToCreateUser()
-  }
-
-  const result = createUser(user)
-  listeners.forEach((listener) => listener(result))
-
-  if (!authReady) {
-    authReady = true
-  }
-})
-
 export function useAuth() {
   const path = usePathname()
   const router = useRouter()
@@ -76,7 +45,13 @@ export function useAuth() {
   )
 
   useEffect(() => {
-    return addAuthListener(setUser)
+    console.log('useAuth effect')
+    const subscriber = auth.onAuthStateChanged((user) => {
+      console.log(JSON.stringify(createUser(user)))
+      authReady = true
+      setUser(createUser(user))
+    })
+    return subscriber
   }, [])
 
   useEffect(() => {
@@ -90,13 +65,32 @@ export function useAuth() {
   return user
 }
 
-export function login() {
-  const provider = new GoogleAuthProvider()
-  if (isSmallScreen()) {
-    signInWithRedirect(auth, provider)
-  } else {
-    signInWithPopup(auth, provider)
+export async function login() {
+  // Check if your device supports Google Play
+  await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true })
+  console.log('Google Play Services are available')
+  // Get the users ID token
+  const signInResult = await GoogleSignin.signIn()
+  console.log(signInResult)
+  // Try the new style of google-sign in result, from v13+ of that module
+  const idToken = signInResult.data?.idToken
+  if (!idToken) {
+    throw new Error('No ID token found')
   }
+
+  // Create a Google credential with the token
+  const googleCredential = authObj.GoogleAuthProvider.credential(idToken)
+
+  // Sign-in the user with the credential
+  return auth
+    .signInWithCredential(googleCredential)
+    .then((user) => {
+      console.log('User signed in', user.user?.email)
+      tryToCreateUser()
+    })
+    .catch((error) => {
+      console.error('Error signing in', error)
+    })
 }
 
 export function logout() {

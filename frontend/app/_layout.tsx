@@ -1,3 +1,4 @@
+import 'utils/firebase'
 import { ThemeProvider, useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
@@ -5,7 +6,6 @@ import { Stack } from 'expo-router'
 import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import 'utils/firebase'
 
 function Content() {
   const user = useAuth()
@@ -34,7 +34,7 @@ function Content() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.surfaceContainerLowest }}>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
         <Stack.Screen name='index' options={{ title: 'Split' }} />
         <Stack.Screen name='home' options={{ title: 'Split' }} />
         <Stack.Screen
