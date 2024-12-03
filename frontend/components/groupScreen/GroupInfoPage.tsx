@@ -129,7 +129,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
             })
           }}
           leftIcon={
-            <MaterialIcons name='visibility' size={240} color={theme.colors.onPrimaryContainer} />
+            <MaterialIcons name='visibility' size={20} color={theme.colors.onPrimaryContainer} />
           }
         />
       )}
