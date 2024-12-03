@@ -156,9 +156,16 @@ function Entry({
         value={String(amount)}
         keyboardType='decimal-pad'
         onChangeText={(val) => {
+          val = val.replace(',', '.')
           update({ email, amount: Number.isNaN(Number(val)) ? amount : val })
         }}
         style={{ flex: 2, margin: 4 }}
+        onBlur={() => {
+          const amountNum = Number(amount)
+          if (!Number.isNaN(amountNum) && amount.length > 0) {
+            update({ email, amount: amountNum.toFixed(2) })
+          }
+        }}
       />
     </View>
   )
