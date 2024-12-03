@@ -1,18 +1,13 @@
 import Modal from '@components/ModalScreen'
 import { getGroupInfo } from '@database/getGroupInfo'
+import { getProfilePicture } from '@database/getProfilePicture'
 import { getSplitInfo } from '@database/getSplitInfo'
 import { getUserById } from '@database/getUserById'
 import { useTheme } from '@styling/theme'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, FlatList, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
 import { GroupInfo, SplitWithUsers, User, UserWithBalanceChange } from 'shared'
-
-const ColoredText = ({ children }: { children: React.ReactNode }) => {
-  const theme = useTheme()
-
-  return <Text style={{ color: theme.colors.onSurface }}>{children}</Text>
-}
 
 function UserRow({
   user,
@@ -23,6 +18,13 @@ function UserRow({
   splitInfo: SplitWithUsers
   groupInfo: GroupInfo | null
 }) {
+  const theme = useTheme()
+  const [userPhoto, setUserPhoto] = useState<string | null>(null)
+
+  useEffect(() => {
+    getProfilePicture(user.photoURL).then(setUserPhoto)
+  }, [user.photoURL])
+
   const paidByThis = splitInfo.paidById === user.id
   let paidInThisSplit = user.change
 
@@ -36,12 +38,27 @@ function UserRow({
   }
 
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 }}>
-      <ColoredText>{user.name}</ColoredText>
-      {paidByThis && <ColoredText>{'<-- this one paid'}</ColoredText>}
-      <ColoredText>
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        paddingVertical: 8,
+        borderBottomWidth: 1,
+        borderColor: theme.colors.outlineVariant,
+      }}
+    >
+      <Image
+        source={{ uri: userPhoto ?? undefined }}
+        style={{ width: 32, height: 32, borderRadius: 16 }}
+      />
+      <View style={{ flex: 1 }}>
+        <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>{user.name}</Text>
+        <Text style={{ color: theme.colors.outline, fontSize: 12 }}>{user.email}</Text>
+      </View>
+      <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 20 }}>
         {paidInThisSplit} {groupInfo?.currency}
-      </ColoredText>
+      </Text>
     </View>
   )
 }
@@ -53,7 +70,9 @@ function SplitInfo({
   splitInfo: SplitWithUsers
   groupInfo: GroupInfo | null
 }) {
+  const theme = useTheme()
   const [createdBy, setCreatedBy] = useState<User | null>(null)
+  const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)!
 
   useEffect(() => {
     getUserById(splitInfo.createdById).then(setCreatedBy)
@@ -61,18 +80,50 @@ function SplitInfo({
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 16 }}>
-      <ColoredText>Title: {splitInfo.title}</ColoredText>
-      <ColoredText>Total: {splitInfo.total}</ColoredText>
-      <ColoredText>Date: {new Date(splitInfo.timestamp).toLocaleDateString()}</ColoredText>
-      <ColoredText>Created by: {createdBy?.name}</ColoredText>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          gap: 8,
+          alignItems: 'center',
+        }}
+      >
+        <Text style={{ color: theme.colors.onSurface, fontSize: 24 }}>{splitInfo.title}</Text>
+        <Text style={{ color: theme.colors.outline, fontSize: 20 }}>
+          {new Date(splitInfo.timestamp).toLocaleDateString()}
+        </Text>
+      </View>
+      <Text
+        style={{ color: theme.colors.onSurface, fontSize: 12, opacity: 0.7, textAlign: 'center' }}
+      >
+        Created by{' '}
+        <Text style={{ color: theme.colors.primary }}>
+          {createdBy?.name} ({createdBy?.email})
+        </Text>
+      </Text>
       <FlatList
-        style={{ flex: 1 }}
+        style={{ flex: 1, marginVertical: 16 }}
         data={splitInfo.users}
         renderItem={({ item }) => (
           <UserRow user={item} groupInfo={groupInfo} splitInfo={splitInfo} />
         )}
         keyExtractor={(item) => item.id}
       />
+
+      <Text
+        style={{
+          textAlign: 'center',
+          color: theme.colors.outline,
+          fontSize: 20,
+          opacity: 0.7,
+          marginBottom: 24,
+        }}
+      >
+        <Text style={{ color: theme.colors.primary }}>{paidBy.email} </Text>
+        has paid
+        <Text style={{ color: theme.colors.primary }}> {splitInfo.total} </Text>
+        {groupInfo?.currency}
+      </Text>
     </View>
   )
 }
