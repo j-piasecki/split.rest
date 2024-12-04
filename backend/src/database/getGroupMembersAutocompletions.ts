@@ -1,3 +1,4 @@
+import { hasAccessToGroup } from './utils/hasAccessToGroup'
 import { UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { GetGroupMembersAutocompletionsArguments, User } from 'shared'
@@ -7,14 +8,7 @@ export async function getGroupMembersAutocompletions(
   callerId: string,
   args: GetGroupMembersAutocompletionsArguments
 ): Promise<User[]> {
-  const hasAccess = (
-    await pool.query('SELECT has_access FROM group_members WHERE group_id = $1 AND user_id = $2', [
-      args.groupId,
-      callerId,
-    ])
-  ).rows[0]?.has_access
-
-  if (!hasAccess) {
+  if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
     throw new UnauthorizedException('You do not have permission to get members in this group')
   }
 

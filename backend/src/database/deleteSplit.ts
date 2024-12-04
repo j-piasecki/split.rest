@@ -1,31 +1,36 @@
+import { hasAccessToGroup } from './utils/hasAccessToGroup'
+import { isUserGroupAdmin } from './utils/isUserGroupAdmin'
+import { splitExists } from './utils/splitExists'
 import { Pool } from 'pg'
 import { DeleteSplitArguments } from 'shared'
 
 export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSplitArguments) {
   const client = await pool.connect()
+
   try {
     await client.query('BEGIN')
 
-    const hasAccess = (
-      await client.query(
-        'SELECT has_access FROM group_members WHERE group_id = $1 AND user_id = $2',
-        [args.groupId, callerId]
-      )
-    ).rows[0]?.has_access
-
-    if (!hasAccess) {
+    if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
       throw new Error('You do not have permission to delete splits in this group')
     }
 
-    const splitExists = (
-      await client.query('SELECT 1 FROM splits WHERE group_id = $1 AND id = $2', [
+    if (!(await splitExists(client, args.groupId, args.splitId))) {
+      throw new Error('Split not found in group')
+    }
+
+    const splitInfo = (
+      await client.query('SELECT paid_by, created_by FROM splits WHERE group_id = $1 AND id = $2', [
         args.groupId,
         args.splitId,
       ])
-    ).rowCount
+    ).rows[0]
 
-    if (!splitExists) {
-      throw new Error('Split not found in group')
+    if (
+      splitInfo.created_by !== callerId &&
+      splitInfo.paid_by !== callerId &&
+      !(await isUserGroupAdmin(client, args.groupId, callerId))
+    ) {
+      throw new Error('You do not have permission to delete this split')
     }
 
     const splitParticipants = (

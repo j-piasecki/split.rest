@@ -1,3 +1,5 @@
+import { isUserGroupAdmin } from './utils/isUserGroupAdmin'
+import { userExists } from './utils/userExists'
 import { Pool } from 'pg'
 import { SetGroupAccessArguments } from 'shared'
 
@@ -6,21 +8,11 @@ export async function setGroupAccess(pool: Pool, callerId: string, args: SetGrou
   try {
     await client.query('BEGIN')
 
-    const isCallerAdmin = (
-      await client.query(
-        'SELECT is_admin FROM group_members WHERE group_id = $1 AND user_id = $2',
-        [args.groupId, callerId]
-      )
-    ).rows[0]?.is_admin
-
-    if (!isCallerAdmin) {
+    if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
       throw new Error('You do not have permission to set group access')
     }
 
-    const userExists = (await client.query('SELECT 1 FROM users WHERE id = $1', [args.userId]))
-      .rowCount
-
-    if (!userExists) {
+    if (!(await userExists(client, args.userId))) {
       throw new Error('User not found')
     }
 

@@ -1,3 +1,4 @@
+import { hasAccessToGroup } from './utils/hasAccessToGroup'
 import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { GetSplitInfoArguments, SplitWithUsers } from 'shared'
@@ -8,14 +9,7 @@ export async function getSplitInfo(
   args: GetSplitInfoArguments
 ): Promise<SplitWithUsers> {
   // TODO: allow to see split if user has no access but is a participant?
-  const hasAccess = (
-    await pool.query('SELECT has_access FROM group_members WHERE group_id = $1 AND user_id = $2', [
-      args.groupId,
-      callerId,
-    ])
-  ).rows[0]?.has_access
-
-  if (!hasAccess) {
+  if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
     throw new UnauthorizedException('You do not have permission to see this split')
   }
 

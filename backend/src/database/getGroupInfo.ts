@@ -1,3 +1,4 @@
+import { isUserMemberOfGroup } from './utils/isUserMemberOfGroup'
 import { UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { GetGroupInfoArguments, GroupInfo } from 'shared'
@@ -7,20 +8,7 @@ export async function getGroupInfo(
   callerId: string,
   args: GetGroupInfoArguments
 ): Promise<GroupInfo | null> {
-  const isMember =
-    (
-      await pool.query(
-        `
-        SELECT 
-          1
-        FROM group_members
-        WHERE group_members.group_id = $1 AND group_members.user_id = $2
-      `,
-        [args.groupId, callerId]
-      )
-    ).rowCount === 1
-
-  if (!isMember) {
+  if (!(await isUserMemberOfGroup(pool, args.groupId, callerId))) {
     throw new UnauthorizedException()
   }
 
