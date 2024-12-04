@@ -58,7 +58,8 @@ export function SplitRow({ split, info, forceReload }: SplitRowProps) {
   const router = useRouter()
   const isSmallScreen = useIsSmallScreen()
 
-  const showDeteteButton = split.paidById === user?.uid || info?.isAdmin
+  const showDeteteButton =
+    split.paidById === user?.uid || split.createdById === user?.uid || info?.isAdmin
 
   return (
     <Pressable
