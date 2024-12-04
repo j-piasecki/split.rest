@@ -4,6 +4,7 @@ import { createGroup } from './database/createGroup'
 import { createOrUpdateUser } from './database/createOrUpdateUser'
 import { createSplit } from './database/createSplit'
 import { deleteSplit } from './database/deleteSplit'
+import { getBalances } from './database/getBalances'
 import { getGroupInfo } from './database/getGroupInfo'
 import { getGroupMembers } from './database/getGroupMembers'
 import { getGroupMembersAutocompletions } from './database/getGroupMembersAutocompletions'
@@ -24,6 +25,7 @@ import {
   CreateGroupArguments,
   CreateSplitArguments,
   DeleteSplitArguments,
+  GetBalancesArguments,
   GetGroupInfoArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
@@ -133,5 +135,9 @@ export class DatabaseService {
 
   async getSplitInfo(callerId: string, args: GetSplitInfoArguments) {
     return await getSplitInfo(this.pool, callerId, args)
+  }
+
+  async getBalances(callerId: string, args: GetBalancesArguments) {
+    return await getBalances(this.pool, callerId, args)
   }
 }

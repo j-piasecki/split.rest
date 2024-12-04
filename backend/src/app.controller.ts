@@ -16,6 +16,7 @@ import {
   CreateGroupArguments,
   CreateSplitArguments,
   DeleteSplitArguments,
+  GetBalancesArguments,
   GetGroupInfoArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
@@ -34,6 +35,7 @@ import {
   isCreateGroupArguments,
   isCreateSplitArguments,
   isDeleteSplitArguments,
+  isGetBalancesArguments,
   isGetGroupInfoArguments,
   isGetGroupMembersArguments,
   isGetGroupMembersAutocompletionsArguments,
@@ -235,6 +237,21 @@ export class AppController {
     }
 
     return await this.appService.getSplitInfo(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getBalances')
+  async getBalances(@Req() request: Request, @Query() query: Record<string, string>) {
+    const args: GetBalancesArguments = {
+      groupId: parseInt(query.groupId),
+      users: query.users.split(','),
+    }
+
+    if (!isGetBalancesArguments(args)) {
+      throw new BadRequestException('Invalid arguments')
+    }
+
+    return await this.appService.getBalances(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

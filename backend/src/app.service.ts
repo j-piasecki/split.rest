@@ -5,6 +5,7 @@ import {
   CreateGroupArguments,
   CreateSplitArguments,
   DeleteSplitArguments,
+  GetBalancesArguments,
   GetGroupInfoArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
@@ -137,6 +138,10 @@ export class AppService {
 
   async getSplitInfo(callerId: string, args: GetSplitInfoArguments) {
     return await this.databaseService.getSplitInfo(callerId, args)
+  }
+
+  async getBalances(callerId: string, args: GetBalancesArguments) {
+    return await this.databaseService.getBalances(callerId, args)
   }
 
   async getProfilePicture(photoURL: string) {

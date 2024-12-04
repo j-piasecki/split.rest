@@ -145,6 +145,10 @@ export interface GetSplitInfoArguments {
   splitId: number
 }
 
+export interface GetBalancesArguments {
+  groupId: number
+  users: string[]
+}
 
 export function isUser(obj: any): obj is User {
   return obj.id !== undefined && obj.name !== undefined && obj.email !== undefined && obj.photoURL !== undefined
@@ -216,4 +220,8 @@ export function isGetGroupMembersAutocompletionsArguments(obj: any): obj is GetG
 
 export function isGetSplitInfoArguments(obj: any): obj is GetSplitInfoArguments {
   return obj.groupId !== undefined && obj.splitId !== undefined
+}
+
+export function isGetBalancesArguments(obj: any): obj is GetBalancesArguments {
+  return obj.groupId !== undefined && obj.users !== undefined && Array.isArray(obj.users)
 }
