@@ -1,5 +1,6 @@
 import { hasAccessToGroup } from './utils/hasAccessToGroup'
 import { userExists } from './utils/userExists'
+import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { CreateSplitArguments } from 'shared'
 
@@ -10,7 +11,7 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
     await client.query('BEGIN')
 
     if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
-      throw new Error('You do not have permission to create splits in this group')
+      throw new UnauthorizedException('You do not have permission to create splits in this group')
     }
 
     const splitId = (
@@ -22,7 +23,7 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
 
     for (const balance of args.balances) {
       if (!(await userExists(client, balance.id))) {
-        throw new Error('User not found in group')
+        throw new NotFoundException('User not found in group')
       }
 
       await client.query(

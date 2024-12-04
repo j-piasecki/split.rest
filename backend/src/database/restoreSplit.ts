@@ -1,6 +1,7 @@
 import { hasAccessToGroup } from './utils/hasAccessToGroup'
 import { isUserGroupAdmin } from './utils/isUserGroupAdmin'
 import { splitExists } from './utils/splitExists'
+import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { RestoreSplitArguments } from 'shared'
 
@@ -10,11 +11,11 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
     await client.query('BEGIN')
 
     if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
-      throw new Error('You do not have permission to restore splits in this group')
+      throw new UnauthorizedException('You do not have permission to restore splits in this group')
     }
 
     if (!(await splitExists(client, args.groupId, args.splitId))) {
-      throw new Error('Split not found in group')
+      throw new NotFoundException('Split not found in group')
     }
 
     const splitInfo = (
@@ -29,7 +30,7 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
       splitInfo.paid_by !== callerId &&
       !(await isUserGroupAdmin(client, args.groupId, callerId))
     ) {
-      throw new Error('You do not have permission to restore this split')
+      throw new UnauthorizedException('You do not have permission to restore this split')
     }
 
     const splitParticipants = (
