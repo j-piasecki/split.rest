@@ -9,5 +9,6 @@ export async function isUserMemberOfGroup(
     'SELECT 1 FROM group_members WHERE group_id = $1 AND user_id = $2',
     [groupId, userId]
   )
+
   return result.rowCount > 0
 }
