@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react"
-import { Pressable, TextInput as TextInputRN, View, Image, Text } from "react-native"
-import { TextInputWithSuggestions, TextInputWithSuggestionsProps } from "./TextInputWithSuggestions"
-import { User } from "shared"
-import { getProfilePicture } from "@database/getProfilePicture"
-import { useTheme } from "@styling/theme"
-import { getGroupMemberAutocompletions } from "@database/getGroupMembersAutocompletions"
+import { TextInputWithSuggestions, TextInputWithSuggestionsProps } from './TextInputWithSuggestions'
+import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocompletions'
+import { getProfilePicture } from '@database/getProfilePicture'
+import { useTheme } from '@styling/theme'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Image, Pressable, Text, TextInput as TextInputRN, View } from 'react-native'
+import { User } from 'shared'
 
 interface SuggestionProps {
   user: User
@@ -13,12 +13,7 @@ interface SuggestionProps {
   setShowSuggestions: (show: boolean) => void
 }
 
-function Suggestion({
-  user,
-  onSelect,
-  textInputRef,
-  setShowSuggestions,
-}: SuggestionProps) {
+function Suggestion({ user, onSelect, textInputRef, setShowSuggestions }: SuggestionProps) {
   const theme = useTheme()
   const [profilePicture, setProfilePicture] = useState<string | null>(null)
 
@@ -61,12 +56,18 @@ function Suggestion({
   )
 }
 
-export interface TextInputWithUserSuggestionsProps extends Omit<TextInputWithSuggestionsProps<User>, 'getSuggestions' | 'renderSuggestion'> {
+export interface TextInputWithUserSuggestionsProps
+  extends Omit<TextInputWithSuggestionsProps<User>, 'getSuggestions' | 'renderSuggestion'> {
   groupId: number
   onSuggestionSelect: (user: User) => void
 }
 
-export function TextInputWithUserSuggestions({groupId, onSuggestionSelect, onChangeText, ...rest}: TextInputWithUserSuggestionsProps) {
+export function TextInputWithUserSuggestions({
+  groupId,
+  onSuggestionSelect,
+  onChangeText,
+  ...rest
+}: TextInputWithUserSuggestionsProps) {
   const ref = useRef<TextInputRN>(null)
   const [showSuggestions, setShowSuggestions] = useState(true)
 
