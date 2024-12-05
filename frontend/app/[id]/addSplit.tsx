@@ -1,86 +1,27 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
-import { TextInputWithSuggestions } from '@components/TextInputWithSuggestions'
+import { TextInputWithUserSuggestions } from '@components/TextInputWithUserSuggestions'
 import { createSplit } from '@database/createSplit'
 import { getGroupInfo } from '@database/getGroupInfo'
-import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocompletions'
-import { getProfilePicture } from '@database/getProfilePicture'
 import { getUserByEmail } from '@database/getUserByEmail'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ActivityIndicator,
-  Image,
   Pressable,
   ScrollView,
   Text,
-  TextInput as TextInputRN,
   View,
 } from 'react-native'
-import { BalanceChange, User } from 'shared'
+import { BalanceChange } from 'shared'
 
 export interface EntryData {
   email: string
   amount: string
-}
-
-function Suggestion({
-  user,
-  update,
-  textInputRef,
-  amount,
-  setShowSuggestions,
-}: {
-  user: User
-  update: (data: EntryData) => void
-  textInputRef: React.RefObject<TextInputRN>
-  amount: string
-  setShowSuggestions: (show: boolean) => void
-}) {
-  const theme = useTheme()
-  const [profilePicture, setProfilePicture] = useState<string | null>(null)
-
-  useEffect(() => {
-    getProfilePicture(user.photoURL).then(setProfilePicture)
-  }, [user.photoURL])
-
-  return (
-    <Pressable
-      onPointerDown={() => {
-        setTimeout(() => {
-          textInputRef.current?.focus()
-        })
-      }}
-      onPress={() => {
-        update({ email: user.email, amount })
-        setShowSuggestions(false)
-      }}
-    >
-      <View
-        style={{
-          flexDirection: 'row',
-          padding: 8,
-          borderBottomWidth: 1,
-          borderBottomColor: theme.colors.outline,
-          alignItems: 'center',
-          gap: 8,
-        }}
-      >
-        <Image
-          source={{ uri: profilePicture ?? undefined }}
-          style={{ width: 24, height: 24, borderRadius: 12 }}
-        />
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>{user.name}</Text>
-          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}>{user.email}</Text>
-        </View>
-      </View>
-    </Pressable>
-  )
 }
 
 function Entry({
@@ -101,13 +42,6 @@ function Entry({
   zIndex: number
 }) {
   const theme = useTheme()
-  const ref = useRef<TextInputRN>(null)
-  const [showSuggestions, setShowSuggestions] = useState(true)
-
-  const getSuggestions = useCallback(
-    (val: string) => getGroupMemberAutocompletions(groupId, val),
-    [groupId]
-  )
 
   return (
     <View
@@ -127,27 +61,14 @@ function Entry({
         )}
       </Pressable>
 
-      <TextInputWithSuggestions
-        inputRef={ref}
-        placeholder='E-mail'
+      <TextInputWithUserSuggestions
+        groupId={groupId}
         value={email}
-        keyboardType='email-address'
+        onSuggestionSelect={(user) => {
+          update({ email: user.email, amount })
+        }}
         onChangeText={(val) => {
           update({ email: val, amount })
-          setShowSuggestions(true)
-        }}
-        getSuggestions={getSuggestions}
-        suggestionsVisible={showSuggestions}
-        renderSuggestion={(user) => {
-          return (
-            <Suggestion
-              user={user}
-              update={update}
-              textInputRef={ref}
-              amount={amount}
-              setShowSuggestions={setShowSuggestions}
-            />
-          )
         }}
         style={{ flex: 4, margin: 4 }}
       />
