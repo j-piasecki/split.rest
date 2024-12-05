@@ -4,15 +4,6 @@ import React from 'react'
 const ThemeContext = React.createContext<Theme | null>(null)
 
 const darkColors: Colors = {
-  // background: '#121212',
-  // backgroundElevated: '#181818',
-  // text: '#ffffff',
-  // highlight: '#ffffff33',
-
-  // tabHeader: 'transparent',
-  // tabHeaderPressed: '#333333',
-  // tabHeaderSelected: '#222222',
-
   transparent: 'transparent',
 
   primary: '#ffb1c8',
@@ -52,6 +43,10 @@ const darkColors: Colors = {
   inverseSurface: '#efdfe1',
   inversePrimary: '#372e30',
   inverseOnSurface: '#8c4a60',
+
+  balancePositive: '#00ff00',
+  balanceNegative: '#ff0000',
+  balanceNeutral: '#9e8c90',
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {

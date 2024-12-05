@@ -117,10 +117,10 @@ export function MemberRow({ member, info, forceReload }: MemberRowProps) {
             fontSize: 20,
             color:
               Number(member.balance) === 0
-                ? theme.colors.outline
+                ? theme.colors.balanceNeutral
                 : Number(member.balance) > 0
-                  ? 'green'
-                  : 'red',
+                  ? theme.colors.balancePositive
+                  : theme.colors.balanceNegative,
           }}
         >
           {Number(member.balance) > 0 && '+'}

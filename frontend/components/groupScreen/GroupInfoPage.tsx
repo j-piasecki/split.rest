@@ -38,10 +38,10 @@ function InfoCard({ info }: { info: GroupInfo }) {
             fontSize: 24,
             color:
               Number(info.balance) === 0
-                ? theme.colors.outline
+                ? theme.colors.balanceNeutral
                 : Number(info.balance) > 0
-                  ? 'green'
-                  : 'red',
+                  ? theme.colors.balancePositive
+                  : theme.colors.balanceNegative,
           }}
         >
           {Number(info.balance) > 0 && '+'}

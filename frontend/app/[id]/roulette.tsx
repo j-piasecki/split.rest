@@ -108,7 +108,11 @@ function Result({ result }: { result: UserWithBalanceChange[] }) {
         {result.map((user) => {
           const balanceNum = parseFloat(user.change)
           const balanceColor =
-            balanceNum === 0 ? theme.colors.outline : balanceNum > 0 ? 'green' : 'red'
+            balanceNum === 0
+              ? theme.colors.balanceNeutral
+              : balanceNum > 0
+                ? theme.colors.balancePositive
+                : theme.colors.balanceNegative
 
           return (
             <View

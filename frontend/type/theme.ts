@@ -40,6 +40,10 @@ export interface Colors {
   inverseSurface: string
   inversePrimary: string
   inverseOnSurface: string
+
+  balancePositive: string
+  balanceNegative: string
+  balanceNeutral: string
 }
 
 export interface Theme {
