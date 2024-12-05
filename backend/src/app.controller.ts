@@ -244,7 +244,8 @@ export class AppController {
   async getBalances(@Req() request: Request, @Query() query: Record<string, string>) {
     const args: GetBalancesArguments = {
       groupId: parseInt(query.groupId),
-      users: query.users.split(','),
+      users: query.users?.split(','),
+      emails: query.emails?.split(','),
     }
 
     if (!isGetBalancesArguments(args)) {

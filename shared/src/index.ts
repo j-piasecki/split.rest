@@ -145,10 +145,17 @@ export interface GetSplitInfoArguments {
   splitId: number
 }
 
-export interface GetBalancesArguments {
+export interface GetBalancesWithIdsArguments {
   groupId: number
   users: string[]
 }
+
+export interface GetBalancesWithEmailsArguments {
+  groupId: number
+  emails: string[]
+}
+
+export type GetBalancesArguments = GetBalancesWithIdsArguments | GetBalancesWithEmailsArguments
 
 export function isUser(obj: any): obj is User {
   return obj.id !== undefined && obj.name !== undefined && obj.email !== undefined && obj.photoURL !== undefined
@@ -223,5 +230,13 @@ export function isGetSplitInfoArguments(obj: any): obj is GetSplitInfoArguments 
 }
 
 export function isGetBalancesArguments(obj: any): obj is GetBalancesArguments {
+  return obj.groupId !== undefined && ((obj.users !== undefined && Array.isArray(obj.users)) || (obj.emails !== undefined && Array.isArray(obj.emails)))
+}
+
+export function isGetBalancesWithIdsArguments(obj: any): obj is GetBalancesWithIdsArguments {
   return obj.groupId !== undefined && obj.users !== undefined && Array.isArray(obj.users)
+}
+
+export function isGetBalancesWithEmailsArguments(obj: any): obj is GetBalancesWithEmailsArguments {
+  return obj.groupId !== undefined && obj.emails !== undefined && Array.isArray(obj.emails)
 }
