@@ -14,7 +14,22 @@ export async function getGroupMembers(
 
   const rows = (
     await pool.query(
-      'SELECT users.id, users.name, users.email, users.photo_url, group_members.balance, group_members.has_access, group_members.is_admin FROM group_members JOIN users ON group_members.user_id = users.id WHERE group_id = $1 AND users.id > $2 ORDER BY users.id LIMIT 20',
+      `
+        SELECT 
+          users.id,
+          users.name,
+          users.email, 
+          users.photo_url,
+          group_members.balance,
+          group_members.has_access,
+          group_members.is_admin 
+        FROM group_members 
+        JOIN users ON group_members.user_id = users.id 
+        WHERE group_id = $1 
+          AND users.id > $2 
+        ORDER BY users.id 
+        LIMIT 20
+      `,
       [args.groupId, args.startAfter ?? '']
     )
   ).rows

@@ -24,7 +24,16 @@ export async function addUserToGroup(pool: Pool, callerId: string, args: AddUser
     }
 
     await client.query(
-      'INSERT INTO group_members (group_id, user_id, balance, is_admin, has_access, is_hidden) VALUES ($1, $2, $3, $4, $5, $6)',
+      `
+        INSERT INTO group_members (
+          group_id,
+          user_id, 
+          balance,
+          is_admin,
+          has_access,
+          is_hidden
+        ) VALUES ($1, $2, $3, $4, $5, $6)
+      `,
       [args.groupId, args.userId, 0, false, true, false]
     )
 

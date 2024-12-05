@@ -26,7 +26,22 @@ export async function getSplitInfo(
 
   const participants = (
     await pool.query(
-      'SELECT users.id, split_participants.change, users.name, users.email, users.photo_url FROM users INNER JOIN split_participants ON users.id = split_participants.user_id WHERE split_id = $1',
+      `
+        SELECT 
+          users.id, 
+          split_participants.change, 
+          users.name, 
+          users.email, 
+          users.photo_url 
+        FROM 
+          users 
+        INNER JOIN 
+          split_participants 
+        ON 
+          users.id = split_participants.user_id 
+        WHERE 
+          split_id = $1
+      `,
       [args.splitId]
     )
   ).rows

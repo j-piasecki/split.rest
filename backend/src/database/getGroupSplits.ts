@@ -14,7 +14,24 @@ export async function getGroupSplits(
 
   const rows = (
     await pool.query(
-      'SELECT id, name, total, paid_by, created_by, timestamp, updated_at, deleted FROM splits WHERE group_id = $1 AND deleted = false AND timestamp < $2 ORDER BY id DESC LIMIT 20',
+      `
+        SELECT 
+          id, 
+          name, 
+          total, 
+          paid_by, 
+          created_by, 
+          timestamp, 
+          updated_at, 
+          deleted 
+        FROM splits 
+        WHERE 
+          group_id = $1 
+          AND deleted = false 
+          AND timestamp < $2 
+        ORDER BY id DESC 
+        LIMIT 20
+      `,
       [args.groupId, args.startAfterTimestamp ?? Number.MAX_SAFE_INTEGER]
     )
   ).rows
