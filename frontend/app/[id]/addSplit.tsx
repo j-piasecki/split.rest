@@ -144,6 +144,11 @@ function Form() {
       return
     }
 
+    if (sumToSave < 0.01) {
+      setError('Total must be greater than 0')
+      return
+    }
+
     if (!title) {
       setError('Title is required')
       setTitleError(true)

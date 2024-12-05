@@ -59,6 +59,10 @@ export class AppService {
       throw new BadRequestException('Payer must get back equal amount as sum others lose')
     }
 
+    if (Number(args.total) < 0.01) {
+      throw new BadRequestException('Total must be greater than 0')
+    }
+
     return await this.databaseService.createSplit(callerId, args)
   }
 
@@ -88,6 +92,10 @@ export class AppService {
 
     if (Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
       throw new BadRequestException('Payer must get back equal amount as sum others lose')
+    }
+
+    if (Number(args.total) < 0.01) {
+      throw new BadRequestException('Total must be greater than 0')
     }
 
     return await this.databaseService.updateSplit(callerId, args)
