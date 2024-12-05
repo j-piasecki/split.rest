@@ -10,13 +10,7 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useRef, useState } from 'react'
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native'
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
 import { BalanceChange } from 'shared'
 
 export interface EntryData {

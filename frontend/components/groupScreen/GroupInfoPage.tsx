@@ -7,7 +7,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { router } from 'expo-router'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function InfoCard({ info }: { info: GroupInfo }) {
@@ -113,6 +113,18 @@ function ActionButtons({ info }: { info: GroupInfo }) {
       {info.hasAccess && (
         <Button
           onPress={() => {
+            router.navigate(`/${info.id}/roulette`)
+          }}
+          title='Roulette'
+          leftIcon={
+            <MaterialIcons name='payments' size={20} color={theme.colors.onPrimaryContainer} />
+          }
+        />
+      )}
+
+      {info.hasAccess && (
+        <Button
+          onPress={() => {
             router.navigate(`/${info.id}/addSplit`)
           }}
           title='Add split'
@@ -170,8 +182,9 @@ export function GroupInfoPage({ info }: { info: GroupInfo | null }) {
   }
 
   return (
-    <View
-      style={{
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{
         flex: 1,
         width: '100%',
         height: '100%',
@@ -184,6 +197,6 @@ export function GroupInfoPage({ info }: { info: GroupInfo | null }) {
     >
       <InfoCard info={info} />
       <ActionButtons info={info} />
-    </View>
+    </ScrollView>
   )
 }
