@@ -30,7 +30,7 @@ export function SplitsList({ info }: SplitsListProps) {
   }
 
   useEffect(() => {
-    if (user?.uid && info?.id && !loadingMoreRef.current) {
+    if (user?.id && info?.id && !loadingMoreRef.current) {
       loadingMoreRef.current = true
 
       getSplits(info?.id)
@@ -39,7 +39,7 @@ export function SplitsList({ info }: SplitsListProps) {
           loadingMoreRef.current = false
         })
     }
-  }, [user?.uid, info?.id, setSplits, counter])
+  }, [user?.id, info?.id, setSplits, counter])
 
   return (
     <View style={{ width: '100%', flex: 1, maxWidth: 768, alignSelf: 'center' }}>

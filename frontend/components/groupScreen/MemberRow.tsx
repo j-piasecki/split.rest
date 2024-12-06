@@ -50,7 +50,7 @@ export function MemberRow({ member, info, forceReload }: MemberRowProps) {
           {member.name}
         </Text>
       </View>
-      {info.isAdmin && member.id !== user?.uid && (
+      {info.isAdmin && member.id !== user?.id && (
         <View
           style={{
             flex: 1,

@@ -30,7 +30,7 @@ export function MembersList({ info }: MembersListProps) {
   }
 
   useEffect(() => {
-    if (user?.uid && info?.id) {
+    if (user?.id && info?.id) {
       loadingMoreRef.current = true
 
       getMembers(info?.id)
@@ -39,7 +39,7 @@ export function MembersList({ info }: MembersListProps) {
           loadingMoreRef.current = false
         })
     }
-  }, [user?.uid, info?.id, setMembers, counter])
+  }, [user?.id, info?.id, setMembers, counter])
 
   if (!info) {
     return null
