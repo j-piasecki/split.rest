@@ -2,6 +2,7 @@ import { Button } from './Button'
 import { TextInput } from './TextInput'
 import { TextInputWithUserSuggestions } from './TextInputWithUserSuggestions'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { useRef, useState } from 'react'
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
@@ -88,15 +89,22 @@ export interface FormData {
 
 export interface SplitFormProps {
   groupInfo: GroupInfo
+  initialTitle?: string
   initialEntries: SplitEntryData[]
   waiting: boolean
   onSubmit: (data: FormData) => void
 }
 
-export function SplitForm({ groupInfo, initialEntries, waiting, onSubmit }: SplitFormProps) {
+export function SplitForm({
+  groupInfo,
+  initialTitle,
+  initialEntries,
+  waiting,
+  onSubmit,
+}: SplitFormProps) {
   const theme = useTheme()
   const [entries, setEntries] = useState<SplitEntryData[]>(initialEntries)
-  const [title, setTitle] = useState('')
+  const [title, setTitle] = useState(initialTitle ?? '')
   const [paidByIndex, setPaidByIndex] = useState(0)
 
   const toBePaid = useRef(0)
@@ -118,7 +126,7 @@ export function SplitForm({ groupInfo, initialEntries, waiting, onSubmit }: Spli
   }
 
   return (
-    <View style={{ flex: 1, paddingHorizontal: 16 }}>
+    <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 100 }}>
         <TextInput
           placeholder='Title'
@@ -185,9 +193,17 @@ export function SplitForm({ groupInfo, initialEntries, waiting, onSubmit }: Spli
         </Text>
       </View>
 
-      <View style={{ margin: 16 }}>
+      <View style={{ marginTop: 16 }}>
         {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
-        {!waiting && <Button title='Save' onPress={submit} />}
+        {!waiting && (
+          <Button
+            leftIcon={
+              <MaterialIcons name='save-alt' size={24} color={theme.colors.onPrimaryContainer} />
+            }
+            title='Save'
+            onPress={submit}
+          />
+        )}
       </View>
     </View>
   )
