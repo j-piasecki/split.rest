@@ -1,10 +1,13 @@
+import { Button } from '@components/Button'
 import Modal from '@components/ModalScreen'
 import { getGroupInfo } from '@database/getGroupInfo'
 import { getProfilePicture } from '@database/getProfilePicture'
 import { getSplitInfo } from '@database/getSplitInfo'
 import { getUserById } from '@database/getUserById'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
-import { useLocalSearchParams } from 'expo-router'
+import { useAuth } from '@utils/auth'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
 import { GroupInfo, SplitWithUsers, User, UserWithBalanceChange } from 'shared'
@@ -71,6 +74,8 @@ function SplitInfo({
   groupInfo: GroupInfo | null
 }) {
   const theme = useTheme()
+  const user = useAuth()
+  const router = useRouter()
   const [createdBy, setCreatedBy] = useState<User | null>(null)
   const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)!
 
@@ -124,6 +129,20 @@ function SplitInfo({
         <Text style={{ color: theme.colors.primary }}> {splitInfo.total} </Text>
         {groupInfo?.currency}
       </Text>
+
+      {(groupInfo?.isAdmin ||
+        splitInfo.createdById === user?.id ||
+        splitInfo.paidById === user?.id) && (
+        <View style={{ marginBottom: 32 }}>
+          <Button
+            title='Edit'
+            leftIcon={
+              <MaterialIcons name='edit-note' size={24} color={theme.colors.onPrimaryContainer} />
+            }
+            onPress={() => router.navigate(`/${groupInfo?.id}/split/${splitInfo.id}/edit`)}
+          />
+        </View>
+      )}
     </View>
   )
 }

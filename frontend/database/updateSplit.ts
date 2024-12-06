@@ -1,5 +1,5 @@
 import { makeRequest } from './makeRequest'
-import { BalanceChange, SplitWithChanges, UpdateSplitArguments } from 'shared'
+import { BalanceChange, UpdateSplitArguments } from 'shared'
 
 export async function updateSplit(
   splitId: number,
@@ -9,17 +9,7 @@ export async function updateSplit(
   total: number,
   timestamp: number,
   balances: BalanceChange[]
-): Promise<SplitWithChanges> {
+): Promise<void> {
   const args: UpdateSplitArguments = { splitId, groupId, title, total, balances, paidBy, timestamp }
-  const result = await makeRequest<UpdateSplitArguments, SplitWithChanges>(
-    'POST',
-    'updateSplit',
-    args
-  )
-
-  if (!result) {
-    throw new Error('Failed to update split')
-  }
-
-  return result
+  await makeRequest<UpdateSplitArguments, void>('POST', 'updateSplit', args)
 }

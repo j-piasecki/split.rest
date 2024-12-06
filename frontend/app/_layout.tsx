@@ -48,7 +48,14 @@ function Content() {
         <Stack.Screen name='[id]/addUser' options={{ title: 'Add user', ...modalOptions }} />
         <Stack.Screen name='[id]/addSplit' options={{ title: 'Add split', ...modalOptions }} />
         <Stack.Screen name='[id]/roulette' options={{ title: 'Roulette', ...modalOptions }} />
-        <Stack.Screen name='[id]/split/[splitId]/index' options={{ title: 'Split', ...modalOptions }} />
+        <Stack.Screen
+          name='[id]/split/[splitId]/index'
+          options={{ title: 'Split', ...modalOptions }}
+        />
+        <Stack.Screen
+          name='[id]/split/[splitId]/edit'
+          options={{ title: 'Edit split', ...modalOptions }}
+        />
       </Stack>
     </SafeAreaView>
   )
