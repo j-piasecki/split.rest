@@ -3,9 +3,9 @@ import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { FirebaseAuthTypes } from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
-import { User } from '@type/auth'
 import { usePathname, useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
+import { User } from 'shared'
 
 GoogleSignin.configure({
   webClientId: '461804772528-nlsf24kbqq46eatjr9hl8au9fj75j8nt.apps.googleusercontent.com',
@@ -18,7 +18,7 @@ function createUser(user: FirebaseAuthTypes.User | null): User | null {
     const uid = user.uid
     const name = user.displayName || 'Anonymous'
     const photoURL = user.photoURL || ''
-    return { name, email: user.email!, uid, photoURL }
+    return { name, email: user.email!, id: uid, photoURL }
   }
 
   return null
@@ -45,9 +45,7 @@ export function useAuth() {
   )
 
   useEffect(() => {
-    console.log('useAuth effect')
     const subscriber = auth.onAuthStateChanged((user) => {
-      console.log(JSON.stringify(createUser(user)))
       authReady = true
       setUser(createUser(user))
     })

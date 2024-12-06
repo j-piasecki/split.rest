@@ -2,7 +2,7 @@ import { isSmallScreen } from './dimensionUtils'
 import { auth } from './firebase.web'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
-import { AuthListener, User } from '@type/auth'
+import { AuthListener } from '@type/auth'
 import { usePathname, useRouter } from 'expo-router'
 import {
   User as FirebaseUser,
@@ -12,6 +12,7 @@ import {
   signInWithRedirect,
 } from 'firebase/auth'
 import { useEffect, useState } from 'react'
+import { User } from 'shared'
 
 let authReady = false
 const listeners: AuthListener[] = []
@@ -21,7 +22,7 @@ function createUser(user: FirebaseUser | null): User | null {
     const uid = user.uid
     const name = user.displayName || 'Anonymous'
     const photoURL = user.photoURL || ''
-    return { name, email: user.email!, uid, photoURL }
+    return { name, email: user.email!, id: uid, photoURL }
   }
 
   return null

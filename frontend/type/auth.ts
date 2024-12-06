@@ -1,8 +1,3 @@
-export interface User {
-  name: string
-  email: string
-  uid: string
-  photoURL: string
-}
+import { User } from 'shared'
 
 export type AuthListener = (user: User | null) => void
