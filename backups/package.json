@@ -3,7 +3,7 @@
   "types": "src/index.ts",
   "main": "lib/index.js",
   "scripts": {
-    "format": "prettier --write src/**/*.ts",
+    "format": "prettier --list-different --write src/**/*.ts",
     "build": "tsc",
     "backup": "yarn build && node lib/src/index.js"
   },

@@ -119,7 +119,7 @@ export interface GetGroupSplitsArguments {
   startAfterTimestamp?: number
 }
 
-export interface GetUserGroupsArguments  {
+export interface GetUserGroupsArguments {
   startAfter?: number
   hidden: boolean
 }
@@ -168,7 +168,12 @@ export interface SetGroupNameArguments {
 }
 
 export function isUser(obj: any): obj is User {
-  return obj.id !== undefined && obj.name !== undefined && obj.email !== undefined && obj.photoUrl !== undefined
+  return (
+    obj.id !== undefined &&
+    obj.name !== undefined &&
+    obj.email !== undefined &&
+    obj.photoUrl !== undefined
+  )
 }
 
 export function isCreateGroupArguments(obj: any): obj is CreateGroupArguments {
@@ -180,7 +185,14 @@ export function isAddUserToGroupArguments(obj: any): obj is AddUserToGroupArgume
 }
 
 export function isCreateSplitArguments(obj: any): obj is CreateSplitArguments {
-  return obj.groupId !== undefined && obj.title !== undefined && obj.total !== undefined && obj.balances !== undefined && obj.paidBy !== undefined && obj.timestamp !== undefined
+  return (
+    obj.groupId !== undefined &&
+    obj.title !== undefined &&
+    obj.total !== undefined &&
+    obj.balances !== undefined &&
+    obj.paidBy !== undefined &&
+    obj.timestamp !== undefined
+  )
 }
 
 export function isDeleteSplitArguments(obj: any): obj is DeleteSplitArguments {
@@ -192,7 +204,15 @@ export function isRestoreSplitArguments(obj: any): obj is RestoreSplitArguments 
 }
 
 export function isUpdateSplitArguments(obj: any): obj is UpdateSplitArguments {
-  return obj.groupId !== undefined && obj.splitId !== undefined && obj.title !== undefined && obj.total !== undefined && obj.balances !== undefined && obj.paidBy !== undefined && obj.timestamp !== undefined
+  return (
+    obj.groupId !== undefined &&
+    obj.splitId !== undefined &&
+    obj.title !== undefined &&
+    obj.total !== undefined &&
+    obj.balances !== undefined &&
+    obj.paidBy !== undefined &&
+    obj.timestamp !== undefined
+  )
 }
 
 export function isSetGroupAccessArguments(obj: any): obj is SetGroupAccessArguments {
@@ -231,7 +251,9 @@ export function isGetGroupInfoArguments(obj: any): obj is GetGroupInfoArguments 
   return obj.groupId !== undefined
 }
 
-export function isGetGroupMembersAutocompletionsArguments(obj: any): obj is GetGroupMembersAutocompletionsArguments {
+export function isGetGroupMembersAutocompletionsArguments(
+  obj: any
+): obj is GetGroupMembersAutocompletionsArguments {
   return obj.groupId !== undefined && obj.query !== undefined
 }
 
@@ -240,7 +262,11 @@ export function isGetSplitInfoArguments(obj: any): obj is GetSplitInfoArguments 
 }
 
 export function isGetBalancesArguments(obj: any): obj is GetBalancesArguments {
-  return obj.groupId !== undefined && ((obj.users !== undefined && Array.isArray(obj.users)) || (obj.emails !== undefined && Array.isArray(obj.emails)))
+  return (
+    obj.groupId !== undefined &&
+    ((obj.users !== undefined && Array.isArray(obj.users)) ||
+      (obj.emails !== undefined && Array.isArray(obj.emails)))
+  )
 }
 
 export function isGetBalancesWithIdsArguments(obj: any): obj is GetBalancesWithIdsArguments {

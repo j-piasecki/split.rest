@@ -3,7 +3,8 @@
   "types": "src/index.ts",
   "main": "lib/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "format": "prettier --list-different --write src/**/*.ts"
   },
   "devDependencies": {
     "prettier": "^3.3.3"

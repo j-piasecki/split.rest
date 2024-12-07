@@ -3,8 +3,8 @@
   "name": "split",
   "scripts": {
     "start": "yarn workspace frontend start",
-    "build": "yarn workspace frontend build:web && yarn workspace shared build",
-    "format": "yarn workspace frontend format && yarn workspace backend format && yarn workspace backups format",
+    "build": "yarn workspace frontend build:web && yarn workspace shared build && yarn workspace backend build",
+    "format": "yarn workspace frontend format && yarn workspace backend format && yarn workspace backups format && yarn workspace shared format",
     "lint": "yarn workspace frontend lint && yarn workspace backend lint",
     "backup": "yarn workspace backups backup",
     "deploy:web": "yarn build && firebase deploy --only hosting"
