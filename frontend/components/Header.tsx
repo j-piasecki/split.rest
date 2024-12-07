@@ -10,7 +10,7 @@ export interface HeaderProps {
   title?: string
 }
 
-export default function Header({ title = 'Split' }: HeaderProps) {
+export default function Header({ title = 'Split.rest' }: HeaderProps) {
   const theme = useTheme()
   const user = useAuth()
 
