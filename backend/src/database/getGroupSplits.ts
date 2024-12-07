@@ -34,7 +34,7 @@ export async function getGroupSplits(
           group_id = $1 
           AND deleted = false 
           AND timestamp < $2 
-        ORDER BY id DESC 
+        ORDER BY timestamp DESC 
         LIMIT 20
       `,
       [args.groupId, args.startAfterTimestamp ?? Number.MAX_SAFE_INTEGER]

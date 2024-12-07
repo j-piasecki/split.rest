@@ -56,6 +56,7 @@ export function SplitsList({ info }: SplitsListProps) {
         data={splits}
         onEndReachedThreshold={50}
         onEndReached={loadMore}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item: split }) => (
           <SplitRow split={split} info={info} forceReload={forceReload} />
         )}

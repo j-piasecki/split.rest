@@ -60,6 +60,7 @@ export function MembersList({ info }: MembersListProps) {
         data={members}
         onEndReachedThreshold={50}
         onEndReached={loadMore}
+        keyExtractor={(item) => item.id}
         renderItem={({ item: member }) => (
           <MemberRow member={member} info={info} forceReload={forceReload} />
         )}
