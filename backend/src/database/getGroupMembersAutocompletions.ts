@@ -33,6 +33,6 @@ export async function getGroupMembersAutocompletions(
     id: row.id,
     name: row.name,
     email: row.email,
-    photoURL: row.photo_url,
+    photoUrl: row.photo_url,
   }))
 }

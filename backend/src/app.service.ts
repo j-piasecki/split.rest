@@ -157,7 +157,7 @@ export class AppService {
       return this.profilePictureCache[userId]
     }
 
-    const { photoURL } = await this.databaseService.getUserById(userId, { userId })
+    const { photoUrl } = await this.databaseService.getUserById(userId, { userId })
 
     const imageUrlToBase64 = async (url: string): Promise<string | null> =>
       url
@@ -172,14 +172,14 @@ export class AppService {
             )
         : null
 
-    this.profilePictureCache[photoURL] = await imageUrlToBase64(photoURL)
+    this.profilePictureCache[photoUrl] = await imageUrlToBase64(photoUrl)
     setTimeout(
       () => {
-        delete this.profilePictureCache[photoURL]
+        delete this.profilePictureCache[photoUrl]
       },
       1000 * 60 * 60 * 24
     )
 
-    return await imageUrlToBase64(photoURL)
+    return await imageUrlToBase64(photoUrl)
   }
 }

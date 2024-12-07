@@ -38,7 +38,7 @@ export async function getGroupMembers(
     id: row.id,
     name: row.name,
     email: row.email,
-    photoURL: row.photo_url,
+    photoUrl: row.photo_url,
     balance: row.balance,
     hasAccess: row.has_access,
     isAdmin: row.is_admin,

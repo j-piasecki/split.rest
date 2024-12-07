@@ -2,7 +2,7 @@ export interface User {
   id: string
   name: string
   email: string
-  photoURL: string
+  photoUrl: string
 }
 
 export interface GroupMetadata {
@@ -158,7 +158,7 @@ export interface GetBalancesWithEmailsArguments {
 export type GetBalancesArguments = GetBalancesWithIdsArguments | GetBalancesWithEmailsArguments
 
 export function isUser(obj: any): obj is User {
-  return obj.id !== undefined && obj.name !== undefined && obj.email !== undefined && obj.photoURL !== undefined
+  return obj.id !== undefined && obj.name !== undefined && obj.email !== undefined && obj.photoUrl !== undefined
 }
 
 export function isCreateGroupArguments(obj: any): obj is CreateGroupArguments {

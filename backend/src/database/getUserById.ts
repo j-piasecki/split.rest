@@ -19,6 +19,6 @@ export async function getUserById(
     id: rows[0].id,
     name: rows[0].name,
     email: rows[0].email,
-    photoURL: rows[0].photo_url,
+    photoUrl: rows[0].photo_url,
   }
 }

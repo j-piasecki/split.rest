@@ -11,7 +11,7 @@ export async function createOrUpdateUser() {
     id: auth.currentUser.uid,
     name: auth.currentUser.displayName!,
     email: auth.currentUser.email!,
-    photoURL: auth.currentUser.photoURL!,
+    photoUrl: auth.currentUser.photoURL!,
   }
 
   return await makeRequest('POST', 'createOrUpdateUser', user as unknown as Record<string, string>)

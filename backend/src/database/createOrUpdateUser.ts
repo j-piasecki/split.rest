@@ -3,7 +3,7 @@ import { User } from 'shared'
 
 export async function createOrUpdateUser(pool: Pool, user: User) {
   const name = user.name.length > 128 ? user.name.slice(0, 128) : user.name
-  const photoURL = user.photoURL.length > 512 ? user.photoURL.slice(0, 512) : user.photoURL
+  const photoUrl = user.photoUrl.length > 512 ? user.photoUrl.slice(0, 512) : user.photoUrl
 
   await pool.query(
     `
@@ -12,6 +12,6 @@ export async function createOrUpdateUser(pool: Pool, user: User) {
       ON CONFLICT (id) DO UPDATE
       SET email = $3, photo_url = $5
     `,
-    [user.id, name, user.email, Date.now(), photoURL]
+    [user.id, name, user.email, Date.now(), photoUrl]
   )
 }
