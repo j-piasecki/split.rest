@@ -15,6 +15,7 @@ import {
   AddUserToGroupArguments,
   CreateGroupArguments,
   CreateSplitArguments,
+  DeleteGroupArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
   GetGroupInfoArguments,
@@ -34,6 +35,7 @@ import {
   isAddUserToGroupArguments,
   isCreateGroupArguments,
   isCreateSplitArguments,
+  isDeleteGroupArguments,
   isDeleteSplitArguments,
   isGetBalancesArguments,
   isGetGroupInfoArguments,
@@ -253,5 +255,15 @@ export class AppController {
     }
 
     return await this.appService.getBalances(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('deleteGroup')
+  async deleteGroup(@Req() request: Request, @Body() args: Partial<DeleteGroupArguments>) {
+    if (!isDeleteGroupArguments(args)) {
+      throw new BadRequestException('Invalid arguments')
+    }
+
+    return await this.appService.deleteGroup(request.user.sub, args)
   }
 }

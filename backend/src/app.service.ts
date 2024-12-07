@@ -6,6 +6,7 @@ import {
   AddUserToGroupArguments,
   CreateGroupArguments,
   CreateSplitArguments,
+  DeleteGroupArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
   GetGroupInfoArguments,
@@ -160,5 +161,9 @@ export class AppService {
 
   async getBalances(callerId: string, args: GetBalancesArguments) {
     return await this.databaseService.getBalances(callerId, args)
+  }
+
+  async deleteGroup(callerId: string, args: DeleteGroupArguments) {
+    return await this.databaseService.deleteGroup(callerId, args)
   }
 }

@@ -135,6 +135,10 @@ export interface GetGroupInfoArguments {
   groupId: number
 }
 
+export interface DeleteGroupArguments {
+  groupId: number
+}
+
 export interface GetGroupMembersAutocompletionsArguments {
   groupId: number
   query: string
@@ -239,4 +243,8 @@ export function isGetBalancesWithIdsArguments(obj: any): obj is GetBalancesWithI
 
 export function isGetBalancesWithEmailsArguments(obj: any): obj is GetBalancesWithEmailsArguments {
   return obj.groupId !== undefined && obj.emails !== undefined && Array.isArray(obj.emails)
+}
+
+export function isDeleteGroupArguments(obj: any): obj is DeleteGroupArguments {
+  return obj.groupId !== undefined
 }

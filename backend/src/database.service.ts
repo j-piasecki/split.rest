@@ -3,6 +3,7 @@ import { createDatabase } from './database/createDatabase'
 import { createGroup } from './database/createGroup'
 import { createOrUpdateUser } from './database/createOrUpdateUser'
 import { createSplit } from './database/createSplit'
+import { deleteGroup } from './database/deleteGroup'
 import { deleteSplit } from './database/deleteSplit'
 import { getBalances } from './database/getBalances'
 import { getGroupInfo } from './database/getGroupInfo'
@@ -24,6 +25,7 @@ import {
   AddUserToGroupArguments,
   CreateGroupArguments,
   CreateSplitArguments,
+  DeleteGroupArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
   GetGroupInfoArguments,
@@ -139,5 +141,9 @@ export class DatabaseService {
 
   async getBalances(callerId: string, args: GetBalancesArguments) {
     return await getBalances(this.pool, callerId, args)
+  }
+
+  async deleteGroup(callerId: string, args: DeleteGroupArguments) {
+    return await deleteGroup(this.pool, callerId, args)
   }
 }
