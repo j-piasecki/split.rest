@@ -5,6 +5,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
+import { useAuth } from '@utils/auth'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { router } from 'expo-router'
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
@@ -96,6 +97,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
 }
 
 function ActionButtons({ info }: { info: GroupInfo }) {
+  const user = useAuth()
   const theme = useTheme()
 
   return (
@@ -162,6 +164,16 @@ function ActionButtons({ info }: { info: GroupInfo }) {
               size={20}
               color={theme.colors.onPrimaryContainer}
             />
+          }
+        />
+      )}
+
+      {(info.isAdmin || info.owner === user?.id) && (
+        <Button
+          title='Settings'
+          onPress={() => router.navigate(`/${info.id}/settings`)}
+          leftIcon={
+            <MaterialIcons name='settings' size={20} color={theme.colors.onPrimaryContainer} />
           }
         />
       )}

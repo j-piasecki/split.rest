@@ -12,11 +12,9 @@ export async function deleteGroup(pool: Pool, callerId: string, args: DeleteGrou
       throw new NotFoundException('Group not found')
     }
 
-    const groupOwner = await client.query('SELECT owner_id FROM groups WHERE id = $1', [
-      args.groupId,
-    ])
+    const groupOwner = await client.query('SELECT owner FROM groups WHERE id = $1', [args.groupId])
 
-    if (groupOwner.rows[0].owner_id !== callerId) {
+    if (groupOwner.rows[0].owner !== callerId) {
       throw new UnauthorizedException('You do not have permission to delete this group')
     }
 
