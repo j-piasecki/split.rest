@@ -1,5 +1,5 @@
-import { isGroupDeleted } from './utils/isGroupDeleted'
-import { isUserMemberOfGroup } from './utils/isUserMemberOfGroup'
+import { isGroupDeleted } from '../utils/isGroupDeleted'
+import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { GetGroupInfoArguments, GroupInfo } from 'shared'

@@ -1,4 +1,4 @@
-import { isGroupDeleted } from './utils/isGroupDeleted'
+import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { NotFoundException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { SetGroupHiddenArguments } from 'shared'

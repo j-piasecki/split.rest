@@ -1,5 +1,5 @@
-import { isGroupDeleted } from './utils/isGroupDeleted'
-import { isUserGroupAdmin } from './utils/isUserGroupAdmin'
+import { isGroupDeleted } from '../utils/isGroupDeleted'
+import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
 import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { SetGroupNameArguments } from 'shared'

@@ -1,5 +1,5 @@
-import { hasAccessToGroup } from './utils/hasAccessToGroup'
-import { isGroupDeleted } from './utils/isGroupDeleted'
+import { hasAccessToGroup } from '../utils/hasAccessToGroup'
+import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { GetGroupSplitsArguments, SplitInfo } from 'shared'
