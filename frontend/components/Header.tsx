@@ -18,7 +18,7 @@ export default function Header({ title = 'Split' }: HeaderProps) {
 
   useEffect(() => {
     if (user) {
-      getProfilePicture(user.photoURL).then(setProfilePicture)
+      getProfilePicture(user.id).then(setProfilePicture)
     }
   }, [user])
 

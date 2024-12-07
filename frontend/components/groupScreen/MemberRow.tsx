@@ -22,10 +22,8 @@ export function MemberRow({ member, info, forceReload }: MemberRowProps) {
   const [photo, setPhoto] = useState<string | null>(null)
 
   useEffect(() => {
-    if (member.photoURL) {
-      getProfilePicture(member.photoURL).then(setPhoto)
-    }
-  }, [member.photoURL])
+    getProfilePicture(member.id).then(setPhoto)
+  }, [member.id])
 
   return (
     <View

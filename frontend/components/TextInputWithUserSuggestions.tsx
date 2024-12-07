@@ -18,8 +18,8 @@ function Suggestion({ user, onSelect, textInputRef, setShowSuggestions }: Sugges
   const [profilePicture, setProfilePicture] = useState<string | null>(null)
 
   useEffect(() => {
-    getProfilePicture(user.photoURL).then(setProfilePicture)
-  }, [user.photoURL])
+    getProfilePicture(user.id).then(setProfilePicture)
+  }, [user.id])
 
   return (
     <Pressable

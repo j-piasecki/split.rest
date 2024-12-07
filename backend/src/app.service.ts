@@ -23,7 +23,7 @@ import {
 
 @Injectable()
 export class AppService {
-  private profilePictureCache: { [photoURL: string]: string } = {}
+  private profilePictureCache: { [userId: string]: string } = {}
 
   constructor(private readonly databaseService: DatabaseService) {}
 
@@ -152,10 +152,12 @@ export class AppService {
     return await this.databaseService.getBalances(callerId, args)
   }
 
-  async getProfilePicture(photoURL: string) {
-    if (this.profilePictureCache[photoURL] !== undefined) {
-      return this.profilePictureCache[photoURL]
+  async getProfilePicture(userId: string) {
+    if (this.profilePictureCache[userId] !== undefined) {
+      return this.profilePictureCache[userId]
     }
+
+    const { photoURL } = await this.databaseService.getUserById(userId, { userId })
 
     const imageUrlToBase64 = async (url: string): Promise<string | null> =>
       url

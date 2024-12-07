@@ -25,8 +25,8 @@ function UserRow({
   const [userPhoto, setUserPhoto] = useState<string | null>(null)
 
   useEffect(() => {
-    getProfilePicture(user.photoURL).then(setUserPhoto)
-  }, [user.photoURL])
+    getProfilePicture(user.id).then(setUserPhoto)
+  }, [user.id])
 
   const paidByThis = splitInfo.paidById === user.id
   let paidInThisSplit = user.change
