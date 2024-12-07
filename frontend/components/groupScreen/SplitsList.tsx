@@ -10,7 +10,7 @@ export interface SplitsListProps {
 
 export function SplitsList({ info }: SplitsListProps) {
   const theme = useTheme()
-  const { splits, isLoading, fetchNextPage, isFetchingNextPage } = useGroupSplits(info?.id ?? 0)
+  const { splits, isLoading, fetchNextPage, isFetchingNextPage } = useGroupSplits(info?.id)
 
   if (!info) {
     return null

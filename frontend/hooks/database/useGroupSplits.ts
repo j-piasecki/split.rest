@@ -4,9 +4,13 @@ import { useCallback } from 'react'
 import { GetGroupSplitsArguments } from 'shared'
 import { SplitInfo } from 'shared'
 
-export function useGroupSplits(groupId: number) {
+export function useGroupSplits(groupId?: number) {
   const fetchSplits = useCallback(
     async ({ pageParam }: QueryFunctionContext<QueryKey, number>) => {
+      if (!groupId) {
+        return []
+      }
+
       const args: GetGroupSplitsArguments = { groupId, startAfterTimestamp: pageParam }
       const result = await makeRequest<GetGroupSplitsArguments, SplitInfo[]>(
         'GET',
