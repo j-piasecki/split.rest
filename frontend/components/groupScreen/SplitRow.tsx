@@ -12,7 +12,6 @@ import { GroupInfo, SplitInfo } from 'shared'
 export interface SplitRowProps {
   split: SplitInfo
   info: GroupInfo | undefined
-  forceReload: () => void
 }
 
 function LinearInfo({ split, info }: { split: SplitInfo; info: GroupInfo | undefined }) {
@@ -53,7 +52,7 @@ function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo | unde
   )
 }
 
-export function SplitRow({ split, info, forceReload }: SplitRowProps) {
+export function SplitRow({ split, info }: SplitRowProps) {
   const user = useAuth()
   const theme = useTheme()
   const router = useRouter()
@@ -95,11 +94,9 @@ export function SplitRow({ split, info, forceReload }: SplitRowProps) {
             }
             onPress={() => {
               if (info) {
-                deleteSplit(info.id, split.id)
-                  .then(forceReload)
-                  .catch((e) => {
-                    alert(e.message)
-                  })
+                deleteSplit(info.id, split.id).catch((e) => {
+                  alert(e.message)
+                })
               }
             }}
           />
