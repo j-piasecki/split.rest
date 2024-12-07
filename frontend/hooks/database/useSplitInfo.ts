@@ -4,7 +4,7 @@ import { GetSplitInfoArguments, SplitWithUsers } from 'shared'
 
 export function useSplitInfo(groupId: number, splitId: number) {
   return useQuery({
-    queryKey: ['splitInfo', groupId, splitId],
+    queryKey: ['groupSplits', groupId, splitId],
     queryFn: async (): Promise<SplitWithUsers> => {
       const args: GetSplitInfoArguments = { groupId: groupId, splitId: splitId }
       const info = await makeRequest<GetSplitInfoArguments, SplitWithUsers>(

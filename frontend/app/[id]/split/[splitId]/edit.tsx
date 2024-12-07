@@ -1,8 +1,8 @@
 import ModalScreen from '@components/ModalScreen'
 import { FormData, SplitForm } from '@components/SplitForm'
-import { updateSplit } from '@database/updateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useSplitInfo } from '@hooks/database/useSplitInfo'
+import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
 import { useTheme } from '@styling/theme'
 import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -14,28 +14,24 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
   const router = useRouter()
   const [error, setError] = useState('')
   const [waiting, setWaiting] = useState(false)
+  const { mutateAsync: updateSplit } = useUpdateSplit()
 
   async function save(form: FormData) {
     try {
       setWaiting(true)
       const { payerId, sumToSave, balanceChange } = await validateSplitForm(form)
 
-      await updateSplit(
-        splitInfo.id,
-        groupInfo.id,
-        payerId,
-        form.title,
-        sumToSave,
-        // TODO: allow to change date
-        splitInfo.timestamp,
-        balanceChange as BalanceChange[]
-      )
+      await updateSplit({
+        splitId: splitInfo.id,
+        groupId: groupInfo.id,
+        paidBy: payerId,
+        title: form.title,
+        total: sumToSave,
+        timestamp: splitInfo.timestamp,
+        balances: balanceChange as BalanceChange[],
+      })
 
       router.replace(`/${groupInfo.id}`)
-
-      setTimeout(() => {
-        location.reload()
-      }, 100)
     } catch (error) {
       setError((error as Error).message)
     } finally {

@@ -14,14 +14,14 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
   const router = useRouter()
   const [error, setError] = useState('')
   const [waiting, setWaiting] = useState(false)
-  const createSplit = useCreateSplit()
+  const { mutateAsync: createSplit } = useCreateSplit()
 
   async function save(form: FormData) {
     try {
       setWaiting(true)
       const { payerId, sumToSave, balanceChange } = await validateSplitForm(form)
 
-      await createSplit.mutateAsync({
+      await createSplit({
         groupId: groupInfo.id,
         paidBy: payerId,
         title: form.title,
