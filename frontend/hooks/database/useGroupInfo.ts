@@ -10,7 +10,7 @@ export function useGroupInfo(id: number) {
 
   return useQuery({
     queryKey: ['groupInfo', id],
-    queryFn: async () => {
+    queryFn: async (): Promise<GroupInfo> => {
       const args: GetGroupInfoArguments = { groupId: id }
       const info = await makeRequest<GetGroupInfoArguments, GroupInfo>('GET', 'getGroupInfo', args)
 
