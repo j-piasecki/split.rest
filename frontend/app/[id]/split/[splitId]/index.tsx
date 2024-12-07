@@ -1,9 +1,9 @@
 import { Button } from '@components/Button'
 import Modal from '@components/ModalScreen'
-import { getSplitInfo } from '@database/getSplitInfo'
 import { getUserById } from '@database/getUserById'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { useSplitInfo } from '@hooks/database/useSplitInfo'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
@@ -146,13 +146,7 @@ export default function SplitInfoScreen() {
   const theme = useTheme()
   const { id, splitId } = useLocalSearchParams()
   const { data: groupInfo } = useGroupInfo(Number(id))
-  const [splitInfo, setSplitInfo] = useState<SplitWithUsers | null | undefined>(undefined)
-
-  useEffect(() => {
-    const groupIdNum = parseInt(id as string)
-    const splitIdNum = parseInt(splitId as string)
-    getSplitInfo(groupIdNum, splitIdNum).then(setSplitInfo)
-  }, [id, splitId])
+  const { data: splitInfo } = useSplitInfo(Number(id), Number(splitId))
 
   return (
     <Modal title='Split info' returnPath={`/${id}`} maxWidth={500}>

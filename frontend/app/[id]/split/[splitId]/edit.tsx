@@ -1,13 +1,12 @@
 import ModalScreen from '@components/ModalScreen'
 import { FormData, SplitForm } from '@components/SplitForm'
-import { getSplitInfo } from '@database/getSplitInfo'
 import { updateSplit } from '@database/updateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { useSplitInfo } from '@hooks/database/useSplitInfo'
 import { useTheme } from '@styling/theme'
-import { useAuth } from '@utils/auth'
 import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 import { BalanceChange, GroupInfo, SplitWithUsers } from 'shared'
 
@@ -74,21 +73,9 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
 
 export default function Modal() {
   const { id, splitId } = useLocalSearchParams()
-  const user = useAuth()
   const theme = useTheme()
-  const [splitInfo, setSplitInfo] = useState<SplitWithUsers | null | undefined>(undefined)
   const { data: groupInfo } = useGroupInfo(Number(id))
-
-  useEffect(() => {
-    if (user) {
-      const groupId = Number(id as string)
-      const splitIdNum = Number(splitId as string)
-
-      getSplitInfo(groupId, splitIdNum).then((split) => {
-        setSplitInfo(split)
-      })
-    }
-  }, [user, id, splitId])
+  const { data: splitInfo } = useSplitInfo(Number(id), Number(splitId))
 
   return (
     <ModalScreen returnPath={`/${id}`} title='Edit split' maxWidth={500}>
