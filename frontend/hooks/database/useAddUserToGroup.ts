@@ -13,6 +13,7 @@ export function useAddUserToGroupMutation(groupId: number) {
 
       queryClient.invalidateQueries({ queryKey: ['groupInfo', groupId] })
       queryClient.invalidateQueries({ queryKey: ['groupMembers', groupId] })
+      queryClient.invalidateQueries({ queryKey: ['userGroups'] })
     },
   })
 }

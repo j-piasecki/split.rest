@@ -1,13 +1,12 @@
 import { Button } from '@components/Button'
 import Header from '@components/Header'
-import { getAllUserGroups } from '@database/getAllUserGroups'
 import Entypo from '@expo/vector-icons/Entypo'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { useUserGroups } from '@hooks/database/useUserGroups'
 import { useTheme } from '@styling/theme'
-import { useAuth } from '@utils/auth'
 import { router } from 'expo-router'
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
@@ -109,20 +108,22 @@ function HiddenGroupsButton({
 }
 
 export default function Home() {
-  const user = useAuth()
   const theme = useTheme()
-  const [groups, setGroups] = useState<GroupInfo[] | null>(null)
-  const [hiddenGroups, setHiddenGroups] = useState<GroupInfo[] | null>(null)
+
+  const {
+    groups: groups,
+    // isLoading: groupsLoading,
+    // fetchNextPage: fetchNextGroups,
+    // isFetchingNextPage: isFetchingNextGroups,
+  } = useUserGroups(false)
+  const {
+    groups: hiddenGroups,
+    // isLoading: hiddenGroupsLoading,
+    // fetchNextPage: fetchNextHiddenGroups,
+    // isFetchingNextPage: isFetchingNextHiddenGroups,
+  } = useUserGroups(true)
 
   const [showHidden, setShowHidden] = useState(false)
-
-  useEffect(() => {
-    if (user) {
-      // TODO: pagination
-      getAllUserGroups(false).then(setGroups)
-      getAllUserGroups(true).then(setHiddenGroups)
-    }
-  }, [user, setGroups, setHiddenGroups])
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surfaceDim }}>
