@@ -23,6 +23,7 @@ async function bootstrap() {
   })
   app.useStaticAssets(join(__dirname, '..', 'public'), {
     prefix: '/public',
+    maxAge: '7d',
   })
   app.enableCors()
   await app.listen(IS_DEV ? 3000 : 443)
