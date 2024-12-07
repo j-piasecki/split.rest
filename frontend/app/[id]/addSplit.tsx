@@ -1,6 +1,6 @@
 import ModalScreen from '@components/ModalScreen'
 import { FormData, SplitForm } from '@components/SplitForm'
-import { createSplit } from '@database/createSplit'
+import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -14,31 +14,28 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
   const router = useRouter()
   const [error, setError] = useState('')
   const [waiting, setWaiting] = useState(false)
+  const createSplit = useCreateSplit()
 
   async function save(form: FormData) {
     try {
       setWaiting(true)
       const { payerId, sumToSave, balanceChange } = await validateSplitForm(form)
 
-      await createSplit(
-        groupInfo.id,
-        payerId,
-        form.title,
-        sumToSave,
+      await createSplit.mutateAsync({
+        groupId: groupInfo.id,
+        paidBy: payerId,
+        title: form.title,
+        total:sumToSave,
         // TODO: allow to change date
-        Date.now(),
-        balanceChange as BalanceChange[]
-      )
+        timestamp: Date.now(),
+        balances: balanceChange as BalanceChange[],
+      })
 
       if (router.canGoBack()) {
         router.back()
       } else {
         router.replace(`/${groupInfo.id}`)
       }
-
-      setTimeout(() => {
-        location.reload()
-      }, 100)
     } catch (error) {
       setError(error as string)
     } finally {
