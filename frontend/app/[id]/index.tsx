@@ -9,7 +9,7 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTheme } from '@styling/theme'
 import { useIsSmallScreen, useThreeBarLayout } from '@utils/dimensionUtils'
 import { useLocalSearchParams } from 'expo-router'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
@@ -24,10 +24,6 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
       setOpenedTab(0)
     }
   }, [openedTab, threeBarLayout])
-
-  const SplitListContent = useCallback(() => <SplitsList info={info} />, [info])
-  const MembersListContent = useCallback(() => <MembersList info={info} />, [info])
-  const GroupInfoContent = useCallback(() => <GroupInfoPage info={info} />, [info])
 
   const tabs: Tab[] = [
     {
@@ -51,7 +47,7 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
           )}
         </View>
       ),
-      content: SplitListContent,
+      content: <SplitsList info={info} />,
     },
     {
       header: ({ selected }) => (
@@ -74,7 +70,7 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
           )}
         </View>
       ),
-      content: MembersListContent,
+      content: <MembersList info={info} />,
     },
   ]
 
@@ -100,7 +96,7 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
           )}
         </View>
       ),
-      content: GroupInfoContent,
+      content: <GroupInfoPage info={info} />,
     })
   }
 

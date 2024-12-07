@@ -4,7 +4,7 @@ import { Pressable, View } from 'react-native'
 
 export interface Tab {
   header: (props: { selected: boolean }) => React.ReactNode
-  content: () => React.ReactNode
+  content: React.ReactNode
 }
 
 export interface TabViewProps {
@@ -23,8 +23,6 @@ export function TabView(props: TabViewProps) {
   }, [props.openedTab])
 
   const item = Math.max(0, Math.min(selectedItem, props.tabs.length - 1))
-
-  const Content = props.tabs[item].content
 
   return (
     <View style={{ width: '100%', flex: 1, alignItems: 'center' }}>
@@ -59,7 +57,7 @@ export function TabView(props: TabViewProps) {
       </View>
 
       <View style={{ width: '100%', flex: 1, maxWidth: props.maxContentWidth }}>
-        <Content />
+        {props.tabs[item].content}
       </View>
     </View>
   )
