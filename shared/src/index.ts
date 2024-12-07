@@ -161,6 +161,11 @@ export interface GetBalancesWithEmailsArguments {
 
 export type GetBalancesArguments = GetBalancesWithIdsArguments | GetBalancesWithEmailsArguments
 
+export interface SetGroupNameArguments {
+  groupId: number
+  name: string
+}
+
 export function isUser(obj: any): obj is User {
   return obj.id !== undefined && obj.name !== undefined && obj.email !== undefined && obj.photoUrl !== undefined
 }
@@ -247,4 +252,8 @@ export function isGetBalancesWithEmailsArguments(obj: any): obj is GetBalancesWi
 
 export function isDeleteGroupArguments(obj: any): obj is DeleteGroupArguments {
   return obj.groupId !== undefined
+}
+
+export function isSetGroupNameArguments(obj: any): obj is SetGroupNameArguments {
+  return obj.groupId !== undefined && obj.name !== undefined
 }

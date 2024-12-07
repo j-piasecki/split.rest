@@ -20,6 +20,7 @@ import {
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
+  SetGroupNameArguments,
   UpdateSplitArguments,
   User,
 } from 'shared'
@@ -165,5 +166,9 @@ export class AppService {
 
   async deleteGroup(callerId: string, args: DeleteGroupArguments) {
     return await this.databaseService.deleteGroup(callerId, args)
+  }
+
+  async setGroupName(callerId: string, args: SetGroupNameArguments) {
+    return await this.databaseService.setGroupName(callerId, args)
   }
 }

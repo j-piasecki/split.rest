@@ -18,6 +18,7 @@ import { restoreSplit } from './database/restoreSplit'
 import { setGroupAccess } from './database/setGroupAccess'
 import { setGroupAdmin } from './database/setGroupAdmin'
 import { setGroupHidden } from './database/setGroupHidden'
+import { setGroupName } from './database/setGroupName'
 import { updateSplit } from './database/updateSplit'
 import { Injectable } from '@nestjs/common'
 import { Pool } from 'pg'
@@ -40,6 +41,7 @@ import {
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
+  SetGroupNameArguments,
   UpdateSplitArguments,
   User,
 } from 'shared'
@@ -145,5 +147,9 @@ export class DatabaseService {
 
   async deleteGroup(callerId: string, args: DeleteGroupArguments) {
     return await deleteGroup(this.pool, callerId, args)
+  }
+
+  async setGroupName(callerId: string, args: SetGroupNameArguments) {
+    return await setGroupName(this.pool, callerId, args)
   }
 }

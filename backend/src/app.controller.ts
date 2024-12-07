@@ -31,6 +31,7 @@ import {
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
+  SetGroupNameArguments,
   UpdateSplitArguments,
   User,
   isAddUserToGroupArguments,
@@ -51,6 +52,7 @@ import {
   isSetGroupAccessArguments,
   isSetGroupAdminArguments,
   isSetGroupHiddenArguments,
+  isSetGroupNameArguments,
   isUpdateSplitArguments,
   isUser,
 } from 'shared'
@@ -266,5 +268,15 @@ export class AppController {
     }
 
     return await this.appService.deleteGroup(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('setGroupName')
+  async setGroupName(@Req() request: Request, @Body() args: Partial<SetGroupNameArguments>) {
+    if (!isSetGroupNameArguments(args)) {
+      throw new BadRequestException('Invalid arguments')
+    }
+
+    return await this.appService.setGroupName(request.user.sub, args)
   }
 }
