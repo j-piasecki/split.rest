@@ -91,6 +91,15 @@ function InfoCard({ info }: { info: GroupInfo }) {
             </Text>
           </View>
         )}
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+          <View style={{ width: 24, alignItems: 'center' }}>
+            <FontAwesome name='dollar' size={20} color={theme.colors.outline} />
+          </View>
+          <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
+            Total transactions value: {info.total} {info.currency}
+          </Text>
+        </View>
       </View>
     </View>
   )
