@@ -1,4 +1,5 @@
 import { DatabaseService } from './database.service'
+import { downloadProfilePicture, downloadProfilePictureToBase64 } from './profilePicture'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import {
   AddUserToGroupArguments,
@@ -28,7 +29,17 @@ export class AppService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async createOrUpdateUser(user: User) {
-    return await this.databaseService.createOrUpdateUser(user)
+    const result = await this.databaseService.createOrUpdateUser(user)
+
+    if (result.photoUrlUpdated) {
+      try {
+        await downloadProfilePicture(user.photoUrl, user.id)
+      } catch (error) {
+        console.error(`Failed to download profile picture for ${user.id}`, error)
+      }
+    }
+
+    return result
   }
 
   async createGroup(userId: string, args: CreateGroupArguments) {
@@ -159,20 +170,9 @@ export class AppService {
 
     const { photoUrl } = await this.databaseService.getUserById(userId, { userId })
 
-    const imageUrlToBase64 = async (url: string): Promise<string | null> =>
-      url
-        ? fetch(url)
-            .then(async (res) => ({
-              contentType: res.headers.get('content-type'),
-              buffer: await res.arrayBuffer(),
-            }))
-            .then(
-              ({ contentType, buffer }) =>
-                'data:' + contentType + ';base64,' + Buffer.from(buffer).toString('base64')
-            )
-        : null
+    const base64 = await downloadProfilePictureToBase64(photoUrl, userId)
 
-    this.profilePictureCache[photoUrl] = await imageUrlToBase64(photoUrl)
+    this.profilePictureCache[photoUrl] = base64
     setTimeout(
       () => {
         delete this.profilePictureCache[photoUrl]
@@ -180,6 +180,6 @@ export class AppService {
       1000 * 60 * 60 * 24
     )
 
-    return await imageUrlToBase64(photoUrl)
+    return base64
   }
 }
