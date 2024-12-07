@@ -1,7 +1,7 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
-import { deleteGroup } from '@database/deleteGroup'
+import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useTheme } from '@styling/theme'
@@ -17,26 +17,10 @@ function Form({ info }: { info: GroupInfo }) {
   const theme = useTheme()
   const router = useRouter()
   const [name, setName] = useState(info.name)
-  const [waiting, setWaiting] = useState(false)
-  const { mutateAsync: setGroupName } = useSetGroupNameMutation(info.id)
+  const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
+  const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
 
-  async function updateNameHandler() {
-    setWaiting(true)
-    await setGroupName(name)
-    setWaiting(false)
-  }
-
-  async function deleteGroupHandler() {
-    setWaiting(true)
-    try {
-      await deleteGroup(info.id)
-      router.replace(`/`)
-    } catch (e) {
-      alert((e as Error).message)
-    } finally {
-      setWaiting(false)
-    }
-  }
+  const waiting = isSettingName || isDeletingGroup
 
   return (
     <View
@@ -56,7 +40,10 @@ function Form({ info }: { info: GroupInfo }) {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               {/* TODO: add confirmation dialog, more generic button */}
               <Pressable
-                onPress={deleteGroupHandler}
+                onPress={async () => {
+                  await deleteGroup(info.id)
+                  router.replace(`/`)
+                }}
                 style={({ pressed }) => {
                   return {
                     backgroundColor: theme.colors.errorContainer,
@@ -79,7 +66,7 @@ function Form({ info }: { info: GroupInfo }) {
             </View>
           )}
           <View>
-            <Button title='Save' onPress={updateNameHandler} />
+            <Button title='Save' onPress={() => setGroupName(name)} />
           </View>
         </>
       )}
