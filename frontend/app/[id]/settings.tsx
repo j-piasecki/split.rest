@@ -2,8 +2,8 @@ import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
 import { deleteGroup } from '@database/deleteGroup'
-import { setGroupName } from '@database/setGroupName'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -18,16 +18,12 @@ function Form({ info }: { info: GroupInfo }) {
   const router = useRouter()
   const [name, setName] = useState(info.name)
   const [waiting, setWaiting] = useState(false)
+  const { mutateAsync: setGroupName } = useSetGroupNameMutation(info.id)
 
   async function updateNameHandler() {
     setWaiting(true)
-    try {
-      await setGroupName(info.id, name)
-    } catch (e) {
-      alert((e as Error).message)
-    } finally {
-      setWaiting(false)
-    }
+    await setGroupName(name)
+    setWaiting(false)
   }
 
   async function deleteGroupHandler() {
