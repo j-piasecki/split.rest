@@ -1,7 +1,7 @@
 import ModalScreen from '@components/ModalScreen'
 import { FormData, SplitForm } from '@components/SplitForm'
 import { createSplit } from '@database/createSplit'
-import { useGroupInfo } from '@database/useGroupInfo'
+import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { validateSplitForm } from '@utils/validateSplitForm'

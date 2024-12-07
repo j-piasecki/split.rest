@@ -5,6 +5,7 @@
     "baseUrl": "./",
     "paths": {
       "@components/*": ["components/*"],
+      "@hooks/*": ["hooks/*"],
       "@styling/*": ["styling/*"],
       "@type/*": ["type/*"],
       "@utils/*": ["utils/*"],
