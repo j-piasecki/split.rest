@@ -1,20 +1,20 @@
 import { Button } from '@components/Button'
-import { deleteSplit } from '@database/deleteSplit'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, Text, View } from 'react-native'
 import { GroupInfo, SplitInfo } from 'shared'
 
 export interface SplitRowProps {
   split: SplitInfo
-  info: GroupInfo | undefined
+  info: GroupInfo
 }
 
-function LinearInfo({ split, info }: { split: SplitInfo; info: GroupInfo | undefined }) {
+function LinearInfo({ split, info }: { split: SplitInfo; info: GroupInfo }) {
   const theme = useTheme()
 
   return (
@@ -33,7 +33,7 @@ function LinearInfo({ split, info }: { split: SplitInfo; info: GroupInfo | undef
   )
 }
 
-function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo | undefined }) {
+function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo }) {
   const theme = useTheme()
 
   return (
@@ -57,6 +57,7 @@ export function SplitRow({ split, info }: SplitRowProps) {
   const theme = useTheme()
   const router = useRouter()
   const isSmallScreen = useIsSmallScreen()
+  const deleteSplit = useDeleteSplit(info.id)
 
   const showDeteteButton =
     split.paidById === user?.id || split.createdById === user?.id || info?.isAdmin
@@ -90,14 +91,14 @@ export function SplitRow({ split, info }: SplitRowProps) {
         {showDeteteButton && (
           <Button
             leftIcon={
-              <MaterialIcons name='delete' size={20} color={theme.colors.onPrimaryContainer} />
+              deleteSplit.isPending ? (
+                <ActivityIndicator size='small' color={theme.colors.onPrimaryContainer} />
+              ) : (
+                <MaterialIcons name='delete' size={20} color={theme.colors.onPrimaryContainer} />
+              )
             }
             onPress={() => {
-              if (info) {
-                deleteSplit(info.id, split.id).catch((e) => {
-                  alert(e.message)
-                })
-              }
+              deleteSplit.mutate(split.id)
             }}
           />
         )}

@@ -10,8 +10,11 @@ export interface SplitsListProps {
 
 export function SplitsList({ info }: SplitsListProps) {
   const theme = useTheme()
-
   const { splits, isLoading, fetchNextPage, isFetchingNextPage } = useGroupSplits(info?.id ?? 0)
+
+  if (!info) {
+    return null
+  }
 
   return (
     <View style={{ width: '100%', flex: 1, maxWidth: 768, alignSelf: 'center' }}>
