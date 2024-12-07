@@ -18,6 +18,7 @@ export async function createDatabase(pool: Pool) {
       created_at bigint,
       currency VARCHAR(8),
       owner VARCHAR(32),
+      deleted BOOLEAN DEFAULT FALSE,
 
       FOREIGN KEY (owner) REFERENCES users(id)
     )

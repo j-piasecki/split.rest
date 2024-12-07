@@ -1,4 +1,5 @@
 import { hasAccessToGroup } from './utils/hasAccessToGroup'
+import { isGroupDeleted } from './utils/isGroupDeleted'
 import { BadRequestException, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import {
@@ -13,6 +14,10 @@ export async function getBalances(
   callerId: string,
   args: GetBalancesArguments
 ): Promise<UserWithBalanceChange[]> {
+  if (await isGroupDeleted(pool, args.groupId)) {
+    throw new NotFoundException('Group not found')
+  }
+
   if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
     throw new UnauthorizedException('User does not have access to group')
   }

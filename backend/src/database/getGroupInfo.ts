@@ -1,5 +1,6 @@
+import { isGroupDeleted } from './utils/isGroupDeleted'
 import { isUserMemberOfGroup } from './utils/isUserMemberOfGroup'
-import { UnauthorizedException } from '@nestjs/common'
+import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { GetGroupInfoArguments, GroupInfo } from 'shared'
 
@@ -8,6 +9,10 @@ export async function getGroupInfo(
   callerId: string,
   args: GetGroupInfoArguments
 ): Promise<GroupInfo | null> {
+  if (await isGroupDeleted(pool, args.groupId)) {
+    throw new NotFoundException('Group not found')
+  }
+
   if (!(await isUserMemberOfGroup(pool, args.groupId, callerId))) {
     throw new UnauthorizedException()
   }

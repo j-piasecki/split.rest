@@ -1,5 +1,6 @@
 import { hasAccessToGroup } from './utils/hasAccessToGroup'
-import { UnauthorizedException } from '@nestjs/common'
+import { isGroupDeleted } from './utils/isGroupDeleted'
+import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { GetGroupMembersArguments, Member } from 'shared'
 
@@ -8,6 +9,10 @@ export async function getGroupMembers(
   callerId: string,
   args: GetGroupMembersArguments
 ): Promise<Member[]> {
+  if (await isGroupDeleted(pool, args.groupId)) {
+    throw new NotFoundException('Group not found')
+  }
+
   if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
     throw new UnauthorizedException('You do not have permission to get members in this group')
   }

@@ -1,3 +1,4 @@
+import { isGroupDeleted } from './utils/isGroupDeleted'
 import { isUserGroupAdmin } from './utils/isUserGroupAdmin'
 import { userExists } from './utils/userExists'
 import { NotFoundException, UnauthorizedException } from '@nestjs/common'
@@ -9,6 +10,10 @@ export async function setGroupAdmin(pool: Pool, callerId: string, args: SetGroup
 
   try {
     await client.query('BEGIN')
+
+    if (await isGroupDeleted(client, args.groupId)) {
+      throw new NotFoundException('Group not found')
+    }
 
     if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
       throw new UnauthorizedException('You do not have permission to set group admin')

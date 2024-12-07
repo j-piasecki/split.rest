@@ -1,3 +1,4 @@
+import { isGroupDeleted } from './utils/isGroupDeleted'
 import { isUserGroupAdmin } from './utils/isUserGroupAdmin'
 import { isUserMemberOfGroup } from './utils/isUserMemberOfGroup'
 import { userExists } from './utils/userExists'
@@ -10,6 +11,10 @@ export async function addUserToGroup(pool: Pool, callerId: string, args: AddUser
 
   try {
     await client.query('BEGIN')
+
+    if (await isGroupDeleted(client, args.groupId)) {
+      throw new NotFoundException('Group not found')
+    }
 
     if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
       throw new UnauthorizedException('You do not have permission to add users to this group')

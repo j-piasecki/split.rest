@@ -1,4 +1,5 @@
 import { hasAccessToGroup } from './utils/hasAccessToGroup'
+import { isGroupDeleted } from './utils/isGroupDeleted'
 import { isUserGroupAdmin } from './utils/isUserGroupAdmin'
 import { splitExists } from './utils/splitExists'
 import { NotFoundException, UnauthorizedException } from '@nestjs/common'
@@ -9,6 +10,10 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
   const client = await pool.connect()
   try {
     await client.query('BEGIN')
+
+    if (await isGroupDeleted(client, args.groupId)) {
+      throw new NotFoundException('Group not found')
+    }
 
     if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
       throw new UnauthorizedException('You do not have permission to restore splits in this group')

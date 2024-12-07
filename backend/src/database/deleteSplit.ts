@@ -1,4 +1,5 @@
 import { hasAccessToGroup } from './utils/hasAccessToGroup'
+import { isGroupDeleted } from './utils/isGroupDeleted'
 import { isUserGroupAdmin } from './utils/isUserGroupAdmin'
 import { splitExists } from './utils/splitExists'
 import { NotFoundException, UnauthorizedException } from '@nestjs/common'
@@ -10,6 +11,10 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
 
   try {
     await client.query('BEGIN')
+
+    if (await isGroupDeleted(client, args.groupId)) {
+      throw new NotFoundException('Group not found')
+    }
 
     if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
       throw new UnauthorizedException('You do not have permission to delete splits in this group')
