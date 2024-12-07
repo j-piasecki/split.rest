@@ -1,10 +1,9 @@
 import { Button } from './Button'
-import { getProfilePicture } from '@database/getProfilePicture'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { logout, useAuth } from '@utils/auth'
+import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { Link } from 'expo-router'
-import { useEffect, useState } from 'react'
 import { Image, Text, View } from 'react-native'
 
 export interface HeaderProps {
@@ -14,13 +13,6 @@ export interface HeaderProps {
 export default function Header({ title = 'Split' }: HeaderProps) {
   const theme = useTheme()
   const user = useAuth()
-  const [profilePicture, setProfilePicture] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (user) {
-      getProfilePicture(user.id).then(setProfilePicture)
-    }
-  }, [user])
 
   return (
     <View
@@ -54,7 +46,7 @@ export default function Header({ title = 'Split' }: HeaderProps) {
           }
         />
         <Image
-          source={{ uri: profilePicture ?? undefined }}
+          source={{ uri: getProfilePictureUrl(user?.id) }}
           style={{
             width: 40,
             height: 40,

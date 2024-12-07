@@ -1,11 +1,10 @@
 import { Button } from '@components/Button'
-import { getProfilePicture } from '@database/getProfilePicture'
 import { setGroupAccess } from '@database/setGroupAccess'
 import { setGroupAdmin } from '@database/setGroupAdmin'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
-import { useEffect, useState } from 'react'
+import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { Image, Text, View } from 'react-native'
 import { GroupInfo, Member } from 'shared'
 
@@ -19,11 +18,6 @@ export function MemberRow({ member, info, forceReload }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
   const isSmallScreen = useIsSmallScreen()
-  const [photo, setPhoto] = useState<string | null>(null)
-
-  useEffect(() => {
-    getProfilePicture(member.id).then(setPhoto)
-  }, [member.id])
 
   return (
     <View
@@ -39,7 +33,7 @@ export function MemberRow({ member, info, forceReload }: MemberRowProps) {
     >
       <View style={{ justifyContent: 'center', marginRight: 16 }}>
         <Image
-          source={{ uri: photo ?? undefined }}
+          source={{ uri: getProfilePictureUrl(member.id) }}
           style={{ width: 32, height: 32, borderRadius: 16 }}
         />
       </View>

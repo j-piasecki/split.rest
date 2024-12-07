@@ -1,8 +1,8 @@
 import { TextInputWithSuggestions, TextInputWithSuggestionsProps } from './TextInputWithSuggestions'
 import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocompletions'
-import { getProfilePicture } from '@database/getProfilePicture'
 import { useTheme } from '@styling/theme'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
+import { useCallback, useRef, useState } from 'react'
 import { Image, Pressable, Text, TextInput as TextInputRN, View } from 'react-native'
 import { User } from 'shared'
 
@@ -15,11 +15,6 @@ interface SuggestionProps {
 
 function Suggestion({ user, onSelect, textInputRef, setShowSuggestions }: SuggestionProps) {
   const theme = useTheme()
-  const [profilePicture, setProfilePicture] = useState<string | null>(null)
-
-  useEffect(() => {
-    getProfilePicture(user.id).then(setProfilePicture)
-  }, [user.id])
 
   return (
     <Pressable
@@ -44,7 +39,7 @@ function Suggestion({ user, onSelect, textInputRef, setShowSuggestions }: Sugges
         }}
       >
         <Image
-          source={{ uri: profilePicture ?? undefined }}
+          source={{ uri: getProfilePictureUrl(user.id) }}
           style={{ width: 24, height: 24, borderRadius: 12 }}
         />
         <View style={{ flex: 1 }}>

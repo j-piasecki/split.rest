@@ -254,13 +254,4 @@ export class AppController {
 
     return await this.appService.getBalances(request.user.sub, args)
   }
-
-  @UseGuards(AuthGuard)
-  @Get('getProfilePicture')
-  async profilePicture(@Req() request: Request, @Query() args: { userId: string }) {
-    const photo = await this.appService.getProfilePicture(args.userId)
-    return {
-      photo: photo,
-    }
-  }
 }

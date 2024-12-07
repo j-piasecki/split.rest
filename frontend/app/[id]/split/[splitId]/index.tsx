@@ -1,12 +1,12 @@
 import { Button } from '@components/Button'
 import Modal from '@components/ModalScreen'
 import { getGroupInfo } from '@database/getGroupInfo'
-import { getProfilePicture } from '@database/getProfilePicture'
 import { getSplitInfo } from '@database/getSplitInfo'
 import { getUserById } from '@database/getUserById'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
@@ -22,11 +22,6 @@ function UserRow({
   groupInfo: GroupInfo | null
 }) {
   const theme = useTheme()
-  const [userPhoto, setUserPhoto] = useState<string | null>(null)
-
-  useEffect(() => {
-    getProfilePicture(user.id).then(setUserPhoto)
-  }, [user.id])
 
   const paidByThis = splitInfo.paidById === user.id
   let paidInThisSplit = user.change
@@ -52,7 +47,7 @@ function UserRow({
       }}
     >
       <Image
-        source={{ uri: userPhoto ?? undefined }}
+        source={{ uri: getProfilePictureUrl(user.id) }}
         style={{ width: 32, height: 32, borderRadius: 16 }}
       />
       <View style={{ flex: 1 }}>

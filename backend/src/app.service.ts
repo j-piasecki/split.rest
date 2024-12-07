@@ -1,6 +1,7 @@
 import { DatabaseService } from './database.service'
-import { downloadProfilePicture, downloadProfilePictureToBase64 } from './profilePicture'
+import { downloadProfilePicture } from './profilePicture'
 import { BadRequestException, Injectable } from '@nestjs/common'
+import * as fs from 'fs'
 import {
   AddUserToGroupArguments,
   CreateGroupArguments,
@@ -24,14 +25,12 @@ import {
 
 @Injectable()
 export class AppService {
-  private profilePictureCache: { [userId: string]: string } = {}
-
   constructor(private readonly databaseService: DatabaseService) {}
 
   async createOrUpdateUser(user: User) {
     const result = await this.databaseService.createOrUpdateUser(user)
 
-    if (result.photoUrlUpdated) {
+    if (result.photoUrlUpdated || !fs.existsSync(`public/${user.id}.png`)) {
       try {
         await downloadProfilePicture(user.photoUrl, user.id)
       } catch (error) {
@@ -161,25 +160,5 @@ export class AppService {
 
   async getBalances(callerId: string, args: GetBalancesArguments) {
     return await this.databaseService.getBalances(callerId, args)
-  }
-
-  async getProfilePicture(userId: string) {
-    if (this.profilePictureCache[userId] !== undefined) {
-      return this.profilePictureCache[userId]
-    }
-
-    const { photoUrl } = await this.databaseService.getUserById(userId, { userId })
-
-    const base64 = await downloadProfilePictureToBase64(photoUrl, userId)
-
-    this.profilePictureCache[photoUrl] = base64
-    setTimeout(
-      () => {
-        delete this.profilePictureCache[photoUrl]
-      },
-      1000 * 60 * 60 * 24
-    )
-
-    return base64
   }
 }
