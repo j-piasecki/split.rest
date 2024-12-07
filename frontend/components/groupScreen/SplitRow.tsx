@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button } from '@components/Button'
 import { deleteSplit } from '@database/deleteSplit'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
@@ -6,6 +5,7 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
+import React from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { GroupInfo, SplitInfo } from 'shared'
 
