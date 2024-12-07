@@ -1,3 +1,4 @@
+import React from 'react'
 import { Button } from '@components/Button'
 import { deleteSplit } from '@database/deleteSplit'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
