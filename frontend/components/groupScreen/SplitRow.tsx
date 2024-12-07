@@ -11,11 +11,11 @@ import { GroupInfo, SplitInfo } from 'shared'
 
 export interface SplitRowProps {
   split: SplitInfo
-  info: GroupInfo | null
+  info: GroupInfo | undefined
   forceReload: () => void
 }
 
-function LinearInfo({ split, info }: { split: SplitInfo; info: GroupInfo | null }) {
+function LinearInfo({ split, info }: { split: SplitInfo; info: GroupInfo | undefined }) {
   const theme = useTheme()
 
   return (
@@ -34,7 +34,7 @@ function LinearInfo({ split, info }: { split: SplitInfo; info: GroupInfo | null 
   )
 }
 
-function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo | null }) {
+function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo | undefined }) {
   const theme = useTheme()
 
   return (

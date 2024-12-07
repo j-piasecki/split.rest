@@ -2,13 +2,13 @@ import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
 import { deleteGroup } from '@database/deleteGroup'
-import { getGroupInfo } from '@database/getGroupInfo'
+import { useGroupInfo } from '@database/useGroupInfo'
 import { setGroupName } from '@database/setGroupName'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ActivityIndicator, Pressable, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
@@ -96,13 +96,9 @@ export default function Settings() {
   const { id } = useLocalSearchParams()
   const user = useAuth()
   const theme = useTheme()
-  const [info, setInfo] = useState<GroupInfo | null>(null)
+  const { data: info } = useGroupInfo(Number(id))
 
   const isAdmin = info?.isAdmin || info?.owner === user?.id
-
-  useEffect(() => {
-    getGroupInfo(Number(id)).then(setInfo)
-  }, [id])
 
   return (
     <ModalScreen returnPath={`/${id}`} title='Group settings' maxWidth={400} maxHeight={400}>

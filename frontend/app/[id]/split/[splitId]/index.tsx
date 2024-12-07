@@ -1,6 +1,6 @@
 import { Button } from '@components/Button'
 import Modal from '@components/ModalScreen'
-import { getGroupInfo } from '@database/getGroupInfo'
+import { useGroupInfo } from '@database/useGroupInfo'
 import { getSplitInfo } from '@database/getSplitInfo'
 import { getUserById } from '@database/getUserById'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
@@ -19,7 +19,7 @@ function UserRow({
 }: {
   user: UserWithBalanceChange
   splitInfo: SplitWithUsers
-  groupInfo: GroupInfo | null
+  groupInfo: GroupInfo | undefined
 }) {
   const theme = useTheme()
 
@@ -66,7 +66,7 @@ function SplitInfo({
   groupInfo,
 }: {
   splitInfo: SplitWithUsers
-  groupInfo: GroupInfo | null
+  groupInfo: GroupInfo | undefined
 }) {
   const theme = useTheme()
   const user = useAuth()
@@ -145,13 +145,12 @@ function SplitInfo({
 export default function SplitInfoScreen() {
   const theme = useTheme()
   const { id, splitId } = useLocalSearchParams()
-  const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null)
+  const { data: groupInfo } = useGroupInfo(Number(id))
   const [splitInfo, setSplitInfo] = useState<SplitWithUsers | null | undefined>(undefined)
 
   useEffect(() => {
     const groupIdNum = parseInt(id as string)
     const splitIdNum = parseInt(splitId as string)
-    getGroupInfo(groupIdNum).then(setGroupInfo)
     getSplitInfo(groupIdNum, splitIdNum).then(setSplitInfo)
   }, [id, splitId])
 

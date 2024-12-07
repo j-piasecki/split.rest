@@ -7,7 +7,7 @@ import { ActivityIndicator, FlatList, Text, View } from 'react-native'
 import { GroupInfo, Member } from 'shared'
 
 export interface MembersListProps {
-  info: GroupInfo | null
+  info: GroupInfo | undefined
 }
 
 export function MembersList({ info }: MembersListProps) {

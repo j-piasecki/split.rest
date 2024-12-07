@@ -3,18 +3,17 @@ import { Tab, TabView } from '@components/TabView'
 import { GroupInfoPage } from '@components/groupScreen/GroupInfoPage'
 import { MembersList } from '@components/groupScreen/MembersList'
 import { SplitsList } from '@components/groupScreen/SplitsList'
-import { getGroupInfo } from '@database/getGroupInfo'
+import { useGroupInfo } from '@database/useGroupInfo'
 import Entypo from '@expo/vector-icons/Entypo'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useTheme } from '@styling/theme'
-import { useAuth } from '@utils/auth'
 import { useIsSmallScreen, useThreeBarLayout } from '@utils/dimensionUtils'
 import { useLocalSearchParams } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
 import { Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
-function ContentSwitcher({ info }: { info: GroupInfo | null }) {
+function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
   const isSmallScreen = useIsSmallScreen()
@@ -109,18 +108,11 @@ function ContentSwitcher({ info }: { info: GroupInfo | null }) {
 }
 
 export default function GroupScreen() {
-  const user = useAuth()
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
   const { id } = useLocalSearchParams()
   const groupId = Number(id as string)
-  const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null)
-
-  useEffect(() => {
-    if (user) {
-      getGroupInfo(groupId).then(setGroupInfo)
-    }
-  }, [user, setGroupInfo, groupId])
+  const { data: groupInfo } = useGroupInfo(groupId)
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>

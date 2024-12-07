@@ -1,4 +1,5 @@
 import { ThemeProvider, useTheme } from '@styling/theme'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { Stack } from 'expo-router'
@@ -62,10 +63,20 @@ function Content() {
   )
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+    },
+  },
+})
+
 export default function App() {
   return (
-    <ThemeProvider>
-      <Content />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <Content />
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 }

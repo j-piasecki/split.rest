@@ -7,7 +7,7 @@ import { ActivityIndicator, FlatList, Text, View } from 'react-native'
 import { GroupInfo, SplitInfo } from 'shared'
 
 export interface SplitsListProps {
-  info: GroupInfo | null
+  info: GroupInfo | undefined
 }
 
 export function SplitsList({ info }: SplitsListProps) {

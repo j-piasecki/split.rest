@@ -1,6 +1,6 @@
 import ModalScreen from '@components/ModalScreen'
 import { FormData, SplitForm } from '@components/SplitForm'
-import { getGroupInfo } from '@database/getGroupInfo'
+import { useGroupInfo } from '@database/useGroupInfo'
 import { getSplitInfo } from '@database/getSplitInfo'
 import { updateSplit } from '@database/updateSplit'
 import { useTheme } from '@styling/theme'
@@ -73,20 +73,16 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
 }
 
 export default function Modal() {
+  const { id, splitId } = useLocalSearchParams()
   const user = useAuth()
   const theme = useTheme()
-  const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null)
   const [splitInfo, setSplitInfo] = useState<SplitWithUsers | null | undefined>(undefined)
-  const { id, splitId } = useLocalSearchParams()
+  const { data: groupInfo } = useGroupInfo(Number(id))
 
   useEffect(() => {
     if (user) {
       const groupId = Number(id as string)
       const splitIdNum = Number(splitId as string)
-
-      getGroupInfo(groupId).then((group) => {
-        setGroupInfo(group)
-      })
 
       getSplitInfo(groupId, splitIdNum).then((split) => {
         setSplitInfo(split)

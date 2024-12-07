@@ -190,7 +190,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
   )
 }
 
-export function GroupInfoPage({ info }: { info: GroupInfo | null }) {
+export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
 
