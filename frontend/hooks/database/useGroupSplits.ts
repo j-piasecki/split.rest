@@ -7,7 +7,7 @@ import { SplitInfo } from 'shared'
 export function useGroupSplits(groupId: number) {
   const fetchSplits = useCallback(
     async ({ pageParam }: QueryFunctionContext<QueryKey, number>) => {
-      const args = { groupId, startAfterTimestamp: pageParam }
+      const args: GetGroupSplitsArguments = { groupId, startAfterTimestamp: pageParam }
       const result = await makeRequest<GetGroupSplitsArguments, SplitInfo[]>(
         'GET',
         'getGroupSplits',
@@ -22,7 +22,7 @@ export function useGroupSplits(groupId: number) {
     queryKey: ['groupSplits', groupId],
     queryFn: fetchSplits,
     initialPageParam: Number.MAX_SAFE_INTEGER,
-    getNextPageParam: (lastPage, allPages, lastPageParam) => {
+    getNextPageParam: (lastPage) => {
       if (lastPage.length === 0) {
         return undefined
       }

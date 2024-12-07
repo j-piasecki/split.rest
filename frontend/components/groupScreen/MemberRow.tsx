@@ -11,10 +11,9 @@ import { GroupInfo, Member } from 'shared'
 export interface MemberRowProps {
   member: Member
   info: GroupInfo
-  forceReload: () => void
 }
 
-export function MemberRow({ member, info, forceReload }: MemberRowProps) {
+export function MemberRow({ member, info }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
   const isSmallScreen = useIsSmallScreen()
@@ -57,7 +56,6 @@ export function MemberRow({ member, info, forceReload }: MemberRowProps) {
               title='Revoke access'
               onPress={() => {
                 setGroupAccess(info.id, member.id, false)
-                  .then(forceReload)
                   .catch((e) => {
                     alert(e.message)
                   })
@@ -69,7 +67,6 @@ export function MemberRow({ member, info, forceReload }: MemberRowProps) {
               title='Give access'
               onPress={() => {
                 setGroupAccess(info.id, member.id, true)
-                  .then(forceReload)
                   .catch((e) => {
                     alert(e.message)
                   })
@@ -82,7 +79,6 @@ export function MemberRow({ member, info, forceReload }: MemberRowProps) {
               title='Revoke admin'
               onPress={() => {
                 setGroupAdmin(info.id, member.id, false)
-                  .then(forceReload)
                   .catch((e) => {
                     alert(e.message)
                   })
@@ -94,7 +90,6 @@ export function MemberRow({ member, info, forceReload }: MemberRowProps) {
               title='Make admin'
               onPress={() => {
                 setGroupAdmin(info.id, member.id, true)
-                  .then(forceReload)
                   .catch((e) => {
                     alert(e.message)
                   })
