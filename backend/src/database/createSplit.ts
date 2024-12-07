@@ -54,6 +54,11 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
       )
     }
 
+    await client.query('UPDATE groups SET total = total + $1 WHERE id = $2', [
+      args.total,
+      args.groupId,
+    ])
+
     await client.query('COMMIT')
 
     return splitId

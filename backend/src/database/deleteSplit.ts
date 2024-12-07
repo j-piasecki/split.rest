@@ -25,10 +25,10 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
     }
 
     const splitInfo = (
-      await client.query('SELECT paid_by, created_by FROM splits WHERE group_id = $1 AND id = $2', [
-        args.groupId,
-        args.splitId,
-      ])
+      await client.query<{ paid_by: string; created_by: string; total: string }>(
+        'SELECT paid_by, created_by, total FROM splits WHERE group_id = $1 AND id = $2',
+        [args.groupId, args.splitId]
+      )
     ).rows[0]
 
     if (
@@ -51,6 +51,11 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
         [participant.change, args.groupId, participant.user_id]
       )
     }
+    console.log(typeof splitInfo.total)
+    await client.query('UPDATE groups SET total = total - $1 WHERE id = $2', [
+      splitInfo.total,
+      args.groupId,
+    ])
 
     await client.query('UPDATE splits SET deleted = TRUE WHERE group_id = $1 AND id = $2', [
       args.groupId,

@@ -24,10 +24,10 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
     }
 
     const splitInfo = (
-      await client.query('SELECT paid_by, created_by FROM splits WHERE group_id = $1 AND id = $2', [
-        args.groupId,
-        args.splitId,
-      ])
+      await client.query<{ paid_by: string; created_by: string; total: string }>(
+        'SELECT paid_by, created_by, total FROM splits WHERE group_id = $1 AND id = $2',
+        [args.groupId, args.splitId]
+      )
     ).rows[0]
 
     if (
@@ -37,6 +37,8 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
     ) {
       throw new UnauthorizedException('You do not have permission to update this split')
     }
+
+    // Remove old balances
 
     const splitParticipants = (
       await client.query('SELECT user_id, change FROM split_participants WHERE split_id = $1', [
@@ -50,6 +52,13 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
         [participant.change, args.groupId, participant.user_id]
       )
     }
+
+    await client.query('UPDATE groups SET total = total - $1 WHERE id = $2', [
+      splitInfo.total,
+      args.groupId,
+    ])
+
+    // Apply new balances
 
     for (const balance of args.balances) {
       const userExists = (
@@ -73,6 +82,11 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
         [balance.change, args.groupId, balance.id]
       )
     }
+
+    await client.query('UPDATE groups SET total = total + $1 WHERE id = $2', [
+      args.total,
+      args.groupId,
+    ])
 
     await client.query(
       'UPDATE splits SET name = $3, total = $4, paid_by = $5, timestamp = $6, updated_at = $7 WHERE group_id = $1 AND id = $2',
