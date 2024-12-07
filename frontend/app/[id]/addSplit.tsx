@@ -25,7 +25,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
         groupId: groupInfo.id,
         paidBy: payerId,
         title: form.title,
-        total:sumToSave,
+        total: sumToSave,
         // TODO: allow to change date
         timestamp: Date.now(),
         balances: balanceChange as BalanceChange[],

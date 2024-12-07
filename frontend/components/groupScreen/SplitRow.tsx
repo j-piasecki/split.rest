@@ -57,7 +57,7 @@ export function SplitRow({ split, info }: SplitRowProps) {
   const theme = useTheme()
   const router = useRouter()
   const isSmallScreen = useIsSmallScreen()
-  const deleteSplit = useDeleteSplit(info.id)
+  const { mutate: deleteSplit, isPending } = useDeleteSplit(info.id)
 
   const showDeteteButton =
     split.paidById === user?.id || split.createdById === user?.id || info?.isAdmin
@@ -91,14 +91,14 @@ export function SplitRow({ split, info }: SplitRowProps) {
         {showDeteteButton && (
           <Button
             leftIcon={
-              deleteSplit.isPending ? (
+              isPending ? (
                 <ActivityIndicator size='small' color={theme.colors.onPrimaryContainer} />
               ) : (
                 <MaterialIcons name='delete' size={20} color={theme.colors.onPrimaryContainer} />
               )
             }
             onPress={() => {
-              deleteSplit.mutate(split.id)
+              deleteSplit(split.id)
             }}
           />
         )}

@@ -9,9 +9,7 @@ async function updateSplit(queryClient: QueryClient, args: UpdateSplitArguments)
     return {
       ...oldData,
       pages: oldData.pages.map((page) =>
-        page.map((split) =>
-          split.id === args.splitId ? { ...split, ...args } : split
-        )
+        page.map((split) => (split.id === args.splitId ? { ...split, ...args } : split))
       ),
     }
   })

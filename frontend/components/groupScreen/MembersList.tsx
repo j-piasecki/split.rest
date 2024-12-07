@@ -32,9 +32,7 @@ export function MembersList({ info }: MembersListProps) {
         onEndReachedThreshold={0.5}
         onEndReached={() => !isFetchingNextPage && fetchNextPage()}
         keyExtractor={(item) => item.id}
-        renderItem={({ item: member }) => (
-          <MemberRow member={member} info={info}/>
-        )}
+        renderItem={({ item: member }) => <MemberRow member={member} info={info} />}
       />
     </View>
   )

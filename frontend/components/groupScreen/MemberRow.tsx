@@ -17,8 +17,8 @@ export function MemberRow({ member, info }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
   const isSmallScreen = useIsSmallScreen()
-  const setGroupAccessMutation = useSetGroupAccessMutation(info.id, member.id)
-  const setGroupAdminMutation = useSetGroupAdminMutation(info.id, member.id)
+  const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(info.id, member.id)
+  const { mutate: setGroupAdminMutation } = useSetGroupAdminMutation(info.id, member.id)
 
   return (
     <View
@@ -57,7 +57,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
             <Button
               title='Revoke access'
               onPress={() => {
-                setGroupAccessMutation.mutate(false)
+                setGroupAccessMutation(false)
               }}
             />
           )}
@@ -65,7 +65,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
             <Button
               title='Give access'
               onPress={() => {
-                setGroupAccessMutation.mutate(true)
+                setGroupAccessMutation(true)
               }}
             />
           )}
@@ -74,7 +74,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
             <Button
               title='Revoke admin'
               onPress={() => {
-                setGroupAdminMutation.mutate(false)
+                setGroupAdminMutation(false)
               }}
             />
           )}
@@ -82,7 +82,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
             <Button
               title='Make admin'
               onPress={() => {
-                setGroupAdminMutation.mutate(true)
+                setGroupAdminMutation(true)
               }}
             />
           )}

@@ -2,11 +2,7 @@ import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
 import { GroupInfo, SetGroupHiddenArguments } from 'shared'
 
-async function setGroupHidden(
-  queryClient: QueryClient,
-  groupId: number,
-  hidden: boolean
-) {
+async function setGroupHidden(queryClient: QueryClient, groupId: number, hidden: boolean) {
   const args: SetGroupHiddenArguments = { groupId, hidden }
 
   await makeRequest('POST', 'setGroupHidden', args)

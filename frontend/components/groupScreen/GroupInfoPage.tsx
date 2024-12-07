@@ -108,7 +108,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
 function ActionButtons({ info }: { info: GroupInfo }) {
   const user = useAuth()
   const theme = useTheme()
-  const setGroupHiddenMutation = useSetGroupHiddenMutation(info.id)
+  const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info.id)
 
   return (
     <View style={{ marginVertical: 16, flexDirection: 'column', gap: 12 }}>
@@ -150,7 +150,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
         <Button
           title='Show group'
           onPress={() => {
-            setGroupHiddenMutation.mutate(false)
+            setGroupHiddenMutation(false)
           }}
           leftIcon={
             <MaterialIcons name='visibility' size={20} color={theme.colors.onPrimaryContainer} />
@@ -162,7 +162,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
         <Button
           title='Hide group'
           onPress={() => {
-            setGroupHiddenMutation.mutate(true)
+            setGroupHiddenMutation(true)
           }}
           leftIcon={
             <MaterialIcons
