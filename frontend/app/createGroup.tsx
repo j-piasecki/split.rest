@@ -1,7 +1,7 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
-import { createGroup } from '@database/createGroup'
+import { useCreateGroup } from '@hooks/database/useCreateGroup'
 import { useTheme } from '@styling/theme'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
@@ -13,32 +13,27 @@ function Form() {
   const [name, setName] = useState('')
   const [currency, setCurrency] = useState('PLN')
   const [error, setError] = useState('')
-  const [waiting, setWaiting] = useState(false)
+  const { mutateAsync: createGroup, isPending } = useCreateGroup()
 
   function handlePress() {
-    setWaiting(true)
     setError('')
 
     if (name === '') {
       setError('Name cannot be empty')
-      setWaiting(false)
       return
     }
 
     if (name.length > 128) {
       setError('Name is too long')
-      setWaiting(false)
       return
     }
 
-    createGroup(name, currency)
-      .then((group) => {
-        router.navigate('/' + group.id, { withAnchor: true })
-        setWaiting(false)
+    createGroup({ name, currency })
+      .then((groupId) => {
+        router.navigate('/' + groupId, { withAnchor: true })
       })
       .catch((error) => {
         setError(error.message)
-        setWaiting(false)
       })
   }
 
@@ -72,8 +67,8 @@ function Form() {
         }}
       />
 
-      {!waiting && <Button title='Create' onPress={handlePress} />}
-      {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
+      {!isPending && <Button title='Create' onPress={handlePress} />}
+      {isPending && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
 
       {error.length > 0 && <Text style={{ color: 'red' }}>{error}</Text>}
     </View>
