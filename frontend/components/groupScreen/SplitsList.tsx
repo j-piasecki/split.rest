@@ -54,7 +54,7 @@ export function SplitsList({ info }: SplitsListProps) {
           </View>
         }
         data={splits}
-        onEndReachedThreshold={50}
+        onEndReachedThreshold={0.5}
         onEndReached={loadMore}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item: split }) => (

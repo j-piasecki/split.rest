@@ -58,7 +58,7 @@ export function MembersList({ info }: MembersListProps) {
           </View>
         }
         data={members}
-        onEndReachedThreshold={50}
+        onEndReachedThreshold={0.5}
         onEndReached={loadMore}
         keyExtractor={(item) => item.id}
         renderItem={({ item: member }) => (
