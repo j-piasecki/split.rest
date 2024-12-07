@@ -15,6 +15,7 @@ export async function getUserGroups(
           groups.currency,
           groups.owner,
           groups.deleted,
+          groups.total,
           group_members.balance, 
           group_members.is_hidden, 
           group_members.is_admin, 
@@ -40,5 +41,6 @@ export async function getUserGroups(
     isAdmin: row.is_admin,
     hasAccess: row.has_access,
     memberCount: row.member_count,
+    total: row.total,
   }))
 }
