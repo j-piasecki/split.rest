@@ -4,6 +4,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Query,
@@ -99,7 +100,7 @@ export class AppController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('deleteSplit')
+  @Delete('deleteSplit')
   async deleteSplit(@Req() request: Request, @Body() args: Partial<DeleteSplitArguments>) {
     if (!isDeleteSplitArguments(args)) {
       throw new BadRequestException('Invalid arguments')
@@ -258,7 +259,7 @@ export class AppController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('deleteGroup')
+  @Delete('deleteGroup')
   async deleteGroup(@Req() request: Request, @Body() args: Partial<DeleteGroupArguments>) {
     if (!isDeleteGroupArguments(args)) {
       throw new BadRequestException('Invalid arguments')

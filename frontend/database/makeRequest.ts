@@ -3,7 +3,7 @@ import { auth } from '@utils/firebase'
 export const ENDPOINT = __DEV__ ? 'http://localhost:3000' : 'https://api.split.rest'
 
 export async function makeRequest<TArgs, TReturn>(
-  method: 'POST' | 'GET',
+  method: 'POST' | 'GET' | 'DELETE',
   name: string,
   args: { [K in keyof TArgs]: TArgs[K] }
 ) {
@@ -36,7 +36,7 @@ export async function makeRequest<TArgs, TReturn>(
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`,
     },
-    body: method === 'POST' ? JSON.stringify(args) : undefined,
+    body: method === 'POST' || method === 'DELETE' ? JSON.stringify(args) : undefined,
   })
 
   if (__DEV__) {
