@@ -49,11 +49,57 @@ const darkColors: Colors = {
   balanceNeutral: '#9e8c90',
 }
 
+const lightColors: Colors = {
+  transparent: 'transparent',
+
+  primary: '#8c4a60',
+  onPrimary: '#ffffff',
+  primaryContainer: '#ffd9e2',
+  onPrimaryContainer: '#3a071d',
+
+  secondary: '#74565f',
+  onSecondary: '#ffffff',
+  secondaryContainer: '#ffd9e2',
+  onSecondaryContainer: '#2b151c',
+
+  tertiary: '#7c5635',
+  onTertiary: '#ffffff',
+  tertiaryContainer: '#ffdcc1',
+  onTertiaryContainer: '#2e1500',
+
+  error: '#ba1a1a',
+  onError: '#ffffff',
+  errorContainer: '#ffdad6',
+  onErrorContainer: '#410002',
+
+  surfaceDim: '#e6d6d9',
+  surface: '#fff8f8',
+  surfaceBright: '#fff8f8',
+  surfaceContainerLowest: '#ffffff',
+  surfaceContainerLow: '#fff0f2',
+  surfaceContainer: '#faeaed',
+  surfaceContainerHigh: '#f5e4e7',
+  surfaceContainerHighest: '#efdfe1',
+
+  onSurface: '#22191c',
+  onSurfaceVariant: '#514347',
+  outline: '#837377',
+  outlineVariant: '#d5c2c6',
+
+  inverseSurface: '#372e30',
+  inversePrimary: '#fdedef',
+  inverseOnSurface: '#ffb1c8',
+
+  balancePositive: '#00ff00',
+  balanceNegative: '#ff0000',
+  balanceNeutral: '#9e8c90',
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = React.useState<ThemeType>('dark')
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, colors: darkColors }}>
+    <ThemeContext.Provider value={{ theme, setTheme, colors: theme === 'dark' ? darkColors : lightColors }}>
       {children}
     </ThemeContext.Provider>
   )

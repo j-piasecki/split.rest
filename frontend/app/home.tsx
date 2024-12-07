@@ -12,7 +12,6 @@ import { GroupInfo } from 'shared'
 
 function Group({ info }: { info: GroupInfo }) {
   const theme = useTheme()
-  const offColor = 'darkgray'
 
   return (
     <Pressable
@@ -35,11 +34,11 @@ function Group({ info }: { info: GroupInfo }) {
 
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <View style={{ flexDirection: 'row', gap: 4 }}>
-          <Text style={{ fontSize: 16, color: offColor }}>{info.memberCount}</Text>
+          <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.memberCount}</Text>
           <FontAwesome
             name='users'
             size={16}
-            color={offColor}
+            color={theme.colors.outline}
             style={{ transform: [{ translateY: 2 }] }}
           />
         </View>
@@ -47,17 +46,17 @@ function Group({ info }: { info: GroupInfo }) {
         <FontAwesome
           name='lock'
           size={16}
-          color={info.hasAccess ? 'transparent' : offColor}
+          color={info.hasAccess ? theme.colors.transparent : theme.colors.outline}
           style={{ transform: [{ translateY: 2 }] }}
         />
         <FontAwesome
           name='wrench'
           size={16}
-          color={info.isAdmin ? offColor : 'transparent'}
+          color={info.isAdmin ? theme.colors.outline : theme.colors.transparent}
           style={{ transform: [{ translateY: 2 }] }}
         />
 
-        <Text style={{ fontSize: 16, color: offColor }}>{info.currency}</Text>
+        <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.currency}</Text>
       </View>
     </Pressable>
   )

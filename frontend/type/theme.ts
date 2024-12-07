@@ -1,4 +1,4 @@
-export type ThemeType = 'dark'
+export type ThemeType = 'dark' | 'light'
 
 export interface Colors {
   transparent: string
