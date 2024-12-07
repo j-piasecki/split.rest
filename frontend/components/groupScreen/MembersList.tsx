@@ -48,7 +48,7 @@ export function MembersList({ info }: MembersListProps) {
   return (
     <View style={{ width: '100%', flex: 1, maxWidth: 768, alignSelf: 'center' }}>
       <FlatList
-        contentContainerStyle={{ flex: 1, paddingHorizontal: 16 }}
+        contentContainerStyle={{ paddingHorizontal: 16 }}
         ListEmptyComponent={
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             {members === null && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
