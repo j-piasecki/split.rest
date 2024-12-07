@@ -12,7 +12,11 @@ async function setGroupAdmin(
 
   await makeRequest('POST', 'setGroupAdmin', args)
 
-  queryClient.setQueryData(['groupMembers', groupId], (oldData: { pages: Member[][] }) => {
+  queryClient.setQueryData(['groupMembers', groupId], (oldData?: { pages: Member[][] }) => {
+    if (!oldData) {
+      return
+    }
+
     return {
       ...oldData,
       pages: oldData.pages.map((page) =>

@@ -7,7 +7,10 @@ async function setGroupName(queryClient: QueryClient, groupId: number, name: str
 
   await makeRequest('POST', 'setGroupName', args)
 
-  queryClient.setQueryData(['groupInfo', groupId], (oldData: GroupInfo) => {
+  queryClient.setQueryData(['groupInfo', groupId], (oldData?: GroupInfo) => {
+    if (!oldData) {
+      return
+    }
     return { ...oldData, name }
   })
 }

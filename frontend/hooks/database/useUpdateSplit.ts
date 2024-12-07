@@ -5,7 +5,11 @@ import { SplitInfo, UpdateSplitArguments } from 'shared'
 async function updateSplit(queryClient: QueryClient, args: UpdateSplitArguments) {
   await makeRequest<UpdateSplitArguments, void>('POST', 'updateSplit', args)
 
-  queryClient.setQueryData(['groupSplits', args.groupId], (oldData: { pages: SplitInfo[][] }) => {
+  queryClient.setQueryData(['groupSplits', args.groupId], (oldData?: { pages: SplitInfo[][] }) => {
+    if (!oldData) {
+      return
+    }
+
     return {
       ...oldData,
       pages: oldData.pages.map((page) =>

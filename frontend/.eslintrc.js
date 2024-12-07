@@ -5,5 +5,6 @@ module.exports = {
   plugins: ['@tanstack/eslint-plugin-query'],
   rules: {
     'import/no-unresolved': 0,
+    'curly': ['error', 'all'],
   },
 }
