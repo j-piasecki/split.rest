@@ -1,9 +1,9 @@
 import { Button } from '@components/Button'
-import { setGroupHidden } from '@database/setGroupHidden'
 import Entypo from '@expo/vector-icons/Entypo'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
@@ -108,6 +108,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
 function ActionButtons({ info }: { info: GroupInfo }) {
   const user = useAuth()
   const theme = useTheme()
+  const setGroupHiddenMutation = useSetGroupHiddenMutation(info.id)
 
   return (
     <View style={{ marginVertical: 16, flexDirection: 'column', gap: 12 }}>
@@ -149,9 +150,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
         <Button
           title='Show group'
           onPress={() => {
-            setGroupHidden(info.id, false).catch((e) => {
-              alert(e.message)
-            })
+            setGroupHiddenMutation.mutate(false)
           }}
           leftIcon={
             <MaterialIcons name='visibility' size={20} color={theme.colors.onPrimaryContainer} />
@@ -163,9 +162,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
         <Button
           title='Hide group'
           onPress={() => {
-            setGroupHidden(info.id, true).catch((e) => {
-              alert(e.message)
-            })
+            setGroupHiddenMutation.mutate(true)
           }}
           leftIcon={
             <MaterialIcons

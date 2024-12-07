@@ -1,6 +1,6 @@
 import { Button } from '@components/Button'
-import { setGroupAccess } from '@database/setGroupAccess'
-import { setGroupAdmin } from '@database/setGroupAdmin'
+import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
+import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
@@ -17,6 +17,8 @@ export function MemberRow({ member, info }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
   const isSmallScreen = useIsSmallScreen()
+  const setGroupAccessMutation = useSetGroupAccessMutation(info.id, member.id)
+  const setGroupAdminMutation = useSetGroupAdminMutation(info.id, member.id)
 
   return (
     <View
@@ -55,10 +57,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
             <Button
               title='Revoke access'
               onPress={() => {
-                setGroupAccess(info.id, member.id, false)
-                  .catch((e) => {
-                    alert(e.message)
-                  })
+                setGroupAccessMutation.mutate(false)
               }}
             />
           )}
@@ -66,10 +65,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
             <Button
               title='Give access'
               onPress={() => {
-                setGroupAccess(info.id, member.id, true)
-                  .catch((e) => {
-                    alert(e.message)
-                  })
+                setGroupAccessMutation.mutate(true)
               }}
             />
           )}
@@ -78,10 +74,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
             <Button
               title='Revoke admin'
               onPress={() => {
-                setGroupAdmin(info.id, member.id, false)
-                  .catch((e) => {
-                    alert(e.message)
-                  })
+                setGroupAdminMutation.mutate(false)
               }}
             />
           )}
@@ -89,10 +82,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
             <Button
               title='Make admin'
               onPress={() => {
-                setGroupAdmin(info.id, member.id, true)
-                  .catch((e) => {
-                    alert(e.message)
-                  })
+                setGroupAdminMutation.mutate(true)
               }}
             />
           )}
