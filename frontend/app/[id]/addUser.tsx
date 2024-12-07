@@ -1,8 +1,8 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
-import { addUserToGroup } from '@database/addUserToGroup'
 import { getUserByEmail } from '@database/getUserByEmail'
+import { useAddUserToGroupMutation } from '@hooks/database/useAddUserToGroup'
 import { useTheme } from '@styling/theme'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
@@ -15,6 +15,7 @@ function Form() {
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [waiting, setWaiting] = useState(false)
+  const { mutateAsync: addUserToGroup } = useAddUserToGroupMutation(Number(groupId))
 
   function handlePress() {
     setWaiting(true)
@@ -40,7 +41,7 @@ function Form() {
           return
         }
 
-        addUserToGroup(Number(groupId as string), user.id)
+        addUserToGroup(user.id)
           .then(() => {
             setWaiting(false)
 
