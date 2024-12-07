@@ -1,4 +1,4 @@
-import { makeRequest } from './makeRequest'
+import { makeRequest } from '../utils/makeApiRequest'
 import { SetGroupHiddenArguments } from 'shared'
 
 export async function setGroupHidden(groupId: number, hidden: boolean): Promise<void> {

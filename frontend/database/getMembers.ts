@@ -1,4 +1,4 @@
-import { makeRequest } from './makeRequest'
+import { makeRequest } from '../utils/makeApiRequest'
 import { GetGroupMembersArguments, Member } from 'shared'
 
 export async function getMembers(groupId: number, startAfter?: string): Promise<Member[]> {

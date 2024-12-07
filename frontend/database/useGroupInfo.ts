@@ -1,4 +1,4 @@
-import { makeRequest } from './makeRequest'
+import { makeRequest } from '../utils/makeApiRequest'
 import { useQuery } from '@tanstack/react-query'
 import { auth } from '@utils/firebase'
 import { GetGroupInfoArguments, GroupInfo } from 'shared'

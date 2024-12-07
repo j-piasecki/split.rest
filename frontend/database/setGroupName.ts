@@ -1,4 +1,4 @@
-import { makeRequest } from './makeRequest'
+import { makeRequest } from '../utils/makeApiRequest'
 import { SetGroupNameArguments } from 'shared'
 
 export async function setGroupName(groupId: number, name: string): Promise<void> {

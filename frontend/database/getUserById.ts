@@ -1,4 +1,4 @@
-import { makeRequest } from './makeRequest'
+import { makeRequest } from '../utils/makeApiRequest'
 import { GetUserByIdArguments, User } from 'shared'
 
 export async function getUserById(id: string): Promise<User | null> {

@@ -1,4 +1,4 @@
-import { makeRequest } from './makeRequest'
+import { makeRequest } from '../utils/makeApiRequest'
 import { auth } from '@utils/firebase'
 import { User } from 'shared'
 

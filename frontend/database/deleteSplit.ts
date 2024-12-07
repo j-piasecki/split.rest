@@ -1,4 +1,4 @@
-import { makeRequest } from './makeRequest'
+import { makeRequest } from '../utils/makeApiRequest'
 import { DeleteSplitArguments } from 'shared'
 
 export async function deleteSplit(groupId: number, splitId: number) {

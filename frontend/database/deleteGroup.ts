@@ -1,4 +1,4 @@
-import { makeRequest } from './makeRequest'
+import { makeRequest } from '../utils/makeApiRequest'
 import { DeleteGroupArguments } from 'shared'
 
 export async function deleteGroup(groupId: number) {

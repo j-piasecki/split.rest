@@ -1,4 +1,4 @@
-import { makeRequest } from './makeRequest'
+import { makeRequest } from '../utils/makeApiRequest'
 import { GetGroupMembersAutocompletionsArguments, User } from 'shared'
 
 export async function getGroupMemberAutocompletions(

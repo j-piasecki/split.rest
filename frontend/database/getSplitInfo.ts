@@ -1,4 +1,4 @@
-import { makeRequest } from './makeRequest'
+import { makeRequest } from '../utils/makeApiRequest'
 import { GetSplitInfoArguments, SplitWithUsers } from 'shared'
 
 export async function getSplitInfo(

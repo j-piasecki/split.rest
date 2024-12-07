@@ -1,4 +1,4 @@
-import { makeRequest } from './makeRequest'
+import { makeRequest } from '../utils/makeApiRequest'
 import { SetGroupAccessArguments } from 'shared'
 
 export async function setGroupAccess(
