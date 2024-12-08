@@ -135,15 +135,15 @@ export default function GroupScreen() {
         style={{
           flex: 1,
           backgroundColor: theme.colors.surface,
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 8,
         }}
       >
-        <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
-        <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
-          Could not load group info
-        </Text>
+        <Header />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
+          <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
+          <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
+            Could not load group info
+          </Text>
+        </View>
       </View>
     )
   }
