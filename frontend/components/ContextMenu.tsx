@@ -217,6 +217,7 @@ export function ContextMenu(props: ContextMenuProps) {
         }}
         // @ts-expect-error - onContextMenu does not exist on Pressable on mobile
         onContextMenu={(e) => {
+          e.preventDefault()
           if (props.disabled) {
             return
           }
@@ -227,8 +228,6 @@ export function ContextMenu(props: ContextMenuProps) {
           if (isSmallScreen) {
             scale.value = withTiming(1.02, { duration: 300 })
           }
-
-          e.preventDefault()
         }}
       >
         <Animated.View style={[{ flex: 1 }, scaleStyle]}>{props.children}</Animated.View>
