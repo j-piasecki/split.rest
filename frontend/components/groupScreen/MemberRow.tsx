@@ -1,11 +1,13 @@
-import { ContextMenu } from '@components/ContextMenu'
+import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
-import { Image, Text, View } from 'react-native'
+import { useRef } from 'react'
+import { Image, Pressable, Text, View } from 'react-native'
 import { GroupInfo, Member } from 'shared'
 
 export interface MemberRowProps {
@@ -17,11 +19,13 @@ export function MemberRow({ member, info }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
   const isSmallScreen = useIsSmallScreen()
+  const contextMenuRef = useRef<ContextMenuRef>(null)
   const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(info.id, member.id)
   const { mutate: setGroupAdminMutation } = useSetGroupAdminMutation(info.id, member.id)
 
   return (
     <ContextMenu
+      ref={contextMenuRef}
       disabled={member.id === user?.id || !info.isAdmin}
       items={[
         {
@@ -77,6 +81,27 @@ export function MemberRow({ member, info }: MemberRowProps) {
             {member.balance}
           </Text>
         </View>
+
+        <Pressable
+          onPress={(e) => {
+            contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
+          }}
+          style={({ pressed, hovered }) => ({
+            width: 40,
+            height: 40,
+            backgroundColor: pressed
+              ? theme.colors.surfaceContainerHigh
+              : hovered
+                ? theme.colors.surfaceContainer
+                : 'transparent',
+            marginLeft: 16,
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 20,
+          })}
+        >
+          <MaterialIcons name='more-vert' size={24} color={theme.colors.outline} />
+        </Pressable>
       </View>
     </ContextMenu>
   )

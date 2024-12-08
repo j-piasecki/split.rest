@@ -1,6 +1,6 @@
 import { useTheme } from '@styling/theme'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
-import React, { useEffect, useLayoutEffect } from 'react'
+import React, { useEffect, useImperativeHandle, useLayoutEffect } from 'react'
 import { useRef, useState } from 'react'
 import {
   GestureResponderEvent,
@@ -151,13 +151,22 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
   )
 }
 
-interface ContextMenuProps {
+export interface ContextMenuProps {
   children: React.ReactNode
   items: ContextMenuItem[]
   disabled?: boolean
 }
 
-export function ContextMenu(props: ContextMenuProps) {
+export interface ContextMenuRef {
+  open: (anchor?: Point) => void
+}
+
+type AnchorEvent = { nativeEvent: { pageX: number; pageY: number } }
+
+export const ContextMenu = React.forwardRef(function ContextMenu(
+  props: ContextMenuProps,
+  ref: React.Ref<ContextMenuRef>
+) {
   const theme = useTheme()
   const isSmallScreen = useIsSmallScreen()
   const [visible, setVisible] = useState(false)
@@ -167,7 +176,18 @@ export function ContextMenu(props: ContextMenuProps) {
   const scale = useSharedValue(1)
   const scaleTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
 
-  function measureAnchor(e: { nativeEvent: PointerEvent } | GestureResponderEvent) {
+  useImperativeHandle(ref, () => ({
+    open: (anchor) => {
+      measureAnchor({ nativeEvent: { pageX: anchor?.x ?? 0, pageY: anchor?.y ?? 0 } })
+      setVisible(true)
+
+      if (isSmallScreen) {
+        scale.value = withTiming(1.02, { duration: 300 })
+      }
+    },
+  }))
+
+  function measureAnchor(e: { nativeEvent: PointerEvent } | GestureResponderEvent | AnchorEvent) {
     touchPoint.current = { x: e.nativeEvent.pageX, y: e.nativeEvent.pageY }
 
     if (Platform.OS === 'web') {
@@ -256,6 +276,7 @@ export function ContextMenu(props: ContextMenuProps) {
                   height: anchorRect.current?.height,
                   backgroundColor: theme.colors.surface,
                   overflow: 'hidden',
+                  pointerEvents: 'none',
                 },
               ]}
             >
@@ -272,4 +293,4 @@ export function ContextMenu(props: ContextMenuProps) {
       </Modal>
     </>
   )
-}
+})
