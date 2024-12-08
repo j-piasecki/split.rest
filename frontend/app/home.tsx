@@ -23,6 +23,7 @@ function Group({ info }: { info: GroupInfo }) {
         padding: 16,
         borderRadius: 16,
         marginVertical: 4,
+        gap: 8,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -30,7 +31,7 @@ function Group({ info }: { info: GroupInfo }) {
         backgroundColor: theme.colors.surfaceContainer,
       }}
     >
-      <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>{info.name}</Text>
+      <Text style={{ flex: 1, fontSize: 20, color: theme.colors.onSurface }}>{info.name}</Text>
 
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <View style={{ flexDirection: 'row', gap: 4 }}>
