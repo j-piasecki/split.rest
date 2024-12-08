@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { User } from 'shared'
 
 GoogleSignin.configure({
-  webClientId: '461804772528-nlsf24kbqq46eatjr9hl8au9fj75j8nt.apps.googleusercontent.com',
+  webClientId: '461804772528-ci5dbjajrcrlv2lsgdap364ki2r2nnkb.apps.googleusercontent.com',
 })
 
 let authReady = false

@@ -19,7 +19,8 @@ secrets/
 *.key
 *.mobileprovision
 
-.yarn
+.yarn/*
+!.yarn/patches/
 .firebase
 
 # Metro

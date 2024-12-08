@@ -20,7 +20,17 @@ async function setGroupAccess(
     return {
       ...oldData,
       pages: oldData.pages.map((page) =>
-        page.map((member) => (member.id === userId ? { ...member, hasAccess: access } : member))
+        page.map((member) => {
+          if (member.id === userId) {
+            if (access) {
+              return { ...member, hasAccess: true }
+            } else {
+              return { ...member, hasAccess: false, isAdmin: false }
+            }
+          }
+
+          return member
+        })
       ),
     }
   })
