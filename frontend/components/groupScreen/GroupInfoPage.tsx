@@ -26,7 +26,6 @@ function InfoCard({ info }: { info: GroupInfo }) {
         paddingHorizontal: threeBarLayout ? 0 : 16,
         paddingTop: threeBarLayout ? 0 : 16,
         paddingBottom: threeBarLayout ? 0 : 24,
-        marginTop: threeBarLayout ? 0 : 16,
       }}
     >
       <Text style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 24 }}>
@@ -204,10 +203,11 @@ export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
       style={{ flex: 1 }}
       contentContainerStyle={{
         width: '100%',
-        height: '100%',
         justifyContent: 'flex-start',
         paddingHorizontal: 16,
-        paddingTop: threeBarLayout ? 8 : 0,
+        paddingVertical: 16,
+        paddingTop: threeBarLayout ? 8 : 16,
+        paddingBottom: 32,
         maxWidth: 500,
         alignSelf: 'center',
       }}
