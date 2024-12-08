@@ -40,15 +40,15 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
             size={20}
             color={selected ? theme.colors.primary : theme.colors.outline}
           />
-            <Text
-              style={{
-                color: selected ? theme.colors.primary : theme.colors.outline,
-                marginLeft: isSmallScreen ? 0 : 8,
-                fontSize: isSmallScreen ? 12 : 16,
-              }}
-            >
-              Splits
-            </Text>
+          <Text
+            style={{
+              color: selected ? theme.colors.primary : theme.colors.outline,
+              marginLeft: isSmallScreen ? 0 : 8,
+              fontSize: isSmallScreen ? 12 : 16,
+            }}
+          >
+            Splits
+          </Text>
         </View>
       ),
       content: <SplitsList info={info} />,
@@ -67,14 +67,14 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
             size={20}
             color={selected ? theme.colors.primary : theme.colors.outline}
           />
-            <Text
-              style={{
-                color: selected ? theme.colors.primary : theme.colors.outline,
+          <Text
+            style={{
+              color: selected ? theme.colors.primary : theme.colors.outline,
               marginLeft: isSmallScreen ? 0 : 8,
               fontSize: isSmallScreen ? 12 : 16,
             }}
           >
-              Members
+            Members
           </Text>
         </View>
       ),
@@ -85,21 +85,27 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
   if (!threeBarLayout) {
     tabs.unshift({
       header: ({ selected }) => (
-        <View style={{ flexDirection: isSmallScreen ? 'column' : 'row', alignItems: 'center', justifyContent: 'center' }}>
+        <View
+          style={{
+            flexDirection: isSmallScreen ? 'column' : 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <Entypo
             name='home'
             size={20}
             color={selected ? theme.colors.primary : theme.colors.outline}
           />
-            <Text
-              style={{
+          <Text
+            style={{
               color: selected ? theme.colors.primary : theme.colors.outline,
               marginLeft: isSmallScreen ? 0 : 8,
               fontSize: isSmallScreen ? 12 : 16,
             }}
-            >
-              Group
-            </Text>
+          >
+            Group
+          </Text>
         </View>
       ),
       content: <GroupInfoPage info={info} />,
@@ -121,7 +127,26 @@ export default function GroupScreen() {
   const threeBarLayout = useThreeBarLayout()
   const { id } = useLocalSearchParams()
   const groupId = Number(id as string)
-  const { data: groupInfo } = useGroupInfo(groupId)
+  const { data: groupInfo, error } = useGroupInfo(groupId)
+
+  if (error) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: theme.colors.surface,
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 8,
+        }}
+      >
+        <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
+        <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
+          Could not load group info
+        </Text>
+      </View>
+    )
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
