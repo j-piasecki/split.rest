@@ -1,5 +1,6 @@
 import { useTheme } from '@styling/theme'
-import React, { useLayoutEffect } from 'react'
+import { useIsSmallScreen } from '@utils/dimensionUtils'
+import React, { useEffect, useLayoutEffect } from 'react'
 import { useRef, useState } from 'react'
 import {
   GestureResponderEvent,
@@ -9,7 +10,13 @@ import {
   useWindowDimensions,
 } from 'react-native'
 import { Modal, Pressable, Text } from 'react-native'
-import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated'
+import Animated, {
+  FadeIn,
+  ZoomIn,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 
 type Rect = { x: number; y: number; width: number; height: number }
 type Point = { x: number; y: number }
@@ -29,11 +36,14 @@ export interface ContextMenuItem {
 
 function ContextMenuItemComponent({ label, onPress, disabled, destructive }: ContextMenuItem) {
   const theme = useTheme()
+  const [isPressed, setIsPressed] = useState(false)
 
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled}
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}
       style={({ pressed, hovered }) => {
         return {
           backgroundColor: pressed
@@ -47,7 +57,14 @@ function ContextMenuItemComponent({ label, onPress, disabled, destructive }: Con
       }}
     >
       <Text
-        style={{ fontSize: 20, color: destructive ? theme.colors.error : theme.colors.onSurface }}
+        style={{
+          fontSize: 20,
+          color: destructive
+            ? theme.colors.error
+            : isPressed
+              ? theme.colors.primary
+              : theme.colors.onSurface,
+        }}
       >
         {label}
       </Text>
@@ -64,6 +81,7 @@ interface ContextMenuItemsProps {
 
 function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: ContextMenuItemsProps) {
   const theme = useTheme()
+  const isSmallScreen = useIsSmallScreen()
   const contentRef = useRef<View>(null)
   const [contentX, setContentX] = useState(touchPoint.x)
   const [contentY, setContentY] = useState(touchPoint.y)
@@ -81,7 +99,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
       })
     }
 
-    if (Platform.OS === 'web') {
+    if (!isSmallScreen) {
       if (frame.y + frame.height > height) {
         setContentY(touchPoint.y - frame.height)
       }
@@ -98,7 +116,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
 
       setContentX(anchorRect.x + (anchorRect.width - frame.width) / 2)
     }
-  }, [anchorRect, touchPoint, height, width])
+  }, [anchorRect, touchPoint, height, width, isSmallScreen])
 
   return (
     <Animated.View
@@ -141,10 +159,13 @@ interface ContextMenuProps {
 
 export function ContextMenu(props: ContextMenuProps) {
   const theme = useTheme()
+  const isSmallScreen = useIsSmallScreen()
   const [visible, setVisible] = useState(false)
   const anchorRef = useRef<View>(null)
   const touchPoint = useRef<Point>()
   const anchorRect = useRef<Rect>()
+  const scale = useSharedValue(1)
+  const scaleTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
 
   function measureAnchor(e: { nativeEvent: PointerEvent } | GestureResponderEvent) {
     touchPoint.current = { x: e.nativeEvent.pageX, y: e.nativeEvent.pageY }
@@ -159,17 +180,36 @@ export function ContextMenu(props: ContextMenuProps) {
     }
   }
 
+  const scaleStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    }
+  })
+
+  useEffect(() => {
+    if (!visible) {
+      scale.value = withTiming(1, { duration: 200 })
+    }
+  }, [scale, visible])
+
   return (
     <>
       <Pressable
         disabled={props.disabled}
         ref={anchorRef}
-        delayLongPress={500}
+        delayLongPress={400}
         onPressIn={() => {
-          console.log('press in')
+          if (isSmallScreen) {
+            scaleTimeoutRef.current = setTimeout(() => {
+              scale.value = withTiming(1.02, { duration: 500 })
+            }, 100)
+          }
         }}
         onPressOut={() => {
-          console.log('press out')
+          if (!visible) {
+            scale.value = withTiming(1, { duration: 500 })
+            clearTimeout(scaleTimeoutRef.current!)
+          }
         }}
         onLongPress={(e) => {
           measureAnchor(e)
@@ -184,38 +224,44 @@ export function ContextMenu(props: ContextMenuProps) {
           measureAnchor(e)
           setVisible(true)
 
+          if (isSmallScreen) {
+            scale.value = withTiming(1.02, { duration: 300 })
+          }
+
           e.preventDefault()
         }}
       >
-        {props.children}
+        <Animated.View style={[{ flex: 1 }, scaleStyle]}>{props.children}</Animated.View>
       </Pressable>
       <Modal visible={visible} onRequestClose={() => setVisible(false)} transparent>
         <Animated.View
           style={StyleSheet.absoluteFillObject}
-          entering={Platform.OS !== 'web' ? FadeIn.duration(150) : undefined}
+          entering={isSmallScreen ? FadeIn.duration(300) : undefined}
         >
           <Pressable
             onPress={() => setVisible(false)}
             style={[
               StyleSheet.absoluteFillObject,
-              { backgroundColor: Platform.OS === 'web' ? 'transparent' : 'rgba(0, 0, 0, 0.5)' },
+              { backgroundColor: isSmallScreen ? 'rgba(0, 0, 0, 0.5)' : 'transparent' },
             ]}
           />
-          {Platform.OS !== 'web' && (
-            <View
-              style={{
-                position: 'absolute',
-                left: anchorRect.current?.x,
-                top: anchorRect.current?.y,
-                width: anchorRect.current?.width,
-                height: anchorRect.current?.height,
-                backgroundColor: theme.colors.surface,
-                borderRadius: 16,
-                overflow: 'hidden',
-              }}
+          {isSmallScreen && (
+            <Animated.View
+              style={[
+                scaleStyle,
+                {
+                  position: 'absolute',
+                  left: anchorRect.current?.x,
+                  top: anchorRect.current?.y,
+                  width: anchorRect.current?.width,
+                  height: anchorRect.current?.height,
+                  backgroundColor: theme.colors.surface,
+                  overflow: 'hidden',
+                },
+              ]}
             >
               {props.children}
-            </View>
+            </Animated.View>
           )}
           <ContextMenuItems
             anchorRect={anchorRect.current!}
