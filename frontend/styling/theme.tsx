@@ -22,8 +22,8 @@ const darkColors: Colors = {
   tertiaryContainer: '#613f20',
   onTertiaryContainer: '#ffdcc1',
 
-  error: '#ffb4ab',
-  onError: '#690005',
+  error: '#ba1a1a',
+  onError: '#eeeeee',
   errorContainer: '#93000a',
   onErrorContainer: '#ffdad6',
 

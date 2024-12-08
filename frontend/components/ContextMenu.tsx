@@ -1,0 +1,230 @@
+import { useTheme } from '@styling/theme'
+import React, { useLayoutEffect } from 'react'
+import { useRef, useState } from 'react'
+import {
+  GestureResponderEvent,
+  Platform,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native'
+import { Modal, Pressable, Text } from 'react-native'
+import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated'
+
+type Rect = { x: number; y: number; width: number; height: number }
+type Point = { x: number; y: number }
+
+declare module 'react-native' {
+  interface PressableStateCallbackType {
+    hovered: boolean
+  }
+}
+
+export interface ContextMenuItem {
+  label: string
+  onPress: () => void
+  disabled?: boolean
+  destructive?: boolean
+}
+
+function ContextMenuItemComponent({ label, onPress, disabled, destructive }: ContextMenuItem) {
+  const theme = useTheme()
+
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={({ pressed, hovered }) => {
+        return {
+          backgroundColor: pressed
+            ? theme.colors.surfaceContainerHighest
+            : hovered
+              ? theme.colors.surfaceContainerHigh
+              : 'transparent',
+          padding: 16,
+          opacity: disabled ? 0.5 : 1,
+        }
+      }}
+    >
+      <Text
+        style={{ fontSize: 20, color: destructive ? theme.colors.error : theme.colors.onSurface }}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  )
+}
+
+interface ContextMenuItemsProps {
+  anchorRect: Rect
+  touchPoint: Point
+  items: ContextMenuItem[]
+  setVisible: (visible: boolean) => void
+}
+
+function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: ContextMenuItemsProps) {
+  const theme = useTheme()
+  const contentRef = useRef<View>(null)
+  const [contentX, setContentX] = useState(touchPoint.x)
+  const [contentY, setContentY] = useState(touchPoint.y)
+  const { width, height } = useWindowDimensions()
+
+  useLayoutEffect(() => {
+    let frame!: Rect
+
+    if (Platform.OS === 'web') {
+      // @ts-expect-error - getBoundingClientRect will not work on mobile
+      frame = contentRef.current?.getBoundingClientRect()
+    } else {
+      contentRef.current?.measureInWindow((x, y, width, height) => {
+        frame = { x, y, width, height }
+      })
+    }
+
+    if (Platform.OS === 'web') {
+      if (frame.y + frame.height > height) {
+        setContentY(touchPoint.y - frame.height)
+      }
+
+      if (frame.x + frame.width > width) {
+        setContentX(touchPoint.x - frame.width)
+      }
+    } else {
+      if (frame.y + frame.height > height) {
+        setContentY(anchorRect.y - frame.height - 16)
+      } else {
+        setContentY(anchorRect.y + anchorRect.height + 16)
+      }
+
+      setContentX(anchorRect.x + (anchorRect.width - frame.width) / 2)
+    }
+  }, [anchorRect, touchPoint, height, width])
+
+  return (
+    <Animated.View
+      entering={Platform.OS !== 'web' ? ZoomIn.duration(150) : undefined}
+      ref={contentRef}
+      style={{
+        position: 'absolute',
+        top: contentY,
+        left: contentX,
+        width: Math.min(anchorRect.width - 16, 300, width - 32),
+        backgroundColor: theme.colors.surfaceContainer,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: theme.colors.outlineVariant,
+        paddingVertical: 8,
+        overflow: 'hidden',
+        // @ts-expect-error - userSelect does not exist on View on mobile
+        userSelect: 'none',
+      }}
+    >
+      {items.map((item, index) => (
+        <ContextMenuItemComponent
+          key={index}
+          {...item}
+          onPress={() => {
+            item.onPress()
+            setVisible(false)
+          }}
+        />
+      ))}
+    </Animated.View>
+  )
+}
+
+interface ContextMenuProps {
+  children: React.ReactNode
+  items: ContextMenuItem[]
+  disabled?: boolean
+}
+
+export function ContextMenu(props: ContextMenuProps) {
+  const theme = useTheme()
+  const [visible, setVisible] = useState(false)
+  const anchorRef = useRef<View>(null)
+  const touchPoint = useRef<Point>()
+  const anchorRect = useRef<Rect>()
+
+  function measureAnchor(e: { nativeEvent: PointerEvent } | GestureResponderEvent) {
+    touchPoint.current = { x: e.nativeEvent.pageX, y: e.nativeEvent.pageY }
+
+    if (Platform.OS === 'web') {
+      // @ts-expect-error - getBoundingClientRect will not work on mobile
+      anchorRect.current = anchorRef.current?.getBoundingClientRect()
+    } else {
+      anchorRef.current?.measureInWindow((x, y, width, height) => {
+        anchorRect.current = { x, y, width, height }
+      })
+    }
+  }
+
+  return (
+    <>
+      <Pressable
+        disabled={props.disabled}
+        ref={anchorRef}
+        delayLongPress={500}
+        onPressIn={() => {
+          console.log('press in')
+        }}
+        onPressOut={() => {
+          console.log('press out')
+        }}
+        onLongPress={(e) => {
+          measureAnchor(e)
+          setVisible(true)
+        }}
+        // @ts-expect-error - onContextMenu does not exist on Pressable on mobile
+        onContextMenu={(e) => {
+          if (props.disabled) {
+            return
+          }
+
+          measureAnchor(e)
+          setVisible(true)
+
+          e.preventDefault()
+        }}
+      >
+        {props.children}
+      </Pressable>
+      <Modal visible={visible} onRequestClose={() => setVisible(false)} transparent>
+        <Animated.View
+          style={StyleSheet.absoluteFillObject}
+          entering={Platform.OS !== 'web' ? FadeIn.duration(150) : undefined}
+        >
+          <Pressable
+            onPress={() => setVisible(false)}
+            style={[
+              StyleSheet.absoluteFillObject,
+              { backgroundColor: Platform.OS === 'web' ? 'transparent' : 'rgba(0, 0, 0, 0.5)' },
+            ]}
+          />
+          {Platform.OS !== 'web' && (
+            <View
+              style={{
+                position: 'absolute',
+                left: anchorRect.current?.x,
+                top: anchorRect.current?.y,
+                width: anchorRect.current?.width,
+                height: anchorRect.current?.height,
+                backgroundColor: theme.colors.surface,
+                borderRadius: 16,
+                overflow: 'hidden',
+              }}
+            >
+              {props.children}
+            </View>
+          )}
+          <ContextMenuItems
+            anchorRect={anchorRect.current!}
+            touchPoint={touchPoint.current!}
+            items={props.items}
+            setVisible={setVisible}
+          />
+        </Animated.View>
+      </Modal>
+    </>
+  )
+}
