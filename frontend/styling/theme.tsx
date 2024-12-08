@@ -1,5 +1,6 @@
 import { Colors, Theme, ThemeType } from '@type/theme'
 import React from 'react'
+import { Appearance, Platform } from 'react-native'
 
 const ThemeContext = React.createContext<Theme | null>(null)
 
@@ -98,8 +99,14 @@ const lightColors: Colors = {
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = React.useState<ThemeType>('dark')
 
+  if (Platform.OS !== 'web') {
+    Appearance.setColorScheme(theme)
+  }
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, colors: theme === 'dark' ? darkColors : lightColors }}>
+    <ThemeContext.Provider
+      value={{ theme, setTheme, colors: theme === 'dark' ? darkColors : lightColors }}
+    >
       {children}
     </ThemeContext.Provider>
   )
