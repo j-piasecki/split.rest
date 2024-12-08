@@ -61,12 +61,13 @@ export function MemberRow({ member, info }: MemberRowProps) {
           />
         </View>
         <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
+          <Text selectable={false} style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
             {member.name}
           </Text>
         </View>
         <View style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: 100 }}>
           <Text
+            selectable={false}
             style={{
               fontSize: 20,
               color:
