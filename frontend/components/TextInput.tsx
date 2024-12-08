@@ -46,7 +46,6 @@ export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput
       <TextInputRN
         ref={ref}
         style={{
-          flex: 1,
           paddingHorizontal: 8,
           paddingBottom: 8,
           paddingTop: 16,
