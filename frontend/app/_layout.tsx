@@ -33,30 +33,32 @@ function Content() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
-      <Stack.Screen name='index' options={{ title: 'Split' }} />
-      <Stack.Screen name='home' options={{ title: 'Split', animation: 'none' }} />
-      <Stack.Screen
-        name='createGroup'
-        options={{
-          title: 'Split - create group',
-          ...modalOptions,
-        }}
-      />
-      <Stack.Screen name='[id]/index' options={{ title: 'Group' }} />
-      <Stack.Screen name='[id]/addUser' options={{ title: 'Add user', ...modalOptions }} />
-      <Stack.Screen name='[id]/addSplit' options={{ title: 'Add split', ...modalOptions }} />
-      <Stack.Screen name='[id]/roulette' options={{ title: 'Roulette', ...modalOptions }} />
-      <Stack.Screen name='[id]/settings' options={{ title: 'Settings', ...modalOptions }} />
-      <Stack.Screen
-        name='[id]/split/[splitId]/index'
-        options={{ title: 'Split', ...modalOptions }}
-      />
-      <Stack.Screen
-        name='[id]/split/[splitId]/edit'
-        options={{ title: 'Edit split', ...modalOptions }}
-      />
-    </Stack>
+    <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
+      <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
+        <Stack.Screen name='index' options={{ title: 'Split' }} />
+        <Stack.Screen name='home' options={{ title: 'Split', animation: 'none' }} />
+        <Stack.Screen
+          name='createGroup'
+          options={{
+            title: 'Split - create group',
+            ...modalOptions,
+          }}
+        />
+        <Stack.Screen name='[id]/index' options={{ title: 'Group' }} />
+        <Stack.Screen name='[id]/addUser' options={{ title: 'Add user', ...modalOptions }} />
+        <Stack.Screen name='[id]/addSplit' options={{ title: 'Add split', ...modalOptions }} />
+        <Stack.Screen name='[id]/roulette' options={{ title: 'Roulette', ...modalOptions }} />
+        <Stack.Screen name='[id]/settings' options={{ title: 'Settings', ...modalOptions }} />
+        <Stack.Screen
+          name='[id]/split/[splitId]/index'
+          options={{ title: 'Split', ...modalOptions }}
+        />
+        <Stack.Screen
+          name='[id]/split/[splitId]/edit'
+          options={{ title: 'Edit split', ...modalOptions }}
+        />
+      </Stack>
+    </View>
   )
 }
 
