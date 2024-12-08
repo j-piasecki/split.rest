@@ -109,9 +109,9 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
       }
     } else {
       if (frame.y + frame.height > height) {
-        setContentY(anchorRect.y - frame.height - 16)
+        setContentY(anchorRect.y - frame.height - 8)
       } else {
-        setContentY(anchorRect.y + anchorRect.height + 16)
+        setContentY(anchorRect.y + anchorRect.height + 8)
       }
 
       setContentX(anchorRect.x + (anchorRect.width - frame.width) / 2)
