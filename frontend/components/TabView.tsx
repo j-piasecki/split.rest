@@ -1,6 +1,7 @@
 import { useTheme } from '@styling/theme'
 import React, { useEffect, useState } from 'react'
 import { Pressable, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface Tab {
   header: (props: { selected: boolean }) => React.ReactNode
@@ -18,8 +19,10 @@ export interface TabViewProps {
 export function TabView(props: TabViewProps) {
   const theme = useTheme()
   const [selectedItem, setSelectedItem] = useState(props.openedTab)
+  const insets = useSafeAreaInsets()
 
   const headerLocation = props.headerLocation ?? 'top'
+  const bottomInset = headerLocation === 'bottom' ? insets.bottom : 0
 
   useEffect(() => {
     setSelectedItem(props.openedTab)
@@ -35,7 +38,7 @@ export function TabView(props: TabViewProps) {
         </View>
       )}
 
-      <View style={{ width: '100%', height: 56, flexDirection: 'row' }}>
+      <View style={{ width: '100%', height: 56 + bottomInset, paddingBottom: bottomInset, flexDirection: 'row' }}>
         {props.tabs.map((tab, index) => {
           const Header = props.tabs[index].header
 

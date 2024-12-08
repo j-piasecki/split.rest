@@ -5,6 +5,8 @@ import { login, useAuth } from '@utils/auth'
 import { Redirect } from 'expo-router'
 import { ActivityIndicator, Text, View } from 'react-native'
 
+// TODO: safe area
+
 export default function Screen() {
   const user = useAuth()
   const theme = useTheme()

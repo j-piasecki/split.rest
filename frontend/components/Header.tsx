@@ -5,6 +5,7 @@ import { logout, useAuth } from '@utils/auth'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { Link } from 'expo-router'
 import { Image, Text, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface HeaderProps {
   title?: string
@@ -13,16 +14,18 @@ export interface HeaderProps {
 export default function Header({ title = 'Split.rest' }: HeaderProps) {
   const theme = useTheme()
   const user = useAuth()
+  const insets = useSafeAreaInsets()
 
   return (
     <View
       style={{
         backgroundColor: theme.colors.surfaceContainer,
-        height: 60,
+        height: 60 + insets.top,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 32,
+        paddingTop: insets.top,
       }}
     >
       <Link href='/'>

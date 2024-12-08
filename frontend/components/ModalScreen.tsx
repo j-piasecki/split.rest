@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface FullscreenModalProps {
   goBack: () => void
@@ -14,6 +15,7 @@ export interface FullscreenModalProps {
 
 function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
   const theme = useTheme()
+  const insets = useSafeAreaInsets()
 
   return (
     <View
@@ -27,7 +29,9 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
           width: '100%',
           flexDirection: 'row',
           alignItems: 'center',
-          padding: 24,
+          paddingHorizontal: 24,
+          paddingBottom: 24,
+          paddingTop: 24 + insets.top,
           justifyContent: 'flex-start',
           gap: 16,
         }}
@@ -37,7 +41,9 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
         </Pressable>
         <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>{title}</Text>
       </View>
-      {children}
+      <View style={{ flex: 1, paddingBottom: insets.bottom }}>
+        {children}
+      </View>
     </View>
   )
 }
