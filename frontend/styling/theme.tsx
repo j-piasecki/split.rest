@@ -1,7 +1,7 @@
 import { Colors, Theme, ThemeType } from '@type/theme'
 import React from 'react'
 import { Appearance, Platform } from 'react-native'
-import { SystemBars } from "react-native-edge-to-edge";
+import { SystemBars } from 'react-native-edge-to-edge'
 
 const ThemeContext = React.createContext<Theme | null>(null)
 

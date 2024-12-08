@@ -40,10 +40,8 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
         </Pressable>
         <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>{title}</Text>
       </View>
-      <KeyboardAvoidingView style={{flex: 1}} behavior={'padding'}>
-        <View style={{ flex: 1, paddingBottom: insets.bottom }}>
-          {children}
-        </View>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
+        <View style={{ flex: 1, paddingBottom: insets.bottom }}>{children}</View>
       </KeyboardAvoidingView>
     </View>
   )

@@ -38,7 +38,14 @@ export function TabView(props: TabViewProps) {
         </View>
       )}
 
-      <View style={{ width: '100%', height: 56 + bottomInset, paddingBottom: bottomInset, flexDirection: 'row' }}>
+      <View
+        style={{
+          width: '100%',
+          height: 56 + bottomInset,
+          paddingBottom: bottomInset,
+          flexDirection: 'row',
+        }}
+      >
         {props.tabs.map((tab, index) => {
           const Header = props.tabs[index].header
 
