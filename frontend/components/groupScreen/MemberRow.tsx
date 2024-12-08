@@ -23,10 +23,12 @@ export function MemberRow({ member, info }: MemberRowProps) {
   const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(info.id, member.id)
   const { mutate: setGroupAdminMutation } = useSetGroupAdminMutation(info.id, member.id)
 
+  const contextMenuDisabled = member.id === user?.id || !info.isAdmin
+
   return (
     <ContextMenu
       ref={contextMenuRef}
-      disabled={member.id === user?.id || !info.isAdmin}
+      disabled={contextMenuDisabled}
       items={[
         {
           label: member.hasAccess ? 'Revoke access' : 'Give access',
@@ -84,6 +86,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
         </View>
 
         <Pressable
+          disabled={contextMenuDisabled}
           onPress={(e) => {
             contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
           }}
@@ -99,6 +102,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: 20,
+            opacity: contextMenuDisabled ? 0 : 1,
           })}
         >
           <MaterialIcons name='more-vert' size={24} color={theme.colors.outline} />

@@ -178,11 +178,13 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
 
   useImperativeHandle(ref, () => ({
     open: (anchor) => {
-      measureAnchor({ nativeEvent: { pageX: anchor?.x ?? 0, pageY: anchor?.y ?? 0 } })
-      setVisible(true)
+      if (!props.disabled) {
+        measureAnchor({ nativeEvent: { pageX: anchor?.x ?? 0, pageY: anchor?.y ?? 0 } })
+        setVisible(true)
 
-      if (isSmallScreen) {
-        scale.value = withTiming(1.02, { duration: 300 })
+        if (isSmallScreen) {
+          scale.value = withTiming(1.02, { duration: 300 })
+        }
       }
     },
   }))
