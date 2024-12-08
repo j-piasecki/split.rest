@@ -3,7 +3,7 @@ import { useTheme } from '@styling/theme'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { KeyboardAvoidingView, Pressable, StyleSheet, Text, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -22,6 +22,7 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
       style={{
         flex: 1,
         backgroundColor: theme.colors.surface,
+        paddingTop: insets.top,
       }}
     >
       <View
@@ -29,9 +30,7 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
           width: '100%',
           flexDirection: 'row',
           alignItems: 'center',
-          paddingHorizontal: 24,
-          paddingBottom: 24,
-          paddingTop: 24 + insets.top,
+          padding: 24,
           justifyContent: 'flex-start',
           gap: 16,
         }}
@@ -41,9 +40,11 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
         </Pressable>
         <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>{title}</Text>
       </View>
-      <View style={{ flex: 1, paddingBottom: insets.bottom }}>
-        {children}
-      </View>
+      <KeyboardAvoidingView style={{flex: 1}} behavior={'padding'}>
+        <View style={{ flex: 1, paddingBottom: insets.bottom }}>
+          {children}
+        </View>
+      </KeyboardAvoidingView>
     </View>
   )
 }

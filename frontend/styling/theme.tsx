@@ -1,6 +1,7 @@
 import { Colors, Theme, ThemeType } from '@type/theme'
 import React from 'react'
 import { Appearance, Platform } from 'react-native'
+import { SystemBars } from "react-native-edge-to-edge";
 
 const ThemeContext = React.createContext<Theme | null>(null)
 
@@ -107,6 +108,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     <ThemeContext.Provider
       value={{ theme, setTheme, colors: theme === 'dark' ? darkColors : lightColors }}
     >
+      <SystemBars style={theme === 'dark' ? 'light' : 'dark'} />
       {children}
     </ThemeContext.Provider>
   )

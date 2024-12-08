@@ -43,7 +43,8 @@
             "useFrameworks": "static"
           }
         }
-      ]
+      ],
+      "react-native-edge-to-edge"
     ]
   }
 }
