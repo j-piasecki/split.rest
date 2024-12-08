@@ -37,7 +37,7 @@ function Content() {
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.surfaceContainerLowest }}>
       <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
         <Stack.Screen name='index' options={{ title: 'Split' }} />
-        <Stack.Screen name='home' options={{ title: 'Split' }} />
+        <Stack.Screen name='home' options={{ title: 'Split', animation: 'none' }} />
         <Stack.Screen
           name='createGroup'
           options={{

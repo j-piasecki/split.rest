@@ -28,46 +28,54 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
   const tabs: Tab[] = [
     {
       header: ({ selected }) => (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View
+          style={{
+            flexDirection: isSmallScreen ? 'column' : 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <FontAwesome
             name='list-ul'
             size={20}
             color={selected ? theme.colors.primary : theme.colors.outline}
           />
-          {(selected || !isSmallScreen) && (
             <Text
               style={{
                 color: selected ? theme.colors.primary : theme.colors.outline,
-                marginLeft: 8,
-                fontSize: 16,
+                marginLeft: isSmallScreen ? 0 : 8,
+                fontSize: isSmallScreen ? 12 : 16,
               }}
             >
               Splits
             </Text>
-          )}
         </View>
       ),
       content: <SplitsList info={info} />,
     },
     {
       header: ({ selected }) => (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View
+          style={{
+            flexDirection: isSmallScreen ? 'column' : 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <FontAwesome
             name='users'
             size={20}
             color={selected ? theme.colors.primary : theme.colors.outline}
           />
-          {(selected || !isSmallScreen) && (
             <Text
               style={{
                 color: selected ? theme.colors.primary : theme.colors.outline,
-                marginLeft: 8,
-                fontSize: 16,
-              }}
-            >
+              marginLeft: isSmallScreen ? 0 : 8,
+              fontSize: isSmallScreen ? 12 : 16,
+            }}
+          >
               Members
-            </Text>
-          )}
+          </Text>
         </View>
       ),
       content: <MembersList info={info} />,
@@ -77,30 +85,35 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
   if (!threeBarLayout) {
     tabs.unshift({
       header: ({ selected }) => (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: isSmallScreen ? 'column' : 'row', alignItems: 'center', justifyContent: 'center' }}>
           <Entypo
             name='home'
             size={20}
             color={selected ? theme.colors.primary : theme.colors.outline}
           />
-          {(selected || !isSmallScreen) && (
             <Text
               style={{
-                color: selected ? theme.colors.primary : theme.colors.outline,
-                marginLeft: 8,
-                fontSize: 16,
-              }}
+              color: selected ? theme.colors.primary : theme.colors.outline,
+              marginLeft: isSmallScreen ? 0 : 8,
+              fontSize: isSmallScreen ? 12 : 16,
+            }}
             >
               Group
             </Text>
-          )}
         </View>
       ),
       content: <GroupInfoPage info={info} />,
     })
   }
 
-  return <TabView openedTab={openedTab} tabs={tabs} onTabChange={setOpenedTab} />
+  return (
+    <TabView
+      openedTab={openedTab}
+      tabs={tabs}
+      onTabChange={setOpenedTab}
+      headerLocation={threeBarLayout ? 'top' : 'bottom'}
+    />
+  )
 }
 
 export default function GroupScreen() {

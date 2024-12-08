@@ -12,11 +12,14 @@ export interface TabViewProps {
   tabs: Tab[]
   onTabChange?: (index: number) => void
   maxContentWidth?: number
+  headerLocation?: 'top' | 'bottom'
 }
 
 export function TabView(props: TabViewProps) {
   const theme = useTheme()
   const [selectedItem, setSelectedItem] = useState(props.openedTab)
+
+  const headerLocation = props.headerLocation ?? 'top'
 
   useEffect(() => {
     setSelectedItem(props.openedTab)
@@ -26,7 +29,13 @@ export function TabView(props: TabViewProps) {
 
   return (
     <View style={{ width: '100%', flex: 1, alignItems: 'center' }}>
-      <View style={{ width: '100%', height: 48, flexDirection: 'row' }}>
+      {headerLocation === 'bottom' && (
+        <View style={{ width: '100%', flex: 1, maxWidth: props.maxContentWidth }}>
+          {props.tabs[item].content}
+        </View>
+      )}
+
+      <View style={{ width: '100%', height: 56, flexDirection: 'row' }}>
         {props.tabs.map((tab, index) => {
           const Header = props.tabs[index].header
 
@@ -56,9 +65,11 @@ export function TabView(props: TabViewProps) {
         })}
       </View>
 
-      <View style={{ width: '100%', flex: 1, maxWidth: props.maxContentWidth }}>
-        {props.tabs[item].content}
-      </View>
+      {headerLocation === 'top' && (
+        <View style={{ width: '100%', flex: 1, maxWidth: props.maxContentWidth }}>
+          {props.tabs[item].content}
+        </View>
+      )}
     </View>
   )
 }
