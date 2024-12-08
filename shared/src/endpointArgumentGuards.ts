@@ -1,4 +1,27 @@
-import { CreateGroupArguments, AddUserToGroupArguments, CreateSplitArguments, DeleteSplitArguments, RestoreSplitArguments, UpdateSplitArguments, SetGroupAccessArguments, SetGroupAdminArguments, SetGroupHiddenArguments, GetGroupMembersArguments, GetGroupSplitsArguments, GetUserGroupsArguments, GetUserByEmailArguments, GetUserByIdArguments, GetGroupInfoArguments, GetGroupMembersAutocompletionsArguments, GetSplitInfoArguments, GetBalancesArguments, GetBalancesWithIdsArguments, GetBalancesWithEmailsArguments, DeleteGroupArguments, SetGroupNameArguments } from "./endpointArguments"
+import {
+  AddUserToGroupArguments,
+  CreateGroupArguments,
+  CreateSplitArguments,
+  DeleteGroupArguments,
+  DeleteSplitArguments,
+  GetBalancesArguments,
+  GetBalancesWithEmailsArguments,
+  GetBalancesWithIdsArguments,
+  GetGroupInfoArguments,
+  GetGroupMembersArguments,
+  GetGroupMembersAutocompletionsArguments,
+  GetGroupSplitsArguments,
+  GetSplitInfoArguments,
+  GetUserByEmailArguments,
+  GetUserByIdArguments,
+  GetUserGroupsArguments,
+  RestoreSplitArguments,
+  SetGroupAccessArguments,
+  SetGroupAdminArguments,
+  SetGroupHiddenArguments,
+  SetGroupNameArguments,
+  UpdateSplitArguments,
+} from './endpointArguments'
 
 export function isCreateGroupArguments(obj: any): obj is CreateGroupArguments {
   return obj.name !== undefined && obj.currency !== undefined

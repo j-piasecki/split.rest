@@ -1,4 +1,4 @@
-import { BalanceChange } from "./types"
+import { BalanceChange } from './types'
 
 export interface CreateGroupArguments {
   name: string
