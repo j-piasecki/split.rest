@@ -15,9 +15,10 @@ export class ApiError extends Error {
 export async function makeRequest<TArgs, TReturn>(
   method: 'POST' | 'GET' | 'DELETE',
   name: string,
-  args: { [K in keyof TArgs]: TArgs[K] }
+  args: { [K in keyof TArgs]: TArgs[K] },
+  authRequired = true
 ) {
-  if (!auth.currentUser) {
+  if (authRequired && !auth.currentUser) {
     throw new Error('You must be logged in to make a request')
   }
 
@@ -44,7 +45,7 @@ export async function makeRequest<TArgs, TReturn>(
     method: method,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`,
+      'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
     },
     body: method === 'POST' || method === 'DELETE' ? JSON.stringify(args) : undefined,
   })
@@ -66,6 +67,15 @@ export async function makeRequest<TArgs, TReturn>(
       return null
     }
   } else {
-    throw new ApiError('Failed to finish a request: ' + result.statusText, result.status)
+    try {
+      const data = await result.json()
+      throw new ApiError(data.message, result.status)
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error
+      }
+
+      throw new ApiError('Failed to finish a request: ' + result.statusText, result.status)
+    }
   }
 }
