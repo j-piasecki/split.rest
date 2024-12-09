@@ -2,6 +2,16 @@ import { auth } from '@utils/firebase'
 
 export const ENDPOINT = __DEV__ ? 'http://localhost:3000' : 'https://api.split.rest'
 
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number
+  ) {
+    super(message)
+    this.name = 'ApiError'
+  }
+}
+
 export async function makeRequest<TArgs, TReturn>(
   method: 'POST' | 'GET' | 'DELETE',
   name: string,
@@ -56,6 +66,6 @@ export async function makeRequest<TArgs, TReturn>(
       return null
     }
   } else {
-    throw new Error('Failed to finish a request: ' + result.statusText)
+    throw new ApiError('Failed to finish a request: ' + result.statusText, result.status)
   }
 }
