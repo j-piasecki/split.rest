@@ -1,5 +1,6 @@
 import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
 import { BadRequestException, UnauthorizedException } from '@nestjs/common'
+import crypto from 'crypto'
 import { Pool } from 'pg'
 import { CreateGroupJoinLinkArguments } from 'shared/src/endpointArguments'
 import { GroupJoinLink } from 'shared/src/types'
