@@ -29,8 +29,8 @@ function Form() {
     }
 
     createGroup({ name, currency })
-      .then((groupId) => {
-        router.navigate(`/group/${groupId}`, { withAnchor: true })
+      .then((group) => {
+        router.navigate(`/group/${group.id}`, { withAnchor: true })
       })
       .catch((error) => {
         setError(error.message)

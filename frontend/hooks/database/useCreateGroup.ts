@@ -1,17 +1,17 @@
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { CreateGroupArguments } from 'shared'
+import { CreateGroupArguments, GroupInfo } from 'shared'
 
 async function createGroup(queryClient: QueryClient, args: CreateGroupArguments) {
-  const groupId = await makeRequest<CreateGroupArguments, number>('POST', 'createGroup', args)
+  const group = await makeRequest<CreateGroupArguments, GroupInfo>('POST', 'createGroup', args)
 
-  if (groupId === null) {
+  if (group === null) {
     throw new Error('Failed to create group')
   }
 
   queryClient.invalidateQueries({ queryKey: ['userGroups', false] })
 
-  return groupId
+  return group
 }
 
 export function useCreateGroup() {
