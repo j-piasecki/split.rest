@@ -1,12 +1,12 @@
 import Header from '@components/Header'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { ActivityIndicator, View, Text } from 'react-native'
+import { ActivityIndicator, Text, View } from 'react-native'
 
 export default function NotFound() {
   const user = useAuth()
   const theme = useTheme()
-  
+
   if (!user) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

@@ -44,6 +44,7 @@ export function TabView(props: TabViewProps) {
           height: 56 + bottomInset,
           paddingBottom: bottomInset,
           flexDirection: 'row',
+          backgroundColor: theme.colors.surfaceContainer,
         }}
       >
         {props.tabs.map((tab, index) => {
@@ -56,9 +57,7 @@ export function TabView(props: TabViewProps) {
                 return {
                   backgroundColor: pressed
                     ? theme.colors.surfaceContainerHigh
-                    : index === item
-                      ? theme.colors.surfaceContainer
-                      : theme.colors.transparent,
+                    : theme.colors.transparent,
                   flex: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
