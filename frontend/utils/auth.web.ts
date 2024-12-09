@@ -1,5 +1,6 @@
 import { isSmallScreen } from './dimensionUtils'
 import { auth } from './firebase.web'
+import { queryClient } from './queryClient'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { AuthListener } from '@type/auth'
@@ -101,5 +102,6 @@ export function login() {
 }
 
 export function logout() {
+  queryClient.invalidateQueries()
   auth.signOut()
 }

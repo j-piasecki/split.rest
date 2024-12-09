@@ -1,4 +1,5 @@
 import { auth, authObj } from './firebase'
+import { queryClient } from './queryClient'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { FirebaseAuthTypes } from '@react-native-firebase/auth'
@@ -94,5 +95,6 @@ export async function login() {
 }
 
 export function logout() {
+  queryClient.invalidateQueries()
   auth.signOut()
 }

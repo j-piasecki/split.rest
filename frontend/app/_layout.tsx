@@ -1,7 +1,8 @@
 import { ThemeProvider, useTheme } from '@styling/theme'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
+import { queryClient } from '@utils/queryClient'
 import { Stack, usePathname } from 'expo-router'
 import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
@@ -65,14 +66,6 @@ function Content() {
     </View>
   )
 }
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5,
-    },
-  },
-})
 
 export default function App() {
   return (
