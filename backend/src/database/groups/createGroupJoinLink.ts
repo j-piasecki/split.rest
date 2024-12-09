@@ -1,9 +1,9 @@
 import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
 import { BadRequestException, UnauthorizedException } from '@nestjs/common'
-import crypto from 'crypto'
 import { Pool } from 'pg'
 import { CreateGroupJoinLinkArguments } from 'shared/src/endpointArguments'
 import { GroupJoinLink } from 'shared/src/types'
+import { v4 as uuidv4 } from 'uuid'
 
 export async function createGroupJoinLink(
   pool: Pool,
@@ -27,7 +27,7 @@ export async function createGroupJoinLink(
       throw new BadRequestException('A join link already exists for this group')
     }
 
-    const uuid = crypto.randomUUID()
+    const uuid = uuidv4()
     const createdAt = Date.now()
 
     await client.query(
