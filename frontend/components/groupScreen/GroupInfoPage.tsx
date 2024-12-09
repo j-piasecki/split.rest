@@ -114,7 +114,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
       {info.isAdmin && (
         <Button
           onPress={() => {
-            router.navigate(`/${info.id}/addUser`)
+            router.navigate(`/group/${info.id}/addUser`)
           }}
           title='Add user'
           leftIcon={<Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />}
@@ -124,7 +124,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
       {info.hasAccess && (
         <Button
           onPress={() => {
-            router.navigate(`/${info.id}/roulette`)
+            router.navigate(`/group/${info.id}/roulette`)
           }}
           title='Roulette'
           leftIcon={
@@ -136,7 +136,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
       {info.hasAccess && (
         <Button
           onPress={() => {
-            router.navigate(`/${info.id}/addSplit`)
+            router.navigate(`/group/${info.id}/addSplit`)
           }}
           title='Add split'
           leftIcon={
@@ -176,7 +176,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
       {(info.isAdmin || info.owner === user?.id) && (
         <Button
           title='Settings'
-          onPress={() => router.navigate(`/${info.id}/settings`)}
+          onPress={() => router.navigate(`/group/${info.id}/settings`)}
           leftIcon={
             <MaterialIcons name='settings' size={20} color={theme.colors.onPrimaryContainer} />
           }

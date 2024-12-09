@@ -134,7 +134,7 @@ function SplitInfo({
             leftIcon={
               <MaterialIcons name='edit-note' size={24} color={theme.colors.onPrimaryContainer} />
             }
-            onPress={() => router.navigate(`/${groupInfo?.id}/split/${splitInfo.id}/edit`)}
+            onPress={() => router.navigate(`/group/${groupInfo?.id}/split/${splitInfo.id}/edit`)}
           />
         </View>
       )}
@@ -149,7 +149,7 @@ export default function SplitInfoScreen() {
   const { data: splitInfo } = useSplitInfo(Number(id), Number(splitId))
 
   return (
-    <Modal title='Split info' returnPath={`/${id}`} maxWidth={500}>
+    <Modal title='Split info' returnPath={`/group/${id}`} maxWidth={500}>
       {splitInfo === undefined && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size='small' color={theme.colors.onSurface} />

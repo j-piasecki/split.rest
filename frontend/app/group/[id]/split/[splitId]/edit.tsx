@@ -31,7 +31,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
         balances: balanceChange as BalanceChange[],
       })
 
-      router.replace(`/${groupInfo.id}`)
+      router.replace(`/group/${groupInfo.id}`)
     } catch (error) {
       setError((error as Error).message)
     } finally {
@@ -74,7 +74,7 @@ export default function Modal() {
   const { data: splitInfo } = useSplitInfo(Number(id), Number(splitId))
 
   return (
-    <ModalScreen returnPath={`/${id}`} title='Edit split' maxWidth={500}>
+    <ModalScreen returnPath={`/group/${id}`} title='Edit split' maxWidth={500}>
       {(!groupInfo || !splitInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={theme.colors.onSurface} />

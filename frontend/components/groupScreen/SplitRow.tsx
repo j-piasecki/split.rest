@@ -66,7 +66,7 @@ export function SplitRow({ split, info }: SplitRowProps) {
     <Pressable
       key={split.id}
       onPress={() => {
-        router.navigate(`${info?.id}/split/${split.id}`)
+        router.navigate(`/group/${info?.id}/split/${split.id}`)
       }}
       style={{
         paddingVertical: 16,

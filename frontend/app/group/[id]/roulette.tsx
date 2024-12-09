@@ -142,7 +142,7 @@ export default function Roulette() {
   const [result, setResult] = useState<UserWithBalanceChange[] | null>(null)
 
   return (
-    <ModalScreen returnPath={`/${id}`} title='Roulette' maxWidth={400}>
+    <ModalScreen returnPath={`/group/${id}`} title='Roulette' maxWidth={400}>
       {result === null && <Form groupId={Number(id)} setResult={setResult} />}
       {result !== null && <Result result={result} />}
     </ModalScreen>

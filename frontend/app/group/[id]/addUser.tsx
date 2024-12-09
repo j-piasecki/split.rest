@@ -48,7 +48,7 @@ function Form() {
             if (router.canGoBack()) {
               router.back()
             } else {
-              router.navigate(`/${groupId}`)
+              router.navigate(`/group/${groupId}`)
             }
           })
           .catch((error) => {
@@ -85,7 +85,7 @@ export default function Modal() {
   const { id } = useLocalSearchParams()
 
   return (
-    <ModalScreen returnPath={`/${id}`} title='Add user' maxWidth={400} maxHeight={250}>
+    <ModalScreen returnPath={`/group/${id}`} title='Add user' maxWidth={400} maxHeight={250}>
       <Form />
     </ModalScreen>
   )

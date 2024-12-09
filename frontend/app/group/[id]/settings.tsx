@@ -84,7 +84,7 @@ export default function Settings() {
   const isAdmin = info?.isAdmin || info?.owner === user?.id
 
   return (
-    <ModalScreen returnPath={`/${id}`} title='Group settings' maxWidth={400} maxHeight={400}>
+    <ModalScreen returnPath={`/group/${id}`} title='Group settings' maxWidth={400} maxHeight={400}>
       {isAdmin && info && <Form info={info} />}
       {!isAdmin && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

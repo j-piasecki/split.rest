@@ -44,17 +44,17 @@ function Content() {
             ...modalOptions,
           }}
         />
-        <Stack.Screen name='[id]/index' options={{ title: 'Group' }} />
-        <Stack.Screen name='[id]/addUser' options={{ title: 'Add user', ...modalOptions }} />
-        <Stack.Screen name='[id]/addSplit' options={{ title: 'Add split', ...modalOptions }} />
-        <Stack.Screen name='[id]/roulette' options={{ title: 'Roulette', ...modalOptions }} />
-        <Stack.Screen name='[id]/settings' options={{ title: 'Settings', ...modalOptions }} />
+        <Stack.Screen name='group/[id]/index' options={{ title: 'Group' }} />
+        <Stack.Screen name='group/[id]/addUser' options={{ title: 'Add user', ...modalOptions }} />
+        <Stack.Screen name='group/[id]/addSplit' options={{ title: 'Add split', ...modalOptions }} />
+        <Stack.Screen name='group/[id]/roulette' options={{ title: 'Roulette', ...modalOptions }} />
+        <Stack.Screen name='group/[id]/settings' options={{ title: 'Settings', ...modalOptions }} />
         <Stack.Screen
-          name='[id]/split/[splitId]/index'
+          name='group/[id]/split/[splitId]/index'
           options={{ title: 'Split', ...modalOptions }}
         />
         <Stack.Screen
-          name='[id]/split/[splitId]/edit'
+          name='group/[id]/split/[splitId]/edit'
           options={{ title: 'Edit split', ...modalOptions }}
         />
       </Stack>

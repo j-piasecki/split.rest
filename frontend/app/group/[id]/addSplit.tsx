@@ -34,7 +34,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
       if (router.canGoBack()) {
         router.back()
       } else {
-        router.replace(`/${groupInfo.id}`)
+        router.replace(`/group/${groupInfo.id}`)
       }
     } catch (error) {
       setError(error as string)
@@ -69,7 +69,7 @@ export default function Modal() {
   const { data: groupInfo } = useGroupInfo(Number(id))
 
   return (
-    <ModalScreen returnPath={`/${id}`} title='Add split' maxWidth={500}>
+    <ModalScreen returnPath={`/group/${id}`} title='Add split' maxWidth={500}>
       {(!user || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={theme.colors.onSurface} />

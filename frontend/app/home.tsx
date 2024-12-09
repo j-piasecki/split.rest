@@ -16,7 +16,7 @@ function Group({ info }: { info: GroupInfo }) {
   return (
     <Pressable
       onPress={() => {
-        router.navigate(`/${info.id}`)
+        router.navigate(`/group/${info.id}`)
       }}
       style={{
         flex: 1,
