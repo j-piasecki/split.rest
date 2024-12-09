@@ -37,7 +37,7 @@ async function tryToCreateUser() {
   }
 }
 
-export function useAuth() {
+export function useAuth(redirectToIndex = true) {
   const path = usePathname()
   const router = useRouter()
   const [user, setUser] = useState<User | null | undefined>(
@@ -53,12 +53,14 @@ export function useAuth() {
   }, [])
 
   useEffect(() => {
-    if (user === null) {
+    if (redirectToIndex && user === null) {
       if (path !== '/') {
-        router.navigate('/')
+        setTimeout(() => {
+          router.replace('/')
+        }, 0)
       }
     }
-  }, [path, router, user])
+  }, [path, router, user, redirectToIndex])
 
   return user
 }

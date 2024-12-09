@@ -7,6 +7,7 @@ import Entypo from '@expo/vector-icons/Entypo'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTheme } from '@styling/theme'
+import { useAuth } from '@utils/auth'
 import { useIsSmallScreen, useThreeBarLayout } from '@utils/dimensionUtils'
 import { useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
@@ -122,7 +123,7 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
   )
 }
 
-export default function GroupScreen() {
+export function GroupScreen() {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
   const { id } = useLocalSearchParams()
@@ -164,4 +165,15 @@ export default function GroupScreen() {
       </View>
     </View>
   )
+}
+
+export default function GroupScreenWrapper() {
+  const user = useAuth()
+  const theme = useTheme()
+
+  if (user === null) {
+    return <View style={{ flex: 1, backgroundColor: theme.colors.surface }} />
+  }
+
+  return <GroupScreen />
 }

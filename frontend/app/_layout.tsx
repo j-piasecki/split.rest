@@ -2,13 +2,14 @@ import { ThemeProvider, useTheme } from '@styling/theme'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
-import { Stack } from 'expo-router'
+import { Stack, usePathname } from 'expo-router'
 import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import 'utils/firebase'
 
 function Content() {
-  const user = useAuth()
+  const pathname = usePathname()
+  const user = useAuth(!pathname.startsWith('/join'))
   const theme = useTheme()
   const isSmallScreen = useIsSmallScreen()
 
@@ -46,7 +47,10 @@ function Content() {
         />
         <Stack.Screen name='group/[id]/index' options={{ title: 'Group' }} />
         <Stack.Screen name='group/[id]/addUser' options={{ title: 'Add user', ...modalOptions }} />
-        <Stack.Screen name='group/[id]/addSplit' options={{ title: 'Add split', ...modalOptions }} />
+        <Stack.Screen
+          name='group/[id]/addSplit'
+          options={{ title: 'Add split', ...modalOptions }}
+        />
         <Stack.Screen name='group/[id]/roulette' options={{ title: 'Roulette', ...modalOptions }} />
         <Stack.Screen name='group/[id]/settings' options={{ title: 'Settings', ...modalOptions }} />
         <Stack.Screen
