@@ -2,7 +2,7 @@ import { Button } from '@components/Button'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { login, useAuth } from '@utils/auth'
-import { Redirect } from 'expo-router'
+import { Redirect, useLocalSearchParams } from 'expo-router'
 import { ActivityIndicator, Text, View } from 'react-native'
 
 // TODO: safe area
@@ -10,6 +10,7 @@ import { ActivityIndicator, Text, View } from 'react-native'
 export default function Screen() {
   const user = useAuth()
   const theme = useTheme()
+  const { join } = useLocalSearchParams()
 
   return (
     <View
@@ -37,7 +38,8 @@ export default function Screen() {
           }
         />
       )}
-      {user && <Redirect href='/home' withAnchor />}
+      {user && !join && <Redirect href='/home' withAnchor />}
+      {user && join && <Redirect href={`/join/${join}`} withAnchor />}
     </View>
   )
 }
