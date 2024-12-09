@@ -1,4 +1,5 @@
 import { isGroupDeleted } from '../utils/isGroupDeleted'
+import { isUserGroupOwner } from '../utils/isUserGroupOwner'
 import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { DeleteGroupArguments } from 'shared'
@@ -12,9 +13,7 @@ export async function deleteGroup(pool: Pool, callerId: string, args: DeleteGrou
       throw new NotFoundException('Group not found')
     }
 
-    const groupOwner = await client.query('SELECT owner FROM groups WHERE id = $1', [args.groupId])
-
-    if (groupOwner.rows[0].owner !== callerId) {
+    if (!(await isUserGroupOwner(client, args.groupId, callerId))) {
       throw new UnauthorizedException('You do not have permission to delete this group')
     }
 
