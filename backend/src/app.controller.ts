@@ -300,7 +300,6 @@ export class AppController {
     return await this.appService.joinGroupByLink(request.user.sub, args)
   }
 
-  @UseGuards(AuthGuard)
   @Get('getGroupMetadataByLink')
   async getGroupMetadataByLink(
     @Req() request: Request,

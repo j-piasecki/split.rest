@@ -27,8 +27,8 @@ export async function joinGroupByLink(
       throw new NotFoundException('Group not found')
     }
 
-    if (!(await isUserMemberOfGroup(pool, groupId, callerId))) {
-      throw new UnauthorizedException('You are not a member of this group')
+    if (await isUserMemberOfGroup(pool, groupId, callerId)) {
+      throw new UnauthorizedException('You are already a member of this group')
     }
 
     await client.query(
