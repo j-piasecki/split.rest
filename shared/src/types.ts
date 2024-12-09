@@ -7,17 +7,17 @@ export interface User {
 
 export interface GroupMetadata {
   id: number
-  hidden: boolean
-}
-
-export interface GroupInfo extends GroupMetadata {
   name: string
   currency: string
   memberCount: number
   total: string
   owner: string
+}
+
+export interface GroupInfo extends GroupMetadata {
   isAdmin: boolean
   hasAccess: boolean
+  hidden: boolean
   balance: string
 }
 
@@ -51,6 +51,13 @@ export interface SplitWithChanges extends SplitInfo {
 
 export interface SplitWithUsers extends SplitInfo {
   users: UserWithBalanceChange[]
+}
+
+export interface GroupJoinLink {
+  uuid: string
+  groupId: number
+  createdById: string
+  createdAt: number
 }
 
 export function isUser(obj: any): obj is User {

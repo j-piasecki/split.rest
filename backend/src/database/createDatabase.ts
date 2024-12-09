@@ -69,4 +69,17 @@ export async function createDatabase(pool: Pool) {
       FOREIGN KEY (user_id) REFERENCES users(id)
     )
   `)
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS group_join_links(
+      uuid VARCHAR(36) NOT NULL,
+      group_id INTEGER NOT NULL UNIQUE,
+      created_by VARCHAR(32) NOT NULL,
+      created_at bigint NOT NULL,
+
+      PRIMARY KEY (uuid),
+      FOREIGN KEY (group_id) REFERENCES groups(id),
+      FOREIGN KEY (created_by) REFERENCES users(id)
+    )
+  `)
 }

@@ -15,18 +15,23 @@ import { Request } from 'express'
 import {
   AddUserToGroupArguments,
   CreateGroupArguments,
+  CreateGroupJoinLinkArguments,
   CreateSplitArguments,
   DeleteGroupArguments,
+  DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
   GetGroupInfoArguments,
+  GetGroupJoinLinkArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupMetadataByLinkArguments,
   GetGroupSplitsArguments,
   GetSplitInfoArguments,
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
+  JoinGroupByLinkArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -36,18 +41,23 @@ import {
   User,
   isAddUserToGroupArguments,
   isCreateGroupArguments,
+  isCreateGroupJoinLinkArguments,
   isCreateSplitArguments,
   isDeleteGroupArguments,
+  isDeleteGroupJoinLinkArguments,
   isDeleteSplitArguments,
   isGetBalancesArguments,
   isGetGroupInfoArguments,
+  isGetGroupJoinLinkArguments,
   isGetGroupMembersArguments,
   isGetGroupMembersAutocompletionsArguments,
+  isGetGroupMetadataByLinkArguments,
   isGetGroupSplitsArguments,
   isGetSplitInfoArguments,
   isGetUserByEmailArguments,
   isGetUserByIdArguments,
   isGetUserGroupsArguments,
+  isJoinGroupByLinkArguments,
   isRestoreSplitArguments,
   isSetGroupAccessArguments,
   isSetGroupAdminArguments,
@@ -278,5 +288,67 @@ export class AppController {
     }
 
     return await this.appService.setGroupName(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('joinGroupByLink')
+  async joinGroupByLink(@Req() request: Request, @Body() args: Partial<JoinGroupByLinkArguments>) {
+    if (!isJoinGroupByLinkArguments(args)) {
+      throw new BadRequestException('Invalid arguments')
+    }
+
+    return await this.appService.joinGroupByLink(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getGroupMetadataByLink')
+  async getGroupMetadataByLink(
+    @Req() request: Request,
+    @Query() args: GetGroupMetadataByLinkArguments
+  ) {
+    if (!isGetGroupMetadataByLinkArguments(args)) {
+      throw new BadRequestException('Invalid arguments')
+    }
+
+    return await this.appService.getGroupMetadataByLink(args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('createGroupJoinLink')
+  async createGroupJoinLink(
+    @Req() request: Request,
+    @Body() args: Partial<CreateGroupJoinLinkArguments>
+  ) {
+    if (!isCreateGroupJoinLinkArguments(args)) {
+      throw new BadRequestException('Invalid arguments')
+    }
+
+    return await this.appService.createGroupJoinLink(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('deleteGroupJoinLink')
+  async deleteGroupJoinLink(
+    @Req() request: Request,
+    @Body() args: Partial<DeleteGroupJoinLinkArguments>
+  ) {
+    if (!isDeleteGroupJoinLinkArguments(args)) {
+      throw new BadRequestException('Invalid arguments')
+    }
+
+    return await this.appService.deleteGroupJoinLink(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getGroupJoinLink')
+  async getGroupJoinLink(
+    @Req() request: Request,
+    @Query() args: Partial<GetGroupJoinLinkArguments>
+  ) {
+    if (!isGetGroupJoinLinkArguments(args)) {
+      throw new BadRequestException('Invalid arguments')
+    }
+
+    return await this.appService.getGroupJoinLink(request.user.sub, args)
   }
 }

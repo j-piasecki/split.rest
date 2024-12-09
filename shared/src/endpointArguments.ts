@@ -113,3 +113,23 @@ export interface SetGroupNameArguments {
   groupId: number
   name: string
 }
+
+export interface CreateGroupJoinLinkArguments {
+  groupId: number
+}
+
+export interface GetGroupJoinLinkArguments {
+  groupId: number
+}
+
+export interface DeleteGroupJoinLinkArguments {
+  groupId: number
+}
+
+export interface GetGroupMetadataByLinkArguments {
+  uuid: string
+}
+
+export interface JoinGroupByLinkArguments {
+  uuid: string
+}

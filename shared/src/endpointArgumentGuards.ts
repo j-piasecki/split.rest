@@ -1,20 +1,25 @@
 import {
   AddUserToGroupArguments,
   CreateGroupArguments,
+  CreateGroupJoinLinkArguments,
   CreateSplitArguments,
   DeleteGroupArguments,
+  DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
   GetBalancesWithEmailsArguments,
   GetBalancesWithIdsArguments,
   GetGroupInfoArguments,
+  GetGroupJoinLinkArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupMetadataByLinkArguments,
   GetGroupSplitsArguments,
   GetSplitInfoArguments,
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
+  JoinGroupByLinkArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -130,4 +135,26 @@ export function isDeleteGroupArguments(obj: any): obj is DeleteGroupArguments {
 
 export function isSetGroupNameArguments(obj: any): obj is SetGroupNameArguments {
   return obj.groupId !== undefined && obj.name !== undefined
+}
+
+export function isCreateGroupJoinLinkArguments(obj: any): obj is CreateGroupJoinLinkArguments {
+  return obj.groupId !== undefined
+}
+
+export function isGetGroupJoinLinkArguments(obj: any): obj is GetGroupJoinLinkArguments {
+  return obj.groupId !== undefined
+}
+
+export function isDeleteGroupJoinLinkArguments(obj: any): obj is DeleteGroupJoinLinkArguments {
+  return obj.groupId !== undefined
+}
+
+export function isGetGroupMetadataByLinkArguments(
+  obj: any
+): obj is GetGroupMetadataByLinkArguments {
+  return obj.uuid !== undefined
+}
+
+export function isJoinGroupByLinkArguments(obj: any): obj is JoinGroupByLinkArguments {
+  return obj.uuid !== undefined
 }

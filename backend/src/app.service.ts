@@ -5,18 +5,23 @@ import * as fs from 'fs'
 import {
   AddUserToGroupArguments,
   CreateGroupArguments,
+  CreateGroupJoinLinkArguments,
   CreateSplitArguments,
   DeleteGroupArguments,
+  DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
   GetGroupInfoArguments,
+  GetGroupJoinLinkArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupMetadataByLinkArguments,
   GetGroupSplitsArguments,
   GetSplitInfoArguments,
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
+  JoinGroupByLinkArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
@@ -170,5 +175,25 @@ export class AppService {
 
   async setGroupName(callerId: string, args: SetGroupNameArguments) {
     return await this.databaseService.setGroupName(callerId, args)
+  }
+
+  async joinGroupByLink(callerId: string, args: JoinGroupByLinkArguments) {
+    return await this.databaseService.joinGroupByLink(callerId, args)
+  }
+
+  async getGroupMetadataByLink(args: GetGroupMetadataByLinkArguments) {
+    return await this.databaseService.getGroupMetadataByLink(args)
+  }
+
+  async createGroupJoinLink(callerId: string, args: CreateGroupJoinLinkArguments) {
+    return await this.databaseService.createGroupJoinLink(callerId, args)
+  }
+
+  async deleteGroupJoinLink(callerId: string, args: DeleteGroupJoinLinkArguments) {
+    return await this.databaseService.deleteGroupJoinLink(callerId, args)
+  }
+
+  async getGroupJoinLink(callerId: string, args: GetGroupJoinLinkArguments) {
+    return await this.databaseService.getGroupJoinLink(callerId, args)
   }
 }

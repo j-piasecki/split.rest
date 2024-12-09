@@ -1,13 +1,18 @@
 import { createDatabase } from './database/createDatabase'
 import { addUserToGroup } from './database/groups/addUserToGroup'
 import { createGroup } from './database/groups/createGroup'
+import { createGroupJoinLink } from './database/groups/createGroupJoinLink'
 import { deleteGroup } from './database/groups/deleteGroup'
+import { deleteGroupJoinLink } from './database/groups/deleteGroupJoinLink'
 import { getBalances } from './database/groups/getBalances'
 import { getGroupInfo } from './database/groups/getGroupInfo'
+import { getGroupJoinLink } from './database/groups/getGroupJoinLink'
 import { getGroupMembers } from './database/groups/getGroupMembers'
 import { getGroupMembersAutocompletions } from './database/groups/getGroupMembersAutocompletions'
+import { getGroupMetadataByLink } from './database/groups/getGroupMetadataByLink'
 import { getGroupSplits } from './database/groups/getGroupSplits'
 import { getUserGroups } from './database/groups/getUserGroups'
+import { joinGroupByLink } from './database/groups/joinGroupByLink'
 import { setGroupAccess } from './database/groups/setGroupAccess'
 import { setGroupAdmin } from './database/groups/setGroupAdmin'
 import { setGroupHidden } from './database/groups/setGroupHidden'
@@ -25,18 +30,23 @@ import { Pool } from 'pg'
 import {
   AddUserToGroupArguments,
   CreateGroupArguments,
+  CreateGroupJoinLinkArguments,
   CreateSplitArguments,
   DeleteGroupArguments,
+  DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
   GetGroupInfoArguments,
+  GetGroupJoinLinkArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupMetadataByLinkArguments,
   GetGroupSplitsArguments,
   GetSplitInfoArguments,
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
+  JoinGroupByLinkArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -151,5 +161,25 @@ export class DatabaseService {
 
   async setGroupName(callerId: string, args: SetGroupNameArguments) {
     return await setGroupName(this.pool, callerId, args)
+  }
+
+  async joinGroupByLink(callerId: string, args: JoinGroupByLinkArguments) {
+    return await joinGroupByLink(this.pool, callerId, args)
+  }
+
+  async getGroupMetadataByLink(args: GetGroupMetadataByLinkArguments) {
+    return await getGroupMetadataByLink(this.pool, args)
+  }
+
+  async createGroupJoinLink(callerId: string, args: CreateGroupJoinLinkArguments) {
+    return await createGroupJoinLink(this.pool, callerId, args)
+  }
+
+  async deleteGroupJoinLink(callerId: string, args: DeleteGroupJoinLinkArguments) {
+    return await deleteGroupJoinLink(this.pool, callerId, args)
+  }
+
+  async getGroupJoinLink(callerId: string, args: GetGroupJoinLinkArguments) {
+    return await getGroupJoinLink(this.pool, callerId, args)
   }
 }
