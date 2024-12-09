@@ -1,16 +1,80 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { useCreateGroupJoinLink } from '@hooks/database/useCreateGroupJoinLink'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
+import { useDeleteGroupJoinLink } from '@hooks/database/useDeleteGroupJoinLink'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { useGroupJoinLink } from '@hooks/database/useGroupJoinLink'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import * as Clipboard from 'expo-clipboard'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { ActivityIndicator, Pressable, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
+
+function JoinLinkManager({ info }: { info: GroupInfo }) {
+  const theme = useTheme()
+  const { data: link, isLoading: isLoadingLink } = useGroupJoinLink(info.id)
+  const { mutateAsync: createJoinLink, isPending: isCreatingJoinLink } = useCreateGroupJoinLink()
+  const { mutateAsync: deleteJoinLink, isPending: isDeletingJoinLink } = useDeleteGroupJoinLink()
+
+  const waiting = isLoadingLink || isCreatingJoinLink || isDeletingJoinLink
+
+  const linkText = __DEV__
+    ? `http://localhost:8081/join/${link?.uuid}`
+    : `https://split.rest/join/${link?.uuid}`
+
+  return (
+    <View>
+      {waiting && <ActivityIndicator color={theme.colors.primary} />}
+      {!waiting && (
+        <>
+          {!link && <Button title='Create join link' onPress={() => createJoinLink(info.id)} />}
+          {link && (
+            <View style={{ gap: 8 }}>
+              <Text
+                style={{
+                  color: theme.colors.onSurface,
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                }}
+              >
+                Join link
+              </Text>
+              <View style={{ flexDirection: 'row', gap: 8 }}>
+                <TextInput
+                  value={linkText}
+                  editable={false}
+                  style={{ flex: 1 }}
+                  selectTextOnFocus
+                />
+                <Button
+                  leftIcon={
+                    <MaterialIcons
+                      name='content-copy'
+                      size={20}
+                      color={theme.colors.onPrimaryContainer}
+                    />
+                  }
+                  onPress={() => {
+                    Clipboard.setStringAsync(linkText)
+                  }}
+                />
+              </View>
+              <Button title='Delete link' onPress={() => deleteJoinLink(info.id)} />
+            </View>
+          )}
+        </>
+      )}
+    </View>
+  )
+}
 
 function Form({ info }: { info: GroupInfo }) {
   const user = useAuth()
@@ -36,6 +100,7 @@ function Form({ info }: { info: GroupInfo }) {
       <TextInput placeholder='Group name' value={name} onChangeText={setName} />
       {!waiting && (
         <>
+          <JoinLinkManager info={info} />
           {info.owner === user?.id && (
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               {/* TODO: add confirmation dialog, more generic button */}
@@ -84,7 +149,7 @@ export default function Settings() {
   const isAdmin = info?.isAdmin || info?.owner === user?.id
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title='Group settings' maxWidth={400} maxHeight={400}>
+    <ModalScreen returnPath={`/group/${id}`} title='Group settings' maxWidth={400} maxHeight={500}>
       {isAdmin && info && <Form info={info} />}
       {!isAdmin && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

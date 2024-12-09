@@ -7776,6 +7776,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-clipboard@npm:~7.0.0":
+  version: 7.0.0
+  resolution: "expo-clipboard@npm:7.0.0"
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+  checksum: 3d351582793a8d746f7fa26fd59d30a99e1cd59ce637ace94b85bea7348e8ab7ad0893cd830a47644e8ea3c109055ac369c6eed2e572b2d0f2a5834f64fb478a
+  languageName: node
+  linkType: hard
+
 "expo-constants@npm:~17.0.0, expo-constants@npm:~17.0.3":
   version: 17.0.3
   resolution: "expo-constants@npm:17.0.3"
@@ -8551,6 +8562,7 @@ __metadata:
     expo: ~52.0.11
     expo-atlas: ^0.4.0
     expo-build-properties: ~0.13.1
+    expo-clipboard: ~7.0.0
     expo-constants: ~17.0.3
     expo-linking: ~7.0.3
     expo-router: ~4.0.9
