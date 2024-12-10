@@ -1,6 +1,7 @@
+import { ForbiddenException } from '../../errors/ForbiddenException'
+import { NotFoundException } from '../../errors/NotFoundException'
 import { hasAccessToGroup } from '../utils/hasAccessToGroup'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
-import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { GetGroupSplitsArguments, SplitInfo } from 'shared'
 
@@ -10,11 +11,11 @@ export async function getGroupSplits(
   args: GetGroupSplitsArguments
 ): Promise<SplitInfo[]> {
   if (await isGroupDeleted(pool, args.groupId)) {
-    throw new NotFoundException('Group not found')
+    throw new NotFoundException('notFound.group')
   }
 
   if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
-    throw new UnauthorizedException('You do not have permission to get splits in this group')
+    throw new ForbiddenException('insufficientPermissions.group.access')
   }
 
   const rows = (

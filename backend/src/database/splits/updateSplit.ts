@@ -1,8 +1,9 @@
+import { ForbiddenException } from '../../errors/ForbiddenException'
+import { NotFoundException } from '../../errors/NotFoundException'
 import { hasAccessToGroup } from '../utils/hasAccessToGroup'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
 import { splitExists } from '../utils/splitExists'
-import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { UpdateSplitArguments } from 'shared'
 
@@ -12,15 +13,15 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
     await client.query('BEGIN')
 
     if (await isGroupDeleted(client, args.groupId)) {
-      throw new NotFoundException('Group not found')
+      throw new NotFoundException('notFound.group')
     }
 
     if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
-      throw new UnauthorizedException('You do not have permission to update splits in this group')
+      throw new ForbiddenException('insufficientPermissions.group.access')
     }
 
     if (!(await splitExists(client, args.groupId, args.splitId))) {
-      throw new NotFoundException('Split not found in group')
+      throw new NotFoundException('notFound.split')
     }
 
     const splitInfo = (
@@ -35,7 +36,7 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
       splitInfo.paid_by !== callerId &&
       !(await isUserGroupAdmin(client, args.groupId, callerId))
     ) {
-      throw new UnauthorizedException('You do not have permission to update this split')
+      throw new ForbiddenException('insufficientPermissions.group.editSplit')
     }
 
     // Remove old balances
@@ -69,7 +70,7 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
       ).rowCount
 
       if (!userExists) {
-        throw new NotFoundException('User not found in group')
+        throw new NotFoundException('notFound.user')
       }
 
       await client.query(

@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common'
+import { NotFoundException } from '../../errors/NotFoundException'
 import { Pool } from 'pg'
 import { GetUserByEmailArguments, User } from 'shared'
 
@@ -12,7 +12,7 @@ export async function getUserByEmail(
   ).rows
 
   if (rows.length === 0) {
-    throw new NotFoundException()
+    throw new NotFoundException('notFound.user')
   }
 
   return {

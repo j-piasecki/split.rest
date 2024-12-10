@@ -1,6 +1,7 @@
+import { ForbiddenException } from '../../errors/ForbiddenException'
+import { NotFoundException } from '../../errors/NotFoundException'
 import { hasAccessToGroup } from '../utils/hasAccessToGroup'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
-import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { GetSplitInfoArguments, SplitWithUsers } from 'shared'
 
@@ -10,12 +11,12 @@ export async function getSplitInfo(
   args: GetSplitInfoArguments
 ): Promise<SplitWithUsers> {
   if (await isGroupDeleted(pool, args.groupId)) {
-    throw new NotFoundException('Group not found')
+    throw new NotFoundException('notFound.group')
   }
 
   // TODO: allow to see split if user has no access but is a participant?
   if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
-    throw new UnauthorizedException('You do not have permission to see this split')
+    throw new ForbiddenException('insufficientPermissions.group.access')
   }
 
   const splitRow = (
@@ -26,7 +27,7 @@ export async function getSplitInfo(
   ).rows[0]
 
   if (!splitRow || splitRow.deleted) {
-    throw new NotFoundException('Split not found')
+    throw new NotFoundException('notFound.split')
   }
 
   const participants = (

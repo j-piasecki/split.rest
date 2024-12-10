@@ -1,5 +1,6 @@
+import { ForbiddenException } from '../../errors/ForbiddenException'
+import { NotFoundException } from '../../errors/NotFoundException'
 import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
-import { NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { GetGroupJoinLinkArguments } from 'shared/src/endpointArguments'
 import { GroupJoinLink } from 'shared/src/types'
@@ -10,7 +11,7 @@ export async function getGroupJoinLink(
   args: GetGroupJoinLinkArguments
 ): Promise<GroupJoinLink> {
   if (!(await isUserGroupAdmin(pool, args.groupId, callerId))) {
-    throw new UnauthorizedException('You do not have permission to get a join link')
+    throw new ForbiddenException('insufficientPermissions.group.joinLink.create')
   }
 
   const { rows } = await pool.query(
@@ -19,7 +20,7 @@ export async function getGroupJoinLink(
   )
 
   if (rows.length === 0) {
-    throw new NotFoundException('No join link found for this group')
+    throw new NotFoundException('notFound.joinLink')
   }
 
   return {

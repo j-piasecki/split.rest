@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common'
+import { NotFoundException } from '../../errors/NotFoundException'
 import { Pool } from 'pg'
 import { GroupMetadata } from 'shared'
 import { GetGroupMetadataByLinkArguments } from 'shared/src/endpointArguments'
@@ -29,7 +29,7 @@ export async function getGroupMetadataByLink(
   )
 
   if (rows.length === 0) {
-    throw new NotFoundException('No group found for this join link')
+    throw new NotFoundException('notFound.group')
   }
 
   return {

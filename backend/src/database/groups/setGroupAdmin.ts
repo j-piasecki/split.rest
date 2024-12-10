@@ -1,9 +1,10 @@
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
 import { userExists } from '../utils/userExists'
-import { NotFoundException, UnauthorizedException } from '@nestjs/common'
+import { NotFoundException } from '@nestjs/common/exceptions/not-found.exception'
 import { Pool } from 'pg'
 import { SetGroupAdminArguments } from 'shared'
+import { ForbiddenException } from 'src/errors/ForbiddenException'
 
 export async function setGroupAdmin(pool: Pool, callerId: string, args: SetGroupAdminArguments) {
   const client = await pool.connect()
@@ -12,15 +13,15 @@ export async function setGroupAdmin(pool: Pool, callerId: string, args: SetGroup
     await client.query('BEGIN')
 
     if (await isGroupDeleted(client, args.groupId)) {
-      throw new NotFoundException('Group not found')
+      throw new NotFoundException('notFound.group')
     }
 
     if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new UnauthorizedException('You do not have permission to set group admin')
+      throw new ForbiddenException('insufficientPermissions.group.setAdmin')
     }
 
     if (!(await userExists(client, args.userId))) {
-      throw new NotFoundException('User not found')
+      throw new NotFoundException('notFound.user')
     }
 
     await client.query(

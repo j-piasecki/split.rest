@@ -1,5 +1,6 @@
+import { BadRequestException } from '../../errors/BadRequestException'
+import { ForbiddenException } from '../../errors/ForbiddenException'
 import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
-import { BadRequestException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { CreateGroupJoinLinkArguments } from 'shared/src/endpointArguments'
 import { GroupJoinLink } from 'shared/src/types'
@@ -16,7 +17,7 @@ export async function createGroupJoinLink(
     await client.query('BEGIN')
 
     if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new UnauthorizedException('You do not have permission to create a join link')
+      throw new ForbiddenException('insufficientPermissions.group.joinLink.create')
     }
 
     const linkExists =
@@ -24,7 +25,7 @@ export async function createGroupJoinLink(
         .rowCount > 0
 
     if (linkExists) {
-      throw new BadRequestException('A join link already exists for this group')
+      throw new BadRequestException('group.joinLinkAlreadyExists')
     }
 
     const uuid = uuidv4()

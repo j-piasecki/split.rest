@@ -1,7 +1,7 @@
+import { ForbiddenException } from '../../errors/ForbiddenException'
+import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
-import { UnauthorizedException } from '@nestjs/common'
-import { NotFoundException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { JoinGroupByLinkArguments } from 'shared/src/endpointArguments'
 
@@ -20,15 +20,15 @@ export async function joinGroupByLink(
     ).rows[0]?.group_id
 
     if (!groupId) {
-      throw new NotFoundException('Invalid join link')
+      throw new NotFoundException('notFound.group')
     }
 
     if (await isGroupDeleted(pool, groupId)) {
-      throw new NotFoundException('Group not found')
+      throw new NotFoundException('notFound.group')
     }
 
     if (await isUserMemberOfGroup(pool, groupId, callerId)) {
-      throw new UnauthorizedException('You are already a member of this group')
+      throw new ForbiddenException('group.userAlreadyInGroup')
     }
 
     await client.query(

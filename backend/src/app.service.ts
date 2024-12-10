@@ -1,6 +1,7 @@
 import { DatabaseService } from './database.service'
+import { BadRequestException } from './errors/BadRequestException'
 import { downloadProfilePicture } from './profilePicture'
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import * as fs from 'fs'
 import {
   AddUserToGroupArguments,
@@ -58,12 +59,12 @@ export class AppService {
 
   async createSplit(callerId: string, args: CreateSplitArguments) {
     if (args.balances.findIndex(({ id }) => id === args.paidBy) === -1) {
-      throw new BadRequestException('Payer must be in the transaction')
+      throw new BadRequestException('split.payerNotInTransaction')
     }
 
     const changeSum = args.balances.reduce((sum, { change }) => sum + change, 0)
     if (Math.abs(changeSum) > 0.01) {
-      throw new BadRequestException('Sum of changes must be 0')
+      throw new BadRequestException('split.sumOfChangesMustBeZero')
     }
 
     const payerGetsBack = args.balances.find(({ id }) => id === args.paidBy)?.change
@@ -73,11 +74,11 @@ export class AppService {
     )
 
     if (Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
-      throw new BadRequestException('Payer must get back equal amount as sum others lose')
+      throw new BadRequestException('split.payerMustGetBackSumOthersLose')
     }
 
     if (Number(args.total) < 0.01) {
-      throw new BadRequestException('Total must be greater than 0')
+      throw new BadRequestException('split.totalValueMustBePositive')
     }
 
     return await this.databaseService.createSplit(callerId, args)
@@ -93,12 +94,12 @@ export class AppService {
 
   async updateSplit(callerId: string, args: UpdateSplitArguments) {
     if (args.balances.findIndex(({ id }) => id === args.paidBy) === -1) {
-      throw new BadRequestException('Payer must be in the transaction')
+      throw new BadRequestException('split.payerNotInTransaction')
     }
 
     const changeSum = args.balances.reduce((sum, { change }) => sum + change, 0)
     if (Math.abs(changeSum) > 0.01) {
-      throw new BadRequestException('Sum of changes must be 0')
+      throw new BadRequestException('split.sumOfChangesMustBeZero')
     }
 
     const payerGetsBack = args.balances.find(({ id }) => id === args.paidBy)?.change
@@ -108,11 +109,11 @@ export class AppService {
     )
 
     if (Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
-      throw new BadRequestException('Payer must get back equal amount as sum others lose')
+      throw new BadRequestException('split.payerMustGetBackSumOthersLose')
     }
 
     if (Number(args.total) < 0.01) {
-      throw new BadRequestException('Total must be greater than 0')
+      throw new BadRequestException('split.totalValueMustBePositive')
     }
 
     return await this.databaseService.updateSplit(callerId, args)

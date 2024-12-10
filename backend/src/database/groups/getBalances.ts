@@ -1,6 +1,5 @@
 import { hasAccessToGroup } from '../utils/hasAccessToGroup'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
-import { BadRequestException, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import {
   GetBalancesArguments,
@@ -8,6 +7,9 @@ import {
   isGetBalancesWithEmailsArguments,
   isGetBalancesWithIdsArguments,
 } from 'shared'
+import { BadRequestException } from 'src/errors/BadRequestException'
+import { ForbiddenException } from 'src/errors/ForbiddenException'
+import { NotFoundException } from 'src/errors/NotFoundException'
 
 export async function getBalances(
   pool: Pool,
@@ -15,11 +17,11 @@ export async function getBalances(
   args: GetBalancesArguments
 ): Promise<UserWithBalanceChange[]> {
   if (await isGroupDeleted(pool, args.groupId)) {
-    throw new NotFoundException('Group not found')
+    throw new NotFoundException('notFound.group')
   }
 
   if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
-    throw new UnauthorizedException('User does not have access to group')
+    throw new ForbiddenException('insufficientPermissions.group.access')
   }
 
   let balances: Record<string, string>[] | null = null
@@ -66,11 +68,11 @@ export async function getBalances(
   }
 
   if (targetLength === null || balances === null) {
-    throw new BadRequestException('Invalid arguments')
+    throw new BadRequestException('invalidArguments')
   }
 
   if (balances.length !== targetLength) {
-    throw new NotFoundException('One or more users were not found in the group')
+    throw new NotFoundException('notFound.user')
   }
 
   return balances.map((balance) => ({

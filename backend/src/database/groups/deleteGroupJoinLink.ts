@@ -1,5 +1,6 @@
+import { ForbiddenException } from '../../errors/ForbiddenException'
+import { NotFoundException } from '../../errors/NotFoundException'
 import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
-import { BadRequestException, UnauthorizedException } from '@nestjs/common'
 import { Pool } from 'pg'
 import { DeleteGroupJoinLinkArguments } from 'shared/src/endpointArguments'
 
@@ -14,7 +15,7 @@ export async function deleteGroupJoinLink(
     await client.query('BEGIN')
 
     if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new UnauthorizedException('You do not have permission to delete a join link')
+      throw new ForbiddenException('insufficientPermissions.group.joinLink.delete')
     }
 
     const linkExists =
@@ -22,7 +23,7 @@ export async function deleteGroupJoinLink(
         .rowCount > 0
 
     if (!linkExists) {
-      throw new BadRequestException('No join link found for this group')
+      throw new NotFoundException('notFound.joinLink')
     }
 
     await client.query('DELETE FROM group_join_links WHERE group_id = $1', [args.groupId])
