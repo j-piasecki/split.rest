@@ -1,7 +1,6 @@
-import apiErrors from '../locales/en/apiErrors.json'
-import translation from '../locales/en/translation.json'
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
+import { apiErrors, translation } from 'shared'
 
 export const defaultNS = 'translation'
 export const resources = {
