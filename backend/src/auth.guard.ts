@@ -1,4 +1,5 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common'
+import { UnauthorizedException } from './errors/UnauthorizedException'
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { Request } from 'express'
 import * as jwt from 'jsonwebtoken'
 
@@ -20,7 +21,7 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request)
 
     if (!token) {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException('auth.missingToken')
     }
 
     const tokenData = jwt.decode(token, { complete: true })
@@ -32,18 +33,14 @@ export class AuthGuard implements CanActivate {
       { algorithms: [tokenData.header.alg as jwt.Algorithm] },
       (err, decoded: jwt.JwtPayload) => {
         if (err) {
-          throw new UnauthorizedException()
+          throw new UnauthorizedException('auth.expiredToken')
         }
 
-        const now = Date.now() / 1000
-
         if (
-          decoded.exp <= now ||
-          decoded.iat >= now ||
           decoded.aud !== 'split-6ed94' ||
           decoded.iss !== 'https://securetoken.google.com/split-6ed94'
         ) {
-          throw new UnauthorizedException()
+          throw new UnauthorizedException('auth.invalidToken')
         }
 
         request['user'] = decoded

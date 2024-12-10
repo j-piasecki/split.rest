@@ -26,7 +26,7 @@ export function useGroupJoinLink(groupId: number) {
 
         return info
       } catch (error) {
-        if (error instanceof ApiError && error.status === 404) {
+        if (error instanceof ApiError && error.statusCode === 404) {
           return null
         }
 

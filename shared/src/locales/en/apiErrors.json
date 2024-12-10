@@ -1,4 +1,5 @@
 {
+  "unknownError": "Unknown error",
   "auth": {
     "missingToken": "Missing token",
     "invalidToken": "Invalid token",
