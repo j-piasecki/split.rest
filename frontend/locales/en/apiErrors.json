@@ -1,0 +1,7 @@
+{
+  "auth": {
+    "missingToken": "Missing token",
+    "invalidToken": "Invalid token",
+    "expiredToken": "Expired token"
+  }
+}

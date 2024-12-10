@@ -2,9 +2,11 @@ import { ThemeProvider, useTheme } from '@styling/theme'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
+import i18n from '@utils/i18n'
 import { queryClient } from '@utils/queryClient'
+import { useLocales } from 'expo-localization'
 import { Stack, usePathname } from 'expo-router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import 'utils/firebase'
 
@@ -13,6 +15,11 @@ function Content() {
   const user = useAuth(!pathname.startsWith('/join'))
   const theme = useTheme()
   const isSmallScreen = useIsSmallScreen()
+  const locales = useLocales()
+
+  useEffect(() => {
+    i18n.changeLanguage(locales[0].languageCode!)
+  }, [locales])
 
   if (user === undefined) {
     return (

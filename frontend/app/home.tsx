@@ -7,6 +7,7 @@ import { useTheme } from '@styling/theme'
 import { router } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
@@ -109,6 +110,7 @@ function HiddenGroupsButton({
 
 export default function Home() {
   const theme = useTheme()
+  const { t } = useTranslation()
 
   const {
     groups: groups,
@@ -144,7 +146,9 @@ export default function Home() {
                   alignItems: 'center',
                 }}
               >
-                <Text style={{ fontSize: 28, color: theme.colors.onSurface }}>Groups</Text>
+                <Text style={{ fontSize: 28, color: theme.colors.onSurface }}>
+                  {t('groupsText')}
+                </Text>
                 <Button
                   onPress={() => {
                     router.navigate('/createGroup')
@@ -162,7 +166,9 @@ export default function Home() {
               )}
               {showHidden && (
                 <>
-                  <Text style={{ fontSize: 28, color: theme.colors.onSurface }}>Hidden groups</Text>
+                  <Text style={{ fontSize: 28, color: theme.colors.onSurface }}>
+                    {t('hiddenGroupsText')}
+                  </Text>
                   <GroupList groups={hiddenGroups} />
                 </>
               )}

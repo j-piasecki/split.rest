@@ -3,6 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": "./",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "paths": {
       "@components/*": ["components/*"],
       "@hooks/*": ["hooks/*"],
