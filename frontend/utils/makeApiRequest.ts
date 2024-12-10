@@ -73,6 +73,10 @@ export async function makeRequest<TArgs, TReturn>(
       const data = await result.json()
 
       if (isApiErrorPayload(data)) {
+        if (__DEV__) {
+          console.log('Request to', name, 'failed with', data)
+        }
+
         throw new ApiError(data.message, data.statusCode, data.error, data.args)
       }
     } finally {
