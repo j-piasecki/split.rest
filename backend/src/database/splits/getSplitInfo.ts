@@ -46,9 +46,9 @@ export async function getSplitInfo(
         ON 
           users.id = split_participants.user_id 
         WHERE 
-          split_id = $1 AND version = $2
+          split_id = $1
       `,
-      [args.splitId, splitRow.version]
+      [args.splitId]
     )
   ).rows
 

@@ -25,8 +25,8 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
     }
 
     const splitInfo = (
-      await client.query<{ paid_by: string; created_by: string; total: string; version: number }>(
-        'SELECT paid_by, created_by, total, version FROM splits WHERE group_id = $1 AND id = $2',
+      await client.query<{ paid_by: string; created_by: string; total: string }>(
+        'SELECT paid_by, created_by, total FROM splits WHERE group_id = $1 AND id = $2',
         [args.groupId, args.splitId]
       )
     ).rows[0]
@@ -40,10 +40,9 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
     }
 
     const splitParticipants = (
-      await client.query(
-        'SELECT user_id, change FROM split_participants WHERE split_id = $1 AND version = $2',
-        [args.splitId, splitInfo.version]
-      )
+      await client.query('SELECT user_id, change FROM split_participants WHERE split_id = $1', [
+        args.splitId,
+      ])
     ).rows
 
     for (const participant of splitParticipants) {

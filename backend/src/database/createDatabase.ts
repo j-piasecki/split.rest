@@ -82,7 +82,19 @@ export async function createDatabase(pool: Pool) {
     CREATE TABLE IF NOT EXISTS split_participants(
       split_id INTEGER,
       user_id VARCHAR(32) NOT NULL,
-      version INTEGER NOT NULL DEFAULT 1,
+      change DECIMAL(10, 2) NOT NULL,
+
+      PRIMARY KEY (split_id, user_id),
+      FOREIGN KEY (split_id) REFERENCES splits(id),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+  `)
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS split_participants_edits(
+      split_id INTEGER,
+      user_id VARCHAR(32) NOT NULL,
+      version INTEGER NOT NULL,
       change DECIMAL(10, 2) NOT NULL,
 
       PRIMARY KEY (split_id, user_id, version),
