@@ -261,6 +261,11 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
         >
           <Pressable
             onPress={() => setVisible(false)}
+            // @ts-expect-error - onContextMenu does not exist on Pressable on mobile
+            onContextMenu={(e) => {
+              setVisible(false)
+              e.preventDefault()
+            }}
             style={[
               StyleSheet.absoluteFillObject,
               { backgroundColor: isSmallScreen ? 'rgba(0, 0, 0, 0.5)' : 'transparent' },
