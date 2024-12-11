@@ -74,7 +74,7 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
 
     const newVersion = (
       await client.query(
-        'UPDATE splits SET name = $3, total = $4, paid_by = $5, timestamp = $6, updated_at = $7, version = version + 1 WHERE group_id = $1 AND id = $2 RETURNING version',
+        'UPDATE splits SET name = $3, total = $4, paid_by = $5, timestamp = $6, updated_at = $7, version = version + 1, created_by = $8 WHERE group_id = $1 AND id = $2 RETURNING version',
         [
           args.groupId,
           args.splitId,
@@ -83,6 +83,7 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
           args.paidBy,
           args.timestamp,
           Date.now(),
+          callerId,
         ]
       )
     ).rows[0].version
