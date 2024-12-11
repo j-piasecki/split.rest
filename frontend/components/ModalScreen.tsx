@@ -135,7 +135,7 @@ export default function Modal({ returnPath, ...props }: ModalProps) {
     if (router.canGoBack()) {
       router.back()
     } else {
-      router.replace(returnPath)
+      router.dismissTo(returnPath)
     }
   }, [router, returnPath])
 

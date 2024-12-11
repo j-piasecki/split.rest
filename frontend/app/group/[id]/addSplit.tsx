@@ -36,7 +36,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
       if (router.canGoBack()) {
         router.back()
       } else {
-        router.replace(`/group/${groupInfo.id}`)
+        router.dismissTo(`/group/${groupInfo.id}`)
       }
     } catch (error) {
       setError(error)

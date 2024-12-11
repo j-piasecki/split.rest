@@ -33,7 +33,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
         balances: balanceChange as BalanceChange[],
       })
 
-      router.replace(`/group/${groupInfo.id}`)
+      router.dismissTo(`/group/${groupInfo.id}`)
     } catch (error) {
       setError(error)
     } finally {
