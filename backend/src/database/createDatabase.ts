@@ -72,6 +72,7 @@ export async function createDatabase(pool: Pool) {
       updated_at bigint NOT NULL,
 
       PRIMARY KEY (id, version),
+      FOREIGN KEY (id) REFERENCES splits(id),
       FOREIGN KEY (group_id) REFERENCES groups(id),
       FOREIGN KEY (paid_by) REFERENCES users(id),
       FOREIGN KEY (created_by) REFERENCES users(id)
@@ -99,7 +100,8 @@ export async function createDatabase(pool: Pool) {
 
       PRIMARY KEY (split_id, user_id, version),
       FOREIGN KEY (split_id) REFERENCES splits(id),
-      FOREIGN KEY (user_id) REFERENCES users(id)
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (split_id, version) REFERENCES split_edits(id, version)
     )
   `)
 
