@@ -12,11 +12,11 @@ export async function setGroupName(pool: Pool, callerId: string, args: SetGroupN
     await client.query('BEGIN')
 
     if (await isGroupDeleted(client, args.groupId)) {
-      throw new NotFoundException('notFound.group')
+      throw new NotFoundException('api.notFound.group')
     }
 
     if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new ForbiddenException('insufficientPermissions.group.setName')
+      throw new ForbiddenException('api.insufficientPermissions.group.setName')
     }
 
     await client.query('UPDATE groups SET name = $1 WHERE id = $2', [args.name, args.groupId])

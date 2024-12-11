@@ -1,11 +1,11 @@
 import { auth } from '@utils/firebase'
-import { ApiErrorPayload, isApiErrorPayload, LanguageApiErrorKey } from 'shared'
+import { ApiErrorPayload, isApiErrorPayload, LanguageTranslationKey } from 'shared'
 
 export const ENDPOINT = __DEV__ ? 'http://localhost:3000' : 'https://api.split.rest'
 
 export class ApiError extends Error implements ApiErrorPayload {
   constructor(
-    public readonly message: LanguageApiErrorKey,
+    public readonly message: LanguageTranslationKey,
     public readonly statusCode: number,
     public readonly error: string,
     public readonly args?: Record<string, string>
@@ -78,6 +78,8 @@ export async function makeRequest<TArgs, TReturn>(
         }
 
         throw new ApiError(data.message, data.statusCode, data.error, data.args)
+      } else {
+        throw new ApiError('unknownError', result.status, 'Unknown error')
       }
     } catch (error) {
       if (error instanceof ApiError) {

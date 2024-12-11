@@ -11,11 +11,11 @@ export async function deleteGroup(pool: Pool, callerId: string, args: DeleteGrou
     await client.query('BEGIN')
 
     if (await isGroupDeleted(client, args.groupId)) {
-      throw new NotFoundException('notFound.group')
+      throw new NotFoundException('api.notFound.group')
     }
 
     if (!(await isUserGroupOwner(client, args.groupId, callerId))) {
-      throw new ForbiddenException('insufficientPermissions.group.delete')
+      throw new ForbiddenException('api.insufficientPermissions.group.delete')
     }
 
     await client.query('UPDATE groups SET deleted = TRUE WHERE id = $1', [args.groupId])

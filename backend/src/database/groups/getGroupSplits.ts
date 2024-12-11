@@ -11,11 +11,11 @@ export async function getGroupSplits(
   args: GetGroupSplitsArguments
 ): Promise<SplitInfo[]> {
   if (await isGroupDeleted(pool, args.groupId)) {
-    throw new NotFoundException('notFound.group')
+    throw new NotFoundException('api.notFound.group')
   }
 
   if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
-    throw new ForbiddenException('insufficientPermissions.group.access')
+    throw new ForbiddenException('api.insufficientPermissions.group.access')
   }
 
   const rows = (

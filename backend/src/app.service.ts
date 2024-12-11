@@ -59,12 +59,12 @@ export class AppService {
 
   async createSplit(callerId: string, args: CreateSplitArguments) {
     if (args.balances.findIndex(({ id }) => id === args.paidBy) === -1) {
-      throw new BadRequestException('split.payerNotInTransaction')
+      throw new BadRequestException('api.split.payerNotInTransaction')
     }
 
     const changeSum = args.balances.reduce((sum, { change }) => sum + change, 0)
     if (Math.abs(changeSum) > 0.01) {
-      throw new BadRequestException('split.sumOfChangesMustBeZero')
+      throw new BadRequestException('api.split.sumOfChangesMustBeZero')
     }
 
     const payerGetsBack = args.balances.find(({ id }) => id === args.paidBy)?.change
@@ -74,11 +74,11 @@ export class AppService {
     )
 
     if (Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
-      throw new BadRequestException('split.payerMustGetBackSumOthersLose')
+      throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
     }
 
     if (Number(args.total) < 0.01) {
-      throw new BadRequestException('split.totalValueMustBePositive')
+      throw new BadRequestException('api.split.totalValueMustBePositive')
     }
 
     return await this.databaseService.createSplit(callerId, args)
@@ -94,12 +94,12 @@ export class AppService {
 
   async updateSplit(callerId: string, args: UpdateSplitArguments) {
     if (args.balances.findIndex(({ id }) => id === args.paidBy) === -1) {
-      throw new BadRequestException('split.payerNotInTransaction')
+      throw new BadRequestException('api.split.payerNotInTransaction')
     }
 
     const changeSum = args.balances.reduce((sum, { change }) => sum + change, 0)
     if (Math.abs(changeSum) > 0.01) {
-      throw new BadRequestException('split.sumOfChangesMustBeZero')
+      throw new BadRequestException('api.split.sumOfChangesMustBeZero')
     }
 
     const payerGetsBack = args.balances.find(({ id }) => id === args.paidBy)?.change
@@ -109,11 +109,11 @@ export class AppService {
     )
 
     if (Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
-      throw new BadRequestException('split.payerMustGetBackSumOthersLose')
+      throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
     }
 
     if (Number(args.total) < 0.01) {
-      throw new BadRequestException('split.totalValueMustBePositive')
+      throw new BadRequestException('api.split.totalValueMustBePositive')
     }
 
     return await this.databaseService.updateSplit(callerId, args)

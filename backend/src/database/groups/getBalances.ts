@@ -17,11 +17,11 @@ export async function getBalances(
   args: GetBalancesArguments
 ): Promise<UserWithBalanceChange[]> {
   if (await isGroupDeleted(pool, args.groupId)) {
-    throw new NotFoundException('notFound.group')
+    throw new NotFoundException('api.notFound.group')
   }
 
   if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
-    throw new ForbiddenException('insufficientPermissions.group.access')
+    throw new ForbiddenException('api.insufficientPermissions.group.access')
   }
 
   let balances: Record<string, string>[] | null = null
@@ -68,11 +68,11 @@ export async function getBalances(
   }
 
   if (targetLength === null || balances === null) {
-    throw new BadRequestException('invalidArguments')
+    throw new BadRequestException('api.invalidArguments')
   }
 
   if (balances.length !== targetLength) {
-    throw new NotFoundException('notFound.user')
+    throw new NotFoundException('api.notFound.user')
   }
 
   return balances.map((balance) => ({

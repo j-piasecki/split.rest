@@ -29,7 +29,7 @@ export async function getGroupMetadataByLink(
   )
 
   if (rows.length === 0) {
-    throw new NotFoundException('notFound.group')
+    throw new NotFoundException('api.notFound.group')
   }
 
   return {

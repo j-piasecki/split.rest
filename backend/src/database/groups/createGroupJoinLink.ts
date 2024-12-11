@@ -17,7 +17,7 @@ export async function createGroupJoinLink(
     await client.query('BEGIN')
 
     if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new ForbiddenException('insufficientPermissions.group.joinLink.create')
+      throw new ForbiddenException('api.insufficientPermissions.group.joinLink.create')
     }
 
     const linkExists =
@@ -25,7 +25,7 @@ export async function createGroupJoinLink(
         .rowCount > 0
 
     if (linkExists) {
-      throw new BadRequestException('group.joinLinkAlreadyExists')
+      throw new BadRequestException('api.group.joinLinkAlreadyExists')
     }
 
     const uuid = uuidv4()

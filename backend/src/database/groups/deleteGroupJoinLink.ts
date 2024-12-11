@@ -15,7 +15,7 @@ export async function deleteGroupJoinLink(
     await client.query('BEGIN')
 
     if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new ForbiddenException('insufficientPermissions.group.joinLink.delete')
+      throw new ForbiddenException('api.insufficientPermissions.group.joinLink.delete')
     }
 
     const linkExists =
@@ -23,7 +23,7 @@ export async function deleteGroupJoinLink(
         .rowCount > 0
 
     if (!linkExists) {
-      throw new NotFoundException('notFound.joinLink')
+      throw new NotFoundException('api.notFound.joinLink')
     }
 
     await client.query('DELETE FROM group_join_links WHERE group_id = $1', [args.groupId])

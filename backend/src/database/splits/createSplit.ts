@@ -13,11 +13,11 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
     await client.query('BEGIN')
 
     if (await isGroupDeleted(client, args.groupId)) {
-      throw new NotFoundException('notFound.group')
+      throw new NotFoundException('api.notFound.group')
     }
 
     if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
-      throw new ForbiddenException('insufficientPermissions.group.createSplit')
+      throw new ForbiddenException('api.insufficientPermissions.group.createSplit')
     }
 
     const splitId = (
@@ -41,7 +41,7 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
 
     for (const balance of args.balances) {
       if (!(await userExists(client, balance.id))) {
-        throw new NotFoundException('notFound.user')
+        throw new NotFoundException('api.notFound.user')
       }
 
       await client.query(

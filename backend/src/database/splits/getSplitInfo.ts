@@ -11,12 +11,12 @@ export async function getSplitInfo(
   args: GetSplitInfoArguments
 ): Promise<SplitWithUsers> {
   if (await isGroupDeleted(pool, args.groupId)) {
-    throw new NotFoundException('notFound.group')
+    throw new NotFoundException('api.notFound.group')
   }
 
   // TODO: allow to see split if user has no access but is a participant?
   if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
-    throw new ForbiddenException('insufficientPermissions.group.access')
+    throw new ForbiddenException('api.insufficientPermissions.group.access')
   }
 
   const splitRow = (
@@ -27,7 +27,7 @@ export async function getSplitInfo(
   ).rows[0]
 
   if (!splitRow || splitRow.deleted) {
-    throw new NotFoundException('notFound.split')
+    throw new NotFoundException('api.notFound.split')
   }
 
   const participants = (

@@ -13,15 +13,15 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
     await client.query('BEGIN')
 
     if (await isGroupDeleted(client, args.groupId)) {
-      throw new NotFoundException('notFound.group')
+      throw new NotFoundException('api.notFound.group')
     }
 
     if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
-      throw new ForbiddenException('insufficientPermissions.group.access')
+      throw new ForbiddenException('api.insufficientPermissions.group.access')
     }
 
     if (!(await splitExists(client, args.groupId, args.splitId))) {
-      throw new NotFoundException('notFound.split')
+      throw new NotFoundException('api.notFound.split')
     }
 
     const splitInfo = (
@@ -36,7 +36,7 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
       splitInfo.paid_by !== callerId &&
       !(await isUserGroupAdmin(client, args.groupId, callerId))
     ) {
-      throw new ForbiddenException('insufficientPermissions.group.editSplit')
+      throw new ForbiddenException('api.insufficientPermissions.group.editSplit')
     }
 
     // Remove old balances
@@ -70,7 +70,7 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
       ).rowCount
 
       if (!userExists) {
-        throw new NotFoundException('notFound.user')
+        throw new NotFoundException('api.notFound.user')
       }
 
       await client.query(

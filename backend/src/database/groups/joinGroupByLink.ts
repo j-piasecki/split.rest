@@ -20,15 +20,15 @@ export async function joinGroupByLink(
     ).rows[0]?.group_id
 
     if (!groupId) {
-      throw new NotFoundException('notFound.group')
+      throw new NotFoundException('api.notFound.group')
     }
 
     if (await isGroupDeleted(pool, groupId)) {
-      throw new NotFoundException('notFound.group')
+      throw new NotFoundException('api.notFound.group')
     }
 
     if (await isUserMemberOfGroup(pool, groupId, callerId)) {
-      throw new ConflictException('group.userAlreadyInGroup')
+      throw new ConflictException('api.group.userAlreadyInGroup')
     }
 
     await client.query(

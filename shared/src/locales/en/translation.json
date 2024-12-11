@@ -1,4 +1,63 @@
 {
+  "api": {
+    "invalidArguments": "Invalid arguments",
+    "auth": {
+      "missingToken": "Missing token",
+      "invalidToken": "Invalid token",
+      "expiredToken": "Expired token"
+    },
+    "insufficientPermissions": {
+      "group": {
+        "access": "User does not have access to group",
+        "addUser": "User does not have permission to add users to the group",
+        "setAdmin": "User does not have permission to manage group admins",
+        "setAccess": "User does not have permission to manage group access",
+        "delete": "User does not have permission to delete the group",
+        "setName": "User does not have permission to change the group name",
+        "createSplit": "User does not have permission to create splits in the group",
+        "deleteSplit": "User does not have permission to delete this split",
+        "editSplit": "User does not have permission to edit this split",
+        "restoreSplit": "User does not have permission to restore this split",
+        "joinLink": {
+          "create": "User does not have permission to create join links",
+          "delete": "User does not have permission to delete join links"
+        }
+      }
+    },
+    "notFound": {
+      "group": "Group not found",
+      "user": "User not found",
+      "split": "Split not found",
+      "joinLink": "Join link not found"
+    },
+    "split": {
+      "sumOfChangesMustBeZero": "Sum of changes must be equal to zero",
+      "payerNotInTransaction": "Payer must be included in the transaction",
+      "payerMustGetBackSumOthersLose": "Payer must get back an equal amount to the sum others lose",
+      "totalValueMustBePositive": "Total value must be greater than zero"
+    },
+    "group": {
+      "userAlreadyInGroup": "User is already a member of the group",
+      "userNotInGroup": "User is not a member of the group",
+      "joinLinkAlreadyExists": "A join link already exists for this group"
+    }
+  },
+  "unknownError": "Unknown error",
   "groupsText": "Groups",
-  "hiddenGroupsText": "Hidden Groups"
+  "hiddenGroupsText": "Hidden Groups",
+  "splitValidation": {
+    "atLeastTwoEntries": "At least two entries are required",
+    "youNeedToFillBothFields": "You need to fill both fields in the row",
+    "amountsMustBeNumbers": "Amounts must be numbers",
+    "totalMustBeGreaterThan0": "Total must be greater than 0",
+    "titleIsRequired": "Title is required",
+    "titleIsTooLong": "Title is too long",
+    "thePayerDataMustBeFilledIn": "The payer data must be filled in",
+    "duplicateEmailsAreNotAllowed": "Duplicate e-mails are not allowed",
+    "amountsCannotBeNegative": "Amounts cannot be negative",
+    "payerNotFound": "Payer not found",
+    "userNotFound": "User not found",
+    "userWithEmailNotFound": "User with e-mail {email} not found"
+  }
 }
+

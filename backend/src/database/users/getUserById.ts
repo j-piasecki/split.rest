@@ -12,7 +12,7 @@ export async function getUserById(
   ).rows
 
   if (rows.length === 0) {
-    throw new NotFoundException('notFound.user')
+    throw new NotFoundException('api.notFound.user')
   }
 
   return {

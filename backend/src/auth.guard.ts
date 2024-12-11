@@ -21,14 +21,14 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request)
 
     if (!token) {
-      throw new UnauthorizedException('auth.missingToken')
+      throw new UnauthorizedException('api.auth.missingToken')
     }
 
     const tokenData = jwt.decode(token, { complete: true })
     const certificates = await this.getTokenCertificates()
 
     if (!tokenData) {
-      throw new UnauthorizedException('auth.invalidToken')
+      throw new UnauthorizedException('api.auth.invalidToken')
     }
 
     jwt.verify(
@@ -37,14 +37,14 @@ export class AuthGuard implements CanActivate {
       { algorithms: [tokenData.header.alg as jwt.Algorithm] },
       (err, decoded: jwt.JwtPayload) => {
         if (err) {
-          throw new UnauthorizedException('auth.expiredToken')
+          throw new UnauthorizedException('api.auth.expiredToken')
         }
 
         if (
           decoded.aud !== 'split-6ed94' ||
           decoded.iss !== 'https://securetoken.google.com/split-6ed94'
         ) {
-          throw new UnauthorizedException('auth.invalidToken')
+          throw new UnauthorizedException('api.auth.invalidToken')
         }
 
         request['user'] = decoded

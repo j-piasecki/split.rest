@@ -66,7 +66,7 @@ export class AppController {
   @Post('createOrUpdateUser')
   async createOrUpdateUser(@Body() user: Partial<User>) {
     if (!isUser(user)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.createOrUpdateUser(user)
@@ -76,7 +76,7 @@ export class AppController {
   @Post('createGroup')
   async createGroup(@Req() request: Request, @Body() args: Partial<CreateGroupArguments>) {
     if (!isCreateGroupArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.createGroup(request.user.sub, args)
@@ -86,7 +86,7 @@ export class AppController {
   @Post('addUserToGroup')
   async addUserToGroup(@Req() request: Request, @Body() args: Partial<AddUserToGroupArguments>) {
     if (!isAddUserToGroupArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.addUserToGroup(request.user.sub, args)
@@ -96,7 +96,7 @@ export class AppController {
   @Post('createSplit')
   async createSplit(@Req() request: Request, @Body() args: Partial<CreateSplitArguments>) {
     if (!isCreateSplitArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.createSplit(request.user.sub, args)
@@ -106,7 +106,7 @@ export class AppController {
   @Delete('deleteSplit')
   async deleteSplit(@Req() request: Request, @Body() args: Partial<DeleteSplitArguments>) {
     if (!isDeleteSplitArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.deleteSplit(request.user.sub, args)
@@ -116,7 +116,7 @@ export class AppController {
   @Post('restoreSplit')
   async restoreSplit(@Req() request: Request, @Body() args: Partial<RestoreSplitArguments>) {
     if (!isRestoreSplitArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.restoreSplit(request.user.sub, args)
@@ -126,7 +126,7 @@ export class AppController {
   @Post('updateSplit')
   async updateSplit(@Req() request: Request, @Body() args: Partial<UpdateSplitArguments>) {
     if (!isUpdateSplitArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.updateSplit(request.user.sub, args)
@@ -136,7 +136,7 @@ export class AppController {
   @Post('setGroupAccess')
   async setGroupAccess(@Req() request: Request, @Body() args: Partial<SetGroupAccessArguments>) {
     if (!isSetGroupAccessArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.setGroupAccess(request.user.sub, args)
@@ -146,7 +146,7 @@ export class AppController {
   @Post('setGroupAdmin')
   async setGroupAdmin(@Req() request: Request, @Body() args: Partial<SetGroupAdminArguments>) {
     if (!isSetGroupAdminArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.setGroupAdmin(request.user.sub, args)
@@ -156,7 +156,7 @@ export class AppController {
   @Post('setGroupHidden')
   async setGroupHidden(@Req() request: Request, @Body() args: Partial<SetGroupHiddenArguments>) {
     if (!isSetGroupHiddenArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.setGroupHidden(request.user.sub, args)
@@ -166,7 +166,7 @@ export class AppController {
   @Get('getGroupMembers')
   async getGroupMembers(@Req() request: Request, @Query() args: Partial<GetGroupMembersArguments>) {
     if (!isGetGroupMembersArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.getGroupMembers(request.user.sub, args)
@@ -176,7 +176,7 @@ export class AppController {
   @Get('getUserGroups')
   async getUserGroups(@Req() request: Request, @Query() args: Partial<GetUserGroupsArguments>) {
     if (!isGetUserGroupsArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.getUserGroups(request.user.sub, args)
@@ -186,7 +186,7 @@ export class AppController {
   @Get('getGroupSplits')
   async getGroupSplits(@Req() request: Request, @Query() args: Partial<GetGroupSplitsArguments>) {
     if (!isGetGroupSplitsArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.getGroupSplits(request.user.sub, args)
@@ -196,7 +196,7 @@ export class AppController {
   @Get('getUserByEmail')
   async getUserByEmail(@Req() request: Request, @Query() args: GetUserByEmailArguments) {
     if (!isGetUserByEmailArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.getUserByEmail(request.user.sub, args)
@@ -206,7 +206,7 @@ export class AppController {
   @Get('getUserById')
   async getUserById(@Req() request: Request, @Query() args: GetUserByIdArguments) {
     if (!isGetUserByIdArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.getUserById(request.user.sub, args)
@@ -216,7 +216,7 @@ export class AppController {
   @Get('getGroupInfo')
   async getGroupInfo(@Req() request: Request, @Query() args: GetGroupInfoArguments) {
     if (!isGetGroupInfoArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.getGroupInfo(request.user.sub, args)
@@ -229,7 +229,7 @@ export class AppController {
     @Query() args: GetGroupMembersAutocompletionsArguments
   ) {
     if (!isGetGroupMembersAutocompletionsArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.getGroupMembersAutocompletions(request.user.sub, args)
@@ -239,7 +239,7 @@ export class AppController {
   @Get('getSplitInfo')
   async getSplitInfo(@Req() request: Request, @Query() args: GetSplitInfoArguments) {
     if (!isGetSplitInfoArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.getSplitInfo(request.user.sub, args)
@@ -255,7 +255,7 @@ export class AppController {
     }
 
     if (!isGetBalancesArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.getBalances(request.user.sub, args)
@@ -265,7 +265,7 @@ export class AppController {
   @Delete('deleteGroup')
   async deleteGroup(@Req() request: Request, @Body() args: Partial<DeleteGroupArguments>) {
     if (!isDeleteGroupArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.deleteGroup(request.user.sub, args)
@@ -275,7 +275,7 @@ export class AppController {
   @Post('setGroupName')
   async setGroupName(@Req() request: Request, @Body() args: Partial<SetGroupNameArguments>) {
     if (!isSetGroupNameArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.setGroupName(request.user.sub, args)
@@ -285,7 +285,7 @@ export class AppController {
   @Post('joinGroupByLink')
   async joinGroupByLink(@Req() request: Request, @Body() args: Partial<JoinGroupByLinkArguments>) {
     if (!isJoinGroupByLinkArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.joinGroupByLink(request.user.sub, args)
@@ -298,7 +298,7 @@ export class AppController {
     @Query() args: GetGroupMetadataByLinkArguments
   ) {
     if (!isGetGroupMetadataByLinkArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.getGroupMetadataByLink(args)
@@ -311,7 +311,7 @@ export class AppController {
     @Body() args: Partial<CreateGroupJoinLinkArguments>
   ) {
     if (!isCreateGroupJoinLinkArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.createGroupJoinLink(request.user.sub, args)
@@ -324,7 +324,7 @@ export class AppController {
     @Body() args: Partial<DeleteGroupJoinLinkArguments>
   ) {
     if (!isDeleteGroupJoinLinkArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.deleteGroupJoinLink(request.user.sub, args)
@@ -337,7 +337,7 @@ export class AppController {
     @Query() args: Partial<GetGroupJoinLinkArguments>
   ) {
     if (!isGetGroupJoinLinkArguments(args)) {
-      throw new BadRequestException('invalidArguments')
+      throw new BadRequestException('api.invalidArguments')
     }
 
     return await this.appService.getGroupJoinLink(request.user.sub, args)

@@ -1,19 +1,18 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import { apiErrors, translation } from 'shared'
+import { translation } from 'shared'
 
 export const defaultNS = 'translation'
 export const resources = {
   en: {
     translation: translation,
-    apiErrors: apiErrors,
   },
 }
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'en',
   debug: true,
-  ns: ['translation', 'apiErrors'],
+  ns: ['translation'],
   supportedLngs: ['en'],
   resources,
   defaultNS,

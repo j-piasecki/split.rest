@@ -11,7 +11,7 @@ export async function getGroupJoinLink(
   args: GetGroupJoinLinkArguments
 ): Promise<GroupJoinLink> {
   if (!(await isUserGroupAdmin(pool, args.groupId, callerId))) {
-    throw new ForbiddenException('insufficientPermissions.group.joinLink.create')
+    throw new ForbiddenException('api.insufficientPermissions.group.joinLink.create')
   }
 
   const { rows } = await pool.query(
@@ -20,7 +20,7 @@ export async function getGroupJoinLink(
   )
 
   if (rows.length === 0) {
-    throw new NotFoundException('notFound.joinLink')
+    throw new NotFoundException('api.notFound.joinLink')
   }
 
   return {

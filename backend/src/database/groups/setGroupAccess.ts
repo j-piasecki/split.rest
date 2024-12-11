@@ -12,15 +12,15 @@ export async function setGroupAccess(pool: Pool, callerId: string, args: SetGrou
     await client.query('BEGIN')
 
     if (await isGroupDeleted(client, args.groupId)) {
-      throw new NotFoundException('notFound.group')
+      throw new NotFoundException('api.notFound.group')
     }
 
     if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new ForbiddenException('insufficientPermissions.group.setAccess')
+      throw new ForbiddenException('api.insufficientPermissions.group.setAccess')
     }
 
     if (!(await userExists(client, args.userId))) {
-      throw new NotFoundException('notFound.user')
+      throw new NotFoundException('api.notFound.user')
     }
 
     if (args.access) {

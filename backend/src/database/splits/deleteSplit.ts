@@ -14,15 +14,15 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
     await client.query('BEGIN')
 
     if (await isGroupDeleted(client, args.groupId)) {
-      throw new NotFoundException('notFound.group')
+      throw new NotFoundException('api.notFound.group')
     }
 
     if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
-      throw new ForbiddenException('insufficientPermissions.group.deleteSplit')
+      throw new ForbiddenException('api.insufficientPermissions.group.deleteSplit')
     }
 
     if (!(await splitExists(client, args.groupId, args.splitId))) {
-      throw new NotFoundException('notFound.split')
+      throw new NotFoundException('api.notFound.split')
     }
 
     const splitInfo = (
@@ -37,7 +37,7 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
       splitInfo.paid_by !== callerId &&
       !(await isUserGroupAdmin(client, args.groupId, callerId))
     ) {
-      throw new ForbiddenException('insufficientPermissions.group.deleteSplit')
+      throw new ForbiddenException('api.insufficientPermissions.group.deleteSplit')
     }
 
     const splitParticipants = (

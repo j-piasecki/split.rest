@@ -13,15 +13,15 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
     await client.query('BEGIN')
 
     if (await isGroupDeleted(client, args.groupId)) {
-      throw new NotFoundException('notFound.group')
+      throw new NotFoundException('api.notFound.group')
     }
 
     if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
-      throw new ForbiddenException('insufficientPermissions.group.access')
+      throw new ForbiddenException('api.insufficientPermissions.group.access')
     }
 
     if (!(await splitExists(client, args.groupId, args.splitId))) {
-      throw new NotFoundException('notFound.split')
+      throw new NotFoundException('api.notFound.split')
     }
 
     const splitInfo = (
@@ -36,7 +36,7 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
       splitInfo.paid_by !== callerId &&
       !(await isUserGroupAdmin(client, args.groupId, callerId))
     ) {
-      throw new ForbiddenException('insufficientPermissions.group.restoreSplit')
+      throw new ForbiddenException('api.insufficientPermissions.group.restoreSplit')
     }
 
     const splitParticipants = (

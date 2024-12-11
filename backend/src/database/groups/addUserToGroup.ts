@@ -15,19 +15,19 @@ export async function addUserToGroup(pool: Pool, callerId: string, args: AddUser
     await client.query('BEGIN')
 
     if (await isGroupDeleted(client, args.groupId)) {
-      throw new NotFoundException('notFound.group')
+      throw new NotFoundException('api.notFound.group')
     }
 
     if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new ForbiddenException('insufficientPermissions.group.addUser')
+      throw new ForbiddenException('api.insufficientPermissions.group.addUser')
     }
 
     if (!(await userExists(client, args.userId))) {
-      throw new NotFoundException('notFound.user')
+      throw new NotFoundException('api.notFound.user')
     }
 
     if (await isUserMemberOfGroup(client, args.groupId, args.userId)) {
-      throw new ConflictException('group.userAlreadyInGroup')
+      throw new ConflictException('api.group.userAlreadyInGroup')
     }
 
     await client.query(

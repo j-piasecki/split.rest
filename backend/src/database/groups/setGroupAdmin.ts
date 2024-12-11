@@ -13,11 +13,11 @@ export async function setGroupAdmin(pool: Pool, callerId: string, args: SetGroup
     await client.query('BEGIN')
 
     if (await isGroupDeleted(client, args.groupId)) {
-      throw new NotFoundException('notFound.group')
+      throw new NotFoundException('api.notFound.group')
     }
 
     if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new ForbiddenException('insufficientPermissions.group.setAdmin')
+      throw new ForbiddenException('api.insufficientPermissions.group.setAdmin')
     }
 
     if (!(await userExists(client, args.userId))) {

@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus } from '@nestjs/common'
-import { ApiErrorPayload, LanguageApiErrorKey } from 'shared'
+import { ApiErrorPayload, LanguageTranslationKey } from 'shared'
 
 export class ForbiddenException extends HttpException {
-  constructor(message: LanguageApiErrorKey) {
+  constructor(message: LanguageTranslationKey) {
     const error: ApiErrorPayload = {
       statusCode: HttpStatus.FORBIDDEN,
       message,

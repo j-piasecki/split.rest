@@ -11,11 +11,11 @@ export async function getGroupInfo(
   args: GetGroupInfoArguments
 ): Promise<GroupInfo | null> {
   if (await isGroupDeleted(pool, args.groupId)) {
-    throw new NotFoundException('notFound.group')
+    throw new NotFoundException('api.notFound.group')
   }
 
   if (!(await isUserMemberOfGroup(pool, args.groupId, callerId))) {
-    throw new ForbiddenException('group.userNotInGroup')
+    throw new ForbiddenException('api.group.userNotInGroup')
   }
 
   const row = (
