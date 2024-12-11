@@ -2,11 +2,13 @@ import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { TextInputWithUserSuggestions } from '@components/TextInputWithUserSuggestions'
 import { getBalances } from '@database/getBalances'
+import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
-import { UserWithBalanceChange } from 'shared'
+import { TranslatableError, UserWithBalanceChange } from 'shared'
 
 interface FormProps {
   groupId: number
@@ -15,9 +17,10 @@ interface FormProps {
 
 function Form({ groupId, setResult }: FormProps) {
   const theme = useTheme()
+  const { t } = useTranslation()
   const [emails, setEmails] = useState<string[]>([''])
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useTranslatedError()
 
   function cleanupEmails() {
     setEmails((prev) => {
@@ -36,7 +39,7 @@ function Form({ groupId, setResult }: FormProps) {
     setError(null)
 
     if (emails.length < 2) {
-      setError('You need to add at least 2 users')
+      setError(new TranslatableError('roulette.youNeedToAddAtLeastTwoUsers'))
       return
     }
 
@@ -48,8 +51,7 @@ function Form({ groupId, setResult }: FormProps) {
       )
       setResult(balances)
     } catch (e) {
-      // @ts-expect-error wtf
-      setError(e?.message)
+      setError(e)
     } finally {
       setLoading(false)
     }
@@ -93,7 +95,7 @@ function Form({ groupId, setResult }: FormProps) {
         ))}
       </ScrollView>
 
-      {!loading && <Button title='Submit' onPress={submit} />}
+      {!loading && <Button title={t('roulette.submit')} onPress={submit} />}
       {loading && <ActivityIndicator color={theme.colors.onSurface} />}
       {error && <Text style={{ color: 'red', marginTop: 8 }}>{error}</Text>}
     </View>
@@ -139,10 +141,11 @@ function Result({ result }: { result: UserWithBalanceChange[] }) {
 
 export default function Roulette() {
   const { id } = useLocalSearchParams()
+  const { t } = useTranslation()
   const [result, setResult] = useState<UserWithBalanceChange[] | null>(null)
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title='Roulette' maxWidth={400}>
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.roulette')} maxWidth={400}>
       {result === null && <Form groupId={Number(id)} setResult={setResult} />}
       {result !== null && <Result result={result} />}
     </ModalScreen>

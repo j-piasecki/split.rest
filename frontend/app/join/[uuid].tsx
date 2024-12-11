@@ -8,10 +8,12 @@ import { useAuth } from '@utils/auth'
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
+import { useTranslation } from 'react-i18next'
 
 function JoinForm() {
   const theme = useTheme()
   const router = useRouter()
+  const { t } = useTranslation()
   const { uuid } = useLocalSearchParams()
   const { data: group, isLoading: isLoadingGroup } = useGroupMetadataByLink(uuid as string)
   const { mutateAsync: joinGroup, isPending: isJoiningGroup } = useJoinGroupByLink()
@@ -23,7 +25,7 @@ function JoinForm() {
       {!isLoadingGroup && group && (
         <>
           <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
-            You've been invited to join
+            {t('joinGroup.youveBeenInvitedToJoin')}
           </Text>
           <Text
             style={{
@@ -36,15 +38,17 @@ function JoinForm() {
             {group.name}
           </Text>
           <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
-            {group.memberCount} members{' '}
-            <Text style={{ color: theme.colors.outline }}>({group.currency})</Text>
+            {t('joinGroup.memberCount', { count: group.memberCount })}
+            <Text style={{ color: theme.colors.outline }}>
+              {t('joinGroup.currency', { currency: group.currency })}
+            </Text>
           </Text>
           <View style={{ flexDirection: 'row', paddingTop: 24 }}>
             {isJoiningGroup ? (
               <ActivityIndicator color={theme.colors.primary} />
             ) : (
               <Button
-                title='Join'
+                title={t('joinGroup.join')}
                 onPress={() => {
                   joinGroup(uuid as string)
                     .then(() => {
@@ -66,7 +70,7 @@ function JoinForm() {
       )}
       {!isLoadingGroup && !group && (
         <Text style={{ color: theme.colors.onSurface, fontSize: 20, fontWeight: 'bold' }}>
-          No group found for this join link
+          {t('joinGroup.noGroupFoundForThisJoinLink')}
         </Text>
       )}
     </View>

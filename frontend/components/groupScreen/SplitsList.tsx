@@ -1,6 +1,7 @@
 import { SplitRow } from './SplitRow'
 import { useGroupSplits } from '@hooks/database/useGroupSplits'
 import { useTheme } from '@styling/theme'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
@@ -10,6 +11,7 @@ export interface SplitsListProps {
 
 export function SplitsList({ info }: SplitsListProps) {
   const theme = useTheme()
+  const { t } = useTranslation()
   const { splits, isLoading, fetchNextPage, isFetchingNextPage } = useGroupSplits(info?.id)
 
   if (!info) {
@@ -24,7 +26,7 @@ export function SplitsList({ info }: SplitsListProps) {
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             {isLoading && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
             {!isLoading && (
-              <Text style={{ fontSize: 20, color: theme.colors.outline }}>No splits</Text>
+              <Text style={{ fontSize: 20, color: theme.colors.outline }}>{t('noSplits')}</Text>
             )}
           </View>
         }

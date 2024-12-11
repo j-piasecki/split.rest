@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { auth } from '@utils/firebase'
 import { ApiError, makeRequest } from '@utils/makeApiRequest'
-import { GetGroupJoinLinkArguments, GroupJoinLink } from 'shared'
+import { GetGroupJoinLinkArguments, GroupJoinLink, TranslatableError } from 'shared'
 
 export function useGroupJoinLink(groupId: number) {
   if (!auth.currentUser) {
-    throw new Error('You must be logged in to get group join link')
+    throw new TranslatableError('api.mustBeLoggedIn')
   }
 
   return useQuery({
@@ -21,7 +21,7 @@ export function useGroupJoinLink(groupId: number) {
         )
 
         if (info === null) {
-          throw new Error('Group join link not found')
+          throw new TranslatableError('api.notFound.joinLink')
         }
 
         return info

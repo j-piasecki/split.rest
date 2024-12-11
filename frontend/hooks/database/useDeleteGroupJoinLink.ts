@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { auth } from '@utils/firebase'
 import { makeRequest } from '@utils/makeApiRequest'
-import { DeleteGroupJoinLinkArguments } from 'shared'
+import { DeleteGroupJoinLinkArguments, TranslatableError } from 'shared'
 
 export function useDeleteGroupJoinLink() {
   if (!auth.currentUser) {
-    throw new Error('You must be logged in to delete a group join link')
+    throw new TranslatableError('api.mustBeLoggedIn')
   }
 
   const queryClient = useQueryClient()

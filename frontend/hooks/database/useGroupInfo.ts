@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { auth } from '@utils/firebase'
 import { makeRequest } from '@utils/makeApiRequest'
-import { GetGroupInfoArguments, GroupInfo } from 'shared'
+import { GetGroupInfoArguments, GroupInfo, TranslatableError } from 'shared'
 
 export function useGroupInfo(id: number) {
   if (!auth.currentUser) {
@@ -15,7 +15,7 @@ export function useGroupInfo(id: number) {
       const info = await makeRequest<GetGroupInfoArguments, GroupInfo>('GET', 'getGroupInfo', args)
 
       if (info === null) {
-        throw new Error('Group info not found')
+        throw new TranslatableError('api.notFound.group')
       }
 
       return info

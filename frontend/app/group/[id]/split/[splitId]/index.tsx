@@ -9,6 +9,7 @@ import { useAuth } from '@utils/auth'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
 import { GroupInfo, SplitWithUsers, User, UserWithBalanceChange } from 'shared'
 
@@ -71,6 +72,7 @@ function SplitInfo({
   const theme = useTheme()
   const user = useAuth()
   const router = useRouter()
+  const { t } = useTranslation()
   const [createdBy, setCreatedBy] = useState<User | null>(null)
   const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)!
 
@@ -96,7 +98,7 @@ function SplitInfo({
       <Text
         style={{ color: theme.colors.onSurface, fontSize: 12, opacity: 0.7, textAlign: 'center' }}
       >
-        Created by{' '}
+        {t('splitInfo.createdBy')}{' '}
         <Text style={{ color: theme.colors.primary }}>
           {createdBy?.name} ({createdBy?.email})
         </Text>
@@ -120,7 +122,7 @@ function SplitInfo({
         }}
       >
         <Text style={{ color: theme.colors.primary }}>{paidBy.email} </Text>
-        has paid
+        {t('splitInfo.hasPaid')}
         <Text style={{ color: theme.colors.primary }}> {splitInfo.total} </Text>
         {groupInfo?.currency}
       </Text>
@@ -130,7 +132,7 @@ function SplitInfo({
         splitInfo.paidById === user?.id) && (
         <View style={{ marginBottom: 32 }}>
           <Button
-            title='Edit'
+            title={t('splitInfo.edit')}
             leftIcon={
               <MaterialIcons name='edit-note' size={24} color={theme.colors.onPrimaryContainer} />
             }
@@ -145,11 +147,12 @@ function SplitInfo({
 export default function SplitInfoScreen() {
   const theme = useTheme()
   const { id, splitId } = useLocalSearchParams()
+  const { t } = useTranslation()
   const { data: groupInfo } = useGroupInfo(Number(id))
   const { data: splitInfo } = useSplitInfo(Number(id), Number(splitId))
 
   return (
-    <Modal title='Split info' returnPath={`/group/${id}`} maxWidth={500}>
+    <Modal title={t('screenName.splitInfo')} returnPath={`/group/${id}`} maxWidth={500}>
       {splitInfo === undefined && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size='small' color={theme.colors.onSurface} />
@@ -159,7 +162,7 @@ export default function SplitInfoScreen() {
       {splitInfo === null && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 20 }}>
-            Split not found
+            {t('splitInfo.splitNotFound')}
           </Text>
         </View>
       )}

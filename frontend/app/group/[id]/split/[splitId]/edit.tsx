@@ -3,16 +3,18 @@ import { FormData, SplitForm } from '@components/SplitForm'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useSplitInfo } from '@hooks/database/useSplitInfo'
 import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
+import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Text, View } from 'react-native'
 import { BalanceChange, GroupInfo, SplitWithUsers } from 'shared'
 
 function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: SplitWithUsers }) {
   const router = useRouter()
-  const [error, setError] = useState('')
+  const [error, setError] = useTranslatedError()
   const [waiting, setWaiting] = useState(false)
   const { mutateAsync: updateSplit } = useUpdateSplit()
 
@@ -33,7 +35,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
 
       router.replace(`/group/${groupInfo.id}`)
     } catch (error) {
-      setError((error as Error).message)
+      setError(error)
     } finally {
       setWaiting(false)
     }
@@ -70,11 +72,12 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
 export default function Modal() {
   const { id, splitId } = useLocalSearchParams()
   const theme = useTheme()
+  const { t } = useTranslation()
   const { data: groupInfo } = useGroupInfo(Number(id))
   const { data: splitInfo } = useSplitInfo(Number(id), Number(splitId))
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title='Edit split' maxWidth={500}>
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.editSplit')} maxWidth={500}>
       {(!groupInfo || !splitInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={theme.colors.onSurface} />

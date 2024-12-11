@@ -2,17 +2,19 @@ import ModalScreen from '@components/ModalScreen'
 import { FormData, SplitForm } from '@components/SplitForm'
 import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Text, View } from 'react-native'
 import { BalanceChange, GroupInfo, User } from 'shared'
 
 function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
   const router = useRouter()
-  const [error, setError] = useState('')
+  const [error, setError] = useTranslatedError()
   const [waiting, setWaiting] = useState(false)
   const { mutateAsync: createSplit } = useCreateSplit()
 
@@ -37,7 +39,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
         router.replace(`/group/${groupInfo.id}`)
       }
     } catch (error) {
-      setError(error as string)
+      setError(error)
     } finally {
       setWaiting(false)
     }
@@ -65,11 +67,12 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
 export default function Modal() {
   const user = useAuth()
   const theme = useTheme()
+  const { t } = useTranslation()
   const { id } = useLocalSearchParams()
   const { data: groupInfo } = useGroupInfo(Number(id))
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title='Add split' maxWidth={500}>
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.addSplit')} maxWidth={500}>
       {(!user || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={theme.colors.onSurface} />

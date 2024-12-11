@@ -1,6 +1,6 @@
 import { FormData } from '@components/SplitForm'
 import { getUserByEmail } from '@database/getUserByEmail'
-import { BalanceChange } from 'shared'
+import { BalanceChange, TranslatableError } from 'shared'
 
 export interface ValidationResult {
   payerId: string
@@ -14,7 +14,7 @@ export async function validateSplitForm({
   entries,
 }: FormData): Promise<ValidationResult> {
   if (entries.length < 2) {
-    throw 'At least two entries are required'
+    throw new TranslatableError('splitValidation.atLeastTwoEntries')
   }
 
   for (const { email, amount } of entries) {
@@ -23,35 +23,35 @@ export async function validateSplitForm({
     }
 
     if (email === '' || amount === '') {
-      throw 'You need to fill both fields in the row'
+      throw new TranslatableError('splitValidation.youNeedToFillBothFields')
     }
   }
 
   const sumToSave = entries.reduce((acc, entry) => acc + Number(entry.amount), 0)
 
   if (Number.isNaN(sumToSave)) {
-    throw 'Amounts must be numbers'
+    throw new TranslatableError('splitValidation.amountsMustBeNumbers')
   }
 
   if (sumToSave < 0.01) {
-    throw 'Total must be greater than 0'
+    throw new TranslatableError('splitValidation.totalMustBeGreaterThan0')
   }
 
   if (!title) {
-    throw 'Title is required'
+    throw new TranslatableError('splitValidation.titleIsRequired')
   }
 
   if (title.length > 512) {
-    throw 'Title is too long'
+    throw new TranslatableError('splitValidation.titleIsTooLong')
   }
 
   if (entries.find((entry) => entry.email === paidBy) === undefined) {
-    throw 'The payer data must be filled in'
+    throw new TranslatableError('splitValidation.thePayerDataMustBeFilledIn')
   }
 
   const emails = entries.map((entry) => entry.email)
   if (new Set(emails).size !== emails.length) {
-    throw 'Duplicate e-mails are not allowed'
+    throw new TranslatableError('splitValidation.duplicateEmailsAreNotAllowed')
   }
 
   let payerId: string | undefined
@@ -63,11 +63,11 @@ export async function validateSplitForm({
       const userData = await getUserByEmail(entry.email)
 
       if (!userData) {
-        throw 'User ' + entry.email + ' not found'
+        throw new TranslatableError('splitValidation.userWithEmailNotFound', { email: entry.email })
       }
 
       if (Number(entry.amount) < 0) {
-        throw 'Amounts cannot be negative'
+        throw new TranslatableError('splitValidation.amountsCannotBeNegative')
       }
 
       if (entry.email === paidBy) {
@@ -82,11 +82,11 @@ export async function validateSplitForm({
   )
 
   if (balanceChange.findIndex((change) => change === undefined) !== -1) {
-    throw 'User not found'
+    throw new TranslatableError('splitValidation.userNotFound')
   }
 
   if (!payerId) {
-    throw 'Payer not found'
+    throw new TranslatableError('splitValidation.payerNotFound')
   }
 
   return {

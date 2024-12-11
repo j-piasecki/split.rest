@@ -6,7 +6,7 @@ import { FirebaseAuthTypes } from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { usePathname, useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { User } from 'shared'
+import { TranslatableError, User } from 'shared'
 
 GoogleSignin.configure({
   webClientId: '461804772528-ci5dbjajrcrlv2lsgdap364ki2r2nnkb.apps.googleusercontent.com',
@@ -76,7 +76,7 @@ export async function login() {
   // Try the new style of google-sign in result, from v13+ of that module
   const idToken = signInResult.data?.idToken
   if (!idToken) {
-    throw new Error('No ID token found')
+    throw new TranslatableError('api.auth.missingToken')
   }
 
   // Create a Google credential with the token

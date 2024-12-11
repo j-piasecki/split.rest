@@ -4,6 +4,7 @@ import { useTheme } from '@styling/theme'
 import { logout, useAuth } from '@utils/auth'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { Link } from 'expo-router'
+import { useTranslation } from 'react-i18next'
 import { Image, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -11,7 +12,8 @@ export interface HeaderProps {
   title?: string
 }
 
-export default function Header({ title = 'Split.rest' }: HeaderProps) {
+export default function Header(props: HeaderProps) {
+  const { t } = useTranslation()
   const theme = useTheme()
   const user = useAuth()
   const insets = useSafeAreaInsets()
@@ -36,13 +38,13 @@ export default function Header({ title = 'Split.rest' }: HeaderProps) {
             color: theme.colors.primary,
           }}
         >
-          {title}
+          {props.title || t('appName')}
         </Text>
       </Link>
 
       <View style={{ flexDirection: 'row', gap: 16 }}>
         <Button
-          title='Logout'
+          title={t('signOut')}
           onPress={logout}
           rightIcon={
             <MaterialIcons name='logout' size={20} color={theme.colors.onPrimaryContainer} />

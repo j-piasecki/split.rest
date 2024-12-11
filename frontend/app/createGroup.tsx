@@ -2,29 +2,32 @@ import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
 import { useCreateGroup } from '@hooks/database/useCreateGroup'
+import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Text, View } from 'react-native'
 
 function Form() {
   const router = useRouter()
   const theme = useTheme()
+  const { t } = useTranslation()
   const [name, setName] = useState('')
   const [currency, setCurrency] = useState('PLN')
-  const [error, setError] = useState('')
+  const [error, setError] = useTranslatedError()
   const { mutateAsync: createGroup, isPending } = useCreateGroup()
 
   function handlePress() {
-    setError('')
+    setError(null)
 
     if (name === '') {
-      setError('Name cannot be empty')
+      setError(t('groupValidation.nameCannotBeEmpty'))
       return
     }
 
     if (name.length > 128) {
-      setError('Name is too long')
+      setError(t('groupValidation.nameIsTooLong'))
       return
     }
 
@@ -33,7 +36,7 @@ function Form() {
         router.navigate(`/group/${group.id}`, { withAnchor: true })
       })
       .catch((error) => {
-        setError(error.message)
+        setError(error)
       })
   }
 
@@ -70,14 +73,16 @@ function Form() {
       {!isPending && <Button title='Create' onPress={handlePress} />}
       {isPending && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
 
-      {error.length > 0 && <Text style={{ color: 'red' }}>{error}</Text>}
+      {error && <Text style={{ color: 'red' }}>{error}</Text>}
     </View>
   )
 }
 
 export default function Modal() {
+  const { t } = useTranslation()
+
   return (
-    <ModalScreen returnPath='/home' title='Create Group' maxWidth={500} maxHeight={300}>
+    <ModalScreen returnPath='/home' title={t('screenName.createGroup')} maxWidth={500} maxHeight={300}>
       <Form />
     </ModalScreen>
   )

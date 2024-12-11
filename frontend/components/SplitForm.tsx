@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
@@ -31,6 +32,7 @@ function SplitEntry({
   zIndex: number
 }) {
   const theme = useTheme()
+  const { t } = useTranslation()
 
   return (
     <View
@@ -62,7 +64,7 @@ function SplitEntry({
         style={{ flex: 4, margin: 4 }}
       />
       <TextInput
-        placeholder='Amount'
+        placeholder={t('form.amount')}
         value={String(amount)}
         keyboardType='decimal-pad'
         onChangeText={(val) => {
@@ -106,6 +108,7 @@ export function SplitForm({
   const [entries, setEntries] = useState<SplitEntryData[]>(initialEntries)
   const [title, setTitle] = useState(initialTitle ?? '')
   const [paidByIndex, setPaidByIndex] = useState(0)
+  const { t } = useTranslation()
 
   const toBePaid = useRef(0)
   const sumFromEntries = entries.reduce((acc, entry) => acc + Number(entry.amount), 0)
@@ -129,7 +132,7 @@ export function SplitForm({
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 100 }}>
         <TextInput
-          placeholder='Title'
+          placeholder={t('form.title')}
           value={title}
           onChangeText={setTitle}
           style={{ marginBottom: 8 }}
@@ -200,7 +203,7 @@ export function SplitForm({
             leftIcon={
               <MaterialIcons name='save-alt' size={24} color={theme.colors.onPrimaryContainer} />
             }
-            title='Save'
+            title={t('form.save')}
             onPress={submit}
           />
         )}

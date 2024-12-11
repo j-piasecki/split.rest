@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { GetSplitInfoArguments, SplitWithUsers } from 'shared'
+import { GetSplitInfoArguments, SplitWithUsers, TranslatableError } from 'shared'
 
 export function useSplitInfo(groupId: number, splitId: number) {
   return useQuery({
@@ -14,7 +14,7 @@ export function useSplitInfo(groupId: number, splitId: number) {
       )
 
       if (info === null) {
-        throw new Error('Split info not found')
+        throw new TranslatableError('api.notFound.split')
       }
 
       return info

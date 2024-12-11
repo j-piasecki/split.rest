@@ -1,5 +1,5 @@
 import { auth } from '@utils/firebase'
-import { ApiErrorPayload, isApiErrorPayload, LanguageTranslationKey } from 'shared'
+import { ApiErrorPayload, isApiErrorPayload, LanguageTranslationKey, TranslatableError } from 'shared'
 
 export const ENDPOINT = __DEV__ ? 'http://localhost:3000' : 'https://api.split.rest'
 
@@ -21,7 +21,7 @@ export async function makeRequest<TArgs, TReturn>(
   authRequired = true
 ) {
   if (authRequired && !auth.currentUser) {
-    throw new Error('You must be logged in to make a request')
+    throw new TranslatableError('api.mustBeLoggedIn')
   }
 
   if (__DEV__) {

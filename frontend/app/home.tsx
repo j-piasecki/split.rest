@@ -82,6 +82,7 @@ function HiddenGroupsButton({
   setShowHidden: (val: boolean) => void
 }) {
   const theme = useTheme()
+  const { t } = useTranslation()
 
   return (
     <Pressable
@@ -100,7 +101,7 @@ function HiddenGroupsButton({
           style={{ marginHorizontal: 8, fontSize: 16, color: theme.colors.onSurfaceVariant }}
           selectable={false}
         >
-          {showHidden ? 'Hide hidden groups' : 'Show hidden groups'}
+          {showHidden ? t('hideHiddenGroups') : t('showHiddenGroups')}
         </Text>
         <View style={{ borderTopWidth: 1, flex: 1, borderColor: theme.colors.onSurfaceVariant }} />
       </View>
@@ -153,7 +154,7 @@ export default function Home() {
                   onPress={() => {
                     router.navigate('/createGroup')
                   }}
-                  title='Create group'
+                  title={t('createGroup')}
                   leftIcon={
                     <Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />
                   }
@@ -179,7 +180,7 @@ export default function Home() {
             <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }}>
               <ActivityIndicator size='small' color={theme.colors.onSurface} />
               <Text style={{ textAlign: 'center', color: theme.colors.onSurface }}>
-                Loading groups
+                {t('loadingGroups')}
               </Text>
             </View>
           )}

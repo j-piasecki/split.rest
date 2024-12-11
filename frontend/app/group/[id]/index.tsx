@@ -11,6 +11,7 @@ import { useAuth } from '@utils/auth'
 import { useIsSmallScreen, useThreeBarLayout } from '@utils/dimensionUtils'
 import { useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
@@ -19,7 +20,7 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
   const threeBarLayout = useThreeBarLayout()
   const isSmallScreen = useIsSmallScreen()
   const [openedTab, setOpenedTab] = useState(0)
-
+  const { t } = useTranslation()
   useEffect(() => {
     if (threeBarLayout && openedTab === 2) {
       setOpenedTab(0)
@@ -48,7 +49,7 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
               fontSize: isSmallScreen ? 12 : 16,
             }}
           >
-            Splits
+            {t('tabs.splits')}
           </Text>
         </View>
       ),
@@ -75,7 +76,7 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
               fontSize: isSmallScreen ? 12 : 16,
             }}
           >
-            Members
+            {t('tabs.members')}
           </Text>
         </View>
       ),
@@ -105,7 +106,7 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
               fontSize: isSmallScreen ? 12 : 16,
             }}
           >
-            Group
+            {t('tabs.group')}
           </Text>
         </View>
       ),
@@ -125,6 +126,7 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
 
 export function GroupScreen() {
   const theme = useTheme()
+  const { t } = useTranslation()
   const threeBarLayout = useThreeBarLayout()
   const { id } = useLocalSearchParams()
   const groupId = Number(id as string)
@@ -142,7 +144,7 @@ export function GroupScreen() {
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
           <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
           <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
-            Could not load group info
+            {t('groupInfo.couldNotLoad')}
           </Text>
         </View>
       </View>

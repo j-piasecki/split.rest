@@ -7,6 +7,7 @@ import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Image, Pressable, Text, View } from 'react-native'
 import { GroupInfo, Member } from 'shared'
 
@@ -20,6 +21,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
   const theme = useTheme()
   const isSmallScreen = useIsSmallScreen()
   const contextMenuRef = useRef<ContextMenuRef>(null)
+  const { t } = useTranslation()
   const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(info.id, member.id)
   const { mutate: setGroupAdminMutation } = useSetGroupAdminMutation(info.id, member.id)
 
@@ -31,13 +33,13 @@ export function MemberRow({ member, info }: MemberRowProps) {
       disabled={contextMenuDisabled}
       items={[
         {
-          label: member.hasAccess ? 'Revoke access' : 'Give access',
+          label: member.hasAccess ? t('member.revokeAccess') : t('member.giveAccess'),
           onPress: () => {
             setGroupAccessMutation(!member.hasAccess)
           },
         },
         {
-          label: member.isAdmin ? 'Revoke admin' : 'Make admin',
+          label: member.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin'),
           onPress: () => {
             setGroupAdminMutation(!member.isAdmin)
           },

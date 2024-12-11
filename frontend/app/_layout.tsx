@@ -7,6 +7,7 @@ import { queryClient } from '@utils/queryClient'
 import { useLocales } from 'expo-localization'
 import { Stack, usePathname } from 'expo-router'
 import React, { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import 'utils/firebase'
 
@@ -16,6 +17,7 @@ function Content() {
   const theme = useTheme()
   const isSmallScreen = useIsSmallScreen()
   const locales = useLocales()
+  const { t } = useTranslation()
 
   useEffect(() => {
     i18n.changeLanguage(locales[0].languageCode!)
@@ -49,25 +51,25 @@ function Content() {
         <Stack.Screen
           name='createGroup'
           options={{
-            title: 'Split - create group',
+            title: t('screenName.createGroup'),
             ...modalOptions,
           }}
         />
-        <Stack.Screen name='group/[id]/index' options={{ title: 'Group' }} />
-        <Stack.Screen name='group/[id]/addUser' options={{ title: 'Add user', ...modalOptions }} />
+        <Stack.Screen name='group/[id]/index' options={{ title: t('screenName.group') }} />
+        <Stack.Screen name='group/[id]/addUser' options={{ title: t('screenName.addUser'), ...modalOptions }} />
         <Stack.Screen
           name='group/[id]/addSplit'
           options={{ title: 'Add split', ...modalOptions }}
         />
-        <Stack.Screen name='group/[id]/roulette' options={{ title: 'Roulette', ...modalOptions }} />
-        <Stack.Screen name='group/[id]/settings' options={{ title: 'Settings', ...modalOptions }} />
+        <Stack.Screen name='group/[id]/roulette' options={{ title: t('screenName.roulette'), ...modalOptions }} />
+        <Stack.Screen name='group/[id]/settings' options={{ title: t('screenName.groupSettings'), ...modalOptions }} />
         <Stack.Screen
           name='group/[id]/split/[splitId]/index'
-          options={{ title: 'Split', ...modalOptions }}
+          options={{ title: t('screenName.splitInfo'), ...modalOptions }}
         />
         <Stack.Screen
           name='group/[id]/split/[splitId]/edit'
-          options={{ title: 'Edit split', ...modalOptions }}
+          options={{ title: t('screenName.editSplit'), ...modalOptions }}
         />
       </Stack>
     </View>

@@ -1,6 +1,7 @@
 import { MemberRow } from './MemberRow'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useTheme } from '@styling/theme'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
@@ -10,6 +11,7 @@ export interface MembersListProps {
 
 export function MembersList({ info }: MembersListProps) {
   const theme = useTheme()
+  const { t } = useTranslation()
   const { members, isLoading, fetchNextPage, isFetchingNextPage } = useGroupMembers(info?.id ?? 0)
 
   if (!info) {
@@ -27,7 +29,7 @@ export function MembersList({ info }: MembersListProps) {
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             {isLoading && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
             {!isLoading && members.length === 0 && (
-              <Text style={{ fontSize: 20, color: theme.colors.outline }}>No members</Text>
+              <Text style={{ fontSize: 20, color: theme.colors.outline }}>{t('noMembers')}</Text>
             )}
           </View>
         }

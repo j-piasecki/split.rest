@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { GetGroupMetadataByLinkArguments, GroupMetadata } from 'shared'
+import { GetGroupMetadataByLinkArguments, GroupMetadata, TranslatableError } from 'shared'
 
 export function useGroupMetadataByLink(uuid: string) {
   return useQuery({
@@ -15,7 +15,7 @@ export function useGroupMetadataByLink(uuid: string) {
       )
 
       if (info === null) {
-        throw new Error('Group metadata not found')
+        throw new TranslatableError('api.notFound.group')
       }
 
       return info

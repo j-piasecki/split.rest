@@ -14,11 +14,13 @@ import * as Clipboard from 'expo-clipboard'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Pressable, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function JoinLinkManager({ info }: { info: GroupInfo }) {
   const theme = useTheme()
+  const { t } = useTranslation()
   const { data: link, isLoading: isLoadingLink } = useGroupJoinLink(info.id)
   const { mutateAsync: createJoinLink, isPending: isCreatingJoinLink } = useCreateGroupJoinLink()
   const { mutateAsync: deleteJoinLink, isPending: isDeletingJoinLink } = useDeleteGroupJoinLink()
@@ -34,7 +36,7 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
       {waiting && <ActivityIndicator color={theme.colors.primary} />}
       {!waiting && (
         <>
-          {!link && <Button title='Create join link' onPress={() => createJoinLink(info.id)} />}
+          {!link && <Button title={t('groupSettings.joinLink.create')} onPress={() => createJoinLink(info.id)} />}
           {link && (
             <View style={{ gap: 8 }}>
               <Text
@@ -45,7 +47,7 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
                   textAlign: 'center',
                 }}
               >
-                Join link
+                {t('groupSettings.joinLink.joinLink')}
               </Text>
               <View style={{ flexDirection: 'row', gap: 8 }}>
                 <TextInput
@@ -67,7 +69,7 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
                   }}
                 />
               </View>
-              <Button title='Delete link' onPress={() => deleteJoinLink(info.id)} />
+              <Button title={t('groupSettings.joinLink.delete')} onPress={() => deleteJoinLink(info.id)} />
             </View>
           )}
         </>
@@ -80,6 +82,7 @@ function Form({ info }: { info: GroupInfo }) {
   const user = useAuth()
   const theme = useTheme()
   const router = useRouter()
+  const { t } = useTranslation()
   const [name, setName] = useState(info.name)
   const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
   const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
@@ -97,7 +100,11 @@ function Form({ info }: { info: GroupInfo }) {
         paddingBottom: 32,
       }}
     >
-      <TextInput placeholder='Group name' value={name} onChangeText={setName} />
+      <TextInput
+        placeholder={t('groupSettings.groupName')}
+        value={name}
+        onChangeText={setName}
+      />
       {!waiting && (
         <>
           <JoinLinkManager info={info} />
@@ -125,13 +132,13 @@ function Form({ info }: { info: GroupInfo }) {
                   selectable={false}
                   style={{ color: theme.colors.onErrorContainer, fontWeight: 'bold', fontSize: 16 }}
                 >
-                  Delete group
+                  {t('groupSettings.deleteGroup')}
                 </Text>
               </Pressable>
             </View>
           )}
           <View>
-            <Button title='Save' onPress={() => setGroupName(name)} />
+            <Button title={t('groupSettings.save')} onPress={() => setGroupName(name)} />
           </View>
         </>
       )}
@@ -144,18 +151,21 @@ export default function Settings() {
   const { id } = useLocalSearchParams()
   const user = useAuth()
   const theme = useTheme()
+  const { t } = useTranslation()
   const { data: info } = useGroupInfo(Number(id))
 
   const isAdmin = info?.isAdmin || info?.owner === user?.id
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title='Group settings' maxWidth={400} maxHeight={500}>
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.groupSettings')} maxWidth={400} maxHeight={500}>
       {isAdmin && info && <Form info={info} />}
       {!isAdmin && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           {(!user || !info) && <ActivityIndicator color={theme.colors.primary} />}
           {user && info && (
-            <Text style={{ color: theme.colors.error }}>You are not an admin of this group</Text>
+            <Text style={{ color: theme.colors.error }}>
+              {t('groupSettings.notAnAdmin')}
+            </Text>
           )}
         </View>
       )}

@@ -8,12 +8,14 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { router } from 'expo-router'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function InfoCard({ info }: { info: GroupInfo }) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
+  const { t } = useTranslation()
 
   return (
     <View
@@ -32,7 +34,9 @@ function InfoCard({ info }: { info: GroupInfo }) {
         {info.name}
       </Text>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>Your balance:</Text>
+        <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>
+          {t('groupInfo.yourBalance')}
+        </Text>
         <Text
           style={{
             fontSize: 24,
@@ -61,7 +65,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
             <FontAwesome name='users' size={20} color={theme.colors.outline} />
           </View>
           <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
-            {info.memberCount} Members
+            {t('groupInfo.numberOfMembers', { count: info.memberCount })}
           </Text>
         </View>
 
@@ -75,8 +79,8 @@ function InfoCard({ info }: { info: GroupInfo }) {
           </View>
           <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
             {info.hasAccess
-              ? 'You have access to this group'
-              : "You don't have access to this group"}
+              ? t('groupInfo.accessToGroup')
+              : t('groupInfo.noAccessToGroup')}
           </Text>
         </View>
 
@@ -86,7 +90,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
               <FontAwesome5 name='shield-alt' size={20} color={theme.colors.outline} />
             </View>
             <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
-              You are administrator of this group
+              {t('groupInfo.youAreAdmin')}
             </Text>
           </View>
         )}
@@ -96,7 +100,10 @@ function InfoCard({ info }: { info: GroupInfo }) {
             <FontAwesome name='dollar' size={20} color={theme.colors.outline} />
           </View>
           <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
-            Total transactions value: {info.total} {info.currency}
+            {t('groupInfo.totalTransactionsValue', {
+              value: info.total,
+              currency: info.currency,
+            })}
           </Text>
         </View>
       </View>
@@ -107,6 +114,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
 function ActionButtons({ info }: { info: GroupInfo }) {
   const user = useAuth()
   const theme = useTheme()
+  const { t } = useTranslation()
   const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info.id)
 
   return (
@@ -116,7 +124,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
           onPress={() => {
             router.navigate(`/group/${info.id}/addUser`)
           }}
-          title='Add user'
+          title={t('groupInfo.addUser')}
           leftIcon={<Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />}
         />
       )}
@@ -126,7 +134,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
           onPress={() => {
             router.navigate(`/group/${info.id}/roulette`)
           }}
-          title='Roulette'
+          title={t('groupInfo.roulette')}
           leftIcon={
             <MaterialIcons name='payments' size={20} color={theme.colors.onPrimaryContainer} />
           }
@@ -138,7 +146,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
           onPress={() => {
             router.navigate(`/group/${info.id}/addSplit`)
           }}
-          title='Add split'
+          title={t('groupInfo.addSplit')}
           leftIcon={
             <MaterialIcons name='call-split' size={20} color={theme.colors.onPrimaryContainer} />
           }
@@ -147,7 +155,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
 
       {info.hidden && (
         <Button
-          title='Show group'
+          title={t('groupInfo.showGroup')}
           onPress={() => {
             setGroupHiddenMutation(false)
           }}
@@ -159,7 +167,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
 
       {info.hidden === false && (
         <Button
-          title='Hide group'
+          title={t('groupInfo.hideGroup')}
           onPress={() => {
             setGroupHiddenMutation(true)
           }}
@@ -175,7 +183,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
 
       {(info.isAdmin || info.owner === user?.id) && (
         <Button
-          title='Settings'
+          title={t('groupInfo.settings')}
           onPress={() => router.navigate(`/group/${info.id}/settings`)}
           leftIcon={
             <MaterialIcons name='settings' size={20} color={theme.colors.onPrimaryContainer} />

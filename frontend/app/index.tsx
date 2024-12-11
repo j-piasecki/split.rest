@@ -3,6 +3,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { login, useAuth } from '@utils/auth'
 import { Redirect, useLocalSearchParams } from 'expo-router'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Text, View } from 'react-native'
 
 // TODO: safe area
@@ -10,6 +11,7 @@ import { ActivityIndicator, Text, View } from 'react-native'
 export default function Screen() {
   const user = useAuth()
   const theme = useTheme()
+  const { t } = useTranslation()
   const { join } = useLocalSearchParams()
 
   return (
@@ -25,13 +27,13 @@ export default function Screen() {
         <View>
           <ActivityIndicator size='small' color={theme.colors.onSurface} />
           <Text style={{ margin: 8, color: theme.colors.onSurface }}>
-            Checking if you're logged in
+            {t('checkingIfYouAreLoggedIn')}
           </Text>
         </View>
       )}
       {user === null && (
         <Button
-          title='Login'
+          title={t('signIn')}
           onPress={login}
           leftIcon={
             <MaterialIcons name='login' size={20} color={theme.colors.onPrimaryContainer} />

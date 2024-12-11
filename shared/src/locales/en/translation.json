@@ -1,6 +1,22 @@
 {
+  "appName": "Split.rest",
+  "unknownError": "Unknown error",
+  "groupsText": "Groups",
+  "hiddenGroupsText": "Hidden Groups",
+  "email": "E-mail",
+  "signIn": "Sign in",
+  "signOut": "Sign out",
+  "noSplits": "No splits",
+  "noMembers": "No members",
+  "checkingIfYouAreLoggedIn": "Checking if you're logged in",
+  "loadingGroups": "Loading groups",
+  "showHiddenGroups": "Show hidden groups",
+  "hideHiddenGroups": "Hide hidden groups",
+  "createGroup": "Create group",
+
   "api": {
     "invalidArguments": "Invalid arguments",
+    "mustBeLoggedIn": "You must be logged in to do that",
     "auth": {
       "missingToken": "Missing token",
       "invalidToken": "Invalid token",
@@ -39,12 +55,62 @@
     "group": {
       "userAlreadyInGroup": "User is already a member of the group",
       "userNotInGroup": "User is not a member of the group",
-      "joinLinkAlreadyExists": "A join link already exists for this group"
+      "joinLinkAlreadyExists": "A join link already exists for this group",
+      "failedToCreateGroup": "Failed to create group"
     }
   },
-  "unknownError": "Unknown error",
-  "groupsText": "Groups",
-  "hiddenGroupsText": "Hidden Groups",
+
+  "tabs": {
+    "group": "Group",
+    "splits": "Splits",
+    "members": "Members"
+  },
+
+  "screenName": {
+    "createGroup": "Create group",
+    "group": "Group",
+    "addUser": "Add user",
+    "addSplit": "Add split",
+    "roulette": "Roulette",
+    "groupSettings": "Settings",
+    "splitInfo": "Split info",
+    "editSplit": "Edit split"
+  },
+
+  "roulette": {
+    "youNeedToAddAtLeastTwoUsers": "You need to add at least 2 users",
+    "submit": "Submit"
+  },
+
+  "joinGroup": {
+    "youveBeenInvitedToJoin": "You've been invited to join",
+    "group": "Group",
+    "memberCount": "{{count}} members",
+    "currency": "({{currency}})",
+    "join": "Join",
+    "noGroupFoundForThisJoinLink": "No group found for this join link"
+  },
+
+  "groupSettings": {
+    "joinLink": {
+      "create": "Create join link",
+      "joinLink": "Join link",
+      "delete": "Delete link"
+    },
+    "notAnAdmin": "You are not an admin of this group",
+    "deleteGroup": "Delete group",
+    "save": "Save",
+    "groupName": "Group name"
+  },
+
+  "addUser": {
+    "emailCannotBeEmpty": "E-mail cannot be empty",
+    "emailIsTooLong": "E-mail is too long",
+    "userNotFound": "User not found",
+    "userAlreadyInGroup": "User is already a member of the group",
+    "addUser": "Add user"
+  },
+
   "splitValidation": {
     "atLeastTwoEntries": "At least two entries are required",
     "youNeedToFillBothFields": "You need to fill both fields in the row",
@@ -57,7 +123,48 @@
     "amountsCannotBeNegative": "Amounts cannot be negative",
     "payerNotFound": "Payer not found",
     "userNotFound": "User not found",
-    "userWithEmailNotFound": "User with e-mail {email} not found"
+    "userWithEmailNotFound": "User with e-mail {{email}} not found"
+  },
+
+  "groupValidation": {
+    "nameCannotBeEmpty": "Name cannot be empty",
+    "nameIsTooLong": "Name is too long"
+  },
+
+  "form": {
+    "title": "Title",
+    "amount": "Amount",
+    "save": "Save"
+  },
+
+  "member": {
+    "giveAccess": "Give access",
+    "revokeAccess": "Revoke access",
+    "makeAdmin": "Make admin",
+    "revokeAdmin": "Revoke admin"
+  },
+
+  "groupInfo": {
+    "couldNotLoad": "Could not load group info",
+    "yourBalance": "Your balance:",
+    "numberOfMembers": "{{count}} members", 
+    "accessToGroup": "You have access to this group",
+    "noAccessToGroup": "You don't have access to this group",
+    "youAreAdmin": "You are an admin of this group",
+    "totalTransactionsValue": "Total transactions value: {{value}} {{currency}}",
+    "addUser": "Add user",
+    "roulette": "Roulette",
+    "addSplit": "Add split",
+    "hideGroup": "Hide group",
+    "showGroup": "Show group",
+    "settings": "Settings"
+  },
+
+  "splitInfo": {
+    "splitNotFound": "Split not found",
+    "edit": "Edit",
+    "createdBy": "Created by",
+    "hasPaid": "has paid"
   }
 }
 

@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { auth } from '@utils/firebase'
 import { makeRequest } from '@utils/makeApiRequest'
-import { CreateGroupJoinLinkArguments } from 'shared'
+import { CreateGroupJoinLinkArguments, TranslatableError } from 'shared'
 
 export function useCreateGroupJoinLink() {
   if (!auth.currentUser) {
-    throw new Error('You must be logged in to create a group join link')
+    throw new TranslatableError('api.mustBeLoggedIn')
   }
 
   const queryClient = useQueryClient()

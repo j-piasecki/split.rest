@@ -3,6 +3,7 @@ import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocomp
 import { useTheme } from '@styling/theme'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { useCallback, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Image, Pressable, Text, TextInput as TextInputRN, View } from 'react-native'
 import { User } from 'shared'
 
@@ -65,6 +66,7 @@ export function TextInputWithUserSuggestions({
 }: TextInputWithUserSuggestionsProps) {
   const ref = useRef<TextInputRN>(null)
   const [showSuggestions, setShowSuggestions] = useState(true)
+  const { t } = useTranslation()
 
   const getSuggestions = useCallback(
     (val: string) => getGroupMemberAutocompletions(groupId, val),
@@ -74,7 +76,7 @@ export function TextInputWithUserSuggestions({
   return (
     <TextInputWithSuggestions
       inputRef={ref}
-      placeholder='E-mail'
+      placeholder={t('email')}
       keyboardType='email-address'
       autoComplete='email'
       autoCorrect={false}
