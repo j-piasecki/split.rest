@@ -41,22 +41,27 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
     }
   }
 
+  const initialEntries = [
+    ...splitInfo.users.map((user) => {
+      if (user.id === splitInfo.paidById) {
+        return {
+          email: user.email,
+          amount: (Number(splitInfo.total) - Number(user.change)).toFixed(2),
+        }
+      }
+      return { email: user.email, amount: (-Number(user.change)).toFixed(2) }
+    }),
+    { email: '', amount: '' },
+  ]
+
+  const initialPaidByIndex = splitInfo.users.findIndex((user) => user.id === splitInfo.paidById)
+
   return (
     <View style={{ flex: 1, paddingHorizontal: 16 }}>
       <SplitForm
         initialTitle={splitInfo.title}
-        initialEntries={[
-          ...splitInfo.users.map((user) => {
-            if (user.id === splitInfo.paidById) {
-              return {
-                email: user.email,
-                amount: (Number(splitInfo.total) - Number(user.change)).toFixed(2),
-              }
-            }
-            return { email: user.email, amount: (-Number(user.change)).toFixed(2) }
-          }),
-          { email: '', amount: '' },
-        ]}
+        initialEntries={initialEntries}
+        initialPaidByIndex={initialPaidByIndex}
         groupInfo={groupInfo}
         onSubmit={save}
         waiting={waiting}

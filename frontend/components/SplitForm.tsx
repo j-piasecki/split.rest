@@ -93,6 +93,7 @@ export interface SplitFormProps {
   groupInfo: GroupInfo
   initialTitle?: string
   initialEntries: SplitEntryData[]
+  initialPaidByIndex?: number
   waiting: boolean
   onSubmit: (data: FormData) => void
 }
@@ -101,13 +102,14 @@ export function SplitForm({
   groupInfo,
   initialTitle,
   initialEntries,
+  initialPaidByIndex,
   waiting,
   onSubmit,
 }: SplitFormProps) {
   const theme = useTheme()
   const [entries, setEntries] = useState<SplitEntryData[]>(initialEntries)
   const [title, setTitle] = useState(initialTitle ?? '')
-  const [paidByIndex, setPaidByIndex] = useState(0)
+  const [paidByIndex, setPaidByIndex] = useState(initialPaidByIndex ?? 0)
   const { t } = useTranslation()
 
   const toBePaid = useRef(0)
