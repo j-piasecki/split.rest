@@ -56,13 +56,22 @@ function Content() {
           }}
         />
         <Stack.Screen name='group/[id]/index' options={{ title: t('screenName.group') }} />
-        <Stack.Screen name='group/[id]/addUser' options={{ title: t('screenName.addUser'), ...modalOptions }} />
+        <Stack.Screen
+          name='group/[id]/addUser'
+          options={{ title: t('screenName.addUser'), ...modalOptions }}
+        />
         <Stack.Screen
           name='group/[id]/addSplit'
           options={{ title: 'Add split', ...modalOptions }}
         />
-        <Stack.Screen name='group/[id]/roulette' options={{ title: t('screenName.roulette'), ...modalOptions }} />
-        <Stack.Screen name='group/[id]/settings' options={{ title: t('screenName.groupSettings'), ...modalOptions }} />
+        <Stack.Screen
+          name='group/[id]/roulette'
+          options={{ title: t('screenName.roulette'), ...modalOptions }}
+        />
+        <Stack.Screen
+          name='group/[id]/settings'
+          options={{ title: t('screenName.groupSettings'), ...modalOptions }}
+        />
         <Stack.Screen
           name='group/[id]/split/[splitId]/index'
           options={{ title: t('screenName.splitInfo'), ...modalOptions }}

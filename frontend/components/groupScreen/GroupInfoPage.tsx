@@ -78,9 +78,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
             />
           </View>
           <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
-            {info.hasAccess
-              ? t('groupInfo.accessToGroup')
-              : t('groupInfo.noAccessToGroup')}
+            {info.hasAccess ? t('groupInfo.accessToGroup') : t('groupInfo.noAccessToGroup')}
           </Text>
         </View>
 

@@ -97,7 +97,12 @@ export default function Modal() {
   const { t } = useTranslation()
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.addUser')} maxWidth={400} maxHeight={250}>
+    <ModalScreen
+      returnPath={`/group/${id}`}
+      title={t('screenName.addUser')}
+      maxWidth={400}
+      maxHeight={250}
+    >
       <Form />
     </ModalScreen>
   )

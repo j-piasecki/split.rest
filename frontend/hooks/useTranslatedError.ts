@@ -7,7 +7,7 @@ export function useTranslatedError(): [string | null, (error: unknown) => void] 
   const { t } = useTranslation(['translation'])
 
   let message: string | null = null
-  
+
   if (error) {
     if (error instanceof Error) {
       if (isTranslatableError(error)) {

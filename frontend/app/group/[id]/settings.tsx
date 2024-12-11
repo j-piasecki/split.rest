@@ -36,7 +36,12 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
       {waiting && <ActivityIndicator color={theme.colors.primary} />}
       {!waiting && (
         <>
-          {!link && <Button title={t('groupSettings.joinLink.create')} onPress={() => createJoinLink(info.id)} />}
+          {!link && (
+            <Button
+              title={t('groupSettings.joinLink.create')}
+              onPress={() => createJoinLink(info.id)}
+            />
+          )}
           {link && (
             <View style={{ gap: 8 }}>
               <Text
@@ -69,7 +74,10 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
                   }}
                 />
               </View>
-              <Button title={t('groupSettings.joinLink.delete')} onPress={() => deleteJoinLink(info.id)} />
+              <Button
+                title={t('groupSettings.joinLink.delete')}
+                onPress={() => deleteJoinLink(info.id)}
+              />
             </View>
           )}
         </>
@@ -100,11 +108,7 @@ function Form({ info }: { info: GroupInfo }) {
         paddingBottom: 32,
       }}
     >
-      <TextInput
-        placeholder={t('groupSettings.groupName')}
-        value={name}
-        onChangeText={setName}
-      />
+      <TextInput placeholder={t('groupSettings.groupName')} value={name} onChangeText={setName} />
       {!waiting && (
         <>
           <JoinLinkManager info={info} />
@@ -157,15 +161,18 @@ export default function Settings() {
   const isAdmin = info?.isAdmin || info?.owner === user?.id
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.groupSettings')} maxWidth={400} maxHeight={500}>
+    <ModalScreen
+      returnPath={`/group/${id}`}
+      title={t('screenName.groupSettings')}
+      maxWidth={400}
+      maxHeight={500}
+    >
       {isAdmin && info && <Form info={info} />}
       {!isAdmin && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           {(!user || !info) && <ActivityIndicator color={theme.colors.primary} />}
           {user && info && (
-            <Text style={{ color: theme.colors.error }}>
-              {t('groupSettings.notAnAdmin')}
-            </Text>
+            <Text style={{ color: theme.colors.error }}>{t('groupSettings.notAnAdmin')}</Text>
           )}
         </View>
       )}

@@ -1,5 +1,10 @@
 import { auth } from '@utils/firebase'
-import { ApiErrorPayload, isApiErrorPayload, LanguageTranslationKey, TranslatableError } from 'shared'
+import {
+  ApiErrorPayload,
+  LanguageTranslationKey,
+  TranslatableError,
+  isApiErrorPayload,
+} from 'shared'
 
 export const ENDPOINT = __DEV__ ? 'http://localhost:3000' : 'https://api.split.rest'
 
