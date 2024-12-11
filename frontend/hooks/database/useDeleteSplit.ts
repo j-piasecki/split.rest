@@ -21,6 +21,7 @@ async function deleteSplit(queryClient: QueryClient, groupId: number, splitId: n
   })
 
   await queryClient.invalidateQueries({ queryKey: ['groupSplits', groupId] })
+  await queryClient.invalidateQueries({ queryKey: ['groupMembers', args.groupId] })
   await queryClient.invalidateQueries({ queryKey: ['groupInfo', groupId] })
 }
 

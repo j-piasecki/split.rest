@@ -22,6 +22,7 @@ async function createSplit(queryClient: QueryClient, args: CreateSplitArguments)
   )
 
   await queryClient.invalidateQueries({ queryKey: ['groupSplits', args.groupId] })
+  await queryClient.invalidateQueries({ queryKey: ['groupMembers', args.groupId] })
   await queryClient.invalidateQueries({ queryKey: ['groupInfo', args.groupId] })
 }
 
