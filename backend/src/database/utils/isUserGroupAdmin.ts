@@ -1,3 +1,4 @@
+import { isUserGroupOwner } from './isUserGroupOwner'
 import { Client, Pool, PoolClient } from 'pg'
 
 export async function isUserGroupAdmin(
@@ -10,5 +11,13 @@ export async function isUserGroupAdmin(
     [groupId, userId]
   )
 
-  return rows[0].is_admin ?? false
+  if (rows[0].is_admin) {
+    return true
+  }
+
+  if (await isUserGroupOwner(client, groupId, userId)) {
+    return true
+  }
+
+  return false
 }

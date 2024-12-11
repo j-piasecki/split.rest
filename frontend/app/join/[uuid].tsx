@@ -9,7 +9,6 @@ import { useState } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 
 function JoinForm() {
-  const auth = useAuth(false)
   const theme = useTheme()
   const router = useRouter()
   const { uuid } = useLocalSearchParams()
@@ -22,7 +21,6 @@ function JoinForm() {
       {isLoadingGroup && <ActivityIndicator color={theme.colors.primary} />}
       {!isLoadingGroup && group && (
         <>
-          {auth === null && <Redirect href={`/?join=${uuid}`} withAnchor />}
           <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
             You've been invited to join
           </Text>
@@ -77,6 +75,7 @@ function JoinForm() {
 export default function JoinPage() {
   const auth = useAuth(false)
   const theme = useTheme()
+  const { uuid } = useLocalSearchParams()
 
   return (
     <View
@@ -88,7 +87,8 @@ export default function JoinPage() {
       {auth && <Header />}
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
         {auth === undefined && <ActivityIndicator color={theme.colors.primary} />}
-        {auth !== undefined && <JoinForm />}
+        {auth === null && <Redirect href={`/?join=${uuid}`} withAnchor />}
+        {auth && <JoinForm />}
       </View>
     </View>
   )

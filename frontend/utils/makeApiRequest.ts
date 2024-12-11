@@ -79,7 +79,11 @@ export async function makeRequest<TArgs, TReturn>(
 
         throw new ApiError(data.message, data.statusCode, data.error, data.args)
       }
-    } finally {
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error
+      }
+
       throw new ApiError('unknownError', result.status, 'Unknown error')
     }
   }

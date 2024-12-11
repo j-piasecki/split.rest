@@ -1,4 +1,4 @@
-import { ForbiddenException } from '../../errors/ForbiddenException'
+import { ConflictException } from '../../errors/ConflictException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
@@ -28,7 +28,7 @@ export async function joinGroupByLink(
     }
 
     if (await isUserMemberOfGroup(pool, groupId, callerId)) {
-      throw new ForbiddenException('group.userAlreadyInGroup')
+      throw new ConflictException('group.userAlreadyInGroup')
     }
 
     await client.query(

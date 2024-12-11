@@ -27,6 +27,10 @@ export class AuthGuard implements CanActivate {
     const tokenData = jwt.decode(token, { complete: true })
     const certificates = await this.getTokenCertificates()
 
+    if (!tokenData) {
+      throw new UnauthorizedException('auth.invalidToken')
+    }
+
     jwt.verify(
       token,
       certificates[tokenData.header.kid],
