@@ -16,7 +16,7 @@ export function useDeleteGroupJoinLink() {
 
       await makeRequest<DeleteGroupJoinLinkArguments, void>('DELETE', 'deleteGroupJoinLink', args)
 
-      queryClient.invalidateQueries({ queryKey: ['groupJoinLink', groupId] })
+      await queryClient.invalidateQueries({ queryKey: ['groupJoinLink', groupId] })
     },
   })
 }

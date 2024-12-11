@@ -11,9 +11,9 @@ export function useAddUserToGroupMutation(groupId: number) {
 
       await makeRequest('POST', 'addUserToGroup', args)
 
-      queryClient.invalidateQueries({ queryKey: ['groupInfo', groupId] })
-      queryClient.invalidateQueries({ queryKey: ['groupMembers', groupId] })
-      queryClient.invalidateQueries({ queryKey: ['userGroups'] })
+      await queryClient.invalidateQueries({ queryKey: ['groupInfo', groupId] })
+      await queryClient.invalidateQueries({ queryKey: ['groupMembers', groupId] })
+      await queryClient.invalidateQueries({ queryKey: ['userGroups'] })
     },
   })
 }

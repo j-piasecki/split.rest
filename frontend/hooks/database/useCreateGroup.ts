@@ -9,7 +9,7 @@ async function createGroup(queryClient: QueryClient, args: CreateGroupArguments)
     throw new TranslatableError('api.group.failedToCreateGroup')
   }
 
-  queryClient.invalidateQueries({ queryKey: ['userGroups', false] })
+  await queryClient.invalidateQueries({ queryKey: ['userGroups', false] })
 
   return group
 }

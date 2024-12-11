@@ -9,7 +9,7 @@ async function deleteSplit(queryClient: QueryClient, groupId: number, splitId: n
 
   queryClient.removeQueries({ queryKey: ['groupSplits', args.groupId, splitId] })
 
-  queryClient.setQueryData(['groupSplits', groupId], (oldData?: { pages: SplitInfo[][] }) => {
+  await queryClient.setQueryData(['groupSplits', groupId], (oldData?: { pages: SplitInfo[][] }) => {
     if (!oldData) {
       return
     }
@@ -20,8 +20,8 @@ async function deleteSplit(queryClient: QueryClient, groupId: number, splitId: n
     }
   })
 
-  queryClient.invalidateQueries({ queryKey: ['groupSplits', groupId] })
-  queryClient.invalidateQueries({ queryKey: ['groupInfo', groupId] })
+  await queryClient.invalidateQueries({ queryKey: ['groupSplits', groupId] })
+  await queryClient.invalidateQueries({ queryKey: ['groupInfo', groupId] })
 }
 
 export function useDeleteSplit(groupId: number) {

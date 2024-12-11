@@ -12,7 +12,7 @@ async function setGroupAccess(
 
   await makeRequest('POST', 'setGroupAccess', args)
 
-  queryClient.setQueryData(['groupMembers', groupId], (oldData?: { pages: Member[][] }) => {
+  await queryClient.setQueryData(['groupMembers', groupId], (oldData?: { pages: Member[][] }) => {
     if (!oldData) {
       return
     }

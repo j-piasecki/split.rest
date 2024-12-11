@@ -7,8 +7,8 @@ async function setGroupName(queryClient: QueryClient, groupId: number, name: str
 
   await makeRequest('POST', 'setGroupName', args)
 
-  queryClient.invalidateQueries({ queryKey: ['userGroups'] })
-  queryClient.setQueryData(['groupInfo', groupId], (oldData?: GroupInfo) => {
+  await queryClient.invalidateQueries({ queryKey: ['userGroups'] })
+  await queryClient.setQueryData(['groupInfo', groupId], (oldData?: GroupInfo) => {
     if (!oldData) {
       return
     }

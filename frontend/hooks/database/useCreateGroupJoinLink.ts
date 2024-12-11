@@ -16,7 +16,7 @@ export function useCreateGroupJoinLink() {
 
       await makeRequest<CreateGroupJoinLinkArguments, void>('POST', 'createGroupJoinLink', args)
 
-      queryClient.invalidateQueries({ queryKey: ['groupJoinLink', groupId] })
+      await queryClient.invalidateQueries({ queryKey: ['groupJoinLink', groupId] })
     },
   })
 }

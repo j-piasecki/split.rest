@@ -7,7 +7,7 @@ async function setGroupHidden(queryClient: QueryClient, groupId: number, hidden:
 
   await makeRequest('POST', 'setGroupHidden', args)
 
-  queryClient.setQueryData(['groupInfo', groupId], (oldData?: GroupInfo) => {
+  await queryClient.setQueryData(['groupInfo', groupId], (oldData?: GroupInfo) => {
     if (!oldData) {
       return
     }
