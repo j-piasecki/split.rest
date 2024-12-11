@@ -6,6 +6,7 @@ import { useAuth } from '@utils/auth'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Pressable, Text, View } from 'react-native'
 import { GroupInfo, SplitInfo } from 'shared'
 
@@ -56,6 +57,7 @@ export function SplitRow({ split, info }: SplitRowProps) {
   const user = useAuth()
   const theme = useTheme()
   const router = useRouter()
+  const { t } = useTranslation()
   const isSmallScreen = useIsSmallScreen()
   const { mutate: deleteSplit, isPending } = useDeleteSplit(info.id)
 
@@ -82,6 +84,18 @@ export function SplitRow({ split, info }: SplitRowProps) {
         <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
           {split.title}
         </Text>
+        {split.version !== 1 && (
+          <Text
+            style={{
+              position: 'absolute',
+              bottom: -12,
+              fontSize: 10,
+              color: theme.colors.outline,
+            }}
+          >
+            {t('splitInfo.edited')}
+          </Text>
+        )}
       </View>
 
       {isSmallScreen && <StackedInfo split={split} info={info} />}

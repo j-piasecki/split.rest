@@ -43,6 +43,8 @@ export interface SplitInfo {
   timestamp: number
   paidById: string
   createdById: string
+  version: number
+  updatedAt: number
 }
 
 export interface SplitWithChanges extends SplitInfo {

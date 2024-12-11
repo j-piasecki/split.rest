@@ -4,7 +4,11 @@ import { makeRequest } from '@utils/makeApiRequest'
 async function deleteGroup(queryClient: QueryClient, groupId: number) {
   await makeRequest('DELETE', 'deleteGroup', { groupId })
 
-  queryClient.invalidateQueries({ queryKey: ['userGroups'] })
+  queryClient.removeQueries({ queryKey: ['groupSplits', groupId] })
+  queryClient.removeQueries({ queryKey: ['groupMembers', groupId] })
+  queryClient.removeQueries({ queryKey: ['groupInfo', groupId] })
+
+  await queryClient.invalidateQueries({ queryKey: ['userGroups'] })
 }
 
 export function useDeleteGroup() {

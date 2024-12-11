@@ -25,8 +25,18 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
     }
 
     const splitInfo = (
-      await client.query<{ paid_by: string; created_by: string; total: string }>(
-        'SELECT paid_by, created_by, total FROM splits WHERE group_id = $1 AND id = $2',
+      await client.query<{
+        id: number
+        version: number
+        group_id: number
+        total: string
+        paid_by: string
+        created_by: string
+        name: string
+        timestamp: number
+        updated_at: number
+      }>(
+        'SELECT id, version, group_id, total, paid_by, created_by, name, timestamp, updated_at FROM splits WHERE group_id = $1 AND id = $2',
         [args.groupId, args.splitId]
       )
     ).rows[0]
@@ -42,9 +52,10 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
     // Remove old balances
 
     const splitParticipants = (
-      await client.query('SELECT user_id, change FROM split_participants WHERE split_id = $1', [
-        args.splitId,
-      ])
+      await client.query(
+        'SELECT user_id, change FROM split_participants WHERE split_id = $1 AND version = $2',
+        [args.splitId, splitInfo.version]
+      )
     ).rows
 
     for (const participant of splitParticipants) {
@@ -58,6 +69,38 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
       splitInfo.total,
       args.groupId,
     ])
+
+    // Save old split info
+
+    const newVersion = (
+      await client.query(
+        'UPDATE splits SET name = $3, total = $4, paid_by = $5, timestamp = $6, updated_at = $7, version = version + 1 WHERE group_id = $1 AND id = $2 RETURNING version',
+        [
+          args.groupId,
+          args.splitId,
+          args.title,
+          args.total,
+          args.paidBy,
+          args.timestamp,
+          Date.now(),
+        ]
+      )
+    ).rows[0].version
+
+    await client.query(
+      'INSERT INTO split_edits (id, version, group_id, total, paid_by, created_by, name, timestamp, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+      [
+        splitInfo.id,
+        newVersion,
+        splitInfo.group_id,
+        splitInfo.total,
+        splitInfo.paid_by,
+        splitInfo.created_by,
+        splitInfo.name,
+        splitInfo.timestamp,
+        Date.now(),
+      ]
+    )
 
     // Apply new balances
 
@@ -74,8 +117,8 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
       }
 
       await client.query(
-        'INSERT INTO split_participants (split_id, user_id, change) VALUES ($1, $2, $3) ON CONFLICT (split_id, user_id) DO UPDATE SET change = $3',
-        [args.splitId, balance.id, balance.change]
+        'INSERT INTO split_participants (split_id, user_id, version, change) VALUES ($1, $2, $3, $4)',
+        [args.splitId, balance.id, newVersion, balance.change]
       )
 
       await client.query(
@@ -88,11 +131,6 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
       args.total,
       args.groupId,
     ])
-
-    await client.query(
-      'UPDATE splits SET name = $3, total = $4, paid_by = $5, timestamp = $6, updated_at = $7 WHERE group_id = $1 AND id = $2',
-      [args.groupId, args.splitId, args.title, args.total, args.paidBy, args.timestamp, Date.now()]
-    )
 
     await client.query('COMMIT')
   } catch (e) {

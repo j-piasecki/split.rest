@@ -21,7 +21,7 @@ export async function getSplitInfo(
 
   const splitRow = (
     await pool.query(
-      'SELECT id, name, total, paid_by, created_by, timestamp, deleted FROM splits WHERE group_id = $1 AND id = $2',
+      'SELECT id, name, total, paid_by, created_by, timestamp, deleted, version, updated_at FROM splits WHERE group_id = $1 AND id = $2',
       [args.groupId, args.splitId]
     )
   ).rows[0]
@@ -46,9 +46,9 @@ export async function getSplitInfo(
         ON 
           users.id = split_participants.user_id 
         WHERE 
-          split_id = $1
+          split_id = $1 AND version = $2
       `,
-      [args.splitId]
+      [args.splitId, splitRow.version]
     )
   ).rows
 
@@ -59,6 +59,8 @@ export async function getSplitInfo(
     timestamp: Number(splitRow.timestamp),
     paidById: splitRow.paid_by,
     createdById: splitRow.created_by,
+    version: splitRow.version,
+    updatedAt: Number(splitRow.updated_at),
     users: participants.map((p) => ({
       id: p.id,
       name: p.name,

@@ -5,7 +5,7 @@ import { CreateSplitArguments, SplitInfo } from 'shared'
 async function createSplit(queryClient: QueryClient, args: CreateSplitArguments) {
   const splitId = await makeRequest<CreateSplitArguments, number>('POST', 'createSplit', args)
 
-  queryClient.setQueryData(['groupSplits', args.groupId], (oldData?: { pages: SplitInfo[][] }) => {
+  await queryClient.setQueryData(['groupSplits', args.groupId], (oldData?: { pages: SplitInfo[][] }) => {
     if (!oldData) {
       return
     }
@@ -13,13 +13,13 @@ async function createSplit(queryClient: QueryClient, args: CreateSplitArguments)
     return {
       ...oldData,
       pages: oldData.pages.map((page, index) =>
-        index === 0 ? [...page, { id: splitId, ...args }] : page
+        index === 0 ? [{ id: splitId, version: 1, ...args }, ...page] : page
       ),
     }
   })
 
-  queryClient.invalidateQueries({ queryKey: ['groupSplits', args.groupId] })
-  queryClient.invalidateQueries({ queryKey: ['groupInfo', args.groupId] })
+  await queryClient.invalidateQueries({ queryKey: ['groupSplits', args.groupId] })
+  await queryClient.invalidateQueries({ queryKey: ['groupInfo', args.groupId] })
 }
 
 export function useCreateSplit() {

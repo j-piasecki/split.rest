@@ -43,6 +43,7 @@ export async function createDatabase(pool: Pool) {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS splits(
       id SERIAL PRIMARY KEY,
+      version INTEGER NOT NULL DEFAULT 1,
       group_id INTEGER NOT NULL,
       total DECIMAL(10, 2) NOT NULL,
       paid_by VARCHAR(32) NOT NULL,
@@ -59,12 +60,32 @@ export async function createDatabase(pool: Pool) {
   `)
 
   await pool.query(`
+    CREATE TABLE IF NOT EXISTS split_edits(
+      id INTEGER NOT NULL,
+      version INTEGER NOT NULL,
+      group_id INTEGER NOT NULL,
+      total DECIMAL(10, 2) NOT NULL,
+      paid_by VARCHAR(32) NOT NULL,
+      created_by VARCHAR(32) NOT NULL,
+      name VARCHAR(512) NOT NULL,
+      timestamp bigint NOT NULL,
+      updated_at bigint NOT NULL,
+
+      PRIMARY KEY (id, version),
+      FOREIGN KEY (group_id) REFERENCES groups(id),
+      FOREIGN KEY (paid_by) REFERENCES users(id),
+      FOREIGN KEY (created_by) REFERENCES users(id)
+    )
+  `)
+
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS split_participants(
       split_id INTEGER,
       user_id VARCHAR(32) NOT NULL,
+      version INTEGER NOT NULL DEFAULT 1,
       change DECIMAL(10, 2) NOT NULL,
 
-      PRIMARY KEY (split_id, user_id),
+      PRIMARY KEY (split_id, user_id, version),
       FOREIGN KEY (split_id) REFERENCES splits(id),
       FOREIGN KEY (user_id) REFERENCES users(id)
     )

@@ -7,6 +7,8 @@ async function deleteSplit(queryClient: QueryClient, groupId: number, splitId: n
 
   await makeRequest('DELETE', 'deleteSplit', args)
 
+  queryClient.removeQueries({ queryKey: ['groupSplits', args.groupId, splitId] })
+
   queryClient.setQueryData(['groupSplits', groupId], (oldData?: { pages: SplitInfo[][] }) => {
     if (!oldData) {
       return
