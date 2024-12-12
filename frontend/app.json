@@ -8,11 +8,6 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "scheme": "splitrest",
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
@@ -21,8 +16,9 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/icon-foreground.png",
+        "monochromeImage": "./assets/icon-foreground.png",
+        "backgroundColor": "#8e004a"
       },
       "package": "com.jpiasecki.Split"
     },
@@ -45,7 +41,16 @@
         }
       ],
       "react-native-edge-to-edge",
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#8e004a",
+          "image": "./assets/splash-icon.png",
+          "resizeMode": "contain",
+          "imageWidth": 160
+        }
+      ]
     ]
   }
 }

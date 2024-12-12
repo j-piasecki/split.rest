@@ -27,6 +27,7 @@
     "expo-linking": "~7.0.3",
     "expo-localization": "~16.0.0",
     "expo-router": "~4.0.11",
+    "expo-splash-screen": "~0.29.18",
     "expo-status-bar": "~2.0.0",
     "firebase": "^11.0.2",
     "firebaseui": "^6.1.0",

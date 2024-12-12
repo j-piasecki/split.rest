@@ -8002,6 +8002,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-splash-screen@npm:~0.29.18":
+  version: 0.29.18
+  resolution: "expo-splash-screen@npm:0.29.18"
+  dependencies:
+    "@expo/prebuild-config": ^8.0.23
+  peerDependencies:
+    expo: "*"
+  checksum: 75dc763b17fc38d599cf4a557190e3c9b661d454dc87096f2ca628fdf2430fbeb83b6b43baf07a29adf3142e8c33fcaf52b74c595a71d806cc687d363415b74a
+  languageName: node
+  linkType: hard
+
 "expo-status-bar@npm:~2.0.0":
   version: 2.0.0
   resolution: "expo-status-bar@npm:2.0.0"
@@ -8659,6 +8670,7 @@ __metadata:
     expo-linking: ~7.0.3
     expo-localization: ~16.0.0
     expo-router: ~4.0.11
+    expo-splash-screen: ~0.29.18
     expo-status-bar: ~2.0.0
     firebase: ^11.0.2
     firebaseui: ^6.1.0

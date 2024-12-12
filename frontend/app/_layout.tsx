@@ -6,10 +6,17 @@ import i18n from '@utils/i18n'
 import { queryClient } from '@utils/queryClient'
 import { useLocales } from 'expo-localization'
 import { Stack, usePathname } from 'expo-router'
+import * as SplashScreen from 'expo-splash-screen'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import 'utils/firebase'
+
+SplashScreen.preventAutoHideAsync()
+SplashScreen.setOptions({
+  duration: 250,
+  fade: true,
+})
 
 function Content() {
   const pathname = usePathname()
@@ -19,11 +26,20 @@ function Content() {
   const locales = useLocales()
   const { t } = useTranslation()
 
+  const isUserLoading = user === undefined
+
   useEffect(() => {
     i18n.changeLanguage(locales[0].languageCode!)
   }, [locales])
 
-  if (user === undefined) {
+  // TODO: combine this with loading assets
+  useEffect(() => {
+    if (!isUserLoading) {
+      SplashScreen.hide()
+    }
+  }, [isUserLoading])
+
+  if (isUserLoading) {
     return (
       <View
         style={{
@@ -46,8 +62,8 @@ function Content() {
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
       <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
-        <Stack.Screen name='index' options={{ title: t('appName') }} />
-        <Stack.Screen name='home' options={{ title: t('appName'), ...modalOptions }} />
+        <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
+        <Stack.Screen name='home' options={{ title: t('appName'), animation: 'none' }} />
         <Stack.Screen name='group/[id]/index' options={{ title: t('screenName.group') }} />
         <Stack.Screen
           name='createGroup'
