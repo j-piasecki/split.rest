@@ -118,7 +118,7 @@ function SplitInfo({
           color: theme.colors.outline,
           fontSize: 20,
           opacity: 0.7,
-          marginBottom: 24,
+          marginBottom: 16,
         }}
       >
         <Text style={{ color: theme.colors.primary }}>{paidBy.email} </Text>
