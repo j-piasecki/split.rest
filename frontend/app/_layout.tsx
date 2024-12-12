@@ -46,8 +46,9 @@ function Content() {
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
       <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
-        <Stack.Screen name='index' options={{ title: 'Split' }} />
-        <Stack.Screen name='home' options={{ title: 'Split', animation: 'none' }} />
+        <Stack.Screen name='index' options={{ title: t('appName') }} />
+        <Stack.Screen name='home' options={{ title: t('appName'), ...modalOptions }} />
+        <Stack.Screen name='group/[id]/index' options={{ title: t('screenName.group') }} />
         <Stack.Screen
           name='createGroup'
           options={{
@@ -55,7 +56,10 @@ function Content() {
             ...modalOptions,
           }}
         />
-        <Stack.Screen name='group/[id]/index' options={{ title: t('screenName.group') }} />
+        <Stack.Screen
+          name='profile'
+          options={{ title: t('screenName.profile'), ...modalOptions }}
+        />
         <Stack.Screen
           name='group/[id]/addUser'
           options={{ title: t('screenName.addUser'), ...modalOptions }}

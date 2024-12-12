@@ -1,11 +1,9 @@
-import { Button } from './Button'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
-import { logout, useAuth } from '@utils/auth'
+import { useAuth } from '@utils/auth'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { Image, Text, View } from 'react-native'
+import { Image, Pressable, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface HeaderProps {
@@ -17,6 +15,7 @@ export default function Header(props: HeaderProps) {
   const theme = useTheme()
   const user = useAuth()
   const insets = useSafeAreaInsets()
+  const router = useRouter()
 
   return (
     <View
@@ -42,14 +41,7 @@ export default function Header(props: HeaderProps) {
         </Text>
       </Link>
 
-      <View style={{ flexDirection: 'row', gap: 16 }}>
-        <Button
-          title={t('signOut')}
-          onPress={logout}
-          rightIcon={
-            <MaterialIcons name='logout' size={20} color={theme.colors.onPrimaryContainer} />
-          }
-        />
+      <Pressable onPress={() => router.navigate('/profile')}>
         <Image
           source={{ uri: getProfilePictureUrl(user?.id) }}
           style={{
@@ -58,7 +50,7 @@ export default function Header(props: HeaderProps) {
             borderRadius: 20,
           }}
         />
-      </View>
+      </Pressable>
     </View>
   )
 }
