@@ -21,12 +21,6 @@ import Animated, {
 type Rect = { x: number; y: number; width: number; height: number }
 type Point = { x: number; y: number }
 
-declare module 'react-native' {
-  interface PressableStateCallbackType {
-    hovered: boolean
-  }
-}
-
 export interface ContextMenuItem {
   label: string
   onPress: () => void
@@ -133,7 +127,6 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
         borderColor: theme.colors.outlineVariant,
         paddingVertical: 8,
         overflow: 'hidden',
-        // @ts-expect-error - userSelect does not exist on View on mobile
         userSelect: 'none',
       }}
     >

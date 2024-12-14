@@ -195,13 +195,7 @@ export function SplitForm({
 
       <View style={{ marginTop: 16 }}>
         {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
-        {!waiting && (
-          <Button
-            leftIcon={<Icon name='save' size={24} color={theme.colors.onPrimaryContainer} />}
-            title={t('form.save')}
-            onPress={submit}
-          />
-        )}
+        {!waiting && <Button leftIcon='save' title={t('form.save')} onPress={submit} />}
       </View>
     </View>
   )

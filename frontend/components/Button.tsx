@@ -1,15 +1,17 @@
+import { Icon, IconName } from './Icon'
 import { useTheme } from '@styling/theme'
 import React from 'react'
-import { Pressable, Text } from 'react-native'
+import { ActivityIndicator, Pressable, Text } from 'react-native'
 
 export interface ButtonProps {
   title?: string
   onPress?: () => void
-  leftIcon?: React.ReactNode
-  rightIcon?: React.ReactNode
+  leftIcon?: IconName
+  rightIcon?: IconName
+  isLoading?: boolean
 }
 
-export function Button({ title, onPress, leftIcon, rightIcon }: ButtonProps) {
+export function Button({ title, onPress, leftIcon, rightIcon, isLoading }: ButtonProps) {
   const theme = useTheme()
 
   return (
@@ -29,7 +31,10 @@ export function Button({ title, onPress, leftIcon, rightIcon }: ButtonProps) {
         }
       }}
     >
-      {leftIcon && leftIcon}
+      {isLoading && <ActivityIndicator size='small' color={theme.colors.onPrimaryContainer} />}
+      {leftIcon && !isLoading && (
+        <Icon name={leftIcon} size={24} color={theme.colors.onPrimaryContainer} />
+      )}
       {title && (
         <Text
           selectable={false}
@@ -38,7 +43,7 @@ export function Button({ title, onPress, leftIcon, rightIcon }: ButtonProps) {
           {title}
         </Text>
       )}
-      {rightIcon && rightIcon}
+      {rightIcon && <Icon name={rightIcon} size={24} color={theme.colors.onPrimaryContainer} />}
     </Pressable>
   )
 }

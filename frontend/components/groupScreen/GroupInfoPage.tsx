@@ -108,7 +108,6 @@ function InfoCard({ info }: { info: GroupInfo }) {
 
 function ActionButtons({ info }: { info: GroupInfo }) {
   const user = useAuth()
-  const theme = useTheme()
   const { t } = useTranslation()
   const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info.id)
 
@@ -120,7 +119,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
             router.navigate(`/group/${info.id}/addUser`)
           }}
           title={t('groupInfo.addUser')}
-          leftIcon={<Icon name='addMember' size={20} color={theme.colors.onPrimaryContainer} />}
+          leftIcon='addMember'
         />
       )}
 
@@ -130,7 +129,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
             router.navigate(`/group/${info.id}/roulette`)
           }}
           title={t('groupInfo.roulette')}
-          leftIcon={<Icon name='payments' size={20} color={theme.colors.onPrimaryContainer} />}
+          leftIcon='payments'
         />
       )}
 
@@ -140,7 +139,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
             router.navigate(`/group/${info.id}/addSplit`)
           }}
           title={t('groupInfo.addSplit')}
-          leftIcon={<Icon name='split' size={20} color={theme.colors.onPrimaryContainer} />}
+          leftIcon='split'
         />
       )}
 
@@ -150,7 +149,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
           onPress={() => {
             setGroupHiddenMutation(false)
           }}
-          leftIcon={<Icon name='visibility' size={20} color={theme.colors.onPrimaryContainer} />}
+          leftIcon='visibility'
         />
       )}
 
@@ -160,9 +159,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
           onPress={() => {
             setGroupHiddenMutation(true)
           }}
-          leftIcon={
-            <Icon name='visibility_off' size={20} color={theme.colors.onPrimaryContainer} />
-          }
+          leftIcon='visibilityOff'
         />
       )}
 
@@ -170,7 +167,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
         <Button
           title={t('groupInfo.settings')}
           onPress={() => router.navigate(`/group/${info.id}/settings`)}
-          leftIcon={<Icon name='settings' size={20} color={theme.colors.onPrimaryContainer} />}
+          leftIcon='settings'
         />
       )}
     </View>

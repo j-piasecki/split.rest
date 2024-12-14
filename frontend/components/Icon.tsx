@@ -29,7 +29,7 @@ export type IconName =
   | 'settings'
   | 'shield'
   | 'split'
-  | 'visibility_off'
+  | 'visibilityOff'
   | 'visibility'
 
 export interface IconProps {
@@ -66,7 +66,7 @@ const iconMap: Record<IconName, unknown> = {
   settings: require('@assets/icons/settings.svg'),
   shield: require('@assets/icons/shield.svg'),
   split: require('@assets/icons/split.svg'),
-  visibility_off: require('@assets/icons/visibility_off.svg'),
+  visibilityOff: require('@assets/icons/visibility_off.svg'),
   visibility: require('@assets/icons/visibility.svg'),
 }
 

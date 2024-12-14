@@ -1,5 +1,4 @@
 import { Button } from '@components/Button'
-import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
 import { useCreateGroupJoinLink } from '@hooks/database/useCreateGroupJoinLink'
@@ -62,7 +61,7 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
                   selectTextOnFocus
                 />
                 <Button
-                  leftIcon={<Icon name='copy' size={20} color={theme.colors.onPrimaryContainer} />}
+                  leftIcon='copy'
                   onPress={() => {
                     Clipboard.setStringAsync(linkText)
                   }}

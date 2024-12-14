@@ -1,5 +1,4 @@
 import { Button } from '@components/Button'
-import { Icon } from '@components/Icon'
 import { useTheme } from '@styling/theme'
 import { login, useAuth } from '@utils/auth'
 import { Redirect, useLocalSearchParams } from 'expo-router'
@@ -31,13 +30,7 @@ export default function Screen() {
           </Text>
         </View>
       )}
-      {user === null && (
-        <Button
-          title={t('signIn')}
-          onPress={login}
-          leftIcon={<Icon name='login' size={20} color={theme.colors.onPrimaryContainer} />}
-        />
-      )}
+      {user === null && <Button title={t('signIn')} onPress={login} leftIcon='login' />}
       {user && !join && <Redirect href='/home' withAnchor />}
       {user && join && <Redirect href={`/join/${join}`} withAnchor />}
     </View>

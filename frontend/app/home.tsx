@@ -148,7 +148,7 @@ export default function Home() {
                     router.navigate('/createGroup')
                   }}
                   title={t('createGroup')}
-                  leftIcon={<Icon name='add' size={20} color={theme.colors.onPrimaryContainer} />}
+                  leftIcon='add'
                 />
               </View>
               <GroupList groups={groups} />
