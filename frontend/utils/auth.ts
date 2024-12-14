@@ -95,6 +95,6 @@ export async function login() {
 }
 
 export function logout() {
-  queryClient.invalidateQueries()
+  queryClient.clear()
   auth.signOut()
 }
