@@ -9,10 +9,24 @@ export interface ButtonProps {
   leftIcon?: IconName
   rightIcon?: IconName
   isLoading?: boolean
+  destructive?: boolean
 }
 
-export function Button({ title, onPress, leftIcon, rightIcon, isLoading }: ButtonProps) {
+export function Button({
+  title,
+  onPress,
+  leftIcon,
+  rightIcon,
+  isLoading,
+  destructive,
+}: ButtonProps) {
   const theme = useTheme()
+
+  const foregroundColor = destructive
+    ? theme.colors.onErrorContainer
+    : isLoading
+      ? theme.colors.primary
+      : theme.colors.onSurface
 
   return (
     <Pressable
@@ -22,7 +36,9 @@ export function Button({ title, onPress, leftIcon, rightIcon, isLoading }: Butto
           paddingVertical: 12,
           paddingHorizontal: title ? 24 : 12,
           borderRadius: 12,
-          backgroundColor: theme.colors.primaryContainer,
+          backgroundColor: destructive
+            ? theme.colors.errorContainer
+            : theme.colors.primaryContainer,
           opacity: state.pressed ? 0.7 : 1,
           justifyContent: 'center',
           alignItems: 'center',
@@ -31,19 +47,17 @@ export function Button({ title, onPress, leftIcon, rightIcon, isLoading }: Butto
         }
       }}
     >
-      {isLoading && <ActivityIndicator size='small' color={theme.colors.onPrimaryContainer} />}
-      {leftIcon && !isLoading && (
-        <Icon name={leftIcon} size={24} color={theme.colors.onPrimaryContainer} />
-      )}
+      {isLoading && <ActivityIndicator size='small' color={foregroundColor} />}
+      {leftIcon && !isLoading && <Icon name={leftIcon} size={24} color={foregroundColor} />}
       {title && (
         <Text
           selectable={false}
-          style={{ fontSize: 16, fontWeight: '600', color: theme.colors.onPrimaryContainer }}
+          style={{ fontSize: 16, fontWeight: '600', color: foregroundColor }}
         >
           {title}
         </Text>
       )}
-      {rightIcon && <Icon name={rightIcon} size={24} color={theme.colors.onPrimaryContainer} />}
+      {rightIcon && <Icon name={rightIcon} size={24} color={foregroundColor} />}
     </Pressable>
   )
 }
