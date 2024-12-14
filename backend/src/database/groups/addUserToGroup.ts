@@ -1,8 +1,6 @@
 import { ConflictException } from '../../errors/ConflictException'
-import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
-import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { userExists } from '../utils/userExists'
 import { Pool } from 'pg'
@@ -16,10 +14,6 @@ export async function addUserToGroup(pool: Pool, callerId: string, args: AddUser
 
     if (await isGroupDeleted(client, args.groupId)) {
       throw new NotFoundException('api.notFound.group')
-    }
-
-    if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new ForbiddenException('api.insufficientPermissions.group.addUser')
     }
 
     if (!(await userExists(client, args.userId))) {

@@ -1,6 +1,4 @@
-import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
-import { hasAccessToGroup } from '../utils/hasAccessToGroup'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { userExists } from '../utils/userExists'
 import { Pool } from 'pg'
@@ -14,10 +12,6 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
 
     if (await isGroupDeleted(client, args.groupId)) {
       throw new NotFoundException('api.notFound.group')
-    }
-
-    if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
-      throw new ForbiddenException('api.insufficientPermissions.group.createSplit')
     }
 
     const splitId = (

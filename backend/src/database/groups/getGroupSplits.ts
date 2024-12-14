@@ -1,6 +1,4 @@
-import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
-import { hasAccessToGroup } from '../utils/hasAccessToGroup'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
 import { GetGroupSplitsArguments, SplitInfo } from 'shared'
@@ -12,10 +10,6 @@ export async function getGroupSplits(
 ): Promise<SplitInfo[]> {
   if (await isGroupDeleted(pool, args.groupId)) {
     throw new NotFoundException('api.notFound.group')
-  }
-
-  if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
-    throw new ForbiddenException('api.insufficientPermissions.group.access')
   }
 
   const rows = (

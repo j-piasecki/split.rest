@@ -1,6 +1,4 @@
-import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
-import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
 import { Pool } from 'pg'
 import { DeleteGroupJoinLinkArguments } from 'shared/src/endpointArguments'
 
@@ -13,10 +11,6 @@ export async function deleteGroupJoinLink(
 
   try {
     await client.query('BEGIN')
-
-    if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new ForbiddenException('api.insufficientPermissions.group.joinLink.delete')
-    }
 
     const linkExists =
       (await client.query('SELECT 1 FROM group_join_links WHERE group_id = $1', [args.groupId]))
