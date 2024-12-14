@@ -1,4 +1,3 @@
-
 import { Colors, Theme, ThemeType } from '@type/theme'
 import React from 'react'
 import { Appearance, Platform } from 'react-native'

@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { EditableText } from '@components/EditableText'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
 import { useCreateGroupJoinLink } from '@hooks/database/useCreateGroupJoinLink'
@@ -24,19 +25,18 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
   const { mutateAsync: createJoinLink, isPending: isCreatingJoinLink } = useCreateGroupJoinLink()
   const { mutateAsync: deleteJoinLink, isPending: isDeletingJoinLink } = useDeleteGroupJoinLink()
 
-  const waiting = isLoadingLink || isCreatingJoinLink || isDeletingJoinLink
-
   const linkText = __DEV__
     ? `http://localhost:8081/join/${link?.uuid}`
     : `https://split.rest/join/${link?.uuid}`
 
   return (
     <View>
-      {waiting && <ActivityIndicator color={theme.colors.primary} />}
-      {!waiting && (
+      {isLoadingLink && <ActivityIndicator color={theme.colors.primary} />}
+      {!isLoadingLink && (
         <>
           {!link && (
             <Button
+              isLoading={isCreatingJoinLink}
               title={t('groupSettings.joinLink.create')}
               onPress={() => createJoinLink(info.id)}
             />
@@ -69,6 +69,7 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
               </View>
               <Button
                 leftIcon='delete'
+                isLoading={isDeletingJoinLink}
                 title={t('groupSettings.joinLink.delete')}
                 onPress={() => deleteJoinLink(info.id)}
               />
@@ -82,14 +83,11 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
 
 function Form({ info }: { info: GroupInfo }) {
   const user = useAuth()
-  const theme = useTheme()
   const router = useRouter()
   const { t } = useTranslation()
   const [name, setName] = useState(info.name)
   const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
   const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
-
-  const waiting = isSettingName || isDeletingGroup
 
   return (
     <View
@@ -102,32 +100,34 @@ function Form({ info }: { info: GroupInfo }) {
         paddingBottom: 32,
       }}
     >
-      <TextInput placeholder={t('groupSettings.groupName')} value={name} onChangeText={setName} />
-      {!waiting && (
+      <EditableText
+        value={name}
+        placeholder={t('groupSettings.groupName')}
+        onSubmit={(newName) => {
+          setGroupName(newName).then(() => {
+            setName(newName)
+          })
+        }}
+        isPending={isSettingName}
+      />
+      {!isDeletingGroup && (
         <>
           <JoinLinkManager info={info} />
-          {/* TODO: add confirmation dialog */}
-          {info.owner === user?.id && (
-            <Button
-              destructive
-              leftIcon='deleteForever'
-              title={t('groupSettings.deleteGroup')}
-              onPress={async () => {
-                await deleteGroup(info.id)
-                router.replace(`/`)
-              }}
-            />
-          )}
-          <View>
-            <Button
-              leftIcon='check'
-              title={t('groupSettings.save')}
-              onPress={() => setGroupName(name)}
-            />
-          </View>
         </>
       )}
-      {waiting && <ActivityIndicator color={theme.colors.primary} />}
+      {/* TODO: add confirmation dialog */}
+      {info.owner === user?.id && (
+        <Button
+          destructive
+          leftIcon='deleteForever'
+          title={t('groupSettings.deleteGroup')}
+          isLoading={isDeletingGroup}
+          onPress={async () => {
+            await deleteGroup(info.id)
+            router.replace(`/`)
+          }}
+        />
+      )}
     </View>
   )
 }

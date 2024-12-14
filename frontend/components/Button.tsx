@@ -10,6 +10,7 @@ export interface ButtonProps {
   rightIcon?: IconName
   isLoading?: boolean
   destructive?: boolean
+  disabled?: boolean
 }
 
 export function Button({
@@ -19,6 +20,7 @@ export function Button({
   rightIcon,
   isLoading,
   destructive,
+  disabled,
 }: ButtonProps) {
   const theme = useTheme()
 
@@ -31,6 +33,7 @@ export function Button({
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled || isLoading}
       style={(state) => {
         return {
           paddingVertical: 12,
@@ -39,7 +42,7 @@ export function Button({
           backgroundColor: destructive
             ? theme.colors.errorContainer
             : theme.colors.primaryContainer,
-          opacity: state.pressed ? 0.7 : 1,
+          opacity: disabled ? 0.5 : state.pressed ? 0.7 : 1,
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'row',
