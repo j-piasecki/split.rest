@@ -25,11 +25,8 @@
     "insufficientPermissions": {
       "group": {
         "access": "User does not have access to group",
-        "addUser": "User does not have permission to add users to the group",
-        "setAdmin": "User does not have permission to manage group admins",
-        "setAccess": "User does not have permission to manage group access",
+        "manage": "User does not have permission to manage the group",
         "delete": "User does not have permission to delete the group",
-        "setName": "User does not have permission to change the group name",
         "createSplit": "User does not have permission to create splits in the group",
         "deleteSplit": "User does not have permission to delete this split",
         "editSplit": "User does not have permission to edit this split",

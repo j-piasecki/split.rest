@@ -1,6 +1,4 @@
 import { BadRequestException } from '../../errors/BadRequestException'
-import { ForbiddenException } from '../../errors/ForbiddenException'
-import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
 import { Pool } from 'pg'
 import { CreateGroupJoinLinkArguments } from 'shared/src/endpointArguments'
 import { GroupJoinLink } from 'shared/src/types'
@@ -15,10 +13,6 @@ export async function createGroupJoinLink(
 
   try {
     await client.query('BEGIN')
-
-    if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new ForbiddenException('api.insufficientPermissions.group.joinLink.create')
-    }
 
     const linkExists =
       (await client.query('SELECT 1 FROM group_join_links WHERE group_id = $1', [args.groupId]))

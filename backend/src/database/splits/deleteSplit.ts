@@ -1,8 +1,5 @@
-import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
-import { hasAccessToGroup } from '../utils/hasAccessToGroup'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
-import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
 import { splitExists } from '../utils/splitExists'
 import { Pool } from 'pg'
 import { DeleteSplitArguments } from 'shared'
@@ -17,10 +14,6 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
       throw new NotFoundException('api.notFound.group')
     }
 
-    if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
-      throw new ForbiddenException('api.insufficientPermissions.group.deleteSplit')
-    }
-
     if (!(await splitExists(client, args.groupId, args.splitId))) {
       throw new NotFoundException('api.notFound.split')
     }
@@ -31,14 +24,6 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
         [args.groupId, args.splitId]
       )
     ).rows[0]
-
-    if (
-      splitInfo.created_by !== callerId &&
-      splitInfo.paid_by !== callerId &&
-      !(await isUserGroupAdmin(client, args.groupId, callerId))
-    ) {
-      throw new ForbiddenException('api.insufficientPermissions.group.deleteSplit')
-    }
 
     const splitParticipants = (
       await client.query('SELECT user_id, change FROM split_participants WHERE split_id = $1', [

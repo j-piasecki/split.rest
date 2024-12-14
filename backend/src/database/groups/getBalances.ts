@@ -1,4 +1,3 @@
-import { hasAccessToGroup } from '../utils/hasAccessToGroup'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
 import {
@@ -8,7 +7,6 @@ import {
   isGetBalancesWithIdsArguments,
 } from 'shared'
 import { BadRequestException } from 'src/errors/BadRequestException'
-import { ForbiddenException } from 'src/errors/ForbiddenException'
 import { NotFoundException } from 'src/errors/NotFoundException'
 
 export async function getBalances(
@@ -18,10 +16,6 @@ export async function getBalances(
 ): Promise<UserWithBalanceChange[]> {
   if (await isGroupDeleted(pool, args.groupId)) {
     throw new NotFoundException('api.notFound.group')
-  }
-
-  if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
-    throw new ForbiddenException('api.insufficientPermissions.group.access')
   }
 
   let balances: Record<string, string>[] | null = null

@@ -1,7 +1,5 @@
-import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
-import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
 import { userExists } from '../utils/userExists'
 import { Pool } from 'pg'
 import { SetGroupAccessArguments } from 'shared'
@@ -13,10 +11,6 @@ export async function setGroupAccess(pool: Pool, callerId: string, args: SetGrou
 
     if (await isGroupDeleted(client, args.groupId)) {
       throw new NotFoundException('api.notFound.group')
-    }
-
-    if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new ForbiddenException('api.insufficientPermissions.group.setAccess')
     }
 
     if (!(await userExists(client, args.userId))) {

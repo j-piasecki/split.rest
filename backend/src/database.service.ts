@@ -17,6 +17,7 @@ import { setGroupAccess } from './database/groups/setGroupAccess'
 import { setGroupAdmin } from './database/groups/setGroupAdmin'
 import { setGroupHidden } from './database/groups/setGroupHidden'
 import { setGroupName } from './database/groups/setGroupName'
+import { RequirePermissions } from './database/permissionCheck'
 import { createSplit } from './database/splits/createSplit'
 import { deleteSplit } from './database/splits/deleteSplit'
 import { getSplitInfo } from './database/splits/getSplitInfo'
@@ -58,7 +59,7 @@ import {
 
 @Injectable()
 export class DatabaseService {
-  private pool: Pool
+  readonly pool: Pool
 
   constructor() {
     this.pool = new Pool({
@@ -80,66 +81,82 @@ export class DatabaseService {
     return await createOrUpdateUser(this.pool, user)
   }
 
-  async createGroup(userId: string, args: CreateGroupArguments) {
-    return await createGroup(this.pool, userId, args)
+  @RequirePermissions(['createGroup'])
+  async createGroup(callerId: string, args: CreateGroupArguments) {
+    return await createGroup(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup', 'manageGroup'])
   async addUserToGroup(callerId: string, args: AddUserToGroupArguments) {
     return await addUserToGroup(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup', 'createSplit'])
   async createSplit(callerId: string, args: CreateSplitArguments) {
     return await createSplit(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup', 'deleteSplit'])
   async deleteSplit(callerId: string, args: DeleteSplitArguments) {
     return await deleteSplit(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup', 'restoreSplit'])
   async restoreSplit(callerId: string, args: RestoreSplitArguments) {
     return await restoreSplit(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup', 'editSplit'])
   async updateSplit(callerId: string, args: UpdateSplitArguments) {
     return await updateSplit(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup', 'manageGroup'])
   async setGroupAccess(callerId: string, args: SetGroupAccessArguments) {
     return await setGroupAccess(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup', 'manageGroup'])
   async setGroupAdmin(callerId: string, args: SetGroupAdminArguments) {
     return await setGroupAdmin(this.pool, callerId, args)
   }
 
+  // Every user can set their own group hidden status
   async setGroupHidden(callerId: string, args: SetGroupHiddenArguments) {
     return await setGroupHidden(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup'])
   async getGroupSplits(callerId: string, args: GetGroupSplitsArguments) {
     return await getGroupSplits(this.pool, callerId, args)
   }
 
+  // Every user can see their own groups
   async getUserGroups(callerId: string, args: GetUserGroupsArguments) {
     return await getUserGroups(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup'])
   async getGroupMembers(callerId: string, args: GetGroupMembersArguments) {
     return await getGroupMembers(this.pool, callerId, args)
   }
 
+  // If email is known, every user can get user info
   async getUserByEmail(callerId: string, args: GetUserByEmailArguments) {
     return await getUserByEmail(this.pool, callerId, args)
   }
 
+  // If id is known, every user can get user info
   async getUserById(callerId: string, args: GetUserByIdArguments) {
     return await getUserById(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['getGroupInfo'])
   async getGroupInfo(callerId: string, args: GetGroupInfoArguments) {
     return await getGroupInfo(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup'])
   async getGroupMembersAutocompletions(
     callerId: string,
     args: GetGroupMembersAutocompletionsArguments
@@ -147,38 +164,48 @@ export class DatabaseService {
     return await getGroupMembersAutocompletions(this.pool, callerId, args)
   }
 
+  // TODO: allow to see split if user has no access but is a participant?
+  @RequirePermissions(['accessGroup'])
   async getSplitInfo(callerId: string, args: GetSplitInfoArguments) {
     return await getSplitInfo(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup'])
   async getBalances(callerId: string, args: GetBalancesArguments) {
     return await getBalances(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup', 'deleteGroup'])
   async deleteGroup(callerId: string, args: DeleteGroupArguments) {
     return await deleteGroup(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup', 'manageGroup'])
   async setGroupName(callerId: string, args: SetGroupNameArguments) {
     return await setGroupName(this.pool, callerId, args)
   }
 
+  // Every user can join a group by link if they have it
   async joinGroupByLink(callerId: string, args: JoinGroupByLinkArguments) {
     return await joinGroupByLink(this.pool, callerId, args)
   }
 
+  // Every user can get group metadata by link if they have it
   async getGroupMetadataByLink(args: GetGroupMetadataByLinkArguments) {
     return await getGroupMetadataByLink(this.pool, args)
   }
 
+  @RequirePermissions(['accessGroup', 'manageGroup'])
   async createGroupJoinLink(callerId: string, args: CreateGroupJoinLinkArguments) {
     return await createGroupJoinLink(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup', 'manageGroup'])
   async deleteGroupJoinLink(callerId: string, args: DeleteGroupJoinLinkArguments) {
     return await deleteGroupJoinLink(this.pool, callerId, args)
   }
 
+  @RequirePermissions(['accessGroup', 'manageGroup'])
   async getGroupJoinLink(callerId: string, args: GetGroupJoinLinkArguments) {
     return await getGroupJoinLink(this.pool, callerId, args)
   }

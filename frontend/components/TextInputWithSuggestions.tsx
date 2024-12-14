@@ -33,7 +33,11 @@ export function TextInputWithSuggestions<T>({
 
   useEffect(() => {
     if (isFocusedDebounced && debouncedValue && debouncedValue.length > 0) {
-      getSuggestions(debouncedValue).then(setSuggestions)
+      getSuggestions(debouncedValue)
+        .then(setSuggestions)
+        .catch((error) => {
+          console.error('Error getting suggestions', error)
+        })
     } else {
       setSuggestions([])
     }

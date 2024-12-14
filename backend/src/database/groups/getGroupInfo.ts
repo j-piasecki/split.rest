@@ -1,7 +1,5 @@
-import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
-import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { Pool } from 'pg'
 import { GetGroupInfoArguments, GroupInfo } from 'shared'
 
@@ -12,10 +10,6 @@ export async function getGroupInfo(
 ): Promise<GroupInfo | null> {
   if (await isGroupDeleted(pool, args.groupId)) {
     throw new NotFoundException('api.notFound.group')
-  }
-
-  if (!(await isUserMemberOfGroup(pool, args.groupId, callerId))) {
-    throw new ForbiddenException('api.group.userNotInGroup')
   }
 
   const row = (

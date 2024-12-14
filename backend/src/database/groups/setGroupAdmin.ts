@@ -1,10 +1,8 @@
 import { isGroupDeleted } from '../utils/isGroupDeleted'
-import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
 import { userExists } from '../utils/userExists'
 import { NotFoundException } from '@nestjs/common/exceptions/not-found.exception'
 import { Pool } from 'pg'
 import { SetGroupAdminArguments } from 'shared'
-import { ForbiddenException } from 'src/errors/ForbiddenException'
 
 export async function setGroupAdmin(pool: Pool, callerId: string, args: SetGroupAdminArguments) {
   const client = await pool.connect()
@@ -16,13 +14,11 @@ export async function setGroupAdmin(pool: Pool, callerId: string, args: SetGroup
       throw new NotFoundException('api.notFound.group')
     }
 
-    if (!(await isUserGroupAdmin(client, args.groupId, callerId))) {
-      throw new ForbiddenException('api.insufficientPermissions.group.setAdmin')
-    }
-
     if (!(await userExists(client, args.userId))) {
       throw new NotFoundException('notFound.user')
     }
+
+    // TODO: check if user has access to group?
 
     await client.query(
       'UPDATE group_members SET is_admin = $1 WHERE group_id = $2 AND user_id = $3',

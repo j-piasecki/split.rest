@@ -1,8 +1,5 @@
-import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
-import { hasAccessToGroup } from '../utils/hasAccessToGroup'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
-import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
 import { splitExists } from '../utils/splitExists'
 import { Pool } from 'pg'
 import { UpdateSplitArguments } from 'shared'
@@ -14,10 +11,6 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
 
     if (await isGroupDeleted(client, args.groupId)) {
       throw new NotFoundException('api.notFound.group')
-    }
-
-    if (!(await hasAccessToGroup(client, args.groupId, callerId))) {
-      throw new ForbiddenException('api.insufficientPermissions.group.access')
     }
 
     if (!(await splitExists(client, args.groupId, args.splitId))) {
@@ -40,14 +33,6 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
         [args.groupId, args.splitId]
       )
     ).rows[0]
-
-    if (
-      splitInfo.created_by !== callerId &&
-      splitInfo.paid_by !== callerId &&
-      !(await isUserGroupAdmin(client, args.groupId, callerId))
-    ) {
-      throw new ForbiddenException('api.insufficientPermissions.group.editSplit')
-    }
 
     // Remove old balances
 
