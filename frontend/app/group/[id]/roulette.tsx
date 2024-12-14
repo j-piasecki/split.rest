@@ -95,7 +95,7 @@ function Form({ groupId, setResult }: FormProps) {
         ))}
       </ScrollView>
 
-      {!loading && <Button title={t('roulette.submit')} onPress={submit} />}
+      {!loading && <Button leftIcon='check' title={t('roulette.submit')} onPress={submit} />}
       {loading && <ActivityIndicator color={theme.colors.onSurface} />}
       {error && <Text style={{ color: 'red', marginTop: 8 }}>{error}</Text>}
     </View>

@@ -17,20 +17,29 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
+import { Icon, IconName } from './Icon'
 
 type Rect = { x: number; y: number; width: number; height: number }
 type Point = { x: number; y: number }
 
 export interface ContextMenuItem {
   label: string
+  icon?: IconName
   onPress: () => void
   disabled?: boolean
   destructive?: boolean
 }
 
-function ContextMenuItemComponent({ label, onPress, disabled, destructive }: ContextMenuItem) {
+function ContextMenuItemComponent({ label, onPress, disabled, destructive, icon }: ContextMenuItem) {
   const theme = useTheme()
   const [isPressed, setIsPressed] = useState(false)
+
+
+  const color = destructive
+  ? theme.colors.error
+  : isPressed
+    ? theme.colors.primary
+    : theme.colors.onSurface
 
   return (
     <Pressable
@@ -40,6 +49,9 @@ function ContextMenuItemComponent({ label, onPress, disabled, destructive }: Con
       onPressOut={() => setIsPressed(false)}
       style={({ pressed, hovered }) => {
         return {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 8,
           backgroundColor: pressed
             ? theme.colors.surfaceContainerHighest
             : hovered
@@ -50,14 +62,11 @@ function ContextMenuItemComponent({ label, onPress, disabled, destructive }: Con
         }
       }}
     >
+      {icon && <Icon name={icon} size={20} color={color} />}
       <Text
         style={{
-          fontSize: 20,
-          color: destructive
-            ? theme.colors.error
-            : isPressed
-              ? theme.colors.primary
-              : theme.colors.onSurface,
+          fontSize: 18,
+          color: color
         }}
       >
         {label}

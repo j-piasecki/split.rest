@@ -34,12 +34,14 @@ export function MemberRow({ member, info }: MemberRowProps) {
       items={[
         {
           label: member.hasAccess ? t('member.revokeAccess') : t('member.giveAccess'),
+          icon: member.hasAccess ? 'lock' : 'lockOpen',
           onPress: () => {
             setGroupAccessMutation(!member.hasAccess)
           },
         },
         {
           label: member.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin'),
+          icon: member.isAdmin ? 'removeModerator' : 'addModerator',
           onPress: () => {
             setGroupAdminMutation(!member.isAdmin)
           },

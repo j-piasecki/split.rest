@@ -68,6 +68,7 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
                 />
               </View>
               <Button
+                leftIcon='delete'
                 title={t('groupSettings.joinLink.delete')}
                 onPress={() => deleteJoinLink(info.id)}
               />
@@ -135,7 +136,7 @@ function Form({ info }: { info: GroupInfo }) {
             </View>
           )}
           <View>
-            <Button title={t('groupSettings.save')} onPress={() => setGroupName(name)} />
+            <Button leftIcon='check' title={t('groupSettings.save')} onPress={() => setGroupName(name)} />
           </View>
         </>
       )}
