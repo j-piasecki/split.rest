@@ -1,11 +1,12 @@
 import { useTheme } from '@styling/theme'
 import React from 'react'
-import { TextInputProps, TextInput as TextInputRN } from 'react-native'
+import { StyleProp, TextInputProps, TextInput as TextInputRN, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-export interface Props extends TextInputProps {
+export interface Props extends Omit<TextInputProps, 'style'> {
   error?: boolean
   resetError?: () => void
+  style?: StyleProp<ViewStyle>
 }
 
 export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput(

@@ -1,16 +1,32 @@
+import { Icon, IconName } from './Icon'
 import { useTheme } from '@styling/theme'
 import React from 'react'
-import { Pressable, Text } from 'react-native'
+import { ActivityIndicator, Pressable, Text } from 'react-native'
 
 export interface ButtonProps {
   title?: string
   onPress?: () => void
-  leftIcon?: React.ReactNode
-  rightIcon?: React.ReactNode
+  leftIcon?: IconName
+  rightIcon?: IconName
+  isLoading?: boolean
+  destructive?: boolean
 }
 
-export function Button({ title, onPress, leftIcon, rightIcon }: ButtonProps) {
+export function Button({
+  title,
+  onPress,
+  leftIcon,
+  rightIcon,
+  isLoading,
+  destructive,
+}: ButtonProps) {
   const theme = useTheme()
+
+  const foregroundColor = destructive
+    ? theme.colors.onErrorContainer
+    : isLoading
+      ? theme.colors.primary
+      : theme.colors.onSurface
 
   return (
     <Pressable
@@ -20,7 +36,9 @@ export function Button({ title, onPress, leftIcon, rightIcon }: ButtonProps) {
           paddingVertical: 12,
           paddingHorizontal: title ? 24 : 12,
           borderRadius: 12,
-          backgroundColor: theme.colors.primaryContainer,
+          backgroundColor: destructive
+            ? theme.colors.errorContainer
+            : theme.colors.primaryContainer,
           opacity: state.pressed ? 0.7 : 1,
           justifyContent: 'center',
           alignItems: 'center',
@@ -29,16 +47,17 @@ export function Button({ title, onPress, leftIcon, rightIcon }: ButtonProps) {
         }
       }}
     >
-      {leftIcon && leftIcon}
+      {isLoading && <ActivityIndicator size='small' color={foregroundColor} />}
+      {leftIcon && !isLoading && <Icon name={leftIcon} size={24} color={foregroundColor} />}
       {title && (
         <Text
           selectable={false}
-          style={{ fontSize: 16, fontWeight: '600', color: theme.colors.onPrimaryContainer }}
+          style={{ fontSize: 16, fontWeight: '600', color: foregroundColor }}
         >
           {title}
         </Text>
       )}
-      {rightIcon && rightIcon}
+      {rightIcon && <Icon name={rightIcon} size={24} color={foregroundColor} />}
     </Pressable>
   )
 }

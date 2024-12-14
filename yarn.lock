@@ -8682,6 +8682,7 @@ __metadata:
     expo-build-properties: ~0.13.1
     expo-clipboard: ~7.0.0
     expo-constants: ~17.0.3
+    expo-image: ~2.0.3
     expo-linking: ~7.0.3
     expo-localization: ~16.0.0
     expo-router: ~4.0.11
@@ -14312,8 +14313,6 @@ __metadata:
 "split@workspace:.":
   version: 0.0.0-use.local
   resolution: "split@workspace:."
-  dependencies:
-    expo-image: ~2.0.3
   languageName: unknown
   linkType: soft
 

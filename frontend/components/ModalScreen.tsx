@@ -1,4 +1,4 @@
-import Ionicons from '@expo/vector-icons/Ionicons'
+import { Icon } from './Icon'
 import { useTheme } from '@styling/theme'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
@@ -36,7 +36,7 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
         }}
       >
         <Pressable onPress={goBack}>
-          <Ionicons name='chevron-back' size={28} color={theme.colors.onSurface} />
+          <Icon name='chevronBack' size={28} color={theme.colors.onSurface} />
         </Pressable>
         <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>{title}</Text>
       </View>
@@ -110,7 +110,7 @@ function ModalScreen({
               }
             }}
           >
-            <Ionicons name='close' size={28} color={theme.colors.onSurface} />
+            <Icon name='close' size={28} color={theme.colors.onSurface} />
           </Pressable>
         </View>
         {children}

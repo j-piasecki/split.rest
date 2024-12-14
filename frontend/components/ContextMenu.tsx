@@ -1,3 +1,4 @@
+import { Icon, IconName } from './Icon'
 import { useTheme } from '@styling/theme'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
 import React, { useEffect, useImperativeHandle, useLayoutEffect } from 'react'
@@ -21,22 +22,29 @@ import Animated, {
 type Rect = { x: number; y: number; width: number; height: number }
 type Point = { x: number; y: number }
 
-declare module 'react-native' {
-  interface PressableStateCallbackType {
-    hovered: boolean
-  }
-}
-
 export interface ContextMenuItem {
   label: string
+  icon?: IconName
   onPress: () => void
   disabled?: boolean
   destructive?: boolean
 }
 
-function ContextMenuItemComponent({ label, onPress, disabled, destructive }: ContextMenuItem) {
+function ContextMenuItemComponent({
+  label,
+  onPress,
+  disabled,
+  destructive,
+  icon,
+}: ContextMenuItem) {
   const theme = useTheme()
   const [isPressed, setIsPressed] = useState(false)
+
+  const color = destructive
+    ? theme.colors.error
+    : isPressed
+      ? theme.colors.primary
+      : theme.colors.onSurface
 
   return (
     <Pressable
@@ -46,6 +54,9 @@ function ContextMenuItemComponent({ label, onPress, disabled, destructive }: Con
       onPressOut={() => setIsPressed(false)}
       style={({ pressed, hovered }) => {
         return {
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 8,
           backgroundColor: pressed
             ? theme.colors.surfaceContainerHighest
             : hovered
@@ -56,14 +67,11 @@ function ContextMenuItemComponent({ label, onPress, disabled, destructive }: Con
         }
       }}
     >
+      {icon && <Icon name={icon} size={20} color={color} />}
       <Text
         style={{
-          fontSize: 20,
-          color: destructive
-            ? theme.colors.error
-            : isPressed
-              ? theme.colors.primary
-              : theme.colors.onSurface,
+          fontSize: 18,
+          color: color,
         }}
       >
         {label}
@@ -133,7 +141,6 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
         borderColor: theme.colors.outlineVariant,
         paddingVertical: 8,
         overflow: 'hidden',
-        // @ts-expect-error - userSelect does not exist on View on mobile
         userSelect: 'none',
       }}
     >

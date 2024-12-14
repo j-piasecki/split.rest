@@ -1,5 +1,5 @@
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Icon } from '@components/Icon'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
 import { useTheme } from '@styling/theme'
@@ -34,12 +34,14 @@ export function MemberRow({ member, info }: MemberRowProps) {
       items={[
         {
           label: member.hasAccess ? t('member.revokeAccess') : t('member.giveAccess'),
+          icon: member.hasAccess ? 'lock' : 'lockOpen',
           onPress: () => {
             setGroupAccessMutation(!member.hasAccess)
           },
         },
         {
           label: member.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin'),
+          icon: member.isAdmin ? 'removeModerator' : 'addModerator',
           onPress: () => {
             setGroupAdminMutation(!member.isAdmin)
           },
@@ -110,7 +112,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
             opacity: contextMenuDisabled ? 0 : 1,
           })}
         >
-          <MaterialIcons name='more-vert' size={24} color={theme.colors.outline} />
+          <Icon name='moreVertical' size={24} color={theme.colors.outline} />
         </Pressable>
       </View>
     </ContextMenu>

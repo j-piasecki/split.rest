@@ -1,8 +1,5 @@
 import { Button } from '@components/Button'
-import Entypo from '@expo/vector-icons/Entypo'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Icon } from '@components/Icon'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -62,7 +59,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
           <View style={{ width: 24, alignItems: 'center' }}>
-            <FontAwesome name='users' size={20} color={theme.colors.outline} />
+            <Icon name='members' size={20} color={theme.colors.outline} />
           </View>
           <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
             {t('groupInfo.numberOfMembers', { count: info.memberCount })}
@@ -71,8 +68,8 @@ function InfoCard({ info }: { info: GroupInfo }) {
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
           <View style={{ width: 24, alignItems: 'center' }}>
-            <FontAwesome
-              name={info.hasAccess ? 'unlock-alt' : 'lock'}
+            <Icon
+              name={info.hasAccess ? 'lockOpen' : 'lock'}
               size={20}
               color={theme.colors.outline}
             />
@@ -85,7 +82,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
         {info.isAdmin && (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             <View style={{ width: 24, alignItems: 'center' }}>
-              <FontAwesome5 name='shield-alt' size={20} color={theme.colors.outline} />
+              <Icon name='shield' size={20} color={theme.colors.outline} />
             </View>
             <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
               {t('groupInfo.youAreAdmin')}
@@ -95,7 +92,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
           <View style={{ width: 24, alignItems: 'center' }}>
-            <FontAwesome name='dollar' size={20} color={theme.colors.outline} />
+            <Icon name='money' size={20} color={theme.colors.outline} />
           </View>
           <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
             {t('groupInfo.totalTransactionsValue', {
@@ -111,7 +108,6 @@ function InfoCard({ info }: { info: GroupInfo }) {
 
 function ActionButtons({ info }: { info: GroupInfo }) {
   const user = useAuth()
-  const theme = useTheme()
   const { t } = useTranslation()
   const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info.id)
 
@@ -123,7 +119,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
             router.navigate(`/group/${info.id}/addUser`)
           }}
           title={t('groupInfo.addUser')}
-          leftIcon={<Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />}
+          leftIcon='addMember'
         />
       )}
 
@@ -133,9 +129,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
             router.navigate(`/group/${info.id}/roulette`)
           }}
           title={t('groupInfo.roulette')}
-          leftIcon={
-            <MaterialIcons name='payments' size={20} color={theme.colors.onPrimaryContainer} />
-          }
+          leftIcon='payments'
         />
       )}
 
@@ -145,9 +139,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
             router.navigate(`/group/${info.id}/addSplit`)
           }}
           title={t('groupInfo.addSplit')}
-          leftIcon={
-            <MaterialIcons name='call-split' size={20} color={theme.colors.onPrimaryContainer} />
-          }
+          leftIcon='split'
         />
       )}
 
@@ -157,9 +149,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
           onPress={() => {
             setGroupHiddenMutation(false)
           }}
-          leftIcon={
-            <MaterialIcons name='visibility' size={20} color={theme.colors.onPrimaryContainer} />
-          }
+          leftIcon='visibility'
         />
       )}
 
@@ -169,13 +159,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
           onPress={() => {
             setGroupHiddenMutation(true)
           }}
-          leftIcon={
-            <MaterialIcons
-              name='visibility-off'
-              size={20}
-              color={theme.colors.onPrimaryContainer}
-            />
-          }
+          leftIcon='visibilityOff'
         />
       )}
 
@@ -183,9 +167,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
         <Button
           title={t('groupInfo.settings')}
           onPress={() => router.navigate(`/group/${info.id}/settings`)}
-          leftIcon={
-            <MaterialIcons name='settings' size={20} color={theme.colors.onPrimaryContainer} />
-          }
+          leftIcon='settings'
         />
       )}
     </View>

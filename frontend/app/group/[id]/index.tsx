@@ -1,10 +1,9 @@
 import Header from '@components/Header'
+import { Icon } from '@components/Icon'
 import { Tab, TabView } from '@components/TabView'
 import { GroupInfoPage } from '@components/groupScreen/GroupInfoPage'
 import { MembersList } from '@components/groupScreen/MembersList'
 import { SplitsList } from '@components/groupScreen/SplitsList'
-import Entypo from '@expo/vector-icons/Entypo'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -37,8 +36,8 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
             justifyContent: 'center',
           }}
         >
-          <FontAwesome
-            name='list-ul'
+          <Icon
+            name='receipt'
             size={20}
             color={selected ? theme.colors.primary : theme.colors.outline}
           />
@@ -64,8 +63,8 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
             justifyContent: 'center',
           }}
         >
-          <FontAwesome
-            name='users'
+          <Icon
+            name='members'
             size={20}
             color={selected ? theme.colors.primary : theme.colors.outline}
           />
@@ -94,7 +93,7 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
             justifyContent: 'center',
           }}
         >
-          <Entypo
+          <Icon
             name='home'
             size={20}
             color={selected ? theme.colors.primary : theme.colors.outline}

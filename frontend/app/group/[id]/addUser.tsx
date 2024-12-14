@@ -84,7 +84,9 @@ function Form() {
         value={email}
         onChangeText={setEmail}
       />
-      {!waiting && <Button title={t('addUser.addUser')} onPress={handlePress} />}
+      {!waiting && (
+        <Button leftIcon='addMember' title={t('addUser.addUser')} onPress={handlePress} />
+      )}
       {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
 
       {error !== '' && <Text style={{ color: 'red' }}>{error}</Text>}

@@ -1,5 +1,4 @@
 import { Button } from '@components/Button'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -7,7 +6,7 @@ import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Pressable, Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 import { GroupInfo, SplitInfo } from 'shared'
 
 export interface SplitRowProps {
@@ -104,13 +103,8 @@ export function SplitRow({ split, info }: SplitRowProps) {
       <View style={{ width: 48 }}>
         {showDeteteButton && (
           <Button
-            leftIcon={
-              isPending ? (
-                <ActivityIndicator size='small' color={theme.colors.onPrimaryContainer} />
-              ) : (
-                <MaterialIcons name='delete' size={20} color={theme.colors.onPrimaryContainer} />
-              )
-            }
+            leftIcon='delete'
+            isLoading={isPending}
             onPress={() => {
               deleteSplit(split.id)
             }}

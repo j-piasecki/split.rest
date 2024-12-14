@@ -1,7 +1,6 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useCreateGroupJoinLink } from '@hooks/database/useCreateGroupJoinLink'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
 import { useDeleteGroupJoinLink } from '@hooks/database/useDeleteGroupJoinLink'
@@ -15,7 +14,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Pressable, Text, View } from 'react-native'
+import { ActivityIndicator, Text, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function JoinLinkManager({ info }: { info: GroupInfo }) {
@@ -62,19 +61,14 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
                   selectTextOnFocus
                 />
                 <Button
-                  leftIcon={
-                    <MaterialIcons
-                      name='content-copy'
-                      size={20}
-                      color={theme.colors.onPrimaryContainer}
-                    />
-                  }
+                  leftIcon='copy'
                   onPress={() => {
                     Clipboard.setStringAsync(linkText)
                   }}
                 />
               </View>
               <Button
+                leftIcon='delete'
                 title={t('groupSettings.joinLink.delete')}
                 onPress={() => deleteJoinLink(info.id)}
               />
@@ -112,37 +106,24 @@ function Form({ info }: { info: GroupInfo }) {
       {!waiting && (
         <>
           <JoinLinkManager info={info} />
+          {/* TODO: add confirmation dialog */}
           {info.owner === user?.id && (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              {/* TODO: add confirmation dialog, more generic button */}
-              <Pressable
-                onPress={async () => {
-                  await deleteGroup(info.id)
-                  router.replace(`/`)
-                }}
-                style={({ pressed }) => {
-                  return {
-                    backgroundColor: theme.colors.errorContainer,
-                    flex: 1,
-                    padding: 12,
-                    borderRadius: 12,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    opacity: pressed ? 0.7 : 1,
-                  }
-                }}
-              >
-                <Text
-                  selectable={false}
-                  style={{ color: theme.colors.onErrorContainer, fontWeight: 'bold', fontSize: 16 }}
-                >
-                  {t('groupSettings.deleteGroup')}
-                </Text>
-              </Pressable>
-            </View>
+            <Button
+              destructive
+              leftIcon='deleteForever'
+              title={t('groupSettings.deleteGroup')}
+              onPress={async () => {
+                await deleteGroup(info.id)
+                router.replace(`/`)
+              }}
+            />
           )}
           <View>
-            <Button title={t('groupSettings.save')} onPress={() => setGroupName(name)} />
+            <Button
+              leftIcon='check'
+              title={t('groupSettings.save')}
+              onPress={() => setGroupName(name)}
+            />
           </View>
         </>
       )}

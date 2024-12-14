@@ -19,10 +19,7 @@ export function MembersList({ info }: MembersListProps) {
   }
 
   return (
-    <View
-      // @ts-expect-error - userSelect is not a valid style property in react-native
-      style={{ width: '100%', flex: 1, maxWidth: 768, alignSelf: 'center', userSelect: 'none' }}
-    >
+    <View style={{ width: '100%', flex: 1, maxWidth: 768, alignSelf: 'center' }}>
       <FlatList
         contentContainerStyle={{ paddingHorizontal: 16, flex: !members?.length ? 1 : undefined }}
         ListEmptyComponent={
