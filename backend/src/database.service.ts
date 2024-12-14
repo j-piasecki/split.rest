@@ -81,7 +81,7 @@ export class DatabaseService {
     return await createOrUpdateUser(this.pool, user)
   }
 
-  @RequirePermissions(['createGroup'])
+  // Every user can create a group
   async createGroup(callerId: string, args: CreateGroupArguments) {
     return await createGroup(this.pool, callerId, args)
   }
@@ -91,7 +91,9 @@ export class DatabaseService {
     return await addUserToGroup(this.pool, callerId, args)
   }
 
-  @RequirePermissions(['accessGroup', 'createSplit'])
+  // Every user can create a split in a group they have access to
+  // TODO: specific permission for creating splits?
+  @RequirePermissions(['accessGroup'])
   async createSplit(callerId: string, args: CreateSplitArguments) {
     return await createSplit(this.pool, callerId, args)
   }

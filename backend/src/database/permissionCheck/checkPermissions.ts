@@ -16,10 +16,6 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
     const args = unsafeArgs as PermissionArguments<[typeof permission]>
 
     switch (permission) {
-      case 'createGroup':
-        // every user can create a group
-        return null
-
       case 'accessGroup':
         if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
           return 'api.insufficientPermissions.group.access'
@@ -29,13 +25,6 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
       case 'manageGroup':
         if (!(await isUserGroupAdmin(pool, args.groupId, callerId))) {
           return 'api.insufficientPermissions.group.manage'
-        }
-        return null
-
-      case 'createSplit':
-        // TODO: specific permission for creating splits?
-        if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
-          return 'api.insufficientPermissions.group.createSplit'
         }
         return null
 
@@ -53,12 +42,7 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           )
         ).rows[0]
 
-        if (
-          splitInfo &&
-          splitInfo.created_by !== callerId &&
-          splitInfo.paid_by !== callerId &&
-          !(await isUserGroupAdmin(pool, args.groupId, callerId))
-        ) {
+        if (splitInfo && splitInfo.created_by !== callerId && splitInfo.paid_by !== callerId) {
           return `api.insufficientPermissions.group.${permission}`
         }
 
