@@ -1,5 +1,5 @@
 import { Button } from '@components/Button'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Icon } from '@components/Icon'
 import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -108,7 +108,7 @@ export function SplitRow({ split, info }: SplitRowProps) {
               isPending ? (
                 <ActivityIndicator size='small' color={theme.colors.onPrimaryContainer} />
               ) : (
-                <MaterialIcons name='delete' size={20} color={theme.colors.onPrimaryContainer} />
+                <Icon name='delete' size={20} color={theme.colors.onPrimaryContainer} />
               )
             }
             onPress={() => {

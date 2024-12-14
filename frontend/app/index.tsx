@@ -1,5 +1,5 @@
 import { Button } from '@components/Button'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { Icon } from '@components/Icon'
 import { useTheme } from '@styling/theme'
 import { login, useAuth } from '@utils/auth'
 import { Redirect, useLocalSearchParams } from 'expo-router'
@@ -35,9 +35,7 @@ export default function Screen() {
         <Button
           title={t('signIn')}
           onPress={login}
-          leftIcon={
-            <MaterialIcons name='login' size={20} color={theme.colors.onPrimaryContainer} />
-          }
+          leftIcon={<Icon name='login' size={20} color={theme.colors.onPrimaryContainer} />}
         />
       )}
       {user && !join && <Redirect href='/home' withAnchor />}

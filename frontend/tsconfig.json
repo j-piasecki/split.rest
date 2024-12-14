@@ -6,6 +6,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "paths": {
+      "@assets/*": ["assets/*"],
       "@components/*": ["components/*"],
       "@hooks/*": ["hooks/*"],
       "@styling/*": ["styling/*"],

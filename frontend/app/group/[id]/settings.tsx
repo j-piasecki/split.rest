@@ -1,7 +1,7 @@
 import { Button } from '@components/Button'
+import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
 import { TextInput } from '@components/TextInput'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useCreateGroupJoinLink } from '@hooks/database/useCreateGroupJoinLink'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
 import { useDeleteGroupJoinLink } from '@hooks/database/useDeleteGroupJoinLink'
@@ -62,13 +62,7 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
                   selectTextOnFocus
                 />
                 <Button
-                  leftIcon={
-                    <MaterialIcons
-                      name='content-copy'
-                      size={20}
-                      color={theme.colors.onPrimaryContainer}
-                    />
-                  }
+                  leftIcon={<Icon name='copy' size={20} color={theme.colors.onPrimaryContainer} />}
                   onPress={() => {
                     Clipboard.setStringAsync(linkText)
                   }}

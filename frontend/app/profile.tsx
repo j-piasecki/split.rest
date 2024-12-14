@@ -1,6 +1,6 @@
 import { Button } from '@components/Button'
+import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { logout, useAuth } from '@utils/auth'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
@@ -43,9 +43,7 @@ function Form({ user }: { user: User }) {
         <Button
           title={t('signOut')}
           onPress={logout}
-          rightIcon={
-            <MaterialIcons name='logout' size={20} color={theme.colors.onPrimaryContainer} />
-          }
+          rightIcon={<Icon name='logout' size={20} color={theme.colors.onPrimaryContainer} />}
         />
       </View>
     </View>

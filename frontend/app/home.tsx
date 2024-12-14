@@ -1,7 +1,6 @@
 import { Button } from '@components/Button'
 import Header from '@components/Header'
-import Entypo from '@expo/vector-icons/Entypo'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { Icon } from '@components/Icon'
 import { useUserGroups } from '@hooks/database/useUserGroups'
 import { useTheme } from '@styling/theme'
 import { router } from 'expo-router'
@@ -37,27 +36,21 @@ function Group({ info }: { info: GroupInfo }) {
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <View style={{ flexDirection: 'row', gap: 4 }}>
           <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.memberCount}</Text>
-          <FontAwesome
-            name='users'
-            size={16}
-            color={theme.colors.outline}
-            style={{ transform: [{ translateY: 2 }] }}
-          />
+          <Icon name='members' size={20} color={theme.colors.outline} />
         </View>
 
-        <FontAwesome
+        <Icon
           name='lock'
           size={16}
-          color={info.hasAccess ? theme.colors.transparent : theme.colors.outline}
+          color={info.hasAccess ? theme.colors.outline : theme.colors.outline}
           style={{ transform: [{ translateY: 2 }] }}
         />
-        <FontAwesome
-          name='wrench'
+        <Icon
+          name='shield'
           size={16}
           color={info.isAdmin ? theme.colors.outline : theme.colors.transparent}
           style={{ transform: [{ translateY: 2 }] }}
         />
-
         <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.currency}</Text>
       </View>
     </Pressable>
@@ -155,9 +148,7 @@ export default function Home() {
                     router.navigate('/createGroup')
                   }}
                   title={t('createGroup')}
-                  leftIcon={
-                    <Entypo name='plus' size={20} color={theme.colors.onPrimaryContainer} />
-                  }
+                  leftIcon={<Icon name='add' size={20} color={theme.colors.onPrimaryContainer} />}
                 />
               </View>
               <GroupList groups={groups} />

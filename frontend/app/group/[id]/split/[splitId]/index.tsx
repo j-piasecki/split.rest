@@ -1,7 +1,7 @@
 import { Button } from '@components/Button'
+import { Icon } from '@components/Icon'
 import Modal from '@components/ModalScreen'
 import { getUserById } from '@database/getUserById'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useSplitInfo } from '@hooks/database/useSplitInfo'
 import { useTheme } from '@styling/theme'
@@ -134,9 +134,7 @@ function SplitInfo({
         <View style={{ marginBottom: 32 }}>
           <Button
             title={t('splitInfo.edit')}
-            leftIcon={
-              <MaterialIcons name='edit-note' size={24} color={theme.colors.onPrimaryContainer} />
-            }
+            leftIcon={<Icon name='edit' size={20} color={theme.colors.onPrimaryContainer} />}
             onPress={() => router.navigate(`/group/${groupInfo?.id}/split/${splitInfo.id}/edit`)}
           />
         </View>

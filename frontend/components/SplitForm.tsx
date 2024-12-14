@@ -1,8 +1,7 @@
 import { Button } from './Button'
+import { Icon } from './Icon'
 import { TextInput } from './TextInput'
 import { TextInputWithUserSuggestions } from './TextInputWithUserSuggestions'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -44,12 +43,8 @@ function SplitEntry({
       }}
     >
       <Pressable onPress={setPaidByIndex} style={{ marginRight: 8 }}>
-        {paidByThis && (
-          <MaterialCommunityIcons name='cash-fast' size={24} color={theme.colors.secondary} />
-        )}
-        {!paidByThis && (
-          <MaterialCommunityIcons name='cash' size={24} color={theme.colors.outlineVariant} />
-        )}
+        {paidByThis && <Icon name='currency' size={24} color={theme.colors.secondary} />}
+        {!paidByThis && <Icon name='currency' size={24} color={theme.colors.outlineVariant} />}
       </Pressable>
 
       <TextInputWithUserSuggestions
@@ -202,9 +197,7 @@ export function SplitForm({
         {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
         {!waiting && (
           <Button
-            leftIcon={
-              <MaterialIcons name='save-alt' size={24} color={theme.colors.onPrimaryContainer} />
-            }
+            leftIcon={<Icon name='save' size={24} color={theme.colors.onPrimaryContainer} />}
             title={t('form.save')}
             onPress={submit}
           />
