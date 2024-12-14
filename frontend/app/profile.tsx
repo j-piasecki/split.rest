@@ -4,8 +4,9 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useTheme } from '@styling/theme'
 import { logout, useAuth } from '@utils/auth'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
+import { Image } from 'expo-image'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Image, Text, View } from 'react-native'
+import { ActivityIndicator, Text, View } from 'react-native'
 import { User } from 'shared'
 
 function Form({ user }: { user: User }) {

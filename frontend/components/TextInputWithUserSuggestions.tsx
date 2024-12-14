@@ -2,9 +2,10 @@ import { TextInputWithSuggestions, TextInputWithSuggestionsProps } from './TextI
 import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocompletions'
 import { useTheme } from '@styling/theme'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
+import { Image } from 'expo-image'
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, Pressable, Text, TextInput as TextInputRN, View } from 'react-native'
+import { Pressable, Text, TextInput as TextInputRN, View } from 'react-native'
 import { User } from 'shared'
 
 interface SuggestionProps {

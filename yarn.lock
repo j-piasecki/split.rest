@@ -7903,6 +7903,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-image@npm:~2.0.3":
+  version: 2.0.3
+  resolution: "expo-image@npm:2.0.3"
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+    react-native-web: "*"
+  peerDependenciesMeta:
+    react-native-web:
+      optional: true
+  checksum: 5be69b91c179b76c881532afcd3278ea15f933fac25b382da7e689d1d523ab71fc573ebc22513dbd65ce86426dc25e73a0eb7cc367f6b78a2ad55e8846d09631
+  languageName: node
+  linkType: hard
+
 "expo-keep-awake@npm:~14.0.1":
   version: 14.0.1
   resolution: "expo-keep-awake@npm:14.0.1"
@@ -14297,6 +14312,8 @@ __metadata:
 "split@workspace:.":
   version: 0.0.0-use.local
   resolution: "split@workspace:."
+  dependencies:
+    expo-image: ~2.0.3
   languageName: unknown
   linkType: soft
 

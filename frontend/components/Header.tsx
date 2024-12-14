@@ -1,9 +1,10 @@
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
+import { Image } from 'expo-image'
 import { Link, useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { Image, Pressable, Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface HeaderProps {

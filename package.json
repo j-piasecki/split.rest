@@ -14,5 +14,8 @@
     "shared",
     "backend",
     "backups"
-  ]
+  ],
+  "dependencies": {
+    "expo-image": "~2.0.3"
+  }
 }
