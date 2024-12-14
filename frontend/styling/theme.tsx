@@ -1,3 +1,4 @@
+
 import { Colors, Theme, ThemeType } from '@type/theme'
 import React from 'react'
 import { Appearance, Platform } from 'react-native'
@@ -46,8 +47,8 @@ const darkColors: Colors = {
   inversePrimary: '#372e30',
   inverseOnSurface: '#8c4a60',
 
-  balancePositive: '#00ff00',
-  balanceNegative: '#ff0000',
+  balancePositive: '#1fc24d',
+  balanceNegative: '#C62828',
   balanceNeutral: '#9e8c90',
 }
 
@@ -92,8 +93,8 @@ const lightColors: Colors = {
   inversePrimary: '#fdedef',
   inverseOnSurface: '#ffb1c8',
 
-  balancePositive: '#00ff00',
-  balanceNegative: '#ff0000',
+  balancePositive: '#00C853',
+  balanceNegative: '#D32F2F',
   balanceNeutral: '#9e8c90',
 }
 
