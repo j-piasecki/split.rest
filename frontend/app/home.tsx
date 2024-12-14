@@ -42,7 +42,7 @@ function Group({ info }: { info: GroupInfo }) {
         <Icon
           name='lock'
           size={16}
-          color={info.hasAccess ? theme.colors.outline : theme.colors.outline}
+          color={info.hasAccess ? theme.colors.transparent : theme.colors.outline}
           style={{ transform: [{ translateY: 2 }] }}
         />
         <Icon
