@@ -1,7 +1,8 @@
 import Header from '@components/Header'
+import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 
 export default function NotFound() {
   const user = useAuth()

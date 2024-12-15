@@ -1,7 +1,8 @@
 import { Icon, IconName } from './Icon'
+import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import React from 'react'
-import { ActivityIndicator, Pressable, Text } from 'react-native'
+import { ActivityIndicator, Pressable } from 'react-native'
 
 export interface ButtonProps {
   title?: string

@@ -1,9 +1,10 @@
 import { Button } from '@components/Button'
+import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { login, useAuth } from '@utils/auth'
 import { Redirect, useLocalSearchParams } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 
 // TODO: safe area
 

@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+// eslint-disable-next-line no-restricted-imports
 import { Platform, StyleSheet, Text as TextNative, TextProps } from 'react-native'
 
 export function Text({ style, ...props }: TextProps) {

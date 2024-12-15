@@ -1,10 +1,11 @@
 import { Button } from '@components/Button'
 import { Icon } from '@components/Icon'
+import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { useTheme } from '@styling/theme'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { Pressable, Text } from 'react-native'
+import { Pressable } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 

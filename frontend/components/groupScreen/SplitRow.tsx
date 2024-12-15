@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { Text } from '@components/Text'
 import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -6,7 +7,7 @@ import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, Text, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { GroupInfo, SplitInfo } from 'shared'
 
 export interface SplitRowProps {

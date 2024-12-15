@@ -1,8 +1,9 @@
 import { MemberRow } from './MemberRow'
+import { Text } from '@components/Text'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useTheme } from '@styling/theme'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, FlatList, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 export interface MembersListProps {

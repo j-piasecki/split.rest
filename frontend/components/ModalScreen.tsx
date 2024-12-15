@@ -1,9 +1,10 @@
 import { Icon } from './Icon'
+import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
-import { KeyboardAvoidingView, Pressable, StyleSheet, Text, View } from 'react-native'
+import { KeyboardAvoidingView, Pressable, StyleSheet, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 

@@ -2,10 +2,11 @@ import { Button } from './Button'
 import { Icon } from './Icon'
 import { TextInput } from './TextInput'
 import { TextInputWithUserSuggestions } from './TextInputWithUserSuggestions'
+import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 export interface SplitEntryData {

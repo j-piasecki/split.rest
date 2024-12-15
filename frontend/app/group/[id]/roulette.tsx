@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
+import { Text } from '@components/Text'
 import { TextInputWithUserSuggestions } from '@components/TextInputWithUserSuggestions'
 import { getBalances } from '@database/getBalances'
 import { useTranslatedError } from '@hooks/useTranslatedError'
@@ -7,7 +8,7 @@ import { useTheme } from '@styling/theme'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { TranslatableError, UserWithBalanceChange } from 'shared'
 
 interface FormProps {

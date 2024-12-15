@@ -1,11 +1,12 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
+import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { logout, useAuth } from '@utils/auth'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { Image } from 'expo-image'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { User } from 'shared'
 
 function Form({ user }: { user: User }) {

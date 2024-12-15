@@ -1,6 +1,7 @@
 import Header from '@components/Header'
 import { Icon } from '@components/Icon'
 import { Tab, TabView } from '@components/TabView'
+import { Text } from '@components/Text'
 import { GroupInfoPage } from '@components/groupScreen/GroupInfoPage'
 import { MembersList } from '@components/groupScreen/MembersList'
 import { SplitsList } from '@components/groupScreen/SplitsList'
@@ -11,7 +12,7 @@ import { useIsSmallScreen, useThreeBarLayout } from '@utils/dimensionUtils'
 import { useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {

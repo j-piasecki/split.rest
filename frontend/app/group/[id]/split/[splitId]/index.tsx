@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import Modal from '@components/ModalScreen'
+import { Text } from '@components/Text'
 import { getUserById } from '@database/getUserById'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useSplitInfo } from '@hooks/database/useSplitInfo'
@@ -10,7 +11,7 @@ import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, FlatList, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, View } from 'react-native'
 import { GroupInfo, SplitWithUsers, User, UserWithBalanceChange } from 'shared'
 
 function UserRow({

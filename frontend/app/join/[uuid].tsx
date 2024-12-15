@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import Header from '@components/Header'
+import { Text } from '@components/Text'
 import { useGroupMetadataByLink } from '@hooks/database/useGroupMetadataByLink'
 import { useJoinGroupByLink } from '@hooks/database/useJoinGroupByLink'
 import { useTheme } from '@styling/theme'
@@ -8,7 +9,7 @@ import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 
 function JoinForm() {
   const theme = useTheme()

@@ -1,13 +1,14 @@
 import { Button } from '@components/Button'
 import Header from '@components/Header'
 import { Icon } from '@components/Icon'
+import { Text } from '@components/Text'
 import { useUserGroups } from '@hooks/database/useUserGroups'
 import { useTheme } from '@styling/theme'
 import { router } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function Group({ info }: { info: GroupInfo }) {

@@ -15,5 +15,17 @@ module.exports = {
         destructuredArrayIgnorePattern: '^_',
       },
     ],
+    'no-restricted-imports': [
+      'error',
+      {
+        paths: [
+          {
+            name: 'react-native',
+            importNames: ['Text'],
+            message: 'Please use Text from @components/Text instead.',
+          },
+        ],
+      },
+    ],
   },
 }

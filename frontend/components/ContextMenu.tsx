@@ -1,4 +1,5 @@
 import { Icon, IconName } from './Icon'
+import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
 import React, { useEffect, useImperativeHandle, useLayoutEffect } from 'react'
@@ -10,7 +11,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native'
-import { Modal, Pressable, Text } from 'react-native'
+import { Modal, Pressable } from 'react-native'
 import Animated, {
   FadeIn,
   ZoomIn,

@@ -1,5 +1,6 @@
 import ModalScreen from '@components/ModalScreen'
 import { FormData, SplitForm } from '@components/SplitForm'
+import { Text } from '@components/Text'
 import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTranslatedError } from '@hooks/useTranslatedError'
@@ -9,7 +10,7 @@ import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { BalanceChange, GroupInfo, User } from 'shared'
 
 function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {

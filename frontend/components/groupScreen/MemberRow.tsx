@@ -1,5 +1,6 @@
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
 import { Icon } from '@components/Icon'
+import { Text } from '@components/Text'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
 import { useTheme } from '@styling/theme'
@@ -8,7 +9,7 @@ import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, Pressable, Text, View } from 'react-native'
+import { Image, Pressable, View } from 'react-native'
 import { GroupInfo, Member } from 'shared'
 
 export interface MemberRowProps {

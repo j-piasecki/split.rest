@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
+import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { getUserByEmail } from '@database/getUserByEmail'
 import { useAddUserToGroupMutation } from '@hooks/database/useAddUserToGroup'
@@ -8,7 +9,7 @@ import { useTheme } from '@styling/theme'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { TranslatableError } from 'shared'
 
 function Form() {

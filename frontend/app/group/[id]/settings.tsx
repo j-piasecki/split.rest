@@ -1,6 +1,7 @@
 import { Button } from '@components/Button'
 import { EditableText } from '@components/EditableText'
 import ModalScreen from '@components/ModalScreen'
+import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { useCreateGroupJoinLink } from '@hooks/database/useCreateGroupJoinLink'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
@@ -15,7 +16,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function JoinLinkManager({ info }: { info: GroupInfo }) {
