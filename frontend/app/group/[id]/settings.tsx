@@ -37,19 +37,19 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
         <>
           {!link && (
             <Button
+              leftIcon='addLink'
               isLoading={isCreatingJoinLink}
               title={t('groupSettings.joinLink.create')}
               onPress={() => createJoinLink(info.id)}
             />
           )}
           {link && (
-            <View style={{ gap: 8 }}>
+            <View>
               <Text
                 style={{
                   color: theme.colors.onSurface,
-                  fontSize: 16,
+                  fontSize: 20,
                   fontWeight: 'bold',
-                  textAlign: 'center',
                 }}
               >
                 {t('groupSettings.joinLink.joinLink')}
@@ -67,13 +67,12 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
                     Clipboard.setStringAsync(linkText)
                   }}
                 />
+                <Button
+                  leftIcon='deleteLink'
+                  isLoading={isDeletingJoinLink}
+                  onPress={() => deleteJoinLink(info.id)}
+                />
               </View>
-              <Button
-                leftIcon='delete'
-                isLoading={isDeletingJoinLink}
-                title={t('groupSettings.joinLink.delete')}
-                onPress={() => deleteJoinLink(info.id)}
-              />
             </View>
           )}
         </>
@@ -85,6 +84,7 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
 function Form({ info }: { info: GroupInfo }) {
   const user = useAuth()
   const router = useRouter()
+  const theme = useTheme()
   const { t } = useTranslation()
   const [name, setName] = useState(info.name)
   const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
@@ -101,21 +101,22 @@ function Form({ info }: { info: GroupInfo }) {
         paddingBottom: 32,
       }}
     >
-      <EditableText
-        value={name}
-        placeholder={t('groupSettings.groupName')}
-        onSubmit={(newName) => {
-          setGroupName(newName).then(() => {
-            setName(newName)
-          })
-        }}
-        isPending={isSettingName}
-      />
-      {!isDeletingGroup && (
-        <>
-          <JoinLinkManager info={info} />
-        </>
-      )}
+      <View style={{ gap: 16 }}>
+        <EditableText
+          value={name}
+          placeholder={t('groupSettings.groupName')}
+          onSubmit={(newName) => {
+            setGroupName(newName).then(() => {
+              setName(newName)
+            })
+          }}
+          isPending={isSettingName}
+        />
+        <View
+          style={{ height: 1, backgroundColor: theme.colors.outlineVariant, marginHorizontal: 16 }}
+        />
+        <JoinLinkManager info={info} />
+      </View>
       {/* TODO: add confirmation dialog */}
       {info.owner === user?.id && (
         <Button

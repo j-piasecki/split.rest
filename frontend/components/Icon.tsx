@@ -3,6 +3,7 @@ import { Image, ImageStyle } from 'expo-image'
 import { StyleProp, View } from 'react-native'
 
 export type IconName =
+  | 'addLink'
   | 'addMember'
   | 'addModerator'
   | 'add'
@@ -13,6 +14,7 @@ export type IconName =
   | 'currency'
   | 'delete'
   | 'deleteForever'
+  | 'deleteLink'
   | 'edit'
   | 'editAlt'
   | 'home'
@@ -41,6 +43,7 @@ export interface IconProps {
 }
 
 const iconMap: Record<IconName, unknown> = {
+  addLink: require('@assets/icons/add_link.svg'),
   addMember: require('@assets/icons/add_member.svg'),
   addModerator: require('@assets/icons/add_moderator.svg'),
   add: require('@assets/icons/add.svg'),
@@ -51,6 +54,7 @@ const iconMap: Record<IconName, unknown> = {
   currency: require('@assets/icons/currency.svg'),
   delete: require('@assets/icons/delete.svg'),
   deleteForever: require('@assets/icons/delete_forever.svg'),
+  deleteLink: require('@assets/icons/delete_link.svg'),
   edit: require('@assets/icons/edit.svg'),
   editAlt: require('@assets/icons/edit_alt.svg'),
   home: require('@assets/icons/home.svg'),
