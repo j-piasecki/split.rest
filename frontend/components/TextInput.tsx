@@ -1,12 +1,19 @@
 import { useTheme } from '@styling/theme'
-import React from 'react'
-import { StyleProp, TextInputProps, TextInput as TextInputRN, ViewStyle } from 'react-native'
+import { resolveFontName } from '@utils/resolveFontName'
+import React, { useMemo } from 'react'
+import {
+  Platform,
+  StyleSheet,
+  TextInputProps,
+  TextInput as TextInputRN,
+  TextStyle,
+  ViewStyle,
+} from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-export interface Props extends Omit<TextInputProps, 'style'> {
+export interface Props extends TextInputProps {
   error?: boolean
   resetError?: () => void
-  style?: StyleProp<ViewStyle>
 }
 
 export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput(
@@ -15,6 +22,32 @@ export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput
 ) {
   const theme = useTheme()
   const isFocused = useSharedValue(false)
+
+  const fontStyle = useMemo(() => {
+    const styles: TextStyle | undefined = StyleSheet.flatten(style)
+
+    if (styles?.fontFamily === undefined) {
+      const result: TextStyle = {
+        fontFamily: resolveFontName(styles),
+      }
+
+      if (Platform.OS === 'android') {
+        return result
+      }
+
+      if (styles?.fontWeight) {
+        result.fontWeight = styles.fontWeight
+      }
+
+      if (styles?.fontStyle) {
+        result.fontStyle = styles.fontStyle
+      }
+
+      return result
+    }
+
+    return {}
+  }, [style])
 
   const wrapperStyle = useAnimatedStyle(() => {
     return {
@@ -43,15 +76,23 @@ export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput
   })
 
   return (
-    <Animated.View style={[style, { borderBottomWidth: 1, borderRadius: 4 }, wrapperStyle]}>
+    <Animated.View
+      style={[style as ViewStyle, { borderBottomWidth: 1, borderRadius: 4 }, wrapperStyle]}
+    >
       <TextInputRN
         ref={ref}
-        style={{
-          paddingHorizontal: 8,
-          paddingBottom: 8,
-          paddingTop: 16,
-          color: theme.colors.onSurface,
-        }}
+        cursorColor={theme.colors.primary}
+        selectionColor={theme.colors.primary}
+        style={[
+          {
+            paddingHorizontal: 8,
+            paddingBottom: 8,
+            paddingTop: 16,
+            color: theme.colors.onSurface,
+            fontWeight: '600',
+          },
+          fontStyle,
+        ]}
         value={value}
         onChangeText={(value) => {
           resetError?.()
