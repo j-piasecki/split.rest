@@ -99,7 +99,7 @@ export function MemberRow({ member, info }: MemberRowProps) {
           onPress={(e) => {
             contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
           }}
-          style={{ marginLeft: 16, opacity: contextMenuDisabled ? 0 : 1 }}
+          style={{ marginLeft: 16, opacity: contextMenuDisabled ? 0 : 0.7 }}
         />
       </View>
     </ContextMenu>
