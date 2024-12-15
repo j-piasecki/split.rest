@@ -1,4 +1,5 @@
 import { Icon } from './Icon'
+import RoundIconButton from './RoundIconButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
@@ -101,18 +102,7 @@ function ModalScreen({
           <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
             {title}
           </Text>
-          <Pressable
-            onPress={goBack}
-            style={({ pressed }) => {
-              return {
-                backgroundColor: pressed ? theme.colors.surfaceBright : 'transparent',
-                borderRadius: 22,
-                padding: 4,
-              }
-            }}
-          >
-            <Icon name='close' size={28} color={theme.colors.onSurface} />
-          </Pressable>
+          <RoundIconButton icon='close' onPress={goBack} />
         </View>
         {children}
       </Animated.View>

@@ -1,5 +1,5 @@
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
-import { Icon } from '@components/Icon'
+import RoundIconButton from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
@@ -9,7 +9,7 @@ import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, Pressable, View } from 'react-native'
+import { Image, View } from 'react-native'
 import { GroupInfo, Member } from 'shared'
 
 export interface MemberRowProps {
@@ -93,28 +93,14 @@ export function MemberRow({ member, info }: MemberRowProps) {
           </Text>
         </View>
 
-        <Pressable
+        <RoundIconButton
           disabled={contextMenuDisabled}
+          icon='moreVertical'
           onPress={(e) => {
             contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
           }}
-          style={({ pressed, hovered }) => ({
-            width: 40,
-            height: 40,
-            backgroundColor: pressed
-              ? theme.colors.surfaceContainerHigh
-              : hovered
-                ? theme.colors.surfaceContainer
-                : 'transparent',
-            marginLeft: 16,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 20,
-            opacity: contextMenuDisabled ? 0 : 1,
-          })}
-        >
-          <Icon name='moreVertical' size={24} color={theme.colors.outline} />
-        </Pressable>
+          style={{ marginLeft: 16, opacity: contextMenuDisabled ? 0 : 1 }}
+        />
       </View>
     </ContextMenu>
   )

@@ -1,11 +1,10 @@
+import RoundIconButton from './RoundIconButton'
 import { Button } from '@components/Button'
-import { Icon } from '@components/Icon'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { useTheme } from '@styling/theme'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { Pressable } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 
@@ -69,17 +68,13 @@ export function EditableText({ value, placeholder, onSubmit, isPending }: Editab
         <Text style={{ fontSize: 24, fontWeight: '600', color: theme.colors.onSurface }}>
           {value}
         </Text>
-        <Pressable
+        <RoundIconButton
+          icon='editAlt'
           onPress={() => setEditing(true)}
           style={({ pressed, hovered }) => ({
-            opacity: pressed ? 1 : hovered ? 0.7 : 0.5,
-            backgroundColor: hovered ? theme.colors.surfaceContainer : 'transparent',
-            padding: 8,
-            borderRadius: 20,
+            opacity: pressed ? 0.7 : hovered ? 0.5 : 0.3,
           })}
-        >
-          <Icon name='editAlt' size={24} color={theme.colors.outline} />
-        </Pressable>
+        />
       </Animated.View>
     )
   }
