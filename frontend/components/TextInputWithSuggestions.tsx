@@ -1,7 +1,7 @@
 import { Props, TextInput } from './TextInput'
 import { useTheme } from '@styling/theme'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Platform, ScrollView, TextInput as TextInputRN, View } from 'react-native'
+import { Platform, ScrollView, TextInput as TextInputRN, View, ViewStyle } from 'react-native'
 import { useDebounce } from 'use-debounce'
 
 export interface TextInputWithSuggestionsProps<T> extends Props {
@@ -58,7 +58,7 @@ export function TextInputWithSuggestions<T>({
 
   return (
     <View
-      style={[style, { position: 'relative' }]}
+      style={[style as ViewStyle, { position: 'relative' }]}
       onLayout={(event) => {
         setInputLayout(event.nativeEvent.layout)
       }}

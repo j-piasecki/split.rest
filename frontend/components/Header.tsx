@@ -8,11 +8,13 @@ import { useTranslation } from 'react-i18next'
 import { Pressable, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-export interface HeaderProps {
-  title?: string
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface HeaderProps {}
 
-export default function Header(props: HeaderProps) {
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const icon = require('@assets/icon-round-transparent.png')
+
+export default function Header(_props: HeaderProps) {
   const { t } = useTranslation()
   const theme = useTheme()
   const user = useAuth()
@@ -32,15 +34,20 @@ export default function Header(props: HeaderProps) {
       }}
     >
       <Link href='/'>
-        <Text
-          style={{
-            fontSize: 28,
-            fontWeight: '500',
-            color: theme.colors.primary,
-          }}
-        >
-          {props.title || t('appName')}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Image source={icon} style={{ width: 32, height: 32 }} tintColor={theme.colors.primary} />
+          <Text
+            style={{
+              fontSize: 28,
+              fontWeight: '700',
+              fontStyle: 'italic',
+              color: theme.colors.primary,
+            }}
+          >
+            {t('appName')}
+            <Text style={{ color: theme.colors.outline }}>.rest</Text>
+          </Text>
+        </View>
       </Link>
 
       <Pressable onPress={() => router.navigate('/profile')}>
