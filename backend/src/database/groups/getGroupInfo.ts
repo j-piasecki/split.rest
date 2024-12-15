@@ -21,11 +21,11 @@ export async function getGroupInfo(
           groups.currency,
           groups.owner,
           groups.total,
+          groups.member_count,
           group_members.balance, 
           group_members.is_hidden, 
           group_members.is_admin, 
-          group_members.has_access,
-          (SELECT COUNT(*) FROM group_members WHERE group_members.group_id = groups.id) AS member_count
+          group_members.has_access
         FROM groups JOIN group_members ON groups.id = group_members.group_id
         WHERE groups.id = $1 AND group_members.user_id = $2
       `,

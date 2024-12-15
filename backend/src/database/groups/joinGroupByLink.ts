@@ -45,6 +45,13 @@ export async function joinGroupByLink(
       [groupId, callerId, 0, false, true, false]
     )
 
+    await client.query(
+      `
+        UPDATE groups SET member_count = member_count + 1 WHERE id = $1
+      `,
+      [groupId]
+    )
+
     await client.query('COMMIT')
   } catch (error) {
     await client.query('ROLLBACK')

@@ -16,7 +16,7 @@ export async function getGroupMetadataByLink(
         groups.currency,
         groups.total,
         groups.deleted,
-        (SELECT COUNT(*) FROM group_members WHERE group_members.group_id = groups.id) AS member_count
+        groups.member_count
       FROM
         groups 
       JOIN

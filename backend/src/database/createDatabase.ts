@@ -19,6 +19,7 @@ export async function createDatabase(pool: Pool) {
       currency VARCHAR(8) NOT NULL,
       owner VARCHAR(32) NOT NULL,
       total DECIMAL(10, 2) NOT NULL DEFAULT 0,
+      member_count SMALLINT NOT NULL DEFAULT 1,
       deleted BOOLEAN NOT NULL DEFAULT FALSE,
 
       FOREIGN KEY (owner) REFERENCES users(id)

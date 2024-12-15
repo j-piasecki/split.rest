@@ -38,6 +38,13 @@ export async function addUserToGroup(pool: Pool, callerId: string, args: AddUser
       [args.groupId, args.userId, 0, false, true, false]
     )
 
+    await client.query(
+      `
+        UPDATE groups SET member_count = member_count + 1 WHERE id = $1
+      `,
+      [args.groupId]
+    )
+
     await client.query('COMMIT')
   } catch (e) {
     await client.query('ROLLBACK')
