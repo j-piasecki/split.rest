@@ -71,8 +71,8 @@ export function SplitRow({ split, info }: SplitRowProps) {
         router.navigate(`/group/${info?.id}/split/${split.id}`)
       }}
       style={{
-        paddingVertical: 16,
-        paddingHorizontal: isSmallScreen ? 0 : 16,
+        padding: 16,
+        marginHorizontal: isSmallScreen ? 0 : 16,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

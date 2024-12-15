@@ -53,8 +53,8 @@ export function MemberRow({ member, info }: MemberRowProps) {
       <View
         key={member.id}
         style={{
-          paddingVertical: 16,
-          paddingHorizontal: isSmallScreen ? 0 : 16,
+          padding: 16,
+          marginHorizontal: isSmallScreen ? 0 : 16,
           flexDirection: 'row',
           justifyContent: 'space-between',
           borderColor: theme.colors.outlineVariant,

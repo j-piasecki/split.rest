@@ -20,9 +20,14 @@ export function MembersList({ info }: MembersListProps) {
   }
 
   return (
-    <View style={{ width: '100%', flex: 1, maxWidth: 768, alignSelf: 'center' }}>
+    <View style={{ width: '100%', flex: 1 }}>
       <FlatList
-        contentContainerStyle={{ paddingHorizontal: 16, flex: !members?.length ? 1 : undefined }}
+        contentContainerStyle={{
+          flex: !members?.length ? 1 : undefined,
+          maxWidth: 768,
+          width: '100%',
+          alignSelf: 'center',
+        }}
         ListEmptyComponent={
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             {isLoading && <ActivityIndicator size='small' color={theme.colors.onSurface} />}

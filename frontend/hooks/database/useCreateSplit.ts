@@ -1,4 +1,5 @@
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
+import { auth } from '@utils/firebase'
 import { makeRequest } from '@utils/makeApiRequest'
 import { CreateSplitArguments, SplitInfo } from 'shared'
 
@@ -15,7 +16,18 @@ async function createSplit(queryClient: QueryClient, args: CreateSplitArguments)
       return {
         ...oldData,
         pages: oldData.pages.map((page, index) =>
-          index === 0 ? [{ id: splitId, version: 1, ...args }, ...page] : page
+          index === 0
+            ? [
+                {
+                  id: splitId,
+                  version: 1,
+                  createdById: auth.currentUser?.uid,
+                  paidById: args.paidBy,
+                  ...args,
+                },
+                ...page,
+              ]
+            : page
         ),
       }
     }
