@@ -1,3 +1,4 @@
+import { useFonts } from '@hooks/useFonts'
 import { ThemeProvider, useTheme } from '@styling/theme'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useAuth } from '@utils/auth'
@@ -25,8 +26,9 @@ function Content() {
   const isSmallScreen = useIsSmallScreen()
   const locales = useLocales()
   const { t } = useTranslation()
+  const [fontsLoaded, _error] = useFonts()
 
-  const isUserLoading = user === undefined
+  const isLoading = user === undefined || !fontsLoaded
 
   useEffect(() => {
     i18n.changeLanguage(locales[0].languageCode!)
@@ -34,12 +36,12 @@ function Content() {
 
   // TODO: combine this with loading assets
   useEffect(() => {
-    if (!isUserLoading) {
+    if (!isLoading) {
       SplashScreen.hide()
     }
-  }, [isUserLoading])
+  }, [isLoading])
 
-  if (isUserLoading) {
+  if (isLoading) {
     return (
       <View
         style={{

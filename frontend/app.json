@@ -50,6 +50,29 @@
           "resizeMode": "contain",
           "imageWidth": 160
         }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Nunito-Black.ttf",
+            "./assets/fonts/Nunito-BlackItalic.ttf",
+            "./assets/fonts/Nunito-Bold.ttf",
+            "./assets/fonts/Nunito-BoldItalic.ttf",
+            "./assets/fonts/Nunito-ExtraBold.ttf",
+            "./assets/fonts/Nunito-ExtraBoldItalic.ttf",
+            "./assets/fonts/Nunito-ExtraLight.ttf",
+            "./assets/fonts/Nunito-ExtraLightItalic.ttf",
+            "./assets/fonts/Nunito-Italic.ttf",
+            "./assets/fonts/Nunito-Light.ttf",
+            "./assets/fonts/Nunito-LightItalic.ttf",
+            "./assets/fonts/Nunito-Regular.ttf",
+            "./assets/fonts/Nunito-SemiBold.ttf",
+            "./assets/fonts/Nunito-SemiBoldItalic.ttf",
+            "./assets/fonts/Nunito-VariableFont_wght.ttf",
+            "./assets/fonts/Nunito-Italic-VariableFont_wght.ttf"
+          ]
+        }
       ]
     ]
   }
