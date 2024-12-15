@@ -52,9 +52,7 @@ export function Button({
       }}
     >
       {isLoading && <ActivityIndicator size='small' color={foregroundColor} />}
-      {leftIcon && !isLoading && (
-        <Icon name={leftIcon} size={24} color={foregroundColor} />
-      )}
+      {leftIcon && !isLoading && <Icon name={leftIcon} size={24} color={foregroundColor} />}
       {title && (
         <Text
           selectable={false}
