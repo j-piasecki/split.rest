@@ -20,6 +20,7 @@ import { setGroupName } from './database/groups/setGroupName'
 import { RequirePermissions } from './database/permissionCheck'
 import { createSplit } from './database/splits/createSplit'
 import { deleteSplit } from './database/splits/deleteSplit'
+import { getSplitHistory } from './database/splits/getSplitHistory'
 import { getSplitInfo } from './database/splits/getSplitInfo'
 import { restoreSplit } from './database/splits/restoreSplit'
 import { updateSplit } from './database/splits/updateSplit'
@@ -43,6 +44,7 @@ import {
   GetGroupMembersAutocompletionsArguments,
   GetGroupMetadataByLinkArguments,
   GetGroupSplitsArguments,
+  GetSplitHistoryArguments,
   GetSplitInfoArguments,
   GetUserByEmailArguments,
   GetUserByIdArguments,
@@ -210,5 +212,10 @@ export class DatabaseService {
   @RequirePermissions(['accessGroup', 'manageGroup'])
   async getGroupJoinLink(callerId: string, args: GetGroupJoinLinkArguments) {
     return await getGroupJoinLink(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['accessGroup'])
+  async getSplitHistory(callerId: string, args: GetSplitHistoryArguments) {
+    return await getSplitHistory(this.pool, callerId, args)
   }
 }

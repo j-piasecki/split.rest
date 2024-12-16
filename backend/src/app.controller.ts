@@ -18,6 +18,7 @@ import {
   GetGroupMembersAutocompletionsArguments,
   GetGroupMetadataByLinkArguments,
   GetGroupSplitsArguments,
+  GetSplitHistoryArguments,
   GetSplitInfoArguments,
   GetUserByEmailArguments,
   GetUserByIdArguments,
@@ -44,6 +45,7 @@ import {
   isGetGroupMembersAutocompletionsArguments,
   isGetGroupMetadataByLinkArguments,
   isGetGroupSplitsArguments,
+  isGetSplitHistoryArguments,
   isGetSplitInfoArguments,
   isGetUserByEmailArguments,
   isGetUserByIdArguments,
@@ -341,5 +343,15 @@ export class AppController {
     }
 
     return await this.appService.getGroupJoinLink(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getSplitHistory')
+  async getSplitHistory(@Req() request: Request, @Query() args: Partial<GetSplitHistoryArguments>) {
+    if (!isGetSplitHistoryArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.getSplitHistory(request.user.sub, args)
   }
 }

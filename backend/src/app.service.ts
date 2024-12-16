@@ -18,6 +18,7 @@ import {
   GetGroupMembersAutocompletionsArguments,
   GetGroupMetadataByLinkArguments,
   GetGroupSplitsArguments,
+  GetSplitHistoryArguments,
   GetSplitInfoArguments,
   GetUserByEmailArguments,
   GetUserByIdArguments,
@@ -196,5 +197,9 @@ export class AppService {
 
   async getGroupJoinLink(callerId: string, args: GetGroupJoinLinkArguments) {
     return await this.databaseService.getGroupJoinLink(callerId, args)
+  }
+
+  async getSplitHistory(callerId: string, args: GetSplitHistoryArguments) {
+    return await this.databaseService.getSplitHistory(callerId, args)
   }
 }

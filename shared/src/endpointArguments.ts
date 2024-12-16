@@ -133,3 +133,9 @@ export interface GetGroupMetadataByLinkArguments {
 export interface JoinGroupByLinkArguments {
   uuid: string
 }
+
+export interface GetSplitHistoryArguments {
+  groupId: number
+  splitId: number
+  startAfter?: number
+}

@@ -15,6 +15,7 @@ import {
   GetGroupMembersAutocompletionsArguments,
   GetGroupMetadataByLinkArguments,
   GetGroupSplitsArguments,
+  GetSplitHistoryArguments,
   GetSplitInfoArguments,
   GetUserByEmailArguments,
   GetUserByIdArguments,
@@ -157,4 +158,8 @@ export function isGetGroupMetadataByLinkArguments(
 
 export function isJoinGroupByLinkArguments(obj: any): obj is JoinGroupByLinkArguments {
   return obj.uuid !== undefined
+}
+
+export function isGetSplitHistoryArguments(obj: any): obj is GetSplitHistoryArguments {
+  return obj.groupId !== undefined && obj.splitId !== undefined
 }
