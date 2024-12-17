@@ -9,7 +9,7 @@ export interface PaneProps {
   icon: IconName
   title: string
   style?: StyleProp<ViewStyle>
-  collapsable?: boolean
+  collapsible?: boolean
   collapsed?: boolean
   onCollapseChange?: (collapsed: boolean) => void
 }
@@ -19,7 +19,7 @@ export function Pane({
   icon,
   title,
   style,
-  collapsable = false,
+  collapsible = false,
   collapsed = false,
   onCollapseChange,
 }: PaneProps) {
@@ -34,7 +34,7 @@ export function Pane({
           borderRadius: 16,
           overflow: 'hidden',
         },
-        collapsable && collapsed ? { width: 64 } : { flex: 1 },
+        collapsible && collapsed ? { width: 64 } : { flex: 1 },
         style,
       ]}
     >
@@ -50,14 +50,14 @@ export function Pane({
           paddingHorizontal: 16,
         }}
       >
-        {(!collapsable || !collapsed) && (
+        {(!collapsible || !collapsed) && (
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
             <Icon name={icon} size={24} color={theme.colors.secondary} />
             <Text style={{ color: theme.colors.secondary, fontSize: 20 }}>{title}</Text>
           </View>
         )}
 
-        {collapsable && (
+        {collapsible && (
           <RoundIconButton
             icon={collapsed ? 'openRightPanel' : 'closeRightPanel'}
             size={24}

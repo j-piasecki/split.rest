@@ -175,7 +175,7 @@ export function GroupScreen() {
             <Pane
               icon='members'
               title={t('tabs.members')}
-              collapsable={!membersAlwaysExpanded}
+              collapsible={!membersAlwaysExpanded}
               collapsed
               onCollapseChange={() => {
                 setMembersExpanded(!membersExpanded)
@@ -214,7 +214,7 @@ export function GroupScreen() {
                   <Pane
                     icon='members'
                     title={t('tabs.members')}
-                    collapsable
+                    collapsible
                     onCollapseChange={() => {
                       setMembersExpanded(false)
                     }}
