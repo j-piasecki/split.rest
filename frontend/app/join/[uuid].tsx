@@ -3,11 +3,11 @@ import Header from '@components/Header'
 import { Text } from '@components/Text'
 import { useGroupMetadataByLink } from '@hooks/database/useGroupMetadataByLink'
 import { useJoinGroupByLink } from '@hooks/database/useJoinGroupByLink'
+import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 
@@ -18,7 +18,7 @@ function JoinForm() {
   const { uuid } = useLocalSearchParams()
   const { data: group, isLoading: isLoadingGroup } = useGroupMetadataByLink(uuid as string)
   const { mutateAsync: joinGroup, isPending: isJoiningGroup } = useJoinGroupByLink()
-  const [error, setError] = useState<Error | null>(null)
+  const [error, setError] = useTranslatedError()
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
@@ -55,16 +55,14 @@ function JoinForm() {
                     .then(() => {
                       router.replace(`/group/${group.id}`)
                     })
-                    .catch((error) => {
-                      setError(error)
-                    })
+                    .catch(setError)
                 }}
               />
             )}
           </View>
           {error && (
             <Text style={{ color: theme.colors.error, fontSize: 16, textAlign: 'center' }}>
-              {error.message}
+              {error}
             </Text>
           )}
         </>
