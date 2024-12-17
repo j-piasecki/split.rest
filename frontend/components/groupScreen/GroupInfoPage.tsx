@@ -28,7 +28,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
         paddingBottom: threeBarLayout ? 0 : 24,
       }}
     >
-      <Text style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 24 }}>
+      <Text style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 8 }}>
         {info.name}
       </Text>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -197,7 +197,7 @@ export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
         paddingVertical: 16,
         paddingTop: threeBarLayout ? 8 : 16,
         paddingBottom: 32,
-        maxWidth: 500,
+        maxWidth: 550,
         alignSelf: 'center',
       }}
     >

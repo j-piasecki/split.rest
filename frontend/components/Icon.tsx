@@ -9,6 +9,7 @@ export type IconName =
   | 'add'
   | 'check'
   | 'chevronBack'
+  | 'closeRightPanel'
   | 'close'
   | 'copy'
   | 'currency'
@@ -25,6 +26,7 @@ export type IconName =
   | 'members'
   | 'money'
   | 'moreVertical'
+  | 'openRightPanel'
   | 'payments'
   | 'receipt'
   | 'removeModerator'
@@ -49,6 +51,7 @@ const iconMap: Record<IconName, unknown> = {
   add: require('@assets/icons/add.svg'),
   check: require('@assets/icons/check.svg'),
   chevronBack: require('@assets/icons/chevron_back.svg'),
+  closeRightPanel: require('@assets/icons/close_right_panel.svg'),
   close: require('@assets/icons/close.svg'),
   copy: require('@assets/icons/copy.svg'),
   currency: require('@assets/icons/currency.svg'),
@@ -65,6 +68,7 @@ const iconMap: Record<IconName, unknown> = {
   members: require('@assets/icons/members.svg'),
   money: require('@assets/icons/money.svg'),
   moreVertical: require('@assets/icons/more_vertical.svg'),
+  openRightPanel: require('@assets/icons/open_right_panel.svg'),
   payments: require('@assets/icons/payments.svg'),
   receipt: require('@assets/icons/receipt.svg'),
   removeModerator: require('@assets/icons/remove_moderator.svg'),

@@ -24,7 +24,7 @@ export function SplitsList({ info }: SplitsListProps) {
       <FlatList
         contentContainerStyle={{
           flex: !splits?.length ? 1 : undefined,
-          maxWidth: 768,
+          maxWidth: 900,
           width: '100%',
           alignSelf: 'center',
         }}

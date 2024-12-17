@@ -8,12 +8,13 @@ import { GroupInfo } from 'shared'
 
 export interface MembersListProps {
   info: GroupInfo | undefined
+  iconOnly?: boolean
 }
 
-export function MembersList({ info }: MembersListProps) {
+export function MembersList({ info, iconOnly }: MembersListProps) {
   const theme = useTheme()
   const { t } = useTranslation()
-  const { members, isLoading, fetchNextPage, isFetchingNextPage } = useGroupMembers(info?.id ?? 0)
+  const { members, isLoading, fetchNextPage, isFetchingNextPage } = useGroupMembers(info?.id)
 
   if (!info) {
     return null
@@ -31,7 +32,7 @@ export function MembersList({ info }: MembersListProps) {
         ListEmptyComponent={
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             {isLoading && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
-            {!isLoading && members.length === 0 && (
+            {!isLoading && members.length === 0 && !iconOnly && (
               <Text style={{ fontSize: 20, color: theme.colors.outline }}>{t('noMembers')}</Text>
             )}
           </View>
@@ -40,7 +41,9 @@ export function MembersList({ info }: MembersListProps) {
         onEndReachedThreshold={0.5}
         onEndReached={() => !isFetchingNextPage && fetchNextPage()}
         keyExtractor={(item) => item.id}
-        renderItem={({ item: member }) => <MemberRow member={member} info={info} />}
+        renderItem={({ item: member }) => (
+          <MemberRow member={member} info={info} iconOnly={iconOnly ?? false} />
+        )}
       />
     </View>
   )

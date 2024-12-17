@@ -4,30 +4,52 @@ import { Tab, TabView } from '@components/TabView'
 import { Text } from '@components/Text'
 import { GroupInfoPage } from '@components/groupScreen/GroupInfoPage'
 import { MembersList } from '@components/groupScreen/MembersList'
+import { Pane } from '@components/groupScreen/Pane'
 import { SplitsList } from '@components/groupScreen/SplitsList'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useIsSmallScreen, useThreeBarLayout } from '@utils/dimensionUtils'
 import { useLocalSearchParams } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { Modal, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
   const theme = useTheme()
-  const threeBarLayout = useThreeBarLayout()
   const isSmallScreen = useIsSmallScreen()
   const [openedTab, setOpenedTab] = useState(0)
   const { t } = useTranslation()
-  useEffect(() => {
-    if (threeBarLayout && openedTab === 2) {
-      setOpenedTab(0)
-    }
-  }, [openedTab, threeBarLayout])
 
   const tabs: Tab[] = [
+    {
+      header: ({ selected }) => (
+        <View
+          style={{
+            flexDirection: isSmallScreen ? 'column' : 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Icon
+            name='home'
+            size={20}
+            color={selected ? theme.colors.primary : theme.colors.outline}
+          />
+          <Text
+            style={{
+              color: selected ? theme.colors.primary : theme.colors.outline,
+              marginLeft: isSmallScreen ? 0 : 8,
+              fontSize: isSmallScreen ? 12 : 16,
+            }}
+          >
+            {t('tabs.group')}
+          </Text>
+        </View>
+      ),
+      content: <GroupInfoPage info={info} />,
+    },
     {
       header: ({ selected }) => (
         <View
@@ -84,42 +106,12 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
     },
   ]
 
-  if (!threeBarLayout) {
-    tabs.unshift({
-      header: ({ selected }) => (
-        <View
-          style={{
-            flexDirection: isSmallScreen ? 'column' : 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Icon
-            name='home'
-            size={20}
-            color={selected ? theme.colors.primary : theme.colors.outline}
-          />
-          <Text
-            style={{
-              color: selected ? theme.colors.primary : theme.colors.outline,
-              marginLeft: isSmallScreen ? 0 : 8,
-              fontSize: isSmallScreen ? 12 : 16,
-            }}
-          >
-            {t('tabs.group')}
-          </Text>
-        </View>
-      ),
-      content: <GroupInfoPage info={info} />,
-    })
-  }
-
   return (
     <TabView
       openedTab={openedTab}
       tabs={tabs}
       onTabChange={setOpenedTab}
-      headerLocation={threeBarLayout ? 'top' : 'bottom'}
+      headerLocation={'bottom'}
     />
   )
 }
@@ -127,10 +119,14 @@ function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
 export function GroupScreen() {
   const theme = useTheme()
   const { t } = useTranslation()
-  const threeBarLayout = useThreeBarLayout()
   const { id } = useLocalSearchParams()
+  const threeBarLayout = useThreeBarLayout()
   const groupId = Number(id as string)
+  const { width } = useWindowDimensions()
   const { data: groupInfo, error } = useGroupInfo(groupId)
+
+  const [membersExpanded, setMembersExpanded] = useState(false)
+  const membersAlwaysExpanded = width > 1800
 
   if (error) {
     return (
@@ -155,15 +151,81 @@ export function GroupScreen() {
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
       <Header />
 
-      <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}>
+      <View style={{ flex: 1, alignItems: 'center' }}>
+        {!threeBarLayout && <ContentSwitcher info={groupInfo} />}
+
         {threeBarLayout && (
-          <View style={{ flex: 1, height: '100%', backgroundColor: theme.colors.surfaceContainer }}>
-            <GroupInfoPage info={groupInfo} />
+          <View
+            style={{
+              flex: 1,
+              width: '100%',
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 16,
+              paddingBottom: 16,
+              gap: 16,
+            }}
+          >
+            <Pane icon='home' title={t('tabs.group')} style={{ minWidth: 420 }}>
+              <GroupInfoPage info={groupInfo} />
+            </Pane>
+            <Pane icon='receipt' title={t('tabs.splits')} style={{ flex: 2 }}>
+              <SplitsList info={groupInfo} />
+            </Pane>
+            <Pane
+              icon='members'
+              title={t('tabs.members')}
+              collapsible={!membersAlwaysExpanded}
+              collapsed
+              onCollapseChange={() => {
+                setMembersExpanded(!membersExpanded)
+              }}
+              style={{ minWidth: membersAlwaysExpanded ? 500 : undefined }}
+            >
+              <MembersList info={groupInfo} iconOnly={!membersAlwaysExpanded} />
+            </Pane>
+
+            {!membersAlwaysExpanded && (
+              <Modal
+                visible={membersExpanded}
+                transparent
+                onRequestClose={() => {
+                  setMembersExpanded(false)
+                }}
+              >
+                <Pressable
+                  style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.6)' }]}
+                  onPress={() => {
+                    setMembersExpanded(false)
+                  }}
+                />
+                <View
+                  style={{
+                    width: 600,
+                    bottom: 16,
+                    top: 60,
+                    right: 16,
+                    position: 'absolute',
+                    backgroundColor: theme.colors.surfaceContainer,
+                    borderRadius: 16,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <Pane
+                    icon='members'
+                    title={t('tabs.members')}
+                    collapsible
+                    onCollapseChange={() => {
+                      setMembersExpanded(false)
+                    }}
+                  >
+                    <MembersList info={groupInfo} />
+                  </Pane>
+                </View>
+              </Modal>
+            )}
           </View>
         )}
-        <View style={{ flex: 2, height: '100%', alignItems: 'center' }}>
-          <ContentSwitcher info={groupInfo} />
-        </View>
       </View>
     </View>
   )
