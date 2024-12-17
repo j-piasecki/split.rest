@@ -177,7 +177,6 @@ function ActionButtons({ info }: { info: GroupInfo }) {
 
 export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
   const theme = useTheme()
-  const threeBarLayout = useThreeBarLayout()
 
   if (!info) {
     return (
@@ -195,7 +194,7 @@ export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
         justifyContent: 'flex-start',
         paddingHorizontal: 16,
         paddingVertical: 16,
-        paddingTop: threeBarLayout ? 8 : 16,
+        paddingTop: 16,
         paddingBottom: 32,
         maxWidth: 550,
         alignSelf: 'center',

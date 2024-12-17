@@ -51,9 +51,11 @@ export function Pane({
         }}
       >
         {(!collapsible || !collapsed) && (
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
             <Icon name={icon} size={24} color={theme.colors.secondary} />
-            <Text style={{ color: theme.colors.secondary, fontSize: 20 }}>{title}</Text>
+            <Text style={{ color: theme.colors.secondary, fontSize: 20, fontWeight: 700 }}>
+              {title}
+            </Text>
           </View>
         )}
 
