@@ -126,7 +126,7 @@ export function GroupScreen() {
   const { data: groupInfo, error } = useGroupInfo(groupId)
 
   const [membersExpanded, setMembersExpanded] = useState(false)
-  const membersAlwaysExpanded = width > 1600
+  const membersAlwaysExpanded = width > 1800
 
   if (error) {
     return (
@@ -180,6 +180,7 @@ export function GroupScreen() {
               onCollapseChange={() => {
                 setMembersExpanded(!membersExpanded)
               }}
+              style={{ minWidth: membersAlwaysExpanded ? 500 : undefined }}
             >
               <MembersList info={groupInfo} iconOnly={!membersAlwaysExpanded} />
             </Pane>
