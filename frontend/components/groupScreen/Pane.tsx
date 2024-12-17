@@ -43,7 +43,7 @@ export function Pane({
           width: '100%',
           borderBottomWidth: 1,
           borderBottomColor: theme.colors.outlineVariant,
-          height: 60,
+          height: 54,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
@@ -52,8 +52,8 @@ export function Pane({
       >
         {(!collapsible || !collapsed) && (
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
-            <Icon name={icon} size={24} color={theme.colors.secondary} />
-            <Text style={{ color: theme.colors.secondary, fontSize: 20, fontWeight: 700 }}>
+            <Icon name={icon} size={20} color={theme.colors.secondary} />
+            <Text style={{ color: theme.colors.secondary, fontSize: 16, fontWeight: 700 }}>
               {title}
             </Text>
           </View>
