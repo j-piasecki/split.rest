@@ -32,7 +32,7 @@ export function MembersList({ info, iconOnly }: MembersListProps) {
         ListEmptyComponent={
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             {isLoading && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
-            {!isLoading && members.length === 0 && (
+            {!isLoading && members.length === 0 && !iconOnly && (
               <Text style={{ fontSize: 20, color: theme.colors.outline }}>{t('noMembers')}</Text>
             )}
           </View>
