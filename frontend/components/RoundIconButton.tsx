@@ -16,6 +16,7 @@ export interface RoundIconButtonProps {
   disabled?: boolean
   size?: number
   style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
+  color?: string
 }
 
 export function RoundIconButton({
@@ -24,6 +25,7 @@ export function RoundIconButton({
   disabled,
   size = 24,
   style,
+  color,
 }: RoundIconButtonProps) {
   const theme = useTheme()
 
@@ -49,33 +51,8 @@ export function RoundIconButton({
       }}
     >
       <View style={{ width: size, height: size, justifyContent: 'center', alignItems: 'center' }}>
-        <Icon name={icon} size={size} color={theme.colors.outline} />
+        <Icon name={icon} size={size} color={color ?? theme.colors.outline} />
       </View>
     </Pressable>
   )
-}
-
-{
-  /* <Pressable
-  disabled={contextMenuDisabled}
-  onPress={(e) => {
-    contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
-  }}
-  style={({ pressed, hovered }) => ({
-    width: 40,
-    height: 40,
-    backgroundColor: pressed
-      ? theme.colors.surfaceContainerHigh
-      : hovered
-        ? theme.colors.surfaceContainer
-        : 'transparent',
-    marginLeft: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    opacity: contextMenuDisabled ? 0 : 1,
-  })}
->
-  <Icon name='moreVertical' size={24} color={theme.colors.outline} />
-</Pressable> */
 }

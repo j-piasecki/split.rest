@@ -123,7 +123,7 @@ export default function Home() {
   const [showHidden, setShowHidden] = useState(false)
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.surfaceDim }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
       <Header />
 
       <View style={{ flex: 1, alignItems: 'center' }}>

@@ -193,7 +193,7 @@ export function GroupScreen() {
                 }}
               >
                 <Pressable
-                  style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.4)' }]}
+                  style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.6)' }]}
                   onPress={() => {
                     setMembersExpanded(false)
                   }}

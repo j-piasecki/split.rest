@@ -59,15 +59,16 @@ export function Pane({
 
         {collapsable && (
           <RoundIconButton
-            icon='chevronBack'
+            icon={collapsed ? 'openRightPanel' : 'closeRightPanel'}
             size={24}
             onPress={() => {
               onCollapseChange?.(!collapsed)
             }}
+            color={theme.colors.secondary}
           />
         )}
       </View>
-      <View style={{}}>{children}</View>
+      <View style={{ flex: 1 }}>{children}</View>
     </View>
   )
 }
