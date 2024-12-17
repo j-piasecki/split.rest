@@ -197,7 +197,7 @@ export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
         paddingVertical: 16,
         paddingTop: threeBarLayout ? 8 : 16,
         paddingBottom: 32,
-        maxWidth: 500,
+        maxWidth: 550,
         alignSelf: 'center',
       }}
     >

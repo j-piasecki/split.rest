@@ -1,10 +1,10 @@
 import Header from '@components/Header'
 import { Icon } from '@components/Icon'
-import RoundIconButton from '@components/RoundIconButton'
 import { Tab, TabView } from '@components/TabView'
 import { Text } from '@components/Text'
 import { GroupInfoPage } from '@components/groupScreen/GroupInfoPage'
 import { MembersList } from '@components/groupScreen/MembersList'
+import { Pane } from '@components/groupScreen/Pane'
 import { SplitsList } from '@components/groupScreen/SplitsList'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTheme } from '@styling/theme'
@@ -166,111 +166,23 @@ export function GroupScreen() {
               gap: 16,
             }}
           >
-            <View
-              style={{
-                flex: 1,
-                height: '100%',
-                minWidth: 450,
-                backgroundColor: theme.colors.surfaceContainer,
-                borderRadius: 16,
+            <Pane icon='home' title={t('tabs.group')}>
+              <GroupInfoPage info={groupInfo} />
+            </Pane>
+            <Pane icon='receipt' title={t('tabs.splits')} style={{ flex: 2 }}>
+              <SplitsList info={groupInfo} />
+            </Pane>
+            <Pane
+              icon='members'
+              title={t('tabs.members')}
+              collapsable={!membersAlwaysExpanded}
+              collapsed
+              onCollapseChange={() => {
+                setMembersExpanded(!membersExpanded)
               }}
             >
-              <View
-                style={{
-                  width: '100%',
-                  borderBottomWidth: 1,
-                  borderBottomColor: theme.colors.outlineVariant,
-                  height: 60,
-                  padding: 16,
-                  flexDirection: 'row',
-                  alignItems: 'flex-start',
-                  gap: 8,
-                }}
-              >
-                <Icon name='home' size={24} color={theme.colors.secondary} />
-                <Text style={{ color: theme.colors.secondary, fontSize: 20 }}>
-                  {t('tabs.group')}
-                </Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <GroupInfoPage info={groupInfo} />
-              </View>
-            </View>
-            <View
-              style={{
-                flex: 2,
-                height: '100%',
-                backgroundColor: theme.colors.surfaceContainer,
-                borderRadius: 16,
-              }}
-            >
-              <View
-                style={{
-                  width: '100%',
-                  borderBottomWidth: 1,
-                  borderBottomColor: theme.colors.outlineVariant,
-                  height: 60,
-                  padding: 16,
-                  flexDirection: 'row',
-                  alignItems: 'flex-start',
-                  gap: 8,
-                }}
-              >
-                <Icon name='receipt' size={24} color={theme.colors.secondary} />
-                <Text style={{ color: theme.colors.secondary, fontSize: 20 }}>
-                  {t('tabs.splits')}
-                </Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <SplitsList info={groupInfo} />
-              </View>
-            </View>
-            <View
-              style={[
-                {
-                  height: '100%',
-                  backgroundColor: theme.colors.surfaceContainer,
-                  borderRadius: 16,
-                  overflow: 'hidden',
-                },
-                membersAlwaysExpanded ? { width: 500 } : { width: 64 },
-              ]}
-            >
-              <View
-                style={{
-                  width: '100%',
-                  borderBottomWidth: 1,
-                  borderBottomColor: theme.colors.outlineVariant,
-                  height: 60,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  paddingHorizontal: 16,
-                }}
-              >
-                {membersAlwaysExpanded && (
-                  <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
-                    <Icon name='members' size={24} color={theme.colors.secondary} />
-                    <Text style={{ color: theme.colors.secondary, fontSize: 20 }}>
-                      {t('tabs.members')}
-                    </Text>
-                  </View>
-                )}
-
-                {!membersAlwaysExpanded && (
-                  <RoundIconButton
-                    icon='chevronBack'
-                    size={24}
-                    onPress={() => {
-                      setMembersExpanded(!membersExpanded)
-                    }}
-                  />
-                )}
-              </View>
-              <View style={{ width: 500, height: '100%' }}>
-                <MembersList info={groupInfo} iconOnly={!membersAlwaysExpanded} />
-              </View>
-            </View>
+              <MembersList info={groupInfo} iconOnly={!membersAlwaysExpanded} />
+            </Pane>
 
             {!membersAlwaysExpanded && (
               <Modal
@@ -298,35 +210,16 @@ export function GroupScreen() {
                     overflow: 'hidden',
                   }}
                 >
-                  <View
-                    style={{
-                      width: '100%',
-                      borderBottomWidth: 1,
-                      borderBottomColor: theme.colors.outlineVariant,
-                      height: 60,
-                      alignItems: 'center',
-                      paddingHorizontal: 16,
-                      flexDirection: 'row',
-                      gap: 8,
+                  <Pane
+                    icon='members'
+                    title={t('tabs.members')}
+                    collapsable
+                    onCollapseChange={() => {
+                      setMembersExpanded(false)
                     }}
                   >
-                    <View
-                      style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}
-                    >
-                      <Icon name='members' size={24} color={theme.colors.secondary} />
-                      <Text style={{ color: theme.colors.secondary, fontSize: 20 }}>
-                        {t('tabs.members')}
-                      </Text>
-                    </View>
-                    <RoundIconButton
-                      icon='chevronBack'
-                      size={24}
-                      onPress={() => {
-                        setMembersExpanded(!membersExpanded)
-                      }}
-                    />
-                  </View>
-                  <MembersList info={groupInfo} />
+                    <MembersList info={groupInfo} />
+                  </Pane>
                 </View>
               </Modal>
             )}
