@@ -166,7 +166,7 @@ export function GroupScreen() {
               gap: 16,
             }}
           >
-            <Pane icon='home' title={t('tabs.group')}>
+            <Pane icon='home' title={t('tabs.group')} style={{ minWidth: 420 }}>
               <GroupInfoPage info={groupInfo} />
             </Pane>
             <Pane icon='receipt' title={t('tabs.splits')} style={{ flex: 2 }}>
