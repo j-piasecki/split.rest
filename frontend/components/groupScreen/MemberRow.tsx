@@ -54,7 +54,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
       <View
         key={member.id}
         style={{
-          padding: 16,
+          padding: 12,
           marginHorizontal: isSmallScreen || iconOnly ? 0 : 16,
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -63,7 +63,21 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
           borderBottomWidth: iconOnly ? 0 : 1,
         }}
       >
-        <View style={{ justifyContent: 'center', marginRight: 16 }}>
+        <View
+          style={{
+            justifyContent: 'center',
+            marginRight: 14,
+            padding: 2,
+            borderWidth: 2,
+            borderRadius: 20,
+            borderColor:
+              Number(member.balance) === 0
+                ? theme.colors.balanceNeutral
+                : Number(member.balance) < 0
+                  ? theme.colors.balanceNegative
+                  : theme.colors.balancePositive,
+          }}
+        >
           <Image
             source={{ uri: getProfilePictureUrl(member.id) }}
             style={{ width: 32, height: 32, borderRadius: 16 }}
