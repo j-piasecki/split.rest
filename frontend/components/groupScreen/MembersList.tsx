@@ -14,7 +14,7 @@ export interface MembersListProps {
 export function MembersList({ info, iconOnly }: MembersListProps) {
   const theme = useTheme()
   const { t } = useTranslation()
-  const { members, isLoading, fetchNextPage, isFetchingNextPage } = useGroupMembers(info?.id ?? 0)
+  const { members, isLoading, fetchNextPage, isFetchingNextPage } = useGroupMembers(info?.id)
 
   if (!info) {
     return null

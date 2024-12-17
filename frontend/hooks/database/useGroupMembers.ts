@@ -3,9 +3,13 @@ import { makeRequest } from '@utils/makeApiRequest'
 import { useCallback } from 'react'
 import { GetGroupMembersArguments, Member } from 'shared'
 
-export function useGroupMembers(groupId: number) {
+export function useGroupMembers(groupId: number | undefined) {
   const fetchMembers = useCallback(
     async ({ pageParam }: QueryFunctionContext<QueryKey, string>) => {
+      if (!groupId) {
+        return []
+      }
+
       const args: GetGroupMembersArguments = { groupId, startAfter: pageParam }
       const result = await makeRequest<GetGroupMembersArguments, Member[]>(
         'GET',
