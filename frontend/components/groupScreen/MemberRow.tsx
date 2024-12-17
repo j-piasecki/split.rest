@@ -54,7 +54,9 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
       <View
         key={member.id}
         style={{
-          padding: 12,
+          paddingVertical: 10,
+          paddingLeft: 10,
+          paddingRight: 16,
           marginHorizontal: isSmallScreen || iconOnly ? 0 : 16,
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -69,7 +71,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
             marginRight: 14,
             padding: 2,
             borderWidth: 2,
-            borderRadius: 20,
+            borderRadius: 24,
             borderColor:
               Number(member.balance) === 0
                 ? theme.colors.balanceNeutral
@@ -80,7 +82,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
         >
           <Image
             source={{ uri: getProfilePictureUrl(member.id) }}
-            style={{ width: 32, height: 32, borderRadius: 16 }}
+            style={{ width: 36, height: 36, borderRadius: 18 }}
           />
         </View>
         {!iconOnly && (
