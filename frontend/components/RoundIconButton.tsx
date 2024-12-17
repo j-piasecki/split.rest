@@ -18,7 +18,7 @@ export interface RoundIconButtonProps {
   style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
 }
 
-export default function RoundIconButton({
+export function RoundIconButton({
   icon,
   onPress,
   disabled,

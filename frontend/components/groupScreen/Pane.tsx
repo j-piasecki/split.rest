@@ -1,5 +1,5 @@
 import { Icon, IconName } from '@components/Icon'
-import RoundIconButton from '@components/RoundIconButton'
+import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { StyleProp, View, ViewStyle } from 'react-native'

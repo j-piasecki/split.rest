@@ -1,5 +1,5 @@
 import { Icon } from './Icon'
-import RoundIconButton from './RoundIconButton'
+import { RoundIconButton } from './RoundIconButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useIsSmallScreen } from '@utils/dimensionUtils'

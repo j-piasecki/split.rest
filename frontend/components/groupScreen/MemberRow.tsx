@@ -1,5 +1,5 @@
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
-import RoundIconButton from '@components/RoundIconButton'
+import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
