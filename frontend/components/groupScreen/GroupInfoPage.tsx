@@ -28,7 +28,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
         paddingBottom: threeBarLayout ? 0 : 24,
       }}
     >
-      <Text style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 24 }}>
+      <Text style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 8 }}>
         {info.name}
       </Text>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

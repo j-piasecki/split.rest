@@ -15,9 +15,10 @@ import { GroupInfo, Member } from 'shared'
 export interface MemberRowProps {
   member: Member
   info: GroupInfo
+  iconOnly: boolean
 }
 
-export function MemberRow({ member, info }: MemberRowProps) {
+export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
   const isSmallScreen = useIsSmallScreen()
@@ -54,11 +55,12 @@ export function MemberRow({ member, info }: MemberRowProps) {
         key={member.id}
         style={{
           padding: 16,
-          marginHorizontal: isSmallScreen ? 0 : 16,
+          marginHorizontal: isSmallScreen || iconOnly ? 0 : 16,
           flexDirection: 'row',
           justifyContent: 'space-between',
+          alignItems: 'center',
           borderColor: theme.colors.outlineVariant,
-          borderBottomWidth: 1,
+          borderBottomWidth: iconOnly ? 0 : 1,
         }}
       >
         <View style={{ justifyContent: 'center', marginRight: 16 }}>
@@ -67,40 +69,44 @@ export function MemberRow({ member, info }: MemberRowProps) {
             style={{ width: 32, height: 32, borderRadius: 16 }}
           />
         </View>
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Text
-            selectable={false}
-            style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}
-          >
-            {member.name}
-          </Text>
-        </View>
-        <View style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: 100 }}>
-          <Text
-            selectable={false}
-            style={{
-              fontSize: 20,
-              color:
-                Number(member.balance) === 0
-                  ? theme.colors.balanceNeutral
-                  : Number(member.balance) > 0
-                    ? theme.colors.balancePositive
-                    : theme.colors.balanceNegative,
-            }}
-          >
-            {Number(member.balance) > 0 && '+'}
-            {member.balance}
-          </Text>
-        </View>
+        {!iconOnly && (
+          <>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
+              <Text
+                selectable={false}
+                style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}
+              >
+                {member.name}
+              </Text>
+            </View>
+            <View style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: 100 }}>
+              <Text
+                selectable={false}
+                style={{
+                  fontSize: 20,
+                  color:
+                    Number(member.balance) === 0
+                      ? theme.colors.balanceNeutral
+                      : Number(member.balance) > 0
+                        ? theme.colors.balancePositive
+                        : theme.colors.balanceNegative,
+                }}
+              >
+                {Number(member.balance) > 0 && '+'}
+                {member.balance}
+              </Text>
+            </View>
 
-        <RoundIconButton
-          disabled={contextMenuDisabled}
-          icon='moreVertical'
-          onPress={(e) => {
-            contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
-          }}
-          style={{ marginLeft: 16, opacity: contextMenuDisabled ? 0 : 0.7 }}
-        />
+            <RoundIconButton
+              disabled={contextMenuDisabled}
+              icon='moreVertical'
+              onPress={(e) => {
+                contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
+              }}
+              style={{ marginLeft: 16, opacity: contextMenuDisabled ? 0 : 0.7 }}
+            />
+          </>
+        )}
       </View>
     </ContextMenu>
   )

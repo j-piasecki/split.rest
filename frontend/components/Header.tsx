@@ -24,12 +24,11 @@ export default function Header(_props: HeaderProps) {
   return (
     <View
       style={{
-        backgroundColor: theme.colors.surfaceContainer,
         height: 60 + insets.top,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 32,
+        paddingHorizontal: 16,
         paddingTop: insets.top,
       }}
     >
@@ -54,9 +53,9 @@ export default function Header(_props: HeaderProps) {
         <Image
           source={{ uri: getProfilePictureUrl(user?.id) }}
           style={{
-            width: 40,
-            height: 40,
-            borderRadius: 20,
+            width: 32,
+            height: 32,
+            borderRadius: 16,
           }}
         />
       </Pressable>

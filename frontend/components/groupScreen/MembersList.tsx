@@ -8,9 +8,10 @@ import { GroupInfo } from 'shared'
 
 export interface MembersListProps {
   info: GroupInfo | undefined
+  iconOnly?: boolean
 }
 
-export function MembersList({ info }: MembersListProps) {
+export function MembersList({ info, iconOnly }: MembersListProps) {
   const theme = useTheme()
   const { t } = useTranslation()
   const { members, isLoading, fetchNextPage, isFetchingNextPage } = useGroupMembers(info?.id ?? 0)
@@ -40,7 +41,9 @@ export function MembersList({ info }: MembersListProps) {
         onEndReachedThreshold={0.5}
         onEndReached={() => !isFetchingNextPage && fetchNextPage()}
         keyExtractor={(item) => item.id}
-        renderItem={({ item: member }) => <MemberRow member={member} info={info} />}
+        renderItem={({ item: member }) => (
+          <MemberRow member={member} info={info} iconOnly={iconOnly ?? false} />
+        )}
       />
     </View>
   )
