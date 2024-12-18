@@ -63,6 +63,7 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
         {members.map((member, index) => {
           return (
             <View
+              key={member.id}
               style={{
                 width: 32,
                 height: 32,
@@ -74,7 +75,6 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
               }}
             >
               <Image
-                id={member.id}
                 source={{ uri: getProfilePictureUrl(member.id) }}
                 style={{
                   width: 32,
