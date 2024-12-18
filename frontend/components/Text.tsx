@@ -7,6 +7,12 @@ export function Text({ style, ...props }: TextProps) {
   const styles = useMemo(() => {
     const styles = StyleSheet.flatten(style)
 
+    if (!styles) {
+      return {
+        fontFamily: resolveFontName(styles),
+      }
+    }
+
     if (styles?.fontFamily === undefined) {
       styles.fontFamily = resolveFontName(styles)
 
