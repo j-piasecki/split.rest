@@ -67,6 +67,7 @@ function Content() {
         <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
         <Stack.Screen name='home' options={{ title: t('appName'), animation: 'none' }} />
         <Stack.Screen name='group/[id]/index' options={{ title: t('screenName.group') }} />
+        <Stack.Screen name='group/[id]/members' options={{ title: t('screenName.members') }} />
         <Stack.Screen
           name='createGroup'
           options={{

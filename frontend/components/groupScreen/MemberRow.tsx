@@ -5,7 +5,6 @@ import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutatio
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +20,6 @@ export interface MemberRowProps {
 export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
-  const isSmallScreen = useIsSmallScreen()
   const contextMenuRef = useRef<ContextMenuRef>(null)
   const { t } = useTranslation()
   const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(info.id, member.id)
@@ -54,15 +52,13 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
       <View
         key={member.id}
         style={{
+          backgroundColor: theme.colors.surfaceContainer,
           paddingVertical: 10,
           paddingLeft: 10,
           paddingRight: 16,
-          marginHorizontal: isSmallScreen || iconOnly ? 0 : 16,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderColor: theme.colors.outlineVariant,
-          borderBottomWidth: iconOnly ? 0 : 1,
         }}
       >
         <View
@@ -113,14 +109,16 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
               </Text>
             </View>
 
-            <RoundIconButton
-              disabled={contextMenuDisabled}
-              icon='moreVertical'
-              onPress={(e) => {
-                contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
-              }}
-              style={{ marginLeft: 16, opacity: contextMenuDisabled ? 0.2 : 0.7 }}
-            />
+            {info.isAdmin && (
+              <RoundIconButton
+                disabled={contextMenuDisabled}
+                icon='moreVertical'
+                onPress={(e) => {
+                  contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
+                }}
+                style={{ marginLeft: 16, opacity: contextMenuDisabled ? 0.2 : 0.7 }}
+              />
+            )}
           </>
         )}
       </View>
