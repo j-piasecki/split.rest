@@ -292,6 +292,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
                   backgroundColor: theme.colors.surfaceContainer,
                   overflow: 'hidden',
                   pointerEvents: 'none',
+                  borderRadius: 8,
                 },
               ]}
             >
