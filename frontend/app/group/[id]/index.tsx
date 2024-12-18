@@ -62,9 +62,7 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
         {/* TODO: Limit the number of photos here? */}
         {members.map((member, index) => {
           return (
-            <Image
-              id={member.id}
-              source={{ uri: getProfilePictureUrl(member.id) }}
+            <View
               style={{
                 width: 32,
                 height: 32,
@@ -72,8 +70,18 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
                 borderWidth: 2,
                 borderColor: theme.colors.surfaceContainer,
                 transform: [{ translateX: index * 8 }],
+                overflow: 'hidden',
               }}
-            />
+            >
+              <Image
+                id={member.id}
+                source={{ uri: getProfilePictureUrl(member.id) }}
+                style={{
+                  width: 32,
+                  height: 32,
+                }}
+              />
+            </View>
           )
         })}
       </View>
