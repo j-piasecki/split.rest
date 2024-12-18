@@ -59,6 +59,7 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
           overflow: 'hidden',
         }}
       >
+        {/* TODO: Limit the number of photos here? */}
         {members.map((member, index) => {
           return (
             <Image
