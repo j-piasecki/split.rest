@@ -13,9 +13,17 @@ import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Modal, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native'
+import {
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native'
 import { GroupInfo } from 'shared'
 
 function MembersButton({ info }: { info: GroupInfo | undefined }) {
@@ -23,6 +31,27 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
   const { t } = useTranslation()
   const router = useRouter()
   const { members } = useGroupMembers(info?.id)
+  const iconsRef = useRef<View>(null)
+  // TODO: limit number of icons shown?
+  const [iconsToShow, setIconsToShow] = useState(20)
+  const { width } = useWindowDimensions()
+
+  useLayoutEffect(() => {
+    const singleIconWidth = 28
+    let width = 0
+
+    // TODO: extract measurement to utils
+    if (Platform.OS === 'web') {
+      // @ts-expect-error - getBoundingClientRect will not work on mobile
+      width = iconsRef.current?.getBoundingClientRect().width
+    } else {
+      iconsRef.current?.measureInWindow((x, y, measuredWidth) => {
+        width = measuredWidth
+      })
+    }
+
+    setIconsToShow(Math.floor(width / singleIconWidth))
+  }, [width])
 
   return (
     <Pressable
@@ -50,6 +79,7 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
       </View>
 
       <View
+        ref={iconsRef}
         style={{
           flex: 1,
           height: 40,
@@ -59,8 +89,7 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
           overflow: 'hidden',
         }}
       >
-        {/* TODO: Limit the number of photos here? */}
-        {members.map((member, index) => {
+        {members.slice(0, iconsToShow).map((member, index) => {
           return (
             <View
               key={member.id}
