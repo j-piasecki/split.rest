@@ -1,5 +1,5 @@
 import { QueryFunctionContext, QueryKey, useInfiniteQuery } from '@tanstack/react-query'
-import { makeRequest } from '@utils/makeApiRequest'
+import { ApiError, makeRequest } from '@utils/makeApiRequest'
 import { useCallback } from 'react'
 import { GetGroupSplitsArguments } from 'shared'
 import { SplitInfo } from 'shared'
@@ -12,12 +12,21 @@ export function useGroupSplits(groupId?: number) {
       }
 
       const args: GetGroupSplitsArguments = { groupId, startAfterTimestamp: pageParam }
-      const result = await makeRequest<GetGroupSplitsArguments, SplitInfo[]>(
-        'GET',
-        'getGroupSplits',
-        args
-      )
-      return result ?? []
+
+      try {
+        const result = await makeRequest<GetGroupSplitsArguments, SplitInfo[]>(
+          'GET',
+          'getGroupSplits',
+          args
+        )
+        return result ?? []
+      } catch (error) {
+        if (error instanceof ApiError && error.statusCode === 403) {
+          return []
+        } else {
+          throw error
+        }
+      }
     },
     [groupId]
   )

@@ -1,5 +1,5 @@
 import { QueryFunctionContext, QueryKey, useInfiniteQuery } from '@tanstack/react-query'
-import { makeRequest } from '@utils/makeApiRequest'
+import { ApiError, makeRequest } from '@utils/makeApiRequest'
 import { useCallback } from 'react'
 import { GetGroupMembersArguments, Member } from 'shared'
 
@@ -11,12 +11,21 @@ export function useGroupMembers(groupId: number | undefined) {
       }
 
       const args: GetGroupMembersArguments = { groupId, startAfter: pageParam }
-      const result = await makeRequest<GetGroupMembersArguments, Member[]>(
-        'GET',
-        'getGroupMembers',
-        args
-      )
-      return result ?? []
+
+      try {
+        const result = await makeRequest<GetGroupMembersArguments, Member[]>(
+          'GET',
+          'getGroupMembers',
+          args
+        )
+        return result ?? []
+      } catch (error) {
+        if (error instanceof ApiError && error.statusCode === 403) {
+          return []
+        } else {
+          throw error
+        }
+      }
     },
     [groupId]
   )
