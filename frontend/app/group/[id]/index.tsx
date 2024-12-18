@@ -6,19 +6,90 @@ import { MembersList } from '@components/groupScreen/MembersList'
 import { Pane } from '@components/groupScreen/Pane'
 import { SplitsList } from '@components/groupScreen/SplitsList'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
+import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native'
 import { GroupInfo } from 'shared'
 
-function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
+function MembersButton({ info }: { info: GroupInfo | undefined }) {
   const theme = useTheme()
   const { t } = useTranslation()
   const router = useRouter()
+  const { members } = useGroupMembers(info?.id)
+
+  return (
+    <Pressable
+      style={({ pressed }) => ({
+        backgroundColor: pressed
+          ? theme.colors.surfaceContainerHigh
+          : theme.colors.surfaceContainer,
+        paddingVertical: 8,
+        paddingHorizontal: 24,
+        borderRadius: 16,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 24,
+      })}
+      onPress={() => {
+        router.navigate(`/group/${info?.id}/members`)
+      }}
+    >
+      <View style={{ flexDirection: 'row', gap: 16 }}>
+        <Icon name='members' size={24} color={theme.colors.secondary} />
+        <Text style={{ color: theme.colors.secondary, fontSize: 20, fontWeight: 600 }}>
+          {t('tabs.members')}
+        </Text>
+      </View>
+
+      <View
+        style={{
+          flex: 1,
+          height: 40,
+          flexDirection: 'row-reverse',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          overflow: 'hidden',
+        }}
+      >
+        {members.map((member, index) => {
+          return (
+            <Image
+              id={member.id}
+              source={{ uri: getProfilePictureUrl(member.id) }}
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                borderWidth: 2,
+                borderColor: theme.colors.surfaceContainer,
+                transform: [{ translateX: index * 8 }],
+              }}
+            />
+          )
+        })}
+      </View>
+
+      <Icon
+        name='chevronBack'
+        size={24}
+        color={theme.colors.secondary}
+        style={{ transform: [{ scaleX: -1 }] }}
+      />
+    </Pressable>
+  )
+}
+
+function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
+  const theme = useTheme()
+  const { t } = useTranslation()
 
   return (
     <SplitsList
@@ -26,35 +97,7 @@ function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
       headerComponent={
         <View>
           <GroupInfoPage info={info} />
-          <Pressable
-            style={({ pressed }) => ({
-              backgroundColor: pressed
-                ? theme.colors.surfaceContainerHigh
-                : theme.colors.surfaceContainer,
-              paddingVertical: 16,
-              paddingHorizontal: 24,
-              borderRadius: 16,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            })}
-            onPress={() => {
-              router.navigate(`/group/${info?.id}/members`)
-            }}
-          >
-            <View style={{ flexDirection: 'row', gap: 16 }}>
-              <Icon name='members' size={24} color={theme.colors.secondary} />
-              <Text style={{ color: theme.colors.secondary, fontSize: 20, fontWeight: 600 }}>
-                {t('tabs.members')}
-              </Text>
-            </View>
-            <Icon
-              name='chevronBack'
-              size={24}
-              color={theme.colors.secondary}
-              style={{ transform: [{ scaleX: -1 }] }}
-            />
-          </Pressable>
-
+          <MembersButton info={info} />
           <View
             style={{
               marginTop: 16,
