@@ -13,7 +13,7 @@ import { useIsSmallScreen, useThreeBarLayout } from '@utils/dimensionUtils'
 import { useLocalSearchParams } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Modal, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native'
+import { Modal, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
@@ -167,7 +167,9 @@ export function GroupScreen() {
             }}
           >
             <Pane icon='home' title={t('tabs.group')} style={{ minWidth: 420 }}>
-              <GroupInfoPage info={groupInfo} />
+              <ScrollView style={{flex: 1}}>
+                <GroupInfoPage info={groupInfo} />
+              </ScrollView>
             </Pane>
             <Pane icon='receipt' title={t('tabs.splits')} style={{ flex: 2 }}>
               <SplitsList info={groupInfo} />

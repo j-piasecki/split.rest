@@ -7,7 +7,7 @@ import { useAuth } from '@utils/auth'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function InfoCard({ info }: { info: GroupInfo }) {
@@ -177,9 +177,8 @@ export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
   }
 
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={{
+    <View
+      style={{
         width: '100%',
         justifyContent: 'flex-start',
         paddingHorizontal: 16,
@@ -192,6 +191,6 @@ export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
     >
       <InfoCard info={info} />
       <ActionButtons info={info} />
-    </ScrollView>
+    </View>
   )
 }
