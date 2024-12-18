@@ -114,16 +114,6 @@ function ActionButtons({ info }: { info: GroupInfo }) {
 
   return (
     <View style={{ marginVertical: 16, flexDirection: 'column', gap: 12 }}>
-      {info.isAdmin && (
-        <Button
-          onPress={() => {
-            router.navigate(`/group/${info.id}/addUser`)
-          }}
-          title={t('groupInfo.addUser')}
-          leftIcon='addMember'
-        />
-      )}
-
       {info.hasAccess && (
         <Button
           onPress={() => {

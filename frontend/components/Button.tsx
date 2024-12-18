@@ -2,7 +2,13 @@ import { Icon, IconName } from './Icon'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import React from 'react'
-import { ActivityIndicator, Pressable } from 'react-native'
+import {
+  ActivityIndicator,
+  Pressable,
+  PressableStateCallbackType,
+  StyleProp,
+  ViewStyle,
+} from 'react-native'
 
 export interface ButtonProps {
   title?: string
@@ -12,6 +18,7 @@ export interface ButtonProps {
   isLoading?: boolean
   destructive?: boolean
   disabled?: boolean
+  style?: (state: PressableStateCallbackType) => StyleProp<ViewStyle>
 }
 
 export function Button({
@@ -22,6 +29,7 @@ export function Button({
   isLoading,
   destructive,
   disabled,
+  style,
 }: ButtonProps) {
   const theme = useTheme()
 
@@ -36,19 +44,22 @@ export function Button({
       onPress={onPress}
       disabled={disabled || isLoading}
       style={(state) => {
-        return {
-          paddingVertical: 12,
-          paddingHorizontal: title ? 24 : 12,
-          borderRadius: 12,
-          backgroundColor: destructive
-            ? theme.colors.errorContainer
-            : theme.colors.primaryContainer,
-          opacity: disabled ? 0.5 : state.pressed ? 0.7 : 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'row',
-          gap: 8,
-        }
+        return [
+          {
+            paddingVertical: 12,
+            paddingHorizontal: title ? 24 : 12,
+            borderRadius: 12,
+            backgroundColor: destructive
+              ? theme.colors.errorContainer
+              : theme.colors.primaryContainer,
+            opacity: disabled ? 0.5 : state.pressed ? 0.7 : 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+            gap: 8,
+          },
+          style?.(state),
+        ]
       }}
     >
       {isLoading && <ActivityIndicator size='small' color={foregroundColor} />}
