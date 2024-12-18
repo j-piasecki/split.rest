@@ -72,12 +72,10 @@ export function SplitRow({ split, info }: SplitRowProps) {
       }}
       style={{
         padding: 16,
-        marginHorizontal: isSmallScreen ? 0 : 16,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderColor: theme.colors.outlineVariant,
-        borderBottomWidth: 1,
+        backgroundColor: theme.colors.surfaceContainer,
       }}
     >
       <View style={{ flex: 2 }}>

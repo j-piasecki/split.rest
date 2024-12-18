@@ -7,18 +7,19 @@ import { useAuth } from '@utils/auth'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, View, useWindowDimensions } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function InfoCard({ info }: { info: GroupInfo }) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
+  const { width } = useWindowDimensions()
 
   return (
     <View
       style={{
-        width: '100%',
+        flex: threeBarLayout || width >= 600 ? 1 : undefined,
         justifyContent: 'center',
         backgroundColor: theme.colors.surfaceContainer,
         borderRadius: 16,
@@ -113,7 +114,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
   const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info.id)
 
   return (
-    <View style={{ marginVertical: 16, flexDirection: 'column', gap: 12 }}>
+    <View style={{ flexDirection: 'column', gap: 12 }}>
       {info.hasAccess && (
         <Button
           onPress={() => {
@@ -167,10 +168,22 @@ function ActionButtons({ info }: { info: GroupInfo }) {
 
 export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
   const theme = useTheme()
+  const threeBarLayout = useThreeBarLayout()
+  const { width } = useWindowDimensions()
 
   if (!info) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View
+        style={{
+          width: '100%',
+          height: 64,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: theme.colors.surfaceContainer,
+          marginBottom: 16,
+          borderRadius: 16,
+        }}
+      >
         <ActivityIndicator color={theme.colors.onSurface} />
       </View>
     )
@@ -181,12 +194,11 @@ export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
       style={{
         width: '100%',
         justifyContent: 'flex-start',
-        paddingHorizontal: 16,
         paddingVertical: 16,
-        paddingTop: 16,
-        paddingBottom: 32,
-        maxWidth: 550,
         alignSelf: 'center',
+        flexDirection: threeBarLayout || width < 600 ? 'column' : 'row',
+        alignItems: threeBarLayout || width < 600 ? undefined : 'center',
+        gap: 16,
       }}
     >
       <InfoCard info={info} />

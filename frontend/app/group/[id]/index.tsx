@@ -1,6 +1,5 @@
 import Header from '@components/Header'
 import { Icon } from '@components/Icon'
-import { Tab, TabView } from '@components/TabView'
 import { Text } from '@components/Text'
 import { GroupInfoPage } from '@components/groupScreen/GroupInfoPage'
 import { MembersList } from '@components/groupScreen/MembersList'
@@ -9,109 +8,84 @@ import { SplitsList } from '@components/groupScreen/SplitsList'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { useIsSmallScreen, useThreeBarLayout } from '@utils/dimensionUtils'
-import { useLocalSearchParams } from 'expo-router'
+import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native'
 import { GroupInfo } from 'shared'
 
-function ContentSwitcher({ info }: { info: GroupInfo | undefined }) {
+function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
   const theme = useTheme()
-  const isSmallScreen = useIsSmallScreen()
-  const [openedTab, setOpenedTab] = useState(0)
   const { t } = useTranslation()
-
-  const tabs: Tab[] = [
-    {
-      header: ({ selected }) => (
-        <View
-          style={{
-            flexDirection: isSmallScreen ? 'column' : 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Icon
-            name='home'
-            size={20}
-            color={selected ? theme.colors.primary : theme.colors.outline}
-          />
-          <Text
-            style={{
-              color: selected ? theme.colors.primary : theme.colors.outline,
-              marginLeft: isSmallScreen ? 0 : 8,
-              fontSize: isSmallScreen ? 12 : 16,
-            }}
-          >
-            {t('tabs.group')}
-          </Text>
-        </View>
-      ),
-      content: <GroupInfoPage info={info} />,
-    },
-    {
-      header: ({ selected }) => (
-        <View
-          style={{
-            flexDirection: isSmallScreen ? 'column' : 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Icon
-            name='receipt'
-            size={20}
-            color={selected ? theme.colors.primary : theme.colors.outline}
-          />
-          <Text
-            style={{
-              color: selected ? theme.colors.primary : theme.colors.outline,
-              marginLeft: isSmallScreen ? 0 : 8,
-              fontSize: isSmallScreen ? 12 : 16,
-            }}
-          >
-            {t('tabs.splits')}
-          </Text>
-        </View>
-      ),
-      content: <SplitsList info={info} />,
-    },
-    {
-      header: ({ selected }) => (
-        <View
-          style={{
-            flexDirection: isSmallScreen ? 'column' : 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Icon
-            name='members'
-            size={20}
-            color={selected ? theme.colors.primary : theme.colors.outline}
-          />
-          <Text
-            style={{
-              color: selected ? theme.colors.primary : theme.colors.outline,
-              marginLeft: isSmallScreen ? 0 : 8,
-              fontSize: isSmallScreen ? 12 : 16,
-            }}
-          >
-            {t('tabs.members')}
-          </Text>
-        </View>
-      ),
-      content: <MembersList info={info} />,
-    },
-  ]
+  const router = useRouter()
 
   return (
-    <TabView
-      openedTab={openedTab}
-      tabs={tabs}
-      onTabChange={setOpenedTab}
-      headerLocation={'bottom'}
+    <SplitsList
+      info={info}
+      headerComponent={
+        <View>
+          <GroupInfoPage info={info} />
+          <Pressable
+            style={({ pressed }) => ({
+              backgroundColor: pressed
+                ? theme.colors.surfaceContainerHigh
+                : theme.colors.surfaceContainer,
+              paddingVertical: 16,
+              paddingHorizontal: 24,
+              borderRadius: 16,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            })}
+            onPress={() => {
+              router.navigate(`/group/${info?.id}/members`)
+            }}
+          >
+            <View style={{ flexDirection: 'row', gap: 16 }}>
+              <Icon name='members' size={24} color={theme.colors.secondary} />
+              <Text style={{ color: theme.colors.secondary, fontSize: 20, fontWeight: 600 }}>
+                {t('tabs.members')}
+              </Text>
+            </View>
+            <Icon
+              name='chevronBack'
+              size={24}
+              color={theme.colors.secondary}
+              style={{ transform: [{ scaleX: -1 }] }}
+            />
+          </Pressable>
+
+          <View
+            style={{
+              marginTop: 16,
+              backgroundColor: theme.colors.surfaceContainer,
+              paddingVertical: 16,
+              paddingHorizontal: 24,
+              flexDirection: 'row',
+              gap: 16,
+              borderTopLeftRadius: 16,
+              borderTopRightRadius: 16,
+              borderBottomWidth: 1,
+              borderColor: theme.colors.outlineVariant,
+            }}
+          >
+            <Icon name='receipt' size={24} color={theme.colors.secondary} />
+            <Text style={{ color: theme.colors.secondary, fontSize: 20, fontWeight: 600 }}>
+              {t('tabs.splits')}
+            </Text>
+          </View>
+        </View>
+      }
+      footerComponent={
+        <View
+          style={{
+            height: 16,
+            backgroundColor: theme.colors.surfaceContainer,
+            borderBottomLeftRadius: 16,
+            borderBottomRightRadius: 16,
+          }}
+        />
+      }
     />
   )
 }
@@ -152,7 +126,7 @@ export function GroupScreen() {
       <Header />
 
       <View style={{ flex: 1, alignItems: 'center' }}>
-        {!threeBarLayout && <ContentSwitcher info={groupInfo} />}
+        {!threeBarLayout && <SingleColumnLayout info={groupInfo} />}
 
         {threeBarLayout && (
           <View
@@ -167,7 +141,7 @@ export function GroupScreen() {
             }}
           >
             <Pane icon='home' title={t('tabs.group')} style={{ minWidth: 420 }}>
-              <ScrollView style={{flex: 1}}>
+              <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
                 <GroupInfoPage info={groupInfo} />
               </ScrollView>
             </Pane>

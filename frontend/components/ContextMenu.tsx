@@ -289,7 +289,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
                   top: anchorRect.current?.y,
                   width: anchorRect.current?.width,
                   height: anchorRect.current?.height,
-                  backgroundColor: theme.colors.surface,
+                  backgroundColor: theme.colors.surfaceContainer,
                   overflow: 'hidden',
                   pointerEvents: 'none',
                 },

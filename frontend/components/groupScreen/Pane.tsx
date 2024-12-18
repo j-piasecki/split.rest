@@ -24,7 +24,7 @@ export function Pane({
   onCollapseChange,
 }: PaneProps) {
   const theme = useTheme()
-  console.log(collapsed, collapsible)
+
   return (
     <View
       style={[
