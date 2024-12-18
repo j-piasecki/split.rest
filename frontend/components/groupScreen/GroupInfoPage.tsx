@@ -73,10 +73,10 @@ function InfoCard({ info }: { info: GroupInfo }) {
             <Icon
               name={info.hasAccess ? 'lockOpen' : 'lock'}
               size={20}
-              color={theme.colors.outline}
+              color={info.hasAccess ? theme.colors.outline : theme.colors.error}
             />
           </View>
-          <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
+          <Text style={{ color: info.hasAccess ? theme.colors.outline : theme.colors.error, fontSize: 18 }}>
             {info.hasAccess ? t('groupInfo.accessToGroup') : t('groupInfo.noAccessToGroup')}
           </Text>
         </View>
