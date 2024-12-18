@@ -45,7 +45,6 @@ export function MembersList({
     <View style={{ width: '100%', flex: 1 }}>
       <FlatList
         contentContainerStyle={{
-          flex: !members?.length ? 1 : undefined,
           maxWidth: 768,
           width: '100%',
           alignSelf: 'center',

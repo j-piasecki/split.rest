@@ -33,7 +33,6 @@ export function SplitsList({ info, headerComponent, footerComponent }: SplitsLis
     <View style={{ width: '100%', flex: 1 }}>
       <FlatList
         contentContainerStyle={{
-          flex: !splits?.length ? 1 : undefined,
           maxWidth: 900,
           width: '100%',
           alignSelf: 'center',
