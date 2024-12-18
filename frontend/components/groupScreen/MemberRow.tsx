@@ -27,7 +27,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
   const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(info.id, member.id)
   const { mutate: setGroupAdminMutation } = useSetGroupAdminMutation(info.id, member.id)
 
-  const contextMenuDisabled = member.id === user?.id || !info.isAdmin
+  const contextMenuDisabled = member.id === user?.id || !info.isAdmin || iconOnly
 
   return (
     <ContextMenu
@@ -119,7 +119,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
               onPress={(e) => {
                 contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
               }}
-              style={{ marginLeft: 16, opacity: contextMenuDisabled ? 0 : 0.7 }}
+              style={{ marginLeft: 16, opacity: contextMenuDisabled ? 0.2 : 0.7 }}
             />
           </>
         )}

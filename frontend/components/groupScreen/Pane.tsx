@@ -2,7 +2,7 @@ import { Icon, IconName } from '@components/Icon'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
-import { StyleProp, View, ViewStyle } from 'react-native'
+import { Pressable, StyleProp, View, ViewStyle } from 'react-native'
 
 export interface PaneProps {
   children: React.ReactNode
@@ -24,7 +24,7 @@ export function Pane({
   onCollapseChange,
 }: PaneProps) {
   const theme = useTheme()
-
+  console.log(collapsed, collapsible)
   return (
     <View
       style={[
@@ -70,7 +70,15 @@ export function Pane({
           />
         )}
       </View>
-      <View style={{ flex: 1 }}>{children}</View>
+      <Pressable
+        disabled={!collapsed || !collapsible}
+        style={{ flex: 1 }}
+        onPress={() => {
+          onCollapseChange?.(false)
+        }}
+      >
+        {children}
+      </Pressable>
     </View>
   )
 }
