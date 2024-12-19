@@ -1,4 +1,5 @@
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
+import { Icon, IconName } from '@components/Icon'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
@@ -15,6 +16,28 @@ export interface MemberRowProps {
   member: Member
   info: GroupInfo
   iconOnly: boolean
+}
+
+function Badge({ icon }: { icon: IconName }) {
+  const theme = useTheme()
+
+  return (
+    <View
+      style={{
+        position: 'absolute',
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        backgroundColor: theme.colors.surfaceContainerHighest,
+        right: -6,
+        bottom: -6,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Icon name={icon} size={16} color={theme.colors.secondary} />
+    </View>
+  )
 }
 
 export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
@@ -80,6 +103,9 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
             source={{ uri: getProfilePictureUrl(member.id) }}
             style={{ width: 36, height: 36, borderRadius: 18 }}
           />
+          {(member.isAdmin || !member.hasAccess) && (
+            <Badge icon={member.hasAccess ? 'shield' : 'lock'} />
+          )}
         </View>
         {!iconOnly && (
           <>
