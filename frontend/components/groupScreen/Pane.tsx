@@ -2,7 +2,71 @@ import { Icon, IconName } from '@components/Icon'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
+import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { Pressable, StyleProp, View, ViewStyle } from 'react-native'
+
+export interface PaneHeaderProps {
+  icon: IconName
+  title: string
+  rightComponent?: React.ReactNode
+  rightComponentVisible?: boolean
+  textVisible?: boolean
+  textLocation?: 'center' | 'start'
+  showSeparator?: boolean
+}
+
+export function PaneHeader({
+  icon,
+  title,
+  rightComponentVisible = true,
+  rightComponent,
+  textVisible = true,
+  textLocation = 'center',
+  showSeparator = true,
+}: PaneHeaderProps) {
+  const theme = useTheme()
+  const threeBarLayout = useThreeBarLayout()
+
+  return (
+    <View
+      style={{
+        width: '100%',
+        borderBottomWidth: showSeparator ? 1 : 0,
+        paddingHorizontal: threeBarLayout ? 16 : 24,
+        borderBottomColor: theme.colors.outlineVariant,
+        height: 54,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 16,
+      }}
+    >
+      {textVisible && (
+        <View
+          style={[
+            { flexDirection: 'row', gap: 16 },
+            textLocation === 'center' ? { flex: 1, justifyContent: 'center' } : {},
+          ]}
+        >
+          <Icon name={icon} size={threeBarLayout ? 20 : 24} color={theme.colors.secondary} />
+          <Text
+            style={{
+              color: theme.colors.secondary,
+              fontSize: threeBarLayout ? 16 : 20,
+              fontWeight: 600,
+            }}
+          >
+            {title}
+          </Text>
+        </View>
+      )}
+
+      <View style={textLocation === 'start' && { flex: 1, alignItems: 'flex-end' }}>
+        {rightComponentVisible && rightComponent}
+      </View>
+    </View>
+  )
+}
 
 export interface PaneProps {
   children: React.ReactNode
@@ -38,28 +102,10 @@ export function Pane({
         style,
       ]}
     >
-      <View
-        style={{
-          width: '100%',
-          borderBottomWidth: 1,
-          borderBottomColor: theme.colors.outlineVariant,
-          height: 54,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingHorizontal: 16,
-        }}
-      >
-        {(!collapsible || !collapsed) && (
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', gap: 8 }}>
-            <Icon name={icon} size={20} color={theme.colors.secondary} />
-            <Text style={{ color: theme.colors.secondary, fontSize: 16, fontWeight: 700 }}>
-              {title}
-            </Text>
-          </View>
-        )}
-
-        {collapsible && (
+      <PaneHeader
+        icon={icon}
+        title={title}
+        rightComponent={
           <RoundIconButton
             icon={collapsed ? 'openRightPanel' : 'closeRightPanel'}
             size={24}
@@ -68,8 +114,10 @@ export function Pane({
             }}
             color={theme.colors.secondary}
           />
-        )}
-      </View>
+        }
+        rightComponentVisible={collapsible}
+        textVisible={!collapsible || !collapsed}
+      />
       <Pressable
         disabled={!collapsed || !collapsible}
         style={{ flex: 1 }}

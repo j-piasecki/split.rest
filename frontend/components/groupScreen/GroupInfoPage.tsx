@@ -199,7 +199,6 @@ export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
       style={{
         width: '100%',
         justifyContent: 'flex-start',
-        paddingVertical: 16,
         alignSelf: 'center',
         flexDirection: threeBarLayout || width < 600 ? 'column' : 'row',
         alignItems: threeBarLayout || width < 600 ? undefined : 'center',

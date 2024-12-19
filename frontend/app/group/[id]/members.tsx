@@ -1,7 +1,7 @@
 import Header from '@components/Header'
-import { Icon } from '@components/Icon'
 import { Text } from '@components/Text'
 import { MembersList } from '@components/groupScreen/MembersList'
+import { PaneHeader } from '@components/groupScreen/Pane'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -18,20 +18,18 @@ function ListHeader({ children }: { children: React.ReactNode }) {
       style={{
         marginTop: 16,
         backgroundColor: theme.colors.surfaceContainer,
-        paddingVertical: 16,
-        paddingHorizontal: 24,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16,
         borderBottomWidth: 1,
         borderColor: theme.colors.outlineVariant,
       }}
     >
-      <View style={{ flexDirection: 'row', gap: 16 }}>
-        <Icon name='members' size={24} color={theme.colors.secondary} />
-        <Text style={{ color: theme.colors.secondary, fontSize: 20, fontWeight: 600 }}>
-          {t('tabs.members')}
-        </Text>
-      </View>
+      <PaneHeader
+        icon='members'
+        title={t('tabs.members')}
+        showSeparator={false}
+        textLocation='start'
+      />
       {children}
     </View>
   )

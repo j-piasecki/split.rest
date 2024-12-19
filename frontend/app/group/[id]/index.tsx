@@ -3,7 +3,7 @@ import { Icon } from '@components/Icon'
 import { Text } from '@components/Text'
 import { GroupInfoPage } from '@components/groupScreen/GroupInfoPage'
 import { MembersList } from '@components/groupScreen/MembersList'
-import { Pane } from '@components/groupScreen/Pane'
+import { Pane, PaneHeader } from '@components/groupScreen/Pane'
 import { SplitsList } from '@components/groupScreen/SplitsList'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
@@ -59,67 +59,68 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
         backgroundColor: pressed
           ? theme.colors.surfaceContainerHigh
           : theme.colors.surfaceContainer,
-        paddingVertical: 8,
-        paddingHorizontal: 24,
         borderRadius: 16,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         gap: 24,
+        overflow: 'hidden',
       })}
       onPress={() => {
         router.navigate(`/group/${info?.id}/members`)
       }}
     >
-      <View style={{ flexDirection: 'row', gap: 16 }}>
-        <Icon name='members' size={24} color={theme.colors.secondary} />
-        <Text style={{ color: theme.colors.secondary, fontSize: 20, fontWeight: 600 }}>
-          {t('tabs.members')}
-        </Text>
-      </View>
-
-      <View
-        ref={iconsRef}
-        style={{
-          flex: 1,
-          height: 40,
-          flexDirection: 'row-reverse',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          overflow: 'hidden',
-        }}
-      >
-        {members.slice(0, iconsToShow).map((member, index) => {
-          return (
+      <PaneHeader
+        icon='members'
+        title={t('tabs.members')}
+        showSeparator={false}
+        textLocation='start'
+        rightComponent={
+          <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 24 }}>
             <View
-              key={member.id}
+              ref={iconsRef}
               style={{
-                width: 32,
-                height: 32,
-                borderRadius: 16,
-                borderWidth: 2,
-                borderColor: theme.colors.surfaceContainer,
-                transform: [{ translateX: index * 8 }],
-                overflow: 'hidden',
+                flex: 1,
+                height: 40,
+                flexDirection: 'row-reverse',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
               }}
             >
-              <Image
-                source={{ uri: getProfilePictureUrl(member.id) }}
-                style={{
-                  width: 32,
-                  height: 32,
-                }}
-              />
+              {members.slice(0, iconsToShow).map((member, index) => {
+                return (
+                  <View
+                    key={member.id}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 16,
+                      borderWidth: 2,
+                      borderColor: theme.colors.surfaceContainer,
+                      transform: [{ translateX: index * 8 }],
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <Image
+                      source={{ uri: getProfilePictureUrl(member.id) }}
+                      style={{
+                        width: 32,
+                        height: 32,
+                      }}
+                    />
+                  </View>
+                )
+              })}
             </View>
-          )
-        })}
-      </View>
 
-      <Icon
-        name='chevronBack'
-        size={24}
-        color={theme.colors.secondary}
-        style={{ transform: [{ scaleX: -1 }] }}
+            <Icon
+              name='chevronBack'
+              size={24}
+              color={theme.colors.secondary}
+              style={{ transform: [{ scaleX: -1 }] }}
+            />
+          </View>
+        }
       />
     </Pressable>
   )
@@ -133,27 +134,17 @@ function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
     <SplitsList
       info={info}
       headerComponent={
-        <View>
+        <View style={{ gap: 16 }}>
           <GroupInfoPage info={info} />
           <MembersButton info={info} />
           <View
             style={{
-              marginTop: 16,
               backgroundColor: theme.colors.surfaceContainer,
-              paddingVertical: 16,
-              paddingHorizontal: 24,
-              flexDirection: 'row',
-              gap: 16,
-              borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
-              borderBottomWidth: 1,
-              borderColor: theme.colors.outlineVariant,
+              borderTopLeftRadius: 16,
             }}
           >
-            <Icon name='receipt' size={24} color={theme.colors.secondary} />
-            <Text style={{ color: theme.colors.secondary, fontSize: 20, fontWeight: 600 }}>
-              {t('tabs.splits')}
-            </Text>
+            <PaneHeader icon='receipt' title={t('tabs.splits')} textLocation='start' />
           </View>
         </View>
       }
