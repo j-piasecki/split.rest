@@ -32,8 +32,8 @@
         "editSplit": "User does not have permission to edit this split",
         "restoreSplit": "User does not have permission to restore this split",
         "joinLink": {
-          "create": "User does not have permission to create join links",
-          "delete": "User does not have permission to delete join links"
+          "create": "User does not have permission to create invitation links",
+          "delete": "User does not have permission to delete invitation links"
         }
       }
     },
@@ -41,7 +41,7 @@
       "group": "Group not found",
       "user": "User not found",
       "split": "Split not found",
-      "joinLink": "Join link not found"
+      "joinLink": "Invitation link not found"
     },
     "split": {
       "sumOfChangesMustBeZero": "Sum of changes must be equal to zero",
@@ -87,13 +87,13 @@
     "memberCount": "{{count}} members",
     "currency": "({{currency}})",
     "join": "Join",
-    "noGroupFoundForThisJoinLink": "No group found for this join link"
+    "noGroupFoundForThisJoinLink": "No group found for this invitation link"
   },
 
   "groupSettings": {
     "joinLink": {
-      "create": "Create join link",
-      "joinLink": "Join link",
+      "create": "Create invitation link",
+      "joinLink": "Invitation link",
       "delete": "Delete link"
     },
     "notAnAdmin": "You are not an admin of this group",
