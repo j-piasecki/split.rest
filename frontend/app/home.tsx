@@ -6,6 +6,7 @@ import { Text } from '@components/Text'
 import { PaneHeader } from '@components/groupScreen/Pane'
 import { useUserGroups } from '@hooks/database/useUserGroups'
 import { useTheme } from '@styling/theme'
+import { useIsSmallScreen } from '@utils/dimensionUtils'
 import { router } from 'expo-router'
 import React, { useMemo } from 'react'
 import { useState } from 'react'
@@ -15,6 +16,13 @@ import { GroupInfo } from 'shared'
 
 function Group({ info }: { info: GroupInfo }) {
   const theme = useTheme()
+  const isSmallScreen = useIsSmallScreen()
+  const balanceColor =
+    Number(info.balance) === 0
+      ? theme.colors.balanceNeutral
+      : Number(info.balance) > 0
+        ? theme.colors.balancePositive
+        : theme.colors.balanceNegative
 
   return (
     <Pressable
@@ -24,40 +32,48 @@ function Group({ info }: { info: GroupInfo }) {
       style={{
         flex: 1,
         paddingHorizontal: 16,
-        paddingVertical: 20,
+        paddingVertical: isSmallScreen ? 16 : 20,
         backgroundColor: theme.colors.surfaceContainer,
       }}
     >
       <View
         style={{
           opacity: info.hidden ? 0.5 : 1,
-          gap: 8,
+          gap: 20,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
-        <Text style={{ flex: 1, fontSize: 20, color: theme.colors.onSurface }}>{info.name}</Text>
+        <Text style={{ flex: 1, fontSize: 20, color: theme.colors.onSurface }} numberOfLines={2}>
+          {info.name}
+        </Text>
 
-        <View style={{ flexDirection: 'row', gap: 8 }}>
-          <View style={{ flexDirection: 'row', gap: 4 }}>
-            <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.memberCount}</Text>
-            <Icon name='members' size={20} color={theme.colors.outline} />
+        <View
+          style={{
+            flexDirection: isSmallScreen ? 'column-reverse' : 'row',
+            gap: isSmallScreen ? 4 : 20,
+            alignItems: 'flex-end',
+          }}
+        >
+          <Text style={{ fontSize: 16, color: balanceColor }}>
+            {info.balance} {info.currency}
+          </Text>
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            <View style={{ flexDirection: 'row', gap: 4 }}>
+              <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.memberCount}</Text>
+              <Icon name='members' size={20} color={theme.colors.outline} />
+            </View>
+
+            <Icon
+              name={info.isAdmin ? 'shield' : 'lock'}
+              size={16}
+              color={
+                info.hasAccess && !info.isAdmin ? theme.colors.transparent : theme.colors.outline
+              }
+              style={{ transform: [{ translateY: 2 }] }}
+            />
           </View>
-
-          <Icon
-            name='lock'
-            size={16}
-            color={info.hasAccess ? theme.colors.transparent : theme.colors.outline}
-            style={{ transform: [{ translateY: 2 }] }}
-          />
-          <Icon
-            name='shield'
-            size={16}
-            color={info.isAdmin ? theme.colors.outline : theme.colors.transparent}
-            style={{ transform: [{ translateY: 2 }] }}
-          />
-          <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.currency}</Text>
         </View>
       </View>
     </Pressable>
