@@ -1,14 +1,16 @@
 import { Button } from '@components/Button'
 import Header from '@components/Header'
 import { Icon } from '@components/Icon'
+import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
+import { PaneHeader } from '@components/groupScreen/Pane'
 import { useUserGroups } from '@hooks/database/useUserGroups'
 import { useTheme } from '@styling/theme'
 import { router } from 'expo-router'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native'
+import { ActivityIndicator, FlatList, Pressable, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function Group({ info }: { info: GroupInfo }) {
@@ -21,86 +23,50 @@ function Group({ info }: { info: GroupInfo }) {
       }}
       style={{
         flex: 1,
-        padding: 16,
-        borderRadius: 16,
-        marginVertical: 4,
-        gap: 8,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        overflow: 'visible',
+        paddingHorizontal: 16,
+        paddingVertical: 20,
         backgroundColor: theme.colors.surfaceContainer,
       }}
     >
-      <Text style={{ flex: 1, fontSize: 20, color: theme.colors.onSurface }}>{info.name}</Text>
+      <View
+        style={{
+          opacity: info.hidden ? 0.5 : 1,
+          gap: 8,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Text style={{ flex: 1, fontSize: 20, color: theme.colors.onSurface }}>{info.name}</Text>
 
-      <View style={{ flexDirection: 'row', gap: 8 }}>
-        <View style={{ flexDirection: 'row', gap: 4 }}>
-          <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.memberCount}</Text>
-          <Icon name='members' size={20} color={theme.colors.outline} />
+        <View style={{ flexDirection: 'row', gap: 8 }}>
+          <View style={{ flexDirection: 'row', gap: 4 }}>
+            <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.memberCount}</Text>
+            <Icon name='members' size={20} color={theme.colors.outline} />
+          </View>
+
+          <Icon
+            name='lock'
+            size={16}
+            color={info.hasAccess ? theme.colors.transparent : theme.colors.outline}
+            style={{ transform: [{ translateY: 2 }] }}
+          />
+          <Icon
+            name='shield'
+            size={16}
+            color={info.isAdmin ? theme.colors.outline : theme.colors.transparent}
+            style={{ transform: [{ translateY: 2 }] }}
+          />
+          <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.currency}</Text>
         </View>
-
-        <Icon
-          name='lock'
-          size={16}
-          color={info.hasAccess ? theme.colors.transparent : theme.colors.outline}
-          style={{ transform: [{ translateY: 2 }] }}
-        />
-        <Icon
-          name='shield'
-          size={16}
-          color={info.isAdmin ? theme.colors.outline : theme.colors.transparent}
-          style={{ transform: [{ translateY: 2 }] }}
-        />
-        <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.currency}</Text>
       </View>
     </Pressable>
   )
 }
 
-function GroupList({ groups }: { groups: GroupInfo[] }) {
-  return (
-    <View style={{ marginTop: 8 }}>
-      {groups.map((group) => (
-        <Group info={group} key={group.id} />
-      ))}
-    </View>
-  )
-}
-
-function HiddenGroupsButton({
-  showHidden,
-  setShowHidden,
-}: {
-  showHidden: boolean
-  setShowHidden: (val: boolean) => void
-}) {
+function Divider() {
   const theme = useTheme()
-  const { t } = useTranslation()
-
-  return (
-    <Pressable
-      onPress={() => {
-        setShowHidden(!showHidden)
-      }}
-      style={({ pressed }) => {
-        return {
-          opacity: pressed ? 0.4 : 0.5,
-        }
-      }}
-    >
-      <View style={{ flex: 1, paddingVertical: 16, flexDirection: 'row', alignItems: 'center' }}>
-        <View style={{ borderTopWidth: 1, flex: 1, borderColor: theme.colors.onSurfaceVariant }} />
-        <Text
-          style={{ marginHorizontal: 8, fontSize: 16, color: theme.colors.onSurfaceVariant }}
-          selectable={false}
-        >
-          {showHidden ? t('hideHiddenGroups') : t('showHiddenGroups')}
-        </Text>
-        <View style={{ borderTopWidth: 1, flex: 1, borderColor: theme.colors.onSurfaceVariant }} />
-      </View>
-    </Pressable>
-  )
+  return <View style={{ width: '100%', height: 1, backgroundColor: theme.colors.outlineVariant }} />
 }
 
 export default function Home() {
@@ -108,74 +74,115 @@ export default function Home() {
   const { t } = useTranslation()
 
   const {
-    groups: groups,
-    // isLoading: groupsLoading,
-    // fetchNextPage: fetchNextGroups,
-    // isFetchingNextPage: isFetchingNextGroups,
+    groups: visibleGroups,
+    isLoading: visibleGroupsLoading,
+    hasNextPage: hasNextVisibleGroups,
+    fetchNextPage: fetchNextVisibleGroups,
+    isFetchingNextPage: isFetchingNextVisibleGroups,
   } = useUserGroups(false)
+
   const {
     groups: hiddenGroups,
-    // isLoading: hiddenGroupsLoading,
-    // fetchNextPage: fetchNextHiddenGroups,
-    // isFetchingNextPage: isFetchingNextHiddenGroups,
+    isLoading: _hiddenGroupsLoading,
+    hasNextPage: hasNextHiddenGroups,
+    fetchNextPage: fetchNextHiddenGroups,
+    isFetchingNextPage: isFetchingNextHiddenGroups,
   } = useUserGroups(true)
 
   const [showHidden, setShowHidden] = useState(false)
+
+  const groups = useMemo(() => {
+    if (!showHidden) {
+      return visibleGroups
+    }
+
+    const result = [...visibleGroups, ...hiddenGroups]
+    result.sort((a, b) => b.id - a.id)
+    return result
+  }, [visibleGroups, hiddenGroups, showHidden])
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
       <Header />
 
       <View style={{ flex: 1, alignItems: 'center' }}>
-        <View style={{ flex: 1, width: '100%', maxWidth: 768 }}>
-          {groups && hiddenGroups && (
-            <ScrollView
-              style={{ flex: 1 }}
-              contentContainerStyle={{ paddingVertical: 24, paddingHorizontal: 32 }}
-            >
+        <View
+          style={{
+            flex: 1,
+            width: '100%',
+            maxWidth: 768,
+            paddingHorizontal: 16,
+            paddingTop: 16,
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: theme.colors.surfaceContainer,
+              borderTopLeftRadius: 16,
+              borderTopRightRadius: 16,
+            }}
+          >
+            <PaneHeader
+              icon='group'
+              title={t('groupsText')}
+              textLocation='start'
+              rightComponentVisible={hiddenGroups.length !== 0}
+              rightComponent={
+                <RoundIconButton
+                  icon={showHidden ? 'visibilityOff' : 'visibility'}
+                  onPress={() => setShowHidden((hidden) => !hidden)}
+                />
+              }
+            />
+          </View>
+          <FlatList
+            data={groups}
+            renderItem={({ item }) => <Group info={item} />}
+            contentContainerStyle={{
+              paddingBottom: 80,
+            }}
+            onEndReachedThreshold={0.5}
+            keyExtractor={(item) => String(item.id)}
+            ItemSeparatorComponent={Divider}
+            ListEmptyComponent={
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                {visibleGroupsLoading && <ActivityIndicator color={theme.colors.onSurface} />}
+                {!visibleGroupsLoading && (
+                  <Text style={{ color: theme.colors.outline, fontSize: 20 }}>
+                    {t('noGroupsText')}
+                  </Text>
+                )}
+              </View>
+            }
+            ListFooterComponent={
               <View
                 style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
+                  height: 16,
+                  backgroundColor: theme.colors.surfaceContainer,
+                  borderBottomLeftRadius: 16,
+                  borderBottomRightRadius: 16,
                 }}
-              >
-                <Text style={{ fontSize: 28, color: theme.colors.onSurface }}>
-                  {t('groupsText')}
-                </Text>
-                <Button
-                  onPress={() => {
-                    router.navigate('/createGroup')
-                  }}
-                  title={t('createGroup')}
-                  leftIcon='add'
-                />
-              </View>
-              <GroupList groups={groups} />
+              />
+            }
+            onEndReached={() => {
+              if (!isFetchingNextVisibleGroups && hasNextVisibleGroups) {
+                fetchNextVisibleGroups()
+              }
 
-              {Boolean(hiddenGroups?.length) && (
-                <HiddenGroupsButton showHidden={showHidden} setShowHidden={setShowHidden} />
-              )}
-              {showHidden && (
-                <>
-                  <Text style={{ fontSize: 28, color: theme.colors.onSurface }}>
-                    {t('hiddenGroupsText')}
-                  </Text>
-                  <GroupList groups={hiddenGroups} />
-                </>
-              )}
-            </ScrollView>
-          )}
-
-          {(!groups || !hiddenGroups) && (
-            <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }}>
-              <ActivityIndicator size='small' color={theme.colors.onSurface} />
-              <Text style={{ textAlign: 'center', color: theme.colors.onSurface }}>
-                {t('loadingGroups')}
-              </Text>
-            </View>
-          )}
+              if (showHidden && !isFetchingNextHiddenGroups && hasNextHiddenGroups) {
+                fetchNextHiddenGroups()
+              }
+            }}
+          />
+          <View style={{ position: 'absolute', right: 16, bottom: 16 }}>
+            <Button
+              onPress={() => {
+                router.navigate('/createGroup')
+              }}
+              title={t('createGroup')}
+              leftIcon='add'
+            />
+          </View>
         </View>
       </View>
     </View>

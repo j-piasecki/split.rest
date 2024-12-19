@@ -76,6 +76,9 @@ export interface PaneProps {
   collapsible?: boolean
   collapsed?: boolean
   onCollapseChange?: (collapsed: boolean) => void
+  textLocation?: 'center' | 'start'
+  expandIcon?: IconName
+  collapseIcon?: IconName
 }
 
 export function Pane({
@@ -86,6 +89,9 @@ export function Pane({
   collapsible = false,
   collapsed = false,
   onCollapseChange,
+  textLocation = 'center',
+  expandIcon,
+  collapseIcon,
 }: PaneProps) {
   const theme = useTheme()
 
@@ -107,7 +113,9 @@ export function Pane({
         title={title}
         rightComponent={
           <RoundIconButton
-            icon={collapsed ? 'openRightPanel' : 'closeRightPanel'}
+            icon={
+              collapsed ? (expandIcon ?? 'openRightPanel') : (collapseIcon ?? 'closeRightPanel')
+            }
             size={24}
             onPress={() => {
               onCollapseChange?.(!collapsed)
@@ -117,6 +125,7 @@ export function Pane({
         }
         rightComponentVisible={collapsible}
         textVisible={!collapsible || !collapsed}
+        textLocation={textLocation}
       />
       <Pressable
         disabled={!collapsed || !collapsible}

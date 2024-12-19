@@ -2,7 +2,7 @@
   "appName": "Split",
   "unknownError": "Unknown error",
   "groupsText": "Groups",
-  "hiddenGroupsText": "Hidden Groups",
+  "noGroupsText": "No groups",
   "email": "E-mail",
   "signIn": "Sign in",
   "signOut": "Sign out",

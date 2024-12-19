@@ -14,6 +14,8 @@ async function setGroupHidden(queryClient: QueryClient, groupId: number, hidden:
 
     return { ...oldData, hidden }
   })
+
+  await queryClient.invalidateQueries({ queryKey: ['userGroups'] })
 }
 
 export function useSetGroupHiddenMutation(groupId: number) {
