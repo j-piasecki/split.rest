@@ -1,7 +1,8 @@
 import { Props, TextInput } from './TextInput'
 import { useTheme } from '@styling/theme'
+import { measure } from '@utils/measure'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Platform, ScrollView, TextInput as TextInputRN, View, ViewStyle } from 'react-native'
+import { ScrollView, TextInput as TextInputRN, View, ViewStyle } from 'react-native'
 import { useDebounce } from 'use-debounce'
 
 export interface TextInputWithSuggestionsProps<T> extends Props {
@@ -45,14 +46,7 @@ export function TextInputWithSuggestions<T>({
 
   useLayoutEffect(() => {
     if (suggestionBoxRef.current) {
-      if (Platform.OS === 'web') {
-        // @ts-expect-error - getBoundingClientRect will not work on mobile
-        setSuggestionBoxHeight(suggestionBoxRef.current.getBoundingClientRect().height)
-      } else {
-        suggestionBoxRef.current.measureInWindow((x, y, width, height) => {
-          setSuggestionBoxHeight(height)
-        })
-      }
+      setSuggestionBoxHeight(measure(suggestionBoxRef).height)
     }
   }, [suggestions, isFocused, suggestionsVisible, value, isFocusedDebounced])
 

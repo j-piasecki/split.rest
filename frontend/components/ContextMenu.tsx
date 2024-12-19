@@ -2,6 +2,7 @@ import { Icon, IconName } from './Icon'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useIsSmallScreen } from '@utils/dimensionUtils'
+import { Rect, measure } from '@utils/measure'
 import React, { useEffect, useImperativeHandle, useLayoutEffect } from 'react'
 import { useRef, useState } from 'react'
 import {
@@ -20,7 +21,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 
-type Rect = { x: number; y: number; width: number; height: number }
 type Point = { x: number; y: number }
 
 export interface ContextMenuItem {
@@ -97,16 +97,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
   const { width, height } = useWindowDimensions()
 
   useLayoutEffect(() => {
-    let frame!: Rect
-
-    if (Platform.OS === 'web') {
-      // @ts-expect-error - getBoundingClientRect will not work on mobile
-      frame = contentRef.current?.getBoundingClientRect()
-    } else {
-      contentRef.current?.measureInWindow((x, y, width, height) => {
-        frame = { x, y, width, height }
-      })
-    }
+    const frame = measure(contentRef)
 
     if (!isSmallScreen) {
       if (frame.y + frame.height > height) {
@@ -199,15 +190,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
 
   function measureAnchor(e: { nativeEvent: PointerEvent } | GestureResponderEvent | AnchorEvent) {
     touchPoint.current = { x: e.nativeEvent.pageX, y: e.nativeEvent.pageY }
-
-    if (Platform.OS === 'web') {
-      // @ts-expect-error - getBoundingClientRect will not work on mobile
-      anchorRect.current = anchorRef.current?.getBoundingClientRect()
-    } else {
-      anchorRef.current?.measureInWindow((x, y, width, height) => {
-        anchorRect.current = { x, y, width, height }
-      })
-    }
+    anchorRect.current = measure(anchorRef)
   }
 
   const scaleStyle = useAnimatedStyle(() => {
