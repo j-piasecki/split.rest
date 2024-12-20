@@ -1,34 +1,19 @@
-import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { DeleteSplitArguments, SplitInfo } from 'shared'
+import { deleteCachedSplit, invalidateSplitRelatedQueries } from '@utils/queryClient'
+import { DeleteSplitArguments } from 'shared'
 
-async function deleteSplit(queryClient: QueryClient, groupId: number, splitId: number) {
+async function deleteSplit(groupId: number, splitId: number) {
   const args: DeleteSplitArguments = { groupId, splitId }
 
   await makeRequest('DELETE', 'deleteSplit', args)
 
-  queryClient.removeQueries({ queryKey: ['groupSplits', args.groupId, splitId] })
-
-  await queryClient.setQueryData(['groupSplits', groupId], (oldData?: { pages: SplitInfo[][] }) => {
-    if (!oldData) {
-      return
-    }
-
-    return {
-      ...oldData,
-      pages: oldData.pages.map((page) => page.filter((split) => split.id !== splitId)),
-    }
-  })
-
-  await queryClient.invalidateQueries({ queryKey: ['groupSplits', groupId] })
-  await queryClient.invalidateQueries({ queryKey: ['groupMembers', args.groupId] })
-  await queryClient.invalidateQueries({ queryKey: ['groupInfo', groupId] })
+  await deleteCachedSplit(args.groupId, args.splitId)
+  await invalidateSplitRelatedQueries(args.groupId, args.splitId)
 }
 
 export function useDeleteSplit(groupId: number) {
-  const queryClient = useQueryClient()
-
   return useMutation({
-    mutationFn: (splitId: number) => deleteSplit(queryClient, groupId, splitId),
+    mutationFn: (splitId: number) => deleteSplit(groupId, splitId),
   })
 }

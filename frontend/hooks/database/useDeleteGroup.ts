@@ -1,20 +1,15 @@
-import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
+import { invalidateGroup } from '@utils/queryClient'
 
-async function deleteGroup(queryClient: QueryClient, groupId: number) {
+async function deleteGroup(groupId: number) {
   await makeRequest('DELETE', 'deleteGroup', { groupId })
 
-  queryClient.removeQueries({ queryKey: ['groupSplits', groupId] })
-  queryClient.removeQueries({ queryKey: ['groupMembers', groupId] })
-  queryClient.removeQueries({ queryKey: ['groupInfo', groupId] })
-
-  await queryClient.invalidateQueries({ queryKey: ['userGroups'] })
+  await invalidateGroup(groupId)
 }
 
 export function useDeleteGroup() {
-  const queryClient = useQueryClient()
-
   return useMutation({
-    mutationFn: (groupId: number) => deleteGroup(queryClient, groupId),
+    mutationFn: (groupId: number) => deleteGroup(groupId),
   })
 }

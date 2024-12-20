@@ -1,25 +1,19 @@
-import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { GroupInfo, SetGroupNameArguments } from 'shared'
+import { invalidateUserGroups, updateCachedGroup } from '@utils/queryClient'
+import { SetGroupNameArguments } from 'shared'
 
-async function setGroupName(queryClient: QueryClient, groupId: number, name: string) {
+async function setGroupName(groupId: number, name: string) {
   const args: SetGroupNameArguments = { groupId, name }
 
   await makeRequest('POST', 'setGroupName', args)
 
-  await queryClient.invalidateQueries({ queryKey: ['userGroups'] })
-  await queryClient.setQueryData(['groupInfo', groupId], (oldData?: GroupInfo) => {
-    if (!oldData) {
-      return
-    }
-    return { ...oldData, name }
-  })
+  await invalidateUserGroups()
+  await updateCachedGroup(groupId, (member) => ({ ...member, name }))
 }
 
 export function useSetGroupNameMutation(groupId: number) {
-  const queryClient = useQueryClient()
-
   return useMutation({
-    mutationFn: (name: string) => setGroupName(queryClient, groupId, name),
+    mutationFn: (name: string) => setGroupName(groupId, name),
   })
 }

@@ -1,27 +1,19 @@
-import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { GroupInfo, SetGroupHiddenArguments } from 'shared'
+import { invalidateUserGroups, updateCachedGroup } from '@utils/queryClient'
+import { SetGroupHiddenArguments } from 'shared'
 
-async function setGroupHidden(queryClient: QueryClient, groupId: number, hidden: boolean) {
+async function setGroupHidden(groupId: number, hidden: boolean) {
   const args: SetGroupHiddenArguments = { groupId, hidden }
 
   await makeRequest('POST', 'setGroupHidden', args)
 
-  await queryClient.setQueryData(['groupInfo', groupId], (oldData?: GroupInfo) => {
-    if (!oldData) {
-      return
-    }
-
-    return { ...oldData, hidden }
-  })
-
-  await queryClient.invalidateQueries({ queryKey: ['userGroups'] })
+  await updateCachedGroup(groupId, (info) => ({ ...info, hidden }))
+  await invalidateUserGroups()
 }
 
 export function useSetGroupHiddenMutation(groupId: number) {
-  const queryClient = useQueryClient()
-
   return useMutation({
-    mutationFn: (hidden: boolean) => setGroupHidden(queryClient, groupId, hidden),
+    mutationFn: (hidden: boolean) => setGroupHidden(groupId, hidden),
   })
 }

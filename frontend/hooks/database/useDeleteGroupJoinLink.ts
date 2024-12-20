@@ -1,6 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { auth } from '@utils/firebase'
 import { makeRequest } from '@utils/makeApiRequest'
+import { invalidateGroupJoinLink } from '@utils/queryClient'
 import { DeleteGroupJoinLinkArguments, TranslatableError } from 'shared'
 
 export function useDeleteGroupJoinLink() {
@@ -8,15 +9,13 @@ export function useDeleteGroupJoinLink() {
     throw new TranslatableError('api.mustBeLoggedIn')
   }
 
-  const queryClient = useQueryClient()
-
   return useMutation({
     mutationFn: async (groupId: number): Promise<void> => {
       const args: DeleteGroupJoinLinkArguments = { groupId }
 
       await makeRequest<DeleteGroupJoinLinkArguments, void>('DELETE', 'deleteGroupJoinLink', args)
 
-      await queryClient.invalidateQueries({ queryKey: ['groupJoinLink', groupId] })
+      await invalidateGroupJoinLink(groupId)
     },
   })
 }

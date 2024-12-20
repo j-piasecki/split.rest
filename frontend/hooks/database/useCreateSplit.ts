@@ -1,48 +1,27 @@
-import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { auth } from '@utils/firebase'
 import { makeRequest } from '@utils/makeApiRequest'
-import { CreateSplitArguments, SplitInfo } from 'shared'
+import { addCachedSplit, invalidateSplitRelatedQueries } from '@utils/queryClient'
+import { CreateSplitArguments } from 'shared'
 
-async function createSplit(queryClient: QueryClient, args: CreateSplitArguments) {
+async function createSplit(args: CreateSplitArguments) {
   const splitId = await makeRequest<CreateSplitArguments, number>('POST', 'createSplit', args)
 
-  await queryClient.setQueryData(
-    ['groupSplits', args.groupId],
-    (oldData?: { pages: SplitInfo[][] }) => {
-      if (!oldData) {
-        return
-      }
+  await addCachedSplit(args.groupId, {
+    ...args,
+    id: splitId!,
+    version: 1,
+    createdById: auth.currentUser!.uid,
+    paidById: args.paidBy,
+    updatedAt: Date.now(),
+    total: String(args.total),
+  })
 
-      return {
-        ...oldData,
-        pages: oldData.pages.map((page, index) =>
-          index === 0
-            ? [
-                {
-                  id: splitId,
-                  version: 1,
-                  createdById: auth.currentUser?.uid,
-                  paidById: args.paidBy,
-                  ...args,
-                },
-                ...page,
-              ]
-            : page
-        ),
-      }
-    }
-  )
-
-  await queryClient.invalidateQueries({ queryKey: ['groupSplits', args.groupId] })
-  await queryClient.invalidateQueries({ queryKey: ['groupMembers', args.groupId] })
-  await queryClient.invalidateQueries({ queryKey: ['groupInfo', args.groupId] })
-  await queryClient.invalidateQueries({ queryKey: ['splitHistory', args.groupId, splitId] })
+  await invalidateSplitRelatedQueries(args.groupId, splitId ?? -1)
 }
 
 export function useCreateSplit() {
-  const queryClient = useQueryClient()
-
   return useMutation({
-    mutationFn: (args: CreateSplitArguments) => createSplit(queryClient, args),
+    mutationFn: (args: CreateSplitArguments) => createSplit(args),
   })
 }

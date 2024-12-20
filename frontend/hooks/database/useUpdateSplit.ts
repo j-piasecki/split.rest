@@ -1,32 +1,18 @@
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { SplitInfo, UpdateSplitArguments } from 'shared'
+import { invalidateSplitRelatedQueries, updateCachedSplit } from '@utils/queryClient'
+import { UpdateSplitArguments } from 'shared'
 
 async function updateSplit(queryClient: QueryClient, args: UpdateSplitArguments) {
   await makeRequest<UpdateSplitArguments, void>('POST', 'updateSplit', args)
 
-  await queryClient.setQueryData(
-    ['groupSplits', args.groupId],
-    (oldData?: { pages: SplitInfo[][] }) => {
-      if (!oldData) {
-        return
-      }
-
-      return {
-        ...oldData,
-        pages: oldData.pages.map((page) =>
-          page.map((split) =>
-            split.id === args.splitId ? { ...split, ...args, version: split.version + 1 } : split
-          )
-        ),
-      }
-    }
-  )
-
-  await queryClient.invalidateQueries({ queryKey: ['groupSplits', args.groupId] })
-  await queryClient.invalidateQueries({ queryKey: ['groupMembers', args.groupId] })
-  await queryClient.invalidateQueries({ queryKey: ['groupInfo', args.groupId] })
-  await queryClient.invalidateQueries({ queryKey: ['splitHistory', args.groupId, args.splitId] })
+  await updateCachedSplit(args.groupId, args.splitId, (split) => ({
+    ...split,
+    ...args,
+    total: String(args.total),
+    version: split.version + 1,
+  }))
+  await invalidateSplitRelatedQueries(args.groupId, args.splitId)
 }
 
 export function useUpdateSplit() {
