@@ -12,6 +12,7 @@ import React, { useMemo } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, Pressable, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupInfo } from 'shared'
 
 function Group({ info }: { info: GroupInfo }) {
@@ -88,6 +89,7 @@ function Divider() {
 export default function Home() {
   const theme = useTheme()
   const { t } = useTranslation()
+  const insets = useSafeAreaInsets()
 
   const {
     groups: visibleGroups,
@@ -131,37 +133,47 @@ export default function Home() {
             paddingTop: 16,
           }}
         >
-          <View
-            style={{
-              backgroundColor: theme.colors.surfaceContainer,
-              borderTopLeftRadius: 16,
-              borderTopRightRadius: 16,
-            }}
-          >
-            <PaneHeader
-              icon='group'
-              title={t('groupsText')}
-              textLocation='start'
-              rightComponentVisible={hiddenGroups.length !== 0}
-              rightComponent={
-                <RoundIconButton
-                  icon={showHidden ? 'visibilityOff' : 'visibility'}
-                  onPress={() => setShowHidden((hidden) => !hidden)}
-                />
-              }
-            />
-          </View>
           <FlatList
             data={groups}
             renderItem={({ item }) => <Group info={item} />}
             contentContainerStyle={{
-              paddingBottom: 80,
+              paddingBottom: 80 + insets.bottom,
             }}
             onEndReachedThreshold={0.5}
             keyExtractor={(item) => String(item.id)}
             ItemSeparatorComponent={Divider}
+            ListHeaderComponent={
+              <View
+                style={{
+                  backgroundColor: theme.colors.surfaceContainer,
+                  borderTopLeftRadius: 16,
+                  borderTopRightRadius: 16,
+                }}
+              >
+                <PaneHeader
+                  icon='group'
+                  title={t('groupsText')}
+                  textLocation='start'
+                  rightComponentVisible={hiddenGroups.length !== 0}
+                  rightComponent={
+                    <RoundIconButton
+                      icon={showHidden ? 'visibilityOff' : 'visibility'}
+                      onPress={() => setShowHidden((hidden) => !hidden)}
+                    />
+                  }
+                />
+              </View>
+            }
             ListEmptyComponent={
-              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: theme.colors.surfaceContainer,
+                  paddingVertical: 32,
+                }}
+              >
                 {visibleGroupsLoading && <ActivityIndicator color={theme.colors.onSurface} />}
                 {!visibleGroupsLoading && (
                   <Text style={{ color: theme.colors.outline, fontSize: 20 }}>
@@ -190,7 +202,7 @@ export default function Home() {
               }
             }}
           />
-          <View style={{ position: 'absolute', right: 16, bottom: 16 }}>
+          <View style={{ position: 'absolute', right: 16, bottom: 16 + insets.bottom }}>
             <Button
               onPress={() => {
                 router.navigate('/createGroup')
