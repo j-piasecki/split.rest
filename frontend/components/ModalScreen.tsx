@@ -23,7 +23,7 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
     <View
       style={{
         flex: 1,
-        backgroundColor: theme.colors.surface,
+        backgroundColor: theme.colors.surfaceContainer,
         paddingTop: insets.top,
       }}
     >
@@ -83,7 +83,7 @@ function ModalScreen({
           height: '80%',
           maxWidth: maxWidth,
           maxHeight: maxHeight,
-          backgroundColor: theme.colors.surface,
+          backgroundColor: theme.colors.surfaceContainer,
           borderRadius: 16,
           overflow: 'hidden',
         }}

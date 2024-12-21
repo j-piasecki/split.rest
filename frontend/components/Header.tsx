@@ -33,18 +33,20 @@ export default function Header(_props: HeaderProps) {
       }}
     >
       <Link href='/'>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
           <Image source={icon} style={{ width: 32, height: 32 }} tintColor={theme.colors.primary} />
           <Text
             style={{
               fontSize: 28,
               fontWeight: '700',
-              fontStyle: 'italic',
               color: theme.colors.primary,
+              letterSpacing: 1,
             }}
           >
             {t('appName')}
-            <Text style={{ color: theme.colors.outline }}>.rest</Text>
+            <Text style={{ color: theme.colors.outline, fontWeight: '400', letterSpacing: 0 }}>
+              .rest
+            </Text>
           </Text>
         </View>
       </Link>

@@ -29,7 +29,7 @@ const darkColors: Colors = {
   onErrorContainer: '#ffdad6',
 
   surfaceDim: '#191113',
-  surface: '#191113',
+  surface: '#1c1416',
   surfaceBright: '#413739',
   surfaceContainerLowest: '#140c0e',
   surfaceContainerLow: '#22191c',
