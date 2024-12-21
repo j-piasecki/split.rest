@@ -82,6 +82,9 @@ const iconMap: Record<IconName, unknown> = {
   visibility: require('@assets/icons/visibility.svg'),
 }
 
+// @ts-expect-error array of strings is expected, unknown is provided
+Image.prefetch(Object.values(iconMap))
+
 export function Icon({ name, size, color, style }: IconProps) {
   if (color === 'transparent') {
     // @ts-expect-error style type doesn't match but it should be fine
