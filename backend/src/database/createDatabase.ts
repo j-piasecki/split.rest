@@ -56,10 +56,13 @@ export async function createDatabase(pool: Pool) {
       updated_at bigint NOT NULL,
       deleted BOOLEAN NOT NULL DEFAULT FALSE,
       type SMALLINT NOT NULL,
+      deleted_by VARCHAR(32) NULL,
+      deleted_at bigint NULL,
 
       FOREIGN KEY (group_id) REFERENCES groups(id),
       FOREIGN KEY (paid_by) REFERENCES users(id),
-      FOREIGN KEY (created_by) REFERENCES users(id)
+      FOREIGN KEY (created_by) REFERENCES users(id),
+      FOREIGN KEY (deleted_by) REFERENCES users(id)
     )
   `)
 

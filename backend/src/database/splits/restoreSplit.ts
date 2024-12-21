@@ -42,10 +42,10 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
       args.groupId,
     ])
 
-    await client.query('UPDATE splits SET deleted = FALSE WHERE group_id = $1 AND id = $2', [
-      args.groupId,
-      args.splitId,
-    ])
+    await client.query(
+      'UPDATE splits SET deleted = FALSE, deleted_by = NULL, deleted_at = NULL WHERE group_id = $1 AND id = $2',
+      [args.groupId, args.splitId]
+    )
 
     await client.query('COMMIT')
   } catch (e) {

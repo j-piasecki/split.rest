@@ -43,10 +43,10 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
       args.groupId,
     ])
 
-    await client.query('UPDATE splits SET deleted = TRUE WHERE group_id = $1 AND id = $2', [
-      args.groupId,
-      args.splitId,
-    ])
+    await client.query(
+      'UPDATE splits SET deleted = TRUE, deleted_by = $1, deleted_at = $2 WHERE group_id = $3 AND id = $4',
+      [callerId, Date.now(), args.groupId, args.splitId]
+    )
 
     await client.query('COMMIT')
   } catch (e) {
