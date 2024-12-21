@@ -24,7 +24,8 @@ export async function getGroupSplits(
           timestamp,
           updated_at,
           version,
-          deleted
+          deleted,
+          type
         FROM splits
         WHERE
           group_id = $1
@@ -46,5 +47,6 @@ export async function getGroupSplits(
     timestamp: Number(row.timestamp),
     version: row.version,
     updatedAt: Number(row.updated_at),
+    type: row.type,
   }))
 }

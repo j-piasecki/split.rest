@@ -2,7 +2,7 @@ import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { splitExists } from '../utils/splitExists'
 import { Pool } from 'pg'
-import { UpdateSplitArguments } from 'shared'
+import { SplitType, UpdateSplitArguments } from 'shared'
 
 export async function updateSplit(pool: Pool, callerId: string, args: UpdateSplitArguments) {
   const client = await pool.connect()
@@ -28,11 +28,14 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
         name: string
         timestamp: number
         updated_at: number
+        type: SplitType
       }>(
-        'SELECT id, version, group_id, total, paid_by, created_by, name, timestamp, updated_at FROM splits WHERE group_id = $1 AND id = $2',
+        'SELECT id, version, group_id, total, paid_by, created_by, name, timestamp, updated_at, type FROM splits WHERE group_id = $1 AND id = $2',
         [args.groupId, args.splitId]
       )
     ).rows[0]
+
+    // TODO: throw when trying to edit settle-up split?
 
     // Remove old balances
 
@@ -73,7 +76,7 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
     )
 
     await client.query(
-      'INSERT INTO split_edits (id, version, group_id, total, paid_by, created_by, name, timestamp, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+      'INSERT INTO split_edits (id, version, group_id, total, paid_by, created_by, name, timestamp, updated_at, type) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
       [
         splitInfo.id,
         splitInfo.version,
@@ -84,6 +87,7 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
         splitInfo.name,
         splitInfo.timestamp,
         Date.now(),
+        splitInfo.type,
       ]
     )
 

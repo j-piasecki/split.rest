@@ -21,6 +21,7 @@ export async function createDatabase(pool: Pool) {
       total DECIMAL(10, 2) NOT NULL DEFAULT 0,
       member_count SMALLINT NOT NULL DEFAULT 1,
       deleted BOOLEAN NOT NULL DEFAULT FALSE,
+      type SMALLINT NOT NULL,
 
       FOREIGN KEY (owner) REFERENCES users(id)
     )
@@ -54,6 +55,7 @@ export async function createDatabase(pool: Pool) {
       timestamp bigint NOT NULL,
       updated_at bigint NOT NULL,
       deleted BOOLEAN NOT NULL DEFAULT FALSE,
+      type SMALLINT NOT NULL,
 
       FOREIGN KEY (group_id) REFERENCES groups(id),
       FOREIGN KEY (paid_by) REFERENCES users(id),
@@ -72,6 +74,7 @@ export async function createDatabase(pool: Pool) {
       name VARCHAR(512) NOT NULL,
       timestamp bigint NOT NULL,
       updated_at bigint NOT NULL,
+      type SMALLINT NOT NULL,
 
       PRIMARY KEY (id, version),
       FOREIGN KEY (id) REFERENCES splits(id),

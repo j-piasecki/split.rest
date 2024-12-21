@@ -45,7 +45,8 @@ export async function getSplitHistory(
           split_edits.created_by,
           split_edits.name,
           split_edits.timestamp,
-          split_edits.updated_at
+          split_edits.updated_at,
+          split_edits.type
         FROM split_edits
         WHERE group_id = $1 AND id = $2 AND version < $3
         ORDER BY version DESC
@@ -94,6 +95,7 @@ export async function getSplitHistory(
         createdById: row.created_by,
         version: row.version,
         updatedAt: Number(row.updated_at),
+        type: row.type,
         users: participants,
       })
     }

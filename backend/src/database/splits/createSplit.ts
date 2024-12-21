@@ -2,7 +2,7 @@ import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { userExists } from '../utils/userExists'
 import { Pool } from 'pg'
-import { CreateSplitArguments } from 'shared'
+import { CreateSplitArguments, SplitType } from 'shared'
 
 export async function createSplit(pool: Pool, callerId: string, args: CreateSplitArguments) {
   const client = await pool.connect()
@@ -24,12 +24,22 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
             created_by,
             name,
             timestamp,
-            updated_at
+            updated_at,
+            type
           )
-          VALUES ($1, $2, $3, $4, $5, $6, $7)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
           RETURNING id
         `,
-        [args.groupId, args.total, args.paidBy, callerId, args.title, args.timestamp, Date.now()]
+        [
+          args.groupId,
+          args.total,
+          args.paidBy,
+          callerId,
+          args.title,
+          args.timestamp,
+          Date.now(),
+          SplitType.Normal,
+        ]
       )
     ).rows[0].id
 

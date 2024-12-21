@@ -41,6 +41,10 @@ export interface UserWithBalanceChange extends User {
   change: string
 }
 
+export enum SplitType {
+  Normal = 0
+}
+
 export interface SplitInfo {
   id: number
   title: string
@@ -50,6 +54,7 @@ export interface SplitInfo {
   createdById: string
   version: number
   updatedAt: number
+  type: SplitType
 }
 
 export interface SplitWithChanges extends SplitInfo {
