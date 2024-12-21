@@ -1,7 +1,7 @@
 import { Icon, IconName } from './Icon'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
-import { useIsSmallScreen } from '@utils/dimensionUtils'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { Rect, measure } from '@utils/measure'
 import React, { useEffect, useImperativeHandle, useLayoutEffect } from 'react'
 import { useRef, useState } from 'react'
@@ -90,7 +90,7 @@ interface ContextMenuItemsProps {
 
 function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: ContextMenuItemsProps) {
   const theme = useTheme()
-  const isSmallScreen = useIsSmallScreen()
+  const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const contentRef = useRef<View>(null)
   const [contentX, setContentX] = useState(touchPoint.x)
   const [contentY, setContentY] = useState(touchPoint.y)
@@ -167,7 +167,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
   ref: React.Ref<ContextMenuRef>
 ) {
   const theme = useTheme()
-  const isSmallScreen = useIsSmallScreen()
+  const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const [visible, setVisible] = useState(false)
   const anchorRef = useRef<View>(null)
   const touchPoint = useRef<Point>()

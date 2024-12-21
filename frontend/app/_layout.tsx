@@ -2,7 +2,7 @@ import { useFonts } from '@hooks/useFonts'
 import { ThemeProvider, useTheme } from '@styling/theme'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useAuth } from '@utils/auth'
-import { useIsSmallScreen } from '@utils/dimensionUtils'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import i18n from '@utils/i18n'
 import { queryClient } from '@utils/queryClient'
 import { useLocales } from 'expo-localization'
@@ -23,7 +23,7 @@ function Content() {
   const pathname = usePathname()
   const user = useAuth(!pathname.startsWith('/join'))
   const theme = useTheme()
-  const isSmallScreen = useIsSmallScreen()
+  const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const locales = useLocales()
   const { t } = useTranslation()
   const [fontsLoaded, _error] = useFonts()

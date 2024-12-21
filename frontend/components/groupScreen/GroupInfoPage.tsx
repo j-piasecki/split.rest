@@ -4,22 +4,22 @@ import { Text } from '@components/Text'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
 import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View, useWindowDimensions } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function InfoCard({ info }: { info: GroupInfo }) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
-  const { width } = useWindowDimensions()
+  const displayClass = useDisplayClass()
 
   return (
     <View
       style={{
-        flex: threeBarLayout || width >= 600 ? 1 : undefined,
+        flex: threeBarLayout || displayClass > DisplayClass.Small ? 1 : undefined,
         justifyContent: 'center',
         backgroundColor: theme.colors.surfaceContainer,
         borderRadius: 16,
@@ -174,7 +174,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
 export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
-  const { width } = useWindowDimensions()
+  const isSmallScreen = useDisplayClass() === DisplayClass.Small
 
   if (!info) {
     return (
@@ -200,8 +200,8 @@ export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
         width: '100%',
         justifyContent: 'flex-start',
         alignSelf: 'center',
-        flexDirection: threeBarLayout || width < 600 ? 'column' : 'row',
-        alignItems: threeBarLayout || width < 600 ? undefined : 'center',
+        flexDirection: threeBarLayout || isSmallScreen ? 'column' : 'row',
+        alignItems: threeBarLayout || isSmallScreen ? undefined : 'center',
         gap: 16,
       }}
     >

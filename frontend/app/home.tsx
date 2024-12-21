@@ -6,7 +6,7 @@ import { Text } from '@components/Text'
 import { PaneHeader } from '@components/groupScreen/Pane'
 import { useUserGroups } from '@hooks/database/useUserGroups'
 import { useTheme } from '@styling/theme'
-import { useIsSmallScreen } from '@utils/dimensionUtils'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { router } from 'expo-router'
 import React, { useMemo } from 'react'
 import { useState } from 'react'
@@ -17,7 +17,7 @@ import { GroupInfo } from 'shared'
 
 function Group({ info }: { info: GroupInfo }) {
   const theme = useTheme()
-  const isSmallScreen = useIsSmallScreen()
+  const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const balanceColor =
     Number(info.balance) === 0
       ? theme.colors.balanceNeutral

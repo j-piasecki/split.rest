@@ -2,7 +2,7 @@ import { Icon } from './Icon'
 import { RoundIconButton } from './RoundIconButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
-import { useIsSmallScreen } from '@utils/dimensionUtils'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
 import { KeyboardAvoidingView, Pressable, StyleSheet, View } from 'react-native'
@@ -120,7 +120,7 @@ export interface ModalProps {
 
 export default function Modal({ returnPath, ...props }: ModalProps) {
   const router = useRouter()
-  const isSmallScreen = useIsSmallScreen()
+  const isSmallScreen = useDisplayClass() === DisplayClass.Small
 
   const goBack = useCallback(() => {
     if (router.canGoBack()) {

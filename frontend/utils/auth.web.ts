@@ -1,4 +1,4 @@
-import { isSmallScreen } from './dimensionUtils'
+import { DisplayClass, getDisplayClass } from './dimensionUtils'
 import { auth } from './firebase.web'
 import { queryClient } from './queryClient'
 import { sleep } from './sleep'
@@ -93,8 +93,10 @@ export function useAuth(redirectToIndex = true) {
 }
 
 export function login() {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
   const provider = new GoogleAuthProvider()
-  if (isSmallScreen()) {
+  if (getDisplayClass() === DisplayClass.Small || isMobile) {
     signInWithRedirect(auth, provider)
   } else {
     signInWithPopup(auth, provider)

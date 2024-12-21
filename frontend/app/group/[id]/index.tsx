@@ -9,7 +9,7 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { measure } from '@utils/measure'
 import { Image } from 'expo-image'
@@ -150,11 +150,11 @@ export function GroupScreen() {
   const { id } = useLocalSearchParams()
   const threeBarLayout = useThreeBarLayout()
   const groupId = Number(id as string)
-  const { width } = useWindowDimensions()
+  const displayClass = useDisplayClass()
   const { data: groupInfo, error } = useGroupInfo(groupId)
 
   const [membersExpanded, setMembersExpanded] = useState(false)
-  const membersAlwaysExpanded = width > 1800
+  const membersAlwaysExpanded = displayClass > DisplayClass.Large
 
   if (error) {
     return (

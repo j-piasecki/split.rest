@@ -1,17 +1,32 @@
 import { Dimensions, useWindowDimensions } from 'react-native'
 
-export function isSmallScreen(width?: number): boolean {
-  if (width) {
-    return width < 768
-  }
-
-  return Dimensions.get('window').width < 768
+export enum DisplayClass {
+  Small = 0,
+  Medium = 1,
+  Large = 3,
+  ExtraLarge = 4,
 }
 
-export function useIsSmallScreen() {
-  return isSmallScreen(useWindowDimensions().width)
+export function getDisplayClass(width?: number): DisplayClass {
+  if (width === undefined) {
+    width = Dimensions.get('window').width
+  }
+
+  if (width < 660) {
+    return DisplayClass.Small
+  } else if (width < 1100) {
+    return DisplayClass.Medium
+  } else if (width < 1600) {
+    return DisplayClass.Large
+  } else {
+    return DisplayClass.ExtraLarge
+  }
+}
+
+export function useDisplayClass() {
+  return getDisplayClass(useWindowDimensions().width)
 }
 
 export function useThreeBarLayout() {
-  return useWindowDimensions().width > 1024
+  return useDisplayClass() > DisplayClass.Medium
 }

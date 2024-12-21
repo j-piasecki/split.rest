@@ -3,7 +3,7 @@ import { Text } from '@components/Text'
 import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { useIsSmallScreen } from '@utils/dimensionUtils'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -58,7 +58,7 @@ export function SplitRow({ split, info }: SplitRowProps) {
   const theme = useTheme()
   const router = useRouter()
   const { t } = useTranslation()
-  const isSmallScreen = useIsSmallScreen()
+  const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { mutate: deleteSplit, isPending } = useDeleteSplit(info.id)
 
   const showDeteteButton =
