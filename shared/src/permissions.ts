@@ -46,12 +46,22 @@ export const enum ManagePermissionsDTO {
   ManagePermissions = 1 << 7, // Manage permissions of the group (cannot grant permissions that the doer does not have)
 }
 
-export class GroupMemberPermissions {
+export interface GroupMemberPermissionsDTO {
+  splits: SplitPermissionsDTO
+  members: MembersPermissionsDTO
+  manage: ManagePermissionsDTO
+}
+
+export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
   readonly splits: SplitPermissionsDTO
   readonly members: MembersPermissionsDTO
   readonly manage: ManagePermissionsDTO
 
-  constructor(splits: SplitPermissionsDTO, members: MembersPermissionsDTO, manage: ManagePermissionsDTO) {
+  constructor(
+    splits: SplitPermissionsDTO,
+    members: MembersPermissionsDTO,
+    manage: ManagePermissionsDTO
+  ) {
     this.splits = splits
     this.members = members
     this.manage = manage

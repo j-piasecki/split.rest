@@ -139,3 +139,8 @@ export interface GetSplitHistoryArguments {
   splitId: number
   startAfter?: number
 }
+
+export interface GetGroupMemberPermissionsArguments {
+  groupId: number
+  userId?: string
+}

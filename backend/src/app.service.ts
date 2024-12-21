@@ -14,6 +14,7 @@ import {
   GetBalancesArguments,
   GetGroupInfoArguments,
   GetGroupJoinLinkArguments,
+  GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMetadataByLinkArguments,
@@ -201,5 +202,9 @@ export class AppService {
 
   async getSplitHistory(callerId: string, args: GetSplitHistoryArguments) {
     return await this.databaseService.getSplitHistory(callerId, args)
+  }
+
+  async getGroupMemberPermissions(callerId: string, args: GetGroupMemberPermissionsArguments) {
+    return await this.databaseService.getGroupMemberPermissions(callerId, args)
   }
 }

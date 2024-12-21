@@ -7,6 +7,7 @@ import { deleteGroupJoinLink } from './database/groups/deleteGroupJoinLink'
 import { getBalances } from './database/groups/getBalances'
 import { getGroupInfo } from './database/groups/getGroupInfo'
 import { getGroupJoinLink } from './database/groups/getGroupJoinLink'
+import { getGroupMemberPermissions } from './database/groups/getGroupMemberPermissions'
 import { getGroupMembers } from './database/groups/getGroupMembers'
 import { getGroupMembersAutocompletions } from './database/groups/getGroupMembersAutocompletions'
 import { getGroupMetadataByLink } from './database/groups/getGroupMetadataByLink'
@@ -217,5 +218,10 @@ export class DatabaseService {
   @RequirePermissions(['accessGroup'])
   async getSplitHistory(callerId: string, args: GetSplitHistoryArguments) {
     return await getSplitHistory(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['beGroupMember'])
+  async getGroupMemberPermissions(callerId: string, args: GetGroupMembersArguments) {
+    return await getGroupMemberPermissions(this.pool, callerId, args)
   }
 }
