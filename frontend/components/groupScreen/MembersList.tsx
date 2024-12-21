@@ -39,8 +39,6 @@ export function MembersList({
     return null
   }
 
-  const Header = (headerComponent ?? View) as JSX.ElementType
-
   return (
     <View style={{ width: '100%', flex: 1 }}>
       <FlatList
@@ -74,23 +72,29 @@ export function MembersList({
           <MemberRow member={member} info={info} iconOnly={iconOnly ?? false} />
         )}
         ItemSeparatorComponent={iconOnly ? undefined : Divider}
-        ListHeaderComponent={
-          <Header>
-            {info.isAdmin && threeBarLayout ? (
-              <View style={{ paddingVertical: 8, paddingHorizontal: iconOnly ? 8 : 16 }}>
-                <Button
-                  leftIcon='addMember'
-                  title={iconOnly ? '' : t('addUser.addUser')}
-                  onPress={() => {
-                    router.navigate(`/group/${info.id}/addUser`)
-                  }}
-                />
-              </View>
-            ) : undefined}
-          </Header>
-        }
+        ListHeaderComponent={headerComponent}
         ListFooterComponent={footerComponent}
       />
+
+      {info.isAdmin && threeBarLayout && (
+        <View
+          style={{
+            paddingVertical: 8,
+            paddingHorizontal: iconOnly ? 8 : 16,
+            maxWidth: 768,
+            width: '100%',
+            alignSelf: 'center',
+          }}
+        >
+          <Button
+            leftIcon='addMember'
+            title={iconOnly ? '' : t('addUser.addUser')}
+            onPress={() => {
+              router.navigate(`/group/${info.id}/addUser`)
+            }}
+          />
+        </View>
+      )}
 
       {info.isAdmin && !threeBarLayout && (
         <View style={{ position: 'absolute', bottom: 16, right: 16 }}>
