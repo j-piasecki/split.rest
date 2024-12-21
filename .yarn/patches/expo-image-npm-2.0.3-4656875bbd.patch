@@ -1,0 +1,67 @@
+diff --git a/src/web/ColorTintFilter.tsx b/src/web/ColorTintFilter.tsx
+index d8a3d6337da0b0afa3f83441e9cd9a61b744fba6..55f25839fa671d50f388fcc0be02425be071509f 100644
+--- a/src/web/ColorTintFilter.tsx
++++ b/src/web/ColorTintFilter.tsx
+@@ -1,25 +1,25 @@
+ import React from 'react';
+ import { StyleSheet } from 'react-native';
+ 
+-export function getTintColorStyle(tintColor?: string | null) {
+-  if (!tintColor) {
++export function getTintColorStyle(tintColor?: string | null, filterId?: string | null) {
++  if (!tintColor | !filterId) {
+     return {};
+   }
+   return {
+-    filter: `url(#expo-image-tint-${tintColor})`,
++    filter: `url(#expo-image-tint-${tintColor}-${filterId})`,
+   };
+ }
+ 
+-type TintColorFilterProps = { tintColor?: string | null };
++type TintColorFilterProps = { tintColor?: string | null, filterId?: string | null };
+ 
+-export default function TintColorFilter({ tintColor }: TintColorFilterProps) {
+-  if (!tintColor) {
++export default function TintColorFilter({ tintColor, filterId }: TintColorFilterProps) {
++  if (!tintColor || !filterId) {
+     return null;
+   }
+   return (
+     <svg style={styles.svg}>
+       <defs>
+-        <filter id={`expo-image-tint-${tintColor}`}>
++        <filter id={`expo-image-tint-${tintColor}-${filterId}`}>
+           <feFlood floodColor={tintColor} />
+           <feComposite in2="SourceAlpha" operator="atop" />
+         </filter>
+diff --git a/src/web/ImageWrapper.tsx b/src/web/ImageWrapper.tsx
+index 31f35d5092359718002e087068dd8daa5a7f45f7..3eb72c521001be5ad70d059fa54c3a15aa159856 100644
+--- a/src/web/ImageWrapper.tsx
++++ b/src/web/ImageWrapper.tsx
+@@ -40,6 +40,7 @@ const ImageWrapper = React.forwardRef(
+     }: ImageWrapperProps,
+     ref: Ref<HTMLImageElement>
+   ) => {
++    const filterId = React.useMemo(() => Math.floor(Math.random() * Math.floor(Math.random() * Date.now())), []);
+     useEffect(() => {
+       events?.onMount?.forEach((e) => e?.());
+     }, []);
+@@ -56,7 +57,7 @@ const ImageWrapper = React.forwardRef(
+     }
+     return (
+       <>
+-        <ColorTintFilter tintColor={tintColor} />
++        <ColorTintFilter tintColor={tintColor} filterId={filterId} />
+         <img
+           ref={ref}
+           alt={accessibilityLabel}
+@@ -66,7 +67,7 @@ const ImageWrapper = React.forwardRef(
+           style={{
+             objectPosition,
+             ...absoluteFilledPosition,
+-            ...getTintColorStyle(tintColor),
++            ...getTintColorStyle(tintColor, filterId),
+             ...style,
+             ...(isImageHash ? hashPlaceholderStyle : {}),
+           }}

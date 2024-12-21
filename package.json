@@ -14,5 +14,8 @@
     "shared",
     "backend",
     "backups"
-  ]
+  ],
+  "resolutions": {
+    "expo-image@~2.0.3": "patch:expo-image@npm%3A2.0.3#./.yarn/patches/expo-image-npm-2.0.3-4656875bbd.patch"
+  }
 }
