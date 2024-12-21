@@ -15,7 +15,7 @@ export async function createDatabase(pool: Pool) {
     CREATE TABLE IF NOT EXISTS groups(
       id SERIAL PRIMARY KEY,
       name VARCHAR(128) NOT NULL,
-      created_at bigint NOT NULL,
+      created_at BIGINT NOT NULL,
       currency VARCHAR(8) NOT NULL,
       owner VARCHAR(32) NOT NULL,
       total DECIMAL(10, 2) NOT NULL DEFAULT 0,
@@ -31,6 +31,7 @@ export async function createDatabase(pool: Pool) {
       group_id INTEGER NOT NULL,
       user_id VARCHAR(32) NOT NULL,
       balance DECIMAL(10, 2) NOT NULL,
+      joined_at BIGINT NOT NULL,
       is_admin BOOLEAN NOT NULL,
       has_access BOOLEAN NOT NULL,
       is_hidden BOOLEAN NOT NULL,

@@ -1,3 +1,4 @@
+import { addUserToGroup } from '../utils/addUserToGroup'
 import { Pool } from 'pg'
 import { CreateGroupArguments, GroupInfo } from 'shared'
 
@@ -22,13 +23,11 @@ export async function createGroup(
 
     const groupId = rows[0].id
 
-    await client.query(
-      `
-        INSERT INTO group_members(group_id, user_id, balance, is_admin, has_access, is_hidden)
-        VALUES ($1, $2, $3, $4, $5, $6)
-      `,
-      [groupId, callerId, 0, true, true, false]
-    )
+    await addUserToGroup(client, {
+      groupId,
+      userId: callerId,
+      isAdmin: true,
+    })
 
     await client.query('COMMIT')
 

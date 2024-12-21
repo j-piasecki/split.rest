@@ -1,5 +1,6 @@
 import { ConflictException } from '../../errors/ConflictException'
 import { NotFoundException } from '../../errors/NotFoundException'
+import { addUserToGroup } from '../utils/addUserToGroup'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { Pool } from 'pg'
@@ -31,19 +32,7 @@ export async function joinGroupByLink(
       throw new ConflictException('api.group.userAlreadyInGroup')
     }
 
-    await client.query(
-      `
-        INSERT INTO group_members (
-          group_id,
-          user_id, 
-          balance,
-          is_admin,
-          has_access,
-          is_hidden
-        ) VALUES ($1, $2, $3, $4, $5, $6)
-      `,
-      [groupId, callerId, 0, false, true, false]
-    )
+    await addUserToGroup(client, { groupId, userId: callerId })
 
     await client.query(
       `
