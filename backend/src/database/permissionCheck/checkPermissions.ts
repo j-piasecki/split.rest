@@ -48,7 +48,7 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
 
         return null
 
-      case 'getGroupInfo':
+      case 'beGroupMember':
         if (!(await isUserMemberOfGroup(pool, args.groupId, callerId))) {
           return 'api.group.userNotInGroup'
         }

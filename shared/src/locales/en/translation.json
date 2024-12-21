@@ -26,6 +26,7 @@
       "group": {
         "access": "User does not have access to group",
         "manage": "User does not have permission to manage the group",
+        "manageOwner": "User does not have permission to change permissions of the group owner",
         "delete": "User does not have permission to delete the group",
         "createSplit": "User does not have permission to create splits in the group",
         "deleteSplit": "User does not have permission to delete this split",

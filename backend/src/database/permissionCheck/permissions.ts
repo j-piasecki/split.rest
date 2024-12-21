@@ -1,6 +1,6 @@
 export const PermissionToFieldMap = {
   accessGroup: ['groupId'] as const,
-  getGroupInfo: ['groupId'] as const,
+  beGroupMember: ['groupId'] as const,
   manageGroup: ['groupId'] as const,
   deleteGroup: ['groupId'] as const,
   deleteSplit: ['groupId', 'splitId'] as const,
