@@ -155,7 +155,7 @@ export class DatabaseService {
     return await getUserById(this.pool, callerId, args)
   }
 
-  @RequirePermissions(['getGroupInfo'])
+  @RequirePermissions(['beGroupMember'])
   async getGroupInfo(callerId: string, args: GetGroupInfoArguments) {
     return await getGroupInfo(this.pool, callerId, args)
   }
