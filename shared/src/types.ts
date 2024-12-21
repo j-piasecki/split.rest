@@ -6,7 +6,7 @@ export interface User {
 }
 
 export enum GroupType {
-  Normal = 0
+  Normal = 0,
 }
 
 export interface GroupMetadata {
@@ -42,7 +42,7 @@ export interface UserWithBalanceChange extends User {
 }
 
 export enum SplitType {
-  Normal = 0
+  Normal = 0,
 }
 
 export interface SplitInfo {
