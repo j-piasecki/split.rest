@@ -1,6 +1,6 @@
 import { addUserToGroup } from '../utils/addUserToGroup'
 import { Pool } from 'pg'
-import { CreateGroupArguments, GroupInfo } from 'shared'
+import { CreateGroupArguments, GroupInfo, GroupType } from 'shared'
 
 export async function createGroup(
   pool: Pool,
@@ -14,11 +14,11 @@ export async function createGroup(
 
     const { rows } = await client.query(
       `
-        INSERT INTO groups(name, created_at, currency, owner)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO groups(name, created_at, currency, owner, type)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING id
       `,
-      [args.name, Date.now(), args.currency, callerId]
+      [args.name, Date.now(), args.currency, callerId, GroupType.Normal]
     )
 
     const groupId = rows[0].id
@@ -36,6 +36,7 @@ export async function createGroup(
       name: args.name,
       currency: args.currency,
       owner: callerId,
+      type: GroupType.Normal,
       hidden: false,
       isAdmin: true,
       hasAccess: true,

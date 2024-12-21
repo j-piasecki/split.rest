@@ -5,6 +5,10 @@ export interface User {
   photoUrl: string
 }
 
+export enum GroupType {
+  Normal = 0
+}
+
 export interface GroupMetadata {
   id: number
   name: string
@@ -12,6 +16,7 @@ export interface GroupMetadata {
   memberCount: number
   total: string
   owner: string
+  type: GroupType
 }
 
 export interface GroupInfo extends GroupMetadata {

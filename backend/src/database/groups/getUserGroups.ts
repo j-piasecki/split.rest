@@ -17,6 +17,7 @@ export async function getUserGroups(
           groups.deleted,
           groups.total,
           groups.member_count,
+          groups.type,
           group_members.balance, 
           group_members.is_hidden, 
           group_members.is_admin, 
@@ -42,5 +43,6 @@ export async function getUserGroups(
     hasAccess: row.has_access,
     memberCount: row.member_count,
     total: row.total,
+    type: row.type,
   }))
 }

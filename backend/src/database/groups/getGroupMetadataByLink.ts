@@ -16,7 +16,8 @@ export async function getGroupMetadataByLink(
         groups.currency,
         groups.total,
         groups.deleted,
-        groups.member_count
+        groups.member_count,
+        groups.type
       FROM
         groups 
       JOIN
@@ -39,5 +40,6 @@ export async function getGroupMetadataByLink(
     currency: rows[0].currency,
     memberCount: rows[0].member_count,
     total: rows[0].total,
+    type: rows[0].type,
   }
 }
