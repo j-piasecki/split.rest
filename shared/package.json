@@ -4,7 +4,8 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
-    "format": "prettier --list-different --write src/**/*.ts"
+    "format": "prettier --list-different --write src/**/*.ts",
+    "check": "tsc --noEmit"
   },
   "devDependencies": {
     "prettier": "^3.3.3"

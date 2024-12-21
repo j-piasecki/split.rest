@@ -9,7 +9,8 @@
     "web": "expo start --web",
     "format": "prettier --write --list-different .",
     "lint": "eslint .",
-    "build:web": "expo export -p web"
+    "build:web": "expo export -p web",
+    "check": "tsc --noEmit ; yarn lint"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.0",
