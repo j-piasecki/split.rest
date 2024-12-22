@@ -18,7 +18,7 @@ export interface ButtonProps {
   isLoading?: boolean
   destructive?: boolean
   disabled?: boolean
-  style?: (state: PressableStateCallbackType) => StyleProp<ViewStyle>
+  style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
 }
 
 export function Button({
@@ -58,7 +58,7 @@ export function Button({
             flexDirection: 'row',
             gap: 8,
           },
-          style?.(state),
+          typeof style === 'function' ? style(state) : style,
         ]
       }}
     >
