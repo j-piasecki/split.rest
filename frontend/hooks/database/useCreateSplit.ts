@@ -16,6 +16,7 @@ async function createSplit(args: CreateSplitArguments) {
     updatedAt: Date.now(),
     total: String(args.total),
     type: SplitType.Normal,
+    isUserParticipating: args.balances.some((balance) => balance.id === auth.currentUser?.uid),
   })
 
   await invalidateSplitRelatedQueries(args.groupId, splitId ?? -1)

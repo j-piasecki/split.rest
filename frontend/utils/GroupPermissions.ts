@@ -2,30 +2,25 @@ import { auth } from './firebase'
 import { GroupMemberPermissions, SplitInfo, SplitPermissionType } from 'shared'
 
 export class GroupPermissions extends GroupMemberPermissions {
-  canDeleteSplit(split: SplitInfo): boolean {
-    // TODO: this is more restrictive than the backend, user can also be a participant
+  private checkSplitPermission(split: SplitInfo, type: SplitPermissionType) {
     return (
-      this.canDeleteSplits() === SplitPermissionType.All ||
-      (this.canDeleteSplits() === SplitPermissionType.OnlyIfIncluded &&
-        (split.createdById === auth.currentUser?.uid || split.paidById === auth.currentUser?.uid))
+      type === SplitPermissionType.All ||
+      (type === SplitPermissionType.OnlyIfIncluded &&
+        (split.isUserParticipating ||
+          split.createdById === auth.currentUser?.uid ||
+          split.paidById === auth.currentUser?.uid))
     )
+  }
+
+  canDeleteSplit(split: SplitInfo): boolean {
+    return this.checkSplitPermission(split, this.canDeleteSplits())
   }
 
   canUpdateSplit(split: SplitInfo): boolean {
-    // TODO: this is more restrictive than the backend, user can also be a participant
-    return (
-      this.canUpdateSplits() === SplitPermissionType.All ||
-      (this.canUpdateSplits() === SplitPermissionType.OnlyIfIncluded &&
-        (split.createdById === auth.currentUser?.uid || split.paidById === auth.currentUser?.uid))
-    )
+    return this.checkSplitPermission(split, this.canUpdateSplits())
   }
 
   canSeeSplitDetails(split: SplitInfo): boolean {
-    // TODO: this is more restrictive than the backend, user can also be a participant
-    return (
-      this.canSeeSplitsDetails() === SplitPermissionType.All ||
-      (this.canSeeSplitsDetails() === SplitPermissionType.OnlyIfIncluded &&
-        (split.createdById === auth.currentUser?.uid || split.paidById === auth.currentUser?.uid))
-    )
+    return this.checkSplitPermission(split, this.canSeeSplitsDetails())
   }
 }

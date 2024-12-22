@@ -55,6 +55,7 @@ export async function getSplitInfo(
     version: splitRow.version,
     updatedAt: Number(splitRow.updated_at),
     type: splitRow.type,
+    isUserParticipating: participants.some((p) => p.id === callerId),
     users: participants.map((p) => ({
       id: p.id,
       name: p.name,
