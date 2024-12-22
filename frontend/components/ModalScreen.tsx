@@ -4,7 +4,7 @@ import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
-import { KeyboardAvoidingView, Pressable, StyleSheet, View } from 'react-native'
+import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -27,18 +27,22 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
       }}
     >
       <View
-        style={{
-          width: '100%',
-          height: 56 + insets.top,
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingTop: insets.top,
-          justifyContent: 'flex-start',
-          backgroundColor: theme.colors.surfaceContainerLow,
-          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-          paddingHorizontal: 4,
-          gap: 4,
-        }}
+        style={[
+          {
+            width: '100%',
+            height: 56 + insets.top,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingTop: insets.top,
+            justifyContent: 'flex-start',
+            paddingHorizontal: 4,
+            gap: 4,
+          },
+          Platform.OS !== 'web' && {
+            backgroundColor: theme.colors.surfaceContainerLow,
+            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+          },
+        ]}
       >
         <RoundIconButton
           icon='chevronBack'
@@ -52,7 +56,9 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
         </Text>
       </View>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
-        <View style={{ flex: 1, paddingBottom: insets.bottom }}>{children}</View>
+        <View style={{ flex: 1, paddingBottom: insets.bottom + (Platform.OS === 'web' ? 16 : 0) }}>
+          {children}
+        </View>
       </KeyboardAvoidingView>
     </View>
   )
@@ -130,7 +136,7 @@ export interface ModalProps {
 
 export default function Modal({ returnPath, ...props }: ModalProps) {
   const router = useRouter()
-  const isSmallScreen = useDisplayClass() === DisplayClass.Small
+  const isSmallScreen = useDisplayClass() <= DisplayClass.Expanded
 
   const goBack = useCallback(() => {
     if (router.canGoBack()) {

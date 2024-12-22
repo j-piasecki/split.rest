@@ -2,7 +2,8 @@ import { Dimensions, useWindowDimensions } from 'react-native'
 
 export enum DisplayClass {
   Small = 0,
-  Medium = 1,
+  Expanded = 1,
+  Medium = 2,
   Large = 3,
   ExtraLarge = 4,
 }
@@ -14,6 +15,8 @@ export function getDisplayClass(width?: number): DisplayClass {
 
   if (width < 660) {
     return DisplayClass.Small
+  } else if (width < 800) {
+    return DisplayClass.Expanded
   } else if (width < 1100) {
     return DisplayClass.Medium
   } else if (width < 1600) {
