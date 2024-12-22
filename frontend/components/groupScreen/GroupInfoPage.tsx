@@ -2,6 +2,7 @@ import { Button } from '@components/Button'
 import { Icon } from '@components/Icon'
 import { Text } from '@components/Text'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
@@ -68,23 +69,21 @@ function InfoCard({ info }: { info: GroupInfo }) {
           </Text>
         </View>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-          <View style={{ width: 24, alignItems: 'center' }}>
-            <Icon
-              name={info.hasAccess ? 'lockOpen' : 'lock'}
-              size={20}
-              color={info.hasAccess ? theme.colors.outline : theme.colors.error}
-            />
+        {!info.hasAccess && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+            <View style={{ width: 24, alignItems: 'center' }}>
+              <Icon name={'lock'} size={20} color={theme.colors.error} />
+            </View>
+            <Text
+              style={{
+                color: theme.colors.error,
+                fontSize: 18,
+              }}
+            >
+              {t('groupInfo.noAccessToGroup')}
+            </Text>
           </View>
-          <Text
-            style={{
-              color: info.hasAccess ? theme.colors.outline : theme.colors.error,
-              fontSize: 18,
-            }}
-          >
-            {info.hasAccess ? t('groupInfo.accessToGroup') : t('groupInfo.noAccessToGroup')}
-          </Text>
-        </View>
+        )}
 
         {info.isAdmin && (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
@@ -116,6 +115,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
 function ActionButtons({ info }: { info: GroupInfo }) {
   const user = useAuth()
   const { t } = useTranslation()
+  const { data: permissions } = useGroupPermissions(info.id)
   const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info.id)
 
   return (
@@ -130,7 +130,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
         />
       )}
 
-      {info.hasAccess && (
+      {permissions?.canCreateSplits() && (
         <Button
           onPress={() => {
             router.navigate(`/group/${info.id}/addSplit`)

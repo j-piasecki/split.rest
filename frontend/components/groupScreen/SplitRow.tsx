@@ -1,8 +1,8 @@
 import { Button } from '@components/Button'
 import { Text } from '@components/Text'
 import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
-import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React from 'react'
@@ -54,15 +54,14 @@ function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo }) {
 }
 
 export function SplitRow({ split, info }: SplitRowProps) {
-  const user = useAuth()
   const theme = useTheme()
   const router = useRouter()
   const { t } = useTranslation()
+  const { data: permissions } = useGroupPermissions(info.id)
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { mutate: deleteSplit, isPending } = useDeleteSplit(info.id)
 
-  const showDeteteButton =
-    split.paidById === user?.id || split.createdById === user?.id || info?.isAdmin
+  const showDeteteButton = permissions?.canDeleteSplit(split)
 
   return (
     <Pressable

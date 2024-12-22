@@ -4,6 +4,7 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
@@ -46,10 +47,12 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
   const theme = useTheme()
   const contextMenuRef = useRef<ContextMenuRef>(null)
   const { t } = useTranslation()
+  const { data: permissions } = useGroupPermissions(info.id)
   const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(info.id, member.id)
   const { mutate: setGroupAdminMutation } = useSetGroupAdminMutation(info.id, member.id)
 
-  const contextMenuDisabled = member.id === user?.id || !info.isAdmin || iconOnly
+  const hasContextActions = permissions?.canManageAccess() || permissions?.canManageAdmins()
+  const contextMenuDisabled = member.id === user?.id || iconOnly || !hasContextActions
 
   return (
     <ContextMenu
@@ -59,6 +62,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
         {
           label: member.hasAccess ? t('member.revokeAccess') : t('member.giveAccess'),
           icon: member.hasAccess ? 'lock' : 'lockOpen',
+          disabled: !permissions?.canManageAccess(),
           onPress: () => {
             setGroupAccessMutation(!member.hasAccess)
           },
@@ -66,10 +70,10 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
         {
           label: member.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin'),
           icon: member.isAdmin ? 'removeModerator' : 'addModerator',
+          disabled: !permissions?.canManageAdmins() || !member.hasAccess,
           onPress: () => {
             setGroupAdminMutation(!member.isAdmin)
           },
-          disabled: !member.hasAccess,
         },
       ]}
     >
@@ -136,7 +140,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
               </Text>
             </View>
 
-            {info.isAdmin && (
+            {hasContextActions && (
               <RoundIconButton
                 disabled={contextMenuDisabled}
                 icon='moreVertical'

@@ -8,9 +8,10 @@ import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
 import { useDeleteGroupJoinLink } from '@hooks/database/useDeleteGroupJoinLink'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupJoinLink } from '@hooks/database/useGroupJoinLink'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useTheme } from '@styling/theme'
-import { useAuth } from '@utils/auth'
+import { GroupPermissions } from '@utils/GroupPermissions'
 import * as Clipboard from 'expo-clipboard'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
@@ -19,7 +20,13 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
-function JoinLinkManager({ info }: { info: GroupInfo }) {
+function JoinLinkManager({
+  info,
+  permissions,
+}: {
+  info: GroupInfo
+  permissions: GroupPermissions
+}) {
   const theme = useTheme()
   const { t } = useTranslation()
   const { data: link, isLoading: isLoadingLink } = useGroupJoinLink(info.id)
@@ -35,7 +42,7 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
       {isLoadingLink && <ActivityIndicator color={theme.colors.primary} />}
       {!isLoadingLink && (
         <>
-          {!link && (
+          {!link && permissions.canCreateJoinLink() && (
             <Button
               leftIcon='addLink'
               isLoading={isCreatingJoinLink}
@@ -67,11 +74,13 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
                     Clipboard.setStringAsync(linkText)
                   }}
                 />
-                <Button
-                  leftIcon='deleteLink'
-                  isLoading={isDeletingJoinLink}
-                  onPress={() => deleteJoinLink(info.id)}
-                />
+                {permissions.canDeleteJoinLink() && (
+                  <Button
+                    leftIcon='deleteLink'
+                    isLoading={isDeletingJoinLink}
+                    onPress={() => deleteJoinLink(info.id)}
+                  />
+                )}
               </View>
             </View>
           )}
@@ -82,11 +91,11 @@ function JoinLinkManager({ info }: { info: GroupInfo }) {
 }
 
 function Form({ info }: { info: GroupInfo }) {
-  const user = useAuth()
   const router = useRouter()
   const theme = useTheme()
   const { t } = useTranslation()
   const [name, setName] = useState(info.name)
+  const { data: permissions } = useGroupPermissions(info.id)
   const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
   const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
 
@@ -105,6 +114,7 @@ function Form({ info }: { info: GroupInfo }) {
         <EditableText
           value={name}
           placeholder={t('groupSettings.groupName')}
+          disabled={!permissions?.canRenameGroup()}
           onSubmit={(newName) => {
             setGroupName(newName).then(() => {
               setName(newName)
@@ -112,13 +122,22 @@ function Form({ info }: { info: GroupInfo }) {
           }}
           isPending={isSettingName}
         />
-        <View
-          style={{ height: 1, backgroundColor: theme.colors.outlineVariant, marginHorizontal: 16 }}
-        />
-        <JoinLinkManager info={info} />
+
+        {permissions?.canSeeJoinLink() && (
+          <>
+            <View
+              style={{
+                height: 1,
+                backgroundColor: theme.colors.outlineVariant,
+                marginHorizontal: 16,
+              }}
+            />
+            <JoinLinkManager info={info} permissions={permissions} />
+          </>
+        )}
       </View>
       {/* TODO: add confirmation dialog */}
-      {info.owner === user?.id && (
+      {permissions?.canDeleteGroup() && (
         <Button
           destructive
           leftIcon='deleteForever'
@@ -136,12 +155,8 @@ function Form({ info }: { info: GroupInfo }) {
 
 export default function Settings() {
   const { id } = useLocalSearchParams()
-  const user = useAuth()
-  const theme = useTheme()
   const { t } = useTranslation()
   const { data: info } = useGroupInfo(Number(id))
-
-  const isAdmin = info?.isAdmin || info?.owner === user?.id
 
   return (
     <ModalScreen
@@ -150,15 +165,7 @@ export default function Settings() {
       maxWidth={400}
       maxHeight={500}
     >
-      {isAdmin && info && <Form info={info} />}
-      {!isAdmin && (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          {(!user || !info) && <ActivityIndicator color={theme.colors.primary} />}
-          {user && info && (
-            <Text style={{ color: theme.colors.error }}>{t('groupSettings.notAnAdmin')}</Text>
-          )}
-        </View>
-      )}
+      {info && <Form info={info} />}
     </ModalScreen>
   )
 }

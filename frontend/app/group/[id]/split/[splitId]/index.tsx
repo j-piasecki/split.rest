@@ -3,9 +3,9 @@ import Modal from '@components/ModalScreen'
 import { Text } from '@components/Text'
 import { getUserById } from '@database/getUserById'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSplitInfo } from '@hooks/database/useSplitInfo'
 import { useTheme } from '@styling/theme'
-import { useAuth } from '@utils/auth'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -71,10 +71,10 @@ function SplitInfo({
   groupInfo: GroupInfo | undefined
 }) {
   const theme = useTheme()
-  const user = useAuth()
   const router = useRouter()
   const { t } = useTranslation()
   const [createdBy, setCreatedBy] = useState<User | null>(null)
+  const { data: permissions } = useGroupPermissions(groupInfo?.id)
   const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)!
 
   useEffect(() => {
@@ -128,9 +128,7 @@ function SplitInfo({
         {groupInfo?.currency}
       </Text>
 
-      {(groupInfo?.isAdmin ||
-        splitInfo.createdById === user?.id ||
-        splitInfo.paidById === user?.id) && (
+      {permissions?.canUpdateSplit(splitInfo) && (
         <View style={{ marginBottom: 32 }}>
           <Button
             title={t('splitInfo.edit')}

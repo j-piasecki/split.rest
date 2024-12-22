@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
+import { GroupPermissions } from '@utils/GroupPermissions'
 import { auth } from '@utils/firebase'
 import { makeRequest } from '@utils/makeApiRequest'
 import {
   GetGroupMemberPermissionsArguments,
-  GroupMemberPermissions,
   GroupMemberPermissionsDTO,
   TranslatableError,
 } from 'shared'
@@ -15,7 +15,7 @@ export function useGroupPermissions(groupId?: number, userId?: string) {
 
   return useQuery({
     queryKey: ['groupPermissions', groupId, userId],
-    queryFn: async (): Promise<GroupMemberPermissions> => {
+    queryFn: async (): Promise<GroupPermissions> => {
       if (!groupId) {
         throw new TranslatableError('api.notFound.group')
       }
@@ -31,7 +31,7 @@ export function useGroupPermissions(groupId?: number, userId?: string) {
         throw new TranslatableError('api.notFound.group')
       }
 
-      return new GroupMemberPermissions(info.splits, info.members, info.manage)
+      return new GroupPermissions(info.splits, info.members, info.manage)
     },
   })
 }
