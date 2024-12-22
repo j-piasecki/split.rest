@@ -6,7 +6,8 @@ export async function splitExists(
   splitId: number
 ): Promise<boolean> {
   return (
-    (await client.query('SELECT 1 FROM splits WHERE group_id = $1 AND id = $2', [groupId, splitId]))
-      .rowCount > 0
+    ((
+      await client.query('SELECT 1 FROM splits WHERE group_id = $1 AND id = $2', [groupId, splitId])
+    )?.rowCount ?? 0) > 0
   )
 }

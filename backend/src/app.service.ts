@@ -75,7 +75,7 @@ export class AppService {
       0
     )
 
-    if (Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
+    if (payerGetsBack && Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
       throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
     }
 
@@ -110,7 +110,7 @@ export class AppService {
       0
     )
 
-    if (Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
+    if (payerGetsBack && Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
       throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
     }
 

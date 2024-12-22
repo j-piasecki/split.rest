@@ -7,7 +7,7 @@ const CERTIFICATE_LIFETIME = 1000 * 60 * 30
 
 declare module 'express' {
   interface Request {
-    user: jwt.JwtPayload
+    user: Omit<jwt.JwtPayload, 'sub'> & { sub: string }
   }
 }
 
@@ -27,13 +27,13 @@ export class AuthGuard implements CanActivate {
     const tokenData = jwt.decode(token, { complete: true })
     const certificates = await this.getTokenCertificates()
 
-    if (!tokenData) {
+    if (!tokenData || !tokenData.header.kid) {
       throw new UnauthorizedException('api.auth.invalidToken')
     }
 
     jwt.verify(
       token,
-      certificates[tokenData.header.kid],
+      certificates[tokenData.header.kid!],
       { algorithms: [tokenData.header.alg as jwt.Algorithm] },
       (err, decoded: jwt.JwtPayload) => {
         if (err) {
