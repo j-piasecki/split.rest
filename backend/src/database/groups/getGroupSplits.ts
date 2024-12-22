@@ -26,7 +26,7 @@ export async function getGroupSplits(
           splits.version,
           splits.deleted,
           splits.type,
-          ${args.onlyIfIncluded ? 'true AS user_participating' : `(SELECT EXISTS (SELECT 1 FROM split_participants WHERE split_participants.user_id = $3)) AS user_participating`}
+          ${args.onlyIfIncluded ? 'true AS user_participating' : `(SELECT EXISTS (SELECT 1 FROM split_participants WHERE split_participants.split_id = splits.id AND split_participants.user_id = $3)) AS user_participating`}
         FROM splits ${args.onlyIfIncluded ? 'INNER JOIN split_participants ON splits.id = split_participants.split_id' : ''}
         WHERE
           group_id = $1
