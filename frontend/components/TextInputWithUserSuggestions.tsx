@@ -1,6 +1,7 @@
 import { TextInputWithSuggestions, TextInputWithSuggestionsProps } from './TextInputWithSuggestions'
 import { Text } from '@components/Text'
 import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocompletions'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { Image } from 'expo-image'
@@ -67,12 +68,14 @@ export function TextInputWithUserSuggestions({
   ...rest
 }: TextInputWithUserSuggestionsProps) {
   const ref = useRef<TextInputRN>(null)
+  const { data: permissions } = useGroupPermissions(groupId)
   const [showSuggestions, setShowSuggestions] = useState(true)
   const { t } = useTranslation()
 
   const getSuggestions = useCallback(
-    (val: string) => getGroupMemberAutocompletions(groupId, val),
-    [groupId]
+    async (val: string) =>
+      permissions?.canReadMembers() ? await getGroupMemberAutocompletions(groupId, val) : [],
+    [groupId, permissions]
   )
 
   return (
@@ -84,7 +87,7 @@ export function TextInputWithUserSuggestions({
       autoCorrect={false}
       autoCapitalize='none'
       getSuggestions={getSuggestions}
-      suggestionsVisible={showSuggestions}
+      suggestionsVisible={showSuggestions && permissions?.canReadMembers()}
       renderSuggestion={(user) => {
         return (
           <Suggestion
