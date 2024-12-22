@@ -99,12 +99,11 @@ export function Pane({
     <View
       style={[
         {
-          height: '100%',
           backgroundColor: theme.colors.surfaceContainer,
           borderRadius: 16,
           overflow: 'hidden',
         },
-        collapsible && collapsed ? { width: 64 } : { flex: 1 },
+        collapsible && collapsed ? { width: 64 } : {},
         style,
       ]}
     >

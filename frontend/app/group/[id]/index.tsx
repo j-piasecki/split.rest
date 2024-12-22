@@ -1,7 +1,7 @@
 import Header from '@components/Header'
 import { Icon } from '@components/Icon'
 import { Text } from '@components/Text'
-import { GroupInfoPage } from '@components/groupScreen/GroupInfoPage'
+import { GroupActionButtons, GroupInfoCard } from '@components/groupScreen/GroupInfoPage'
 import { MembersList } from '@components/groupScreen/MembersList'
 import { Pane, PaneHeader } from '@components/groupScreen/Pane'
 import { SplitsList } from '@components/groupScreen/SplitsList'
@@ -111,14 +111,30 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
 
 function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
   const theme = useTheme()
+  const displayClass = useDisplayClass()
   const { t } = useTranslation()
+
+  const horizontalInfo = displayClass === DisplayClass.Expanded || displayClass === DisplayClass.Medium
 
   return (
     <SplitsList
       info={info}
       headerComponent={
         <View style={{ gap: 16 }}>
-          <GroupInfoPage info={info} />
+          <View style={{gap: 16, flexDirection:horizontalInfo ? 'row' : 'column', alignItems: horizontalInfo ? 'center' : undefined }}>
+            <Pane icon='group' title={t('tabs.group')} textLocation='start' style={{ flex: 1, marginTop: 8 }}>
+              <View
+                style={{
+                  paddingHorizontal: 16,
+                  paddingTop: 4,
+                  paddingBottom: 24,
+                }}
+              >
+                <GroupInfoCard info={info} />
+              </View>
+            </Pane>
+            {info && <GroupActionButtons info={info} />}
+          </View>
           <MembersButton info={info} />
           <View
             style={{
@@ -196,12 +212,13 @@ export function GroupScreen() {
               gap: 16,
             }}
           >
-            <Pane icon='home' title={t('tabs.group')} style={{ minWidth: 420 }}>
-              <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
-                <GroupInfoPage info={groupInfo} />
+            <Pane icon='home' title={t('tabs.group')} style={{ minWidth: 420, height: '100%' }}>
+              <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 16 }}>
+                <GroupInfoCard info={groupInfo} />
+                {groupInfo && <GroupActionButtons info={groupInfo} />}
               </ScrollView>
             </Pane>
-            <Pane icon='receipt' title={t('tabs.splits')} style={{ flex: 2 }}>
+            <Pane icon='receipt' title={t('tabs.splits')} style={{ flex: 2, height: '100%' }}>
               <SplitsList info={groupInfo} />
             </Pane>
             {permissions?.canReadMembers() && (
@@ -213,7 +230,7 @@ export function GroupScreen() {
                 onCollapseChange={() => {
                   setMembersExpanded(!membersExpanded)
                 }}
-                style={{ minWidth: membersAlwaysExpanded ? 500 : undefined }}
+                style={{ minWidth: membersAlwaysExpanded ? 500 : undefined, height: '100%' }}
               >
                 <MembersList info={groupInfo} iconOnly={!membersAlwaysExpanded} />
               </Pane>
@@ -252,6 +269,7 @@ export function GroupScreen() {
                     onCollapseChange={() => {
                       setMembersExpanded(false)
                     }}
+                    style={{ height: '100%' }}
                   >
                     <MembersList info={groupInfo} />
                   </Pane>

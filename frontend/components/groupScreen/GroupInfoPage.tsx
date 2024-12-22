@@ -11,23 +11,42 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
-function InfoCard({ info }: { info: GroupInfo }) {
+function Loader() {
+  const theme = useTheme()
+
+  return (
+    <View
+      style={{
+        width: '100%',
+        height: 64,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 16,
+        borderRadius: 16,
+      }}
+    >
+      <ActivityIndicator color={theme.colors.onSurface} />
+    </View>
+  )
+}
+
+export function GroupInfoCard({ info }: { info: GroupInfo | undefined }) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
   const displayClass = useDisplayClass()
+
+  if (!info) {
+    return <Loader />
+  }
 
   return (
     <View
       style={{
         flex: threeBarLayout || displayClass > DisplayClass.Small ? 1 : undefined,
         justifyContent: 'center',
-        backgroundColor: theme.colors.surfaceContainer,
         borderRadius: 16,
         gap: 8,
-        paddingHorizontal: threeBarLayout ? 0 : 16,
-        paddingTop: threeBarLayout ? 0 : 16,
-        paddingBottom: threeBarLayout ? 0 : 24,
       }}
     >
       <Text style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 8 }}>
@@ -60,17 +79,17 @@ function InfoCard({ info }: { info: GroupInfo }) {
           marginTop: 8,
         }}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <View style={{ width: 24, alignItems: 'center' }}>
             <Icon name='members' size={20} color={theme.colors.outline} />
           </View>
-          <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
+          <Text style={{ color: theme.colors.outline, fontSize: 18, flex: 1 }}>
             {t('groupInfo.numberOfMembers', { count: info.memberCount })}
           </Text>
         </View>
 
         {!info.hasAccess && (
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <View style={{ width: 24, alignItems: 'center' }}>
               <Icon name={'lock'} size={20} color={theme.colors.error} />
             </View>
@@ -78,6 +97,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
               style={{
                 color: theme.colors.error,
                 fontSize: 18,
+                flex: 1,
               }}
             >
               {t('groupInfo.noAccessToGroup')}
@@ -86,21 +106,21 @@ function InfoCard({ info }: { info: GroupInfo }) {
         )}
 
         {info.isAdmin && (
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <View style={{ width: 24, alignItems: 'center' }}>
               <Icon name='shield' size={20} color={theme.colors.outline} />
             </View>
-            <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
+            <Text style={{ color: theme.colors.outline, fontSize: 18, flex: 1 }}>
               {t('groupInfo.youAreAdmin')}
             </Text>
           </View>
         )}
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <View style={{ width: 24, alignItems: 'center' }}>
             <Icon name='money' size={20} color={theme.colors.outline} />
           </View>
-          <Text style={{ color: theme.colors.outline, fontSize: 18 }}>
+          <Text style={{ color: theme.colors.outline, fontSize: 18, flex: 1 }}>
             {t('groupInfo.totalTransactionsValue', {
               value: info.total,
               currency: info.currency,
@@ -112,7 +132,7 @@ function InfoCard({ info }: { info: GroupInfo }) {
   )
 }
 
-function ActionButtons({ info }: { info: GroupInfo }) {
+export function GroupActionButtons({ info }: { info: GroupInfo }) {
   const user = useAuth()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info.id)
@@ -167,46 +187,6 @@ function ActionButtons({ info }: { info: GroupInfo }) {
           leftIcon='settings'
         />
       )}
-    </View>
-  )
-}
-
-export function GroupInfoPage({ info }: { info: GroupInfo | undefined }) {
-  const theme = useTheme()
-  const threeBarLayout = useThreeBarLayout()
-  const isSmallScreen = useDisplayClass() === DisplayClass.Small
-
-  if (!info) {
-    return (
-      <View
-        style={{
-          width: '100%',
-          height: 64,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: theme.colors.surfaceContainer,
-          marginBottom: 16,
-          borderRadius: 16,
-        }}
-      >
-        <ActivityIndicator color={theme.colors.onSurface} />
-      </View>
-    )
-  }
-
-  return (
-    <View
-      style={{
-        width: '100%',
-        justifyContent: 'flex-start',
-        alignSelf: 'center',
-        flexDirection: threeBarLayout || isSmallScreen ? 'column' : 'row',
-        alignItems: threeBarLayout || isSmallScreen ? undefined : 'center',
-        gap: 16,
-      }}
-    >
-      <InfoCard info={info} />
-      <ActionButtons info={info} />
     </View>
   )
 }
