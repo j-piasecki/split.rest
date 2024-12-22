@@ -114,15 +114,27 @@ function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
   const displayClass = useDisplayClass()
   const { t } = useTranslation()
 
-  const horizontalInfo = displayClass === DisplayClass.Expanded || displayClass === DisplayClass.Medium
+  const horizontalInfo =
+    displayClass === DisplayClass.Expanded || displayClass === DisplayClass.Medium
 
   return (
     <SplitsList
       info={info}
       headerComponent={
         <View style={{ gap: 16 }}>
-          <View style={{gap: 16, flexDirection:horizontalInfo ? 'row' : 'column', alignItems: horizontalInfo ? 'center' : undefined }}>
-            <Pane icon='group' title={t('tabs.group')} textLocation='start' style={{ flex: 1, marginTop: 8 }}>
+          <View
+            style={{
+              gap: 16,
+              flexDirection: horizontalInfo ? 'row' : 'column',
+              alignItems: horizontalInfo ? 'center' : undefined,
+            }}
+          >
+            <Pane
+              icon='group'
+              title={t('tabs.group')}
+              textLocation='start'
+              style={{ flex: 1, marginTop: 8 }}
+            >
               <View
                 style={{
                   paddingHorizontal: 16,
