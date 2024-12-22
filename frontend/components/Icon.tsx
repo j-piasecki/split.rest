@@ -20,6 +20,7 @@ export type IconName =
   | 'edit'
   | 'group'
   | 'home'
+  | 'link'
   | 'lockOpen'
   | 'lock'
   | 'login'
@@ -63,6 +64,7 @@ const iconMap: Record<IconName, unknown> = {
   edit: require('@assets/icons/edit.svg'),
   group: require('@assets/icons/group.svg'),
   home: require('@assets/icons/home.svg'),
+  link: require('@assets/icons/link.svg'),
   lockOpen: require('@assets/icons/lock_open.svg'),
   lock: require('@assets/icons/lock.svg'),
   login: require('@assets/icons/login.svg'),
