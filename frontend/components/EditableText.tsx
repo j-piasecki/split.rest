@@ -80,7 +80,7 @@ export function EditableText({
             icon='editAlt'
             onPress={() => setEditing(true)}
             style={({ pressed, hovered }) => ({
-              opacity: pressed ? 0.7 : hovered ? 0.5 : 0.3,
+              opacity: pressed ? 0.9 : hovered ? 0.7 : 0.5,
             })}
           />
         )}
