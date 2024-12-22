@@ -9,6 +9,14 @@ export const queryClient = new QueryClient({
   },
 })
 
+export async function deleteGroupQueries(groupId: number) {
+  await invalidateUserGroups()
+  queryClient.removeQueries({ queryKey: ['groupSplits', groupId] })
+  queryClient.removeQueries({ queryKey: ['groupMembers', groupId] })
+  queryClient.removeQueries({ queryKey: ['groupInfo', groupId] })
+  queryClient.removeQueries({ queryKey: ['groupPermissions', groupId] })
+}
+
 export async function invalidateGroup(groupId: number) {
   await queryClient.invalidateQueries({ queryKey: ['groupSplits', groupId] })
   await queryClient.invalidateQueries({ queryKey: ['groupMembers', groupId] })
