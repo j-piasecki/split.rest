@@ -3,6 +3,7 @@ import ModalScreen from '@components/ModalScreen'
 import { Text } from '@components/Text'
 import { TextInputWithUserSuggestions } from '@components/TextInputWithUserSuggestions'
 import { getBalances } from '@database/getBalances'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useLocalSearchParams } from 'expo-router'
@@ -143,12 +144,23 @@ function Result({ result }: { result: UserWithBalanceChange[] }) {
 export default function Roulette() {
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()
+  const theme = useTheme()
+  const { data: permissions } = useGroupPermissions(Number(id))
   const [result, setResult] = useState<UserWithBalanceChange[] | null>(null)
+
+  const canAccessRoulette = permissions?.canAccessRoulette() ?? false
 
   return (
     <ModalScreen returnPath={`/group/${id}`} title={t('screenName.roulette')} maxWidth={400}>
-      {result === null && <Form groupId={Number(id)} setResult={setResult} />}
-      {result !== null && <Result result={result} />}
+      {!canAccessRoulette && (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <Text style={{ color: theme.colors.outline, fontSize: 20, textAlign: 'center' }}>
+            {t('api.insufficientPermissions.group.accessRoulette')}
+          </Text>
+        </View>
+      )}
+      {canAccessRoulette && result === null && <Form groupId={Number(id)} setResult={setResult} />}
+      {canAccessRoulette && result !== null && <Result result={result} />}
     </ModalScreen>
   )
 }

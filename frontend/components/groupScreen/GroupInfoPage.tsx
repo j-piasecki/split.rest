@@ -120,7 +120,7 @@ function ActionButtons({ info }: { info: GroupInfo }) {
 
   return (
     <View style={{ flexDirection: 'column', gap: 12 }}>
-      {info.hasAccess && (
+      {permissions?.canAccessRoulette() && (
         <Button
           onPress={() => {
             router.navigate(`/group/${info.id}/roulette`)

@@ -5,6 +5,7 @@ export const PermissionKeys = [
   'updateSplit',
   'deleteSplit',
   'restoreSplit',
+  'accessRoulette',
   'readMembers',
   'addMembers',
   'renameGroup',
@@ -31,6 +32,7 @@ export const enum SplitPermissionsDTO {
   DeleteAll = 1 << 8, // Delete all splits
   Restore = 1 << 9, // Restore splits in which the user is included (allows to see affected deleted splits)
   RestoreAll = 1 << 10, // Restore all splits (allows to see all deleted splits)
+  AccessRoulette = 1 << 11, // Access the roulette
 }
 
 export enum SplitPermissionType {
@@ -154,6 +156,10 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return SplitPermissionType.None
   }
 
+  canAccessRoulette(): boolean {
+    return Boolean(this.splits & SplitPermissionsDTO.AccessRoulette)
+  }
+
   canReadMembers(): boolean {
     return Boolean(this.members & MembersPermissionsDTO.Read)
   }
@@ -206,6 +212,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
       updateSplits: splitPermissionTypeToString(this.canUpdateSplits()),
       deleteSplits: splitPermissionTypeToString(this.canDeleteSplits()),
       restoreSplits: splitPermissionTypeToString(this.canRestoreSplits()),
+      accessRoulette: this.canAccessRoulette(),
       readMembers: this.canReadMembers(),
       addMembers: this.canAddMembers(),
       renameGroup: this.canRenameGroup(),

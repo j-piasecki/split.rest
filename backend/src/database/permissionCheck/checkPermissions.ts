@@ -122,6 +122,13 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'accessRoulette': {
+          if (!callerPermissions?.canAccessRoulette()) {
+            return 'api.insufficientPermissions.group.accessRoulette'
+          }
+          continue
+        }
+
         case 'readMembers': {
           if (!callerPermissions?.canReadMembers()) {
             return 'api.insufficientPermissions.group.readMembers'

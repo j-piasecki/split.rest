@@ -19,7 +19,8 @@ const ownerPermissions: GroupMemberPermissionsDTO = {
     SplitPermissionsDTO.Delete |
     SplitPermissionsDTO.DeleteAll |
     SplitPermissionsDTO.Restore |
-    SplitPermissionsDTO.RestoreAll,
+    SplitPermissionsDTO.RestoreAll |
+    SplitPermissionsDTO.AccessRoulette,
   members: MembersPermissionsDTO.Read | MembersPermissionsDTO.Add,
   manage:
     ManagePermissionsDTO.Rename |
@@ -45,7 +46,8 @@ const adminPermissions: GroupMemberPermissionsDTO = {
     SplitPermissionsDTO.Delete |
     SplitPermissionsDTO.DeleteAll |
     SplitPermissionsDTO.Restore |
-    SplitPermissionsDTO.RestoreAll,
+    SplitPermissionsDTO.RestoreAll |
+    SplitPermissionsDTO.AccessRoulette,
   members: MembersPermissionsDTO.Read | MembersPermissionsDTO.Add,
   manage:
     ManagePermissionsDTO.Rename |
@@ -66,7 +68,8 @@ const memberPermissions: GroupMemberPermissionsDTO = {
     SplitPermissionsDTO.SeeDetails |
     SplitPermissionsDTO.SeeDetailsAll |
     SplitPermissionsDTO.Update |
-    SplitPermissionsDTO.Delete,
+    SplitPermissionsDTO.Delete |
+    SplitPermissionsDTO.AccessRoulette,
   members: MembersPermissionsDTO.Read,
   manage: ManagePermissionsDTO.None,
 } as const

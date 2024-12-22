@@ -30,6 +30,7 @@
         "deleteSplit": "User does not have permission to delete this split",
         "editSplit": "User does not have permission to edit this split",
         "restoreSplit": "User does not have permission to restore this split",
+        "accessRoulette": "User does not have permission to access the roulette",
         "readMembers": "User does not have permission to see members of the group",
         "addMembers": "User does not have permission to add members to the group",
         "rename": "User does not have permission to rename the group",

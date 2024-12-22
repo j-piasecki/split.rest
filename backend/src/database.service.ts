@@ -175,7 +175,7 @@ export class DatabaseService {
     return await getSplitInfo(this.pool, callerId, args)
   }
 
-  @RequirePermissions(['readMembers'])
+  @RequirePermissions(['accessRoulette'])
   async getBalances(callerId: string, args: GetBalancesArguments) {
     return await getBalances(this.pool, callerId, args)
   }
