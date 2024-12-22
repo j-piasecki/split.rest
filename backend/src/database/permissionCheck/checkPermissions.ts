@@ -1,10 +1,10 @@
-import { hasAccessToGroup } from '../utils/hasAccessToGroup'
-import { isUserGroupAdmin } from '../utils/isUserGroupAdmin'
-import { isUserGroupOwner } from '../utils/isUserGroupOwner'
+import { canQuickRestoreSplit } from '../utils/canQuickRestoreSplit'
+import { getMemberPermissions } from '../utils/getMemberPermissions'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
-import { PermissionArguments, PermissionToFieldMap } from './permissions'
+import { isUserMemberOfSplit } from '../utils/isUserMemberOfSplit'
+import { PermissionArguments, PermissionToFieldMap } from './utils'
 import { Pool } from 'pg'
-import { LanguageTranslationKey } from 'shared'
+import { LanguageTranslationKey, SplitPermissionType } from 'shared'
 
 export async function checkPermissions<TPermissions extends (keyof PermissionToFieldMap)[]>(
   pool: Pool,
@@ -12,57 +12,202 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
   permissions: TPermissions,
   unsafeArgs: PermissionArguments<TPermissions>
 ): Promise<LanguageTranslationKey | null> {
-  for (const permission of permissions) {
-    const args = unsafeArgs as PermissionArguments<[typeof permission]>
+  const client = await pool.connect()
 
-    switch (permission) {
-      case 'accessGroup':
-        if (!(await hasAccessToGroup(pool, args.groupId, callerId))) {
-          return 'api.insufficientPermissions.group.access'
-        }
-        return null
+  try {
+    const callerPermissions =
+      'groupId' in unsafeArgs
+        ? await getMemberPermissions(client, unsafeArgs.groupId as number, callerId)
+        : null
 
-      case 'manageGroup':
-        if (!(await isUserGroupAdmin(pool, args.groupId, callerId))) {
-          return 'api.insufficientPermissions.group.manage'
-        }
-        return null
-
-      case 'deleteSplit':
-      case 'restoreSplit':
-      case 'editSplit':
-        if (await isUserGroupAdmin(pool, args.groupId, callerId)) {
-          return null
+    for (const permission of permissions) {
+      switch (permission) {
+        case 'beGroupMember': {
+          const args = unsafeArgs as PermissionArguments<['beGroupMember']>
+          if (!(await isUserMemberOfGroup(client, args.groupId, callerId))) {
+            return 'api.group.userNotInGroup'
+          }
+          continue
         }
 
-        const splitInfo = (
-          await pool.query<{ paid_by: string; created_by: string; total: string }>(
-            'SELECT paid_by, created_by, total FROM splits WHERE group_id = $1 AND id = $2',
-            [args.groupId, args.splitId]
-          )
-        ).rows[0]
-
-        if (splitInfo && splitInfo.created_by !== callerId && splitInfo.paid_by !== callerId) {
-          return `api.insufficientPermissions.group.${permission}`
+        case 'createSplit': {
+          if (!callerPermissions?.canCreateSplits()) {
+            return 'api.insufficientPermissions.group.createSplit'
+          }
+          continue
         }
 
-        return null
+        case 'readSplits': {
+          const args = unsafeArgs as PermissionArguments<['readSplits']>
+          const canReadSplits = callerPermissions?.canReadSplits()
+          if (canReadSplits === undefined || canReadSplits === SplitPermissionType.None) {
+            return 'api.insufficientPermissions.group.readSplits'
+          }
 
-      case 'beGroupMember':
-        if (!(await isUserMemberOfGroup(pool, args.groupId, callerId))) {
-          return 'api.group.userNotInGroup'
+          if (
+            canReadSplits === SplitPermissionType.OnlyIfIncluded &&
+            args.onlyIfIncluded !== true
+          ) {
+            return 'api.insufficientPermissions.group.readSplits'
+          }
+          continue
         }
-        return null
 
-      case 'deleteGroup':
-        if (!(await isUserGroupOwner(pool, args.groupId, callerId))) {
-          return 'api.insufficientPermissions.group.delete'
+        case 'seeSplitDetails': {
+          const args = unsafeArgs as PermissionArguments<['seeSplitDetails']>
+          const canSeeDetails = callerPermissions?.canSeeSplitDetails()
+          if (canSeeDetails === undefined || canSeeDetails === SplitPermissionType.None) {
+            return 'api.insufficientPermissions.group.seeSplitDetails'
+          }
+
+          if (
+            canSeeDetails === SplitPermissionType.OnlyIfIncluded &&
+            !(await isUserMemberOfSplit(client, args.splitId, callerId))
+          ) {
+            return 'api.insufficientPermissions.group.seeSplitDetails'
+          }
+          continue
         }
-        return null
 
-      default:
-        console.log('Unknown permission required:', permission)
-        return 'unknownError'
+        case 'updateSplit': {
+          const args = unsafeArgs as PermissionArguments<['updateSplit']>
+          const canUpdateSplits = callerPermissions?.canUpdateSplits()
+          if (canUpdateSplits === undefined || canUpdateSplits === SplitPermissionType.None) {
+            return 'api.insufficientPermissions.group.editSplit'
+          }
+
+          if (
+            canUpdateSplits === SplitPermissionType.OnlyIfIncluded &&
+            !(await isUserMemberOfSplit(client, args.splitId, callerId))
+          ) {
+            return 'api.insufficientPermissions.group.editSplit'
+          }
+          continue
+        }
+
+        case 'deleteSplit': {
+          const args = unsafeArgs as PermissionArguments<['deleteSplit']>
+          const canDeleteSplits = callerPermissions?.canDeleteSplits()
+          if (canDeleteSplits === undefined || canDeleteSplits === SplitPermissionType.None) {
+            return 'api.insufficientPermissions.group.deleteSplit'
+          }
+
+          if (
+            canDeleteSplits === SplitPermissionType.OnlyIfIncluded &&
+            !(await isUserMemberOfSplit(client, args.splitId, callerId))
+          ) {
+            return 'api.insufficientPermissions.group.deleteSplit'
+          }
+          continue
+        }
+
+        case 'restoreSplit': {
+          const args = unsafeArgs as PermissionArguments<['restoreSplit']>
+          // Check if the user is trying to restore a split they **just** deleted
+          if (await canQuickRestoreSplit(client, args.splitId, callerId)) {
+            continue
+          }
+
+          const canRestoreSplits = callerPermissions?.canRestoreSplits()
+          if (canRestoreSplits === undefined || canRestoreSplits === SplitPermissionType.None) {
+            return 'api.insufficientPermissions.group.restoreSplit'
+          }
+
+          if (
+            canRestoreSplits === SplitPermissionType.OnlyIfIncluded &&
+            !(await isUserMemberOfSplit(client, args.splitId, callerId))
+          ) {
+            return 'api.insufficientPermissions.group.restoreSplit'
+          }
+          continue
+        }
+
+        case 'readMembers': {
+          if (!callerPermissions?.canReadMembers()) {
+            return 'api.insufficientPermissions.group.readMembers'
+          }
+          continue
+        }
+
+        case 'addMembers': {
+          if (!callerPermissions?.canAddMembers()) {
+            return 'api.insufficientPermissions.group.addMembers'
+          }
+          continue
+        }
+
+        case 'renameGroup': {
+          if (!callerPermissions?.canRenameGroup()) {
+            return 'api.insufficientPermissions.group.rename'
+          }
+          continue
+        }
+
+        case 'deleteGroup': {
+          if (!callerPermissions?.canDeleteGroup()) {
+            return 'api.insufficientPermissions.group.delete'
+          }
+          continue
+        }
+
+        case 'seeJoinLink': {
+          if (!callerPermissions?.canSeeJoinLink()) {
+            return 'api.insufficientPermissions.group.joinLink.see'
+          }
+          continue
+        }
+
+        case 'createJoinLink': {
+          if (!callerPermissions?.canCreateJoinLink()) {
+            return 'api.insufficientPermissions.group.joinLink.create'
+          }
+          continue
+        }
+
+        case 'deleteJoinLink': {
+          if (!callerPermissions?.canDeleteJoinLink()) {
+            return 'api.insufficientPermissions.group.joinLink.delete'
+          }
+          continue
+        }
+
+        case 'manageAccess': {
+          if (!callerPermissions?.canManageAccess()) {
+            return 'api.insufficientPermissions.group.manageAccess'
+          }
+          continue
+        }
+
+        case 'manageAdmins': {
+          if (!callerPermissions?.canManageAdmins()) {
+            return 'api.insufficientPermissions.group.manageAdmins'
+          }
+          continue
+        }
+
+        case 'readPermissions': {
+          const args = unsafeArgs as PermissionArguments<['readPermissions']>
+          if (args.userId && args.userId !== callerId && !callerPermissions?.canReadPermissions()) {
+            return 'api.insufficientPermissions.group.readPermissions'
+          }
+          continue
+        }
+
+        case 'managePermissions': {
+          if (!callerPermissions?.canManagePermissions()) {
+            return 'api.insufficientPermissions.group.managePermissions'
+          }
+          continue
+        }
+
+        default:
+          console.log('Unknown permission required:', permission)
+          return 'unknownError'
+      }
     }
+  } finally {
+    client.release()
   }
+
+  return null
 }

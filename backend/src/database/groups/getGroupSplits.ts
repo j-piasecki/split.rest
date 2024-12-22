@@ -16,25 +16,28 @@ export async function getGroupSplits(
     await pool.query(
       `
         SELECT 
-          id,
-          name,
-          total,
-          paid_by,
-          created_by,
-          timestamp,
-          updated_at,
-          version,
-          deleted,
-          type
-        FROM splits
+          splits.id,
+          splits.name,
+          splits.total,
+          splits.paid_by,
+          splits.created_by,
+          splits.timestamp,
+          splits.updated_at,
+          splits.version,
+          splits.deleted,
+          splits.type
+        FROM splits ${args.onlyIfIncluded ? 'INNER JOIN split_participants ON splits.id = split_participants.split_id' : ''}
         WHERE
           group_id = $1
+          ${args.onlyIfIncluded ? 'AND split_participants.user_id = $3' : ''}
           AND deleted = false
           AND timestamp < $2
         ORDER BY timestamp DESC
         LIMIT 20
       `,
-      [args.groupId, args.startAfterTimestamp ?? Number.MAX_SAFE_INTEGER]
+      args.onlyIfIncluded
+        ? [args.groupId, args.startAfterTimestamp ?? Number.MAX_SAFE_INTEGER, callerId]
+        : [args.groupId, args.startAfterTimestamp ?? Number.MAX_SAFE_INTEGER]
     )
   ).rows
 

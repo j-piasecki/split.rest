@@ -14,6 +14,7 @@ export const PermissionKeys = [
   'deleteJoinLink',
   'manageAccess',
   'manageAdmins',
+  'readPermissions',
   'managePermissions',
 ] as const
 
@@ -64,7 +65,8 @@ export const enum ManagePermissionsDTO {
   DeleteJoinLink = 1 << 4, // Delete the join link of the group
   ManageAccess = 1 << 5, // Manage access to the group
   ManageAdmins = 1 << 6, // Manage admins of the group
-  ManagePermissions = 1 << 7, // Manage permissions of the group (cannot grant permissions that the doer does not have)
+  ReadPermissions = 1 << 7, // Read permissions of the group
+  ManagePermissions = 1 << 8, // Manage permissions of the group (cannot grant permissions that the doer does not have)
 }
 
 export interface GroupMemberPermissionsDTO {
@@ -188,6 +190,10 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return Boolean(this.manage & ManagePermissionsDTO.ManageAdmins)
   }
 
+  canReadPermissions(): boolean {
+    return Boolean(this.manage & ManagePermissionsDTO.ReadPermissions)
+  }
+
   canManagePermissions(): boolean {
     return Boolean(this.manage & ManagePermissionsDTO.ManagePermissions)
   }
@@ -196,6 +202,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return {
       createSplit: this.canCreateSplits(),
       readSplits: splitPermissionTypeToString(this.canReadSplits()),
+      seeSplitDetails: splitPermissionTypeToString(this.canSeeSplitDetails()),
       updateSplits: splitPermissionTypeToString(this.canUpdateSplits()),
       deleteSplits: splitPermissionTypeToString(this.canDeleteSplits()),
       restoreSplits: splitPermissionTypeToString(this.canRestoreSplits()),
@@ -208,6 +215,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
       deleteJoinLink: this.canDeleteJoinLink(),
       manageAccess: this.canManageAccess(),
       manageAdmins: this.canManageAdmins(),
+      readPermissions: this.canReadPermissions(),
       managePermissions: this.canManagePermissions(),
     }
   }

@@ -63,6 +63,7 @@ export interface GetGroupMembersArguments {
 
 export interface GetGroupSplitsArguments {
   groupId: number
+  onlyIfIncluded?: boolean
   startAfterTimestamp?: number
 }
 
