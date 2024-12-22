@@ -2,6 +2,7 @@ import { Icon } from './Icon'
 import { IconName } from './Icon'
 import { useTheme } from '@styling/theme'
 import {
+  ActivityIndicator,
   GestureResponderEvent,
   Pressable,
   PressableStateCallbackType,
@@ -17,6 +18,7 @@ export interface RoundIconButtonProps {
   size?: number
   style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
   color?: string
+  isLoading?: boolean
 }
 
 export function RoundIconButton({
@@ -26,6 +28,7 @@ export function RoundIconButton({
   size = 24,
   style,
   color,
+  isLoading,
 }: RoundIconButtonProps) {
   const theme = useTheme()
 
@@ -51,7 +54,8 @@ export function RoundIconButton({
       }}
     >
       <View style={{ width: size, height: size, justifyContent: 'center', alignItems: 'center' }}>
-        <Icon name={icon} size={size} color={color ?? theme.colors.outline} />
+        {isLoading && <ActivityIndicator color={color ?? theme.colors.outline} />}
+        {!isLoading && <Icon name={icon} size={size} color={color ?? theme.colors.outline} />}
       </View>
     </Pressable>
   )

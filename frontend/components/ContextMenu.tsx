@@ -62,24 +62,33 @@ function ContextMenuItemComponent({
           alignItems: 'center',
           gap: 8,
           backgroundColor: pressed
-            ? theme.colors.surfaceContainerHighest
+            ? theme.colors.surfaceBright
             : hovered
-              ? theme.colors.surfaceContainerHigh
+              ? theme.colors.surfaceContainerHighest
               : 'transparent',
-          padding: 16,
+          paddingHorizontal: 16,
+          paddingVertical: 12,
           opacity: disabled ? 0.5 : 1,
         }
       }}
     >
-      {icon && <Icon name={icon} size={20} color={color} />}
       <Text
         style={{
           fontSize: 18,
+          fontWeight: 600,
           color: color,
+          flex: 1,
         }}
       >
         {label}
       </Text>
+      {icon && (
+        <Icon
+          name={icon}
+          size={20}
+          color={color === theme.colors.onSurface ? theme.colors.secondary : color}
+        />
+      )}
     </Pressable>
   )
 }
@@ -129,8 +138,8 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
         position: 'absolute',
         top: contentY,
         left: contentX,
-        width: Math.min(anchorRect.width - 16, 300, width - 32),
-        backgroundColor: theme.colors.surfaceContainer,
+        width: Math.min(anchorRect.width - 16, 320, width - 32),
+        backgroundColor: theme.colors.surfaceContainerHigh,
         borderRadius: 12,
         borderWidth: 1,
         borderColor: theme.colors.outlineVariant,
@@ -140,14 +149,27 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
       }}
     >
       {items.map((item, index) => (
-        <ContextMenuItemComponent
-          key={index}
-          {...item}
-          onPress={() => {
-            item.onPress()
-            setVisible(false)
-          }}
-        />
+        <>
+          <ContextMenuItemComponent
+            key={index}
+            {...item}
+            onPress={() => {
+              item.onPress()
+              setVisible(false)
+            }}
+          />
+
+          {index !== items.length - 1 && (
+            <View
+              key={`separator-${index}`}
+              style={{
+                height: 1,
+                backgroundColor: theme.colors.outlineVariant,
+                marginHorizontal: 8,
+              }}
+            />
+          )}
+        </>
       ))}
     </Animated.View>
   )
@@ -216,6 +238,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
       <Pressable
         disabled={props.disabled && (props.pressDisabled || !props.onPress)}
         ref={anchorRef}
+        unstable_pressDelay={50}
         delayLongPress={400}
         onPress={!props.pressDisabled ? props.onPress : undefined}
         style={props.style}

@@ -153,6 +153,12 @@
     "revokeAdmin": "Revoke admin"
   },
 
+  "split": {
+    "showDetails": "Show details",
+    "edit": "Edit split",
+    "delete": "Delete"
+  },
+
   "groupInfo": {
     "couldNotLoad": "Could not load group info",
     "yourBalance": "Your balance:",
