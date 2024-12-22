@@ -83,7 +83,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
           backgroundColor: theme.colors.surfaceContainer,
           paddingVertical: 10,
           paddingLeft: 10,
-          paddingRight: 16,
+          paddingRight: 8,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -117,7 +117,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
             <View style={{ flex: 1, justifyContent: 'center' }}>
               <Text
                 selectable={false}
-                style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}
+                style={{ fontSize: 20, fontWeight: '700', color: theme.colors.onSurface }}
               >
                 {member.name}
               </Text>
@@ -147,7 +147,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
                 onPress={(e) => {
                   contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
                 }}
-                style={{ marginLeft: 16, opacity: contextMenuDisabled ? 0.4 : 1 }}
+                style={{ marginLeft: 8, opacity: contextMenuDisabled ? 0.4 : 1 }}
               />
             )}
           </>
