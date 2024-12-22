@@ -62,7 +62,11 @@ export function MembersList({
           >
             {isLoading && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
             {!isLoading && members.length === 0 && !iconOnly && (
-              <Text style={{ fontSize: 20, color: theme.colors.outline }}>{t('noMembers')}</Text>
+              <Text style={{ fontSize: 20, color: theme.colors.outline }}>
+                {permissions?.canReadMembers()
+                  ? t('api.insufficientPermissions.group.readMembers')
+                  : t('noMembers')}
+              </Text>
             )}
           </View>
         }
