@@ -64,8 +64,8 @@ export function MembersList({
             {!isLoading && members.length === 0 && !iconOnly && (
               <Text style={{ fontSize: 20, color: theme.colors.outline }}>
                 {permissions?.canReadMembers()
-                  ? t('api.insufficientPermissions.group.readMembers')
-                  : t('noMembers')}
+                  ? t('noMembers')
+                  : t('api.insufficientPermissions.group.readMembers')}
               </Text>
             )}
           </View>
