@@ -8,7 +8,7 @@ import {
   TranslatableError,
 } from 'shared'
 
-export function useGroupPermissions(groupId: number, userId?: string) {
+export function useGroupPermissions(groupId?: number, userId?: string) {
   if (!auth.currentUser) {
     throw new Error('You must be logged in to get group info')
   }
@@ -16,6 +16,10 @@ export function useGroupPermissions(groupId: number, userId?: string) {
   return useQuery({
     queryKey: ['groupPermissions', groupId, userId],
     queryFn: async (): Promise<GroupMemberPermissions> => {
+      if (!groupId) {
+        throw new TranslatableError('api.notFound.group')
+      }
+
       const args: GetGroupMemberPermissionsArguments = { groupId: groupId, userId: userId }
       const info = await makeRequest<GetGroupMemberPermissionsArguments, GroupMemberPermissionsDTO>(
         'GET',

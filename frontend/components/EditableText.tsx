@@ -13,9 +13,10 @@ export interface EditableTextProps {
   onSubmit: (text: string) => void
   isPending: boolean
   placeholder?: string
+  disabled?: boolean
 }
 
-export function EditableText({ value, placeholder, onSubmit, isPending }: EditableTextProps) {
+export function EditableText({ value, placeholder, onSubmit, isPending, disabled }: EditableTextProps) {
   const theme = useTheme()
   const [editing, setEditing] = useState(false)
   const [text, setText] = useState(value)
@@ -70,6 +71,7 @@ export function EditableText({ value, placeholder, onSubmit, isPending }: Editab
         </Text>
         <RoundIconButton
           icon='editAlt'
+          disabled={disabled}
           onPress={() => setEditing(true)}
           style={({ pressed, hovered }) => ({
             opacity: pressed ? 0.7 : hovered ? 0.5 : 0.3,

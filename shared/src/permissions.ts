@@ -106,7 +106,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return SplitPermissionType.None
   }
 
-  canSeeSplitDetails(): SplitPermissionType {
+  canSeeSplitsDetails(): SplitPermissionType {
     if (this.splits & SplitPermissionsDTO.SeeDetailsAll) {
       return SplitPermissionType.All
     }
@@ -202,7 +202,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return {
       createSplit: this.canCreateSplits(),
       readSplits: splitPermissionTypeToString(this.canReadSplits()),
-      seeSplitDetails: splitPermissionTypeToString(this.canSeeSplitDetails()),
+      seeSplitsDetails: splitPermissionTypeToString(this.canSeeSplitsDetails()),
       updateSplits: splitPermissionTypeToString(this.canUpdateSplits()),
       deleteSplits: splitPermissionTypeToString(this.canDeleteSplits()),
       restoreSplits: splitPermissionTypeToString(this.canRestoreSplits()),

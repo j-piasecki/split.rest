@@ -55,7 +55,7 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
 
         case 'seeSplitDetails': {
           const args = unsafeArgs as PermissionArguments<['seeSplitDetails']>
-          const canSeeDetails = callerPermissions?.canSeeSplitDetails()
+          const canSeeDetails = callerPermissions?.canSeeSplitsDetails()
           if (canSeeDetails === undefined || canSeeDetails === SplitPermissionType.None) {
             return 'api.insufficientPermissions.group.seeSplitDetails'
           }
