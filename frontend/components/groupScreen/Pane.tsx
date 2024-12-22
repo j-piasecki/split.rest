@@ -73,6 +73,7 @@ export interface PaneProps {
   icon: IconName
   title: string
   style?: StyleProp<ViewStyle>
+  containerStyle?: StyleProp<ViewStyle>
   collapsible?: boolean
   collapsed?: boolean
   onCollapseChange?: (collapsed: boolean) => void
@@ -86,6 +87,7 @@ export function Pane({
   icon,
   title,
   style,
+  containerStyle,
   collapsible = false,
   collapsed = false,
   onCollapseChange,
@@ -128,7 +130,7 @@ export function Pane({
       />
       <Pressable
         disabled={!collapsed || !collapsible}
-        style={{ flex: 1 }}
+        style={containerStyle}
         onPress={() => {
           onCollapseChange?.(false)
         }}

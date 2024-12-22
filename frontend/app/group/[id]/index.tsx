@@ -224,13 +224,31 @@ export function GroupScreen() {
               gap: 16,
             }}
           >
-            <Pane icon='home' title={t('tabs.group')} style={{ minWidth: 420, height: '100%' }}>
-              <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16, gap: 16 }}>
+            <Pane
+              icon='home'
+              title={t('tabs.group')}
+              style={{ minWidth: 420, height: '100%' }}
+              containerStyle={{ flex: 1 }}
+            >
+              <ScrollView
+                style={{ flex: 1 }}
+                contentContainerStyle={{
+                  paddingHorizontal: 16,
+                  paddingTop: 16,
+                  paddingBottom: 32,
+                  gap: 16,
+                }}
+              >
                 <GroupInfoCard info={groupInfo} />
                 {groupInfo && <GroupActionButtons info={groupInfo} />}
               </ScrollView>
             </Pane>
-            <Pane icon='receipt' title={t('tabs.splits')} style={{ flex: 2, height: '100%' }}>
+            <Pane
+              icon='receipt'
+              title={t('tabs.splits')}
+              style={{ flex: 2, height: '100%' }}
+              containerStyle={{ flex: 1 }}
+            >
               <SplitsList info={groupInfo} />
             </Pane>
             {permissions?.canReadMembers() && (
@@ -243,6 +261,7 @@ export function GroupScreen() {
                   setMembersExpanded(!membersExpanded)
                 }}
                 style={{ minWidth: membersAlwaysExpanded ? 500 : undefined, height: '100%' }}
+                containerStyle={{ flex: 1 }}
               >
                 <MembersList info={groupInfo} iconOnly={!membersAlwaysExpanded} />
               </Pane>
@@ -282,6 +301,7 @@ export function GroupScreen() {
                       setMembersExpanded(false)
                     }}
                     style={{ height: '100%' }}
+                    containerStyle={{ flex: 1 }}
                   >
                     <MembersList info={groupInfo} />
                   </Pane>
