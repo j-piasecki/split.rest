@@ -32,7 +32,7 @@ function JoinForm() {
             style={{
               color: theme.colors.onSurface,
               fontSize: 24,
-              fontWeight: 'bold',
+              fontWeight: 800,
               textAlign: 'center',
             }}
           >
@@ -68,7 +68,7 @@ function JoinForm() {
         </>
       )}
       {!isLoadingGroup && !group && (
-        <Text style={{ color: theme.colors.onSurface, fontSize: 20, fontWeight: 'bold' }}>
+        <Text style={{ color: theme.colors.onSurface, fontSize: 20, fontWeight: 800 }}>
           {t('joinGroup.noGroupFoundForThisJoinLink')}
         </Text>
       )}

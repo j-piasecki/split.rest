@@ -115,7 +115,7 @@ function ModalScreen({
             justifyContent: 'space-between',
           }}
         >
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>
+          <Text style={{ fontSize: 20, fontWeight: 800, color: theme.colors.onSurface }}>
             {title}
           </Text>
           <RoundIconButton icon='close' onPress={goBack} />

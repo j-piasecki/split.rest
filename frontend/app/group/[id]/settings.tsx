@@ -56,7 +56,7 @@ function JoinLinkManager({
                 style={{
                   color: theme.colors.onSurface,
                   fontSize: 20,
-                  fontWeight: 'bold',
+                  fontWeight: 800,
                 }}
               >
                 {t('groupSettings.joinLink.joinLink')}

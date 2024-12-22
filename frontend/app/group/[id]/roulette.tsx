@@ -128,7 +128,7 @@ function Result({ result }: { result: UserWithBalanceChange[] }) {
                 paddingVertical: 16,
               }}
             >
-              <Text style={{ fontSize: 18, fontWeight: 'bold', color: theme.colors.onSurface }}>
+              <Text style={{ fontSize: 18, fontWeight: 800, color: theme.colors.onSurface }}>
                 {user.name}
               </Text>
               <Text style={{ fontSize: 18, color: balanceColor }}>{user.change}</Text>
