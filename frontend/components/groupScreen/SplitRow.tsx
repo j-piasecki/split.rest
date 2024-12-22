@@ -129,7 +129,7 @@ export function SplitRow({ split, info }: SplitRowProps) {
           style={{ width: 32, height: 32, borderRadius: 18, marginRight: isSmallScreen ? 8 : 16 }}
         />
         <View style={{ flex: 2 }}>
-          <Text style={{ flex: 1, fontSize: 18, fontWeight: 800, color: theme.colors.onSurface }} numberOfLines={3}>
+          <Text style={{ fontSize: 18, fontWeight: 800, color: theme.colors.onSurface }} numberOfLines={3}>
             {split.title}
           </Text>
           {split.version !== 1 && (
