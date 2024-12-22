@@ -36,7 +36,7 @@ export function useGroupSplits(groupId?: number, onlyIfIncluded = false) {
   )
 
   const result = useInfiniteQuery({
-    queryKey: ['groupSplits', groupId],
+    queryKey: ['groupSplits', groupId, 'onlyIncluded', onlyIfIncluded],
     queryFn: fetchSplits,
     initialPageParam: Number.MAX_SAFE_INTEGER,
     getNextPageParam: (lastPage) => {
