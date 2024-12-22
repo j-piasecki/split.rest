@@ -91,7 +91,9 @@ function SplitInfo({
           alignItems: 'center',
         }}
       >
-        <Text style={{ flex: 1, color: theme.colors.onSurface, fontSize: 24 }}>{splitInfo.title}</Text>
+        <Text style={{ flex: 1, color: theme.colors.onSurface, fontSize: 24 }}>
+          {splitInfo.title}
+        </Text>
         <Text style={{ color: theme.colors.outline, fontSize: 20 }}>
           {new Date(splitInfo.timestamp).toLocaleDateString()}
         </Text>
