@@ -9,7 +9,7 @@ import { useTheme } from '@styling/theme'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 import { TranslatableError } from 'shared'
 
 function Form() {
@@ -72,9 +72,8 @@ function Form() {
       style={{
         flex: 1,
         gap: 16,
-        justifyContent: 'center',
-        paddingBottom: 32,
-        paddingHorizontal: 48,
+        justifyContent: 'space-between',
+        paddingHorizontal: 16,
       }}
     >
       <TextInput
@@ -85,12 +84,27 @@ function Form() {
         value={email}
         onChangeText={setEmail}
       />
-      {!waiting && (
-        <Button leftIcon='addMember' title={t('addUser.addUser')} onPress={handlePress} />
-      )}
-      {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
 
-      {error !== '' && <Text style={{ color: 'red' }}>{error}</Text>}
+      <View style={{ gap: 8 }}>
+        {error && (
+          <Text
+            style={{
+              color: theme.colors.error,
+              textAlign: 'center',
+              fontSize: 18,
+              fontWeight: 500,
+            }}
+          >
+            {error}
+          </Text>
+        )}
+        <Button
+          leftIcon='addMember'
+          title={t('addUser.addUser')}
+          onPress={handlePress}
+          isLoading={waiting}
+        />
+      </View>
     </View>
   )
 }

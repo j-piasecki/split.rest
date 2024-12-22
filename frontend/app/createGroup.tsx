@@ -47,7 +47,6 @@ function Form() {
         flex: 1,
         justifyContent: 'center',
         gap: 16,
-        paddingBottom: 32,
         paddingHorizontal: 48,
       }}
     >

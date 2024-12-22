@@ -92,6 +92,7 @@ export interface SplitFormProps {
   initialPaidByIndex?: number
   waiting: boolean
   onSubmit: (data: FormData) => void
+  error?: string | null
 }
 
 export function SplitForm({
@@ -101,6 +102,7 @@ export function SplitForm({
   initialPaidByIndex,
   waiting,
   onSubmit,
+  error,
 }: SplitFormProps) {
   const theme = useTheme()
   const [entries, setEntries] = useState<SplitEntryData[]>(initialEntries)
@@ -170,33 +172,48 @@ export function SplitForm({
         ))}
       </ScrollView>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginHorizontal: 4,
-        }}
-      >
-        <Text
+      <View style={{ gap: 8 }}>
+        <View
           style={{
-            flex: 1,
-            textAlign: 'center',
-            color: theme.colors.outline,
-            fontSize: 20,
-            opacity: 0.7,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginHorizontal: 4,
           }}
         >
-          <Text style={{ color: theme.colors.primary }}>{entries[paidByIndex].email} </Text>
-          has paid
-          <Text style={{ color: theme.colors.primary }}> {toBePaid.current} </Text>
-          {groupInfo.currency}
-        </Text>
-      </View>
+          <Text
+            style={{
+              flex: 1,
+              textAlign: 'center',
+              color: theme.colors.outline,
+              fontSize: 20,
+              opacity: 0.7,
+            }}
+          >
+            <Text style={{ color: theme.colors.primary }}>{entries[paidByIndex].email} </Text>
+            has paid
+            <Text style={{ color: theme.colors.primary }}> {toBePaid.current} </Text>
+            {groupInfo.currency}
+          </Text>
+        </View>
 
-      <View style={{ marginTop: 16 }}>
-        {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
-        {!waiting && <Button leftIcon='save' title={t('form.save')} onPress={submit} />}
+        {error && (
+          <Text
+            style={{
+              color: theme.colors.error,
+              textAlign: 'center',
+              fontSize: 18,
+              fontWeight: 500,
+            }}
+          >
+            {error}
+          </Text>
+        )}
+
+        <View>
+          {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
+          {!waiting && <Button leftIcon='save' title={t('form.save')} onPress={submit} />}
+        </View>
       </View>
     </View>
   )

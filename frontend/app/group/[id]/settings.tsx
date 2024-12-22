@@ -104,10 +104,8 @@ function Form({ info }: { info: GroupInfo }) {
       style={{
         flex: 1,
         gap: 16,
-        paddingTop: 16,
         paddingHorizontal: 16,
         justifyContent: 'space-between',
-        paddingBottom: 32,
       }}
     >
       <View style={{ gap: 16 }}>

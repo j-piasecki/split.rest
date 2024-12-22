@@ -8,7 +8,6 @@ import { useAuth } from '@utils/auth'
 import { useLocalSearchParams } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function ListHeader({ children }: { children: React.ReactNode }) {
   const theme = useTheme()
@@ -37,7 +36,6 @@ function ListHeader({ children }: { children: React.ReactNode }) {
 
 export function GroupMembersScreen() {
   const theme = useTheme()
-  const insets = useSafeAreaInsets()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
   const groupId = Number(id as string)
@@ -66,8 +64,9 @@ export function GroupMembersScreen() {
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
       <Header />
 
-      <View style={{ flex: 1, alignItems: 'center', paddingBottom: insets.bottom }}>
+      <View style={{ flex: 1, alignItems: 'center' }}>
         <MembersList
+          applyBottomInset
           info={groupInfo}
           headerComponent={ListHeader}
           footerComponent={

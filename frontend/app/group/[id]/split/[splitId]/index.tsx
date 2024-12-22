@@ -129,13 +129,11 @@ function SplitInfo({
       </Text>
 
       {permissions?.canUpdateSplit(splitInfo) && (
-        <View style={{ marginBottom: 32 }}>
-          <Button
-            title={t('splitInfo.edit')}
-            leftIcon='edit'
-            onPress={() => router.navigate(`/group/${groupInfo?.id}/split/${splitInfo.id}/edit`)}
-          />
-        </View>
+        <Button
+          title={t('splitInfo.edit')}
+          leftIcon='edit'
+          onPress={() => router.navigate(`/group/${groupInfo?.id}/split/${splitInfo.id}/edit`)}
+        />
       )}
     </View>
   )

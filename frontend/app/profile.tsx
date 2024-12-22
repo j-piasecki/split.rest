@@ -20,7 +20,7 @@ function Form({ user }: { user: User }) {
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 24,
-        paddingVertical: 24,
+        paddingTop: 32,
       }}
     >
       <View style={{ gap: 16, alignItems: 'center' }}>

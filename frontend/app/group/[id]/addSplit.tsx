@@ -1,6 +1,5 @@
 import ModalScreen from '@components/ModalScreen'
 import { FormData, SplitForm } from '@components/SplitForm'
-import { Text } from '@components/Text'
 import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTranslatedError } from '@hooks/useTranslatedError'
@@ -56,11 +55,8 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
         groupInfo={groupInfo}
         onSubmit={save}
         waiting={waiting}
+        error={error}
       />
-
-      <View style={{ margin: 16 }}>
-        {error !== '' && <Text style={{ color: 'red' }}>{error}</Text>}
-      </View>
     </View>
   )
 }

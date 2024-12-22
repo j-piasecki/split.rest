@@ -1,4 +1,3 @@
-import { Icon } from './Icon'
 import { RoundIconButton } from './RoundIconButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
@@ -23,24 +22,34 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
     <View
       style={{
         flex: 1,
-        backgroundColor: theme.colors.surfaceContainer,
-        paddingTop: insets.top,
+        backgroundColor: theme.colors.surface,
+        gap: 8,
       }}
     >
       <View
         style={{
           width: '100%',
+          height: 56 + insets.top,
           flexDirection: 'row',
           alignItems: 'center',
-          padding: 24,
+          paddingTop: insets.top,
           justifyContent: 'flex-start',
-          gap: 16,
+          backgroundColor: theme.colors.surfaceContainerLow,
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+          paddingHorizontal: 4,
+          gap: 4,
         }}
       >
-        <Pressable onPress={goBack}>
-          <Icon name='chevronBack' size={28} color={theme.colors.onSurface} />
-        </Pressable>
-        <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>{title}</Text>
+        <RoundIconButton
+          icon='chevronBack'
+          onPress={goBack}
+          size={24}
+          color={theme.colors.onSurface}
+          style={{ padding: 12, borderRadius: 48 }}
+        />
+        <Text style={{ fontSize: 20, color: theme.colors.onSurface, fontWeight: 600 }}>
+          {title}
+        </Text>
       </View>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
         <View style={{ flex: 1, paddingBottom: insets.bottom }}>{children}</View>
@@ -83,9 +92,10 @@ function ModalScreen({
           height: '80%',
           maxWidth: maxWidth,
           maxHeight: maxHeight,
-          backgroundColor: theme.colors.surfaceContainer,
-          borderRadius: 16,
+          backgroundColor: theme.colors.surface,
           overflow: 'hidden',
+          borderRadius: 16,
+          paddingBottom: 16,
         }}
       >
         <View
@@ -94,7 +104,7 @@ function ModalScreen({
             flexDirection: 'row',
             alignItems: 'center',
             paddingHorizontal: 16,
-            paddingTop: 16,
+            paddingTop: 12,
             paddingBottom: 4,
             justifyContent: 'space-between',
           }}

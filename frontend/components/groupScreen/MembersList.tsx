@@ -8,6 +8,7 @@ import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupInfo } from 'shared'
 
 function Divider() {
@@ -18,6 +19,7 @@ function Divider() {
 export interface MembersListProps {
   info: GroupInfo | undefined
   iconOnly?: boolean
+  applyBottomInset?: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   headerComponent?: React.ComponentType<any> | React.ReactElement
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,9 +31,11 @@ export function MembersList({
   iconOnly,
   headerComponent,
   footerComponent,
+  applyBottomInset = false,
 }: MembersListProps) {
   const theme = useTheme()
   const router = useRouter()
+  const insets = useSafeAreaInsets()
   const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
@@ -48,7 +52,7 @@ export function MembersList({
           maxWidth: 768,
           width: '100%',
           alignSelf: 'center',
-          paddingBottom: 88,
+          paddingBottom: 88 + (applyBottomInset ? insets.bottom : 0),
           paddingHorizontal: iconOnly ? 0 : 16,
         }}
         ListEmptyComponent={
@@ -82,14 +86,12 @@ export function MembersList({
         ListFooterComponent={footerComponent}
       />
 
-      {permissions?.canAddMembers() && threeBarLayout && (
+      {permissions?.canAddMembers() && (
         <View
           style={{
-            paddingVertical: 8,
-            paddingHorizontal: iconOnly ? 8 : 16,
-            maxWidth: 768,
-            width: '100%',
-            alignSelf: 'center',
+            position: 'absolute',
+            bottom: (threeBarLayout ? 8 : 16) + (applyBottomInset ? insets.bottom : 0),
+            right: threeBarLayout ? 8 : 16,
           }}
         >
           <Button
@@ -98,19 +100,6 @@ export function MembersList({
             onPress={() => {
               router.navigate(`/group/${info.id}/addUser`)
             }}
-          />
-        </View>
-      )}
-
-      {permissions?.canAddMembers() && !threeBarLayout && (
-        <View style={{ position: 'absolute', bottom: 16, right: 16 }}>
-          <Button
-            leftIcon='addMember'
-            title={iconOnly ? '' : t('addUser.addUser')}
-            onPress={() => {
-              router.navigate(`/group/${info.id}/addUser`)
-            }}
-            style={() => ({ paddingVertical: 16 })}
           />
         </View>
       )}

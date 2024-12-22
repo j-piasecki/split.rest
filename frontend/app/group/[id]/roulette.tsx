@@ -65,7 +65,6 @@ function Form({ groupId, setResult }: FormProps) {
         flex: 1,
         paddingHorizontal: 16,
         paddingTop: 8,
-        paddingBottom: 16,
         opacity: loading ? 0.5 : 1,
         pointerEvents: loading ? 'none' : 'auto',
       }}
@@ -107,7 +106,7 @@ function Form({ groupId, setResult }: FormProps) {
 function Result({ result }: { result: UserWithBalanceChange[] }) {
   const theme = useTheme()
   return (
-    <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 8, paddingBottom: 16 }}>
+    <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 8 }}>
       <ScrollView style={{ flex: 1 }}>
         {result.map((user) => {
           const balanceNum = parseFloat(user.change)
