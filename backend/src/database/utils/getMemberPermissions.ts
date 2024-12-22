@@ -29,6 +29,7 @@ const ownerPermissions: GroupMemberPermissionsDTO = {
     ManagePermissionsDTO.DeleteJoinLink |
     ManagePermissionsDTO.ManageAccess |
     ManagePermissionsDTO.ManageAdmins |
+    ManagePermissionsDTO.ReadPermissions |
     ManagePermissionsDTO.ManagePermissions,
 } as const
 
@@ -53,6 +54,7 @@ const adminPermissions: GroupMemberPermissionsDTO = {
     ManagePermissionsDTO.DeleteJoinLink |
     ManagePermissionsDTO.ManageAccess |
     ManagePermissionsDTO.ManageAdmins |
+    ManagePermissionsDTO.ReadPermissions |
     ManagePermissionsDTO.ManagePermissions,
 } as const
 
