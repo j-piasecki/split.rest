@@ -8,8 +8,11 @@ import { useRef, useState } from 'react'
 import {
   GestureResponderEvent,
   Platform,
+  PressableStateCallbackType,
+  StyleProp,
   StyleSheet,
   View,
+  ViewStyle,
   useWindowDimensions,
 } from 'react-native'
 import { Modal, Pressable } from 'react-native'
@@ -154,6 +157,9 @@ export interface ContextMenuProps {
   children: React.ReactNode
   items: ContextMenuItem[]
   disabled?: boolean
+  pressDisabled?: boolean
+  onPress?: (state: GestureResponderEvent) => void
+  style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
 }
 
 export interface ContextMenuRef {
@@ -208,11 +214,13 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
   return (
     <>
       <Pressable
-        disabled={props.disabled}
+        disabled={props.disabled && (props.pressDisabled || !props.onPress)}
         ref={anchorRef}
         delayLongPress={400}
+        onPress={!props.pressDisabled ? props.onPress : undefined}
+        style={props.style}
         onPressIn={() => {
-          if (isSmallScreen) {
+          if (isSmallScreen && !props.disabled) {
             scaleTimeoutRef.current = setTimeout(() => {
               scale.value = withTiming(1.02, { duration: 500 })
             }, 100)
@@ -225,8 +233,10 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
           }
         }}
         onLongPress={(e) => {
-          measureAnchor(e)
-          setVisible(true)
+          if (!props.disabled) {
+            measureAnchor(e)
+            setVisible(true)
+          }
         }}
         // @ts-expect-error - onContextMenu does not exist on Pressable on mobile
         onContextMenu={(e) => {
