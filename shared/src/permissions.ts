@@ -1,14 +1,35 @@
+export const PermissionKeys = [
+  'createSplit',
+  'readSplits',
+  'seeSplitDetails',
+  'updateSplit',
+  'deleteSplit',
+  'restoreSplit',
+  'readMembers',
+  'addMembers',
+  'renameGroup',
+  'deleteGroup',
+  'seeJoinLink',
+  'createJoinLink',
+  'deleteJoinLink',
+  'manageAccess',
+  'manageAdmins',
+  'managePermissions',
+] as const
+
 export const enum SplitPermissionsDTO {
   None = 0 << 0,
   Create = 1 << 0, // Create new splits
   Read = 1 << 1, // Read splits in which the user is included
   ReadAll = 1 << 2, // Read all splits
-  Update = 1 << 3, // Update splits in which the user is included
-  UpdateAll = 1 << 4, // Update all splits
-  Delete = 1 << 5, // Delete splits in which the user is included
-  DeleteAll = 1 << 6, // Delete all splits
-  Restore = 1 << 7, // Restore splits in which the user is included (allows to see affected deleted splits)
-  RestoreAll = 1 << 8, // Restore all splits (allows to see all deleted splits)
+  SeeDetails = 1 << 3, // See details of splits in which the user is included
+  SeeDetailsAll = 1 << 4, // See details of all splits
+  Update = 1 << 5, // Update splits in which the user is included
+  UpdateAll = 1 << 6, // Update all splits
+  Delete = 1 << 7, // Delete splits in which the user is included
+  DeleteAll = 1 << 8, // Delete all splits
+  Restore = 1 << 9, // Restore splits in which the user is included (allows to see affected deleted splits)
+  RestoreAll = 1 << 10, // Restore all splits (allows to see all deleted splits)
 }
 
 export enum SplitPermissionType {
@@ -77,6 +98,18 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     }
 
     if (this.splits & SplitPermissionsDTO.Read) {
+      return SplitPermissionType.OnlyIfIncluded
+    }
+
+    return SplitPermissionType.None
+  }
+
+  canSeeSplitDetails(): SplitPermissionType {
+    if (this.splits & SplitPermissionsDTO.SeeDetailsAll) {
+      return SplitPermissionType.All
+    }
+
+    if (this.splits & SplitPermissionsDTO.SeeDetails) {
       return SplitPermissionType.OnlyIfIncluded
     }
 
