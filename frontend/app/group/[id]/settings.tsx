@@ -1,8 +1,8 @@
 import { Button } from '@components/Button'
-import { EditableText } from '@components/EditableText'
+import { EditableText, EditableTextRef } from '@components/EditableText'
 import ModalScreen from '@components/ModalScreen'
-import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
+import { Pane } from '@components/groupScreen/Pane'
 import { useCreateGroupJoinLink } from '@hooks/database/useCreateGroupJoinLink'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
 import { useDeleteGroupJoinLink } from '@hooks/database/useDeleteGroupJoinLink'
@@ -17,7 +17,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function JoinLinkManager({
@@ -38,7 +38,12 @@ function JoinLinkManager({
     : `https://split.rest/join/${link?.uuid}`
 
   return (
-    <View>
+    <Pane
+      icon='link'
+      title={t('groupSettings.joinLink.joinLink')}
+      textLocation='start'
+      containerStyle={{ padding: 16 }}
+    >
       {isLoadingLink && <ActivityIndicator color={theme.colors.primary} />}
       {!isLoadingLink && (
         <>
@@ -51,16 +56,7 @@ function JoinLinkManager({
             />
           )}
           {link && (
-            <View>
-              <Text
-                style={{
-                  color: theme.colors.onSurface,
-                  fontSize: 20,
-                  fontWeight: 800,
-                }}
-              >
-                {t('groupSettings.joinLink.joinLink')}
-              </Text>
+            <View style={{ gap: 16 }}>
               <View style={{ flexDirection: 'row', gap: 8 }}>
                 <TextInput
                   value={linkText}
@@ -74,65 +70,77 @@ function JoinLinkManager({
                     Clipboard.setStringAsync(linkText)
                   }}
                 />
-                {permissions.canDeleteJoinLink() && (
-                  <Button
-                    leftIcon='deleteLink'
-                    isLoading={isDeletingJoinLink}
-                    onPress={() => deleteJoinLink(info.id)}
-                  />
-                )}
               </View>
+              {permissions.canDeleteJoinLink() && (
+                <Button
+                  leftIcon='deleteLink'
+                  title={t('groupSettings.joinLink.delete')}
+                  isLoading={isDeletingJoinLink}
+                  onPress={() => deleteJoinLink(info.id)}
+                />
+              )}
             </View>
           )}
         </>
       )}
-    </View>
+    </Pane>
   )
 }
 
 function Form({ info }: { info: GroupInfo }) {
   const router = useRouter()
-  const theme = useTheme()
   const { t } = useTranslation()
+  const nameInputRef = React.useRef<EditableTextRef>(null)
   const [name, setName] = useState(info.name)
+  const [isEditingName, setIsEditingName] = useState(false)
   const { data: permissions } = useGroupPermissions(info.id)
   const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
   const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
 
   return (
-    <View
-      style={{
-        flex: 1,
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{
         gap: 16,
+        flex: 1,
         paddingHorizontal: 16,
+        paddingTop: 16,
         justifyContent: 'space-between',
       }}
     >
       <View style={{ gap: 16 }}>
-        <EditableText
-          value={name}
-          placeholder={t('groupSettings.groupName')}
-          disabled={!permissions?.canRenameGroup()}
-          onSubmit={(newName) => {
-            setGroupName(newName).then(() => {
-              setName(newName)
-            })
+        <Pane
+          icon='link'
+          title={t('groupSettings.groupName')}
+          textLocation='start'
+          containerStyle={{ padding: 16 }}
+          collapsible={permissions?.canRenameGroup()}
+          collapseIcon={isEditingName ? 'close' : 'editAlt'}
+          onCollapseChange={() => {
+            if (isEditingName) {
+              nameInputRef.current?.cancel()
+            } else {
+              nameInputRef.current?.edit()
+            }
+            setIsEditingName(!isEditingName)
           }}
-          isPending={isSettingName}
-        />
+        >
+          <EditableText
+            ref={nameInputRef}
+            value={name}
+            iconHidden
+            placeholder={t('groupSettings.groupName')}
+            disabled={!permissions?.canRenameGroup()}
+            onSubmit={(newName) => {
+              setGroupName(newName).then(() => {
+                setName(newName)
+              })
+            }}
+            isPending={isSettingName}
+          />
+        </Pane>
 
-        {permissions?.canSeeJoinLink() && (
-          <>
-            <View
-              style={{
-                height: 1,
-                backgroundColor: theme.colors.outlineVariant,
-                marginHorizontal: 16,
-              }}
-            />
-            <JoinLinkManager info={info} permissions={permissions} />
-          </>
-        )}
+        {permissions?.canSeeJoinLink() && <JoinLinkManager info={info} permissions={permissions} />}
       </View>
       {/* TODO: add confirmation dialog */}
       {permissions?.canDeleteGroup() && (
@@ -141,13 +149,14 @@ function Form({ info }: { info: GroupInfo }) {
           leftIcon='deleteForever'
           title={t('groupSettings.deleteGroup')}
           isLoading={isDeletingGroup}
+          style={{ marginTop: 32 }}
           onPress={async () => {
             await deleteGroup(info.id)
             router.replace(`/`)
           }}
         />
       )}
-    </View>
+    </ScrollView>
   )
 }
 
@@ -160,8 +169,8 @@ export default function Settings() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.groupSettings')}
-      maxWidth={400}
-      maxHeight={500}
+      maxWidth={500}
+      maxHeight={600}
     >
       {info && <Form info={info} />}
     </ModalScreen>
