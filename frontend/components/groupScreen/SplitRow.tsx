@@ -66,6 +66,7 @@ export function SplitRow({ split, info }: SplitRowProps) {
   return (
     <Pressable
       key={split.id}
+      disabled={!permissions?.canSeeSplitDetails(split)}
       onPress={() => {
         router.navigate(`/group/${info?.id}/split/${split.id}`)
       }}
