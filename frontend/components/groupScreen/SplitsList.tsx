@@ -1,11 +1,12 @@
 import { SplitRow } from './SplitRow'
 import { Text } from '@components/Text'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useGroupSplits } from '@hooks/database/useGroupSplits'
 import { useTheme } from '@styling/theme'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, View } from 'react-native'
-import { GroupInfo } from 'shared'
+import { GroupInfo, SplitPermissionType } from 'shared'
 
 function Divider() {
   const theme = useTheme()
@@ -23,7 +24,11 @@ export interface SplitsListProps {
 export function SplitsList({ info, headerComponent, footerComponent }: SplitsListProps) {
   const theme = useTheme()
   const { t } = useTranslation()
-  const { splits, isLoading, fetchNextPage, isFetchingNextPage } = useGroupSplits(info?.id)
+  const { data: permissions } = useGroupPermissions(info?.id)
+  const { splits, isLoading, fetchNextPage, isFetchingNextPage } = useGroupSplits(
+    info?.id,
+    permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
+  )
 
   if (!info) {
     return null
@@ -50,7 +55,11 @@ export function SplitsList({ info, headerComponent, footerComponent }: SplitsLis
           >
             {isLoading && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
             {!isLoading && (
-              <Text style={{ fontSize: 20, color: theme.colors.outline }}>{t('noSplits')}</Text>
+              <Text style={{ fontSize: 20, color: theme.colors.outline }}>
+                {permissions?.canReadSplits() === SplitPermissionType.None
+                  ? t('api.insufficientPermissions.group.readSplits')
+                  : t('noSplits')}
+              </Text>
             )}
           </View>
         }

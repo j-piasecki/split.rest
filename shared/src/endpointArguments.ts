@@ -63,6 +63,7 @@ export interface GetGroupMembersArguments {
 
 export interface GetGroupSplitsArguments {
   groupId: number
+  onlyIfIncluded?: boolean
   startAfterTimestamp?: number
 }
 
@@ -138,4 +139,9 @@ export interface GetSplitHistoryArguments {
   groupId: number
   splitId: number
   startAfter?: number
+}
+
+export interface GetGroupMemberPermissionsArguments {
+  groupId: number
+  userId?: string
 }

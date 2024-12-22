@@ -14,6 +14,7 @@ import {
   GetBalancesArguments,
   GetGroupInfoArguments,
   GetGroupJoinLinkArguments,
+  GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMetadataByLinkArguments,
@@ -74,7 +75,7 @@ export class AppService {
       0
     )
 
-    if (Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
+    if (payerGetsBack && Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
       throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
     }
 
@@ -109,7 +110,7 @@ export class AppService {
       0
     )
 
-    if (Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
+    if (payerGetsBack && Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
       throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
     }
 
@@ -201,5 +202,9 @@ export class AppService {
 
   async getSplitHistory(callerId: string, args: GetSplitHistoryArguments) {
     return await this.databaseService.getSplitHistory(callerId, args)
+  }
+
+  async getGroupMemberPermissions(callerId: string, args: GetGroupMemberPermissionsArguments) {
+    return await this.databaseService.getGroupMemberPermissions(callerId, args)
   }
 }

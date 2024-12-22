@@ -13,8 +13,8 @@ export async function deleteGroupJoinLink(
     await client.query('BEGIN')
 
     const linkExists =
-      (await client.query('SELECT 1 FROM group_join_links WHERE group_id = $1', [args.groupId]))
-        .rowCount > 0
+      ((await client.query('SELECT 1 FROM group_join_links WHERE group_id = $1', [args.groupId]))
+        .rowCount ?? 0) > 0
 
     if (!linkExists) {
       throw new NotFoundException('api.notFound.joinLink')

@@ -14,6 +14,7 @@ import {
   GetBalancesArguments,
   GetGroupInfoArguments,
   GetGroupJoinLinkArguments,
+  GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMetadataByLinkArguments,
@@ -41,6 +42,7 @@ import {
   isGetBalancesArguments,
   isGetGroupInfoArguments,
   isGetGroupJoinLinkArguments,
+  isGetGroupMemberPermissionsArguments,
   isGetGroupMembersArguments,
   isGetGroupMembersAutocompletionsArguments,
   isGetGroupMetadataByLinkArguments,
@@ -190,6 +192,9 @@ export class AppController {
     if (!isGetGroupSplitsArguments(args)) {
       throw new BadRequestException('api.invalidArguments')
     }
+
+    // @ts-expect-error onlyIfIncluded is a string due to being a get query parameter
+    args.onlyIfIncluded = args.onlyIfIncluded === 'true'
 
     return await this.appService.getGroupSplits(request.user.sub, args)
   }
@@ -353,5 +358,18 @@ export class AppController {
     }
 
     return await this.appService.getSplitHistory(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getGroupMemberPermissions')
+  async getGroupMemberPermissions(
+    @Req() request: Request,
+    @Query() args: Partial<GetGroupMemberPermissionsArguments>
+  ) {
+    if (!isGetGroupMemberPermissionsArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.getGroupMemberPermissions(request.user.sub, args)
   }
 }

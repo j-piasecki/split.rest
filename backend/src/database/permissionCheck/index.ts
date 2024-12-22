@@ -1,2 +1,2 @@
 export { RequirePermissions } from './requirePermissions'
-export { PermissionToFieldMap, PermissionArguments } from './permissions'
+export { PermissionToFieldMap, PermissionArguments } from './utils'

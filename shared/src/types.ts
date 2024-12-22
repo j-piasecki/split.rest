@@ -55,6 +55,7 @@ export interface SplitInfo {
   version: number
   updatedAt: number
   type: SplitType
+  isUserParticipating: boolean
 }
 
 export interface SplitWithChanges extends SplitInfo {

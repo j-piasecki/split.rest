@@ -11,6 +11,7 @@ import {
   GetBalancesWithIdsArguments,
   GetGroupInfoArguments,
   GetGroupJoinLinkArguments,
+  GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMetadataByLinkArguments,
@@ -162,4 +163,10 @@ export function isJoinGroupByLinkArguments(obj: any): obj is JoinGroupByLinkArgu
 
 export function isGetSplitHistoryArguments(obj: any): obj is GetSplitHistoryArguments {
   return obj.groupId !== undefined && obj.splitId !== undefined
+}
+
+export function isGetGroupMemberPermissionsArguments(
+  obj: any
+): obj is GetGroupMemberPermissionsArguments {
+  return obj.groupId !== undefined
 }

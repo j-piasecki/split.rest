@@ -24,14 +24,24 @@
     },
     "insufficientPermissions": {
       "group": {
-        "access": "User does not have access to group",
-        "manage": "User does not have permission to manage the group",
-        "delete": "User does not have permission to delete the group",
         "createSplit": "User does not have permission to create splits in the group",
+        "readSplits": "User does not have permission to read splits in the group",
+        "seeSplitDetails": "User does not have permission to see details of split",
         "deleteSplit": "User does not have permission to delete this split",
         "editSplit": "User does not have permission to edit this split",
         "restoreSplit": "User does not have permission to restore this split",
+        "accessRoulette": "User does not have permission to access the roulette",
+        "readMembers": "User does not have permission to see members of the group",
+        "addMembers": "User does not have permission to add members to the group",
+        "rename": "User does not have permission to rename the group",
+        "delete": "User does not have permission to delete the group",
+        "manageAccess": "User does not have permission to manage the group access",
+        "manageAdmins": "User does not have permission to manage the group admins",
+        "readPermissions": "User does not have permission to read the group permissions",
+        "managePermissions": "User does not have permission to manage the group permissions",
+        "manageOwner": "User does not have permission to change permissions of the group owner",
         "joinLink": {
+          "see": "User does not have permission to view invitation links",
           "create": "User does not have permission to create invitation links",
           "delete": "User does not have permission to delete invitation links"
         }

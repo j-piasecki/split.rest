@@ -2,6 +2,7 @@ import { MemberRow } from './MemberRow'
 import { Button } from '@components/Button'
 import { Text } from '@components/Text'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
@@ -33,6 +34,7 @@ export function MembersList({
   const router = useRouter()
   const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
+  const { data: permissions } = useGroupPermissions(info?.id)
   const { members, isLoading, fetchNextPage, isFetchingNextPage } = useGroupMembers(info?.id)
 
   if (!info) {
@@ -60,7 +62,11 @@ export function MembersList({
           >
             {isLoading && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
             {!isLoading && members.length === 0 && !iconOnly && (
-              <Text style={{ fontSize: 20, color: theme.colors.outline }}>{t('noMembers')}</Text>
+              <Text style={{ fontSize: 20, color: theme.colors.outline }}>
+                {permissions?.canReadMembers()
+                  ? t('noMembers')
+                  : t('api.insufficientPermissions.group.readMembers')}
+              </Text>
             )}
           </View>
         }
@@ -76,7 +82,7 @@ export function MembersList({
         ListFooterComponent={footerComponent}
       />
 
-      {info.isAdmin && threeBarLayout && (
+      {permissions?.canAddMembers() && threeBarLayout && (
         <View
           style={{
             paddingVertical: 8,
@@ -96,7 +102,7 @@ export function MembersList({
         </View>
       )}
 
-      {info.isAdmin && !threeBarLayout && (
+      {permissions?.canAddMembers() && !threeBarLayout && (
         <View style={{ position: 'absolute', bottom: 16, right: 16 }}>
           <Button
             leftIcon='addMember'

@@ -64,7 +64,7 @@ export function Button({
     >
       {isLoading && <ActivityIndicator size='small' color={foregroundColor} />}
       {leftIcon && !isLoading && <Icon name={leftIcon} size={24} color={foregroundColor} />}
-      {title && (
+      {title !== undefined && title.length > 0 && (
         <Text
           selectable={false}
           style={{ fontSize: 18, fontWeight: '700', color: foregroundColor }}

@@ -1,6 +1,6 @@
 import { ForbiddenException } from '../../errors/ForbiddenException'
 import { checkPermissions } from './checkPermissions'
-import { PermissionArguments, PermissionToFieldMap } from './permissions'
+import { PermissionArguments, PermissionToFieldMap } from './utils'
 import { Pool } from 'pg'
 
 interface HasDatabasePool {
@@ -15,7 +15,7 @@ function validateArguments<TPermissions extends (keyof PermissionToFieldMap)[]>(
     const fields = PermissionToFieldMap[permission]
 
     for (const field of fields) {
-      if (!args[field]) {
+      if (!args[field] && !field.endsWith('?')) {
         throw new Error(`Missing required field: ${field}`)
       }
     }
@@ -50,7 +50,7 @@ export function RequirePermissions<
         throw new ForbiddenException(error)
       }
 
-      return originalMethod.apply(this, [callerId, args, ...rest])
+      return originalMethod?.apply(this, [callerId, args, ...rest])
     }
 
     return descriptor

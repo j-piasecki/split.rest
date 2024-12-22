@@ -10,5 +10,5 @@ export async function isUserMemberOfGroup(
     [groupId, userId]
   )
 
-  return result.rowCount > 0
+  return (result.rowCount ?? 0) > 0
 }

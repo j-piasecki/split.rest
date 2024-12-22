@@ -30,7 +30,7 @@ export async function getSplitHistory(
       splitId: args.splitId,
     })
 
-    if (upToDateInfo.version < args.startAfter) {
+    if (args.startAfter && upToDateInfo.version < args.startAfter) {
       splitHistory.push(upToDateInfo)
     }
 
@@ -97,6 +97,7 @@ export async function getSplitHistory(
         updatedAt: Number(row.updated_at),
         type: row.type,
         users: participants,
+        isUserParticipating: participants.some((participant) => participant.id === callerId),
       })
     }
 
