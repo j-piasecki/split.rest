@@ -23,6 +23,7 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
       style={{
         flex: 1,
         backgroundColor: theme.colors.surface,
+        gap: 8,
       }}
     >
       <View
