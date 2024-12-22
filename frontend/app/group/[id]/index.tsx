@@ -7,6 +7,7 @@ import { Pane, PaneHeader } from '@components/groupScreen/Pane'
 import { SplitsList } from '@components/groupScreen/SplitsList'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
@@ -152,6 +153,7 @@ export function GroupScreen() {
   const groupId = Number(id as string)
   const displayClass = useDisplayClass()
   const { data: groupInfo, error } = useGroupInfo(groupId)
+  const { data: permissions } = useGroupPermissions(groupId)
 
   const [membersExpanded, setMembersExpanded] = useState(false)
   const membersAlwaysExpanded = displayClass > DisplayClass.Large
@@ -202,18 +204,20 @@ export function GroupScreen() {
             <Pane icon='receipt' title={t('tabs.splits')} style={{ flex: 2 }}>
               <SplitsList info={groupInfo} />
             </Pane>
-            <Pane
-              icon='members'
-              title={t('tabs.members')}
-              collapsible={!membersAlwaysExpanded}
-              collapsed
-              onCollapseChange={() => {
-                setMembersExpanded(!membersExpanded)
-              }}
-              style={{ minWidth: membersAlwaysExpanded ? 500 : undefined }}
-            >
-              <MembersList info={groupInfo} iconOnly={!membersAlwaysExpanded} />
-            </Pane>
+            {permissions?.canReadMembers() && (
+              <Pane
+                icon='members'
+                title={t('tabs.members')}
+                collapsible={!membersAlwaysExpanded}
+                collapsed
+                onCollapseChange={() => {
+                  setMembersExpanded(!membersExpanded)
+                }}
+                style={{ minWidth: membersAlwaysExpanded ? 500 : undefined }}
+              >
+                <MembersList info={groupInfo} iconOnly={!membersAlwaysExpanded} />
+              </Pane>
+            )}
 
             {!membersAlwaysExpanded && (
               <Modal
