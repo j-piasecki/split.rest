@@ -113,9 +113,11 @@ function Form({ info }: { info: GroupInfo }) {
           icon='link'
           title={t('groupSettings.groupName')}
           textLocation='start'
+          collapsed={false}
           containerStyle={{ padding: 16 }}
           collapsible={permissions?.canRenameGroup()}
           collapseIcon={isEditingName ? 'close' : 'editAlt'}
+          wholeHeaderInteractive={false}
           onCollapseChange={() => {
             if (isEditingName) {
               nameInputRef.current?.cancel()

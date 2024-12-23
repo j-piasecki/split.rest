@@ -139,12 +139,8 @@ export function Pane({
             <RoundIconButton
               icon={
                 isCollapsed
-                  ? (expandIcon ?? orientation === 'vertical')
-                    ? 'openRightPanel'
-                    : 'arrowDown'
-                  : (collapseIcon ?? orientation === 'vertical')
-                    ? 'closeRightPanel'
-                    : 'arrowUp'
+                  ? (expandIcon ?? (orientation === 'vertical' ? 'openRightPanel' : 'arrowDown'))
+                  : (collapseIcon ?? (orientation === 'vertical' ? 'closeRightPanel' : 'arrowUp'))
               }
               size={24}
               onPress={() => {
