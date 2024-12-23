@@ -4,7 +4,14 @@ import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
-import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  LayoutChangeEvent,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -12,9 +19,10 @@ export interface FullscreenModalProps {
   goBack: () => void
   title: string
   children: React.ReactNode
+  onLayout?: (event: LayoutChangeEvent) => void
 }
 
-function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
+function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalProps) {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
 
@@ -56,7 +64,10 @@ function FullscreenModal({ children, title, goBack }: FullscreenModalProps) {
         </Text>
       </View>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
-        <View style={{ flex: 1, paddingBottom: insets.bottom + (Platform.OS === 'web' ? 16 : 0) }}>
+        <View
+          onLayout={onLayout}
+          style={{ flex: 1, paddingBottom: insets.bottom + (Platform.OS === 'web' ? 16 : 0) }}
+        >
           {children}
         </View>
       </KeyboardAvoidingView>
@@ -70,12 +81,14 @@ export interface ModalScreenProps {
   children: React.ReactNode
   maxWidth?: number
   maxHeight?: number
+  onLayout?: (event: LayoutChangeEvent) => void
 }
 
 function ModalScreen({
   goBack,
   title,
   children,
+  onLayout,
   maxWidth = 768,
   maxHeight = 600,
 }: ModalScreenProps) {
@@ -120,7 +133,9 @@ function ModalScreen({
           </Text>
           <RoundIconButton icon='close' onPress={goBack} />
         </View>
-        {children}
+        <View onLayout={onLayout} style={{ flex: 1 }}>
+          {children}
+        </View>
       </Animated.View>
     </Animated.View>
   )
@@ -132,6 +147,7 @@ export interface ModalProps {
   children: React.ReactNode
   maxWidth?: number
   maxHeight?: number
+  onLayout?: (event: LayoutChangeEvent) => void
 }
 
 export default function Modal({ returnPath, ...props }: ModalProps) {
@@ -148,7 +164,7 @@ export default function Modal({ returnPath, ...props }: ModalProps) {
 
   if (isSmallScreen) {
     return (
-      <FullscreenModal title={props.title} goBack={goBack}>
+      <FullscreenModal title={props.title} goBack={goBack} onLayout={props.onLayout}>
         {props.children}
       </FullscreenModal>
     )
