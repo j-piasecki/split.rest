@@ -43,8 +43,8 @@ const darkColors: Colors = {
   outlineVariant: '#514347',
 
   inverseSurface: '#efdfe1',
-  inversePrimary: '#372e30',
-  inverseOnSurface: '#8c4a60',
+  inversePrimary: '#8c4a60',
+  inverseOnSurface: '#372e30',
 
   balancePositive: '#1fc24d',
   balanceNegative: '#C62828',
@@ -89,8 +89,8 @@ const lightColors: Colors = {
   outlineVariant: '#d5c2c6',
 
   inverseSurface: '#372e30',
-  inversePrimary: '#fdedef',
-  inverseOnSurface: '#ffb1c8',
+  inversePrimary: '#ffb1c8',
+  inverseOnSurface: '#fdedef',
 
   balancePositive: '#00C853',
   balanceNegative: '#D32F2F',
