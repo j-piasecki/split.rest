@@ -141,6 +141,7 @@ function EditInfo({ splitInfo }: { splitInfo: SplitWithUsers }) {
             icon='edit'
             translationKey='splitInfo.createAuthorText'
             values={{ editor: createdBy.name }}
+            image={getProfilePictureUrl(createdBy.id)}
           />
         )}
       </Pane>
