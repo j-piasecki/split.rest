@@ -1,5 +1,6 @@
 import Header from '@components/Header'
 import { Icon } from '@components/Icon'
+import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { GroupActionButtons, GroupInfoCard } from '@components/groupScreen/GroupInfoPage'
 import { MembersList } from '@components/groupScreen/MembersList'
@@ -12,9 +13,7 @@ import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
-import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { measure } from '@utils/measure'
-import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -88,13 +87,7 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
                       overflow: 'hidden',
                     }}
                   >
-                    <Image
-                      source={{ uri: getProfilePictureUrl(member.id) }}
-                      style={{
-                        width: 32,
-                        height: 32,
-                      }}
-                    />
+                    <ProfilePicture userId={member.id} size={32} />
                   </View>
                 )
               })}

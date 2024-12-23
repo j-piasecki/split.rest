@@ -1,7 +1,7 @@
+import { ProfilePicture } from './ProfilePicture'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { Image } from 'expo-image'
 import { Link, useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
@@ -52,14 +52,7 @@ export default function Header(_props: HeaderProps) {
       </Link>
 
       <Pressable onPress={() => router.navigate('/profile')}>
-        <Image
-          source={{ uri: getProfilePictureUrl(user?.id) }}
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: 16,
-          }}
-        />
+        <ProfilePicture userId={user?.id} size={32} />
       </Pressable>
     </View>
   )

@@ -1,4 +1,5 @@
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
+import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
@@ -6,8 +7,6 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
-import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
-import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -133,9 +132,10 @@ export function SplitRow({ split, info }: SplitRowProps) {
           alignItems: 'center',
         }}
       >
-        <Image
-          source={{ uri: getProfilePictureUrl(split.paidById) }}
-          style={{ width: 32, height: 32, borderRadius: 18, marginRight: isSmallScreen ? 8 : 16 }}
+        <ProfilePicture
+          userId={split.paidById}
+          size={32}
+          style={{ marginRight: isSmallScreen ? 8 : 16 }}
         />
         <View style={{ flex: 2 }}>
           <Text

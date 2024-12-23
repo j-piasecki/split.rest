@@ -1,10 +1,9 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
+import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { logout, useAuth } from '@utils/auth'
-import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
-import { Image } from 'expo-image'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import { User } from 'shared'
@@ -24,14 +23,7 @@ function Form({ user }: { user: User }) {
       }}
     >
       <View style={{ gap: 16, alignItems: 'center' }}>
-        <Image
-          source={{ uri: getProfilePictureUrl(user?.id) }}
-          style={{
-            width: 96,
-            height: 96,
-            borderRadius: 48,
-          }}
-        />
+        <ProfilePicture userId={user?.id} size={96} />
         <Text style={{ fontSize: 16, fontWeight: '400', color: theme.colors.onSurfaceVariant }}>
           {user?.email}
         </Text>

@@ -1,5 +1,6 @@
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
 import { Icon, IconName } from '@components/Icon'
+import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
@@ -9,11 +10,10 @@ import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
-import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import React from 'react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, View } from 'react-native'
+import { View } from 'react-native'
 import { GroupInfo, Member } from 'shared'
 
 export interface MemberRowProps {
@@ -111,10 +111,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
                   : theme.colors.balancePositive,
           }}
         >
-          <Image
-            source={{ uri: getProfilePictureUrl(member.id) }}
-            style={{ width: 36, height: 36, borderRadius: 18 }}
-          />
+          <ProfilePicture userId={member.id} size={36} />
           {(member.isAdmin || !member.hasAccess) && (
             <Badge icon={member.hasAccess ? 'shield' : 'lock'} />
           )}

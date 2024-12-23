@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
+import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { Pane } from '@components/groupScreen/Pane'
@@ -7,8 +8,6 @@ import { getUserByEmail } from '@database/getUserByEmail'
 import { useAddUserToGroupMutation } from '@hooks/database/useAddUserToGroup'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
-import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
-import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -98,10 +97,7 @@ function UserPane({
 
         {user && (
           <View style={{ flexDirection: 'column', gap: 16, alignItems: 'center' }}>
-            <Image
-              source={{ uri: getProfilePictureUrl(user.id) }}
-              style={{ width: 128, height: 128, borderRadius: 64 }}
-            />
+            <ProfilePicture userId={user.id} size={128} />
             <Text
               style={{
                 color: theme.colors.onSurface,

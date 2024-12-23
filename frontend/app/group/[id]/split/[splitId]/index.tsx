@@ -1,6 +1,7 @@
 import { Button } from '@components/Button'
 import { Icon, IconName } from '@components/Icon'
 import Modal from '@components/ModalScreen'
+import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { Pane } from '@components/groupScreen/Pane'
 import { getUserById } from '@database/getUserById'
@@ -8,9 +9,7 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSplitHistory } from '@hooks/database/useSplitHistory'
 import { useTheme } from '@styling/theme'
-import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import { measure } from '@utils/measure'
-import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -60,10 +59,7 @@ function UserRow({
         borderColor: theme.colors.outlineVariant,
       }}
     >
-      <Image
-        source={{ uri: getProfilePictureUrl(user.id) }}
-        style={{ width: 32, height: 32, borderRadius: 16 }}
-      />
+      <ProfilePicture userId={user.id} size={32} />
       <View style={{ flex: 1 }}>
         <Text
           style={{
@@ -87,21 +83,16 @@ interface EditInfoTextProps {
   icon: IconName
   translationKey: LanguageTranslationKey
   values: Record<string, string>
-  image?: string
+  userIdPhoto?: string
 }
 
-function IconInfoText({ icon, translationKey, values, image }: EditInfoTextProps) {
+function IconInfoText({ icon, translationKey, values, userIdPhoto }: EditInfoTextProps) {
   const theme = useTheme()
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 4 }}>
       <Icon name={icon} size={20} color={theme.colors.outline} style={{ marginRight: 12 }} />
-      {image && (
-        <Image
-          source={{ uri: image }}
-          style={{ width: 20, height: 20, borderRadius: 10, marginRight: 8 }}
-        />
-      )}
+      {userIdPhoto && <ProfilePicture userId={userIdPhoto} size={20} style={{ marginRight: 8 }} />}
       <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
         <Trans
           i18nKey={translationKey}
@@ -141,7 +132,7 @@ function EditInfo({ splitInfo }: { splitInfo: SplitWithUsers }) {
             icon='edit'
             translationKey='splitInfo.createAuthorText'
             values={{ editor: createdBy.name }}
-            image={getProfilePictureUrl(createdBy.id)}
+            userIdPhoto={createdBy.id}
           />
         )}
       </Pane>
@@ -162,7 +153,7 @@ function EditInfo({ splitInfo }: { splitInfo: SplitWithUsers }) {
           icon='edit'
           translationKey='splitInfo.editAuthorText'
           values={{ editor: createdBy.name }}
-          image={getProfilePictureUrl(createdBy.id)}
+          userIdPhoto={createdBy.id}
         />
       )}
       <IconInfoText
@@ -211,7 +202,7 @@ function SplitInfo({ splitInfo, groupInfo }: { splitInfo: SplitWithUsers; groupI
             icon='currency'
             translationKey='splitInfo.hasPaidText'
             values={{ payer: paidBy.name, amount: splitInfo.total, currency: groupInfo.currency }}
-            image={getProfilePictureUrl(paidBy.id)}
+            userIdPhoto={paidBy.id}
           />
           <IconInfoText
             icon='calendar'

@@ -1,10 +1,9 @@
+import { ProfilePicture } from './ProfilePicture'
 import { TextInputWithSuggestions, TextInputWithSuggestionsProps } from './TextInputWithSuggestions'
 import { Text } from '@components/Text'
 import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocompletions'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
-import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
-import { Image } from 'expo-image'
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, TextInput as TextInputRN, View } from 'react-native'
@@ -42,10 +41,7 @@ function Suggestion({ user, onSelect, textInputRef, setShowSuggestions }: Sugges
           gap: 8,
         }}
       >
-        <Image
-          source={{ uri: getProfilePictureUrl(user.id) }}
-          style={{ width: 24, height: 24, borderRadius: 12 }}
-        />
+        <ProfilePicture userId={user.id} size={24} />
         <View style={{ flex: 1 }}>
           <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>{user.name}</Text>
           <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}>{user.email}</Text>
