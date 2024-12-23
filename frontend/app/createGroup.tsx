@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { Pane } from '@components/groupScreen/Pane'
 import ModalScreen from '@components/ModalScreen'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
@@ -8,7 +9,7 @@ import { useTheme } from '@styling/theme'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 
 function Form() {
   const router = useRouter()
@@ -45,35 +46,46 @@ function Form() {
     <View
       style={{
         flex: 1,
-        justifyContent: 'center',
         gap: 16,
-        paddingHorizontal: 48,
+        justifyContent: 'space-between',
+        paddingHorizontal: 16,
+        paddingTop: 8,
       }}
     >
-      <TextInput
-        placeholder='Name'
-        value={name}
-        onChangeText={setName}
-        style={{
-          width: '100%',
-        }}
-      />
-      <TextInput
-        placeholder='Currency'
-        value={currency}
-        onChangeText={setCurrency}
-        editable={false}
-        focusable={false}
-        style={{
-          width: '100%',
-          opacity: 0.5,
-        }}
-      />
+      <Pane icon='group' title={t('group.details')} textLocation='start' containerStyle={{ paddingHorizontal: 16, paddingBottom: 24, paddingTop: 8, gap: 16 }}>
+        <TextInput
+          placeholder='Name'
+          value={name}
+          onChangeText={(text) => {
+            setName(text)
+            setError(null)
+          }}
+          style={{
+            width: '100%',
+          }}
+        />
+        <TextInput
+          placeholder='Currency'
+          value={currency}
+          onChangeText={setCurrency}
+          editable={false}
+          focusable={false}
+          style={{
+            width: '100%',
+            opacity: 0.5,
+          }}
+        />
+      </Pane>
 
-      {!isPending && <Button title='Create' onPress={handlePress} />}
-      {isPending && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
-
-      {error && <Text style={{ color: 'red' }}>{error}</Text>}
+      <View style={{ gap: 16 }}>
+        {error && <Text style={{
+          color: theme.colors.error,
+          textAlign: 'center',
+          fontSize: 18,
+          fontWeight: 500,
+        }}>{error}</Text>}
+        <Button title='Create' leftIcon='check' onPress={handlePress} isLoading={isPending} />
+      </View>
     </View>
   )
 }
@@ -85,8 +97,8 @@ export default function Modal() {
     <ModalScreen
       returnPath='/home'
       title={t('screenName.createGroup')}
-      maxWidth={500}
-      maxHeight={300}
+      maxWidth={450}
+      maxHeight={500}
     >
       <Form />
     </ModalScreen>

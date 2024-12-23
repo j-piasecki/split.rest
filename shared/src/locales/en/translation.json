@@ -73,6 +73,10 @@
     "members": "Members"
   },
 
+  "group": {
+    "details": "Details"
+  },
+
   "screenName": {
     "createGroup": "Create group",
     "group": "Group",
