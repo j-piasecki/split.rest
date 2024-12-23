@@ -207,9 +207,8 @@ export function TextInputWithSuggestions<T>({
         >
           <ScrollView style={{ flex: 1 }}>
             {suggestions.map((suggestion, index) => (
-              <>
+              <React.Fragment key={index}>
                 <SuggestionContainer
-                  key={index}
                   inputRef={textInputRef}
                   renderSuggestion={renderSuggestion}
                   suggestion={suggestion}
@@ -221,12 +220,9 @@ export function TextInputWithSuggestions<T>({
                   }
                 />
                 {index < suggestions.length - 1 && (
-                  <View
-                    key={`separator-${index}`}
-                    style={{ height: 1, backgroundColor: theme.colors.outlineVariant }}
-                  />
+                  <View style={{ height: 1, backgroundColor: theme.colors.outlineVariant }} />
                 )}
-              </>
+              </React.Fragment>
             ))}
           </ScrollView>
         </View>
