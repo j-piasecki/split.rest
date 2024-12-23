@@ -1,7 +1,7 @@
 import Header from '@components/Header'
+import { PaneHeader } from '@components/Pane'
 import { Text } from '@components/Text'
 import { MembersList } from '@components/groupScreen/MembersList'
-import { PaneHeader } from '@components/Pane'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'

@@ -1,8 +1,8 @@
 import { Button } from './Button'
 import { Icon } from './Icon'
+import { Pane } from './Pane'
 import { TextInput } from './TextInput'
 import { TextInputWithUserSuggestions } from './TextInputWithUserSuggestions'
-import { Pane } from './Pane'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useRef, useState } from 'react'
@@ -45,7 +45,11 @@ function SplitEntry({
       }}
     >
       <Pressable onPress={setPaidByIndex} style={{ marginRight: 8 }} tabIndex={-1}>
-        <Icon name='currency' size={24} color={paidByThis ? theme.colors.secondary : theme.colors.outlineVariant} />
+        <Icon
+          name='currency'
+          size={24}
+          color={paidByThis ? theme.colors.secondary : theme.colors.outlineVariant}
+        />
       </Pressable>
 
       <TextInputWithUserSuggestions

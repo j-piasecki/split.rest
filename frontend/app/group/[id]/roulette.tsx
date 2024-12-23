@@ -97,13 +97,24 @@ function Form({ groupId, setResult }: FormProps) {
       </ScrollView>
 
       <View style={{ gap: 8 }}>
-        {error && <Text style={{
-          color: theme.colors.error,
-          textAlign: 'center',
-          fontSize: 18,
-          fontWeight: 500,
-        }}>{error}</Text>}
-        <Button leftIcon='check' title={t('roulette.submit')} onPress={submit} isLoading={loading} />
+        {error && (
+          <Text
+            style={{
+              color: theme.colors.error,
+              textAlign: 'center',
+              fontSize: 18,
+              fontWeight: 500,
+            }}
+          >
+            {error}
+          </Text>
+        )}
+        <Button
+          leftIcon='check'
+          title={t('roulette.submit')}
+          onPress={submit}
+          isLoading={loading}
+        />
       </View>
     </View>
   )

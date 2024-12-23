@@ -1,6 +1,6 @@
 import { Button } from '@components/Button'
-import { Pane } from '@components/Pane'
 import ModalScreen from '@components/ModalScreen'
+import { Pane } from '@components/Pane'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { useCreateGroup } from '@hooks/database/useCreateGroup'
@@ -52,7 +52,12 @@ function Form() {
         paddingTop: 8,
       }}
     >
-      <Pane icon='group' title={t('group.details')} textLocation='start' containerStyle={{ paddingHorizontal: 16, paddingBottom: 24, paddingTop: 8, gap: 16 }}>
+      <Pane
+        icon='group'
+        title={t('group.details')}
+        textLocation='start'
+        containerStyle={{ paddingHorizontal: 16, paddingBottom: 24, paddingTop: 8, gap: 16 }}
+      >
         <TextInput
           placeholder='Name'
           value={name}
@@ -78,12 +83,18 @@ function Form() {
       </Pane>
 
       <View style={{ gap: 16 }}>
-        {error && <Text style={{
-          color: theme.colors.error,
-          textAlign: 'center',
-          fontSize: 18,
-          fontWeight: 500,
-        }}>{error}</Text>}
+        {error && (
+          <Text
+            style={{
+              color: theme.colors.error,
+              textAlign: 'center',
+              fontSize: 18,
+              fontWeight: 500,
+            }}
+          >
+            {error}
+          </Text>
+        )}
         <Button title='Create' leftIcon='check' onPress={handlePress} isLoading={isPending} />
       </View>
     </View>
