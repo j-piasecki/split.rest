@@ -49,7 +49,11 @@ export function GroupInfoCard({ info }: { info: GroupInfo | undefined }) {
         gap: 8,
       }}
     >
-      <Text style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 8 }}>
+      <Text
+        style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 8 }}
+        numberOfLines={2}
+        adjustsFontSizeToFit
+      >
         {info.name}
       </Text>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

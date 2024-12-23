@@ -11,7 +11,6 @@ import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
-import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
 import { measure } from '@utils/measure'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -176,7 +175,7 @@ function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
   )
 }
 
-export function GroupScreen() {
+export default function GroupScreen() {
   const theme = useTheme()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
@@ -230,7 +229,7 @@ export function GroupScreen() {
             <Pane
               icon='home'
               title={t('tabs.group')}
-              style={{ minWidth: 420, height: '100%' }}
+              style={{ flex: 1, minWidth: 420, height: '100%' }}
               containerStyle={{ flex: 1 }}
             >
               <ScrollView
@@ -318,15 +317,4 @@ export function GroupScreen() {
       </View>
     </View>
   )
-}
-
-export default function GroupScreenWrapper() {
-  const user = useAuth()
-  const theme = useTheme()
-
-  if (user === null) {
-    return <View style={{ flex: 1, backgroundColor: theme.colors.surface }} />
-  }
-
-  return <GroupScreen />
 }
