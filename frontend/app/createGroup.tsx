@@ -1,5 +1,5 @@
 import { Button } from '@components/Button'
-import { Pane } from '@components/groupScreen/Pane'
+import { Pane } from '@components/Pane'
 import ModalScreen from '@components/ModalScreen'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
