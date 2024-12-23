@@ -44,9 +44,8 @@ function SplitEntry({
         zIndex: zIndex,
       }}
     >
-      <Pressable onPress={setPaidByIndex} style={{ marginRight: 8 }}>
-        {paidByThis && <Icon name='currency' size={24} color={theme.colors.secondary} />}
-        {!paidByThis && <Icon name='currency' size={24} color={theme.colors.outlineVariant} />}
+      <Pressable onPress={setPaidByIndex} style={{ marginRight: 8 }} tabIndex={-1}>
+        <Icon name='currency' size={24} color={paidByThis ? theme.colors.secondary : theme.colors.outlineVariant} />
       </Pressable>
 
       <TextInputWithUserSuggestions

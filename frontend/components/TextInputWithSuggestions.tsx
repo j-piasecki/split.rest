@@ -31,6 +31,7 @@ function SuggestionContainer<T>({
 
   return (
     <Pressable
+      tabIndex={-1}
       onPressIn={() => {
         setPressed(true)
         inputRef.current?.focus()
