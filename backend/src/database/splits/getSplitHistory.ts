@@ -30,7 +30,7 @@ export async function getSplitHistory(
       splitId: args.splitId,
     })
 
-    if (args.startAfter && upToDateInfo.version < args.startAfter) {
+    if (!args.startAfter || upToDateInfo.version < args.startAfter) {
       splitHistory.push(upToDateInfo)
     }
 

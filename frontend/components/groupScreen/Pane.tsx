@@ -69,7 +69,7 @@ export function PaneHeader({
 }
 
 export interface PaneProps {
-  children: React.ReactNode
+  children?: React.ReactNode
   icon: IconName
   title: string
   style?: StyleProp<ViewStyle>

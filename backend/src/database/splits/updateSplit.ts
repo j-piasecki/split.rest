@@ -86,7 +86,7 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
         splitInfo.created_by,
         splitInfo.name,
         splitInfo.timestamp,
-        Date.now(),
+        splitInfo.updated_at,
         splitInfo.type,
       ]
     )
