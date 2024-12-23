@@ -23,6 +23,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 type Point = { x: number; y: number }
 
@@ -104,6 +105,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
   const theme = useTheme()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const contentRef = useRef<View>(null)
+  const insets = useSafeAreaInsets()
   const [contentX, setContentX] = useState(touchPoint.x)
   const [contentY, setContentY] = useState(touchPoint.y)
   const { width, height } = useWindowDimensions()
@@ -112,7 +114,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
     const frame = measure(contentRef)
 
     if (!isSmallScreen) {
-      if (frame.y + frame.height > height) {
+      if (frame.y + frame.height > height - insets.bottom) {
         setContentY(touchPoint.y - frame.height)
       }
 
@@ -120,7 +122,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
         setContentX(touchPoint.x - frame.width)
       }
     } else {
-      if (frame.y + frame.height > height) {
+      if (anchorRect.y + anchorRect.height + frame.height > height - insets.bottom) {
         setContentY(anchorRect.y - frame.height - 8)
       } else {
         setContentY(anchorRect.y + anchorRect.height + 8)
@@ -128,7 +130,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
 
       setContentX(anchorRect.x + (anchorRect.width - frame.width) / 2)
     }
-  }, [anchorRect, touchPoint, height, width, isSmallScreen])
+  }, [anchorRect, touchPoint, height, width, isSmallScreen, insets])
 
   return (
     <Animated.View
