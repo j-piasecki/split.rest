@@ -7,6 +7,9 @@ export type IconName =
   | 'addMember'
   | 'addModerator'
   | 'add'
+  | 'arrowDown'
+  | 'arrowUp'
+  | 'calendar'
   | 'check'
   | 'chevronBack'
   | 'closeRightPanel'
@@ -36,6 +39,8 @@ export type IconName =
   | 'settings'
   | 'shield'
   | 'split'
+  | 'tag'
+  | 'user'
   | 'visibilityOff'
   | 'visibility'
 
@@ -51,6 +56,9 @@ const iconMap: Record<IconName, unknown> = {
   addMember: require('@assets/icons/add_member.svg'),
   addModerator: require('@assets/icons/add_moderator.svg'),
   add: require('@assets/icons/add.svg'),
+  arrowDown: require('@assets/icons/arrow_down.svg'),
+  arrowUp: require('@assets/icons/arrow_up.svg'),
+  calendar: require('@assets/icons/calendar.svg'),
   check: require('@assets/icons/check.svg'),
   chevronBack: require('@assets/icons/chevron_back.svg'),
   closeRightPanel: require('@assets/icons/close_right_panel.svg'),
@@ -80,6 +88,8 @@ const iconMap: Record<IconName, unknown> = {
   settings: require('@assets/icons/settings.svg'),
   shield: require('@assets/icons/shield.svg'),
   split: require('@assets/icons/split.svg'),
+  tag: require('@assets/icons/tag.svg'),
+  user: require('@assets/icons/user.svg'),
   visibilityOff: require('@assets/icons/visibility_off.svg'),
   visibility: require('@assets/icons/visibility.svg'),
 }
