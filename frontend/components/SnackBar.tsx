@@ -100,7 +100,7 @@ function Snack({
           }}
         >
           <Text
-            style={{ color: theme.colors.inversePrimary, fontSize: 18 }}
+            style={{ color: theme.colors.inversePrimary, fontSize: 18, fontWeight: 600 }}
             numberOfLines={numberOfLines}
           >
             {data.actionText}

@@ -43,7 +43,7 @@ const darkColors: Colors = {
   outlineVariant: '#514347',
 
   inverseSurface: '#efdfe1',
-  inversePrimary: '#8c4a60',
+  inversePrimary: '#ad4065',
   inverseOnSurface: '#372e30',
 
   balancePositive: '#1fc24d',
