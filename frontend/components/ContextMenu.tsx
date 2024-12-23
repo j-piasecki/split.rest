@@ -149,9 +149,8 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
       }}
     >
       {items.map((item, index) => (
-        <>
+        <React.Fragment key={index}>
           <ContextMenuItemComponent
-            key={index}
             {...item}
             onPress={() => {
               item.onPress()
@@ -161,7 +160,6 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
 
           {index !== items.length - 1 && (
             <View
-              key={`separator-${index}`}
               style={{
                 height: 1,
                 backgroundColor: theme.colors.outlineVariant,
@@ -169,7 +167,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
               }}
             />
           )}
-        </>
+        </React.Fragment>
       ))}
     </Animated.View>
   )
