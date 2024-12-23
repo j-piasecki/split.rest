@@ -9,7 +9,7 @@ import { useTheme } from '@styling/theme'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { TranslatableError, UserWithBalanceChange } from 'shared'
 
 interface FormProps {
@@ -96,9 +96,15 @@ function Form({ groupId, setResult }: FormProps) {
         ))}
       </ScrollView>
 
-      {!loading && <Button leftIcon='check' title={t('roulette.submit')} onPress={submit} />}
-      {loading && <ActivityIndicator color={theme.colors.onSurface} />}
-      {error && <Text style={{ color: 'red', marginTop: 8 }}>{error}</Text>}
+      <View style={{ gap: 8 }}>
+        {error && <Text style={{
+          color: theme.colors.error,
+          textAlign: 'center',
+          fontSize: 18,
+          fontWeight: 500,
+        }}>{error}</Text>}
+        <Button leftIcon='check' title={t('roulette.submit')} onPress={submit} isLoading={loading} />
+      </View>
     </View>
   )
 }
