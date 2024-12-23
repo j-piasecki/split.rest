@@ -16,6 +16,11 @@ export function useSplitHistory(groupId?: number, splitId?: number) {
         'getSplitHistory',
         args
       )
+
+      result?.forEach((split) => {
+        split.users.sort((a, b) => a.name.localeCompare(b.name))
+      })
+
       return result ?? []
     },
     [groupId, splitId]

@@ -80,7 +80,7 @@
     "addSplit": "Add split",
     "roulette": "Roulette",
     "groupSettings": "Settings",
-    "splitInfo": "Split info",
+    "splitInfo": "Split details",
     "editSplit": "Edit split",
     "profile": "Profile",
     "members": "Members"
@@ -178,9 +178,18 @@
   "splitInfo": {
     "splitNotFound": "Split not found",
     "edit": "Edit",
-    "createdBy": "Created by",
-    "hasPaid": "has paid",
-    "edited": "Edited"
+    "edited": "Edited",
+    "details": "Details",
+    "editInfo": "Edited",
+    "authorInfo": "Author",
+    "participants": "Participants",
+    "versionText": "This is edit <Styled>{{version}}</Styled> of the split",
+    "editTimeText": "On <Styled>{{date}}</Styled>",
+    "createTimeText": "This split was submitted on <Styled>{{date}}</Styled>",
+    "editAuthorText": "<Styled>{{editor}}</Styled> has edited this split",
+    "createAuthorText": "By <Styled>{{editor}}</Styled>",
+    "hasPaidText": "<Styled>{{payer}}</Styled> has paid <Styled>{{amount}} {{currency}}</Styled>",
+    "splitTimeText": "On <Styled>{{date}}</Styled>"
   }
 }
 
