@@ -87,7 +87,7 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
                       overflow: 'hidden',
                     }}
                   >
-                    <ProfilePicture userId={member.id} size={32} />
+                    <ProfilePicture userId={member.id} size={28} />
                   </View>
                 )
               })}
