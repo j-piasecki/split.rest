@@ -3,6 +3,7 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
@@ -62,8 +63,10 @@ export function SplitRow({ split, info }: SplitRowProps) {
   const { t } = useTranslation()
   const contextMenuRef = useRef<ContextMenuRef>(null)
   const { data: permissions } = useGroupPermissions(info.id)
-  const isSmallScreen = useDisplayClass() === DisplayClass.Small
+  const displayClass = useDisplayClass()
   const { mutate: deleteSplit, isPending } = useDeleteSplit(info.id)
+
+  const isSmallScreen = displayClass === DisplayClass.Small
 
   const contextMenuDisabled =
     !permissions?.canSeeSplitDetails(split) &&
@@ -76,13 +79,16 @@ export function SplitRow({ split, info }: SplitRowProps) {
       ref={contextMenuRef}
       disabled={contextMenuDisabled}
       style={({ pressed }) => {
-        return {
-          userSelect: 'none',
-          backgroundColor:
-            pressed && permissions?.canSeeSplitDetails(split)
-              ? theme.colors.surfaceContainerHigh
-              : theme.colors.surfaceContainer,
-        }
+        return [
+          {
+            userSelect: 'none',
+            backgroundColor:
+              pressed && permissions?.canSeeSplitDetails(split)
+                ? theme.colors.surfaceContainerHigh
+                : theme.colors.surfaceContainer,
+          },
+          displayClass <= DisplayClass.Medium && styles.paneShadow,
+        ]
       }}
       onPress={() => {
         if (permissions?.canSeeSplitDetails(split)) {

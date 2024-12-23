@@ -8,6 +8,7 @@ import { SplitsList } from '@components/groupScreen/SplitsList'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
@@ -38,17 +39,20 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
 
   return (
     <Pressable
-      style={({ pressed }) => ({
-        backgroundColor: pressed
-          ? theme.colors.surfaceContainerHigh
-          : theme.colors.surfaceContainer,
-        borderRadius: 16,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: 24,
-        overflow: 'hidden',
-      })}
+      style={({ pressed }) => [
+        {
+          backgroundColor: pressed
+            ? theme.colors.surfaceContainerHigh
+            : theme.colors.surfaceContainer,
+          borderRadius: 16,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 24,
+          overflow: 'hidden',
+        },
+        styles.paneShadow,
+      ]}
       onPress={() => {
         router.navigate(`/group/${info?.id}/members`)
       }}
@@ -149,11 +153,14 @@ function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
           </View>
           <MembersButton info={info} />
           <View
-            style={{
-              backgroundColor: theme.colors.surfaceContainer,
-              borderTopRightRadius: 16,
-              borderTopLeftRadius: 16,
-            }}
+            style={[
+              {
+                backgroundColor: theme.colors.surfaceContainer,
+                borderTopRightRadius: 16,
+                borderTopLeftRadius: 16,
+              },
+              styles.paneShadow,
+            ]}
           >
             <PaneHeader icon='receipt' title={t('tabs.splits')} textLocation='start' />
           </View>
@@ -161,12 +168,15 @@ function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
       }
       footerComponent={
         <View
-          style={{
-            height: 16,
-            backgroundColor: theme.colors.surfaceContainer,
-            borderBottomLeftRadius: 16,
-            borderBottomRightRadius: 16,
-          }}
+          style={[
+            {
+              height: 16,
+              backgroundColor: theme.colors.surfaceContainer,
+              borderBottomLeftRadius: 16,
+              borderBottomRightRadius: 16,
+            },
+            styles.paneShadow,
+          ]}
         />
       }
     />

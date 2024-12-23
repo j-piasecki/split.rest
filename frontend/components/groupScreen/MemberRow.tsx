@@ -5,8 +5,10 @@ import { Text } from '@components/Text'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
 import React from 'react'
 import { useRef } from 'react'
@@ -47,6 +49,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
   const contextMenuRef = useRef<ContextMenuRef>(null)
+  const displayClass = useDisplayClass()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info.id)
   const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(info.id, member.id)
@@ -80,15 +83,18 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
     >
       <View
         key={member.id}
-        style={{
-          backgroundColor: theme.colors.surfaceContainer,
-          paddingVertical: 10,
-          paddingLeft: 10,
-          paddingRight: 8,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
+        style={[
+          {
+            backgroundColor: theme.colors.surfaceContainer,
+            paddingVertical: 10,
+            paddingLeft: 10,
+            paddingRight: 8,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          },
+          displayClass <= DisplayClass.Medium && styles.paneShadow,
+        ]}
       >
         <View
           style={{

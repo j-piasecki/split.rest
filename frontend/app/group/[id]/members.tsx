@@ -3,6 +3,7 @@ import { Text } from '@components/Text'
 import { MembersList } from '@components/groupScreen/MembersList'
 import { PaneHeader } from '@components/groupScreen/Pane'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams } from 'expo-router'
@@ -14,14 +15,17 @@ function ListHeader({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation()
   return (
     <View
-      style={{
-        marginTop: 16,
-        backgroundColor: theme.colors.surfaceContainer,
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
-        borderBottomWidth: 1,
-        borderColor: theme.colors.outlineVariant,
-      }}
+      style={[
+        {
+          marginTop: 16,
+          backgroundColor: theme.colors.surfaceContainer,
+          borderTopLeftRadius: 16,
+          borderTopRightRadius: 16,
+          borderBottomWidth: 1,
+          borderColor: theme.colors.outlineVariant,
+        },
+        styles.paneShadow,
+      ]}
     >
       <PaneHeader
         icon='members'
@@ -71,12 +75,15 @@ export function GroupMembersScreen() {
           headerComponent={ListHeader}
           footerComponent={
             <View
-              style={{
-                height: 16,
-                backgroundColor: theme.colors.surfaceContainer,
-                borderBottomLeftRadius: 16,
-                borderBottomRightRadius: 16,
-              }}
+              style={[
+                {
+                  height: 16,
+                  backgroundColor: theme.colors.surfaceContainer,
+                  borderBottomLeftRadius: 16,
+                  borderBottomRightRadius: 16,
+                },
+                styles.paneShadow,
+              ]}
             />
           }
         />

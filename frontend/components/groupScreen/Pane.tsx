@@ -1,6 +1,7 @@
 import { Icon, IconName } from '@components/Icon'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
+import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { useState } from 'react'
@@ -115,6 +116,7 @@ export function Pane({
           borderRadius: 16,
           overflow: 'hidden',
         },
+        styles.paneShadow,
         collapsible && isCollapsed
           ? orientation === 'vertical'
             ? { width: 64 }
