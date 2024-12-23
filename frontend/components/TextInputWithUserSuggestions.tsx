@@ -6,48 +6,40 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, TextInput as TextInputRN, View } from 'react-native'
+import { TextInput as TextInputRN, View } from 'react-native'
 import { User } from 'shared'
 
 interface SuggestionProps {
   user: User
-  onSelect: () => void
-  textInputRef: React.RefObject<TextInputRN>
-  setShowSuggestions: (show: boolean) => void
+  hovered?: boolean
+  pressed?: boolean
 }
 
-function Suggestion({ user, onSelect, textInputRef, setShowSuggestions }: SuggestionProps) {
+function Suggestion({ user, hovered, pressed }: SuggestionProps) {
   const theme = useTheme()
 
   return (
-    <Pressable
-      onPointerDown={() => {
-        setTimeout(() => {
-          textInputRef.current?.focus()
-        })
-      }}
-      onPress={() => {
-        onSelect()
-        setShowSuggestions(false)
+    <View
+      style={{
+        backgroundColor: pressed
+          ? theme.colors.surfaceBright
+          : hovered
+            ? theme.colors.surfaceContainerHighest
+            : theme.colors.surfaceContainerHigh,
+        flexDirection: 'row',
+        padding: 8,
+        alignItems: 'center',
+        gap: 8,
       }}
     >
-      <View
-        style={{
-          flexDirection: 'row',
-          padding: 8,
-          borderBottomWidth: 1,
-          borderBottomColor: theme.colors.outline,
-          alignItems: 'center',
-          gap: 8,
-        }}
-      >
-        <ProfilePicture userId={user.id} size={24} />
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>{user.name}</Text>
-          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}>{user.email}</Text>
-        </View>
+      <ProfilePicture userId={user.id} size={24} />
+      <View style={{ flex: 1 }}>
+        <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 500 }}>
+          {user.name}
+        </Text>
+        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}>{user.email}</Text>
       </View>
-    </Pressable>
+    </View>
   )
 }
 
@@ -84,17 +76,12 @@ export function TextInputWithUserSuggestions({
       autoCapitalize='none'
       getSuggestions={getSuggestions}
       suggestionsVisible={showSuggestions && permissions?.canReadMembers()}
-      renderSuggestion={(user) => {
-        return (
-          <Suggestion
-            user={user}
-            onSelect={() => {
-              onSuggestionSelect(user)
-            }}
-            textInputRef={ref}
-            setShowSuggestions={setShowSuggestions}
-          />
-        )
+      onSuggestionSelect={(user) => {
+        onSuggestionSelect(user)
+        setShowSuggestions(false)
+      }}
+      renderSuggestion={(user, hovered, pressed) => {
+        return <Suggestion user={user} hovered={hovered} pressed={pressed} />
       }}
       onChangeText={(val) => {
         onChangeText?.(val)
