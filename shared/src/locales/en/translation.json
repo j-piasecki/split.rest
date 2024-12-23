@@ -156,7 +156,9 @@
   "split": {
     "showDetails": "Show details",
     "edit": "Edit split",
-    "delete": "Delete"
+    "delete": "Delete",
+    "deletedToast": "Deleted {{title}}",
+    "undo": "Undo"
   },
 
   "groupInfo": {

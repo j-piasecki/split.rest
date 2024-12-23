@@ -1,7 +1,9 @@
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
+import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
+import { restoreSplit } from '@database/restoreSplit'
 import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { styles } from '@styling/styles'
@@ -59,11 +61,12 @@ function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo }) {
 export function SplitRow({ split, info }: SplitRowProps) {
   const theme = useTheme()
   const router = useRouter()
+  const snack = useSnack()
   const { t } = useTranslation()
   const contextMenuRef = useRef<ContextMenuRef>(null)
   const { data: permissions } = useGroupPermissions(info.id)
   const displayClass = useDisplayClass()
-  const { mutate: deleteSplit, isPending } = useDeleteSplit(info.id)
+  const { mutateAsync: deleteSplit, isPending } = useDeleteSplit(info.id)
 
   const isSmallScreen = displayClass === DisplayClass.Small
 
@@ -117,7 +120,15 @@ export function SplitRow({ split, info }: SplitRowProps) {
           disabled: !permissions?.canDeleteSplit(split),
           destructive: true,
           onPress: () => {
-            deleteSplit(split.id)
+            deleteSplit(split.id).then(() => {
+              snack.show(
+                t('split.deletedToast', { title: split.title }),
+                t('split.undo'),
+                async () => {
+                  await restoreSplit(split.id, info.id)
+                }
+              )
+            })
           },
         },
       ]}
