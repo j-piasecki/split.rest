@@ -35,6 +35,7 @@ function Badge({ icon }: { icon: IconName }) {
         bottom: -6,
         alignItems: 'center',
         justifyContent: 'center',
+        boxShadow: '1px 2px 4px rgba(0, 0, 0, 0.2)',
       }}
     >
       <Icon name={icon} size={16} color={theme.colors.secondary} />
