@@ -45,9 +45,9 @@ export type IconName =
   | 'visibility'
 
 export interface IconProps {
-  name: IconName
-  size: number
-  color: string
+  name?: IconName
+  size?: number
+  color?: string
   style?: StyleProp<ImageStyle>
 }
 
@@ -105,7 +105,7 @@ export function Icon({ name, size, color, style }: IconProps) {
 
   return (
     <Image
-      source={iconMap[name]}
+      source={name === undefined ? null : iconMap[name]}
       style={[style, { width: size, height: size }]}
       tintColor={color}
     />

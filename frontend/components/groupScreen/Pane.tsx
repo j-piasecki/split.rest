@@ -8,8 +8,8 @@ import { useState } from 'react'
 import { Pressable, StyleProp, View, ViewStyle } from 'react-native'
 
 export interface PaneHeaderProps {
-  icon: IconName
-  title: string
+  icon?: IconName
+  title?: string
   rightComponent?: React.ReactNode
   rightComponentVisible?: boolean
   textVisible?: boolean
@@ -72,8 +72,8 @@ export function PaneHeader({
 
 export interface PaneProps {
   children?: React.ReactNode
-  icon: IconName
-  title: string
+  icon?: IconName
+  title?: string
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
   collapsible?: boolean
@@ -85,6 +85,7 @@ export interface PaneProps {
   expandIcon?: IconName
   collapseIcon?: IconName
   orientation?: 'vertical' | 'horizontal'
+  headerHidden?: boolean
 }
 
 export function Pane({
@@ -102,6 +103,7 @@ export function Pane({
   expandIcon,
   collapseIcon,
   orientation = 'horizontal',
+  headerHidden = false,
 }: PaneProps) {
   const theme = useTheme()
   const [innerCollapsed, setInnerCollapsed] = useState(startCollapsed ?? false)
@@ -125,37 +127,39 @@ export function Pane({
         style,
       ]}
     >
-      <Pressable
-        disabled={!wholeHeaderInteractive || !collapsible}
-        onPress={() => {
-          setInnerCollapsed(!isCollapsed)
-          onCollapseChange?.(!isCollapsed)
-        }}
-      >
-        <PaneHeader
-          icon={icon}
-          title={title}
-          rightComponent={
-            <RoundIconButton
-              icon={
-                isCollapsed
-                  ? (expandIcon ?? (orientation === 'vertical' ? 'openRightPanel' : 'arrowDown'))
-                  : (collapseIcon ?? (orientation === 'vertical' ? 'closeRightPanel' : 'arrowUp'))
-              }
-              size={24}
-              onPress={() => {
-                setInnerCollapsed(!isCollapsed)
-                onCollapseChange?.(!isCollapsed)
-              }}
-              color={theme.colors.secondary}
-            />
-          }
-          rightComponentVisible={collapsible}
-          textVisible={!collapsible || !isCollapsed || orientation === 'horizontal'}
-          textLocation={textLocation}
-          showSeparator={!isCollapsed || orientation === 'vertical'}
-        />
-      </Pressable>
+      {!headerHidden && (
+        <Pressable
+          disabled={!wholeHeaderInteractive || !collapsible}
+          onPress={() => {
+            setInnerCollapsed(!isCollapsed)
+            onCollapseChange?.(!isCollapsed)
+          }}
+        >
+          <PaneHeader
+            icon={icon}
+            title={title}
+            rightComponent={
+              <RoundIconButton
+                icon={
+                  isCollapsed
+                    ? (expandIcon ?? (orientation === 'vertical' ? 'openRightPanel' : 'arrowDown'))
+                    : (collapseIcon ?? (orientation === 'vertical' ? 'closeRightPanel' : 'arrowUp'))
+                }
+                size={24}
+                onPress={() => {
+                  setInnerCollapsed(!isCollapsed)
+                  onCollapseChange?.(!isCollapsed)
+                }}
+                color={theme.colors.secondary}
+              />
+            }
+            rightComponentVisible={collapsible}
+            textVisible={!collapsible || !isCollapsed || orientation === 'horizontal'}
+            textLocation={textLocation}
+            showSeparator={!isCollapsed || orientation === 'vertical'}
+          />
+        </Pressable>
+      )}
       <Pressable
         disabled={!isCollapsed || !collapsible}
         style={containerStyle}

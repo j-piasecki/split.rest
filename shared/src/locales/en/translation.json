@@ -113,7 +113,7 @@
   },
 
   "addUser": {
-    "emailCannotBeEmpty": "E-mail cannot be empty",
+    "findByEmail": "Find by e-mail",
     "emailIsTooLong": "E-mail is too long",
     "userNotFound": "User not found",
     "userAlreadyInGroup": "User is already a member of the group",
