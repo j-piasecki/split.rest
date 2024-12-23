@@ -306,7 +306,7 @@ export default function GroupScreen() {
                       onCollapseChange={() => {
                         setMembersExpanded(false)
                       }}
-                      style={{ height: '100%' }}
+                      style={{ height: '100%', overflow: 'hidden' }}
                       containerStyle={{ flex: 1 }}
                     >
                       <MembersList info={groupInfo} />

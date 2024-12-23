@@ -116,7 +116,6 @@ export function Pane({
         {
           backgroundColor: theme.colors.surfaceContainer,
           borderRadius: 16,
-          overflow: 'hidden',
         },
         styles.paneShadow,
         collapsible && isCollapsed

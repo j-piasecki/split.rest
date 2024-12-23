@@ -2,6 +2,7 @@ import { Button } from './Button'
 import { Icon } from './Icon'
 import { TextInput } from './TextInput'
 import { TextInputWithUserSuggestions } from './TextInputWithUserSuggestions'
+import { Pane } from './groupScreen/Pane'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useRef, useState } from 'react'
@@ -51,23 +52,25 @@ function SplitEntry({
       <TextInputWithUserSuggestions
         groupId={groupId}
         value={email}
+        selectTextOnFocus
         onSuggestionSelect={(user) => {
           update({ email: user.email, amount })
         }}
         onChangeText={(val) => {
           update({ email: val, amount })
         }}
-        style={{ flex: 4, margin: 4 }}
+        style={{ flex: 5, margin: 4 }}
       />
       <TextInput
         placeholder={t('form.amount')}
         value={String(amount)}
+        selectTextOnFocus
         keyboardType='decimal-pad'
         onChangeText={(val) => {
           val = val.replace(',', '.')
           update({ email, amount: Number.isNaN(Number(val)) ? amount : val })
         }}
-        style={{ flex: 2, margin: 4 }}
+        style={{ flex: 2, margin: 4, maxWidth: 80 }}
         onBlur={() => {
           const amountNum = Number(amount)
           if (!Number.isNaN(amountNum) && amount.length > 0) {
@@ -121,6 +124,7 @@ export function SplitForm({
     const toSave = entries
       .map((entry) => ({ email: entry.email.trim(), amount: entry.amount.trim() }))
       .filter((entry) => entry.email !== '' || entry.amount !== '')
+
     onSubmit({
       title: title,
       paidBy: paidBy.email,
@@ -130,73 +134,95 @@ export function SplitForm({
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 100 }}>
-        <TextInput
-          placeholder={t('form.title')}
-          value={title}
-          onChangeText={setTitle}
-          style={{ marginBottom: 8 }}
-        />
-
-        {entries.map((entry, index) => (
-          <SplitEntry
-            key={index}
-            groupId={groupInfo.id}
-            paidByThis={paidByIndex === index}
-            setPaidByIndex={() => setPaidByIndex(index)}
-            email={entry.email}
-            amount={String(entry.amount)}
-            zIndex={entries.length - index}
-            update={(data) => {
-              let newEntries = [...entries]
-              newEntries[index] = data
-
-              const paidBy = newEntries[paidByIndex]
-
-              newEntries = newEntries.filter((entry) => entry.email !== '' || entry.amount !== '')
-
-              const newPaidByIndex = newEntries.findIndex((entry) => entry.email === paidBy.email)
-
-              if (
-                newEntries.length === 0 ||
-                newEntries[newEntries.length - 1].email !== '' ||
-                newEntries[newEntries.length - 1].amount !== ''
-              ) {
-                newEntries.push({ email: '', amount: '' })
-              }
-
-              setEntries(newEntries)
-              setPaidByIndex(newPaidByIndex === -1 ? 0 : newPaidByIndex)
-            }}
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: 100, gap: 16, paddingTop: 8 }}
+      >
+        <Pane
+          icon='receipt'
+          title={t('splitInfo.details')}
+          textLocation='start'
+          containerStyle={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 8, gap: 16 }}
+        >
+          <TextInput
+            placeholder={t('form.title')}
+            value={title}
+            onChangeText={setTitle}
+            style={{ marginBottom: 8 }}
           />
-        ))}
+
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginHorizontal: 4,
+            }}
+          >
+            <Text
+              style={{
+                flex: 1,
+                textAlign: 'center',
+                color: theme.colors.outline,
+                fontSize: 20,
+                opacity: 0.7,
+              }}
+            >
+              <Text style={{ color: theme.colors.primary }}>{entries[paidByIndex].email} </Text>
+              has paid
+              <Text style={{ color: theme.colors.primary }}> {toBePaid.current} </Text>
+              {groupInfo.currency}
+            </Text>
+          </View>
+        </Pane>
+
+        <Pane
+          icon='group'
+          title={t('splitInfo.participants')}
+          textLocation='start'
+          containerStyle={{
+            paddingHorizontal: 16,
+            paddingBottom: 16,
+            paddingTop: 8,
+            overflow: 'visible',
+          }}
+        >
+          {entries.map((entry, index) => (
+            <SplitEntry
+              key={index}
+              groupId={groupInfo.id}
+              paidByThis={paidByIndex === index}
+              setPaidByIndex={() => setPaidByIndex(index)}
+              email={entry.email}
+              amount={String(entry.amount)}
+              zIndex={entries.length - index}
+              update={(data) => {
+                let newEntries = [...entries]
+                newEntries[index] = data
+
+                const paidBy = newEntries[paidByIndex]
+
+                newEntries = newEntries.filter((entry) => entry.email !== '' || entry.amount !== '')
+
+                const newPaidByIndex = newEntries.findIndex((entry) => entry.email === paidBy.email)
+
+                if (
+                  newEntries.length === 0 ||
+                  newEntries[newEntries.length - 1].email !== '' ||
+                  newEntries[newEntries.length - 1].amount !== ''
+                ) {
+                  newEntries.push({ email: '', amount: '' })
+                }
+
+                setEntries(newEntries)
+                setPaidByIndex(newPaidByIndex === -1 ? 0 : newPaidByIndex)
+              }}
+            />
+          ))}
+        </Pane>
       </ScrollView>
 
       <View style={{ gap: 8 }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginHorizontal: 4,
-          }}
-        >
-          <Text
-            style={{
-              flex: 1,
-              textAlign: 'center',
-              color: theme.colors.outline,
-              fontSize: 20,
-              opacity: 0.7,
-            }}
-          >
-            <Text style={{ color: theme.colors.primary }}>{entries[paidByIndex].email} </Text>
-            has paid
-            <Text style={{ color: theme.colors.primary }}> {toBePaid.current} </Text>
-            {groupInfo.currency}
-          </Text>
-        </View>
-
         {error && (
           <Text
             style={{

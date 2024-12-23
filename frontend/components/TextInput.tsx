@@ -77,7 +77,7 @@ export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput
 
   return (
     <Animated.View
-      style={[style as ViewStyle, { borderBottomWidth: 1, borderRadius: 4 }, wrapperStyle]}
+      style={[style as ViewStyle, { borderBottomWidth: 1, borderRadius: 2 }, wrapperStyle]}
     >
       <TextInputRN
         ref={ref}
