@@ -4,7 +4,7 @@ import { Text } from '@components/Text'
 import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocompletions'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput as TextInputRN, View } from 'react-native'
 import { User } from 'shared'
@@ -57,7 +57,6 @@ export function TextInputWithUserSuggestions({
 }: TextInputWithUserSuggestionsProps) {
   const ref = useRef<TextInputRN>(null)
   const { data: permissions } = useGroupPermissions(groupId)
-  const [showSuggestions, setShowSuggestions] = useState(true)
   const { t } = useTranslation()
 
   const getSuggestions = useCallback(
@@ -75,18 +74,12 @@ export function TextInputWithUserSuggestions({
       autoCorrect={false}
       autoCapitalize='none'
       getSuggestions={getSuggestions}
-      suggestionsVisible={showSuggestions && permissions?.canReadMembers()}
-      onSuggestionSelect={(user) => {
-        onSuggestionSelect(user)
-        setShowSuggestions(false)
-      }}
+      suggestionsVisible={permissions?.canReadMembers()}
+      onSuggestionSelect={onSuggestionSelect}
       renderSuggestion={(user, hovered, pressed) => {
         return <Suggestion user={user} hovered={hovered} pressed={pressed} />
       }}
-      onChangeText={(val) => {
-        onChangeText?.(val)
-        setShowSuggestions(true)
-      }}
+      onChangeText={onChangeText}
       {...rest}
     />
   )

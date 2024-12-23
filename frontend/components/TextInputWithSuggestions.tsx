@@ -16,6 +16,7 @@ interface SuggestionContainerProps<T> {
   renderSuggestion: SuggestionRenderFunction<T>
   suggestion: T
   onSelect?: (suggestion: T) => void
+  highlighted?: boolean
 }
 
 function SuggestionContainer<T>({
@@ -23,6 +24,7 @@ function SuggestionContainer<T>({
   renderSuggestion,
   suggestion,
   onSelect,
+  highlighted,
 }: SuggestionContainerProps<T>) {
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
@@ -51,7 +53,7 @@ function SuggestionContainer<T>({
         onSelect?.(suggestion)
       }}
     >
-      {renderSuggestion(suggestion, hovered, pressed)}
+      {renderSuggestion(suggestion, highlighted ?? hovered, pressed)}
     </Pressable>
   )
 }
@@ -75,6 +77,7 @@ export function TextInputWithSuggestions<T>({
   onBlur,
   inputRef,
   onKeyPress,
+  onChangeText,
   ...rest
 }: TextInputWithSuggestionsProps<T>) {
   const theme = useTheme()
@@ -86,6 +89,16 @@ export function TextInputWithSuggestions<T>({
   const [inputLayout, setInputLayout] = useState({ x: 0, y: 0, width: 0, height: 0 })
   const [suggestionBoxHeight, setSuggestionBoxHeight] = useState(0)
   const [isFocusedDebounced] = useDebounce(isFocused, 100)
+  const [showSuggestions, setShowSuggestions] = useState(true)
+
+  const [keyboardHighligtedSuggestion, setKeyboardHighlightedSuggestion] = useState<number | null>(
+    null
+  )
+
+  const selectSuggestion = (suggestion: T) => {
+    onSuggestionSelect?.(suggestion)
+    setShowSuggestions(false)
+  }
 
   useEffect(() => {
     if (isFocusedDebounced && debouncedValue && debouncedValue.length > 0) {
@@ -103,14 +116,15 @@ export function TextInputWithSuggestions<T>({
     if (suggestionBoxRef.current) {
       setSuggestionBoxHeight(measure(suggestionBoxRef).height)
     }
-  }, [suggestions, isFocused, suggestionsVisible, value, isFocusedDebounced])
+  }, [suggestions, isFocused, suggestionsVisible, showSuggestions, value, isFocusedDebounced])
 
   const suggestionBoxVisible =
     isFocusedDebounced &&
     value !== undefined &&
     value.length > 0 &&
     suggestions.length > 0 &&
-    suggestionsVisible
+    suggestionsVisible &&
+    showSuggestions
 
   return (
     <View
@@ -131,6 +145,11 @@ export function TextInputWithSuggestions<T>({
         }}
         {...rest}
         value={value}
+        onChangeText={(text) => {
+          onChangeText?.(text)
+          setShowSuggestions(true)
+          setKeyboardHighlightedSuggestion(null)
+        }}
         onFocus={(e) => {
           setIsFocused(true)
           onFocus?.(e)
@@ -141,6 +160,30 @@ export function TextInputWithSuggestions<T>({
         }}
         onKeyPress={(e) => {
           onKeyPress?.(e)
+
+          if (e.defaultPrevented) {
+            return
+          }
+
+          if (e.nativeEvent.key === 'ArrowDown' && suggestions.length > 0) {
+            e.preventDefault()
+            setKeyboardHighlightedSuggestion((prev) =>
+              prev === null ? 0 : Math.min(prev + 1, suggestions.length - 1)
+            )
+          } else if (e.nativeEvent.key === 'ArrowUp' && suggestions.length > 0) {
+            e.preventDefault()
+            setKeyboardHighlightedSuggestion((prev) =>
+              prev === null ? suggestions.length - 1 : Math.max(prev - 1, 0)
+            )
+          } else if (e.nativeEvent.key === 'Enter' && keyboardHighligtedSuggestion !== null) {
+            e.preventDefault()
+            selectSuggestion(suggestions[keyboardHighligtedSuggestion])
+            setKeyboardHighlightedSuggestion(null)
+          } else if (e.nativeEvent.key === 'Escape' && suggestionBoxVisible) {
+            e.preventDefault()
+            setShowSuggestions(false)
+            setKeyboardHighlightedSuggestion(null)
+          }
         }}
       />
       {suggestionBoxVisible && (
@@ -151,11 +194,11 @@ export function TextInputWithSuggestions<T>({
             left: 4,
             bottom: -suggestionBoxHeight,
             width: inputLayout.width - 8,
-            maxHeight: 150,
-            backgroundColor: theme.colors.surfaceContainer,
+            maxHeight: 160,
+            backgroundColor: theme.colors.surfaceContainerHigh,
             opacity: suggestionBoxHeight > 0 ? 1 : 0,
-            borderBottomLeftRadius: 8,
-            borderBottomRightRadius: 8,
+            borderBottomLeftRadius: 12,
+            borderBottomRightRadius: 12,
             borderColor: theme.colors.outlineVariant,
             borderWidth: 1,
             borderTopWidth: 0,
@@ -170,7 +213,12 @@ export function TextInputWithSuggestions<T>({
                   inputRef={textInputRef}
                   renderSuggestion={renderSuggestion}
                   suggestion={suggestion}
-                  onSelect={onSuggestionSelect}
+                  onSelect={selectSuggestion}
+                  highlighted={
+                    keyboardHighligtedSuggestion === null
+                      ? undefined
+                      : index === keyboardHighligtedSuggestion
+                  }
                 />
                 {index < suggestions.length - 1 && (
                   <View
