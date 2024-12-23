@@ -9,9 +9,10 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSplitHistory } from '@hooks/database/useSplitHistory'
 import { useTheme } from '@styling/theme'
 import { getProfilePictureUrl } from '@utils/getProfilePictureUrl'
+import { measure } from '@utils/measure'
 import { Image } from 'expo-image'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, Platform, ScrollView, View } from 'react-native'
 import {
@@ -255,20 +256,21 @@ export default function SplitInfoScreen() {
     isFetchingNextPage,
     fetchNextPage,
   } = useSplitHistory(Number(id), Number(splitId))
+  const containerRef = useRef<View>(null)
   const [maxWidth, setMaxWidth] = useState(500)
 
   const userScrollRef = useRef(false)
   const scrollContentWidth = useRef(0)
 
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      const size = measure(containerRef)
+      setMaxWidth(size.width)
+    }
+  }, [isLoadingHistory, groupInfo])
+
   return (
-    <Modal
-      title={t('screenName.splitInfo')}
-      returnPath={`/group/${id}`}
-      maxWidth={500}
-      onLayout={(e) => {
-        setMaxWidth(e.nativeEvent.layout.width)
-      }}
-    >
+    <Modal title={t('screenName.splitInfo')} returnPath={`/group/${id}`} maxWidth={500}>
       {(isLoadingHistory || groupInfo === undefined) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size='small' color={theme.colors.onSurface} />
@@ -284,7 +286,7 @@ export default function SplitInfoScreen() {
       )}
 
       {!isLoadingHistory && groupInfo && (
-        <>
+        <View ref={containerRef} style={{ flex: 1 }}>
           {/* Paginated horizontal flatlist breaks vertical scroll on web */}
           {Platform.OS !== 'web' && (
             <FlatList
@@ -364,7 +366,10 @@ export default function SplitInfoScreen() {
               }}
             >
               {history.map((split) => (
-                <View style={{ flex: 1, width: maxWidth, transform: [{ scaleX: -1 }] }}>
+                <View
+                  key={`${split.version}`}
+                  style={{ flex: 1, width: maxWidth, transform: [{ scaleX: -1 }] }}
+                >
                   <SplitInfo splitInfo={split} groupInfo={groupInfo} />
                 </View>
               ))}
@@ -379,7 +384,7 @@ export default function SplitInfoScreen() {
               onPress={() => router.navigate(`/group/${groupInfo?.id}/split/${history[0].id}/edit`)}
             />
           )}
-        </>
+        </View>
       )}
     </Modal>
   )
