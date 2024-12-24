@@ -17,7 +17,15 @@ import { measure } from '@utils/measure'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Modal, Platform, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native'
+import {
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native'
 import { GroupInfo } from 'shared'
 
 function MembersButton({ info }: { info: GroupInfo | undefined }) {
