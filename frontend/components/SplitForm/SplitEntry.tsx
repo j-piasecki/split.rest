@@ -6,7 +6,13 @@ import { TextInputUserPicker } from '@components/TextInputUserPicker'
 import { useTheme } from '@styling/theme'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LayoutRectangle, Pressable, ScrollView, View } from 'react-native'
+import {
+  LayoutRectangle,
+  Pressable,
+  ScrollView,
+  TextInput as TextInputRN,
+  View,
+} from 'react-native'
 
 export interface SplitEntryProps {
   scrollRef?: React.RefObject<ScrollView>
@@ -35,6 +41,7 @@ export function SplitEntry({
   const theme = useTheme()
   const layout = useRef<LayoutRectangle | null>(null)
   const { t } = useTranslation()
+  const amountInputRef = useRef<TextInputRN>(null)
 
   const entry = formState.entries[index]
   const showDeleteButton = entry.email.trim().length > 0 || entry.amount.trim().length > 0
@@ -42,7 +49,7 @@ export function SplitEntry({
   function scrollToThis() {
     if (layout.current && parentLayout?.current) {
       scrollRef?.current?.scrollTo({
-        y: parentLayout.current.y + layout.current.y - 200,
+        y: parentLayout.current.y + layout.current.y - 100,
         animated: true,
       })
     }
@@ -79,11 +86,13 @@ export function SplitEntry({
         groupId={groupId}
         value={entry.email}
         selectTextOnFocus
+        submitBehavior='submit'
         containerStyle={{ flex: 5 }}
         user={entry.user}
         onClearSelection={() => updateForm({ type: 'setUser', index, user: undefined })}
         onSuggestionSelect={(user) => {
           updateForm({ type: 'setUser', index, user })
+          amountInputRef.current?.focus()
         }}
         onChangeText={(val) => {
           updateForm({ type: 'setEmail', index, email: val })
@@ -97,12 +106,15 @@ export function SplitEntry({
             (u) => u.email === entry.email || formState.entries.every((e) => e.email !== u.email)
           )
         }
+        onSubmitEditing={() => amountInputRef.current?.focus()}
       />
 
       <TextInput
         placeholder={t('form.amount')}
         value={entry.amount}
+        ref={amountInputRef}
         selectTextOnFocus
+        submitBehavior='submit'
         keyboardType='decimal-pad'
         onChangeText={(val) => {
           val = val.replace(',', '.')
@@ -115,6 +127,9 @@ export function SplitEntry({
           if (!Number.isNaN(amountNum) && entry.amount.length > 0) {
             updateForm({ type: 'setAmount', index, amount: amountNum.toFixed(2) })
           }
+        }}
+        onSubmitEditing={() => {
+          // TODO: focus next input
         }}
       />
 

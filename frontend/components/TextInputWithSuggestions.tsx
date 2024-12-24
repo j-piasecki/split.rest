@@ -79,6 +79,7 @@ export function TextInputWithSuggestions<T>({
   inputRef,
   onKeyPress,
   onChangeText,
+  onSubmitEditing,
   ...rest
 }: TextInputWithSuggestionsProps<T>) {
   const theme = useTheme()
@@ -189,6 +190,15 @@ export function TextInputWithSuggestions<T>({
             setKeyboardHighlightedSuggestion(null)
           }
         }}
+        onSubmitEditing={(e) => {
+          if (keyboardHighligtedSuggestion !== null || suggestions.length > 0) {
+            e.preventDefault()
+            selectSuggestion(suggestions[keyboardHighligtedSuggestion ?? 0])
+            setKeyboardHighlightedSuggestion(null)
+          } else {
+            onSubmitEditing?.(e)
+          }
+        }}
       />
       {suggestionBoxVisible && (
         <View
@@ -209,7 +219,7 @@ export function TextInputWithSuggestions<T>({
             overflow: 'hidden',
           }}
         >
-          <ScrollView style={{ flex: 1 }}>
+          <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps='always'>
             {suggestions.map((suggestion, index) => (
               <React.Fragment key={index}>
                 <SuggestionContainer

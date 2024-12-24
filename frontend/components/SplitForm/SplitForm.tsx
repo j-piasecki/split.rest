@@ -62,6 +62,7 @@ export function SplitForm({
         ref={scrollRef}
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 100, gap: 16, paddingTop: 8 }}
+        keyboardShouldPersistTaps='handled'
       >
         <Pane
           icon='receipt'
