@@ -207,7 +207,7 @@ function SplitInfo({ splitInfo, groupInfo }: { splitInfo: SplitWithUsers; groupI
           <IconInfoText
             icon='calendar'
             translationKey='splitInfo.splitTimeText'
-            values={{ date: new Date(splitInfo.timestamp).toLocaleString() }}
+            values={{ date: new Date(splitInfo.timestamp).toLocaleDateString() }}
           />
         </Pane>
 
