@@ -7,14 +7,10 @@ export interface SplitEntryData {
   user?: User
 }
 
-interface SplitEntryDataInternal extends SplitEntryData {
-  focusOnMount?: boolean
-}
-
 export interface FormData {
   title: string
   paidByIndex: number
-  entries: SplitEntryDataInternal[]
+  entries: SplitEntryData[]
 }
 
 export type FormActionType =
@@ -77,8 +73,6 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
 
       if (action.user) {
         newState.entries[action.index].email = action.user.email
-      } else {
-        newState.entries[action.index].focusOnMount = true
       }
       return newState
 

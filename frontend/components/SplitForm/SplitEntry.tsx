@@ -1,12 +1,9 @@
 import { FormActionType, FormData } from './formData'
 import { Icon } from '@components/Icon'
-import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
-import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
-import { TextInputWithUserSuggestions } from '@components/TextInputWithUserSuggestions'
+import { TextInputUserPicker } from '@components/TextInputUserPicker'
 import { useTheme } from '@styling/theme'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutRectangle, Pressable, ScrollView, View } from 'react-native'
@@ -37,7 +34,6 @@ export function SplitEntry({
 }) {
   const theme = useTheme()
   const layout = useRef<LayoutRectangle | null>(null)
-  const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { t } = useTranslation()
 
   const entry = formState.entries[index]
@@ -79,63 +75,29 @@ export function SplitEntry({
         />
       </Pressable>
 
-      <View style={{ flex: 5 }}>
-        {!entry.user && (
-          <TextInputWithUserSuggestions
-            groupId={groupId}
-            value={entry.email}
-            selectTextOnFocus
-            autoFocus={entry.focusOnMount}
-            onSuggestionSelect={(user) => {
-              updateForm({ type: 'setUser', index, user })
-            }}
-            onChangeText={(val) => {
-              updateForm({ type: 'setEmail', index, email: val })
-            }}
-            style={{ flex: 1, margin: 4 }}
-            onFocus={() => {
-              scrollToThis()
-              updateForm({ type: 'clearFocusOnMount', index })
-            }}
-            filterSuggestions={(user) =>
-              user.filter(
-                (u) =>
-                  u.email === entry.email || formState.entries.every((e) => e.email !== u.email)
-              )
-            }
-          />
-        )}
-
-        {entry.user && (
-          <Pressable
-            onPress={() => updateForm({ type: 'setUser', index, user: undefined })}
-            tabIndex={-1}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginHorizontal: 4,
-              paddingVertical: 8,
-              marginTop: 4,
-              borderBottomWidth: 1,
-              borderBottomColor: theme.colors.outlineVariant,
-            }}
-          >
-            <ProfilePicture userId={entry.user.id} size={isSmallScreen ? 20 : 24} />
-            <Text
-              style={{
-                flex: 1,
-                marginLeft: 6,
-                color: theme.colors.onSurface,
-                fontSize: isSmallScreen ? 16 : 18,
-                fontWeight: 600,
-              }}
-              numberOfLines={1}
-            >
-              {entry.user.name}
-            </Text>
-          </Pressable>
-        )}
-      </View>
+      <TextInputUserPicker
+        groupId={groupId}
+        value={entry.email}
+        selectTextOnFocus
+        containerStyle={{ flex: 5 }}
+        user={entry.user}
+        onClearSelection={() => updateForm({ type: 'setUser', index, user: undefined })}
+        onSuggestionSelect={(user) => {
+          updateForm({ type: 'setUser', index, user })
+        }}
+        onChangeText={(val) => {
+          updateForm({ type: 'setEmail', index, email: val })
+        }}
+        onFocus={() => {
+          scrollToThis()
+          updateForm({ type: 'clearFocusOnMount', index })
+        }}
+        filterSuggestions={(user) =>
+          user.filter(
+            (u) => u.email === entry.email || formState.entries.every((e) => e.email !== u.email)
+          )
+        }
+      />
 
       <TextInput
         placeholder={t('form.amount')}

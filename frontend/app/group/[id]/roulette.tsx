@@ -1,7 +1,7 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { Text } from '@components/Text'
-import { TextInputWithUserSuggestions } from '@components/TextInputWithUserSuggestions'
+import { TextInputUserPicker } from '@components/TextInputUserPicker'
 import { getBalances } from '@database/getBalances'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTranslatedError } from '@hooks/useTranslatedError'
@@ -11,37 +11,42 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { TranslatableError, UserWithBalanceChange } from 'shared'
+import { TranslatableError, User, UserWithBalanceChange } from 'shared'
 
 interface FormProps {
   groupId: number
   setResult: (result: UserWithBalanceChange[]) => void
 }
 
+interface Entry {
+  email: string
+  user?: User
+}
+
 function Form({ groupId, setResult }: FormProps) {
   const theme = useTheme()
   const { t } = useTranslation()
-  const [emails, setEmails] = useState<string[]>([''])
+  const [entries, setEntries] = useState<Entry[]>([{ email: '' }])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useTranslatedError()
 
-  function cleanupEmails() {
-    setEmails((prev) => {
-      const newEmails = prev.filter((email) => email.trim() !== '')
-      if (newEmails.length === 0) {
-        newEmails.push('')
+  function cleanupEntries() {
+    setEntries((prev) => {
+      const newEntries = prev.filter((entry) => entry.email.trim() !== '')
+      if (newEntries.length === 0) {
+        newEntries.push({ email: '' })
       }
-      if (newEmails[newEmails.length - 1] !== '') {
-        newEmails.push('')
+      if (newEntries[newEntries.length - 1].email !== '') {
+        newEntries.push({ email: '' })
       }
-      return newEmails
+      return newEntries
     })
   }
 
   async function submit() {
     setError(null)
 
-    if (emails.length < 2) {
+    if (entries.length < 2) {
       setError(new TranslatableError('roulette.youNeedToAddAtLeastTwoUsers'))
       return
     }
@@ -50,7 +55,7 @@ function Form({ groupId, setResult }: FormProps) {
     try {
       const balances = await getBalances(
         groupId,
-        emails.filter((email) => email.trim() !== '')
+        entries.filter((entry) => entry.email.trim() !== '').map((entry) => entry.email)
       )
       setResult(balances)
     } catch (e) {
@@ -71,31 +76,44 @@ function Form({ groupId, setResult }: FormProps) {
       }}
     >
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 100 }}>
-        {emails.map((email, index) => (
-          <TextInputWithUserSuggestions
+        {entries.map((entry, index) => (
+          <TextInputUserPicker
             key={index}
             groupId={groupId}
-            value={email}
+            value={entry.email}
+            user={entry.user}
+            selectTextOnFocus
             filterSuggestions={(suggestions) =>
-              suggestions.filter((s) => !emails.includes(s.email))
+              suggestions.filter(
+                (s) =>
+                  s.email === entry.email || entries.find((e) => e.email === s.email) === undefined
+              )
             }
             onChangeText={(val) => {
-              setEmails((prev) => {
+              setEntries((prev) => {
                 const newEmails = [...prev]
-                newEmails[index] = val
+                newEmails[index] = { email: val, user: undefined }
                 return newEmails
               })
-              cleanupEmails()
+              cleanupEntries()
             }}
             onSuggestionSelect={(user) => {
-              setEmails((prev) => {
+              setEntries((prev) => {
                 const newEmails = [...prev]
-                newEmails[index] = user.email
+                newEmails[index] = { email: user.email, user }
                 return newEmails
               })
-              cleanupEmails()
+              cleanupEntries()
             }}
-            style={{ zIndex: emails.length - index }}
+            onClearSelection={() => {
+              setEntries((prev) => {
+                const newEmails = [...prev]
+                newEmails[index] = { email: entry.email, user: undefined }
+                return newEmails
+              })
+              cleanupEntries()
+            }}
+            containerStyle={{ zIndex: entries.length - index }}
           />
         ))}
       </ScrollView>
