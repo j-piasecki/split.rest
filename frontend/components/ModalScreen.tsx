@@ -92,7 +92,7 @@ function ModalScreen({
   children,
   onLayout,
   maxWidth = 768,
-  maxHeight = 600,
+  maxHeight = 800,
 }: ModalScreenProps) {
   const theme = useTheme()
 

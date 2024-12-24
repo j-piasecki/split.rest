@@ -262,7 +262,7 @@ export default function SplitInfoScreen() {
   }, [isLoadingHistory, groupInfo])
 
   return (
-    <Modal title={t('screenName.splitInfo')} returnPath={`/group/${id}`} maxWidth={500}>
+    <Modal title={t('screenName.splitInfo')} returnPath={`/group/${id}`} maxWidth={600}>
       {(isLoadingHistory || groupInfo === undefined) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size='small' color={theme.colors.onSurface} />

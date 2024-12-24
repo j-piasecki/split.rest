@@ -278,7 +278,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
       >
         <Animated.View style={[{ flex: 1 }, scaleStyle]}>{props.children}</Animated.View>
       </Pressable>
-      <Modal visible={visible} onRequestClose={() => setVisible(false)} transparent>
+      <Modal visible={visible} statusBarTranslucent onRequestClose={() => setVisible(false)} transparent>
         <Animated.View
           style={StyleSheet.absoluteFillObject}
           entering={isSmallScreen ? FadeIn.duration(300) : undefined}

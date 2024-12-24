@@ -79,7 +79,7 @@ export default function Modal() {
   const { data: splitInfo } = useSplitInfo(Number(id), Number(splitId))
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.editSplit')} maxWidth={500}>
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.editSplit')} maxWidth={600}>
       {(!groupInfo || !splitInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={theme.colors.onSurface} />

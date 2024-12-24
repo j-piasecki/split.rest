@@ -17,7 +17,7 @@ import { measure } from '@utils/measure'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Modal, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native'
+import { Modal, Platform, Pressable, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function MembersButton({ info }: { info: GroupInfo | undefined }) {
@@ -231,7 +231,7 @@ export default function GroupScreen() {
               <Pane
                 icon='home'
                 title={t('tabs.group')}
-                style={{ flex: 1, minWidth: 420, height: '100%' }}
+                style={[{ flex: 1, height: '100%' }, Platform.OS === 'web' && { minWidth: 420 }]}
                 containerStyle={{ flex: 1 }}
               >
                 <ScrollView
@@ -276,6 +276,7 @@ export default function GroupScreen() {
                 <Modal
                   visible={membersExpanded}
                   transparent
+                  statusBarTranslucent
                   onRequestClose={() => {
                     setMembersExpanded(false)
                   }}
