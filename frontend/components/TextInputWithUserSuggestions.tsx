@@ -47,12 +47,14 @@ export interface TextInputWithUserSuggestionsProps
   extends Omit<TextInputWithSuggestionsProps<User>, 'getSuggestions' | 'renderSuggestion'> {
   groupId: number
   onSuggestionSelect: (user: User) => void
+  filterSuggestions?: (suggestions: User[]) => User[]
 }
 
 export function TextInputWithUserSuggestions({
   groupId,
   onSuggestionSelect,
   onChangeText,
+  filterSuggestions,
   ...rest
 }: TextInputWithUserSuggestionsProps) {
   const ref = useRef<TextInputRN>(null)
@@ -60,9 +62,14 @@ export function TextInputWithUserSuggestions({
   const { t } = useTranslation()
 
   const getSuggestions = useCallback(
-    async (val: string) =>
-      permissions?.canReadMembers() ? await getGroupMemberAutocompletions(groupId, val) : [],
-    [groupId, permissions]
+    async (val: string) => {
+      const suggestions = permissions?.canReadMembers()
+        ? await getGroupMemberAutocompletions(groupId, val)
+        : []
+
+      return filterSuggestions ? filterSuggestions(suggestions) : suggestions
+    },
+    [groupId, permissions, filterSuggestions]
   )
 
   return (

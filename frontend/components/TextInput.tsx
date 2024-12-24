@@ -3,6 +3,7 @@ import { resolveFontName } from '@utils/resolveFontName'
 import React, { useMemo } from 'react'
 import {
   Platform,
+  StyleProp,
   StyleSheet,
   TextInputProps,
   TextInput as TextInputRN,
@@ -14,10 +15,22 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 export interface Props extends TextInputProps {
   error?: boolean
   resetError?: () => void
+  inputStyle?: StyleProp<TextStyle>
 }
 
 export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput(
-  { style, placeholder, value, onChangeText, error, resetError, onFocus, onBlur, ...rest }: Props,
+  {
+    style,
+    placeholder,
+    value,
+    onChangeText,
+    error,
+    resetError,
+    onFocus,
+    onBlur,
+    inputStyle,
+    ...rest
+  }: Props,
   ref
 ) {
   const theme = useTheme()
@@ -92,6 +105,7 @@ export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput
             fontWeight: '600',
           },
           fontStyle,
+          inputStyle,
         ]}
         value={value}
         onChangeText={(value) => {

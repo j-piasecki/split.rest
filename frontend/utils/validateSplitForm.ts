@@ -10,7 +10,7 @@ export interface ValidationResult {
 
 export async function validateSplitForm({
   title,
-  paidBy,
+  paidByIndex,
   entries,
 }: FormData): Promise<ValidationResult> {
   if (entries.length < 2) {
@@ -27,6 +27,7 @@ export async function validateSplitForm({
     }
   }
 
+  const paidBy = entries[paidByIndex].email
   const sumToSave = entries.reduce((acc, entry) => acc + Number(entry.amount), 0)
 
   if (Number.isNaN(sumToSave)) {

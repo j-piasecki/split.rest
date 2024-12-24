@@ -19,6 +19,7 @@ export interface RoundIconButtonProps {
   style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
   color?: string
   isLoading?: boolean
+  tabIndex?: 0 | -1
 }
 
 export function RoundIconButton({
@@ -29,6 +30,7 @@ export function RoundIconButton({
   style,
   color,
   isLoading,
+  tabIndex,
 }: RoundIconButtonProps) {
   const theme = useTheme()
 
@@ -36,6 +38,7 @@ export function RoundIconButton({
     <Pressable
       onPress={onPress}
       disabled={disabled}
+      tabIndex={tabIndex}
       style={({ pressed, hovered }) => {
         const otherStyles =
           typeof style === 'function' ? style({ pressed, hovered }) : (style ?? {})
