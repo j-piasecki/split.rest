@@ -79,7 +79,7 @@ function Form({ groupId, setResult }: FormProps) {
         pointerEvents: loading ? 'none' : 'auto',
       }}
     >
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 100 }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 100 }} keyboardShouldPersistTaps='handled'>
         <Pane
           icon='group'
           title={t('splitInfo.participants')}
