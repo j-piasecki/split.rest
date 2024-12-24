@@ -1,2 +1,2 @@
-export { FormData } from './formData'
+export { FormData, SplitEntryData } from './formData'
 export { SplitForm } from './SplitForm'

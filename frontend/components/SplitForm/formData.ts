@@ -5,13 +5,16 @@ export interface SplitEntryData {
   email: string
   amount: string
   user?: User
+}
+
+interface SplitEntryDataInternal extends SplitEntryData {
   focusOnMount?: boolean
 }
 
 export interface FormData {
   title: string
   paidByIndex: number
-  entries: SplitEntryData[]
+  entries: SplitEntryDataInternal[]
 }
 
 export type FormActionType =

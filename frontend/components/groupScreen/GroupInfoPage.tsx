@@ -6,6 +6,7 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
+import { beginNewSplit } from '@utils/splitCreationContext'
 import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
@@ -157,6 +158,7 @@ export function GroupActionButtons({ info }: { info: GroupInfo }) {
       {permissions?.canCreateSplits() && (
         <Button
           onPress={() => {
+            beginNewSplit()
             router.navigate(`/group/${info.id}/addSplit`)
           }}
           title={t('groupInfo.addSplit')}

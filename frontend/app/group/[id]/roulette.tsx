@@ -6,7 +6,8 @@ import { getBalances } from '@database/getBalances'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
-import { useLocalSearchParams } from 'expo-router'
+import { beginNewSplit } from '@utils/splitCreationContext'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
@@ -75,6 +76,9 @@ function Form({ groupId, setResult }: FormProps) {
             key={index}
             groupId={groupId}
             value={email}
+            filterSuggestions={(suggestions) =>
+              suggestions.filter((s) => !emails.includes(s.email))
+            }
             onChangeText={(val) => {
               setEmails((prev) => {
                 const newEmails = [...prev]
@@ -120,8 +124,11 @@ function Form({ groupId, setResult }: FormProps) {
   )
 }
 
-function Result({ result }: { result: UserWithBalanceChange[] }) {
+function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId: number }) {
   const theme = useTheme()
+  const router = useRouter()
+  const { t } = useTranslation()
+
   return (
     <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 8 }}>
       <ScrollView style={{ flex: 1 }}>
@@ -153,6 +160,18 @@ function Result({ result }: { result: UserWithBalanceChange[] }) {
           )
         })}
       </ScrollView>
+
+      <Button
+        leftIcon='split'
+        title={t('roulette.createSplit')}
+        onPress={() => {
+          beginNewSplit({
+            participants: result.map((user) => ({ userOrEmail: user })),
+            paidByEmail: result[0].email,
+          })
+          router.navigate(`/group/${groupId}/addSplit`)
+        }}
+      />
     </View>
   )
 }
@@ -176,7 +195,7 @@ export default function Roulette() {
         </View>
       )}
       {canAccessRoulette && result === null && <Form groupId={Number(id)} setResult={setResult} />}
-      {canAccessRoulette && result !== null && <Result result={result} />}
+      {canAccessRoulette && result !== null && <Result groupId={Number(id)} result={result} />}
     </ModalScreen>
   )
 }

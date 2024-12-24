@@ -1,16 +1,37 @@
 import ModalScreen from '@components/ModalScreen'
-import { FormData, SplitForm } from '@components/SplitForm'
+import { FormData, SplitEntryData, SplitForm } from '@components/SplitForm'
 import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { getSplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import { BalanceChange, GroupInfo, User } from 'shared'
+
+function initialEntriesFromContext(currentUser: User): SplitEntryData[] {
+  const splitContext = getSplitCreationContext()
+
+  const initialEntries =
+    splitContext.participants === null
+      ? [{ email: currentUser.email, amount: '', user: currentUser }]
+      : splitContext.participants.map((participant) => ({
+          email:
+            typeof participant.userOrEmail === 'string'
+              ? participant.userOrEmail
+              : participant.userOrEmail.email,
+          amount: '',
+          user: typeof participant.userOrEmail === 'string' ? undefined : participant.userOrEmail,
+        }))
+
+  initialEntries.push({ email: '', amount: '', user: undefined })
+
+  return initialEntries
+}
 
 function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
   const router = useRouter()
@@ -48,10 +69,8 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
   return (
     <View style={{ flex: 1, paddingHorizontal: 16 }}>
       <SplitForm
-        initialEntries={[
-          { email: user.email, amount: '', user: user },
-          { email: '', amount: '' },
-        ]}
+        initialEntries={initialEntriesFromContext(user)}
+        initialPaidByIndex={getSplitCreationContext().paidByIndex}
         groupInfo={groupInfo}
         onSubmit={save}
         waiting={waiting}

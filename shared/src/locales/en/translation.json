@@ -92,7 +92,8 @@
 
   "roulette": {
     "youNeedToAddAtLeastTwoUsers": "You need to add at least 2 users",
-    "submit": "Submit"
+    "submit": "Submit",
+    "createSplit": "Create split"
   },
 
   "joinGroup": {
