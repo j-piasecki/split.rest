@@ -78,6 +78,7 @@ function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalP
 export interface ModalScreenProps {
   goBack: () => void
   title: string
+  opaque: boolean
   children: React.ReactNode
   maxWidth?: number
   maxHeight?: number
@@ -87,6 +88,7 @@ export interface ModalScreenProps {
 function ModalScreen({
   goBack,
   title,
+  opaque,
   children,
   onLayout,
   maxWidth = 768,
@@ -101,7 +103,7 @@ function ModalScreen({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#000000a0',
+        backgroundColor: opaque ? '#000000a0' : 'transparent',
       }}
     >
       <Pressable style={StyleSheet.absoluteFill} onPress={goBack} />
@@ -148,9 +150,10 @@ export interface ModalProps {
   maxWidth?: number
   maxHeight?: number
   onLayout?: (event: LayoutChangeEvent) => void
+  opaque?: boolean
 }
 
-export default function Modal({ returnPath, ...props }: ModalProps) {
+export default function Modal({ returnPath, opaque = true, ...props }: ModalProps) {
   const router = useRouter()
   const isSmallScreen = useDisplayClass() <= DisplayClass.Expanded
 
@@ -169,6 +172,6 @@ export default function Modal({ returnPath, ...props }: ModalProps) {
       </FullscreenModal>
     )
   } else {
-    return <ModalScreen {...props} goBack={goBack} />
+    return <ModalScreen {...props} goBack={goBack} opaque={opaque} />
   }
 }

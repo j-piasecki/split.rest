@@ -69,7 +69,12 @@ export default function Modal() {
   const { data: groupInfo } = useGroupInfo(Number(id))
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.addSplit')} maxWidth={500}>
+    <ModalScreen
+      returnPath={`/group/${id}`}
+      title={t('screenName.addSplit')}
+      maxWidth={500}
+      opaque={false}
+    >
       {(!user || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={theme.colors.onSurface} />

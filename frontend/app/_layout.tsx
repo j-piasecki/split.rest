@@ -1,4 +1,5 @@
 import { useFonts } from '@hooks/useFonts'
+import { DefaultTheme, ThemeProvider as NavigationThemeProvider } from '@react-navigation/native'
 import { ThemeProvider, useTheme } from '@styling/theme'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useAuth } from '@utils/auth'
@@ -8,7 +9,7 @@ import { queryClient } from '@utils/queryClient'
 import { useLocales } from 'expo-localization'
 import { Stack, usePathname } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import 'utils/firebase'
@@ -29,6 +30,17 @@ function Content() {
   const [fontsLoaded, _error] = useFonts()
 
   const isLoading = user === undefined || !fontsLoaded
+
+  const navigationTheme = useMemo(
+    () => ({
+      ...DefaultTheme,
+      colors: {
+        ...DefaultTheme.colors,
+        background: theme.colors.surface,
+      },
+    }),
+    [theme.colors.surface]
+  )
 
   useEffect(() => {
     i18n.changeLanguage(locales[0].languageCode!)
@@ -62,7 +74,7 @@ function Content() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
+    <NavigationThemeProvider value={navigationTheme}>
       <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
         <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
         <Stack.Screen name='home' options={{ title: t('appName'), animation: 'none' }} />
@@ -104,7 +116,7 @@ function Content() {
           options={{ title: t('screenName.editSplit'), ...modalOptions }}
         />
       </Stack>
-    </View>
+    </NavigationThemeProvider>
   )
 }
 
