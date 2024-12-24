@@ -57,7 +57,7 @@ function JoinLinkManager({
           )}
           {link && (
             <View style={{ gap: 16 }}>
-              <View style={{ flexDirection: 'row', gap: 8 }}>
+              <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
                 <TextInput
                   value={linkText}
                   editable={false}
