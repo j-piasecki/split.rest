@@ -145,7 +145,7 @@ function Form() {
   return (
     <ScrollView
       contentContainerStyle={{
-        flex: 1,
+        flexGrow: 1,
         gap: 24,
         justifyContent: 'space-between',
         paddingHorizontal: 16,

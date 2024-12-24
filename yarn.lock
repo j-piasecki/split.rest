@@ -13255,7 +13255,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-reanimated@npm:^3.16.2":
+"react-native-reanimated@npm:3.16.3":
   version: 3.16.3
   resolution: "react-native-reanimated@npm:3.16.3"
   dependencies:
@@ -13275,6 +13275,29 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 5fb997414a56cf5dd5602eaa32bf73eb75a35c4f03fd5d24fff1787745b38e5373fe6eb7ce0b6c9db325856358cfff69545299a1a610abda2f0f189172bed4bd
+  languageName: node
+  linkType: hard
+
+"react-native-reanimated@patch:react-native-reanimated@npm%3A3.16.3#./.yarn/patches/react-native-reanimated-npm-3.16.3-5a92636653.patch::locator=split%40workspace%3A.":
+  version: 3.16.3
+  resolution: "react-native-reanimated@patch:react-native-reanimated@npm%3A3.16.3#./.yarn/patches/react-native-reanimated-npm-3.16.3-5a92636653.patch::version=3.16.3&hash=186ea6&locator=split%40workspace%3A."
+  dependencies:
+    "@babel/plugin-transform-arrow-functions": ^7.0.0-0
+    "@babel/plugin-transform-class-properties": ^7.0.0-0
+    "@babel/plugin-transform-classes": ^7.0.0-0
+    "@babel/plugin-transform-nullish-coalescing-operator": ^7.0.0-0
+    "@babel/plugin-transform-optional-chaining": ^7.0.0-0
+    "@babel/plugin-transform-shorthand-properties": ^7.0.0-0
+    "@babel/plugin-transform-template-literals": ^7.0.0-0
+    "@babel/plugin-transform-unicode-regex": ^7.0.0-0
+    "@babel/preset-typescript": ^7.16.7
+    convert-source-map: ^2.0.0
+    invariant: ^2.2.4
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+    react: "*"
+    react-native: "*"
+  checksum: 03edecfa8e874648d3e0801114b5aff189e9a93fd4a785828473ee3df08dd760baabdf89c9416899f9a6e4dd4af4b23652a21bf8ca1d1998da928b4e3516a219
   languageName: node
   linkType: hard
 

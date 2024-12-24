@@ -102,7 +102,7 @@ function Form({ info }: { info: GroupInfo }) {
       style={{ flex: 1 }}
       contentContainerStyle={{
         gap: 16,
-        flex: 1,
+        flexGrow: 1,
         paddingHorizontal: 16,
         paddingTop: 8,
         justifyContent: 'space-between',
