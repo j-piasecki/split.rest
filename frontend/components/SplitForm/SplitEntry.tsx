@@ -41,6 +41,7 @@ export function SplitEntry({
   const { t } = useTranslation()
 
   const entry = formState.entries[index]
+  const showDeleteButton = entry.email.trim().length > 0 || entry.amount.trim().length > 0
 
   function scrollToThis() {
     if (layout.current && parentLayout?.current) {
@@ -155,8 +156,9 @@ export function SplitEntry({
         }}
       />
 
-      <View style={{ width: 20, height: 20 }}>
+      <View style={{ width: 20, height: 20, opacity: showDeleteButton ? 1 : 0 }}>
         <RoundIconButton
+          disabled={!showDeleteButton}
           icon='close'
           size={20}
           onPress={() => updateForm({ type: 'remove', index })}
