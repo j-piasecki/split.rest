@@ -176,9 +176,12 @@ export function TextInputWithSuggestions<T>({
             setKeyboardHighlightedSuggestion((prev) =>
               prev === null ? suggestions.length - 1 : Math.max(prev - 1, 0)
             )
-          } else if (e.nativeEvent.key === 'Enter' && keyboardHighligtedSuggestion !== null) {
+          } else if (
+            e.nativeEvent.key === 'Enter' &&
+            (keyboardHighligtedSuggestion !== null || suggestions.length > 0)
+          ) {
             e.preventDefault()
-            selectSuggestion(suggestions[keyboardHighligtedSuggestion])
+            selectSuggestion(suggestions[keyboardHighligtedSuggestion ?? 0])
             setKeyboardHighlightedSuggestion(null)
           } else if (e.nativeEvent.key === 'Escape' && suggestionBoxVisible) {
             e.preventDefault()
