@@ -110,7 +110,7 @@ function Form({ info }: { info: GroupInfo }) {
     >
       <View style={{ gap: 16 }}>
         <Pane
-          icon='link'
+          icon='home'
           title={t('groupSettings.groupName')}
           textLocation='start'
           collapsed={false}
