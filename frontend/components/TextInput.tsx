@@ -106,6 +106,7 @@ export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput
           isFocused.value = false
           onBlur?.(e)
         }}
+        numberOfLines={1}
         {...rest}
       />
       <Animated.Text style={[{ position: 'absolute', pointerEvents: 'none' }, hintStyle]}>
