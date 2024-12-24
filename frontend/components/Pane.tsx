@@ -5,7 +5,7 @@ import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { useState } from 'react'
-import { Pressable, StyleProp, View, ViewStyle } from 'react-native'
+import { LayoutChangeEvent, Pressable, StyleProp, View, ViewStyle } from 'react-native'
 
 export interface PaneHeaderProps {
   icon?: IconName
@@ -86,6 +86,7 @@ export interface PaneProps {
   collapseIcon?: IconName
   orientation?: 'vertical' | 'horizontal'
   headerHidden?: boolean
+  onLayout?: (event: LayoutChangeEvent) => void
 }
 
 export function Pane({
@@ -104,6 +105,7 @@ export function Pane({
   collapseIcon,
   orientation = 'horizontal',
   headerHidden = false,
+  onLayout,
 }: PaneProps) {
   const theme = useTheme()
   const [innerCollapsed, setInnerCollapsed] = useState(startCollapsed ?? false)
@@ -112,6 +114,7 @@ export function Pane({
 
   return (
     <View
+      onLayout={onLayout}
       style={[
         {
           backgroundColor: theme.colors.surfaceContainer,

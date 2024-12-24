@@ -47,9 +47,10 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
         return {
           email: user.email,
           amount: (Number(splitInfo.total) - Number(user.change)).toFixed(2),
+          user: user,
         }
       }
-      return { email: user.email, amount: (-Number(user.change)).toFixed(2) }
+      return { email: user.email, amount: (-Number(user.change)).toFixed(2), user: user }
     }),
     { email: '', amount: '' },
   ]

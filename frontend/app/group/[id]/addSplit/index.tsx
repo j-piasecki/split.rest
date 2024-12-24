@@ -49,7 +49,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
     <View style={{ flex: 1, paddingHorizontal: 16 }}>
       <SplitForm
         initialEntries={[
-          { email: user.email, amount: '' },
+          { email: user.email, amount: '', user: user },
           { email: '', amount: '' },
         ]}
         groupInfo={groupInfo}
