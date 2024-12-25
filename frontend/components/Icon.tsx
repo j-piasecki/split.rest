@@ -8,11 +8,11 @@ export type IconName =
   | 'addModerator'
   | 'add'
   | 'arrowDown'
-  | 'arrowForward'
   | 'arrowUp'
   | 'calendar'
   | 'check'
   | 'chevronBack'
+  | 'chevronForward'
   | 'closeRightPanel'
   | 'close'
   | 'copy'
@@ -61,11 +61,11 @@ const iconMap: Record<IconName, unknown> = {
   addModerator: require('@assets/icons/add_moderator.svg'),
   add: require('@assets/icons/add.svg'),
   arrowDown: require('@assets/icons/arrow_down.svg'),
-  arrowForward: require('@assets/icons/arrow_forward.svg'),
   arrowUp: require('@assets/icons/arrow_up.svg'),
   calendar: require('@assets/icons/calendar.svg'),
   check: require('@assets/icons/check.svg'),
   chevronBack: require('@assets/icons/chevron_back.svg'),
+  chevronForward: require('@assets/icons/chevron_forward.svg'),
   closeRightPanel: require('@assets/icons/close_right_panel.svg'),
   close: require('@assets/icons/close.svg'),
   copy: require('@assets/icons/copy.svg'),

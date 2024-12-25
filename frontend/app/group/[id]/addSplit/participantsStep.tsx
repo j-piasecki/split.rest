@@ -101,7 +101,7 @@ function ParticipansPicker({ user }: { user: User }) {
         </Pane>
       </ScrollView>
 
-      <View style={{ gap: 8 }}>
+      <View style={{ gap: 8, paddingHorizontal: 16 }}>
         {error && (
           <Text
             style={{
@@ -114,7 +114,7 @@ function ParticipansPicker({ user }: { user: User }) {
             {error}
           </Text>
         )}
-        <Button leftIcon='arrowForward' title={t('splitType.buttonNext')} onPress={submit} />
+        <Button rightIcon='chevronForward' title={t('splitType.buttonNext')} onPress={submit} />
       </View>
     </View>
   )

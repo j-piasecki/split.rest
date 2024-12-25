@@ -72,7 +72,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
         waiting={waiting}
         error={error}
         buttonTitle='splitType.buttonNext'
-        buttonIcon='arrowForward'
+        buttonIcon='chevronForward'
         buttonIconLocation='right'
       />
     </View>

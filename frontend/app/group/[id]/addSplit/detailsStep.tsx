@@ -84,7 +84,7 @@ export default function Modal() {
             </Text>
           )}
           <Button
-            rightIcon='arrowForward'
+            rightIcon='chevronForward'
             title={t('splitType.buttonNext')}
             onPress={() => {
               try {
