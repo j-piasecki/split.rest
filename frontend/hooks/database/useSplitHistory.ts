@@ -18,7 +18,15 @@ export function useSplitHistory(groupId?: number, splitId?: number) {
       )
 
       result?.forEach((split) => {
-        split.users.sort((a, b) => a.name.localeCompare(b.name))
+        split.users.sort((a, b) => {
+          const nameComparison = a.name.localeCompare(b.name)
+
+          if (nameComparison !== 0) {
+            return nameComparison
+          }
+
+          return a.email.localeCompare(b.email)
+        })
       })
 
       return result ?? []
