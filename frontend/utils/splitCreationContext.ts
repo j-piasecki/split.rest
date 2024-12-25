@@ -112,14 +112,26 @@ class SplitCreationContext {
       throw new TranslatableError('splitValidation.payerNotFound')
     }
 
+    if (!this.title) {
+      throw new TranslatableError('splitValidation.titleIsRequired')
+    }
+
+    if (!this.totalAmount) {
+      throw new TranslatableError('splitValidation.totalRequired')
+    }
+
+    if (!auth.currentUser) {
+      throw new TranslatableError('api.mustBeLoggedIn')
+    }
+
     return {
       id: -1,
-      title: this.title ?? '',
-      total: this.totalAmount ?? '',
+      title: this.title,
+      total: this.totalAmount,
       timestamp: this.timestamp ?? Date.now(),
       paidById: paidById,
       version: 1,
-      createdById: auth.currentUser?.uid ?? '',
+      createdById: auth.currentUser.uid,
       updatedAt: this.timestamp ?? Date.now(),
       isUserParticipating: users.find((user) => user.email === auth.currentUser?.email)
         ? true
