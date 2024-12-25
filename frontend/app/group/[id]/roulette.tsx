@@ -1,10 +1,9 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
+import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
 import { ProfilePicture } from '@components/ProfilePicture'
-import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
-import { TextInputUserPicker } from '@components/TextInputUserPicker'
 import { getBalances } from '@database/getBalances'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTranslatedError } from '@hooks/useTranslatedError'
@@ -14,37 +13,19 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { TranslatableError, User, UserWithBalanceChange } from 'shared'
+import { TranslatableError, UserWithBalanceChange } from 'shared'
 
 interface FormProps {
   groupId: number
   setResult: (result: UserWithBalanceChange[]) => void
 }
 
-interface Entry {
-  email: string
-  user?: User
-}
-
 function Form({ groupId, setResult }: FormProps) {
   const theme = useTheme()
   const { t } = useTranslation()
-  const [entries, setEntries] = useState<Entry[]>([{ email: '' }])
+  const [entries, setEntries] = useState<PersonEntry[]>([{ email: '' }])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useTranslatedError()
-
-  function cleanupEntries() {
-    setEntries((prev) => {
-      const newEntries = prev.filter((entry) => entry.email.trim() !== '')
-      if (newEntries.length === 0) {
-        newEntries.push({ email: '' })
-      }
-      if (newEntries[newEntries.length - 1].email !== '') {
-        newEntries.push({ email: '' })
-      }
-      return newEntries
-    })
-  }
 
   async function submit() {
     setError(null)
@@ -90,79 +71,7 @@ function Form({ groupId, setResult }: FormProps) {
           textLocation='start'
           containerStyle={{ gap: 16, padding: 16, paddingTop: 8 }}
         >
-          {entries.map((entry, index) => {
-            const deleteVisible = entry.email.trim().length > 0
-            return (
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  zIndex: entries.length - index,
-                }}
-              >
-                <TextInputUserPicker
-                  key={index}
-                  groupId={groupId}
-                  value={entry.email}
-                  user={entry.user}
-                  selectTextOnFocus
-                  filterSuggestions={(suggestions) =>
-                    suggestions.filter(
-                      (s) =>
-                        s.email === entry.email ||
-                        entries.find((e) => e.email === s.email) === undefined
-                    )
-                  }
-                  onChangeText={(val) => {
-                    setEntries((prev) => {
-                      const newEmails = [...prev]
-                      newEmails[index] = { email: val, user: undefined }
-                      return newEmails
-                    })
-                    cleanupEntries()
-                  }}
-                  onSuggestionSelect={(user) => {
-                    setEntries((prev) => {
-                      const newEmails = [...prev]
-                      newEmails[index] = { email: user.email, user }
-                      return newEmails
-                    })
-                    cleanupEntries()
-                  }}
-                  onClearSelection={() => {
-                    setEntries((prev) => {
-                      const newEmails = [...prev]
-                      newEmails[index] = { email: entry.email, user: undefined }
-                      return newEmails
-                    })
-                    cleanupEntries()
-                  }}
-                  containerStyle={{ flex: 1 }}
-                />
-                <View
-                  style={{
-                    width: 20,
-                    height: 20,
-                    marginHorizontal: 4,
-                    marginBottom: 4,
-                    opacity: deleteVisible ? 1 : 0,
-                  }}
-                >
-                  <RoundIconButton
-                    disabled={!deleteVisible}
-                    icon='close'
-                    size={20}
-                    onPress={() => {
-                      setEntries((prev) => prev.filter((_, i) => i !== index))
-                      cleanupEntries()
-                    }}
-                    style={{ position: 'absolute' }}
-                  />
-                </View>
-              </View>
-            )
-          })}
+          <PeoplePicker entries={entries} setEntries={setEntries} groupId={groupId} />
         </Pane>
       </ScrollView>
 
