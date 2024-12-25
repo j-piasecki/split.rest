@@ -8,22 +8,27 @@ import { getBalances } from '@database/getBalances'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
+import { useAuth } from '@utils/auth'
 import { beginNewSplit } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
-import { TranslatableError, UserWithBalanceChange } from 'shared'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { TranslatableError, User, UserWithBalanceChange } from 'shared'
 
 interface FormProps {
   groupId: number
   setResult: (result: UserWithBalanceChange[]) => void
+  user: User
 }
 
-function Form({ groupId, setResult }: FormProps) {
+function Form({ groupId, setResult, user }: FormProps) {
   const theme = useTheme()
   const { t } = useTranslation()
-  const [entries, setEntries] = useState<PersonEntry[]>([{ email: '' }])
+  const [entries, setEntries] = useState<PersonEntry[]>([
+    { email: user.email, user },
+    { email: '' },
+  ])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useTranslatedError()
 
@@ -42,6 +47,12 @@ function Form({ groupId, setResult }: FormProps) {
         groupId,
         entries.filter((entry) => entry.email.trim() !== '').map((entry) => entry.email)
       )
+
+      if (balances.length !== entries.length - 1) {
+        // TODO: show which user was not found
+        throw new TranslatableError('api.notFound.user')
+      }
+
       setResult(balances)
     } catch (e) {
       setError(e)
@@ -166,6 +177,7 @@ export default function Roulette() {
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()
   const theme = useTheme()
+  const user = useAuth()
   const { data: permissions } = useGroupPermissions(Number(id))
   const [result, setResult] = useState<UserWithBalanceChange[] | null>(null)
 
@@ -173,15 +185,26 @@ export default function Roulette() {
 
   return (
     <ModalScreen returnPath={`/group/${id}`} title={t('screenName.roulette')} maxWidth={500}>
-      {!canAccessRoulette && (
+      {!user && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
-          <Text style={{ color: theme.colors.outline, fontSize: 20, textAlign: 'center' }}>
-            {t('api.insufficientPermissions.group.accessRoulette')}
-          </Text>
+          <ActivityIndicator color={theme.colors.onSurface} />
         </View>
       )}
-      {canAccessRoulette && result === null && <Form groupId={Number(id)} setResult={setResult} />}
-      {canAccessRoulette && result !== null && <Result groupId={Number(id)} result={result} />}
+      {user && (
+        <>
+          {!canAccessRoulette && (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+              <Text style={{ color: theme.colors.outline, fontSize: 20, textAlign: 'center' }}>
+                {t('api.insufficientPermissions.group.accessRoulette')}
+              </Text>
+            </View>
+          )}
+          {canAccessRoulette && result === null && (
+            <Form groupId={Number(id)} setResult={setResult} user={user} />
+          )}
+          {canAccessRoulette && result !== null && <Result groupId={Number(id)} result={result} />}
+        </>
+      )}
     </ModalScreen>
   )
 }
