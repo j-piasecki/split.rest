@@ -48,10 +48,13 @@ export function SplitEntry({
 
   function scrollToThis() {
     if (layout.current && parentLayout?.current) {
-      scrollRef?.current?.scrollTo({
-        y: parentLayout.current.y + layout.current.y - 100,
-        animated: true,
-      })
+      const targetScroll = parentLayout.current.y + layout.current.y - 50
+      setTimeout(() => {
+        scrollRef?.current?.scrollTo({
+          y: targetScroll,
+          animated: true,
+        })
+      }, 100)
     }
   }
 
