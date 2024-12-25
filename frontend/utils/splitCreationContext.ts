@@ -78,7 +78,7 @@ class SplitCreationContext {
     if (this.splitType === SplitMethod.Equal) {
       const amount = Math.floor((Number(this.totalAmount) * 100) / users.length) / 100
       const totalRounded = amount * users.length
-      const difference = (Number(this.totalAmount) - totalRounded) * 100
+      const difference = Math.floor((Number(this.totalAmount) - totalRounded) * 100)
       let distributed = 0
 
       this.participants.forEach((participant) => {
