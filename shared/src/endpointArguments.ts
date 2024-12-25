@@ -14,7 +14,7 @@ export interface CreateSplitArguments {
   groupId: number
   paidBy: string
   title: string
-  total: number
+  total: string
   timestamp: number
   balances: BalanceChange[]
 }

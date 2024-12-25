@@ -45,7 +45,7 @@ export async function validateSplitForm({
   }
 
   if (sumToSave < 0.01) {
-    throw new TranslatableError('splitValidation.totalMustBeGreaterThan0')
+    throw new TranslatableError('splitValidation.totalMustBeGreaterThanZero')
   }
 
   validateSplitTitle(title)
@@ -71,8 +71,8 @@ export async function validateSplitForm({
         throw new TranslatableError('splitValidation.userWithEmailNotFound', { email: entry.email })
       }
 
-      if (Number(entry.amount) < 0) {
-        throw new TranslatableError('splitValidation.amountsCannotBeNegative')
+      if (Number(entry.amount) <= 0) {
+        throw new TranslatableError('splitValidation.amountsMustBePositive')
       }
 
       if (entry.email === paidBy) {
@@ -81,7 +81,7 @@ export async function validateSplitForm({
 
       return {
         id: userData.id,
-        change: change,
+        change: change.toFixed(2),
       }
     })
   )

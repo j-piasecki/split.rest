@@ -34,7 +34,7 @@ export interface Member extends User {
 
 export interface BalanceChange {
   id: string
-  change: number
+  change: string
 }
 
 export interface UserWithBalanceChange extends User {

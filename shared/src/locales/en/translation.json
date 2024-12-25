@@ -89,14 +89,17 @@
     "members": "Members",
   
     "splitType": "New split",
+    "splitSummary": "Summary",
     "detailsStep": "Details",
-    "exactAmounts": "Exact amounts"
+    "exactAmounts": "Exact amounts",
+    "splitParticipants": "Participants"
   },
 
   "splitType": {
     "buttonNext": "Next",
     "selectType": "How would you like to split?",
-    "exactAmounts": "By exact amounts"
+    "exactAmounts": "By exact amounts",
+    "equalAmounts": "Equally"
   },
 
   "roulette": {
@@ -139,12 +142,15 @@
     "atLeastTwoEntries": "At least two entries are required",
     "youNeedToFillBothFields": "You need to fill both fields in the row",
     "amountsMustBeNumbers": "Amounts must be numbers",
-    "totalMustBeGreaterThan0": "Total must be greater than 0",
+    "totalMustBeGreaterThanZero": "Total must be greater than 0",
+    "totalRequired": "Total amount is required",
+    "totalAmountMustBeNumber": "Total amount must be a number",
     "titleIsRequired": "Title is required",
     "titleIsTooLong": "Title is too long",
     "thePayerDataMustBeFilledIn": "The payer data must be filled in",
     "duplicateEmailsAreNotAllowed": "Duplicate e-mails are not allowed",
-    "amountsCannotBeNegative": "Amounts cannot be negative",
+    "amountsMustBePositive": "Amounts must be positive",
+    "tooLittleToDivide": "The amount is too small to divide between participants",
     "payerNotFound": "Payer not found",
     "userNotFound": "User not found",
     "userWithEmailNotFound": "User with e-mail {{email}} not found"
@@ -158,7 +164,9 @@
   "form": {
     "title": "Title",
     "amount": "Amount",
-    "save": "Save"
+    "save": "Save",
+    "totalPaid": "Total paid",
+    "back": "Go back"
   },
 
   "member": {

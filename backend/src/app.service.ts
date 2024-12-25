@@ -64,18 +64,18 @@ export class AppService {
       throw new BadRequestException('api.split.payerNotInTransaction')
     }
 
-    const changeSum = args.balances.reduce((sum, { change }) => sum + change, 0)
+    const changeSum = args.balances.reduce((sum, { change }) => sum + Number(change), 0)
     if (Math.abs(changeSum) > 0.01) {
       throw new BadRequestException('api.split.sumOfChangesMustBeZero')
     }
 
     const payerGetsBack = args.balances.find(({ id }) => id === args.paidBy)?.change
     const othersLose = args.balances.reduce(
-      (sum, { id, change }) => (id !== args.paidBy ? sum + change : sum),
+      (sum, { id, change }) => (id !== args.paidBy ? sum + Number(change) : sum),
       0
     )
 
-    if (payerGetsBack && Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
+    if (payerGetsBack && Math.abs(Number(payerGetsBack) - Math.abs(othersLose)) > 0.01) {
       throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
     }
 
@@ -99,18 +99,18 @@ export class AppService {
       throw new BadRequestException('api.split.payerNotInTransaction')
     }
 
-    const changeSum = args.balances.reduce((sum, { change }) => sum + change, 0)
+    const changeSum = args.balances.reduce((sum, { change }) => sum + Number(change), 0)
     if (Math.abs(changeSum) > 0.01) {
       throw new BadRequestException('api.split.sumOfChangesMustBeZero')
     }
 
     const payerGetsBack = args.balances.find(({ id }) => id === args.paidBy)?.change
     const othersLose = args.balances.reduce(
-      (sum, { id, change }) => (id !== args.paidBy ? sum + change : sum),
+      (sum, { id, change }) => (id !== args.paidBy ? sum + Number(change) : sum),
       0
     )
 
-    if (payerGetsBack && Math.abs(payerGetsBack - Math.abs(othersLose)) > 0.01) {
+    if (payerGetsBack && Math.abs(Number(payerGetsBack) - Math.abs(othersLose)) > 0.01) {
       throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
     }
 
