@@ -98,7 +98,7 @@ function ModalScreen({
 
   return (
     <Animated.View
-      entering={FadeIn.duration(100)}
+      entering={opaque ? FadeIn.duration(100) : undefined}
       style={{
         flex: 1,
         justifyContent: 'center',

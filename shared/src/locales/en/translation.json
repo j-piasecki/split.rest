@@ -81,13 +81,20 @@
     "createGroup": "Create group",
     "group": "Group",
     "addUser": "Add member",
-    "addSplit": "Add split",
     "roulette": "Roulette",
     "groupSettings": "Settings",
     "splitInfo": "Split details",
     "editSplit": "Edit split",
     "profile": "Profile",
-    "members": "Members"
+    "members": "Members",
+  
+    "splitType": "New split",
+    "exactAmounts": "Exact amounts"
+  },
+
+  "splitType": {
+    "selectType": "How would you like to split?",
+    "exactAmounts": "By exact amounts"
   },
 
   "roulette": {

@@ -8,6 +8,7 @@ export type IconName =
   | 'addModerator'
   | 'add'
   | 'arrowDown'
+  | 'arrowForward'
   | 'arrowUp'
   | 'calendar'
   | 'check'
@@ -21,6 +22,7 @@ export type IconName =
   | 'deleteLink'
   | 'editAlt'
   | 'edit'
+  | 'exactAmount'
   | 'group'
   | 'home'
   | 'link'
@@ -58,6 +60,7 @@ const iconMap: Record<IconName, unknown> = {
   addModerator: require('@assets/icons/add_moderator.svg'),
   add: require('@assets/icons/add.svg'),
   arrowDown: require('@assets/icons/arrow_down.svg'),
+  arrowForward: require('@assets/icons/arrow_forward.svg'),
   arrowUp: require('@assets/icons/arrow_up.svg'),
   calendar: require('@assets/icons/calendar.svg'),
   check: require('@assets/icons/check.svg'),
@@ -71,6 +74,7 @@ const iconMap: Record<IconName, unknown> = {
   deleteLink: require('@assets/icons/delete_link.svg'),
   editAlt: require('@assets/icons/edit_alt.svg'),
   edit: require('@assets/icons/edit.svg'),
+  exactAmount: require('@assets/icons/exact_amount.svg'),
   group: require('@assets/icons/group.svg'),
   home: require('@assets/icons/home.svg'),
   link: require('@assets/icons/link.svg'),
