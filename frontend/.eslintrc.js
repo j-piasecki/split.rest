@@ -2,8 +2,9 @@ module.exports = {
   root: true,
   extends: ['plugin:@typescript-eslint/recommended', 'expo'],
   ignorePatterns: ['/dist/*'],
-  plugins: ['@tanstack/eslint-plugin-query'],
+  plugins: ['@tanstack/eslint-plugin-query', 'eslint-plugin-react-compiler'],
   rules: {
+    'react-compiler/react-compiler': 'error',
     'import/no-unresolved': 0,
     'curly': ['error', 'all'],
     '@typescript-eslint/no-unused-vars': [

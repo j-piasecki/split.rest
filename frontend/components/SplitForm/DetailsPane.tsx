@@ -29,6 +29,7 @@ export function DetailsPane({
   const toBePaid = useRef(0)
   const sumFromEntries = formState.entries.reduce((acc, entry) => acc + Number(entry.amount), 0)
   if (!Number.isNaN(sumFromEntries)) {
+    // eslint-disable-next-line react-compiler/react-compiler
     toBePaid.current = sumFromEntries
   }
 
@@ -77,6 +78,7 @@ export function DetailsPane({
                 payer:
                   formState.entries[formState.paidByIndex].user?.name ??
                   formState.entries[formState.paidByIndex].email,
+                // eslint-disable-next-line react-compiler/react-compiler
                 amount: toBePaid.current.toFixed(2),
                 currency: groupInfo.currency,
               }}

@@ -142,6 +142,7 @@ export function TextInputWithSuggestions<T>({
             inputRef(ref)
           } else if (inputRef) {
             // @ts-expect-error react types are weird
+            // eslint-disable-next-line react-compiler/react-compiler
             inputRef.current = ref
           }
         }}

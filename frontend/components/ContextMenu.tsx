@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import { Icon, IconName } from './Icon'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
