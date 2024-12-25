@@ -53,6 +53,7 @@ export function PeoplePicker({
         const deleteVisible = entry.email.trim().length > 0
         return (
           <View
+            key={index}
             style={{
               flex: 1,
               flexDirection: 'row',
@@ -76,7 +77,6 @@ export function PeoplePicker({
             )}
 
             <TextInputUserPicker
-              key={index}
               groupId={groupId}
               value={entry.email}
               user={entry.user}
