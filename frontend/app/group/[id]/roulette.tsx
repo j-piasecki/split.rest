@@ -172,7 +172,7 @@ export default function Roulette() {
   const canAccessRoulette = permissions?.canAccessRoulette() ?? false
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.roulette')} maxWidth={400}>
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.roulette')} maxWidth={500}>
       {!canAccessRoulette && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
           <Text style={{ color: theme.colors.outline, fontSize: 20, textAlign: 'center' }}>
