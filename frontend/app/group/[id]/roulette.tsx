@@ -71,7 +71,7 @@ function Form({ groupId, setResult }: FormProps) {
           textLocation='start'
           containerStyle={{ gap: 16, padding: 16, paddingTop: 8 }}
         >
-          <PeoplePicker entries={entries} setEntries={setEntries} groupId={groupId} />
+          <PeoplePicker groupId={groupId} entries={entries} onEntriesChange={setEntries} />
         </Pane>
       </ScrollView>
 

@@ -12,22 +12,26 @@ export interface PersonEntry {
 export interface PeoplePickerProps {
   groupId: number
   entries: PersonEntry[]
-  setEntries: React.Dispatch<React.SetStateAction<PersonEntry[]>>
+  onEntriesChange: (entries: PersonEntry[]) => void
 }
 
-export function PeoplePicker({ groupId, entries, setEntries }: PeoplePickerProps) {
-  function cleanupEntries() {
-      setEntries((prev) => {
-        const newEntries = prev.filter((entry) => entry.email.trim() !== '')
-        if (newEntries.length === 0) {
-          newEntries.push({ email: '' })
-        }
-        if (newEntries[newEntries.length - 1].email !== '') {
-          newEntries.push({ email: '' })
-        }
-        return newEntries
-      })
+export function PeoplePicker({ groupId, entries, onEntriesChange }: PeoplePickerProps) {
+  function cleanupEntries(entries: PersonEntry[]): PersonEntry[] {
+    const newEntries = entries.filter((entry) => entry.email.trim() !== '')
+
+    if (newEntries.length === 0) {
+      newEntries.push({ email: '' })
     }
+    if (newEntries[newEntries.length - 1].email !== '') {
+      newEntries.push({ email: '' })
+    }
+
+    return newEntries
+  }
+
+  function setEntries(newEntries: PersonEntry[]) {
+    onEntriesChange(cleanupEntries(newEntries))
+  }
 
   return (
     <View>
@@ -56,28 +60,22 @@ export function PeoplePicker({ groupId, entries, setEntries }: PeoplePickerProps
                 )
               }
               onChangeText={(val) => {
-                setEntries((prev) => {
-                  const newEmails = [...prev]
-                  newEmails[index] = { email: val, user: undefined }
-                  return newEmails
-                })
-                cleanupEntries()
+                const newEntries = [...entries]
+                newEntries[index] = { email: val, user: undefined }
+
+                setEntries(newEntries)
               }}
               onSuggestionSelect={(user) => {
-                setEntries((prev) => {
-                  const newEmails = [...prev]
-                  newEmails[index] = { email: user.email, user }
-                  return newEmails
-                })
-                cleanupEntries()
+                const newEntries = [...entries]
+                newEntries[index] = { email: user.email, user }
+
+                setEntries(newEntries)
               }}
               onClearSelection={() => {
-                setEntries((prev) => {
-                  const newEmails = [...prev]
-                  newEmails[index] = { email: entry.email, user: undefined }
-                  return newEmails
-                })
-                cleanupEntries()
+                const newEntries = [...entries]
+                newEntries[index] = { email: entry.email, user: undefined }
+
+                setEntries(newEntries)
               }}
               containerStyle={{ flex: 1 }}
             />
@@ -95,8 +93,7 @@ export function PeoplePicker({ groupId, entries, setEntries }: PeoplePickerProps
                 icon='close'
                 size={20}
                 onPress={() => {
-                  setEntries((prev) => prev.filter((_, i) => i !== index))
-                  cleanupEntries()
+                  setEntries(entries.filter((_, i) => i !== index))
                 }}
                 style={{ position: 'absolute' }}
               />
