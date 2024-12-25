@@ -2,6 +2,7 @@ import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
+import { SplitType, getSplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
@@ -37,7 +38,10 @@ export default function Modal() {
           <Button
             leftIcon='exactAmount'
             title={t('splitType.exactAmounts')}
-            onPress={() => router.navigate(`/group/${id}/addSplit/exactAmounts`)}
+            onPress={() => {
+              getSplitCreationContext().splitType = SplitType.ExactAmounts
+              router.navigate(`/group/${id}/addSplit/detailsStep`)
+            }}
           />
         </View>
       </View>

@@ -11,14 +11,14 @@ import { GroupInfo } from 'shared'
 
 export interface SplitFormProps {
   groupInfo: GroupInfo
-  initialTitle?: string
+  initialTitle?: string | null
   initialEntries: SplitEntryData[]
   initialPaidByIndex?: number
   waiting: boolean
   onSubmit: (data: FormData) => void
   error?: string | null
 
-  showTitle?: boolean
+  titleEditable?: boolean
   showPaidByHint?: boolean
 }
 
@@ -30,7 +30,7 @@ export function SplitForm({
   waiting,
   onSubmit,
   error,
-  showTitle,
+  titleEditable,
   showPaidByHint,
 }: SplitFormProps) {
   const theme = useTheme()
@@ -66,7 +66,7 @@ export function SplitForm({
           formState={formState}
           groupInfo={groupInfo}
           updateForm={updateForm}
-          showTitle={showTitle}
+          titleEditable={titleEditable}
           showPaidByHint={showPaidByHint}
         />
 

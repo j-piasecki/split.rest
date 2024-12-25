@@ -8,6 +8,16 @@ export interface ValidationResult {
   sumToSave: number
 }
 
+export function validateSplitTitle(title: string): void {
+  if (!title) {
+    throw new TranslatableError('splitValidation.titleIsRequired')
+  }
+
+  if (title.length > 512) {
+    throw new TranslatableError('splitValidation.titleIsTooLong')
+  }
+}
+
 export async function validateSplitForm({
   title,
   paidByIndex,
@@ -38,13 +48,7 @@ export async function validateSplitForm({
     throw new TranslatableError('splitValidation.totalMustBeGreaterThan0')
   }
 
-  if (!title) {
-    throw new TranslatableError('splitValidation.titleIsRequired')
-  }
-
-  if (title.length > 512) {
-    throw new TranslatableError('splitValidation.titleIsTooLong')
-  }
+  validateSplitTitle(title)
 
   if (entries.find((entry) => entry.email === paidBy) === undefined) {
     throw new TranslatableError('splitValidation.thePayerDataMustBeFilledIn')

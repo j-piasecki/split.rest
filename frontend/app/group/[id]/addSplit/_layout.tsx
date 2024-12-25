@@ -21,6 +21,7 @@ export default function AddFlow() {
       <ThemeProvider value={transparentNavTheme}>
         <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
           <Stack.Screen name='index' options={{ title: t('screenName.splitType') }} />
+          <Stack.Screen name='detailsStep' options={{ title: t('screenName.detailsStep') }} />
           <Stack.Screen name='exactAmounts' options={{ title: t('screenName.exactAmounts') }} />
         </Stack>
       </ThemeProvider>

@@ -5,18 +5,28 @@ interface UserWithValue {
   value?: string
 }
 
+export enum SplitType {
+  ExactAmounts = 'exactAmounts',
+}
+
 export interface SplitCreationContextArguments {
   participants?: UserWithValue[]
   paidByEmail?: string
+  splitType?: SplitType
+  title?: string
 }
 
 class SplitCreationContext {
   participants: UserWithValue[] | null = null
   paidByEmail: string | null = null
+  splitType: SplitType | null = null
+  title: string | null = null
 
   constructor(args: SplitCreationContextArguments) {
     this.participants = args.participants ?? null
     this.paidByEmail = args.paidByEmail ?? null
+    this.splitType = args.splitType ?? null
+    this.title = args.title ?? null
   }
 
   get paidByIndex(): number | undefined {

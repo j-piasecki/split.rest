@@ -54,11 +54,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
         balances: balanceChange as BalanceChange[],
       })
 
-      if (router.canGoBack()) {
-        router.back()
-      } else {
-        router.dismissTo(`/group/${groupInfo.id}`)
-      }
+      router.dismissTo(`/group/${groupInfo.id}`)
     } catch (error) {
       setError(error)
     } finally {
@@ -71,6 +67,8 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
       <SplitForm
         initialEntries={initialEntriesFromContext(user)}
         initialPaidByIndex={getSplitCreationContext().paidByIndex}
+        initialTitle={getSplitCreationContext().title}
+        titleEditable={!getSplitCreationContext().title}
         groupInfo={groupInfo}
         onSubmit={save}
         waiting={waiting}

@@ -12,7 +12,7 @@ export interface SplitFormProps {
   groupInfo: GroupInfo
   formState: FormData
   updateForm: React.Dispatch<FormActionType>
-  showTitle?: boolean
+  titleEditable?: boolean
   showPaidByHint?: boolean
 }
 
@@ -20,7 +20,7 @@ export function DetailsPane({
   groupInfo,
   formState,
   updateForm,
-  showTitle = true,
+  titleEditable = true,
   showPaidByHint = true,
 }: SplitFormProps) {
   const theme = useTheme()
@@ -39,13 +39,19 @@ export function DetailsPane({
       textLocation='start'
       containerStyle={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 8, gap: 16 }}
     >
-      {showTitle && (
+      {titleEditable && (
         <TextInput
           placeholder={t('form.title')}
           value={formState.title}
           onChangeText={(value) => updateForm({ type: 'setTitle', title: value })}
           style={{ marginBottom: 8 }}
         />
+      )}
+
+      {!titleEditable && (
+        <Text style={{ color: theme.colors.onSurface, fontSize: 24, fontWeight: 500 }}>
+          {formState.title}
+        </Text>
       )}
 
       {showPaidByHint && (
@@ -60,7 +66,6 @@ export function DetailsPane({
           <Text
             style={{
               flex: 1,
-              textAlign: 'center',
               color: theme.colors.outline,
               fontSize: 20,
               opacity: 0.7,

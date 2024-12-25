@@ -89,10 +89,12 @@
     "members": "Members",
   
     "splitType": "New split",
+    "detailsStep": "Details",
     "exactAmounts": "Exact amounts"
   },
 
   "splitType": {
+    "buttonNext": "Next",
     "selectType": "How would you like to split?",
     "exactAmounts": "By exact amounts"
   },
