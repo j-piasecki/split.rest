@@ -1,6 +1,5 @@
 import ModalScreen from '@components/ModalScreen'
 import { FormData, SplitEntryData, SplitForm } from '@components/SplitForm'
-import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
@@ -11,7 +10,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { BalanceChange, GroupInfo, User } from 'shared'
+import { GroupInfo, User } from 'shared'
 
 function initialEntriesFromContext(currentUser: User): SplitEntryData[] {
   const splitContext = getSplitCreationContext()
@@ -37,24 +36,23 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
   const router = useRouter()
   const [error, setError] = useTranslatedError()
   const [waiting, setWaiting] = useState(false)
-  const { mutateAsync: createSplit } = useCreateSplit()
 
   async function save(form: FormData) {
     try {
       setWaiting(true)
-      const { payerId, sumToSave, balanceChange } = await validateSplitForm(form)
+      const { sumToSave } = await validateSplitForm(form)
 
-      await createSplit({
-        groupId: groupInfo.id,
-        paidBy: payerId,
-        title: form.title,
-        total: sumToSave,
-        // TODO: allow to change date
-        timestamp: Date.now(),
-        balances: balanceChange as BalanceChange[],
-      })
+      getSplitCreationContext().participants = form.entries.map((entry) => ({
+        userOrEmail: entry.user ?? entry.email,
+        value: entry.amount,
+      }))
 
-      router.dismissTo(`/group/${groupInfo.id}`)
+      getSplitCreationContext().paidByEmail = form.entries[form.paidByIndex].email
+      getSplitCreationContext().title = form.title
+      getSplitCreationContext().totalAmount = sumToSave.toFixed(2)
+      getSplitCreationContext().timestamp = Date.now()
+
+      router.navigate(`/group/${groupInfo.id}/addSplit/summary`)
     } catch (error) {
       setError(error)
     } finally {
@@ -68,11 +66,14 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
         initialEntries={initialEntriesFromContext(user)}
         initialPaidByIndex={getSplitCreationContext().paidByIndex}
         initialTitle={getSplitCreationContext().title}
-        titleEditable={!getSplitCreationContext().title}
+        showDetails={false}
         groupInfo={groupInfo}
         onSubmit={save}
         waiting={waiting}
         error={error}
+        buttonTitle='splitType.buttonNext'
+        buttonIcon='arrowForward'
+        buttonIconLocation='right'
       />
     </View>
   )

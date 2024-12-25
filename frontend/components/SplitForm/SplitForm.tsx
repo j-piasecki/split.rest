@@ -2,24 +2,26 @@ import { DetailsPane } from './DetailsPane'
 import { EntriesPane } from './EntriesPane'
 import { FormData, SplitEntryData, useFormData } from './formData'
 import { Button } from '@components/Button'
+import { IconName } from '@components/Icon'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
-import { GroupInfo } from 'shared'
+import { GroupInfo, LanguageTranslationKey } from 'shared'
 
 export interface SplitFormProps {
   groupInfo: GroupInfo
   initialTitle?: string | null
   initialEntries: SplitEntryData[]
   initialPaidByIndex?: number
-  waiting: boolean
+  waiting?: boolean
   onSubmit: (data: FormData) => void
   error?: string | null
-
-  titleEditable?: boolean
-  showPaidByHint?: boolean
+  showDetails?: boolean
+  buttonIcon?: IconName
+  buttonTitle?: LanguageTranslationKey
+  buttonIconLocation?: 'left' | 'right'
 }
 
 export function SplitForm({
@@ -30,8 +32,10 @@ export function SplitForm({
   waiting,
   onSubmit,
   error,
-  titleEditable,
-  showPaidByHint,
+  showDetails = true,
+  buttonIcon = 'save',
+  buttonTitle = 'form.save',
+  buttonIconLocation = 'left',
 }: SplitFormProps) {
   const theme = useTheme()
   const scrollRef = useRef<ScrollView>(null)
@@ -44,7 +48,11 @@ export function SplitForm({
 
   function submit() {
     const toSave = formState.entries
-      .map((entry) => ({ email: entry.email.trim(), amount: entry.amount.trim() }))
+      .map((entry) => ({
+        email: entry.email.trim(),
+        amount: entry.amount.trim(),
+        user: entry.user,
+      }))
       .filter((entry) => entry.email !== '' && entry.amount !== '')
 
     onSubmit({
@@ -62,13 +70,9 @@ export function SplitForm({
         contentContainerStyle={{ paddingBottom: 100, gap: 16, paddingTop: 8 }}
         keyboardShouldPersistTaps='handled'
       >
-        <DetailsPane
-          formState={formState}
-          groupInfo={groupInfo}
-          updateForm={updateForm}
-          titleEditable={titleEditable}
-          showPaidByHint={showPaidByHint}
-        />
+        {showDetails && (
+          <DetailsPane formState={formState} groupInfo={groupInfo} updateForm={updateForm} />
+        )}
 
         <EntriesPane
           formState={formState}
@@ -94,7 +98,14 @@ export function SplitForm({
 
         <View>
           {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
-          {!waiting && <Button leftIcon='save' title={t('form.save')} onPress={submit} />}
+          {!waiting && (
+            <Button
+              leftIcon={buttonIconLocation === 'left' ? buttonIcon : undefined}
+              rightIcon={buttonIconLocation === 'right' ? buttonIcon : undefined}
+              title={t(buttonTitle)}
+              onPress={submit}
+            />
+          )}
         </View>
       </View>
     </View>
