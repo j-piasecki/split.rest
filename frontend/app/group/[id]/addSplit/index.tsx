@@ -36,18 +36,18 @@ export default function Modal() {
 
         <View style={{ gap: 16 }}>
           <Button
-            leftIcon='exactAmount'
-            title={t('splitType.exactAmounts')}
-            onPress={() => {
-              getSplitCreationContext().splitType = SplitMethod.ExactAmounts
-              router.navigate(`/group/${id}/addSplit/detailsStep`)
-            }}
-          />
-          <Button
             leftIcon='equal'
             title={t('splitType.equalAmounts')}
             onPress={() => {
               getSplitCreationContext().splitType = SplitMethod.Equal
+              router.navigate(`/group/${id}/addSplit/detailsStep`)
+            }}
+          />
+          <Button
+            leftIcon='exactAmount'
+            title={t('splitType.exactAmounts')}
+            onPress={() => {
+              getSplitCreationContext().splitType = SplitMethod.ExactAmounts
               router.navigate(`/group/${id}/addSplit/detailsStep`)
             }}
           />
