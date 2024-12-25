@@ -112,6 +112,7 @@ function EditInfo({ splitInfo }: { splitInfo: SplitWithUsers }) {
         title={t('splitInfo.authorInfo')}
         textLocation='start'
         containerStyle={{ padding: 16, paddingTop: 12 }}
+        style={{ overflow: 'hidden' }}
         collapsible
         startCollapsed
       >
@@ -191,6 +192,7 @@ export function SplitInfo({
           title={t('splitInfo.details')}
           textLocation='start'
           containerStyle={{ padding: 16, paddingTop: 12 }}
+          style={{ overflow: 'hidden' }}
           collapsible
         >
           <Text style={{ color: theme.colors.onSurface, fontSize: 24, marginBottom: 8 }}>
@@ -217,6 +219,7 @@ export function SplitInfo({
           title={t('splitInfo.participants')}
           textLocation='start'
           containerStyle={{ paddingBottom: 16, paddingTop: 8 }}
+          style={{ overflow: 'hidden' }}
           collapsible
         >
           {splitInfo.users.map((user, index) => (
