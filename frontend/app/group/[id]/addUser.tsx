@@ -130,7 +130,12 @@ function Form() {
   )
 
   function handlePress() {
-    addUserToGroup(user!.id)
+    if (user === null) {
+      setAddingError(new TranslatableError('addUser.userNotFound'))
+      return
+    }
+
+    addUserToGroup(user.id)
       .then(() => {
         if (router.canGoBack()) {
           router.back()
