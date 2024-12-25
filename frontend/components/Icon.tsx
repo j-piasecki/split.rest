@@ -22,6 +22,7 @@ export type IconName =
   | 'deleteLink'
   | 'editAlt'
   | 'edit'
+  | 'equal'
   | 'exactAmount'
   | 'group'
   | 'home'
@@ -74,6 +75,7 @@ const iconMap: Record<IconName, unknown> = {
   deleteLink: require('@assets/icons/delete_link.svg'),
   editAlt: require('@assets/icons/edit_alt.svg'),
   edit: require('@assets/icons/edit.svg'),
+  equal: require('@assets/icons/equal.svg'),
   exactAmount: require('@assets/icons/exact_amount.svg'),
   group: require('@assets/icons/group.svg'),
   home: require('@assets/icons/home.svg'),
