@@ -1,9 +1,8 @@
+import { DetailsPane } from './DetailsPane'
 import { EntriesPane } from './EntriesPane'
 import { FormData, SplitEntryData, useFormData } from './formData'
 import { Button } from '@components/Button'
-import { Pane } from '@components/Pane'
 import { Text } from '@components/Text'
-import { TextInput } from '@components/TextInput'
 import { useTheme } from '@styling/theme'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +17,9 @@ export interface SplitFormProps {
   waiting: boolean
   onSubmit: (data: FormData) => void
   error?: string | null
+
+  showTitle?: boolean
+  showPaidByHint?: boolean
 }
 
 export function SplitForm({
@@ -28,6 +30,8 @@ export function SplitForm({
   waiting,
   onSubmit,
   error,
+  showTitle,
+  showPaidByHint,
 }: SplitFormProps) {
   const theme = useTheme()
   const scrollRef = useRef<ScrollView>(null)
@@ -37,12 +41,6 @@ export function SplitForm({
     entries: initialEntries,
   })
   const { t } = useTranslation()
-
-  const toBePaid = useRef(0)
-  const sumFromEntries = formState.entries.reduce((acc, entry) => acc + Number(entry.amount), 0)
-  if (!Number.isNaN(sumFromEntries)) {
-    toBePaid.current = sumFromEntries
-  }
 
   function submit() {
     const toSave = formState.entries
@@ -64,46 +62,13 @@ export function SplitForm({
         contentContainerStyle={{ paddingBottom: 100, gap: 16, paddingTop: 8 }}
         keyboardShouldPersistTaps='handled'
       >
-        <Pane
-          icon='receipt'
-          title={t('splitInfo.details')}
-          textLocation='start'
-          containerStyle={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 8, gap: 16 }}
-        >
-          <TextInput
-            placeholder={t('form.title')}
-            value={formState.title}
-            onChangeText={(value) => updateForm({ type: 'setTitle', title: value })}
-            style={{ marginBottom: 8 }}
-          />
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginHorizontal: 4,
-            }}
-          >
-            <Text
-              style={{
-                flex: 1,
-                textAlign: 'center',
-                color: theme.colors.outline,
-                fontSize: 20,
-                opacity: 0.7,
-              }}
-            >
-              <Text style={{ color: theme.colors.primary }}>
-                {formState.entries[formState.paidByIndex].user?.name ??
-                  formState.entries[formState.paidByIndex].email}{' '}
-              </Text>
-              has paid
-              <Text style={{ color: theme.colors.primary }}> {toBePaid.current} </Text>
-              {groupInfo.currency}
-            </Text>
-          </View>
-        </Pane>
+        <DetailsPane
+          formState={formState}
+          groupInfo={groupInfo}
+          updateForm={updateForm}
+          showTitle={showTitle}
+          showPaidByHint={showPaidByHint}
+        />
 
         <EntriesPane
           formState={formState}
