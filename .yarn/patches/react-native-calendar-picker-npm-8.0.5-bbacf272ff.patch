@@ -1,0 +1,13 @@
+diff --git a/CalendarPicker/Day.js b/CalendarPicker/Day.js
+index 5c9de0322bdc690b3355610a1679278ee3daf0bd..ba116aca73eee22d13f9826fa3d95d25acfc88e7 100644
+--- a/CalendarPicker/Day.js
++++ b/CalendarPicker/Day.js
+@@ -123,7 +123,7 @@ export default function Day(props) {
+   // If date is in range let's apply styles
+   if (!dateOutOfRange || isThisDaySameAsSelectedStart || isThisDaySameAsSelectedEnd || isThisDateInSelectedRange) {
+     // set today's style
+-    let isToday = isSameDay(thisDay, today);
++    let isToday = false;
+     if (isToday) {
+       computedSelectedDayStyle = styles.selectedToday;
+       // todayTextStyle prop overrides selectedDayTextColor (created via makeStyles)

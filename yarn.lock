@@ -4597,6 +4597,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-native-calendar-picker@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "@types/react-native-calendar-picker@npm:8.0.0"
+  dependencies:
+    "@types/react": "*"
+    react-native: "*"
+  checksum: 193b7acfbde3117759df26e92ba526abac071b41eb01cf4638b55a40c354c99eeb1ed2dbb58af2e84f640f4503a6589f69bd5d54d7a49d56d526af0047503038
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:*":
+  version: 19.0.2
+  resolution: "@types/react@npm:19.0.2"
+  dependencies:
+    csstype: ^3.0.2
+  checksum: 2f12c2a84b778283884d41560c723d815153d88c56cacf25c0166329e9099c35c82c602a21d8831a381e2ef5574434ebd7bf09a636fe073558919474b0b3c9ed
+  languageName: node
+  linkType: hard
+
 "@types/react@npm:~18.3.12":
   version: 18.3.12
   resolution: "@types/react@npm:18.3.12"
@@ -6640,6 +6659,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"core-js@npm:^1.0.0":
+  version: 1.2.7
+  resolution: "core-js@npm:1.2.7"
+  checksum: 0b76371bfa98708351cde580f9287e2360d2209920e738ae950ae74ad08639a2e063541020bf666c28778956fc356ed9fe56d962129c88a87a6a4a0612526c75
+  languageName: node
+  linkType: hard
+
 "core-util-is@npm:^1.0.3, core-util-is@npm:~1.0.0":
   version: 1.0.3
   resolution: "core-util-is@npm:1.0.3"
@@ -6810,6 +6836,13 @@ __metadata:
     es-errors: ^1.3.0
     is-data-view: ^1.0.1
   checksum: 7f0bf8720b7414ca719eedf1846aeec392f2054d7af707c5dc9a753cc77eb8625f067fa901e0b5127e831f9da9056138d894b9c2be79c27a21f6db5824f009c2
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "date-fns@npm:4.1.0"
+  checksum: fb681b242cccabed45494468f64282a7d375ea970e0adbcc5dcc92dcb7aba49b2081c2c9739d41bf71ce89ed68dd73bebfe06ca35129490704775d091895710b
   languageName: node
   linkType: hard
 
@@ -7153,7 +7186,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"encoding@npm:^0.1.13":
+"encoding@npm:^0.1.11, encoding@npm:^0.1.13":
   version: 0.1.13
   resolution: "encoding@npm:0.1.13"
   dependencies:
@@ -8291,6 +8324,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fbjs@npm:^0.8.9":
+  version: 0.8.18
+  resolution: "fbjs@npm:0.8.18"
+  dependencies:
+    core-js: ^1.0.0
+    isomorphic-fetch: ^2.1.1
+    loose-envify: ^1.0.0
+    object-assign: ^4.1.0
+    promise: ^7.1.1
+    setimmediate: ^1.0.5
+    ua-parser-js: ^0.7.30
+  checksum: 668731b946a765908c9cbe51d5160f973abb78004b3d122587c3e930e3e1ddcc0ce2b17f2a8637dc9d733e149aa580f8d3035a35cc2d3bc78b78f1b19aab90e2
+  languageName: node
+  linkType: hard
+
 "fbjs@npm:^3.0.0, fbjs@npm:^3.0.4":
   version: 3.0.5
   resolution: "fbjs@npm:3.0.5"
@@ -8697,9 +8745,11 @@ __metadata:
     "@tanstack/react-query": ^5.62.3
     "@trivago/prettier-plugin-sort-imports": ^4.3.0
     "@types/react": ~18.3.12
+    "@types/react-native-calendar-picker": ^8.0.0
     "@typescript-eslint/eslint-plugin": ^8.15.0
     "@typescript-eslint/parser": ^8.15.0
     babel-plugin-react-compiler: ^19.0.0-beta-b2e8e9c-20241220
+    date-fns: ^4.1.0
     eslint: ^8.57.0
     eslint-config-expo: ~8.0.1
     eslint-plugin-prettier: ^5.2.1
@@ -8725,6 +8775,7 @@ __metadata:
     react-dom: 18.3.1
     react-i18next: ^15.1.4
     react-native: 0.76.5
+    react-native-calendar-picker: ^8.0.5
     react-native-edge-to-edge: ^1.1.3
     react-native-reanimated: ^3.16.2
     react-native-safe-area-context: 4.12.0
@@ -9901,7 +9952,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-stream@npm:^1.1.0":
+"is-stream@npm:^1.0.1, is-stream@npm:^1.1.0":
   version: 1.1.0
   resolution: "is-stream@npm:1.1.0"
   checksum: 063c6bec9d5647aa6d42108d4c59723d2bd4ae42135a2d4db6eadbd49b7ea05b750fd69d279e5c7c45cf9da753ad2c00d8978be354d65aa9f6bb434969c6a2ae
@@ -10016,6 +10067,16 @@ __metadata:
   version: 3.0.1
   resolution: "isobject@npm:3.0.1"
   checksum: db85c4c970ce30693676487cca0e61da2ca34e8d4967c2e1309143ff910c207133a969f9e4ddb2dc6aba670aabce4e0e307146c310350b298e74a31f7d464703
+  languageName: node
+  linkType: hard
+
+"isomorphic-fetch@npm:^2.1.1":
+  version: 2.2.1
+  resolution: "isomorphic-fetch@npm:2.2.1"
+  dependencies:
+    node-fetch: ^1.0.1
+    whatwg-fetch: ">=0.10.0"
+  checksum: bb5daa7c3785d6742f4379a81e55b549a469503f7c9bf9411b48592e86632cf5e8fe8ea878dba185c0f33eb7c510c23abdeb55aebfdf5d3c70f031ced68c5424
   languageName: node
   linkType: hard
 
@@ -11128,7 +11189,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.debounce@npm:^4.0.8":
+"lodash.debounce@npm:4.0.8, lodash.debounce@npm:^4.0.8":
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
   checksum: a3f527d22c548f43ae31c861ada88b2637eb48ac6aa3eb56e82d44917971b8aa96fbb37aa60efea674dc4ee8c42074f90f7b1f772e9db375435f6c83a19b3bc6
@@ -12046,6 +12107,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-fetch@npm:^1.0.1":
+  version: 1.7.3
+  resolution: "node-fetch@npm:1.7.3"
+  dependencies:
+    encoding: ^0.1.11
+    is-stream: ^1.0.1
+  checksum: 3bb0528c05d541316ebe52770d71ee25a6dce334df4231fd55df41a644143e07f068637488c18a5b0c43f05041dbd3346752f9e19b50df50569a802484544d5b
+  languageName: node
+  linkType: hard
+
 "node-fetch@npm:^2.2.0, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.9, node-fetch@npm:^2.7.0":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
@@ -12064,6 +12135,15 @@ __metadata:
   version: 1.3.1
   resolution: "node-forge@npm:1.3.1"
   checksum: 08fb072d3d670599c89a1704b3e9c649ff1b998256737f0e06fbd1a5bf41cae4457ccaee32d95052d80bbafd9ffe01284e078c8071f0267dc9744e51c5ed42a9
+  languageName: node
+  linkType: hard
+
+"node-git-hooks@npm:^1.0.1":
+  version: 1.0.7
+  resolution: "node-git-hooks@npm:1.0.7"
+  bin:
+    node-git-hooks: bin/install.js
+  checksum: bfe34de15389d3626a5d056df4aa5fde27c43376d6390817a993f12cb6731fd88c526fc366c027c232f3c76854b23d39cb347c650c330b3cca6ec334c8f408b5
   languageName: node
   linkType: hard
 
@@ -12969,7 +13049,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:15.5.8":
+  version: 15.5.8
+  resolution: "prop-types@npm:15.5.8"
+  dependencies:
+    fbjs: ^0.8.9
+  checksum: b64fcb5770c665e66e57663940864425529ea2b8c7821fb86068d1879d7b2c85778948b9a1294912e0d58f55075d1f3e19f44ae4fd5f5cd988c3bf833fa3e1f6
+  languageName: node
+  linkType: hard
+
+"prop-types@npm:^15.6.0, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -13235,6 +13324,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-calendar-picker@npm:8.0.5":
+  version: 8.0.5
+  resolution: "react-native-calendar-picker@npm:8.0.5"
+  dependencies:
+    node-git-hooks: ^1.0.1
+    prop-types: ^15.6.0
+    recyclerlistview: ^3.0.0
+  peerDependencies:
+    date-fns: "*"
+    react: "*"
+    react-native: "*"
+  checksum: 430dda8a89a401dd0acbe7a9e29856e1dd2917729137292e667afd390940f3873ff92440ac98bcf6b0ff8513e8ec19bfe772a7f53559e46929da7546055a63c7
+  languageName: node
+  linkType: hard
+
+"react-native-calendar-picker@patch:react-native-calendar-picker@npm%3A8.0.5#./.yarn/patches/react-native-calendar-picker-npm-8.0.5-bbacf272ff.patch::locator=split%40workspace%3A.":
+  version: 8.0.5
+  resolution: "react-native-calendar-picker@patch:react-native-calendar-picker@npm%3A8.0.5#./.yarn/patches/react-native-calendar-picker-npm-8.0.5-bbacf272ff.patch::version=8.0.5&hash=506fd1&locator=split%40workspace%3A."
+  dependencies:
+    node-git-hooks: ^1.0.1
+    prop-types: ^15.6.0
+    recyclerlistview: ^3.0.0
+  peerDependencies:
+    date-fns: "*"
+    react: "*"
+    react-native: "*"
+  checksum: 0445b167c611702feab6910e5fb1c04885ba380397f15fa8dbcf6323dffdbfeae903134dab49cf30b01bda08b08e3a83233ff566710368f678e97e1a93e64c70
+  languageName: node
+  linkType: hard
+
 "react-native-edge-to-edge@npm:^1.1.3":
   version: 1.1.3
   resolution: "react-native-edge-to-edge@npm:1.1.3"
@@ -13356,7 +13475,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:0.76.5":
+"react-native@npm:*, react-native@npm:0.76.5":
   version: 0.76.5
   resolution: "react-native@npm:0.76.5"
   dependencies:
@@ -13477,6 +13596,20 @@ __metadata:
     source-map: ~0.6.1
     tslib: ^2.0.1
   checksum: 03cc7f57562238ba258d468be67bf7446ce7a707bc87a087891dad15afead46c36e9aaeedf2130e2ab5a465244a9c62bfd4127849761cf8f4085abe2f3e5f485
+  languageName: node
+  linkType: hard
+
+"recyclerlistview@npm:^3.0.0":
+  version: 3.0.5
+  resolution: "recyclerlistview@npm:3.0.5"
+  dependencies:
+    lodash.debounce: 4.0.8
+    prop-types: 15.5.8
+    ts-object-utils: 0.0.5
+  peerDependencies:
+    react: ">= 15.2.1"
+    react-native: ">= 0.30.0"
+  checksum: 68fe28f044a42d30ea92f2a2a37d3d96bfb5f57cb2aea763edd37c52f1c735a7e4c559b6ab88339b4ce04cd043490fdaf210a43e0e3eb0eb00fcc25fd0f9ccfe
   languageName: node
   linkType: hard
 
@@ -15168,6 +15301,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-object-utils@npm:0.0.5":
+  version: 0.0.5
+  resolution: "ts-object-utils@npm:0.0.5"
+  checksum: 83c48fbdaba392fb2c01cea53b267ed5538d2bb44fc6c3eecc10bcfabc1780bfa6ec8569b52bbf0140d9b521d9049d5f15884e12286918244d463d854dbc73cb
+  languageName: node
+  linkType: hard
+
 "tsconfig-paths-webpack-plugin@npm:4.2.0":
   version: 4.2.0
   resolution: "tsconfig-paths-webpack-plugin@npm:4.2.0"
@@ -15375,6 +15515,15 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 803430c6da2ba73c25a21880d8d4f08a56d9d2444e6db2ea949ac4abceeece8e4a442b7b9b585db7d8a0b47ebda2060e45fe8ee8b8aca23e27ec1d4844987ee6
+  languageName: node
+  linkType: hard
+
+"ua-parser-js@npm:^0.7.30":
+  version: 0.7.40
+  resolution: "ua-parser-js@npm:0.7.40"
+  bin:
+    ua-parser-js: script/cli.js
+  checksum: c8f69573c336cbf0f4341e7fe93a8d7082acf39dba4e135b704f06ad240f585d4b38fb44fd3cad92c97a015128e9fe2e653b39c3b6c0919f8a8af3be02d79cc2
   languageName: node
   linkType: hard
 
@@ -15818,7 +15967,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"whatwg-fetch@npm:^3.0.0":
+"whatwg-fetch@npm:>=0.10.0, whatwg-fetch@npm:^3.0.0":
   version: 3.6.20
   resolution: "whatwg-fetch@npm:3.6.20"
   checksum: c58851ea2c4efe5c2235f13450f426824cf0253c1d45da28f45900290ae602a20aff2ab43346f16ec58917d5562e159cd691efa368354b2e82918c2146a519c5
