@@ -16,7 +16,8 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { TranslatableError } from 'shared'
 
-const SNACK_DURATION = 7000
+const SNACK_DURATION = 5000
+const ACTIONABLE_SNACK_DURATION = 10000
 
 interface SnackBarContextType {
   show: (message: string, actionText?: string, action?: () => Promise<void>) => void
@@ -152,18 +153,22 @@ export function SnackBarProvider({ children }: { children: React.ReactNode }) {
     clearScheduledDismiss()
 
     if (queue.current.length > 0) {
-      setSnack(queue.current.shift()!)
-      scheduleDismissSnack()
+      const snack = queue.current.shift()!
+      setSnack(snack)
+      scheduleDismissSnack(snack)
     } else {
       setSnack(null)
     }
   }
 
-  const scheduleDismissSnack = () => {
+  const scheduleDismissSnack = (snack: SnackData) => {
     if (!timeout.current) {
-      timeout.current = setTimeout(() => {
-        dismissSnack()
-      }, SNACK_DURATION)
+      timeout.current = setTimeout(
+        () => {
+          dismissSnack()
+        },
+        snack.action ? ACTIONABLE_SNACK_DURATION : SNACK_DURATION
+      )
     }
   }
 
@@ -188,7 +193,7 @@ export function SnackBarProvider({ children }: { children: React.ReactNode }) {
           }
 
           nextIndex.current += 1
-          scheduleDismissSnack()
+          scheduleDismissSnack(newSnack)
         },
         setBottomInset: (inset: number) => {
           bottomInset.value = inset
