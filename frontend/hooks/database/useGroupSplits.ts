@@ -13,7 +13,7 @@ export function useGroupSplits(groupId?: number, onlyIfIncluded = false) {
 
       const args: GetGroupSplitsArguments = {
         groupId,
-        startAfterTimestamp: pageParam,
+        startAfterId: pageParam,
         onlyIfIncluded,
       }
 
@@ -38,13 +38,13 @@ export function useGroupSplits(groupId?: number, onlyIfIncluded = false) {
   const result = useInfiniteQuery({
     queryKey: ['groupSplits', groupId, 'onlyIncluded', onlyIfIncluded],
     queryFn: fetchSplits,
-    initialPageParam: Number.MAX_SAFE_INTEGER,
+    initialPageParam: 2147483647,
     getNextPageParam: (lastPage) => {
       if (lastPage.length === 0) {
         return undefined
       }
 
-      return lastPage[lastPage.length - 1].timestamp
+      return lastPage[lastPage.length - 1].id
     },
   })
 
