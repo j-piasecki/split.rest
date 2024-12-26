@@ -113,6 +113,7 @@ function Form({ groupId, setResult, user }: FormProps) {
 function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId: number }) {
   const theme = useTheme()
   const router = useRouter()
+  const { data: permissions } = useGroupPermissions(groupId)
   const { t } = useTranslation()
 
   return (
@@ -158,17 +159,19 @@ function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId:
         </Pane>
       </ScrollView>
 
-      <Button
-        leftIcon='split'
-        title={t('roulette.createSplit')}
-        onPress={() => {
-          beginNewSplit({
-            participants: result.map((user) => ({ userOrEmail: user })),
-            paidByEmail: result[0].email,
-          })
-          router.navigate(`/group/${groupId}/addSplit`)
-        }}
-      />
+      {permissions?.canCreateSplits() && (
+        <Button
+          leftIcon='split'
+          title={t('roulette.createSplit')}
+          onPress={() => {
+            beginNewSplit({
+              participants: result.map((user) => ({ userOrEmail: user })),
+              paidByEmail: result[0].email,
+            })
+            router.navigate(`/group/${groupId}/addSplit`)
+          }}
+        />
+      )}
     </View>
   )
 }

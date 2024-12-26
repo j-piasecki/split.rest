@@ -4,6 +4,7 @@ import { SplitInfo } from '@components/SplitInfo'
 import { Text } from '@components/Text'
 import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { getSplitCreationContext } from '@utils/splitCreationContext'
@@ -18,6 +19,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupInfo; split: SplitWithU
   const theme = useTheme()
   const router = useRouter()
   const [error, setError] = useTranslatedError()
+  const { data: permissions } = useGroupPermissions(groupInfo.id)
   const { mutateAsync: createSplit, isPending } = useCreateSplit()
 
   function save() {
@@ -55,7 +57,21 @@ function Content({ groupInfo, split }: { groupInfo: GroupInfo; split: SplitWithU
             {error}
           </Text>
         )}
-        <Button leftIcon='save' title={t('form.save')} isLoading={isPending} onPress={save} />
+        {permissions?.canCreateSplits() && (
+          <Button leftIcon='save' title={t('form.save')} isLoading={isPending} onPress={save} />
+        )}
+        {!permissions?.canCreateSplits() && (
+          <Text
+            style={{
+              color: theme.colors.error,
+              textAlign: 'center',
+              fontSize: 18,
+              fontWeight: 500,
+            }}
+          >
+            {t('api.insufficientPermissions.group.createSplit')}
+          </Text>
+        )}
       </View>
     </View>
   )
