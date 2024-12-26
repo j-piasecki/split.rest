@@ -1,4 +1,5 @@
 import { Icon, IconName } from './Icon'
+import { useSnackFABInset } from './SnackBar'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
@@ -23,6 +24,7 @@ export interface FloatingActionButtonRef {
 }
 
 export function useFABScrollHandler() {
+  useSnackFABInset()
   const fab = useRef<FloatingActionButtonRef>(null)
   const previousOffset = useRef(0)
 

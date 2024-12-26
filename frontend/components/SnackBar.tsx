@@ -2,10 +2,17 @@ import { RoundIconButton } from './RoundIconButton'
 import { Text } from './Text'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { useFocusEffect } from 'expo-router'
 import React, { createContext, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, View } from 'react-native'
-import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated'
+import { Pressable } from 'react-native'
+import Animated, {
+  SlideInDown,
+  SlideOutDown,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { TranslatableError } from 'shared'
 
@@ -13,6 +20,7 @@ const SNACK_DURATION = 7000
 
 interface SnackBarContextType {
   show: (message: string, actionText?: string, action?: () => Promise<void>) => void
+  setBottomInset: (inset: number) => void
 }
 
 interface SnackData {
@@ -51,7 +59,7 @@ function Snack({
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: theme.colors.inverseSurface,
-        maxWidth: 800,
+        maxWidth: 768,
         minWidth: 350,
         paddingVertical: 12,
         paddingLeft: 16,
@@ -121,6 +129,7 @@ function Snack({
 export function SnackBarProvider({ children }: { children: React.ReactNode }) {
   const insets = useSafeAreaInsets()
   const [snack, setSnack] = useState<SnackData | null>(null)
+  const bottomInset = useSharedValue(0)
 
   const queue = useRef<SnackData[]>([])
   const nextIndex = useRef(0)
@@ -152,6 +161,15 @@ export function SnackBarProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      paddingBottom: withSpring(insets.bottom + 8 + bottomInset.value, {
+        damping: 20,
+        stiffness: 250,
+      }),
+    }
+  })
+
   return (
     <SnackBarContext.Provider
       value={{
@@ -166,22 +184,26 @@ export function SnackBarProvider({ children }: { children: React.ReactNode }) {
           nextIndex.current += 1
           scheduleDismissSnack()
         },
+        setBottomInset: (inset: number) => {
+          bottomInset.value = inset
+        },
       }}
     >
       <>{children}</>
 
-      {/* TODO: FAB padding */}
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          paddingHorizontal: 24,
-          paddingBottom: insets.bottom + 8,
-          justifyContent: 'center',
-          flexDirection: 'row',
-        }}
+      <Animated.View
+        style={[
+          {
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            paddingHorizontal: 24,
+            justifyContent: 'center',
+            flexDirection: 'row',
+          },
+          animatedStyle,
+        ]}
         pointerEvents='box-none'
       >
         {snack && (
@@ -191,7 +213,7 @@ export function SnackBarProvider({ children }: { children: React.ReactNode }) {
             clearScheduledDismiss={clearScheduledDismiss}
           />
         )}
-      </View>
+      </Animated.View>
     </SnackBarContext.Provider>
   )
 }
@@ -202,4 +224,21 @@ export function useSnack() {
     throw new Error('useSnackBar must be used within a SnackBarProvider')
   }
   return context
+}
+
+export function useSnackFABInset() {
+  const context = React.useContext(SnackBarContext)
+  const displayClass = useDisplayClass()
+
+  // TODO: this will break on multiple insets at once
+  useFocusEffect(() => {
+    if (displayClass > DisplayClass.Medium) {
+      return
+    }
+
+    context?.setBottomInset(80)
+    return () => {
+      context?.setBottomInset(0)
+    }
+  })
 }

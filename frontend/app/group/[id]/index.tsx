@@ -2,7 +2,6 @@ import Header from '@components/Header'
 import { Icon } from '@components/Icon'
 import { Pane, PaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
-import { SnackBarProvider } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { GroupActionButtons, GroupInfoCard } from '@components/groupScreen/GroupInfoPage'
 import { MembersList } from '@components/groupScreen/MembersList'
@@ -220,113 +219,111 @@ export default function GroupScreen() {
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
       <Header />
 
-      <SnackBarProvider>
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          {!threeBarLayout && <SingleColumnLayout info={groupInfo} />}
+      <View style={{ flex: 1, alignItems: 'center' }}>
+        {!threeBarLayout && <SingleColumnLayout info={groupInfo} />}
 
-          {threeBarLayout && (
-            <View
-              style={{
-                flex: 1,
-                width: '100%',
-                alignItems: 'center',
-                flexDirection: 'row',
-                paddingHorizontal: 16,
-                paddingBottom: 16,
-                gap: 16,
-              }}
+        {threeBarLayout && (
+          <View
+            style={{
+              flex: 1,
+              width: '100%',
+              alignItems: 'center',
+              flexDirection: 'row',
+              paddingHorizontal: 16,
+              paddingBottom: 16,
+              gap: 16,
+            }}
+          >
+            <Pane
+              icon='home'
+              title={t('tabs.group')}
+              style={[{ flex: 1, height: '100%' }, Platform.OS === 'web' && { minWidth: 420 }]}
+              containerStyle={{ flex: 1 }}
             >
+              <ScrollView
+                style={{ flex: 1 }}
+                contentContainerStyle={{
+                  paddingHorizontal: 16,
+                  paddingTop: 16,
+                  paddingBottom: 32,
+                  gap: 16,
+                }}
+              >
+                <GroupInfoCard info={groupInfo} />
+                {groupInfo && <GroupActionButtons info={groupInfo} />}
+              </ScrollView>
+            </Pane>
+            <Pane
+              icon='receipt'
+              title={t('tabs.splits')}
+              style={{ flex: 2, height: '100%' }}
+              containerStyle={{ flex: 1 }}
+            >
+              <SplitsList info={groupInfo} />
+            </Pane>
+            {permissions?.canReadMembers() && (
               <Pane
-                icon='home'
-                title={t('tabs.group')}
-                style={[{ flex: 1, height: '100%' }, Platform.OS === 'web' && { minWidth: 420 }]}
+                icon='members'
+                title={t('tabs.members')}
+                collapsible={!membersAlwaysExpanded}
+                collapsed
+                orientation='vertical'
+                onCollapseChange={() => {
+                  setMembersExpanded(!membersExpanded)
+                }}
+                style={{ minWidth: membersAlwaysExpanded ? 500 : undefined, height: '100%' }}
                 containerStyle={{ flex: 1 }}
               >
-                <ScrollView
-                  style={{ flex: 1 }}
-                  contentContainerStyle={{
-                    paddingHorizontal: 16,
-                    paddingTop: 16,
-                    paddingBottom: 32,
-                    gap: 16,
-                  }}
-                >
-                  <GroupInfoCard info={groupInfo} />
-                  {groupInfo && <GroupActionButtons info={groupInfo} />}
-                </ScrollView>
+                <MembersList info={groupInfo} iconOnly={!membersAlwaysExpanded} />
               </Pane>
-              <Pane
-                icon='receipt'
-                title={t('tabs.splits')}
-                style={{ flex: 2, height: '100%' }}
-                containerStyle={{ flex: 1 }}
-              >
-                <SplitsList info={groupInfo} />
-              </Pane>
-              {permissions?.canReadMembers() && (
-                <Pane
-                  icon='members'
-                  title={t('tabs.members')}
-                  collapsible={!membersAlwaysExpanded}
-                  collapsed
-                  orientation='vertical'
-                  onCollapseChange={() => {
-                    setMembersExpanded(!membersExpanded)
-                  }}
-                  style={{ minWidth: membersAlwaysExpanded ? 500 : undefined, height: '100%' }}
-                  containerStyle={{ flex: 1 }}
-                >
-                  <MembersList info={groupInfo} iconOnly={!membersAlwaysExpanded} />
-                </Pane>
-              )}
+            )}
 
-              {!membersAlwaysExpanded && (
-                <Modal
-                  visible={membersExpanded}
-                  transparent
-                  statusBarTranslucent
-                  onRequestClose={() => {
+            {!membersAlwaysExpanded && (
+              <Modal
+                visible={membersExpanded}
+                transparent
+                statusBarTranslucent
+                onRequestClose={() => {
+                  setMembersExpanded(false)
+                }}
+              >
+                <Pressable
+                  style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.6)' }]}
+                  onPress={() => {
                     setMembersExpanded(false)
                   }}
+                />
+                <View
+                  style={{
+                    width: 600,
+                    bottom: 16,
+                    top: 60,
+                    right: 16,
+                    position: 'absolute',
+                    backgroundColor: theme.colors.surfaceContainer,
+                    borderRadius: 16,
+                    overflow: 'hidden',
+                  }}
                 >
-                  <Pressable
-                    style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.6)' }]}
-                    onPress={() => {
+                  <Pane
+                    icon='members'
+                    title={t('tabs.members')}
+                    orientation='vertical'
+                    collapsible
+                    onCollapseChange={() => {
                       setMembersExpanded(false)
                     }}
-                  />
-                  <View
-                    style={{
-                      width: 600,
-                      bottom: 16,
-                      top: 60,
-                      right: 16,
-                      position: 'absolute',
-                      backgroundColor: theme.colors.surfaceContainer,
-                      borderRadius: 16,
-                      overflow: 'hidden',
-                    }}
+                    style={{ height: '100%', overflow: 'hidden' }}
+                    containerStyle={{ flex: 1 }}
                   >
-                    <Pane
-                      icon='members'
-                      title={t('tabs.members')}
-                      orientation='vertical'
-                      collapsible
-                      onCollapseChange={() => {
-                        setMembersExpanded(false)
-                      }}
-                      style={{ height: '100%', overflow: 'hidden' }}
-                      containerStyle={{ flex: 1 }}
-                    >
-                      <MembersList info={groupInfo} />
-                    </Pane>
-                  </View>
-                </Modal>
-              )}
-            </View>
-          )}
-        </View>
-      </SnackBarProvider>
+                    <MembersList info={groupInfo} />
+                  </Pane>
+                </View>
+              </Modal>
+            )}
+          </View>
+        )}
+      </View>
     </View>
   )
 }
