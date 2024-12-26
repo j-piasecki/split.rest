@@ -1,5 +1,6 @@
 import { SplitEntry } from './SplitEntry'
 import { FormActionType, FormData } from './formData'
+import { Form } from '@components/Form'
 import { Pane } from '@components/Pane'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -37,18 +38,21 @@ export function EntriesPane({
         overflow: 'visible',
       }}
     >
-      {formState.entries.map((entry, index) => (
-        <React.Fragment key={index}>
-          <SplitEntry
-            scrollRef={scrollRef}
-            groupId={groupInfo.id}
-            index={index}
-            formState={formState}
-            updateForm={updateForm}
-            parentLayout={layout}
-          />
-        </React.Fragment>
-      ))}
+      <Form>
+        {formState.entries.map((entry, index) => (
+          <React.Fragment key={index}>
+            <SplitEntry
+              scrollRef={scrollRef}
+              groupId={groupInfo.id}
+              index={index}
+              formState={formState}
+              updateForm={updateForm}
+              parentLayout={layout}
+              focusIndex={index * 2}
+            />
+          </React.Fragment>
+        ))}
+      </Form>
     </Pane>
   )
 }

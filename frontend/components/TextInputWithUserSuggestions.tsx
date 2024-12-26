@@ -1,4 +1,5 @@
 import { ProfilePicture } from './ProfilePicture'
+import { TextInputRef } from './TextInput'
 import { TextInputWithSuggestions, TextInputWithSuggestionsProps } from './TextInputWithSuggestions'
 import { Text } from '@components/Text'
 import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocompletions'
@@ -6,7 +7,7 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TextInput as TextInputRN, View } from 'react-native'
+import { View } from 'react-native'
 import { User } from 'shared'
 
 interface SuggestionProps {
@@ -57,7 +58,7 @@ export function TextInputWithUserSuggestions({
   filterSuggestions,
   ...rest
 }: TextInputWithUserSuggestionsProps) {
-  const ref = useRef<TextInputRN>(null)
+  const ref = useRef<TextInputRef>(null)
   const { data: permissions } = useGroupPermissions(groupId)
   const { t } = useTranslation()
 

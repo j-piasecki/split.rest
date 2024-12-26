@@ -1,6 +1,7 @@
+import { useFormContext } from './Form'
 import { useTheme } from '@styling/theme'
 import { resolveFontName } from '@utils/resolveFontName'
-import React, { useMemo } from 'react'
+import React, { useImperativeHandle, useMemo, useRef } from 'react'
 import {
   Platform,
   StyleProp,
@@ -16,9 +17,16 @@ export interface Props extends TextInputProps {
   error?: boolean
   resetError?: () => void
   inputStyle?: StyleProp<TextStyle>
+  focusIndex?: number
 }
 
-export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput(
+export interface TextInputRef {
+  focus(): void
+  blur(): void
+  focusNext(): void
+}
+
+export const TextInput = React.forwardRef<TextInputRef, Props>(function TextInput(
   {
     style,
     placeholder,
@@ -29,12 +37,17 @@ export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput
     onFocus,
     onBlur,
     inputStyle,
+    onSubmitEditing,
+    submitBehavior,
     ...rest
   }: Props,
   ref
 ) {
   const theme = useTheme()
+  const inputRef = useRef<TextInputRN | null>(null)
   const isFocused = useSharedValue(false)
+
+  const form = useFormContext(inputRef, rest.focusIndex)
 
   const fontStyle = useMemo(() => {
     const styles: TextStyle | undefined = StyleSheet.flatten(style)
@@ -61,6 +74,18 @@ export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput
 
     return {}
   }, [style])
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      inputRef.current?.focus()
+    },
+    blur: () => {
+      inputRef.current?.blur()
+    },
+    focusNext: () => {
+      form?.focusNext()
+    },
+  }))
 
   const wrapperStyle = useAnimatedStyle(() => {
     return {
@@ -93,7 +118,7 @@ export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput
       style={[style as ViewStyle, { borderBottomWidth: 1, borderRadius: 2 }, wrapperStyle]}
     >
       <TextInputRN
-        ref={ref}
+        ref={inputRef}
         cursorColor={theme.colors.primary}
         selectionColor={theme.colors.primary}
         style={[
@@ -119,6 +144,11 @@ export const TextInput = React.forwardRef<TextInputRN, Props>(function TextInput
         onBlur={(e) => {
           isFocused.value = false
           onBlur?.(e)
+        }}
+        submitBehavior={(submitBehavior ?? form === null) ? undefined : 'submit'}
+        onSubmitEditing={(e) => {
+          onSubmitEditing?.(e)
+          form?.focusNext()
         }}
         numberOfLines={1}
         {...rest}

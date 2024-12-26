@@ -1,8 +1,8 @@
-import { Props, TextInput } from './TextInput'
+import { Props, TextInput, TextInputRef } from './TextInput'
 import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Pressable, ScrollView, TextInput as TextInputRN, View, ViewStyle } from 'react-native'
+import { Pressable, ScrollView, View, ViewStyle } from 'react-native'
 import { useDebounce } from 'use-debounce'
 
 type SuggestionRenderFunction<T> = (
@@ -12,7 +12,7 @@ type SuggestionRenderFunction<T> = (
 ) => React.ReactNode
 
 interface SuggestionContainerProps<T> {
-  inputRef: React.RefObject<TextInputRN | null>
+  inputRef: React.RefObject<TextInputRef | null>
   renderSuggestion: SuggestionRenderFunction<T>
   suggestion: T
   onSelect?: (suggestion: T) => void
@@ -60,7 +60,7 @@ function SuggestionContainer<T>({
 }
 
 export interface TextInputWithSuggestionsProps<T> extends Props {
-  inputRef?: React.Ref<TextInputRN | null>
+  inputRef?: React.Ref<TextInputRef | null>
   getSuggestions: (value: string) => Promise<T[]>
   renderSuggestion: SuggestionRenderFunction<T>
   onSuggestionSelect?: (suggestion: T) => void
@@ -84,7 +84,7 @@ export function TextInputWithSuggestions<T>({
 }: TextInputWithSuggestionsProps<T>) {
   const theme = useTheme()
   const suggestionBoxRef = useRef<View>(null)
-  const textInputRef: React.MutableRefObject<TextInputRN | null> = useRef<TextInputRN>(null)
+  const textInputRef: React.MutableRefObject<TextInputRef | null> = useRef<TextInputRef>(null)
   const [suggestions, setSuggestions] = useState<T[]>([])
   const [isFocused, setIsFocused] = useState(false)
   const [debouncedValue] = useDebounce(value, 300)
@@ -100,6 +100,7 @@ export function TextInputWithSuggestions<T>({
   const selectSuggestion = (suggestion: T) => {
     onSuggestionSelect?.(suggestion)
     setShowSuggestions(false)
+    textInputRef.current?.focusNext()
   }
 
   useEffect(() => {
