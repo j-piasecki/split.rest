@@ -54,12 +54,12 @@ const darkColors: Colors = {
 const lightColors: Colors = {
   transparent: 'transparent',
 
-  primary: '#8c4a60',
+  primary: '#a8074f',
   onPrimary: '#ffffff',
-  primaryContainer: '#ffd9e2',
-  onPrimaryContainer: '#3a071d',
+  primaryContainer: '#fcb8c9',
+  onPrimaryContainer: '#4a0825',
 
-  secondary: '#74565f',
+  secondary: '#6e3a49',
   onSecondary: '#ffffff',
   secondaryContainer: '#ffd9e2',
   onSecondaryContainer: '#2b151c',

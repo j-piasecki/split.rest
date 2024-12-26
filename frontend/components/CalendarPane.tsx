@@ -80,7 +80,7 @@ export function CalendarPane({
             startFromMonday
             todayBackgroundColor='transparent'
             selectedDayStyle={{ backgroundColor: theme.colors.primary }}
-            selectedDayColor={theme.colors.onPrimary}
+            selectedDayTextColor={theme.colors.onPrimary}
             textStyle={{
               color: theme.colors.onSurface,
               fontFamily: resolveFontName(),

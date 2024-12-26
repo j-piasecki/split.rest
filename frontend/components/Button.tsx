@@ -37,7 +37,7 @@ export function Button({
     ? theme.colors.onErrorContainer
     : isLoading
       ? theme.colors.primary
-      : theme.colors.onSurface
+      : theme.colors.onPrimaryContainer
 
   return (
     <Pressable
