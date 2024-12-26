@@ -50,7 +50,6 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
       getSplitCreationContext().paidByEmail = form.entries[form.paidByIndex].email
       getSplitCreationContext().title = form.title
       getSplitCreationContext().totalAmount = sumToSave.toFixed(2)
-      getSplitCreationContext().timestamp = Date.now()
 
       router.navigate(`/group/${groupInfo.id}/addSplit/summary`)
     } catch (error) {
@@ -67,6 +66,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
         initialPaidByIndex={getSplitCreationContext().paidByIndex}
         initialTitle={getSplitCreationContext().title}
         showDetails={false}
+        showCalendar={false}
         groupInfo={groupInfo}
         onSubmit={save}
         waiting={waiting}

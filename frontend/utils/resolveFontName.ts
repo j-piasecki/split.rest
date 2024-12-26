@@ -1,6 +1,6 @@
 import { Platform, TextStyle } from 'react-native'
 
-export function resolveFontName(style: TextStyle | undefined) {
+export function resolveFontName(style?: TextStyle) {
   if (Platform.OS === 'web') {
     return 'Nunito'
   }

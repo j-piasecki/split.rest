@@ -21,7 +21,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
   async function save(form: FormData) {
     try {
       setWaiting(true)
-      const { payerId, sumToSave, balanceChange } = await validateSplitForm(form)
+      const { payerId, sumToSave, balanceChange, timestamp } = await validateSplitForm(form)
 
       await updateSplit({
         splitId: splitInfo.id,
@@ -29,7 +29,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
         paidBy: payerId,
         title: form.title,
         total: sumToSave,
-        timestamp: splitInfo.timestamp,
+        timestamp: timestamp,
         balances: balanceChange as BalanceChange[],
       })
 
@@ -63,6 +63,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
         initialTitle={splitInfo.title}
         initialEntries={initialEntries}
         initialPaidByIndex={initialPaidByIndex}
+        initialTimestamp={splitInfo.timestamp}
         groupInfo={groupInfo}
         onSubmit={save}
         waiting={waiting}

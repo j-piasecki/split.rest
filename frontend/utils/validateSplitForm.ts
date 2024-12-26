@@ -6,6 +6,7 @@ export interface ValidationResult {
   payerId: string
   balanceChange: BalanceChange[]
   sumToSave: number
+  timestamp: number
 }
 
 export function validateSplitTitle(title: string): void {
@@ -22,6 +23,7 @@ export async function validateSplitForm({
   title,
   paidByIndex,
   entries,
+  timestamp,
 }: FormData): Promise<ValidationResult> {
   if (entries.length < 2) {
     throw new TranslatableError('splitValidation.atLeastTwoEntries')
@@ -98,5 +100,6 @@ export async function validateSplitForm({
     payerId,
     balanceChange: balanceChange.filter((change) => change !== undefined),
     sumToSave,
+    timestamp,
   }
 }

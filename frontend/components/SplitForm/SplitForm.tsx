@@ -2,6 +2,7 @@ import { DetailsPane } from './DetailsPane'
 import { EntriesPane } from './EntriesPane'
 import { FormData, SplitEntryData, useFormData } from './formData'
 import { Button } from '@components/Button'
+import { CalendarPane } from '@components/CalendarPane'
 import { ErrorText } from '@components/ErrorText'
 import { IconName } from '@components/Icon'
 import { useTheme } from '@styling/theme'
@@ -15,10 +16,12 @@ export interface SplitFormProps {
   initialTitle?: string | null
   initialEntries: SplitEntryData[]
   initialPaidByIndex?: number
+  initialTimestamp?: number
   waiting?: boolean
   onSubmit: (data: FormData) => void
   error?: string | null
   showDetails?: boolean
+  showCalendar?: boolean
   buttonIcon?: IconName
   buttonTitle?: LanguageTranslationKey
   buttonIconLocation?: 'left' | 'right'
@@ -29,10 +32,12 @@ export function SplitForm({
   initialTitle,
   initialEntries,
   initialPaidByIndex,
+  initialTimestamp,
   waiting,
   onSubmit,
   error,
   showDetails = true,
+  showCalendar = true,
   buttonIcon = 'save',
   buttonTitle = 'form.save',
   buttonIconLocation = 'left',
@@ -41,6 +46,7 @@ export function SplitForm({
   const scrollRef = useRef<ScrollView>(null)
   const [formState, updateForm] = useFormData({
     title: initialTitle ?? '',
+    timestamp: initialTimestamp ?? Date.now(),
     paidByIndex: initialPaidByIndex ?? 0,
     entries: initialEntries,
   })
@@ -53,10 +59,11 @@ export function SplitForm({
         amount: entry.amount.trim(),
         user: entry.user,
       }))
-      .filter((entry) => entry.email !== '' && entry.amount !== '')
+      .filter((entry) => entry.email !== '' || entry.amount !== '')
 
     onSubmit({
       title: formState.title,
+      timestamp: formState.timestamp,
       paidByIndex: formState.paidByIndex,
       entries: toSave,
     })
@@ -72,6 +79,17 @@ export function SplitForm({
       >
         {showDetails && (
           <DetailsPane formState={formState} groupInfo={groupInfo} updateForm={updateForm} />
+        )}
+
+        {showCalendar && (
+          <CalendarPane
+            initialDate={formState.timestamp}
+            onDateChange={(timestamp) => {
+              updateForm({ type: 'setTimestamp', timestamp: timestamp })
+            }}
+            showDateOnHeader
+            startCollapsed
+          />
         )}
 
         <EntriesPane

@@ -124,15 +124,19 @@ class SplitCreationContext {
       throw new TranslatableError('api.mustBeLoggedIn')
     }
 
+    if (!this.timestamp) {
+      throw new TranslatableError('splitValidation.dateMustBeSelected')
+    }
+
     return {
       id: -1,
       title: this.title,
       total: this.totalAmount,
-      timestamp: this.timestamp ?? Date.now(),
+      timestamp: this.timestamp,
       paidById: paidById,
       version: 1,
       createdById: auth.currentUser.uid,
-      updatedAt: this.timestamp ?? Date.now(),
+      updatedAt: Date.now(),
       isUserParticipating: users.find((user) => user.email === auth.currentUser?.email)
         ? true
         : false,

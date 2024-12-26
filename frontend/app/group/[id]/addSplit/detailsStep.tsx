@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { CalendarPane } from '@components/CalendarPane'
 import { ErrorText } from '@components/ErrorText'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
@@ -7,9 +8,9 @@ import { useTranslatedError } from '@hooks/useTranslatedError'
 import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 export default function Modal() {
   const router = useRouter()
@@ -18,6 +19,7 @@ export default function Modal() {
 
   const [title, setTitle] = useState(getSplitCreationContext().title ?? '')
   const [total, setTotal] = useState(getSplitCreationContext().totalAmount ?? '')
+  const [timestamp, setTimestamp] = useState(getSplitCreationContext().timestamp ?? Date.now())
   const [error, setError] = useTranslatedError()
 
   const totalVisible = getSplitCreationContext().splitType === SplitMethod.Equal
@@ -29,8 +31,15 @@ export default function Modal() {
       maxWidth={500}
       opaque={false}
     >
-      <View
-        style={{ flex: 1, paddingTop: 8, paddingHorizontal: 16, justifyContent: 'space-between' }}
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingTop: 8,
+          paddingHorizontal: 16,
+          gap: 16,
+          paddingBottom: 16,
+        }}
       >
         <Pane
           icon='receipt'
@@ -68,52 +77,60 @@ export default function Modal() {
           )}
         </Pane>
 
-        <View style={{ gap: 16 }}>
-          {error && <ErrorText>{error}</ErrorText>}
-          <Button
-            rightIcon='chevronForward'
-            title={t('splitType.buttonNext')}
-            onPress={() => {
-              try {
-                validateSplitTitle(title)
-              } catch (error) {
-                setError(error)
+        <CalendarPane
+          initialDate={timestamp}
+          onDateChange={setTimestamp}
+          showDateOnHeader
+          startCollapsed
+        />
+      </ScrollView>
+
+      <View style={{ gap: 16, marginHorizontal: 16 }}>
+        {error && <ErrorText>{error}</ErrorText>}
+        <Button
+          rightIcon='chevronForward'
+          title={t('splitType.buttonNext')}
+          onPress={() => {
+            try {
+              validateSplitTitle(title)
+            } catch (error) {
+              setError(error)
+              return
+            }
+
+            if (totalVisible) {
+              if (total === '') {
+                setError(t('splitValidation.totalRequired'))
                 return
               }
 
-              if (totalVisible) {
-                if (total === '') {
-                  setError(t('splitValidation.totalRequired'))
-                  return
-                }
-
-                if (Number.isNaN(Number(total))) {
-                  setError(t('splitValidation.totalAmountMustBeNumber'))
-                  return
-                }
-
-                if (Number(total) <= 0) {
-                  setError(t('splitValidation.totalMustBeGreaterThanZero'))
-                  return
-                }
-
-                getSplitCreationContext().totalAmount = total
+              if (Number.isNaN(Number(total))) {
+                setError(t('splitValidation.totalAmountMustBeNumber'))
+                return
               }
 
-              getSplitCreationContext().title = title
-
-              switch (getSplitCreationContext().splitType) {
-                case SplitMethod.ExactAmounts:
-                  router.navigate(`/group/${id}/addSplit/exactAmounts`)
-                  break
-
-                case SplitMethod.Equal:
-                  router.navigate(`/group/${id}/addSplit/participantsStep`)
-                  break
+              if (Number(total) <= 0) {
+                setError(t('splitValidation.totalMustBeGreaterThanZero'))
+                return
               }
-            }}
-          />
-        </View>
+
+              getSplitCreationContext().totalAmount = total
+            }
+
+            getSplitCreationContext().title = title
+            getSplitCreationContext().timestamp = timestamp
+
+            switch (getSplitCreationContext().splitType) {
+              case SplitMethod.ExactAmounts:
+                router.navigate(`/group/${id}/addSplit/exactAmounts`)
+                break
+
+              case SplitMethod.Equal:
+                router.navigate(`/group/${id}/addSplit/participantsStep`)
+                break
+            }
+          }}
+        />
       </View>
     </ModalScreen>
   )

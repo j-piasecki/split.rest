@@ -153,7 +153,8 @@
     "tooLittleToDivide": "The amount is too small to divide between participants",
     "payerNotFound": "Payer not found",
     "userNotFound": "User not found",
-    "userWithEmailNotFound": "User with e-mail {{email}} not found"
+    "userWithEmailNotFound": "User with e-mail {{email}} not found",
+    "dateMustBeSelected": "Date must be selected"
   },
 
   "groupValidation": {
@@ -215,6 +216,36 @@
     "createAuthorText": "By <Styled>{{editor}}</Styled>",
     "hasPaidText": "<Styled>{{payer}}</Styled> has paid <Styled>{{amount}} {{currency}}</Styled>",
     "splitTimeText": "On <Styled>{{date}}</Styled>"
+  },
+
+  "calendar": {
+    "header": "Date",
+    "headerWithDate": "Date: {{date}}",
+    "selectYear": "Select year ",
+    "selectMonth": "Select month in ",
+    "day": {
+      "monday": "Mon",
+      "tuesday": "Tue",
+      "wednesday": "Wed",
+      "thursday": "Thu",
+      "friday": "Fri",
+      "saturday": "Sat",
+      "sunday": "Sun"
+    },
+    "month": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    }
   }
 }
 

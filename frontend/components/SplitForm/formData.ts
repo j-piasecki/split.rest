@@ -9,6 +9,7 @@ export interface SplitEntryData {
 
 export interface FormData {
   title: string
+  timestamp: number
   paidByIndex: number
   entries: SplitEntryData[]
 }
@@ -45,6 +46,10 @@ export type FormActionType =
       type: 'clearFocusOnMount'
       index: number
     }
+  | {
+      type: 'setTimestamp'
+      timestamp: number
+    }
 
 function entriesReducer(state: FormData, action: FormActionType): FormData {
   const newState = { ...state }
@@ -57,6 +62,10 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
 
     case 'setPaidBy':
       newState.paidByIndex = action.index
+      return newState
+
+    case 'setTimestamp':
+      newState.timestamp = action.timestamp
       return newState
 
     case 'clearFocusOnMount':
