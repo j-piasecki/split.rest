@@ -30,7 +30,7 @@ export function CalendarPane({
   const [timestamp, setTimestamp] = useState(initialDate ?? Date.now())
 
   useLayoutEffect(() => {
-    const size = measure(containerRef)
+    const size = measure(containerRef.current!)
     setCalendarWidth(Math.min(size.width, 350))
   }, [windowWidth])
 

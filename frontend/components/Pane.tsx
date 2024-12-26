@@ -123,7 +123,7 @@ export function Pane({
         styles.paneShadow,
         collapsible && isCollapsed
           ? orientation === 'vertical'
-            ? { width: 64 }
+            ? { width: 72 }
             : { height: 54 }
           : {},
         style,

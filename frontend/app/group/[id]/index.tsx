@@ -39,7 +39,7 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
 
   useLayoutEffect(() => {
     const singleIconWidth = 28
-    const width = measure(iconsRef).width
+    const width = measure(iconsRef.current!).width
 
     setIconsToShow(Math.floor(width / singleIconWidth))
   }, [width])

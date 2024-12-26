@@ -112,7 +112,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
   const { width, height } = useWindowDimensions()
 
   useLayoutEffect(() => {
-    const frame = measure(contentRef)
+    const frame = measure(contentRef.current!)
 
     if (!isSmallScreen) {
       if (frame.y + frame.height > height - insets.bottom) {
@@ -219,7 +219,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
 
   function measureAnchor(e: { nativeEvent: PointerEvent } | GestureResponderEvent | AnchorEvent) {
     touchPoint.current = { x: e.nativeEvent.pageX, y: e.nativeEvent.pageY }
-    anchorRect.current = measure(anchorRef)
+    anchorRect.current = measure(anchorRef.current!)
   }
 
   const scaleStyle = useAnimatedStyle(() => {

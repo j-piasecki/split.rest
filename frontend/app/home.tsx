@@ -1,4 +1,4 @@
-import { Button } from '@components/Button'
+import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
 import Header from '@components/Header'
 import { Icon } from '@components/Icon'
 import { PaneHeader } from '@components/Pane'
@@ -90,6 +90,7 @@ export default function Home() {
   const theme = useTheme()
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
+  const [fabRef, scrollHandler] = useFABScrollHandler()
 
   const {
     groups: visibleGroups,
@@ -129,7 +130,6 @@ export default function Home() {
             flex: 1,
             width: '100%',
             maxWidth: 768,
-            paddingHorizontal: 16,
             paddingTop: 16,
           }}
         >
@@ -137,10 +137,13 @@ export default function Home() {
             data={groups}
             renderItem={({ item }) => <Group info={item} />}
             contentContainerStyle={{
+              paddingHorizontal: 16,
               paddingBottom: 80 + insets.bottom,
             }}
             onEndReachedThreshold={0.5}
             keyExtractor={(item) => String(item.id)}
+            scrollEventThrottle={100}
+            onScroll={scrollHandler}
             ItemSeparatorComponent={Divider}
             ListHeaderComponent={
               <View
@@ -203,12 +206,13 @@ export default function Home() {
             }}
           />
           <View style={{ position: 'absolute', right: 16, bottom: 16 + insets.bottom }}>
-            <Button
+            <FloatingActionButton
+              ref={fabRef}
               onPress={() => {
                 router.navigate('/createGroup')
               }}
               title={t('createGroup')}
-              leftIcon='add'
+              icon='add'
             />
           </View>
         </View>

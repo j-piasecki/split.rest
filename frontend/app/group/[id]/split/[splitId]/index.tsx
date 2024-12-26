@@ -33,7 +33,7 @@ export default function SplitInfoScreen() {
 
   useLayoutEffect(() => {
     if (containerRef.current) {
-      const size = measure(containerRef)
+      const size = measure(containerRef.current)
       setMaxWidth(size.width)
     }
   }, [isLoadingHistory, groupInfo])

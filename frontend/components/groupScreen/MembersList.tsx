@@ -1,5 +1,5 @@
 import { MemberRow } from './MemberRow'
-import { Button } from '@components/Button'
+import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
 import { Text } from '@components/Text'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
@@ -37,6 +37,7 @@ export function MembersList({
   const router = useRouter()
   const insets = useSafeAreaInsets()
   const threeBarLayout = useThreeBarLayout()
+  const [fabRef, scrollHandler] = useFABScrollHandler()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
   const { members, isLoading, fetchNextPage, isFetchingNextPage } = useGroupMembers(info?.id)
@@ -53,7 +54,7 @@ export function MembersList({
           width: '100%',
           alignSelf: 'center',
           paddingBottom: 88 + (applyBottomInset ? insets.bottom : 0),
-          paddingHorizontal: iconOnly ? 0 : 16,
+          paddingHorizontal: iconOnly ? 4 : 16,
         }}
         ListEmptyComponent={
           <View
@@ -84,6 +85,8 @@ export function MembersList({
         ItemSeparatorComponent={iconOnly ? undefined : Divider}
         ListHeaderComponent={headerComponent}
         ListFooterComponent={footerComponent}
+        scrollEventThrottle={100}
+        onScroll={scrollHandler}
       />
 
       {permissions?.canAddMembers() && (
@@ -94,8 +97,9 @@ export function MembersList({
             right: threeBarLayout ? 8 : 16,
           }}
         >
-          <Button
-            leftIcon='addMember'
+          <FloatingActionButton
+            ref={fabRef}
+            icon='addMember'
             title={iconOnly ? '' : t('addUser.addUser')}
             onPress={() => {
               router.navigate(`/group/${info.id}/addUser`)

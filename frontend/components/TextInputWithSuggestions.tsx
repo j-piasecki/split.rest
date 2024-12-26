@@ -117,7 +117,7 @@ export function TextInputWithSuggestions<T>({
 
   useLayoutEffect(() => {
     if (suggestionBoxRef.current) {
-      setSuggestionBoxHeight(measure(suggestionBoxRef).height)
+      setSuggestionBoxHeight(measure(suggestionBoxRef.current).height)
     }
   }, [suggestions, isFocused, suggestionsVisible, showSuggestions, value, isFocusedDebounced])
 
