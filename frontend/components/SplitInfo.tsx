@@ -139,6 +139,7 @@ function EditInfo({ splitInfo }: { splitInfo: SplitWithUsers }) {
       title={t('splitInfo.editInfo')}
       textLocation='start'
       containerStyle={{ padding: 16, paddingTop: 12 }}
+      style={{ overflow: 'hidden' }}
       collapsible
       startCollapsed
     >
