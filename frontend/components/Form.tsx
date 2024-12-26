@@ -5,6 +5,8 @@ export interface FormContextType {
   inputs: { focusIndex: number; ref: React.RefObject<TextInput> }[]
   registerInput: (focusIndex: number, ref: React.RefObject<TextInput>) => () => void
   focusNext: (focusIndex: number) => void
+  nextIndex: number
+  getNextIndex(): number
 }
 
 const FormContext = React.createContext<React.RefObject<FormContextType> | null>(null)
@@ -51,6 +53,10 @@ export function Form({ autofocus, children, onSubmit }: FormProps) {
         nextInput.ref.current?.focus()
       }
     },
+    nextIndex: 0,
+    getNextIndex(): number {
+      return value.current.nextIndex++
+    },
   })
 
   useEffect(() => {
@@ -68,7 +74,7 @@ export function useFormContext(ref: React.RefObject<TextInput>, focusIndex?: num
   const context = useContext(FormContext)
 
   // focus index doesn't matter if context doesn't exist, it wouldn't be used anyway
-  const [nextIndex] = useState(() => focusIndex ?? (context?.current?.inputs.length ?? 0) + 1)
+  const [nextIndex] = useState(() => focusIndex ?? context?.current?.getNextIndex() ?? 0)
 
   useEffect(() => {
     return context?.current?.registerInput(nextIndex, ref)
