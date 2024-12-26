@@ -61,15 +61,12 @@ function Snack({
         backgroundColor: theme.colors.inverseSurface,
         maxWidth: 768,
         minWidth: 350,
-        paddingVertical: 12,
         paddingLeft: 16,
-        paddingRight: 16,
         borderRadius: 4,
-        gap: 8,
       }}
     >
       <Text
-        style={{ color: theme.colors.inverseOnSurface, fontSize: 18, flex: 1 }}
+        style={{ color: theme.colors.inverseOnSurface, fontSize: 18, flex: 1, paddingVertical: 12 }}
         numberOfLines={numberOfLines}
       >
         {data.message}
@@ -78,12 +75,12 @@ function Snack({
       {data.action && data.actionText && (
         <Pressable
           disabled={actionRunning}
-          style={{
+          style={({ pressed }) => ({
             height: '100%',
             paddingHorizontal: 8,
             justifyContent: 'center',
-            opacity: actionRunning ? 0.5 : 1,
-          }}
+            opacity: pressed || actionRunning ? 0.5 : 1,
+          })}
           onPress={() => {
             clearScheduledDismiss()
             setActionRunning(true)
@@ -120,7 +117,16 @@ function Snack({
         icon='close'
         onPress={dismiss}
         color={theme.colors.inverseOnSurface}
-        style={{ backgroundColor: 'transparent', padding: 0 }}
+        style={({ pressed }) => ({
+          backgroundColor: 'transparent',
+          borderRadius: 0,
+          height: '100%',
+          paddingVertical: 0,
+          paddingRight: 16,
+          paddingLeft: 4,
+          justifyContent: 'center',
+          opacity: pressed ? 0.5 : 1,
+        })}
       />
     </Animated.View>
   )
