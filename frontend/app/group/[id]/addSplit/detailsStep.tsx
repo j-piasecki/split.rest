@@ -1,10 +1,9 @@
 import { Button } from '@components/Button'
+import { ErrorText } from '@components/ErrorText'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
-import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { useTranslatedError } from '@hooks/useTranslatedError'
-import { useTheme } from '@styling/theme'
 import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -14,7 +13,6 @@ import { View } from 'react-native'
 
 export default function Modal() {
   const router = useRouter()
-  const theme = useTheme()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
 
@@ -71,18 +69,7 @@ export default function Modal() {
         </Pane>
 
         <View style={{ gap: 16 }}>
-          {error && (
-            <Text
-              style={{
-                color: theme.colors.error,
-                textAlign: 'center',
-                fontSize: 18,
-                fontWeight: 500,
-              }}
-            >
-              {error}
-            </Text>
-          )}
+          {error && <ErrorText>{error}</ErrorText>}
           <Button
             rightIcon='chevronForward'
             title={t('splitType.buttonNext')}

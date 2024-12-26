@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { ErrorText } from '@components/ErrorText'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
@@ -81,18 +82,7 @@ function UserPane({
       }}
     >
       <View>
-        {error && (
-          <Text
-            style={{
-              color: theme.colors.error,
-              textAlign: 'center',
-              fontSize: 18,
-              fontWeight: 500,
-            }}
-          >
-            {error}
-          </Text>
-        )}
+        {error && <ErrorText>{error}</ErrorText>}
 
         {waiting && <ActivityIndicator color={theme.colors.onSurface} />}
 
@@ -118,7 +108,6 @@ function UserPane({
 
 function Form() {
   const router = useRouter()
-  const theme = useTheme()
   const { id: groupId } = useLocalSearchParams()
   const { t } = useTranslation()
 
@@ -183,18 +172,7 @@ function Form() {
       </View>
 
       <View style={{ gap: 8 }}>
-        {addingError && (
-          <Text
-            style={{
-              color: theme.colors.error,
-              textAlign: 'center',
-              fontSize: 18,
-              fontWeight: 500,
-            }}
-          >
-            {addingError}
-          </Text>
-        )}
+        {addingError && <ErrorText>{addingError}</ErrorText>}
         <Button
           leftIcon='addMember'
           title={t('addUser.addUser')}

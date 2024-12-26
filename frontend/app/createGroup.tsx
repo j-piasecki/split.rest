@@ -1,11 +1,10 @@
 import { Button } from '@components/Button'
+import { ErrorText } from '@components/ErrorText'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
-import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { useCreateGroup } from '@hooks/database/useCreateGroup'
 import { useTranslatedError } from '@hooks/useTranslatedError'
-import { useTheme } from '@styling/theme'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,7 +12,6 @@ import { View } from 'react-native'
 
 function Form() {
   const router = useRouter()
-  const theme = useTheme()
   const { t } = useTranslation()
   const [name, setName] = useState('')
   const [currency, setCurrency] = useState('PLN')
@@ -83,18 +81,7 @@ function Form() {
       </Pane>
 
       <View style={{ gap: 16 }}>
-        {error && (
-          <Text
-            style={{
-              color: theme.colors.error,
-              textAlign: 'center',
-              fontSize: 18,
-              fontWeight: 500,
-            }}
-          >
-            {error}
-          </Text>
-        )}
+        {error && <ErrorText>{error}</ErrorText>}
         <Button title='Create' leftIcon='check' onPress={handlePress} isLoading={isPending} />
       </View>
     </View>

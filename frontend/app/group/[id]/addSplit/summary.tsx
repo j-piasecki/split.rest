@@ -1,7 +1,7 @@
 import { Button } from '@components/Button'
+import { ErrorText } from '@components/ErrorText'
 import ModalScreen from '@components/ModalScreen'
 import { SplitInfo } from '@components/SplitInfo'
-import { Text } from '@components/Text'
 import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
@@ -16,7 +16,6 @@ import { GroupInfo, SplitWithUsers } from 'shared'
 
 function Content({ groupInfo, split }: { groupInfo: GroupInfo; split: SplitWithUsers }) {
   const { t } = useTranslation()
-  const theme = useTheme()
   const router = useRouter()
   const [error, setError] = useTranslatedError()
   const { data: permissions } = useGroupPermissions(groupInfo.id)
@@ -45,32 +44,12 @@ function Content({ groupInfo, split }: { groupInfo: GroupInfo; split: SplitWithU
       <SplitInfo groupInfo={groupInfo} splitInfo={split} />
 
       <View style={{ gap: 16, paddingHorizontal: 16 }}>
-        {error && (
-          <Text
-            style={{
-              color: theme.colors.error,
-              textAlign: 'center',
-              fontSize: 18,
-              fontWeight: 500,
-            }}
-          >
-            {error}
-          </Text>
-        )}
+        {error && <ErrorText>{error}</ErrorText>}
         {permissions?.canCreateSplits() && (
           <Button leftIcon='save' title={t('form.save')} isLoading={isPending} onPress={save} />
         )}
         {!permissions?.canCreateSplits() && (
-          <Text
-            style={{
-              color: theme.colors.error,
-              textAlign: 'center',
-              fontSize: 18,
-              fontWeight: 500,
-            }}
-          >
-            {t('api.insufficientPermissions.group.createSplit')}
-          </Text>
+          <ErrorText translationKey='api.insufficientPermissions.group.createSplit' />
         )}
       </View>
     </View>
@@ -105,16 +84,7 @@ export default function Modal() {
       {error && (
         <View style={{ flex: 1, paddingHorizontal: 16 }}>
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text
-              style={{
-                color: theme.colors.error,
-                textAlign: 'center',
-                fontSize: 18,
-                fontWeight: 500,
-              }}
-            >
-              {error}
-            </Text>
+            <ErrorText>{error}</ErrorText>
           </View>
           <Button
             leftIcon='chevronBack'

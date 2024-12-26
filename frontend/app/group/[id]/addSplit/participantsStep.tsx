@@ -1,10 +1,9 @@
 import { Button } from '@components/Button'
+import { ErrorText } from '@components/ErrorText'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
-import { Text } from '@components/Text'
 import { useTranslatedError } from '@hooks/useTranslatedError'
-import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { getSplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -39,7 +38,6 @@ function getInitialEntries(user: User): PersonEntry[] {
 }
 
 function ParticipansPicker({ user }: { user: User }) {
-  const theme = useTheme()
   const router = useRouter()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
@@ -102,18 +100,7 @@ function ParticipansPicker({ user }: { user: User }) {
       </ScrollView>
 
       <View style={{ gap: 8, paddingHorizontal: 16 }}>
-        {error && (
-          <Text
-            style={{
-              color: theme.colors.error,
-              textAlign: 'center',
-              fontSize: 18,
-              fontWeight: 500,
-            }}
-          >
-            {error}
-          </Text>
-        )}
+        {error && <ErrorText>{error}</ErrorText>}
         <Button rightIcon='chevronForward' title={t('splitType.buttonNext')} onPress={submit} />
       </View>
     </View>

@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { ErrorText } from '@components/ErrorText'
 import Header from '@components/Header'
 import { Text } from '@components/Text'
 import { useGroupMetadataByLink } from '@hooks/database/useGroupMetadataByLink'
@@ -60,11 +61,7 @@ function JoinForm() {
               />
             )}
           </View>
-          {error && (
-            <Text style={{ color: theme.colors.error, fontSize: 16, textAlign: 'center' }}>
-              {error}
-            </Text>
-          )}
+          {error && <ErrorText>{error}</ErrorText>}
         </>
       )}
       {!isLoadingGroup && !group && (

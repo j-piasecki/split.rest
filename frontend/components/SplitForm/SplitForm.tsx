@@ -2,8 +2,8 @@ import { DetailsPane } from './DetailsPane'
 import { EntriesPane } from './EntriesPane'
 import { FormData, SplitEntryData, useFormData } from './formData'
 import { Button } from '@components/Button'
+import { ErrorText } from '@components/ErrorText'
 import { IconName } from '@components/Icon'
-import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -83,18 +83,7 @@ export function SplitForm({
       </ScrollView>
 
       <View style={{ gap: 8 }}>
-        {error && (
-          <Text
-            style={{
-              color: theme.colors.error,
-              textAlign: 'center',
-              fontSize: 18,
-              fontWeight: 500,
-            }}
-          >
-            {error}
-          </Text>
-        )}
+        {error && <ErrorText>{error}</ErrorText>}
 
         <View>
           {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}

@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { ErrorText } from '@components/ErrorText'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
@@ -23,7 +24,6 @@ interface FormProps {
 }
 
 function Form({ groupId, setResult, user }: FormProps) {
-  const theme = useTheme()
   const { t } = useTranslation()
   const [entries, setEntries] = useState<PersonEntry[]>([
     { email: user.email, user },
@@ -87,18 +87,7 @@ function Form({ groupId, setResult, user }: FormProps) {
       </ScrollView>
 
       <View style={{ gap: 8 }}>
-        {error && (
-          <Text
-            style={{
-              color: theme.colors.error,
-              textAlign: 'center',
-              fontSize: 18,
-              fontWeight: 500,
-            }}
-          >
-            {error}
-          </Text>
-        )}
+        {error && <ErrorText>{error}</ErrorText>}
         <Button
           leftIcon='check'
           title={t('roulette.submit')}
