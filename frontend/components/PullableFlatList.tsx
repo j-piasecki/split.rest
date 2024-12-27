@@ -21,13 +21,23 @@ export interface PullableFlatListProps<T> extends FlatListPropsWithLayout<T> {
 }
 
 export function PullableFlatList<T>(props: PullableFlatListProps<T>) {
+  const enablePull = props.refreshControl === undefined
+
   const animatedRef = useAnimatedRef<Animated.FlatList<T>>()
   const scrollOffset = useScrollViewOffset(animatedRef as unknown as null)
   const scrollEnabled = useSharedValue(true)
   const dragDistance = useSharedValue(0)
 
   const normalizedDrag = useDerivedValue(() => {
-    return -Math.pow(Math.max(-dragDistance.value, 0), 0.85)
+    if (!enablePull) {
+      return 0
+    }
+
+    if (ENABLE_PAN_DRAGGING) {
+      return -Math.pow(Math.max(-dragDistance.value, 0), 0.85)
+    }
+
+    return scrollOffset.value
   })
 
   function enableScroll() {
@@ -36,7 +46,7 @@ export function PullableFlatList<T>(props: PullableFlatListProps<T>) {
   }
 
   const dragGesture = Gesture.Pan()
-    .enabled(ENABLE_PAN_DRAGGING)
+    .enabled(ENABLE_PAN_DRAGGING && enablePull)
     .onChange((e) => {
       if (scrollOffset.value <= 0) {
         dragDistance.value -= e.changeY
@@ -57,7 +67,7 @@ export function PullableFlatList<T>(props: PullableFlatListProps<T>) {
       }
     })
 
-  const Header = props.renderPullableHeader?.(ENABLE_PAN_DRAGGING ? normalizedDrag : scrollOffset)
+  const Header = props.renderPullableHeader?.(normalizedDrag)
 
   return (
     <GestureDetector gesture={dragGesture} touchAction='none'>
@@ -70,6 +80,7 @@ export function PullableFlatList<T>(props: PullableFlatListProps<T>) {
           renderScrollComponent={(props) => {
             return (
               <ScrollComponent
+                enablePull={enablePull}
                 scrollEnabledSV={scrollEnabled}
                 dragGesture={dragGesture}
                 dragDistance={normalizedDrag}
@@ -84,6 +95,7 @@ export function PullableFlatList<T>(props: PullableFlatListProps<T>) {
 }
 
 interface ScrollComponentProps extends AnimatedScrollViewProps {
+  enablePull: boolean
   scrollEnabledSV: SharedValue<boolean>
   dragGesture: PanGesture
   dragDistance: SharedValue<number>
@@ -91,11 +103,18 @@ interface ScrollComponentProps extends AnimatedScrollViewProps {
 
 const ScrollComponent = React.forwardRef<Animated.ScrollView, ScrollComponentProps>(
   function ScrollComponent(
-    { scrollEnabledSV, dragGesture, dragDistance, style, ...rest }: ScrollComponentProps,
+    {
+      enablePull,
+      scrollEnabledSV,
+      dragGesture,
+      dragDistance,
+      style,
+      ...rest
+    }: ScrollComponentProps,
     ref
   ) {
     const scrollGesture = Gesture.Native()
-      .enabled(ENABLE_PAN_DRAGGING)
+      .enabled(ENABLE_PAN_DRAGGING && enablePull)
       .disallowInterruption(true)
       .simultaneousWithExternalGesture(dragGesture)
 
