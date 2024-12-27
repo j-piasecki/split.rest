@@ -34,10 +34,15 @@ function Form({ user }: { user: User }) {
         </Text>
       </View>
       <View style={{ width: '100%' }}>
-        <Button title={t('signOut')} onPress={() => {
-          router.dismissTo('/')
-          logout()
-        }} rightIcon='logout' />
+        <Button
+          title={t('signOut')}
+          onPress={() => {
+            router.dismissAll()
+            router.replace('/login')
+            logout()
+          }}
+          rightIcon='logout'
+        />
       </View>
     </View>
   )

@@ -6,7 +6,6 @@ import { JoinGroupByLinkArguments } from 'shared'
 export function useJoinGroupByLink() {
   return useMutation({
     mutationFn: async (uuid: string) => {
-
       const args: JoinGroupByLinkArguments = { uuid }
       await makeRequest('POST', 'joinGroupByLink', args)
 

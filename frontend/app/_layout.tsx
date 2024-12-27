@@ -25,7 +25,7 @@ SplashScreen.setOptions({
 
 function Content() {
   const pathname = usePathname()
-  const user = useAuth(!pathname.startsWith('/join'))
+  const user = useAuth(!pathname.startsWith('/join') && !pathname.startsWith('/login'))
   const theme = useTheme()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const locales = useLocales()
@@ -84,6 +84,7 @@ function Content() {
             <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
               <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
               <Stack.Screen name='home' options={{ title: t('appName'), animation: 'none' }} />
+              <Stack.Screen name='login' options={{ title: t('appName'), animation: 'none' }} />
               <Stack.Screen name='group/[id]/index' options={{ title: t('screenName.group') }} />
               <Stack.Screen
                 name='group/[id]/members'

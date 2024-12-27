@@ -1,18 +1,16 @@
 import { Button } from '@components/Button'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
-import { login, useAuth } from '@utils/auth'
-import { Redirect, useLocalSearchParams } from 'expo-router'
+import { Redirect, useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import { Platform, View } from 'react-native'
 
 // TODO: safe area
 
 export default function Screen() {
-  const user = useAuth()
   const theme = useTheme()
+  const router = useRouter()
   const { t } = useTranslation()
-  const { join } = useLocalSearchParams()
 
   return (
     <View
@@ -23,17 +21,18 @@ export default function Screen() {
         backgroundColor: theme.colors.surface,
       }}
     >
-      {user === undefined && (
-        <View>
-          <ActivityIndicator size='small' color={theme.colors.onSurface} />
-          <Text style={{ margin: 8, color: theme.colors.onSurface }}>
-            {t('checkingIfYouAreLoggedIn')}
-          </Text>
-        </View>
-      )}
-      {user === null && <Button title={t('signIn')} onPress={login} leftIcon='login' />}
-      {user && !join && <Redirect href='/home' withAnchor />}
-      {user && join && <Redirect href={`/join/${join}`} withAnchor />}
+      {Platform.OS !== 'web' && <Redirect href='/login' withAnchor />}
+
+      <Text style={{ color: theme.colors.outline, fontSize: 18, textAlign: 'center' }}>
+        (This is home screen)
+      </Text>
+      <Button
+        title={t('signIn')}
+        onPress={() => {
+          router.navigate('/login')
+        }}
+        leftIcon='login'
+      />
     </View>
   )
 }
