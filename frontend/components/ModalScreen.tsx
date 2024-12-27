@@ -1,17 +1,11 @@
+import { KeyboardAvoidingView } from './KeyboardAvoidingView'
 import { RoundIconButton } from './RoundIconButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
-import {
-  KeyboardAvoidingView,
-  LayoutChangeEvent,
-  Platform,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native'
+import { LayoutChangeEvent, Platform, Pressable, StyleSheet, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -63,7 +57,7 @@ function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalP
           {title}
         </Text>
       </View>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
+      <KeyboardAvoidingView style={{ flex: 1 }}>
         <View
           onLayout={onLayout}
           style={{ flex: 1, paddingBottom: insets.bottom + (Platform.OS === 'web' ? 16 : 0) }}
