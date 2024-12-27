@@ -1,4 +1,4 @@
-import Header from '@components/Header'
+import Header, { HEADER_HEIGHT } from '@components/Header'
 import { Icon } from '@components/Icon'
 import { Pane, PaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
@@ -298,7 +298,7 @@ export default function GroupScreen() {
                   style={{
                     width: 600,
                     bottom: 16,
-                    top: 60,
+                    top: HEADER_HEIGHT,
                     right: 16,
                     position: 'absolute',
                     backgroundColor: theme.colors.surfaceContainer,
