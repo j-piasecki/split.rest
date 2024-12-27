@@ -3,6 +3,7 @@ import { Icon, IconName } from './Icon'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { HapticFeedback } from '@utils/hapticFeedback'
 import { Rect, measure } from '@utils/measure'
 import React, { useEffect, useImperativeHandle, useLayoutEffect } from 'react'
 import { useRef, useState } from 'react'
@@ -260,6 +261,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
           if (!props.disabled) {
             measureAnchor(e)
             setVisible(true)
+            HapticFeedback.impactMedium()
           }
         }}
         // @ts-expect-error - onContextMenu does not exist on Pressable on mobile

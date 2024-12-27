@@ -4,6 +4,7 @@ import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { HapticFeedback } from '@utils/hapticFeedback'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect } from 'react'
@@ -37,6 +38,10 @@ const AnimatedImage = Animated.createAnimatedComponent(Image)
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const icon = require('@assets/icon.svg')
 
+function feedback() {
+  HapticFeedback.impactLight()
+}
+
 export default function Header({ offset, isWaiting, onPull, showBackButton }: HeaderProps) {
   const { t } = useTranslation()
   const theme = useTheme()
@@ -65,7 +70,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
     () => (offset?.value ?? 0) < -100,
     (value, previous) => {
       if (value && !previous) {
-        // TODO: feedback here
+        runOnJS(feedback)()
       }
 
       if (!value && previous && !isRotating.value) {
