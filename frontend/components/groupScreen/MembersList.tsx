@@ -119,7 +119,6 @@ export function MembersList({
         ItemSeparatorComponent={iconOnly ? undefined : Divider}
         ListHeaderComponent={headerComponent}
         ListFooterComponent={footerComponent}
-        scrollEventThrottle={100}
         onScroll={scrollHandler}
       />
 
