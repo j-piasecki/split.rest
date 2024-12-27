@@ -85,7 +85,7 @@ export default function JoinPage() {
         backgroundColor: theme.colors.surface,
       }}
     >
-      {auth && <Header />}
+      <Header showBackButton />
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
         {auth === undefined && <ActivityIndicator color={theme.colors.primary} />}
         {auth === null && <Redirect href={`/?join=${uuid}`} withAnchor />}

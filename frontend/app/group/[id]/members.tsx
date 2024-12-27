@@ -17,7 +17,7 @@ function ListHeader({ children }: { children: React.ReactNode }) {
     <View
       style={[
         {
-          marginTop: 16,
+          marginTop: 8,
           backgroundColor: theme.colors.surfaceContainer,
           borderTopLeftRadius: 16,
           borderTopRightRadius: 16,
@@ -53,7 +53,7 @@ export function GroupMembersScreen() {
           backgroundColor: theme.colors.surface,
         }}
       >
-        <Header />
+        <Header showBackButton />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
           <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
           <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
@@ -66,28 +66,25 @@ export function GroupMembersScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
-      <Header />
-
-      <View style={{ flex: 1, alignItems: 'center' }}>
-        <MembersList
-          applyBottomInset
-          info={groupInfo}
-          headerComponent={ListHeader}
-          footerComponent={
-            <View
-              style={[
-                {
-                  height: 16,
-                  backgroundColor: theme.colors.surfaceContainer,
-                  borderBottomLeftRadius: 16,
-                  borderBottomRightRadius: 16,
-                },
-                styles.paneShadow,
-              ]}
-            />
-          }
-        />
-      </View>
+      <MembersList
+        showPullableHeader
+        applyBottomInset
+        info={groupInfo}
+        headerComponent={ListHeader}
+        footerComponent={
+          <View
+            style={[
+              {
+                height: 16,
+                backgroundColor: theme.colors.surfaceContainer,
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+              },
+              styles.paneShadow,
+            ]}
+          />
+        }
+      />
     </View>
   )
 }

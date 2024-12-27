@@ -13,6 +13,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import React, { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import 'utils/firebase'
 
 SplashScreen.preventAutoHideAsync()
@@ -75,51 +76,53 @@ function Content() {
   }
 
   return (
-    <NavigationThemeProvider value={navigationTheme}>
-      <SnackBarProvider>
-        <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
-          <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
-          <Stack.Screen name='home' options={{ title: t('appName'), animation: 'none' }} />
-          <Stack.Screen name='group/[id]/index' options={{ title: t('screenName.group') }} />
-          <Stack.Screen name='group/[id]/members' options={{ title: t('screenName.members') }} />
-          <Stack.Screen
-            name='createGroup'
-            options={{
-              title: t('screenName.createGroup'),
-              ...modalOptions,
-            }}
-          />
-          <Stack.Screen
-            name='profile'
-            options={{ title: t('screenName.profile'), ...modalOptions }}
-          />
-          <Stack.Screen
-            name='group/[id]/addUser'
-            options={{ title: t('screenName.addUser'), ...modalOptions }}
-          />
-          <Stack.Screen
-            name='group/[id]/addSplit'
-            options={{ title: 'Add split', ...modalOptions }}
-          />
-          <Stack.Screen
-            name='group/[id]/roulette'
-            options={{ title: t('screenName.roulette'), ...modalOptions }}
-          />
-          <Stack.Screen
-            name='group/[id]/settings'
-            options={{ title: t('screenName.groupSettings'), ...modalOptions }}
-          />
-          <Stack.Screen
-            name='group/[id]/split/[splitId]/index'
-            options={{ title: t('screenName.splitInfo'), ...modalOptions }}
-          />
-          <Stack.Screen
-            name='group/[id]/split/[splitId]/edit'
-            options={{ title: t('screenName.editSplit'), ...modalOptions }}
-          />
-        </Stack>
-      </SnackBarProvider>
-    </NavigationThemeProvider>
+    <GestureHandlerRootView>
+      <NavigationThemeProvider value={navigationTheme}>
+        <SnackBarProvider>
+          <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
+            <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
+            <Stack.Screen name='home' options={{ title: t('appName'), animation: 'none' }} />
+            <Stack.Screen name='group/[id]/index' options={{ title: t('screenName.group') }} />
+            <Stack.Screen name='group/[id]/members' options={{ title: t('screenName.members') }} />
+            <Stack.Screen
+              name='createGroup'
+              options={{
+                title: t('screenName.createGroup'),
+                ...modalOptions,
+              }}
+            />
+            <Stack.Screen
+              name='profile'
+              options={{ title: t('screenName.profile'), ...modalOptions }}
+            />
+            <Stack.Screen
+              name='group/[id]/addUser'
+              options={{ title: t('screenName.addUser'), ...modalOptions }}
+            />
+            <Stack.Screen
+              name='group/[id]/addSplit'
+              options={{ title: 'Add split', ...modalOptions }}
+            />
+            <Stack.Screen
+              name='group/[id]/roulette'
+              options={{ title: t('screenName.roulette'), ...modalOptions }}
+            />
+            <Stack.Screen
+              name='group/[id]/settings'
+              options={{ title: t('screenName.groupSettings'), ...modalOptions }}
+            />
+            <Stack.Screen
+              name='group/[id]/split/[splitId]/index'
+              options={{ title: t('screenName.splitInfo'), ...modalOptions }}
+            />
+            <Stack.Screen
+              name='group/[id]/split/[splitId]/edit'
+              options={{ title: t('screenName.editSplit'), ...modalOptions }}
+            />
+          </Stack>
+        </SnackBarProvider>
+      </NavigationThemeProvider>
+    </GestureHandlerRootView>
   )
 }
 

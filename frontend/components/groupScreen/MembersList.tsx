@@ -1,13 +1,17 @@
 import { MemberRow } from './MemberRow'
 import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
+import Header from '@components/Header'
+import { PullableFlatList } from '@components/PullableFlatList'
 import { Text } from '@components/Text'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { queryClient } from '@utils/queryClient'
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, FlatList, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
+import { RefreshControl } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupInfo } from 'shared'
 
@@ -24,6 +28,8 @@ export interface MembersListProps {
   headerComponent?: React.ComponentType<any> | React.ReactElement
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   footerComponent?: React.ComponentType<any> | React.ReactElement
+  showPullableHeader?: boolean
+  onRefresh?: () => void
 }
 
 export function MembersList({
@@ -32,6 +38,8 @@ export function MembersList({
   headerComponent,
   footerComponent,
   applyBottomInset = false,
+  showPullableHeader,
+  onRefresh,
 }: MembersListProps) {
   const theme = useTheme()
   const router = useRouter()
@@ -40,15 +48,41 @@ export function MembersList({
   const [fabRef, scrollHandler] = useFABScrollHandler()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
-  const { members, isLoading, fetchNextPage, isFetchingNextPage } = useGroupMembers(info?.id)
+  const { members, isLoading, fetchNextPage, isFetchingNextPage, isRefetching } = useGroupMembers(
+    info?.id
+  )
 
   if (!info) {
     return null
   }
 
+  function refreshData() {
+    queryClient.invalidateQueries({ queryKey: ['groupMembers', info!.id] })
+    onRefresh?.()
+  }
+
   return (
     <View style={{ width: '100%', flex: 1 }}>
-      <FlatList
+      <PullableFlatList
+        renderPullableHeader={
+          showPullableHeader
+            ? (pullValue) => {
+                return (
+                  <Header
+                    showBackButton
+                    offset={pullValue}
+                    isWaiting={isLoading || isRefetching}
+                    onPull={refreshData}
+                  />
+                )
+              }
+            : undefined
+        }
+        refreshControl={
+          showPullableHeader ? undefined : (
+            <RefreshControl refreshing={isRefetching} onRefresh={onRefresh} />
+          )
+        }
         contentContainerStyle={{
           maxWidth: 768,
           width: '100%',
