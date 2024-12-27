@@ -8,7 +8,7 @@ import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, View, useWindowDimensions } from 'react-native'
+import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native'
 import Animated, {
   SharedValue,
   runOnJS,
@@ -162,12 +162,18 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
         </Animated.View>
       </Pressable>
 
-      <AnimatedImage
-        source={icon}
-        style={[{ position: 'absolute' }, animatedStyle]}
-        contentFit='contain'
-        tintColor={theme.colors.primary}
-      />
+      <Pressable
+        disabled={onPull === undefined}
+        onPress={onPull}
+        style={({ pressed }) => [StyleSheet.absoluteFill, { opacity: pressed ? 0.5 : 1 }]}
+      >
+        <AnimatedImage
+          source={icon}
+          style={[{ position: 'absolute' }, animatedStyle]}
+          contentFit='contain'
+          tintColor={theme.colors.primary}
+        />
+      </Pressable>
 
       <Animated.View style={offsetStyle}>
         <Pressable onPress={() => router.navigate('/profile')}>
