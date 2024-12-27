@@ -14,6 +14,7 @@ import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
 import { measure } from '@utils/measure'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import React from 'react'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -124,6 +125,7 @@ function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
   return (
     <SplitsList
       info={info}
+      showPullableHeader
       headerComponent={
         <View style={{ gap: 16 }}>
           <View
@@ -217,12 +219,11 @@ export default function GroupScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
-      <Header showBackButton />
+      {!threeBarLayout && <SingleColumnLayout info={groupInfo} />}
 
-      <View style={{ flex: 1, alignItems: 'center' }}>
-        {!threeBarLayout && <SingleColumnLayout info={groupInfo} />}
-
-        {threeBarLayout && (
+      {threeBarLayout && (
+        <>
+          <Header showBackButton />
           <View
             style={{
               flex: 1,
@@ -322,8 +323,8 @@ export default function GroupScreen() {
               </Modal>
             )}
           </View>
-        )}
-      </View>
+        </>
+      )}
     </View>
   )
 }

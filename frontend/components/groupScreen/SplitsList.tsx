@@ -1,11 +1,15 @@
 import { SplitRow } from './SplitRow'
+import Header from '@components/Header'
+import { PullableFlatList } from '@components/PullableFlatList'
 import { Text } from '@components/Text'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useGroupSplits } from '@hooks/database/useGroupSplits'
 import { useTheme } from '@styling/theme'
+import { invalidateGroup } from '@utils/queryClient'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, FlatList, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
+import { RefreshControl } from 'react-native-gesture-handler'
 import { GroupInfo, SplitPermissionType } from 'shared'
 
 function Divider() {
@@ -19,13 +23,21 @@ export interface SplitsListProps {
   headerComponent?: React.ComponentType<any> | React.ReactElement
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   footerComponent?: React.ComponentType<any> | React.ReactElement
+  showPullableHeader?: boolean
+  onRefresh?: () => void
 }
 
-export function SplitsList({ info, headerComponent, footerComponent }: SplitsListProps) {
+export function SplitsList({
+  info,
+  headerComponent,
+  footerComponent,
+  showPullableHeader,
+  onRefresh,
+}: SplitsListProps) {
   const theme = useTheme()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
-  const { splits, isLoading, fetchNextPage, isFetchingNextPage } = useGroupSplits(
+  const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching } = useGroupSplits(
     info?.id,
     permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
   )
@@ -34,9 +46,33 @@ export function SplitsList({ info, headerComponent, footerComponent }: SplitsLis
     return null
   }
 
+  function refreshData() {
+    invalidateGroup(info!.id)
+    onRefresh?.()
+  }
+
   return (
     <View style={{ width: '100%', flex: 1 }}>
-      <FlatList
+      <PullableFlatList
+        renderPullableHeader={
+          showPullableHeader
+            ? (pullValue) => {
+                return (
+                  <Header
+                    showBackButton
+                    offset={pullValue}
+                    isWaiting={isLoading || isRefetching}
+                    onPull={refreshData}
+                  />
+                )
+              }
+            : undefined
+        }
+        refreshControl={
+          showPullableHeader ? undefined : (
+            <RefreshControl refreshing={isRefetching} onRefresh={onRefresh} />
+          )
+        }
         contentContainerStyle={{
           maxWidth: 900,
           width: '100%',

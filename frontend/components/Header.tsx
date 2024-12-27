@@ -8,7 +8,8 @@ import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native'
+import { Platform, Pressable, View, useWindowDimensions } from 'react-native'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   SharedValue,
   runOnJS,
@@ -20,6 +21,9 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const HEADER_HEIGHT = 68
+
+// TODO: rotation kills android framerate for some reason, remve when figured out
+const SHOW_ROTATION = Platform.OS !== 'android'
 
 export interface HeaderProps {
   offset?: SharedValue<number>
@@ -41,17 +45,20 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
   const router = useRouter()
   const displayClass = useDisplayClass()
   const isRotating = useSharedValue(false)
-  const isWaitingSV = useSharedValue(false)
+  const isWaitingSV = useSharedValue(isWaiting ?? false)
   const rotation = useSharedValue(0)
   const { width } = useWindowDimensions()
 
   const spin = useCallback(() => {
     'worklet'
-    isRotating.value = true
-    rotation.value = withSpring(360, { damping: 10, stiffness: 40 }, () => {
-      rotation.value = 0
-      isRotating.value = false
-    })
+
+    if (SHOW_ROTATION) {
+      isRotating.value = true
+      rotation.value = withSpring(360, { damping: 10, stiffness: 40 }, () => {
+        rotation.value = 0
+        isRotating.value = false
+      })
+    }
   }, [isRotating, rotation])
 
   useAnimatedReaction(
@@ -94,13 +101,15 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
 
     return {
       transform: [
+        { scale: 0.5 + size / 96 + 0.125 - Math.sin(Math.abs(rotation.value - 180) / 1440) },
+        { translateY: size / 1.25 },
         { rotate: `${rotation.value}deg` },
-        { scale: 1 + 0.25 - Math.sin(Math.abs(rotation.value - 180) / 720) },
       ],
-      height: 48 + size,
-      width: 48 + size,
-      bottom: 14 - size * 1.5,
-      left: -24 - size / 2 + width / 2,
+      width: 96,
+      height: 96,
+      left: -48 + width / 2,
+      bottom: -10,
+      opacity: withSpring(SHOW_ROTATION ? 1 : isWaitingSV.value ? 0.3 : 1),
     }
   })
 
@@ -162,10 +171,11 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
         </Animated.View>
       </Pressable>
 
-      <Pressable
-        disabled={onPull === undefined}
-        onPress={onPull}
-        style={({ pressed }) => [StyleSheet.absoluteFill, { opacity: pressed ? 0.5 : 1 }]}
+      <GestureDetector
+        gesture={Gesture.Tap()
+          .runOnJS(true)
+          .enabled(onPull !== undefined)
+          .onStart(() => onPull?.())}
       >
         <AnimatedImage
           source={icon}
@@ -173,7 +183,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
           contentFit='contain'
           tintColor={theme.colors.primary}
         />
-      </Pressable>
+      </GestureDetector>
 
       <Animated.View style={offsetStyle}>
         <Pressable onPress={() => router.navigate('/profile')}>

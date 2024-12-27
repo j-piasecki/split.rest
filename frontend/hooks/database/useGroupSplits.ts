@@ -54,5 +54,6 @@ export function useGroupSplits(groupId?: number, onlyIfIncluded = false) {
     fetchNextPage: result.fetchNextPage,
     hasNextPage: result.hasNextPage,
     isFetchingNextPage: result.isFetchingNextPage,
+    isRefetching: result.isRefetching,
   }
 }

@@ -66,28 +66,25 @@ export function GroupMembersScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
-      <Header showBackButton />
-
-      <View style={{ flex: 1, alignItems: 'center' }}>
-        <MembersList
-          applyBottomInset
-          info={groupInfo}
-          headerComponent={ListHeader}
-          footerComponent={
-            <View
-              style={[
-                {
-                  height: 16,
-                  backgroundColor: theme.colors.surfaceContainer,
-                  borderBottomLeftRadius: 16,
-                  borderBottomRightRadius: 16,
-                },
-                styles.paneShadow,
-              ]}
-            />
-          }
-        />
-      </View>
+      <MembersList
+        showPullableHeader
+        applyBottomInset
+        info={groupInfo}
+        headerComponent={ListHeader}
+        footerComponent={
+          <View
+            style={[
+              {
+                height: 16,
+                backgroundColor: theme.colors.surfaceContainer,
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+              },
+              styles.paneShadow,
+            ]}
+          />
+        }
+      />
     </View>
   )
 }

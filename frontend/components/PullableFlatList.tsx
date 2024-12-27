@@ -114,7 +114,7 @@ const ScrollComponent = React.forwardRef<Animated.ScrollView, ScrollComponentPro
     ref
   ) {
     const scrollGesture = Gesture.Native()
-      .enabled(ENABLE_PAN_DRAGGING && enablePull)
+      .enabled(ENABLE_PAN_DRAGGING ? enablePull : true)
       .disallowInterruption(true)
       .simultaneousWithExternalGesture(dragGesture)
 

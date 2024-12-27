@@ -49,5 +49,6 @@ export function useGroupMembers(groupId: number | undefined) {
     fetchNextPage: result.fetchNextPage,
     hasNextPage: result.hasNextPage,
     isFetchingNextPage: result.isFetchingNextPage,
+    isRefetching: result.isRefetching,
   }
 }

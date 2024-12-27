@@ -125,6 +125,10 @@ export default function Home() {
     return result
   }, [visibleGroups, hiddenGroups, showHidden])
 
+  function refresh() {
+    queryClient.invalidateQueries({ queryKey: ['userGroups'] })
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
       <View style={{ flex: 1, alignItems: 'center' }}>
@@ -135,7 +139,7 @@ export default function Home() {
           }}
         >
           <PullableFlatList
-            data={[...groups, ...groups]}
+            data={groups}
             renderPullableHeader={(pullValue) => (
               <Header
                 offset={pullValue}
@@ -145,9 +149,7 @@ export default function Home() {
                   isRefetchingVisibleGroups ||
                   isRefetchingHiddenGroups
                 }
-                onPull={() => {
-                  queryClient.invalidateQueries({ queryKey: ['userGroups'] })
-                }}
+                onPull={refresh}
               />
             )}
             renderItem={({ item }) => <Group info={item} />}
