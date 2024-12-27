@@ -1,13 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { auth } from '@utils/firebase'
 import { ApiError, makeRequest } from '@utils/makeApiRequest'
 import { GetGroupJoinLinkArguments, GroupJoinLink, TranslatableError } from 'shared'
 
 export function useGroupJoinLink(groupId: number) {
-  if (!auth.currentUser) {
-    throw new TranslatableError('api.mustBeLoggedIn')
-  }
-
   return useQuery({
     queryKey: ['groupJoinLink', groupId],
     queryFn: async (): Promise<GroupJoinLink | null> => {

@@ -4,12 +4,14 @@ import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { logout, useAuth } from '@utils/auth'
+import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import { User } from 'shared'
 
 function Form({ user }: { user: User }) {
   const theme = useTheme()
+  const router = useRouter()
   const { t } = useTranslation()
 
   return (
@@ -32,7 +34,10 @@ function Form({ user }: { user: User }) {
         </Text>
       </View>
       <View style={{ width: '100%' }}>
-        <Button title={t('signOut')} onPress={logout} rightIcon='logout' />
+        <Button title={t('signOut')} onPress={() => {
+          router.dismissTo('/')
+          logout()
+        }} rightIcon='logout' />
       </View>
     </View>
   )
