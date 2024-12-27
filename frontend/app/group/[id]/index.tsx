@@ -204,7 +204,7 @@ export default function GroupScreen() {
           backgroundColor: theme.colors.surface,
         }}
       >
-        <Header />
+        <Header showBackButton />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
           <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
           <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
@@ -217,7 +217,7 @@ export default function GroupScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
-      <Header />
+      <Header showBackButton />
 
       <View style={{ flex: 1, alignItems: 'center' }}>
         {!threeBarLayout && <SingleColumnLayout info={groupInfo} />}

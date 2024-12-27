@@ -2,16 +2,18 @@ import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingA
 import Header from '@components/Header'
 import { Icon } from '@components/Icon'
 import { PaneHeader } from '@components/Pane'
+import { PullableFlatList } from '@components/PullableFlatList'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useUserGroups } from '@hooks/database/useUserGroups'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { queryClient } from '@utils/queryClient'
 import { router } from 'expo-router'
 import React, { useMemo } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, FlatList, Pressable, View } from 'react-native'
+import { ActivityIndicator, Pressable, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupInfo } from 'shared'
 
@@ -89,6 +91,7 @@ function Divider() {
 export default function Home() {
   const theme = useTheme()
   const { t } = useTranslation()
+  const displayClass = useDisplayClass()
   const insets = useSafeAreaInsets()
   const [fabRef, scrollHandler] = useFABScrollHandler()
 
@@ -98,14 +101,16 @@ export default function Home() {
     hasNextPage: hasNextVisibleGroups,
     fetchNextPage: fetchNextVisibleGroups,
     isFetchingNextPage: isFetchingNextVisibleGroups,
+    isRefetching: isRefetchingVisibleGroups,
   } = useUserGroups(false)
 
   const {
     groups: hiddenGroups,
-    isLoading: _hiddenGroupsLoading,
+    isLoading: hiddenGroupsLoading,
     hasNextPage: hasNextHiddenGroups,
     fetchNextPage: fetchNextHiddenGroups,
     isFetchingNextPage: isFetchingNextHiddenGroups,
+    isRefetching: isRefetchingHiddenGroups,
   } = useUserGroups(true)
 
   const [showHidden, setShowHidden] = useState(false)
@@ -122,27 +127,40 @@ export default function Home() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
-      <Header />
-
       <View style={{ flex: 1, alignItems: 'center' }}>
         <View
           style={{
             flex: 1,
             width: '100%',
-            maxWidth: 768,
-            paddingTop: 16,
           }}
         >
-          <FlatList
-            data={groups}
+          <PullableFlatList
+            data={[...groups, ...groups]}
+            renderPullableHeader={(pullValue) => (
+              <Header
+                offset={pullValue}
+                isWaiting={
+                  visibleGroupsLoading ||
+                  hiddenGroupsLoading ||
+                  isRefetchingVisibleGroups ||
+                  isRefetchingHiddenGroups
+                }
+                onPull={() => {
+                  queryClient.invalidateQueries({ queryKey: ['userGroups'] })
+                }}
+              />
+            )}
             renderItem={({ item }) => <Group info={item} />}
             contentContainerStyle={{
+              width: '100%',
+              maxWidth: 768,
               paddingHorizontal: 16,
               paddingBottom: 80 + insets.bottom,
+              alignSelf: 'center',
+              paddingTop: displayClass <= DisplayClass.Medium ? 8 : 0,
             }}
             onEndReachedThreshold={0.5}
             keyExtractor={(item) => String(item.id)}
-            scrollEventThrottle={100}
             onScroll={scrollHandler}
             ItemSeparatorComponent={Divider}
             ListHeaderComponent={
