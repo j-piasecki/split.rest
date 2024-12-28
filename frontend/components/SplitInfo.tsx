@@ -4,6 +4,7 @@ import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { getUserById } from '@database/getUserById'
 import { useTheme } from '@styling/theme'
+import { CurrencyUtils } from '@utils/CurrencyUtils'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
@@ -66,7 +67,7 @@ function UserRow({
         <Text style={{ color: theme.colors.outline, fontSize: 12 }}>{user.email}</Text>
       </View>
       <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 20 }}>
-        {paidInThisSplit} {groupInfo?.currency}
+        {CurrencyUtils.format(paidInThisSplit, groupInfo?.currency)}
       </Text>
     </View>
   )
@@ -203,7 +204,10 @@ export function SplitInfo({
           <IconInfoText
             icon='currency'
             translationKey='splitInfo.hasPaidText'
-            values={{ payer: paidBy.name, amount: splitInfo.total, currency: groupInfo.currency }}
+            values={{
+              payer: paidBy.name,
+              amount: CurrencyUtils.format(splitInfo.total, groupInfo.currency),
+            }}
             userIdPhoto={paidBy.id}
           />
           <IconInfoText

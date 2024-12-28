@@ -192,7 +192,7 @@
     "accessToGroup": "You have access to this group",
     "noAccessToGroup": "You don't have access to this group",
     "youAreAdmin": "You are an admin of this group",
-    "totalTransactionsValue": "Total transactions value: {{value}} {{currency}}",
+    "totalTransactionsValue": "Total transactions value: {{value}}",
     "addUser": "Add member",
     "roulette": "Roulette",
     "addSplit": "Add split",
@@ -214,7 +214,7 @@
     "createTimeText": "This split was submitted on <Styled>{{date}}</Styled>",
     "editAuthorText": "<Styled>{{editor}}</Styled> has edited this split",
     "createAuthorText": "By <Styled>{{editor}}</Styled>",
-    "hasPaidText": "<Styled>{{payer}}</Styled> has paid <Styled>{{amount}} {{currency}}</Styled>",
+    "hasPaidText": "<Styled>{{payer}}</Styled> has paid <Styled>{{amount}}</Styled>",
     "splitTimeText": "On <Styled>{{date}}</Styled>"
   },
 

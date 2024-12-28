@@ -7,6 +7,7 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useUserGroups } from '@hooks/database/useUserGroups'
 import { useTheme } from '@styling/theme'
+import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { queryClient } from '@utils/queryClient'
 import { router } from 'expo-router'
@@ -60,7 +61,7 @@ function Group({ info }: { info: GroupInfo }) {
           }}
         >
           <Text style={{ fontSize: 16, color: balanceColor }}>
-            {info.balance} {info.currency}
+            {CurrencyUtils.format(info.balance, info.currency, true)}
           </Text>
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <View style={{ flexDirection: 'row', gap: 4 }}>

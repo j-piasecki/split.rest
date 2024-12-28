@@ -8,6 +8,7 @@ import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
+import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React, { useRef } from 'react'
@@ -27,7 +28,7 @@ function LinearInfo({ split, info }: { split: SplitInfo; info: GroupInfo }) {
     <>
       <View style={{ minWidth: 132, alignItems: 'flex-end' }}>
         <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>
-          {split.total} {info?.currency}
+          {CurrencyUtils.format(split.total, info?.currency)}
         </Text>
       </View>
       <View style={{ flex: 2, alignItems: 'center', overflow: 'hidden' }}>
@@ -46,7 +47,7 @@ function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo }) {
     <View style={{ paddingHorizontal: 8, alignItems: 'flex-end' }}>
       <View style={{ alignItems: 'flex-end' }}>
         <Text style={{ fontSize: 18, fontWeight: 600, color: theme.colors.onSurface }}>
-          {split.total} {info?.currency}
+          {CurrencyUtils.format(split.total, info?.currency)}
         </Text>
       </View>
       <View style={{ alignItems: 'flex-end' }}>

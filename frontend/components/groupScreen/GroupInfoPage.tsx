@@ -4,6 +4,7 @@ import { Text } from '@components/Text'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
+import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
 import { beginNewSplit } from '@utils/splitCreationContext'
@@ -72,8 +73,7 @@ export function GroupInfoCard({ info }: { info: GroupInfo | undefined }) {
                   : theme.colors.balanceNegative,
           }}
         >
-          {Number(info.balance) > 0 && '+'}
-          {info.balance} <Text style={{ color: 'darkgray' }}>{info.currency}</Text>
+          {CurrencyUtils.format(info.balance, info.currency, true)}
         </Text>
       </View>
 
@@ -127,8 +127,7 @@ export function GroupInfoCard({ info }: { info: GroupInfo | undefined }) {
           </View>
           <Text style={{ color: theme.colors.outline, fontSize: 18, flex: 1 }}>
             {t('groupInfo.totalTransactionsValue', {
-              value: info.total,
-              currency: info.currency,
+              value: CurrencyUtils.format(info.total, info.currency),
             })}
           </Text>
         </View>

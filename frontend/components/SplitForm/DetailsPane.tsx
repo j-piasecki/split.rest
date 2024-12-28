@@ -3,6 +3,7 @@ import { Pane } from '@components/Pane'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { useTheme } from '@styling/theme'
+import { CurrencyUtils } from '@utils/CurrencyUtils'
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
@@ -79,8 +80,7 @@ export function DetailsPane({
                   formState.entries[formState.paidByIndex].user?.name ??
                   formState.entries[formState.paidByIndex].email,
                 // eslint-disable-next-line react-compiler/react-compiler
-                amount: toBePaid.current.toFixed(2),
-                currency: groupInfo.currency,
+                amount: CurrencyUtils.format(toBePaid.current, groupInfo.currency),
               }}
               components={{ Styled: <Text style={{ color: theme.colors.primary }} /> }}
             />
