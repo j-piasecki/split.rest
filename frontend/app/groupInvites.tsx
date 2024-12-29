@@ -95,9 +95,13 @@ function Invite({ invite }: { invite: GroupInvite }) {
             isLoading={isChangingVisibility}
             onPress={() => {
               setInviteRejected(true).then(() => {
-                snack.show(t('home.rejectedInvite', {name: invite.groupInfo.name}), t('home.undoReject'), async () => {
-                  await setInviteRejected(false)
-                })
+                snack.show(
+                  t('home.rejectedInvite', { name: invite.groupInfo.name }),
+                  t('home.undoReject'),
+                  async () => {
+                    await setInviteRejected(false)
+                  }
+                )
               })
             }}
           />
@@ -146,10 +150,7 @@ export default function Home() {
               <Header
                 offset={pullValue}
                 showBackButton
-                isWaiting={
-                  invitesLoading ||
-                  isRefetchingInvites
-                }
+                isWaiting={invitesLoading || isRefetchingInvites}
                 onPull={refresh}
               />
             )}
@@ -175,7 +176,7 @@ export default function Home() {
                   }}
                 >
                   <PaneHeader
-                    icon='group'
+                    icon='stackedEmail'
                     title={t('home.groupInvites')}
                     textLocation='start'
                   />

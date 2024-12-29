@@ -17,7 +17,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Pressable, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupInfo } from 'shared'
+import { GroupInfo, GroupInvite } from 'shared'
 
 function Group({ info }: { info: GroupInfo }) {
   const theme = useTheme()
@@ -88,6 +88,42 @@ function Group({ info }: { info: GroupInfo }) {
 function Divider() {
   const theme = useTheme()
   return <View style={{ width: '100%', height: 1, backgroundColor: theme.colors.outlineVariant }} />
+}
+
+interface InvitationsButtonProps {
+  invites: GroupInvite[]
+  isLoadingInvites: boolean
+}
+
+function InvitationsButton({ invites, isLoadingInvites }: InvitationsButtonProps) {
+  const theme = useTheme()
+  const { t } = useTranslation()
+
+  return (
+    <Pressable
+      style={({ pressed }) => ({
+        backgroundColor: pressed
+          ? theme.colors.surfaceContainerHigh
+          : theme.colors.surfaceContainer,
+        borderRadius: 16,
+      })}
+      onPress={() => router.navigate('/groupInvites')}
+    >
+      {isLoadingInvites && (
+        <ActivityIndicator color={theme.colors.onSurface} style={{ margin: 16 }} />
+      )}
+      {!isLoadingInvites && (
+        <PaneHeader
+          icon='stackedEmail'
+          title={invites.length === 0 ? t('home.noGroupInvitesButton') : t('home.showGroupInvites')}
+          textLocation='start'
+          showSeparator={false}
+          adjustsFontSizeToFit
+          rightComponent={<Icon size={24} name={'chevronForward'} color={theme.colors.secondary} />}
+        />
+      )}
+    </Pressable>
+  )
 }
 
 export default function Home() {
@@ -162,35 +198,7 @@ export default function Home() {
             ItemSeparatorComponent={Divider}
             ListHeaderComponent={
               <View style={{ gap: 16 }}>
-                <Pressable
-                  style={({ pressed }) => ({
-                    backgroundColor: pressed
-                      ? theme.colors.surfaceContainerHigh
-                      : theme.colors.surfaceContainer,
-                    borderRadius: 16,
-                  })}
-                  onPress={() => router.navigate('/groupInvites')}
-                >
-                  {isLoadingInvites && (
-                    <ActivityIndicator color={theme.colors.onSurface} style={{ margin: 16 }} />
-                  )}
-                  {!isLoadingInvites && (
-                    <PaneHeader
-                      icon='addMember'
-                      title={
-                        invites.length === 0
-                          ? t('home.noGroupInvitesButton')
-                          : t('home.showGroupInvites')
-                      }
-                      textLocation='start'
-                      showSeparator={false}
-                      adjustsFontSizeToFit
-                      rightComponent={
-                        <Icon size={24} name={'chevronForward'} color={theme.colors.secondary} />
-                      }
-                    />
-                  )}
-                </Pressable>
+                <InvitationsButton invites={invites} isLoadingInvites={isLoadingInvites} />
 
                 <View
                   style={{

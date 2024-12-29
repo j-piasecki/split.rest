@@ -43,6 +43,7 @@ export type IconName =
   | 'settings'
   | 'shield'
   | 'split'
+  | 'stackedEmail'
   | 'tag'
   | 'undo'
   | 'user'
@@ -97,6 +98,7 @@ const iconMap: Record<IconName, unknown> = {
   settings: require('@assets/icons/settings.svg'),
   shield: require('@assets/icons/shield.svg'),
   split: require('@assets/icons/split.svg'),
+  stackedEmail: require('@assets/icons/stacked_email.svg'),
   tag: require('@assets/icons/tag.svg'),
   undo: require('@assets/icons/undo.svg'),
   user: require('@assets/icons/user.svg'),
