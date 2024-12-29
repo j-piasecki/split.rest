@@ -34,8 +34,6 @@ export async function getUserGroupInvites(
     )
   ).rows
 
-  console.log(args)
-
   return rows.map((row) => ({
     createdBy: {
       id: row.inviter_id,
