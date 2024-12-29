@@ -3,10 +3,11 @@ import { ErrorText } from '@components/ErrorText'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
+import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { getUserByEmail } from '@database/getUserByEmail'
-import { useAddUserToGroupMutation } from '@hooks/database/useAddUserToGroup'
+import { useInviteUserToGroupMutation } from '@hooks/database/useInviteUserToGroup'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -30,7 +31,7 @@ function useUserByEmail(email: string): [User | null, boolean, string | null] {
     }
 
     if (debouncedEmail.length > 512) {
-      setError(new TranslatableError('addUser.emailIsTooLong'))
+      setError(new TranslatableError('inviteMember.emailIsTooLong'))
       return
     }
 
@@ -40,7 +41,7 @@ function useUserByEmail(email: string): [User | null, boolean, string | null] {
     getUserByEmail(email)
       .then((user) => {
         if (user === null) {
-          setError(new TranslatableError('addUser.userNotFound'))
+          setError(new TranslatableError('inviteMember.userNotFound'))
           return
         }
 
@@ -108,24 +109,27 @@ function UserPane({
 
 function Form() {
   const router = useRouter()
+  const snack = useSnack()
   const { id: groupId } = useLocalSearchParams()
   const { t } = useTranslation()
 
   const [email, setEmail] = useState('')
   const [user, waiting, error] = useUserByEmail(email)
   const [addingError, setAddingError] = useTranslatedError()
-  const { mutateAsync: addUserToGroup, isPending: isAddingToGroup } = useAddUserToGroupMutation(
+  const { mutateAsync: addUserToGroup, isPending: isAddingToGroup } = useInviteUserToGroupMutation(
     Number(groupId)
   )
 
   function handlePress() {
     if (user === null) {
-      setAddingError(new TranslatableError('addUser.userNotFound'))
+      setAddingError(new TranslatableError('inviteMember.userNotFound'))
       return
     }
 
     addUserToGroup(user.id)
       .then(() => {
+        snack.show(t('inviteMember.inviteSent', { name: user.name }))
+
         if (router.canGoBack()) {
           router.back()
         } else {
@@ -150,7 +154,7 @@ function Form() {
       <View style={{ gap: 16 }}>
         <Pane
           icon='user'
-          title={t('addUser.findByEmail')}
+          title={t('inviteMember.findByEmail')}
           textLocation='start'
           containerStyle={{ padding: 16, gap: 32 }}
         >
@@ -175,7 +179,7 @@ function Form() {
         {addingError && <ErrorText>{addingError}</ErrorText>}
         <Button
           leftIcon='addMember'
-          title={t('addUser.addUser')}
+          title={t('inviteMember.inviteMember')}
           onPress={handlePress}
           isLoading={isAddingToGroup}
           disabled={isAddingToGroup || waiting || user === null}
@@ -192,7 +196,7 @@ export default function Modal() {
   return (
     <ModalScreen
       returnPath={`/group/${id}`}
-      title={t('screenName.addUser')}
+      title={t('screenName.inviteMember')}
       maxWidth={400}
       maxHeight={600}
     >

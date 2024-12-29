@@ -122,7 +122,7 @@ export function MembersList({
         onScroll={scrollHandler}
       />
 
-      {permissions?.canAddMembers() && (
+      {permissions?.canInviteMembers() && (
         <View
           style={{
             position: 'absolute',
@@ -133,9 +133,9 @@ export function MembersList({
           <FloatingActionButton
             ref={fabRef}
             icon='addMember'
-            title={iconOnly ? '' : t('addUser.addUser')}
+            title={iconOnly ? '' : t('inviteMember.inviteMember')}
             onPress={() => {
-              router.navigate(`/group/${info.id}/addUser`)
+              router.navigate(`/group/${info.id}/inviteMember`)
             }}
           />
         </View>

@@ -1,13 +1,12 @@
 import { ConflictException } from '../../errors/ConflictException'
 import { NotFoundException } from '../../errors/NotFoundException'
-import { addUserToGroup as addUserToGroupUtil } from '../utils/addUserToGroup'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { userExists } from '../utils/userExists'
 import { Pool } from 'pg'
-import { AddUserToGroupArguments } from 'shared'
+import { InviteUserToGroupArguments } from 'shared'
 
-export async function addUserToGroup(pool: Pool, callerId: string, args: AddUserToGroupArguments) {
+export async function inviteUser(pool: Pool, callerId: string, args: InviteUserToGroupArguments) {
   const client = await pool.connect()
 
   try {
@@ -25,16 +24,13 @@ export async function addUserToGroup(pool: Pool, callerId: string, args: AddUser
       throw new ConflictException('api.group.userAlreadyInGroup')
     }
 
-    await addUserToGroupUtil(client, {
-      groupId: args.groupId,
-      userId: args.userId,
-    })
-
     await client.query(
       `
-        UPDATE groups SET member_count = member_count + 1 WHERE id = $1
+        INSERT INTO group_invites (group_id, user_id, created_by, created_at)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (group_id, user_id) DO UPDATE SET created_by = $3, created_at = $4, ignored = FALSE
       `,
-      [args.groupId]
+      [args.groupId, args.userId, callerId, Date.now()]
     )
 
     await client.query('COMMIT')

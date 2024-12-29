@@ -53,7 +53,7 @@ export function GroupInfoCard({ info }: { info: GroupInfo | undefined }) {
     >
       <Text
         style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 8 }}
-        numberOfLines={2}
+        numberOfLines={3}
         adjustsFontSizeToFit
       >
         {info.name}

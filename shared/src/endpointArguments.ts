@@ -5,7 +5,7 @@ export interface CreateGroupArguments {
   currency: string
 }
 
-export interface AddUserToGroupArguments {
+export interface InviteUserToGroupArguments {
   groupId: number
   userId: string
 }
@@ -144,4 +144,18 @@ export interface GetSplitHistoryArguments {
 export interface GetGroupMemberPermissionsArguments {
   groupId: number
   userId?: string
+}
+
+export interface GetUserInvitesArguments {
+  startAfter?: number
+  ignored: boolean
+}
+
+export interface AcceptGroupInviteArguments {
+  groupId: number
+}
+
+export interface SetGroupInviteIgnoredArguments {
+  groupId: number
+  ignored: boolean
 }

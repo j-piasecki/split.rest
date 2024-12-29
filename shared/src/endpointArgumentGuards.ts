@@ -1,5 +1,5 @@
 import {
-  AddUserToGroupArguments,
+  AcceptGroupInviteArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -21,11 +21,14 @@ import {
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
+  GetUserInvitesArguments,
+  InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
+  SetGroupInviteIgnoredArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
 } from './endpointArguments'
@@ -34,7 +37,7 @@ export function isCreateGroupArguments(obj: any): obj is CreateGroupArguments {
   return obj.name !== undefined && obj.currency !== undefined
 }
 
-export function isAddUserToGroupArguments(obj: any): obj is AddUserToGroupArguments {
+export function isInviteUserToGroupArguments(obj: any): obj is InviteUserToGroupArguments {
   return obj.groupId !== undefined && obj.userId !== undefined
 }
 
@@ -169,4 +172,16 @@ export function isGetGroupMemberPermissionsArguments(
   obj: any
 ): obj is GetGroupMemberPermissionsArguments {
   return obj.groupId !== undefined
+}
+
+export function isGetUserInvitesArguments(obj: any): obj is GetUserInvitesArguments {
+  return obj.ignored !== undefined
+}
+
+export function isAcceptGroupInviteArguments(obj: any): obj is AcceptGroupInviteArguments {
+  return obj.groupId !== undefined
+}
+
+export function isSetGroupInviteIgnoredArguments(obj: any): obj is SetGroupInviteIgnoredArguments {
+  return obj.groupId !== undefined && obj.ignored !== undefined
 }

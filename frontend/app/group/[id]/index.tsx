@@ -70,7 +70,15 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
         showSeparator={false}
         textLocation='start'
         rightComponent={
-          <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 24 }}>
+          <View
+            style={{
+              flexGrow: 1,
+              flexShrink: 1,
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 24,
+            }}
+          >
             <View
               ref={iconsRef}
               style={{

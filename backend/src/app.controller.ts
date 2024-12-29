@@ -4,7 +4,7 @@ import { BadRequestException } from './errors/BadRequestException'
 import { Body, Controller, Delete, Get, Post, Query, Req, UseGuards } from '@nestjs/common'
 import { Request } from 'express'
 import {
-  AddUserToGroupArguments,
+  AcceptGroupInviteArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -24,15 +24,18 @@ import {
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
+  GetUserInvitesArguments,
+  InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
+  SetGroupInviteIgnoredArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
   User,
-  isAddUserToGroupArguments,
+  isAcceptGroupInviteArguments,
   isCreateGroupArguments,
   isCreateGroupJoinLinkArguments,
   isCreateSplitArguments,
@@ -52,11 +55,14 @@ import {
   isGetUserByEmailArguments,
   isGetUserByIdArguments,
   isGetUserGroupsArguments,
+  isGetUserInvitesArguments,
+  isInviteUserToGroupArguments,
   isJoinGroupByLinkArguments,
   isRestoreSplitArguments,
   isSetGroupAccessArguments,
   isSetGroupAdminArguments,
   isSetGroupHiddenArguments,
+  isSetGroupInviteIgnoredArguments,
   isSetGroupNameArguments,
   isUpdateSplitArguments,
   isUser,
@@ -87,13 +93,13 @@ export class AppController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('addUserToGroup')
-  async addUserToGroup(@Req() request: Request, @Body() args: Partial<AddUserToGroupArguments>) {
-    if (!isAddUserToGroupArguments(args)) {
+  @Post('inviteUserToGroup')
+  async addUserToGroup(@Req() request: Request, @Body() args: Partial<InviteUserToGroupArguments>) {
+    if (!isInviteUserToGroupArguments(args)) {
       throw new BadRequestException('api.invalidArguments')
     }
 
-    return await this.appService.addUserToGroup(request.user.sub, args)
+    return await this.appService.inviteUser(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)
@@ -371,5 +377,44 @@ export class AppController {
     }
 
     return await this.appService.getGroupMemberPermissions(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getUserGroupInvites')
+  async getUserGroupInvites(
+    @Req() request: Request,
+    @Query() args: Partial<GetUserInvitesArguments>
+  ) {
+    if (!isGetUserInvitesArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.getUserGroupInvites(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('acceptGroupInvite')
+  async acceptGroupInvite(
+    @Req() request: Request,
+    @Body() args: Partial<AcceptGroupInviteArguments>
+  ) {
+    if (!isAcceptGroupInviteArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.acceptGroupInvite(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('setGroupInviteIgnored')
+  async setGroupInviteIgnored(
+    @Req() request: Request,
+    @Body() args: Partial<SetGroupInviteIgnoredArguments>
+  ) {
+    if (!isSetGroupInviteIgnoredArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.setGroupInviteIgnored(request.user.sub, args)
   }
 }

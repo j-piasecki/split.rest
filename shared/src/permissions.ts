@@ -7,7 +7,7 @@ export const PermissionKeys = [
   'restoreSplit',
   'accessRoulette',
   'readMembers',
-  'addMembers',
+  'inviteMembers',
   'renameGroup',
   'deleteGroup',
   'seeJoinLink',
@@ -55,7 +55,7 @@ function splitPermissionTypeToString(type: SplitPermissionType): string {
 export const enum MembersPermissionsDTO {
   None = 0 << 0,
   Read = 1 << 0, // Read members of the group (if not, the user cannot get hints when adding splits and in the roulette)
-  Add = 1 << 1, // Add new members to the group
+  Invite = 1 << 1, // Invite new members to the group
 }
 
 export const enum ManagePermissionsDTO {
@@ -164,8 +164,8 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return Boolean(this.members & MembersPermissionsDTO.Read)
   }
 
-  canAddMembers(): boolean {
-    return Boolean(this.members & MembersPermissionsDTO.Add)
+  canInviteMembers(): boolean {
+    return Boolean(this.members & MembersPermissionsDTO.Invite)
   }
 
   canRenameGroup(): boolean {
@@ -214,7 +214,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
       restoreSplits: splitPermissionTypeToString(this.canRestoreSplits()),
       accessRoulette: this.canAccessRoulette(),
       readMembers: this.canReadMembers(),
-      addMembers: this.canAddMembers(),
+      inviteMembers: this.canInviteMembers(),
       renameGroup: this.canRenameGroup(),
       deleteGroup: this.canDeleteGroup(),
       seeJoinLink: this.canSeeJoinLink(),

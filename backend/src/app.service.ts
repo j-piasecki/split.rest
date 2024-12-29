@@ -4,7 +4,7 @@ import { downloadProfilePicture } from './profilePicture'
 import { Injectable } from '@nestjs/common'
 import * as fs from 'fs'
 import {
-  AddUserToGroupArguments,
+  AcceptGroupInviteArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -24,10 +24,13 @@ import {
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
+  GetUserInvitesArguments,
+  InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
+  SetGroupInviteIgnoredArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
   User,
@@ -55,8 +58,8 @@ export class AppService {
     return await this.databaseService.createGroup(userId, args)
   }
 
-  async addUserToGroup(callerId: string, args: AddUserToGroupArguments) {
-    return await this.databaseService.addUserToGroup(callerId, args)
+  async inviteUser(callerId: string, args: InviteUserToGroupArguments) {
+    return await this.databaseService.inviteUser(callerId, args)
   }
 
   async createSplit(callerId: string, args: CreateSplitArguments) {
@@ -206,5 +209,17 @@ export class AppService {
 
   async getGroupMemberPermissions(callerId: string, args: GetGroupMemberPermissionsArguments) {
     return await this.databaseService.getGroupMemberPermissions(callerId, args)
+  }
+
+  async getUserGroupInvites(callerId: string, args: GetUserInvitesArguments) {
+    return await this.databaseService.getUserGroupInvites(callerId, args)
+  }
+
+  async acceptGroupInvite(callerId: string, args: AcceptGroupInviteArguments) {
+    return await this.databaseService.acceptGroupInvite(callerId, args)
+  }
+
+  async setGroupInviteIgnored(callerId: string, args: SetGroupInviteIgnoredArguments) {
+    return await this.databaseService.setGroupInviteIgnored(callerId, args)
   }
 }

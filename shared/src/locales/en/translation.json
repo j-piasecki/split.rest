@@ -1,18 +1,26 @@
 {
   "appName": "Split",
   "unknownError": "Unknown error",
-  "groupsText": "Groups",
-  "noGroupsText": "No groups",
   "email": "E-mail",
   "signIn": "Sign in",
   "signOut": "Sign out",
   "noSplits": "No splits",
   "noMembers": "No members",
   "checkingIfYouAreLoggedIn": "Checking if you're logged in",
-  "loadingGroups": "Loading groups",
-  "showHiddenGroups": "Show hidden groups",
-  "hideHiddenGroups": "Hide hidden groups",
-  "createGroup": "Create group",
+
+  "home": {
+    "groups": "Groups",
+    "noGroups": "No groups",
+    "noHiddenGroups": "No hidden groups",
+    "groupInvites": "Group invites",
+    "showGroupInvites": "Show group invites",
+    "noGroupInvitesButton": "No pending invites",
+    "noGroupInvites": "You don't have any pending invites",
+    "noIgnoredGroupInvites": "You don't have any hidden invites",
+    "createGroup": "Create group",
+    "invitedToGroupMessage": "You've been invited to join",
+    "invitedBy": "By {{name}}"
+  },
 
   "api": {
     "invalidArguments": "Invalid arguments",
@@ -32,7 +40,7 @@
         "restoreSplit": "User does not have permission to restore this split",
         "accessRoulette": "User does not have permission to access the roulette",
         "readMembers": "User does not have permission to see members of the group",
-        "addMembers": "User does not have permission to add members to the group",
+        "inviteMembers": "User does not have permission to invite members to the group",
         "rename": "User does not have permission to rename the group",
         "delete": "User does not have permission to delete the group",
         "manageAccess": "User does not have permission to manage the group access",
@@ -51,7 +59,8 @@
       "group": "Group not found",
       "user": "User not found",
       "split": "Split not found",
-      "joinLink": "Invitation link not found"
+      "joinLink": "Invitation link not found",
+      "invite": "Invite not found"
     },
     "split": {
       "sumOfChangesMustBeZero": "Sum of changes must be equal to zero",
@@ -80,7 +89,7 @@
   "screenName": {
     "createGroup": "Create group",
     "group": "Group",
-    "addUser": "Add member",
+    "inviteMember": "Invite member",
     "roulette": "Roulette",
     "groupSettings": "Settings",
     "splitInfo": "Split details",
@@ -130,12 +139,13 @@
     "groupName": "Group name"
   },
 
-  "addUser": {
+  "inviteMember": {
     "findByEmail": "Find by e-mail",
     "emailIsTooLong": "E-mail is too long",
     "userNotFound": "User not found",
     "userAlreadyInGroup": "User is already a member of the group",
-    "addUser": "Add member"
+    "inviteMember": "Invite member",
+    "inviteSent": "Invite to {{name}} sent"
   },
 
   "splitValidation": {
@@ -193,7 +203,7 @@
     "noAccessToGroup": "You don't have access to this group",
     "youAreAdmin": "You are an admin of this group",
     "totalTransactionsValue": "Total transactions value: {{value}}",
-    "addUser": "Add member",
+    "inviteMember": "Invite member",
     "roulette": "Roulette",
     "addSplit": "Add split",
     "hideGroup": "Hide group",
