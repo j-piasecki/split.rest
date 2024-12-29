@@ -17,7 +17,9 @@
     "noGroupInvitesButton": "No pending invites",
     "noGroupInvites": "You don't have any pending invites",
     "noIgnoredGroupInvites": "You don't have any hidden invites",
-    "createGroup": "Create group"
+    "createGroup": "Create group",
+    "invitedToGroupMessage": "You've been invited to join",
+    "invitedBy": "By {{name}}"
   },
 
   "api": {

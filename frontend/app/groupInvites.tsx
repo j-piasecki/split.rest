@@ -20,6 +20,7 @@ import { GroupInvite } from 'shared'
 
 function Invite({ invite }: { invite: GroupInvite }) {
   const theme = useTheme()
+  const { t } = useTranslation()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { mutateAsync: setInviteIgnored, isPending: isChangingVisibility } =
     useSetInviteIgnoredMutation(invite.groupInfo.id)
@@ -47,7 +48,7 @@ function Invite({ invite }: { invite: GroupInvite }) {
             numberOfLines={1}
             adjustsFontSizeToFit
           >
-            You've been invited to join
+            {t('home.invitedToGroupMessage')}
           </Text>
           <Text
             style={{ flex: 1, fontSize: 24, fontWeight: 600, color: theme.colors.onSurface }}
@@ -69,7 +70,7 @@ function Invite({ invite }: { invite: GroupInvite }) {
               style={{ color: theme.colors.outline, fontSize: 16, fontWeight: 500, flexShrink: 1 }}
               numberOfLines={1}
             >
-              By {invite.createdBy.name}
+              {t('home.invitedBy', { name: invite.createdBy.name })}
             </Text>
             <ProfilePicture size={24} userId={invite.createdBy.id} />
           </View>
