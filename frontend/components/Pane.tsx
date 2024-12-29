@@ -39,20 +39,23 @@ export function PaneHeader({
         height: 54,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         gap: 16,
       }}
     >
       {textVisible && (
         <View
           style={[
-            { flexDirection: 'row', gap: 16 },
-            textLocation === 'center' ? { flex: 1, justifyContent: 'center' } : {},
+            { flexDirection: 'row', gap: 16, flexGrow: 1, flexShrink: 0 },
+            textLocation === 'center' ? { justifyContent: 'center' } : {},
           ]}
         >
           <Icon name={icon} size={threeBarLayout ? 20 : 24} color={theme.colors.secondary} />
           <Text
+            numberOfLines={1}
+            adjustsFontSizeToFit
             style={{
+              flexShrink: 1,
               color: theme.colors.secondary,
               fontSize: threeBarLayout ? 16 : 20,
               fontWeight: 600,
@@ -63,9 +66,7 @@ export function PaneHeader({
         </View>
       )}
 
-      <View style={textLocation === 'start' && { flex: 1, alignItems: 'flex-end' }}>
-        {rightComponentVisible && rightComponent}
-      </View>
+      {rightComponentVisible && rightComponent}
     </View>
   )
 }
