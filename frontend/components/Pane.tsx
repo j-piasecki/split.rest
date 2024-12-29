@@ -15,6 +15,7 @@ export interface PaneHeaderProps {
   textVisible?: boolean
   textLocation?: 'center' | 'start'
   showSeparator?: boolean
+  adjustsFontSizeToFit?: boolean
 }
 
 export function PaneHeader({
@@ -25,6 +26,7 @@ export function PaneHeader({
   textVisible = true,
   textLocation = 'center',
   showSeparator = true,
+  adjustsFontSizeToFit = false,
 }: PaneHeaderProps) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
@@ -46,14 +48,15 @@ export function PaneHeader({
       {textVisible && (
         <View
           style={[
-            { flexDirection: 'row', gap: 16, flexGrow: 1, flexShrink: 0 },
+            { flexDirection: 'row', gap: 16 },
             textLocation === 'center' ? { justifyContent: 'center' } : {},
+            adjustsFontSizeToFit ? { flex: 1 } : { flexGrow: 1, flexShrink: 0 },
           ]}
         >
           <Icon name={icon} size={threeBarLayout ? 20 : 24} color={theme.colors.secondary} />
           <Text
             numberOfLines={1}
-            adjustsFontSizeToFit
+            adjustsFontSizeToFit={adjustsFontSizeToFit}
             style={{
               flexShrink: 1,
               color: theme.colors.secondary,
