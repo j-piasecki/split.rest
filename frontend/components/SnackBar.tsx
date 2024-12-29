@@ -6,6 +6,7 @@ import { useFocusEffect } from 'expo-router'
 import React, { createContext, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable } from 'react-native'
+import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   SlideInDown,
   SlideOutDown,
@@ -49,87 +50,96 @@ function Snack({
 
   const numberOfLines = displayClass <= DisplayClass.Expanded ? 2 : 1
 
+  const dismissGesture = Gesture.Fling().runOnJS(true).onStart(dismiss).direction(Directions.DOWN)
+
   return (
-    <Animated.View
-      entering={SlideInDown.duration(500)}
-      exiting={SlideOutDown.duration(500)}
-      key={data.index}
-      style={{
-        flex: displayClass <= DisplayClass.Expanded ? 1 : undefined,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: theme.colors.inverseSurface,
-        maxWidth: 768,
-        minWidth: 350,
-        paddingLeft: 16,
-        borderRadius: 4,
-      }}
-    >
-      <Text
-        style={{ color: theme.colors.inverseOnSurface, fontSize: 18, flex: 1, paddingVertical: 12 }}
-        numberOfLines={numberOfLines}
+    <GestureDetector gesture={dismissGesture}>
+      <Animated.View
+        entering={SlideInDown.duration(500)}
+        exiting={SlideOutDown.duration(500)}
+        key={data.index}
+        style={{
+          flex: displayClass <= DisplayClass.Expanded ? 1 : undefined,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          backgroundColor: theme.colors.inverseSurface,
+          maxWidth: 768,
+          minWidth: 350,
+          paddingLeft: 16,
+          borderRadius: 4,
+        }}
       >
-        {data.message}
-      </Text>
-
-      {data.action && data.actionText && (
-        <Pressable
-          disabled={actionRunning}
-          style={({ pressed }) => ({
-            height: '100%',
-            paddingHorizontal: 8,
-            justifyContent: 'center',
-            opacity: pressed || actionRunning ? 0.5 : 1,
-          })}
-          onPress={() => {
-            clearScheduledDismiss()
-            setActionRunning(true)
-
-            data.action!()
-              .then(() => {
-                setActionRunning(false)
-                dismiss()
-              })
-              .catch((error) => {
-                setActionRunning(false)
-                // TODO: handle this gracefully
-                // don't dismiss in case of an error, retrying might be necessary
-                alert(
-                  error instanceof TranslatableError
-                    ? t(error.message)
-                    : error instanceof Error
-                      ? error.message
-                      : error
-                )
-              })
+        <Text
+          style={{
+            color: theme.colors.inverseOnSurface,
+            fontSize: 18,
+            flex: 1,
+            paddingVertical: 12,
           }}
+          numberOfLines={numberOfLines}
         >
-          <Text
-            style={{ color: theme.colors.inversePrimary, fontSize: 18, fontWeight: 600 }}
-            numberOfLines={numberOfLines}
-          >
-            {data.actionText}
-          </Text>
-        </Pressable>
-      )}
+          {data.message}
+        </Text>
 
-      <RoundIconButton
-        icon='close'
-        onPress={dismiss}
-        color={theme.colors.inverseOnSurface}
-        style={({ pressed }) => ({
-          backgroundColor: 'transparent',
-          borderRadius: 0,
-          height: '100%',
-          paddingVertical: 0,
-          paddingRight: 16,
-          paddingLeft: 4,
-          justifyContent: 'center',
-          opacity: pressed ? 0.5 : 1,
-        })}
-      />
-    </Animated.View>
+        {data.action && data.actionText && (
+          <Pressable
+            disabled={actionRunning}
+            style={({ pressed }) => ({
+              height: '100%',
+              paddingHorizontal: 8,
+              justifyContent: 'center',
+              opacity: pressed || actionRunning ? 0.5 : 1,
+            })}
+            onPress={() => {
+              clearScheduledDismiss()
+              setActionRunning(true)
+
+              data.action!()
+                .then(() => {
+                  setActionRunning(false)
+                  dismiss()
+                })
+                .catch((error) => {
+                  setActionRunning(false)
+                  // TODO: handle this gracefully
+                  // don't dismiss in case of an error, retrying might be necessary
+                  alert(
+                    error instanceof TranslatableError
+                      ? t(error.message)
+                      : error instanceof Error
+                        ? error.message
+                        : error
+                  )
+                })
+            }}
+          >
+            <Text
+              style={{ color: theme.colors.inversePrimary, fontSize: 18, fontWeight: 600 }}
+              numberOfLines={numberOfLines}
+            >
+              {data.actionText}
+            </Text>
+          </Pressable>
+        )}
+
+        <RoundIconButton
+          icon='close'
+          onPress={dismiss}
+          color={theme.colors.inverseOnSurface}
+          style={({ pressed }) => ({
+            backgroundColor: 'transparent',
+            borderRadius: 0,
+            height: '100%',
+            paddingVertical: 0,
+            paddingRight: 16,
+            paddingLeft: 4,
+            justifyContent: 'center',
+            opacity: pressed ? 0.5 : 1,
+          })}
+        />
+      </Animated.View>
+    </GestureDetector>
   )
 }
 
