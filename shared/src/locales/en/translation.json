@@ -16,10 +16,11 @@
     "showGroupInvites": "Show group invites",
     "noGroupInvitesButton": "No pending invites",
     "noGroupInvites": "You don't have any pending invites",
-    "noIgnoredGroupInvites": "You don't have any hidden invites",
     "createGroup": "Create group",
     "invitedToGroupMessage": "You've been invited to join",
-    "invitedBy": "By {{name}}"
+    "invitedBy": "By {{name}}",
+    "rejectedInvite": "Rejected invite to {{name}}",
+    "undoReject": "Undo"
   },
 
   "api": {

@@ -44,6 +44,7 @@ export type IconName =
   | 'shield'
   | 'split'
   | 'tag'
+  | 'undo'
   | 'user'
   | 'visibilityOff'
   | 'visibility'
@@ -97,6 +98,7 @@ const iconMap: Record<IconName, unknown> = {
   shield: require('@assets/icons/shield.svg'),
   split: require('@assets/icons/split.svg'),
   tag: require('@assets/icons/tag.svg'),
+  undo: require('@assets/icons/undo.svg'),
   user: require('@assets/icons/user.svg'),
   visibilityOff: require('@assets/icons/visibility_off.svg'),
   visibility: require('@assets/icons/visibility.svg'),

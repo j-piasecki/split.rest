@@ -3,10 +3,10 @@ import { makeRequest } from '@utils/makeApiRequest'
 import { useCallback } from 'react'
 import { GetUserInvitesArguments, GroupInvite } from 'shared'
 
-export function useUserGroupInvites(ignored: boolean) {
+export function useUserGroupInvites(rejected: boolean) {
   const fetchInvites = useCallback(
     async ({ pageParam }: QueryFunctionContext<QueryKey, number>) => {
-      const args: GetUserInvitesArguments = { ignored, startAfter: pageParam }
+      const args: GetUserInvitesArguments = { rejected, startAfter: pageParam }
       const result = await makeRequest<GetUserInvitesArguments, GroupInvite[]>(
         'GET',
         'getUserGroupInvites',
@@ -14,11 +14,11 @@ export function useUserGroupInvites(ignored: boolean) {
       )
       return result ?? []
     },
-    [ignored]
+    [rejected]
   )
 
   const result = useInfiniteQuery({
-    queryKey: ['groupInvites', ignored],
+    queryKey: ['groupInvites', rejected],
     queryFn: fetchInvites,
     initialPageParam: Number.MAX_SAFE_INTEGER,
     getNextPageParam: (lastPage) => {

@@ -30,7 +30,7 @@ import {
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
-  SetGroupInviteIgnoredArguments,
+  SetGroupInviteRejectedArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
   User,
@@ -219,7 +219,7 @@ export class AppService {
     return await this.databaseService.acceptGroupInvite(callerId, args)
   }
 
-  async setGroupInviteIgnored(callerId: string, args: SetGroupInviteIgnoredArguments) {
-    return await this.databaseService.setGroupInviteIgnored(callerId, args)
+  async setGroupInviteRejected(callerId: string, args: SetGroupInviteRejectedArguments) {
+    return await this.databaseService.setGroupInviteRejected(callerId, args)
   }
 }

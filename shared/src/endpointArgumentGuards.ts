@@ -28,7 +28,7 @@ import {
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
-  SetGroupInviteIgnoredArguments,
+  SetGroupInviteRejectedArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
 } from './endpointArguments'
@@ -175,13 +175,15 @@ export function isGetGroupMemberPermissionsArguments(
 }
 
 export function isGetUserInvitesArguments(obj: any): obj is GetUserInvitesArguments {
-  return obj.ignored !== undefined
+  return obj.rejected !== undefined
 }
 
 export function isAcceptGroupInviteArguments(obj: any): obj is AcceptGroupInviteArguments {
   return obj.groupId !== undefined
 }
 
-export function isSetGroupInviteIgnoredArguments(obj: any): obj is SetGroupInviteIgnoredArguments {
-  return obj.groupId !== undefined && obj.ignored !== undefined
+export function isSetGroupInviteRejectedArguments(
+  obj: any
+): obj is SetGroupInviteRejectedArguments {
+  return obj.groupId !== undefined && obj.rejected !== undefined
 }

@@ -148,14 +148,14 @@ export interface GetGroupMemberPermissionsArguments {
 
 export interface GetUserInvitesArguments {
   startAfter?: number
-  ignored: boolean
+  rejected: boolean
 }
 
 export interface AcceptGroupInviteArguments {
   groupId: number
 }
 
-export interface SetGroupInviteIgnoredArguments {
+export interface SetGroupInviteRejectedArguments {
   groupId: number
-  ignored: boolean
+  rejected: boolean
 }

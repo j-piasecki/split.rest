@@ -20,7 +20,7 @@ import { setGroupAccess } from './database/groups/setGroupAccess'
 import { setGroupAdmin } from './database/groups/setGroupAdmin'
 import { setGroupHidden } from './database/groups/setGroupHidden'
 import { setGroupName } from './database/groups/setGroupName'
-import { setGroupInviteIgnored } from './database/groups/setInviteIgnored'
+import { setGroupInviteRejected } from './database/groups/setInviteRejected'
 import { RequirePermissions } from './database/permissionCheck'
 import { createSplit } from './database/splits/createSplit'
 import { deleteSplit } from './database/splits/deleteSplit'
@@ -60,7 +60,7 @@ import {
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
-  SetGroupInviteIgnoredArguments,
+  SetGroupInviteRejectedArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
   User,
@@ -242,7 +242,7 @@ export class DatabaseService {
   }
 
   // Every user can ignore a group invite
-  async setGroupInviteIgnored(callerId: string, args: SetGroupInviteIgnoredArguments) {
-    return await setGroupInviteIgnored(this.pool, callerId, args)
+  async setGroupInviteRejected(callerId: string, args: SetGroupInviteRejectedArguments) {
+    return await setGroupInviteRejected(this.pool, callerId, args)
   }
 }

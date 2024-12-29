@@ -31,7 +31,7 @@ import {
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
-  SetGroupInviteIgnoredArguments,
+  SetGroupInviteRejectedArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
   User,
@@ -62,7 +62,7 @@ import {
   isSetGroupAccessArguments,
   isSetGroupAdminArguments,
   isSetGroupHiddenArguments,
-  isSetGroupInviteIgnoredArguments,
+  isSetGroupInviteRejectedArguments,
   isSetGroupNameArguments,
   isUpdateSplitArguments,
   isUser,
@@ -406,15 +406,15 @@ export class AppController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('setGroupInviteIgnored')
-  async setGroupInviteIgnored(
+  @Post('setGroupInviteRejected')
+  async setGroupInviteRejected(
     @Req() request: Request,
-    @Body() args: Partial<SetGroupInviteIgnoredArguments>
+    @Body() args: Partial<SetGroupInviteRejectedArguments>
   ) {
-    if (!isSetGroupInviteIgnoredArguments(args)) {
+    if (!isSetGroupInviteRejectedArguments(args)) {
       throw new BadRequestException('api.invalidArguments')
     }
 
-    return await this.appService.setGroupInviteIgnored(request.user.sub, args)
+    return await this.appService.setGroupInviteRejected(request.user.sub, args)
   }
 }

@@ -3,16 +3,16 @@ import { PaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { PullableFlatList } from '@components/PullableFlatList'
 import { RoundIconButton } from '@components/RoundIconButton'
+import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { useAcceptInvite } from '@hooks/database/useAcceptInvite'
-import { useSetInviteIgnoredMutation } from '@hooks/database/useInviteIgnoredMutation'
+import { useSetInviteRejectedMutation } from '@hooks/database/useInviteRejectedMutation'
 import { useUserGroupInvites } from '@hooks/database/useUserGroupInvites'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { invalidateGroupInvites } from '@utils/queryClient'
 import { router } from 'expo-router'
 import React from 'react'
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -21,9 +21,10 @@ import { GroupInvite } from 'shared'
 function Invite({ invite }: { invite: GroupInvite }) {
   const theme = useTheme()
   const { t } = useTranslation()
+  const snack = useSnack()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
-  const { mutateAsync: setInviteIgnored, isPending: isChangingVisibility } =
-    useSetInviteIgnoredMutation(invite.groupInfo.id)
+  const { mutateAsync: setInviteRejected, isPending: isChangingVisibility } =
+    useSetInviteRejectedMutation(invite.groupInfo.id)
   const { mutateAsync: acceptInvite, isPending: isAcceptingInvite } = useAcceptInvite()
 
   return (
@@ -38,7 +39,7 @@ function Invite({ invite }: { invite: GroupInvite }) {
     >
       <View
         style={{
-          opacity: invite.ignored ? 0.7 : 1,
+          opacity: invite.rejected ? 0.7 : 1,
           justifyContent: 'space-between',
         }}
       >
@@ -89,11 +90,15 @@ function Invite({ invite }: { invite: GroupInvite }) {
           />
 
           <RoundIconButton
-            icon={invite.ignored ? 'visibility' : 'visibilityOff'}
+            icon={'close'}
             disabled={isAcceptingInvite}
             isLoading={isChangingVisibility}
             onPress={() => {
-              setInviteIgnored(!invite.ignored)
+              setInviteRejected(true).then(() => {
+                snack.show(t('home.rejectedInvite', {name: invite.groupInfo.name}), t('home.undoReject'), async () => {
+                  await setInviteRejected(false)
+                })
+              })
             }}
           />
         </View>
@@ -121,16 +126,6 @@ export default function Home() {
     isFetchingNextPage: isFetchingNextInvites,
     isRefetching: isRefetchingInvites,
   } = useUserGroupInvites(false)
-  const {
-    invites: ignoredInvites,
-    isLoading: ignoredInvitesLoading,
-    hasNextPage: hasNextIgnoredInvites,
-    fetchNextPage: getchNextIgnoredInvites,
-    isFetchingNextPage: isFetchingNextIgnoredInvites,
-    isRefetching: isRefetchingIgnoredInvites,
-  } = useUserGroupInvites(true)
-
-  const [showIgnored, setShowIgnored] = useState(false)
 
   function refresh() {
     invalidateGroupInvites()
@@ -146,16 +141,14 @@ export default function Home() {
           }}
         >
           <PullableFlatList
-            data={showIgnored ? ignoredInvites : invites}
+            data={invites}
             renderPullableHeader={(pullValue) => (
               <Header
                 offset={pullValue}
                 showBackButton
                 isWaiting={
                   invitesLoading ||
-                  ignoredInvitesLoading ||
-                  isRefetchingInvites ||
-                  isRefetchingIgnoredInvites
+                  isRefetchingInvites
                 }
                 onPull={refresh}
               />
@@ -170,7 +163,7 @@ export default function Home() {
               paddingTop: displayClass <= DisplayClass.Medium ? 8 : 0,
             }}
             onEndReachedThreshold={0.5}
-            keyExtractor={(item) => `${item.groupInfo.id}-${item.ignored}`}
+            keyExtractor={(item) => `${item.groupInfo.id}-${item.rejected}`}
             ItemSeparatorComponent={Divider}
             ListHeaderComponent={
               <View style={{ gap: 16 }}>
@@ -185,13 +178,6 @@ export default function Home() {
                     icon='group'
                     title={t('home.groupInvites')}
                     textLocation='start'
-                    rightComponentVisible
-                    rightComponent={
-                      <RoundIconButton
-                        icon={showIgnored ? 'visibilityOff' : 'visibility'}
-                        onPress={() => setShowIgnored((ignored) => !ignored)}
-                      />
-                    }
                   />
                 </View>
               </View>
@@ -209,7 +195,7 @@ export default function Home() {
                 {invitesLoading && <ActivityIndicator color={theme.colors.onSurface} />}
                 {!invitesLoading && (
                   <Text style={{ color: theme.colors.outline, fontSize: 20 }}>
-                    {showIgnored ? t('home.noIgnoredGroupInvites') : t('home.noGroupInvites')}
+                    {t('home.noGroupInvites')}
                   </Text>
                 )}
               </View>
@@ -225,12 +211,8 @@ export default function Home() {
               />
             }
             onEndReached={() => {
-              if (!showIgnored && !isFetchingNextInvites && hasNextInvites) {
+              if (!isFetchingNextInvites && hasNextInvites) {
                 getchNextInvites()
-              }
-
-              if (showIgnored && !isFetchingNextIgnoredInvites && hasNextIgnoredInvites) {
-                getchNextIgnoredInvites()
               }
             }}
           />
