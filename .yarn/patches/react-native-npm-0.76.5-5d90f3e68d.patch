@@ -1,0 +1,12 @@
+diff --git a/ReactCommon/react/renderer/core/ShadowNode.cpp b/ReactCommon/react/renderer/core/ShadowNode.cpp
+index 44cca7436b984ff3340d28c4b24cd8382e063e72..633350c7756761a960721bbd48e63a37b6deeaaf 100644
+--- a/ReactCommon/react/renderer/core/ShadowNode.cpp
++++ b/ReactCommon/react/renderer/core/ShadowNode.cpp
+@@ -371,6 +371,7 @@ ShadowNode::Unshared ShadowNode::cloneTree(
+ 
+     childNode = parentNode.clone(
+         {.children = std::make_shared<ShadowNode::ListOfShared>(children),
++         .state = parentNode.getState(),
+          .traits = traits});
+   }
+ 
