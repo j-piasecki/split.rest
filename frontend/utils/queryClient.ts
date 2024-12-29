@@ -48,6 +48,10 @@ export async function invalidateUserGroups(hidden?: boolean) {
   }
 }
 
+export async function invalidateGroupInvites() {
+  await queryClient.invalidateQueries({ queryKey: ['groupInvites'] })
+}
+
 export async function invalidateGroupJoinLink(groupId: number) {
   await queryClient.invalidateQueries({ queryKey: ['groupJoinLink', groupId] })
 }

@@ -51,7 +51,8 @@
       "group": "Group not found",
       "user": "User not found",
       "split": "Split not found",
-      "joinLink": "Invitation link not found"
+      "joinLink": "Invitation link not found",
+      "invite": "Invite not found"
     },
     "split": {
       "sumOfChangesMustBeZero": "Sum of changes must be equal to zero",

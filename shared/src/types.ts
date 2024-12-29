@@ -73,6 +73,12 @@ export interface GroupJoinLink {
   createdAt: number
 }
 
+export interface GroupInvite {
+  createdBy: User
+  groupInfo: GroupMetadata
+  createdAt: number
+}
+
 export function isUser(obj: any): obj is User {
   return (
     obj.id !== undefined &&

@@ -1,4 +1,5 @@
 import { createDatabase } from './database/createDatabase'
+import { acceptGroupInvite } from './database/groups/acceptInvite'
 import { createGroup } from './database/groups/createGroup'
 import { createGroupJoinLink } from './database/groups/createGroupJoinLink'
 import { deleteGroup } from './database/groups/deleteGroup'
@@ -11,6 +12,7 @@ import { getGroupMembers } from './database/groups/getGroupMembers'
 import { getGroupMembersAutocompletions } from './database/groups/getGroupMembersAutocompletions'
 import { getGroupMetadataByLink } from './database/groups/getGroupMetadataByLink'
 import { getGroupSplits } from './database/groups/getGroupSplits'
+import { getUserGroupInvites } from './database/groups/getUserGroupInvites'
 import { getUserGroups } from './database/groups/getUserGroups'
 import { inviteUser } from './database/groups/inviteUser'
 import { joinGroupByLink } from './database/groups/joinGroupByLink'
@@ -18,6 +20,7 @@ import { setGroupAccess } from './database/groups/setGroupAccess'
 import { setGroupAdmin } from './database/groups/setGroupAdmin'
 import { setGroupHidden } from './database/groups/setGroupHidden'
 import { setGroupName } from './database/groups/setGroupName'
+import { setGroupInviteIgnored } from './database/groups/setInviteIgnored'
 import { RequirePermissions } from './database/permissionCheck'
 import { createSplit } from './database/splits/createSplit'
 import { deleteSplit } from './database/splits/deleteSplit'
@@ -31,6 +34,7 @@ import { getUserById } from './database/users/getUserById'
 import { Injectable } from '@nestjs/common'
 import { Pool } from 'pg'
 import {
+  AcceptGroupInviteArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -49,12 +53,14 @@ import {
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
+  GetUserInvitesArguments,
   InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
+  SetGroupInviteIgnoredArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
   User,
@@ -223,5 +229,20 @@ export class DatabaseService {
   @RequirePermissions(['readPermissions'])
   async getGroupMemberPermissions(callerId: string, args: GetGroupMembersArguments) {
     return await getGroupMemberPermissions(this.pool, callerId, args)
+  }
+
+  // Every user can see their own group invites
+  async getUserGroupInvites(callerId: string, args: GetUserInvitesArguments) {
+    return await getUserGroupInvites(this.pool, callerId, args)
+  }
+
+  // Every user can accept a group invite
+  async acceptGroupInvite(callerId: string, args: AcceptGroupInviteArguments) {
+    return await acceptGroupInvite(this.pool, callerId, args)
+  }
+
+  // Every user can ignore a group invite
+  async setGroupInviteIgnored(callerId: string, args: SetGroupInviteIgnoredArguments) {
+    return await setGroupInviteIgnored(this.pool, callerId, args)
   }
 }

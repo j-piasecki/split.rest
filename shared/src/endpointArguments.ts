@@ -145,3 +145,17 @@ export interface GetGroupMemberPermissionsArguments {
   groupId: number
   userId?: string
 }
+
+export interface GetUserInvitesArguments {
+  startAfter?: number
+  ignored: boolean
+}
+
+export interface AcceptGroupInviteArguments {
+  groupId: number
+}
+
+export interface SetGroupInviteIgnoredArguments {
+  groupId: number
+  ignored: boolean
+}
