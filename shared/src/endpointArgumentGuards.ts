@@ -1,5 +1,4 @@
 import {
-  AddUserToGroupArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -21,6 +20,7 @@ import {
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
+  InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
@@ -34,7 +34,7 @@ export function isCreateGroupArguments(obj: any): obj is CreateGroupArguments {
   return obj.name !== undefined && obj.currency !== undefined
 }
 
-export function isAddUserToGroupArguments(obj: any): obj is AddUserToGroupArguments {
+export function isInviteUserToGroupArguments(obj: any): obj is InviteUserToGroupArguments {
   return obj.groupId !== undefined && obj.userId !== undefined
 }
 

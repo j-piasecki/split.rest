@@ -6,7 +6,7 @@ export async function createDatabase(pool: Pool) {
       id VARCHAR(32) PRIMARY KEY,
       name VARCHAR(128) NOT NULL,
       email VARCHAR(512) NOT NULL,
-      created_at bigint NOT NULL,
+      created_at BIGINT NOT NULL,
       photo_url VARCHAR(512) NULL
     )
   `)
@@ -52,12 +52,12 @@ export async function createDatabase(pool: Pool) {
       paid_by VARCHAR(32) NOT NULL,
       created_by VARCHAR(32) NOT NULL,
       name VARCHAR(512) NOT NULL,
-      timestamp bigint NOT NULL,
-      updated_at bigint NOT NULL,
+      timestamp BIGINT NOT NULL,
+      updated_at BIGINT NOT NULL,
       deleted BOOLEAN NOT NULL DEFAULT FALSE,
       type SMALLINT NOT NULL,
       deleted_by VARCHAR(32) NULL,
-      deleted_at bigint NULL,
+      deleted_at BIGINT NULL,
 
       FOREIGN KEY (group_id) REFERENCES groups(id),
       FOREIGN KEY (paid_by) REFERENCES users(id),
@@ -75,8 +75,8 @@ export async function createDatabase(pool: Pool) {
       paid_by VARCHAR(32) NOT NULL,
       created_by VARCHAR(32) NOT NULL,
       name VARCHAR(512) NOT NULL,
-      timestamp bigint NOT NULL,
-      updated_at bigint NOT NULL,
+      timestamp BIGINT NOT NULL,
+      updated_at BIGINT NOT NULL,
       type SMALLINT NOT NULL,
 
       PRIMARY KEY (id, version),
@@ -118,10 +118,25 @@ export async function createDatabase(pool: Pool) {
       uuid VARCHAR(36) NOT NULL,
       group_id INTEGER NOT NULL UNIQUE,
       created_by VARCHAR(32) NOT NULL,
-      created_at bigint NOT NULL,
+      created_at BIGINT NOT NULL,
 
       PRIMARY KEY (uuid),
       FOREIGN KEY (group_id) REFERENCES groups(id),
+      FOREIGN KEY (created_by) REFERENCES users(id)
+    )
+  `)
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS group_invites(
+      group_id INTEGER NOT NULL,
+      user_id VARCHAR(32) NOT NULL,
+      created_by VARCHAR(32) NOT NULL,
+      created_at BIGINT NOT NULL,
+      ignored BOOLEAN NOT NULL DEFAULT FALSE,
+
+      PRIMARY KEY (group_id, user_id),
+      FOREIGN KEY (group_id) REFERENCES groups(id),
+      FOREIGN KEY (user_id) REFERENCES users(id),
       FOREIGN KEY (created_by) REFERENCES users(id)
     )
   `)

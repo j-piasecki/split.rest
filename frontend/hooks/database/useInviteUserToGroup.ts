@@ -1,14 +1,14 @@
 import { useMutation } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
 import { invalidateGroupInfo, invalidateGroupMembers } from '@utils/queryClient'
-import { AddUserToGroupArguments } from 'shared'
+import { InviteUserToGroupArguments } from 'shared'
 
-export function useAddUserToGroupMutation(groupId: number) {
+export function useInviteUserToGroupMutation(groupId: number) {
   return useMutation({
     mutationFn: async (userId: string) => {
-      const args: AddUserToGroupArguments = { groupId, userId }
+      const args: InviteUserToGroupArguments = { groupId, userId }
 
-      await makeRequest('POST', 'addUserToGroup', args)
+      await makeRequest('POST', 'inviteUserToGroup', args)
 
       invalidateGroupInfo(groupId)
       invalidateGroupMembers(groupId)

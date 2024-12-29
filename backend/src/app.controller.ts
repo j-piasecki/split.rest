@@ -4,7 +4,6 @@ import { BadRequestException } from './errors/BadRequestException'
 import { Body, Controller, Delete, Get, Post, Query, Req, UseGuards } from '@nestjs/common'
 import { Request } from 'express'
 import {
-  AddUserToGroupArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -24,6 +23,7 @@ import {
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
+  InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
@@ -32,7 +32,6 @@ import {
   SetGroupNameArguments,
   UpdateSplitArguments,
   User,
-  isAddUserToGroupArguments,
   isCreateGroupArguments,
   isCreateGroupJoinLinkArguments,
   isCreateSplitArguments,
@@ -52,6 +51,7 @@ import {
   isGetUserByEmailArguments,
   isGetUserByIdArguments,
   isGetUserGroupsArguments,
+  isInviteUserToGroupArguments,
   isJoinGroupByLinkArguments,
   isRestoreSplitArguments,
   isSetGroupAccessArguments,
@@ -87,13 +87,13 @@ export class AppController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('addUserToGroup')
-  async addUserToGroup(@Req() request: Request, @Body() args: Partial<AddUserToGroupArguments>) {
-    if (!isAddUserToGroupArguments(args)) {
+  @Post('inviteUserToGroup')
+  async addUserToGroup(@Req() request: Request, @Body() args: Partial<InviteUserToGroupArguments>) {
+    if (!isInviteUserToGroupArguments(args)) {
       throw new BadRequestException('api.invalidArguments')
     }
 
-    return await this.appService.addUserToGroup(request.user.sub, args)
+    return await this.appService.inviteUser(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

@@ -12,7 +12,7 @@ export const PermissionToFieldMap = {
   restoreSplit: ['groupId', 'splitId'] as const,
   accessRoulette: ['groupId'] as const,
   readMembers: ['groupId'] as const,
-  addMembers: ['groupId'] as const,
+  inviteMembers: ['groupId'] as const,
   renameGroup: ['groupId'] as const,
   deleteGroup: ['groupId'] as const,
   seeJoinLink: ['groupId'] as const,

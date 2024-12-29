@@ -5,7 +5,7 @@ export interface CreateGroupArguments {
   currency: string
 }
 
-export interface AddUserToGroupArguments {
+export interface InviteUserToGroupArguments {
   groupId: number
   userId: string
 }

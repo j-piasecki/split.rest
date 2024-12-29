@@ -4,7 +4,6 @@ import { downloadProfilePicture } from './profilePicture'
 import { Injectable } from '@nestjs/common'
 import * as fs from 'fs'
 import {
-  AddUserToGroupArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -24,6 +23,7 @@ import {
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
+  InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -55,8 +55,8 @@ export class AppService {
     return await this.databaseService.createGroup(userId, args)
   }
 
-  async addUserToGroup(callerId: string, args: AddUserToGroupArguments) {
-    return await this.databaseService.addUserToGroup(callerId, args)
+  async inviteUser(callerId: string, args: InviteUserToGroupArguments) {
+    return await this.databaseService.inviteUser(callerId, args)
   }
 
   async createSplit(callerId: string, args: CreateSplitArguments) {

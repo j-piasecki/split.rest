@@ -1,5 +1,4 @@
 import { createDatabase } from './database/createDatabase'
-import { addUserToGroup } from './database/groups/addUserToGroup'
 import { createGroup } from './database/groups/createGroup'
 import { createGroupJoinLink } from './database/groups/createGroupJoinLink'
 import { deleteGroup } from './database/groups/deleteGroup'
@@ -13,6 +12,7 @@ import { getGroupMembersAutocompletions } from './database/groups/getGroupMember
 import { getGroupMetadataByLink } from './database/groups/getGroupMetadataByLink'
 import { getGroupSplits } from './database/groups/getGroupSplits'
 import { getUserGroups } from './database/groups/getUserGroups'
+import { inviteUser } from './database/groups/inviteUser'
 import { joinGroupByLink } from './database/groups/joinGroupByLink'
 import { setGroupAccess } from './database/groups/setGroupAccess'
 import { setGroupAdmin } from './database/groups/setGroupAdmin'
@@ -31,7 +31,6 @@ import { getUserById } from './database/users/getUserById'
 import { Injectable } from '@nestjs/common'
 import { Pool } from 'pg'
 import {
-  AddUserToGroupArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -50,6 +49,7 @@ import {
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
+  InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
@@ -89,9 +89,9 @@ export class DatabaseService {
     return await createGroup(this.pool, callerId, args)
   }
 
-  @RequirePermissions(['addMembers'])
-  async addUserToGroup(callerId: string, args: AddUserToGroupArguments) {
-    return await addUserToGroup(this.pool, callerId, args)
+  @RequirePermissions(['inviteMembers'])
+  async inviteUser(callerId: string, args: InviteUserToGroupArguments) {
+    return await inviteUser(this.pool, callerId, args)
   }
 
   // Every user can create a split in a group they have access to
