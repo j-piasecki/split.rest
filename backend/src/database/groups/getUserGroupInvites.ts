@@ -22,7 +22,8 @@ export async function getUserGroupInvites(
           users.name AS inviter_name,
           users.email AS inviter_email,
           users.photo_url AS inviter_photo_url,
-          group_invites.created_at
+          group_invites.created_at,
+          group_invites.ignored
         FROM groups JOIN group_invites ON groups.id = group_invites.group_id JOIN users ON users.id = group_invites.created_by
         WHERE group_invites.user_id = $1 AND group_invites.ignored = $2 AND group_invites.created_at < $3 AND groups.deleted = FALSE
         ORDER BY
@@ -52,5 +53,6 @@ export async function getUserGroupInvites(
       type: row.type,
     },
     createdAt: Number(row.created_at),
+    ignored: row.ignored,
   }))
 }

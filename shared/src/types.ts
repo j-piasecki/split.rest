@@ -77,6 +77,7 @@ export interface GroupInvite {
   createdBy: User
   groupInfo: GroupMetadata
   createdAt: number
+  ignored: boolean
 }
 
 export function isUser(obj: any): obj is User {
