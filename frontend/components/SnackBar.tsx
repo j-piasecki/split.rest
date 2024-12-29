@@ -174,10 +174,14 @@ export function SnackBarProvider({ children }: { children: React.ReactNode }) {
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      paddingBottom: withSpring(insets.bottom + 8 + bottomInset.value, {
-        damping: 20,
-        stiffness: 250,
-      }),
+      transform: [
+        {
+          translateY: withSpring(-(insets.bottom + 8 + bottomInset.value), {
+            damping: 20,
+            stiffness: 250,
+          }),
+        },
+      ],
     }
   })
 

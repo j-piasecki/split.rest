@@ -3,6 +3,7 @@ import { ErrorText } from '@components/ErrorText'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
+import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { getUserByEmail } from '@database/getUserByEmail'
@@ -108,6 +109,7 @@ function UserPane({
 
 function Form() {
   const router = useRouter()
+  const snack = useSnack()
   const { id: groupId } = useLocalSearchParams()
   const { t } = useTranslation()
 
@@ -126,6 +128,8 @@ function Form() {
 
     addUserToGroup(user.id)
       .then(() => {
+        snack.show(t('inviteMember.inviteSent', { name: user.name }))
+
         if (router.canGoBack()) {
           router.back()
         } else {

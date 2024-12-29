@@ -102,7 +102,7 @@ function Content() {
                 options={{ title: t('screenName.profile'), ...modalOptions }}
               />
               <Stack.Screen
-                name='group/[id]/inviteUser'
+                name='group/[id]/inviteMember'
                 options={{ title: t('screenName.inviteMember'), ...modalOptions }}
               />
               <Stack.Screen

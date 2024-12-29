@@ -40,7 +40,7 @@
         "restoreSplit": "User does not have permission to restore this split",
         "accessRoulette": "User does not have permission to access the roulette",
         "readMembers": "User does not have permission to see members of the group",
-        "addMembers": "User does not have permission to add members to the group",
+        "inviteMembers": "User does not have permission to invite members to the group",
         "rename": "User does not have permission to rename the group",
         "delete": "User does not have permission to delete the group",
         "manageAccess": "User does not have permission to manage the group access",
@@ -144,7 +144,8 @@
     "emailIsTooLong": "E-mail is too long",
     "userNotFound": "User not found",
     "userAlreadyInGroup": "User is already a member of the group",
-    "inviteMember": "Invite member"
+    "inviteMember": "Invite member",
+    "inviteSent": "Invite to {{name}} sent"
   },
 
   "splitValidation": {

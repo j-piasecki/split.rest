@@ -138,7 +138,7 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
 
         case 'inviteMembers': {
           if (!callerPermissions?.canInviteMembers()) {
-            return 'api.insufficientPermissions.group.addMembers'
+            return 'api.insufficientPermissions.group.inviteMembers'
           }
           continue
         }
