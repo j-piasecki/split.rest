@@ -1,18 +1,24 @@
 {
   "appName": "Split",
   "unknownError": "Unknown error",
-  "groupsText": "Groups",
-  "noGroupsText": "No groups",
   "email": "E-mail",
   "signIn": "Sign in",
   "signOut": "Sign out",
   "noSplits": "No splits",
   "noMembers": "No members",
   "checkingIfYouAreLoggedIn": "Checking if you're logged in",
-  "loadingGroups": "Loading groups",
-  "showHiddenGroups": "Show hidden groups",
-  "hideHiddenGroups": "Hide hidden groups",
-  "createGroup": "Create group",
+
+  "home": {
+    "groups": "Groups",
+    "noGroups": "No groups",
+    "noHiddenGroups": "No hidden groups",
+    "groupInvites": "Group invites",
+    "showGroupInvites": "Show group invites",
+    "noGroupInvitesButton": "No pending invites",
+    "noGroupInvites": "You don't have any pending invites",
+    "noIgnoredGroupInvites": "You don't have any hidden invites",
+    "createGroup": "Create group"
+  },
 
   "api": {
     "invalidArguments": "Invalid arguments",

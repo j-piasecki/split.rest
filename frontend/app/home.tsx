@@ -5,13 +5,14 @@ import { PaneHeader } from '@components/Pane'
 import { PullableFlatList } from '@components/PullableFlatList'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
+import { useUserGroupInvites } from '@hooks/database/useUserGroupInvites'
 import { useUserGroups } from '@hooks/database/useUserGroups'
 import { useTheme } from '@styling/theme'
 import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
-import { queryClient } from '@utils/queryClient'
+import { invalidateGroupInvites, invalidateUserGroups } from '@utils/queryClient'
 import { router } from 'expo-router'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Pressable, View } from 'react-native'
@@ -42,7 +43,7 @@ function Group({ info }: { info: GroupInfo }) {
     >
       <View
         style={{
-          opacity: info.hidden ? 0.5 : 1,
+          opacity: info.hidden ? 0.7 : 1,
           gap: 20,
           flexDirection: 'row',
           alignItems: 'center',
@@ -114,20 +115,13 @@ export default function Home() {
     isRefetching: isRefetchingHiddenGroups,
   } = useUserGroups(true)
 
+  const { invites, isLoading: isLoadingInvites } = useUserGroupInvites(false)
+
   const [showHidden, setShowHidden] = useState(false)
 
-  const groups = useMemo(() => {
-    if (!showHidden) {
-      return visibleGroups
-    }
-
-    const result = [...visibleGroups, ...hiddenGroups]
-    result.sort((a, b) => b.id - a.id)
-    return result
-  }, [visibleGroups, hiddenGroups, showHidden])
-
   function refresh() {
-    queryClient.invalidateQueries({ queryKey: ['userGroups'] })
+    invalidateUserGroups()
+    invalidateGroupInvites(true)
   }
 
   return (
@@ -140,7 +134,7 @@ export default function Home() {
           }}
         >
           <PullableFlatList
-            data={groups}
+            data={showHidden ? hiddenGroups : visibleGroups}
             renderPullableHeader={(pullValue) => (
               <Header
                 offset={pullValue}
@@ -163,29 +157,61 @@ export default function Home() {
               paddingTop: displayClass <= DisplayClass.Medium ? 8 : 0,
             }}
             onEndReachedThreshold={0.5}
-            keyExtractor={(item) => String(item.id)}
+            keyExtractor={(item) => `${item.id}-${item.hidden}`}
             onScroll={scrollHandler}
             ItemSeparatorComponent={Divider}
             ListHeaderComponent={
-              <View
-                style={{
-                  backgroundColor: theme.colors.surfaceContainer,
-                  borderTopLeftRadius: 16,
-                  borderTopRightRadius: 16,
-                }}
-              >
-                <PaneHeader
-                  icon='group'
-                  title={t('groupsText')}
-                  textLocation='start'
-                  rightComponentVisible={hiddenGroups.length !== 0}
-                  rightComponent={
-                    <RoundIconButton
-                      icon={showHidden ? 'visibilityOff' : 'visibility'}
-                      onPress={() => setShowHidden((hidden) => !hidden)}
+              <View style={{ gap: 16 }}>
+                <Pressable
+                  style={({ pressed }) => ({
+                    backgroundColor: pressed
+                      ? theme.colors.surfaceContainerHigh
+                      : theme.colors.surfaceContainer,
+                    borderRadius: 16,
+                  })}
+                  onPress={() => router.navigate('/groupInvites')}
+                >
+                  {isLoadingInvites && (
+                    <ActivityIndicator color={theme.colors.onSurface} style={{ margin: 16 }} />
+                  )}
+                  {!isLoadingInvites && (
+                    <PaneHeader
+                      icon='addMember'
+                      title={
+                        invites.length === 0
+                          ? t('home.noGroupInvitesButton')
+                          : t('home.showGroupInvites')
+                      }
+                      textLocation='start'
+                      showSeparator={false}
+                      adjustsFontSizeToFit
+                      rightComponent={
+                        <Icon size={24} name={'chevronForward'} color={theme.colors.secondary} />
+                      }
                     />
-                  }
-                />
+                  )}
+                </Pressable>
+
+                <View
+                  style={{
+                    backgroundColor: theme.colors.surfaceContainer,
+                    borderTopLeftRadius: 16,
+                    borderTopRightRadius: 16,
+                  }}
+                >
+                  <PaneHeader
+                    icon='group'
+                    title={t('home.groups')}
+                    textLocation='start'
+                    rightComponentVisible
+                    rightComponent={
+                      <RoundIconButton
+                        icon={showHidden ? 'visibilityOff' : 'visibility'}
+                        onPress={() => setShowHidden((hidden) => !hidden)}
+                      />
+                    }
+                  />
+                </View>
               </View>
             }
             ListEmptyComponent={
@@ -201,7 +227,7 @@ export default function Home() {
                 {visibleGroupsLoading && <ActivityIndicator color={theme.colors.onSurface} />}
                 {!visibleGroupsLoading && (
                   <Text style={{ color: theme.colors.outline, fontSize: 20 }}>
-                    {t('noGroupsText')}
+                    {showHidden ? t('home.noHiddenGroups') : t('home.noGroups')}
                   </Text>
                 )}
               </View>
@@ -217,7 +243,7 @@ export default function Home() {
               />
             }
             onEndReached={() => {
-              if (!isFetchingNextVisibleGroups && hasNextVisibleGroups) {
+              if (!showHidden && !isFetchingNextVisibleGroups && hasNextVisibleGroups) {
                 fetchNextVisibleGroups()
               }
 
@@ -232,7 +258,7 @@ export default function Home() {
               onPress={() => {
                 router.navigate('/createGroup')
               }}
-              title={t('createGroup')}
+              title={t('home.createGroup')}
               icon='add'
             />
           </View>
