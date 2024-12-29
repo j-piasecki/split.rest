@@ -9,6 +9,7 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import React from 'react'
 import { useRef } from 'react'
@@ -139,8 +140,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
                         : theme.colors.balanceNegative,
                 }}
               >
-                {Number(member.balance) > 0 && '+'}
-                {member.balance}
+                {CurrencyUtils.format(member.balance, info.currency, true)}
               </Text>
             </View>
 
