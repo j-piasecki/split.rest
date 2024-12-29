@@ -5,6 +5,7 @@ import { useSplitInfo } from '@hooks/database/useSplitInfo'
 import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
+import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
@@ -46,11 +47,11 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
       if (user.id === splitInfo.paidById) {
         return {
           email: user.email,
-          amount: (Number(splitInfo.total) - Number(user.change)).toFixed(2),
+          amount: CurrencyUtils.format(Number(splitInfo.total) - Number(user.change)),
           user: user,
         }
       }
-      return { email: user.email, amount: (-Number(user.change)).toFixed(2), user: user }
+      return { email: user.email, amount: CurrencyUtils.format(-Number(user.change)), user: user }
     }),
     { email: '', amount: '' },
   ]

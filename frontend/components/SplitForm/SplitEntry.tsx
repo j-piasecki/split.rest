@@ -4,6 +4,7 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { TextInput, TextInputRef } from '@components/TextInput'
 import { TextInputUserPicker } from '@components/TextInputUserPicker'
 import { useTheme } from '@styling/theme'
+import { CurrencyUtils } from '@utils/CurrencyUtils'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutRectangle, Pressable, ScrollView, View } from 'react-native'
@@ -116,7 +117,7 @@ export function SplitEntry({
         onBlur={() => {
           const amountNum = Number(entry.amount)
           if (!Number.isNaN(amountNum) && entry.amount.length > 0) {
-            updateForm({ type: 'setAmount', index, amount: amountNum.toFixed(2) })
+            updateForm({ type: 'setAmount', index, amount: CurrencyUtils.format(amountNum) })
           }
         }}
       />

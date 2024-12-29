@@ -5,6 +5,7 @@ import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { TextInput } from '@components/TextInput'
 import { useTranslatedError } from '@hooks/useTranslatedError'
+import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -70,7 +71,7 @@ export default function Modal() {
               onBlur={() => {
                 const amountNum = Number(total)
                 if (!Number.isNaN(amountNum) && total.length > 0) {
-                  setTotal(amountNum.toFixed(2))
+                  setTotal(CurrencyUtils.format(amountNum))
                 }
               }}
             />

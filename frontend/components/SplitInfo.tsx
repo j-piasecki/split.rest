@@ -36,7 +36,7 @@ function UserRow({
     const total = Number(splitInfo.total)
     const remainder = total - Number(paidInThisSplit)
 
-    paidInThisSplit = `${remainder.toFixed(2)}`
+    paidInThisSplit = remainder.toFixed(2)
   } else {
     paidInThisSplit = paidInThisSplit.substring(1)
   }
