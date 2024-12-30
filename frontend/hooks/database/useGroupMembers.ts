@@ -20,7 +20,7 @@ export function useGroupMembers(groupId: number | undefined) {
         )
         return result ?? []
       } catch (error) {
-        if (error instanceof ApiError && error.statusCode === 403) {
+        if (error instanceof ApiError && (error.statusCode === 403 || error.statusCode === 404)) {
           return []
         } else {
           throw error

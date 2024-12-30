@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { makeRequest } from '@utils/makeApiRequest'
+import { ApiError, makeRequest } from '@utils/makeApiRequest'
 import { GetGroupInfoArguments, GroupInfo, TranslatableError } from 'shared'
 
 export function useGroupInfo(id: number) {
@@ -14,6 +14,13 @@ export function useGroupInfo(id: number) {
       }
 
       return info
+    },
+    retry: (failureCount, error) => {
+      if (error instanceof ApiError && error.statusCode === 404) {
+        return false
+      }
+
+      return failureCount < 3
     },
   })
 }

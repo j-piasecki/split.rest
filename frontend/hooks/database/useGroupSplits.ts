@@ -25,7 +25,7 @@ export function useGroupSplits(groupId?: number, onlyIfIncluded = false) {
         )
         return result ?? []
       } catch (error) {
-        if (error instanceof ApiError && error.statusCode === 403) {
+        if (error instanceof ApiError && (error.statusCode === 403 || error.statusCode === 404)) {
           return []
         } else {
           throw error

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { GroupPermissions } from '@utils/GroupPermissions'
-import { makeRequest } from '@utils/makeApiRequest'
+import { ApiError, makeRequest } from '@utils/makeApiRequest'
 import {
   GetGroupMemberPermissionsArguments,
   GroupMemberPermissionsDTO,
@@ -27,6 +27,13 @@ export function useGroupPermissions(groupId?: number, userId?: string) {
       }
 
       return new GroupPermissions(info.splits, info.members, info.manage)
+    },
+    retry: (failureCount, error) => {
+      if (error instanceof ApiError && error.statusCode === 404) {
+        return false
+      }
+
+      return failureCount < 3
     },
   })
 }
