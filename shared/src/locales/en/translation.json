@@ -8,6 +8,24 @@
   "noMembers": "No members",
   "checkingIfYouAreLoggedIn": "Checking if you're logged in",
 
+  "index": {
+    "headline": "Pay once and <Styled>split</Styled> between the <Styled>rest</Styled> of the group",
+    "mock1Header": "Easily manage balances in the group",
+    "mock1Text": "Keep track of the balances of every group member and total value of transactions in the group.",
+    "mock2Header": "Always know whose turn to pay it is",
+    "mock2Text": "Use the roulette to find out whose balance is the lowest.",
+    "mock3Header": "Submit splits to keep track of expenses",
+    "mock3Text": "Easily split expenses between between its participants.",
+    "mock4Header": "Update splits and see the individual updates",
+    "mock4Text": "We all end up forgetting something.",
+    "mock5Header": "Manage members of the group",
+    "mock5Text": "Easily see individual balances and manage who can access and moderate the group."
+  },
+
+  "login": {
+    "youMustSignIn": "You must sign in to start <Styled>splitting</Styled>"
+  },
+
   "home": {
     "groups": "Groups",
     "noGroups": "No groups",
@@ -21,10 +39,6 @@
     "invitedBy": "By {{name}}",
     "rejectedInvite": "Rejected invite to {{name}}",
     "undoReject": "Undo"
-  },
-
-  "login": {
-    "youMustSignIn": "You must sign in to start <Styled>splitting</Styled>"
   },
 
   "api": {

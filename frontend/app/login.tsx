@@ -5,7 +5,7 @@ import { login, useAuth } from '@utils/auth'
 import { Image } from 'expo-image'
 import { Redirect, useLocalSearchParams } from 'expo-router'
 import { Trans, useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, View, useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function Screen() {
@@ -14,6 +14,7 @@ export default function Screen() {
   const insets = useSafeAreaInsets()
   const { t } = useTranslation()
   const { join } = useLocalSearchParams()
+  const { width, height } = useWindowDimensions()
 
   return (
     <View
@@ -26,6 +27,29 @@ export default function Screen() {
         paddingBottom: insets.bottom,
       }}
     >
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: insets.top,
+          backgroundColor: theme.colors.primaryContainer,
+        }}
+      />
+      <View
+        style={{
+          position: 'absolute',
+          top: insets.top,
+          left: 0,
+          width: 0,
+          height: 0,
+          borderBottomWidth: height / 2,
+          borderColor: 'transparent',
+          borderRightWidth: width,
+          borderRightColor: theme.colors.primaryContainer,
+        }}
+      />
       {user === undefined && (
         <View>
           <ActivityIndicator size='small' color={theme.colors.onSurface} />
@@ -36,7 +60,7 @@ export default function Screen() {
       )}
       {user === null && (
         <View style={{ flex: 1 }}>
-          <View style={{ padding: 16, alignItems: 'center', gap: 24 }}>
+          <View style={{ padding: 16, paddingTop: height / 4 - 80, alignItems: 'center', gap: 24 }}>
             <Image
               // eslint-disable-next-line @typescript-eslint/no-require-imports
               source={require('@assets/icon.svg')}
