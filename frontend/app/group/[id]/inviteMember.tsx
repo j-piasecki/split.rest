@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import { ErrorText } from '@components/ErrorText'
+import { Form } from '@components/Form'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
@@ -107,7 +108,7 @@ function UserPane({
   )
 }
 
-function Form() {
+function UserPicker() {
   const router = useRouter()
   const snack = useSnack()
   const { id: groupId } = useLocalSearchParams()
@@ -158,18 +159,20 @@ function Form() {
           textLocation='start'
           containerStyle={{ padding: 16, gap: 32 }}
         >
-          <TextInput
-            placeholder={t('email')}
-            keyboardType='email-address'
-            autoCapitalize='none'
-            autoCorrect={false}
-            value={email}
-            onChangeText={(text) => {
-              setEmail(text)
-              setAddingError('')
-            }}
-            editable={!isAddingToGroup}
-          />
+          <Form onSubmit={handlePress} autofocus>
+            <TextInput
+              placeholder={t('email')}
+              keyboardType='email-address'
+              autoCapitalize='none'
+              autoCorrect={false}
+              value={email}
+              onChangeText={(text) => {
+                setEmail(text)
+                setAddingError('')
+              }}
+              editable={!isAddingToGroup}
+            />
+          </Form>
         </Pane>
 
         <UserPane user={user} waiting={waiting} error={error} />
@@ -200,7 +203,7 @@ export default function Modal() {
       maxWidth={400}
       maxHeight={600}
     >
-      <Form />
+      <UserPicker />
     </ModalScreen>
   )
 }

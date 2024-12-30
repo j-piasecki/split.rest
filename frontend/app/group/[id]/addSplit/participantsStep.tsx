@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import { ErrorText } from '@components/ErrorText'
+import { Form } from '@components/Form'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
@@ -87,15 +88,17 @@ function ParticipansPicker({ user }: { user: User }) {
           textLocation='start'
           containerStyle={{ gap: 16, padding: 16, paddingTop: 8 }}
         >
-          <PeoplePicker
-            groupId={Number(id)}
-            entries={entries}
-            selectable
-            onEntriesChange={(entries) => {
-              setEntries(entries)
-              setError(null)
-            }}
-          />
+          <Form autofocus={getSplitCreationContext().participants === null} onSubmit={submit}>
+            <PeoplePicker
+              groupId={Number(id)}
+              entries={entries}
+              selectable
+              onEntriesChange={(entries) => {
+                setEntries(entries)
+                setError(null)
+              }}
+            />
+          </Form>
         </Pane>
       </ScrollView>
 

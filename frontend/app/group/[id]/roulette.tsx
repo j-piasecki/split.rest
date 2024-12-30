@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import { ErrorText } from '@components/ErrorText'
+import { Form } from '@components/Form'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
@@ -17,13 +18,13 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { TranslatableError, User, UserWithBalanceChange } from 'shared'
 
-interface FormProps {
+interface RouletteProps {
   groupId: number
   setResult: (result: UserWithBalanceChange[]) => void
   user: User
 }
 
-function Form({ groupId, setResult, user }: FormProps) {
+function Roulette({ groupId, setResult, user }: RouletteProps) {
   const { t } = useTranslation()
   const [entries, setEntries] = useState<PersonEntry[]>([
     { email: user.email, user },
@@ -82,7 +83,9 @@ function Form({ groupId, setResult, user }: FormProps) {
           textLocation='start'
           containerStyle={{ gap: 16, padding: 16, paddingTop: 8 }}
         >
-          <PeoplePicker groupId={groupId} entries={entries} onEntriesChange={setEntries} />
+          <Form autofocus onSubmit={submit}>
+            <PeoplePicker groupId={groupId} entries={entries} onEntriesChange={setEntries} />
+          </Form>
         </Pane>
       </ScrollView>
 
@@ -165,7 +168,7 @@ function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId:
   )
 }
 
-export default function Roulette() {
+export default function Modal() {
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()
   const theme = useTheme()
@@ -192,7 +195,7 @@ export default function Roulette() {
             </View>
           )}
           {canAccessRoulette && result === null && (
-            <Form groupId={Number(id)} setResult={setResult} user={user} />
+            <Roulette groupId={Number(id)} setResult={setResult} user={user} />
           )}
           {canAccessRoulette && result !== null && <Result groupId={Number(id)} result={result} />}
         </>

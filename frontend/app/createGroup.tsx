@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import { ErrorText } from '@components/ErrorText'
+import { Form } from '@components/Form'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { TextInput } from '@components/TextInput'
@@ -10,7 +11,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
-function Form() {
+function CreateGroupForm() {
   const router = useRouter()
   const { t } = useTranslation()
   const [name, setName] = useState('')
@@ -33,7 +34,7 @@ function Form() {
 
     createGroup({ name, currency })
       .then((group) => {
-        router.navigate(`/group/${group.id}`, { withAnchor: true })
+        router.replace(`/group/${group.id}`)
       })
       .catch((error) => {
         setError(error)
@@ -56,28 +57,31 @@ function Form() {
         textLocation='start'
         containerStyle={{ paddingHorizontal: 16, paddingBottom: 24, paddingTop: 8, gap: 16 }}
       >
-        <TextInput
-          placeholder='Name'
-          value={name}
-          onChangeText={(text) => {
-            setName(text)
-            setError(null)
-          }}
-          style={{
-            width: '100%',
-          }}
-        />
-        <TextInput
-          placeholder='Currency'
-          value={currency}
-          onChangeText={setCurrency}
-          editable={false}
-          focusable={false}
-          style={{
-            width: '100%',
-            opacity: 0.5,
-          }}
-        />
+        <Form autofocus onSubmit={handlePress}>
+          <TextInput
+            placeholder='Name'
+            value={name}
+            onChangeText={(text) => {
+              setName(text)
+              setError(null)
+            }}
+            style={{
+              width: '100%',
+            }}
+          />
+          {/* TODO: use actual picker instead of disabled textinput */}
+          <TextInput
+            placeholder='Currency'
+            value={currency}
+            onChangeText={setCurrency}
+            editable={false}
+            focusable={false}
+            style={{
+              width: '100%',
+              opacity: 0.5,
+            }}
+          />
+        </Form>
       </Pane>
 
       <View style={{ gap: 16 }}>
@@ -98,7 +102,7 @@ export default function Modal() {
       maxWidth={450}
       maxHeight={500}
     >
-      <Form />
+      <CreateGroupForm />
     </ModalScreen>
   )
 }

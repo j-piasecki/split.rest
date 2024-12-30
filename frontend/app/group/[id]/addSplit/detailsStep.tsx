@@ -1,6 +1,7 @@
 import { Button } from '@components/Button'
 import { CalendarPane } from '@components/CalendarPane'
 import { ErrorText } from '@components/ErrorText'
+import { Form } from '@components/Form'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { TextInput } from '@components/TextInput'
@@ -25,6 +26,47 @@ export default function Modal() {
 
   const totalVisible = getSplitCreationContext().splitType === SplitMethod.Equal
 
+  function submit() {
+    try {
+      validateSplitTitle(title)
+    } catch (error) {
+      setError(error)
+      return
+    }
+
+    if (totalVisible) {
+      if (total === '') {
+        setError(t('splitValidation.totalRequired'))
+        return
+      }
+
+      if (Number.isNaN(Number(total))) {
+        setError(t('splitValidation.totalAmountMustBeNumber'))
+        return
+      }
+
+      if (Number(total) <= 0) {
+        setError(t('splitValidation.totalMustBeGreaterThanZero'))
+        return
+      }
+
+      getSplitCreationContext().totalAmount = total
+    }
+
+    getSplitCreationContext().title = title
+    getSplitCreationContext().timestamp = timestamp
+
+    switch (getSplitCreationContext().splitType) {
+      case SplitMethod.ExactAmounts:
+        router.navigate(`/group/${id}/addSplit/exactAmounts`)
+        break
+
+      case SplitMethod.Equal:
+        router.navigate(`/group/${id}/addSplit/participantsStep`)
+        break
+    }
+  }
+
   return (
     <ModalScreen
       returnPath={`/group/${id}`}
@@ -48,34 +90,36 @@ export default function Modal() {
           textLocation='start'
           containerStyle={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 8, gap: 16 }}
         >
-          <TextInput
-            placeholder={t('form.title')}
-            value={title}
-            onChangeText={(value) => {
-              setTitle(value)
-              setError(null)
-            }}
-            style={{ marginBottom: 8 }}
-          />
-
-          {totalVisible && (
+          <Form autofocus onSubmit={submit}>
             <TextInput
-              placeholder={t('form.totalPaid')}
-              keyboardType='decimal-pad'
-              value={total}
+              placeholder={t('form.title')}
+              value={title}
               onChangeText={(value) => {
-                setTotal(value.replace(',', '.'))
+                setTitle(value)
                 setError(null)
               }}
               style={{ marginBottom: 8 }}
-              onBlur={() => {
-                const amountNum = Number(total)
-                if (!Number.isNaN(amountNum) && total.length > 0) {
-                  setTotal(CurrencyUtils.format(amountNum))
-                }
-              }}
             />
-          )}
+
+            {totalVisible && (
+              <TextInput
+                placeholder={t('form.totalPaid')}
+                keyboardType='decimal-pad'
+                value={total}
+                onChangeText={(value) => {
+                  setTotal(value.replace(',', '.'))
+                  setError(null)
+                }}
+                style={{ marginBottom: 8 }}
+                onBlur={() => {
+                  const amountNum = Number(total)
+                  if (!Number.isNaN(amountNum) && total.length > 0) {
+                    setTotal(CurrencyUtils.format(amountNum))
+                  }
+                }}
+              />
+            )}
+          </Form>
         </Pane>
 
         <CalendarPane
@@ -88,50 +132,7 @@ export default function Modal() {
 
       <View style={{ gap: 16, marginHorizontal: 16 }}>
         {error && <ErrorText>{error}</ErrorText>}
-        <Button
-          rightIcon='chevronForward'
-          title={t('splitType.buttonNext')}
-          onPress={() => {
-            try {
-              validateSplitTitle(title)
-            } catch (error) {
-              setError(error)
-              return
-            }
-
-            if (totalVisible) {
-              if (total === '') {
-                setError(t('splitValidation.totalRequired'))
-                return
-              }
-
-              if (Number.isNaN(Number(total))) {
-                setError(t('splitValidation.totalAmountMustBeNumber'))
-                return
-              }
-
-              if (Number(total) <= 0) {
-                setError(t('splitValidation.totalMustBeGreaterThanZero'))
-                return
-              }
-
-              getSplitCreationContext().totalAmount = total
-            }
-
-            getSplitCreationContext().title = title
-            getSplitCreationContext().timestamp = timestamp
-
-            switch (getSplitCreationContext().splitType) {
-              case SplitMethod.ExactAmounts:
-                router.navigate(`/group/${id}/addSplit/exactAmounts`)
-                break
-
-              case SplitMethod.Equal:
-                router.navigate(`/group/${id}/addSplit/participantsStep`)
-                break
-            }
-          }}
-        />
+        <Button rightIcon='chevronForward' title={t('splitType.buttonNext')} onPress={submit} />
       </View>
     </ModalScreen>
   )

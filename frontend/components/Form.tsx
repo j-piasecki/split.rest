@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import { TextInput } from 'react-native'
+import { useFocusEffect } from 'expo-router'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { Platform, TextInput } from 'react-native'
 
 export interface FormContextType {
   inputs: { focusIndex: number; ref: React.RefObject<TextInput> }[]
@@ -19,6 +20,9 @@ export interface FormProps {
 
 export function Form({ autofocus, children, onSubmit }: FormProps) {
   const parentForm = useContext(FormContext)
+
+  const onSubmitRef = useRef(onSubmit)
+  onSubmitRef.current = onSubmit
 
   const value = useRef<FormContextType>({
     inputs: [],
@@ -47,8 +51,8 @@ export function Form({ autofocus, children, onSubmit }: FormProps) {
       )
       const nextInput = value.current.inputs[currentIndex + 1]
 
-      if (currentIndex === value.current.inputs.length - 1 && onSubmit) {
-        onSubmit()
+      if (currentIndex === value.current.inputs.length - 1 && onSubmitRef.current) {
+        onSubmitRef.current()
       } else if (nextInput) {
         nextInput.ref.current?.focus()
       }
@@ -60,12 +64,25 @@ export function Form({ autofocus, children, onSubmit }: FormProps) {
   })
 
   useEffect(() => {
-    setTimeout(() => {
-      if (autofocus && value.current.inputs.length > 0) {
-        value.current.inputs[0].ref.current?.focus()
-      }
-    }, 100)
+    setTimeout(
+      () => {
+        if (autofocus && value.current.inputs.length > 0) {
+          value.current.inputs[0].ref.current?.focus()
+        }
+      },
+      Platform.OS === 'web' ? 100 : 500
+    )
   }, [autofocus])
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        value.current.inputs.forEach((input) => {
+          input.ref.current?.blur()
+        })
+      }
+    }, [])
+  )
 
   return <FormContext.Provider value={value}>{children}</FormContext.Provider>
 }
