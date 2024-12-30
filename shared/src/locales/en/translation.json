@@ -49,7 +49,7 @@
         "rename": "User does not have permission to rename the group",
         "delete": "User does not have permission to delete the group",
         "manageAccess": "User does not have permission to manage the group access",
-        "manageAdmins": "User does not have permission to manage the group admins",
+        "manageAdmins": "User does not have permission to manage the group moderators",
         "readPermissions": "User does not have permission to read the group permissions",
         "managePermissions": "User does not have permission to manage the group permissions",
         "manageOwner": "User does not have permission to change permissions of the group owner",
@@ -138,7 +138,7 @@
       "joinLink": "Invitation link",
       "delete": "Delete link"
     },
-    "notAnAdmin": "You are not an admin of this group",
+    "notAnAdmin": "You are not a moderator of this group",
     "deleteGroup": "Delete group",
     "save": "Save",
     "groupName": "Group name",
@@ -192,8 +192,8 @@
   "member": {
     "giveAccess": "Give access",
     "revokeAccess": "Revoke access",
-    "makeAdmin": "Make admin",
-    "revokeAdmin": "Revoke admin"
+    "makeAdmin": "Make a moderator",
+    "revokeAdmin": "Revoke moderator"
   },
 
   "split": {
@@ -210,7 +210,7 @@
     "numberOfMembers": "{{count}} members", 
     "accessToGroup": "You have access to this group",
     "noAccessToGroup": "You don't have access to this group",
-    "youAreAdmin": "You are an admin of this group",
+    "youAreAdmin": "You are a moderator of this group",
     "totalTransactionsValue": "Total transactions value: {{value}}",
     "inviteMember": "Invite member",
     "roulette": "Roulette",
