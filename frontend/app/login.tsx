@@ -2,9 +2,9 @@ import { SignInWithGoogleButton } from '@components/SignInWithGoogleButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { login, useAuth } from '@utils/auth'
-import { ImageBackground } from 'expo-image'
+import { Image } from 'expo-image'
 import { Redirect, useLocalSearchParams } from 'expo-router'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -37,7 +37,7 @@ export default function Screen() {
       {user === null && (
         <View style={{ flex: 1 }}>
           <View style={{ padding: 16, alignItems: 'center', gap: 24 }}>
-            <ImageBackground
+            <Image
               // eslint-disable-next-line @typescript-eslint/no-require-imports
               source={require('@assets/icon.svg')}
               style={{ width: 160, height: 160 }}
@@ -52,13 +52,22 @@ export default function Screen() {
                 padding: 16,
               }}
             >
-              You must sign in before you can start{' '}
-              <Text style={{ color: theme.colors.primary }}>splitting</Text>
+              <Trans
+                i18nKey='login.youMustSignIn'
+                components={{ Styled: <Text style={{ color: theme.colors.primary }} /> }}
+              />
             </Text>
           </View>
-          <View style={{ flex: 1, padding: 16, alignItems: 'center', justifyContent: 'center', gap: 16 }}>
+          <View
+            style={{
+              flex: 1,
+              padding: 16,
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 16,
+            }}
+          >
             <SignInWithGoogleButton onPress={login} />
-            
           </View>
         </View>
       )}

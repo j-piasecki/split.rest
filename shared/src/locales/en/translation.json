@@ -23,6 +23,10 @@
     "undoReject": "Undo"
   },
 
+  "login": {
+    "youMustSignIn": "You must sign in to start <Styled>splitting</Styled>"
+  },
+
   "api": {
     "invalidArguments": "Invalid arguments",
     "mustBeLoggedIn": "You must be logged in to do that",
