@@ -25,7 +25,7 @@ SplashScreen.setOptions({
 
 function Content() {
   const pathname = usePathname()
-  const user = useAuth(!pathname.startsWith('/join') && !pathname.startsWith('/login'))
+  const user = useAuth(!pathname.startsWith('/join') && !pathname.startsWith('/login')  && !pathname.startsWith('/privacyPolicy'))
   const theme = useTheme()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const locales = useLocales()
