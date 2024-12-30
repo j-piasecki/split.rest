@@ -2,6 +2,8 @@ import { Button } from '@components/Button'
 import { EditableText, EditableTextRef } from '@components/EditableText'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
+import { useSnack } from '@components/SnackBar'
+import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { useCreateGroupJoinLink } from '@hooks/database/useCreateGroupJoinLink'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
@@ -17,7 +19,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import { GroupInfo } from 'shared'
 
 function JoinLinkManager({
@@ -87,12 +89,72 @@ function JoinLinkManager({
   )
 }
 
+interface DeleteConfirmationModalProps {
+  isOpen: boolean
+  isDeleting: boolean
+  onSubmit: () => void
+  onClose: () => void
+}
+
+function DeleteConfirmationModal({
+  isOpen,
+  isDeleting,
+  onClose,
+  onSubmit,
+}: DeleteConfirmationModalProps) {
+  const theme = useTheme()
+  const { t } = useTranslation()
+
+  return (
+    <Modal transparent visible={isOpen}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Pressable
+          style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.7)' }]}
+          onPress={onClose}
+        />
+        <View
+          style={{
+            backgroundColor: theme.colors.surface,
+            padding: 24,
+            borderRadius: 16,
+            margin: 16,
+            maxWidth: 500,
+          }}
+        >
+          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 22 }}>
+            {t('groupSettings.deleteGroupConfirmationText')}
+          </Text>
+
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 16, marginTop: 16 }}
+          >
+            <Button
+              title={t('groupSettings.deleteGroupCancel')}
+              leftIcon='close'
+              onPress={onClose}
+            />
+            <Button
+              title={t('groupSettings.deleteGroupConfirm')}
+              leftIcon='check'
+              isLoading={isDeleting}
+              destructive
+              onPress={onSubmit}
+            />
+          </View>
+        </View>
+      </View>
+    </Modal>
+  )
+}
+
 function Form({ info }: { info: GroupInfo }) {
   const router = useRouter()
   const { t } = useTranslation()
+  const snack = useSnack()
   const nameInputRef = React.useRef<EditableTextRef>(null)
   const [name, setName] = useState(info.name)
   const [isEditingName, setIsEditingName] = useState(false)
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const { data: permissions } = useGroupPermissions(info.id)
   const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
   const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
@@ -144,19 +206,30 @@ function Form({ info }: { info: GroupInfo }) {
 
         {permissions?.canSeeJoinLink() && <JoinLinkManager info={info} permissions={permissions} />}
       </View>
-      {/* TODO: add confirmation dialog */}
       {permissions?.canDeleteGroup() && (
-        <Button
-          destructive
-          leftIcon='deleteForever'
-          title={t('groupSettings.deleteGroup')}
-          isLoading={isDeletingGroup}
-          style={{ marginTop: 32 }}
-          onPress={async () => {
-            await deleteGroup(info.id)
-            router.replace(`/`)
-          }}
-        />
+        <>
+          <DeleteConfirmationModal
+            isOpen={deleteModalVisible}
+            isDeleting={isDeletingGroup}
+            onClose={() => setDeleteModalVisible(false)}
+            onSubmit={() => {
+              deleteGroup(info.id).then(() => {
+                router.replace(`/home`)
+                snack.show(t('groupSettings.deleteGroupSuccess', { name: info.name }))
+              })
+            }}
+          />
+          <Button
+            destructive
+            leftIcon='deleteForever'
+            title={t('groupSettings.deleteGroup')}
+            isLoading={isDeletingGroup}
+            style={{ marginTop: 32 }}
+            onPress={() => {
+              setDeleteModalVisible(true)
+            }}
+          />
+        </>
       )}
     </ScrollView>
   )

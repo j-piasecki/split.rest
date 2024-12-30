@@ -137,7 +137,11 @@
     "notAnAdmin": "You are not an admin of this group",
     "deleteGroup": "Delete group",
     "save": "Save",
-    "groupName": "Group name"
+    "groupName": "Group name",
+    "deleteGroupConfirmationText": "Are you sure you want to delete the group?",
+    "deleteGroupConfirm": "Yes",
+    "deleteGroupCancel": "No",
+    "deleteGroupSuccess": "Group {{name}} deleted"
   },
 
   "inviteMember": {
