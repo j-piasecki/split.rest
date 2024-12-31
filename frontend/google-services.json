@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:461804772528:android:f8adff8e814bddebc1af75",
+        "mobilesdk_app_id": "1:461804772528:android:8d1abfe1803f066ac1af75",
         "android_client_info": {
-          "package_name": "com.jpiasecki.Split"
+          "package_name": "rest.split.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "461804772528-nlsf24kbqq46eatjr9hl8au9fj75j8nt.apps.googleusercontent.com",
+          "client_id": "461804772528-942mpbdqu0rusemuspgesd344i0v4u50.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.jpiasecki.Split",
+            "package_name": "rest.split.app",
             "certificate_hash": "9345ea1d0aa204d6a3b46807c45dfbf079d8deb2"
           }
         },

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Split",
     "slug": "Split",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -11,7 +11,7 @@
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
-      "bundleIdentifier": "com.jpiasecki.Split"
+      "bundleIdentifier": "rest.split.app"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -20,7 +20,7 @@
         "monochromeImage": "./assets/icon-foreground.png",
         "backgroundColor": "#8e004a"
       },
-      "package": "com.jpiasecki.Split"
+      "package": "rest.split.app"
     },
     "web": {
       "favicon": "./assets/favicon.png",
