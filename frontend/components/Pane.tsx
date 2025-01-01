@@ -16,6 +16,7 @@ export interface PaneHeaderProps {
   textLocation?: 'center' | 'start'
   showSeparator?: boolean
   adjustsFontSizeToFit?: boolean
+  color?: string
 }
 
 export function PaneHeader({
@@ -27,9 +28,12 @@ export function PaneHeader({
   textLocation = 'center',
   showSeparator = true,
   adjustsFontSizeToFit = false,
+  color,
 }: PaneHeaderProps) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
+
+  const foregroundColor = color ?? theme.colors.secondary
 
   return (
     <View
@@ -53,13 +57,13 @@ export function PaneHeader({
             adjustsFontSizeToFit ? { flex: 1 } : { flexGrow: 1, flexShrink: 0 },
           ]}
         >
-          <Icon name={icon} size={threeBarLayout ? 20 : 24} color={theme.colors.secondary} />
+          <Icon name={icon} size={threeBarLayout ? 20 : 24} color={foregroundColor} />
           <Text
             numberOfLines={1}
             adjustsFontSizeToFit={adjustsFontSizeToFit}
             style={{
               flexShrink: 1,
-              color: theme.colors.secondary,
+              color: foregroundColor,
               fontSize: threeBarLayout ? 16 : 20,
               fontWeight: 600,
             }}
@@ -91,6 +95,7 @@ export interface PaneProps {
   orientation?: 'vertical' | 'horizontal'
   headerHidden?: boolean
   onLayout?: (event: LayoutChangeEvent) => void
+  color?: string
 }
 
 export function Pane({
@@ -110,10 +115,12 @@ export function Pane({
   orientation = 'horizontal',
   headerHidden = false,
   onLayout,
+  color,
 }: PaneProps) {
   const theme = useTheme()
   const [innerCollapsed, setInnerCollapsed] = useState(startCollapsed ?? false)
 
+  const foregroundColor = color ?? theme.colors.secondary
   const isCollapsed = collapsed ?? innerCollapsed
 
   return (
@@ -163,6 +170,7 @@ export function Pane({
             textVisible={!collapsible || !isCollapsed || orientation === 'horizontal'}
             textLocation={textLocation}
             showSeparator={!isCollapsed || orientation === 'vertical'}
+            color={foregroundColor}
           />
         </Pressable>
       )}
