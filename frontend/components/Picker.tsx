@@ -66,7 +66,8 @@ export function Picker({ hint, items, selectedItem, onSelectionChange }: PickerP
             borderRadius: 2,
             paddingBottom: 8,
             paddingTop: 16,
-            fontFamily: resolveFontName(),          },
+            fontFamily: resolveFontName(),
+          },
           wrapperStyle,
         ]}
         selectedValue={selectedItem}
