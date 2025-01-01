@@ -47,7 +47,10 @@ export interface Colors {
 }
 
 export interface Theme {
+  // theme used by the app (light/dark)
   theme: ThemeType
+  // theme selected by the user (light/dark/null (system))
+  userSelectedTheme: ThemeType | null
   setTheme: (theme: ThemeType) => void
   colors: Colors
   ready: boolean

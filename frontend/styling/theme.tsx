@@ -103,6 +103,7 @@ const THEME_KEY = 'application_theme'
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = React.useState(false)
   const [theme, setTheme] = React.useState<ThemeType>('dark')
+  const [userTheme, setUserTheme] = React.useState<ThemeType | null>('dark')
   const systemTheme = useColorScheme()
 
   useEffect(() => {
@@ -116,8 +117,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       .then((value) => {
         if ((value && value === 'dark') || value === 'light') {
           setTheme(value)
+          setUserTheme(value)
         } else {
           setTheme(systemTheme ?? 'dark')
+          setUserTheme(null)
         }
       })
       .finally(() => {
@@ -131,6 +134,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         theme,
         setTheme: (theme: ThemeType | null) => {
           setTheme(theme ?? systemTheme ?? 'dark')
+          setUserTheme(theme)
 
           if (theme) {
             AsyncStorage.setItem(THEME_KEY, theme)
@@ -139,6 +143,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
           }
         },
         ready,
+        userSelectedTheme: userTheme,
         colors: theme === 'dark' ? darkColors : lightColors,
       }}
     >
