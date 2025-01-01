@@ -153,7 +153,12 @@ export const TextInput = React.forwardRef<TextInputRef, Props>(function TextInpu
         numberOfLines={1}
         {...rest}
       />
-      <Animated.Text style={[{ position: 'absolute', pointerEvents: 'none' }, hintStyle]}>
+      <Animated.Text
+        style={[
+          { position: 'absolute', pointerEvents: 'none', fontFamily: resolveFontName() },
+          hintStyle,
+        ]}
+      >
         {placeholder}
       </Animated.Text>
     </Animated.View>
