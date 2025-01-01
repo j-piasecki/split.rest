@@ -85,7 +85,7 @@ export const FloatingActionButton = React.forwardRef<
   return (
     <Pressable
       ref={(ref) => {
-        if (ref) {
+        if (ref && !expandedWidth.value) {
           expandedWidth.value = measure(ref).width
         }
       }}
