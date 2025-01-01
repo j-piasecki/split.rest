@@ -51,7 +51,7 @@ export interface Theme {
   theme: ThemeType
   // theme selected by the user (light/dark/null (system))
   userSelectedTheme: ThemeType | null
-  setTheme: (theme: ThemeType) => void
+  setTheme: (theme: ThemeType | null) => void
   colors: Colors
   ready: boolean
 }

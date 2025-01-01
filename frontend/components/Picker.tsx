@@ -1,7 +1,7 @@
 import { Picker as RNPicker } from '@react-native-picker/picker'
 import { useTheme } from '@styling/theme'
 import { resolveFontName } from '@utils/resolveFontName'
-import { Platform, View } from 'react-native'
+import { Platform, StyleProp, View, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 const AnimatedRNPicker = Animated.createAnimatedComponent(RNPicker)
@@ -16,16 +16,16 @@ export interface PickerProps {
   selectedItem: string
   onSelectionChange: (item: string) => void
   hint?: string
+  style?: StyleProp<ViewStyle>
 }
 
-export function Picker({ hint, items, selectedItem, onSelectionChange }: PickerProps) {
+export function Picker({ hint, items, selectedItem, onSelectionChange, style }: PickerProps) {
   const theme = useTheme()
   const isFocused = useSharedValue(false)
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       top: -4,
-      transform: [{ scale: 0.7 }],
       color: withTiming(isFocused.value ? theme.colors.primary : theme.colors.outline, {
         duration: 200,
       }),
@@ -41,10 +41,17 @@ export function Picker({ hint, items, selectedItem, onSelectionChange }: PickerP
   })
 
   return (
-    <View>
+    <View style={style}>
       {hint && (
         <Animated.Text
-          style={[{ position: 'absolute', fontFamily: resolveFontName() }, animatedStyle]}
+          style={[
+            {
+              position: 'absolute',
+              fontFamily: resolveFontName(),
+              fontSize: Platform.OS === 'ios' ? 16 : 10,
+            },
+            animatedStyle,
+          ]}
         >
           {hint}
         </Animated.Text>
@@ -59,6 +66,7 @@ export function Picker({ hint, items, selectedItem, onSelectionChange }: PickerP
         }}
         style={[
           {
+            width: '100%',
             backgroundColor: 'transparent',
             color: theme.colors.onSurface,
             borderWidth: 0,

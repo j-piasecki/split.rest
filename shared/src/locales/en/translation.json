@@ -105,6 +105,15 @@
     "details": "Details"
   },
 
+  "settings": {
+    "theme": {
+      "hint": "Choose your theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    }
+  },
+
   "screenName": {
     "createGroup": "Create group",
     "group": "Group",

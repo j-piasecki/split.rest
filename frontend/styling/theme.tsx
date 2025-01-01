@@ -108,9 +108,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (Platform.OS !== 'web') {
-      Appearance.setColorScheme(theme)
+      Appearance.setColorScheme(userTheme)
     }
-  }, [theme])
+  }, [userTheme])
 
   useEffect(() => {
     AsyncStorage.getItem(THEME_KEY)
