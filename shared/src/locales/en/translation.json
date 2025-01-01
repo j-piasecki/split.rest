@@ -123,6 +123,11 @@
     "splitParticipants": "Participants"
   },
 
+  "createGroup": {
+    "name": "Group name",
+    "currency": "Currency"
+  },
+
   "splitType": {
     "buttonNext": "Next",
     "selectType": "How would you like to split?",
@@ -279,6 +284,13 @@
       "november": "November",
       "december": "December"
     }
+  },
+
+  "currency": {
+    "pln": "PLN (Złoty)",
+    "usd": "USD (United States Dollar)",
+    "eur": "EUR (Euro)",
+    "gbp": "GBP (Pound Sterling)"
   }
 }
 

@@ -20,6 +20,7 @@
     "@react-native-firebase/auth": "^21.6.1",
     "@react-native-firebase/crashlytics": "^21.6.1",
     "@react-native-google-signin/google-signin": "^13.1.0",
+    "@react-native-picker/picker": "2.9.0",
     "@tanstack/react-query": "^5.62.3",
     "babel-plugin-react-compiler": "^19.0.0-beta-b2e8e9c-20241220",
     "date-fns": "^4.1.0",

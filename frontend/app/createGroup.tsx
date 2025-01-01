@@ -3,21 +3,41 @@ import { ErrorText } from '@components/ErrorText'
 import { Form } from '@components/Form'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
+import { Picker } from '@components/Picker'
 import { TextInput } from '@components/TextInput'
 import { useCreateGroup } from '@hooks/database/useCreateGroup'
 import { useTranslatedError } from '@hooks/useTranslatedError'
+import { getLocales } from 'expo-localization'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
+const CURRENCIES = ['eur', 'gbp', 'pln', 'usd'] as const
+
+function getDefaultCurrency() {
+  const locale = getLocales()[0]
+  const currency = locale.currencySymbol?.toLocaleLowerCase() ?? 'usd'
+
+  if (!CURRENCIES.some((item) => item === currency)) {
+    return 'usd'
+  }
+
+  return currency
+}
+
 function CreateGroupForm() {
   const router = useRouter()
   const { t } = useTranslation()
   const [name, setName] = useState('')
-  const [currency, setCurrency] = useState('PLN')
+  const [currency, setCurrency] = useState(getDefaultCurrency())
   const [error, setError] = useTranslatedError()
   const { mutateAsync: createGroup, isPending } = useCreateGroup()
+
+  const currencyPickerItems = CURRENCIES.map((currency) => ({
+    value: currency,
+    label: t(`currency.${currency}`),
+  }))
 
   function handlePress() {
     setError(null)
@@ -59,7 +79,7 @@ function CreateGroupForm() {
       >
         <Form autofocus onSubmit={handlePress}>
           <TextInput
-            placeholder='Name'
+            placeholder={t('createGroup.name')}
             value={name}
             onChangeText={(text) => {
               setName(text)
@@ -69,17 +89,11 @@ function CreateGroupForm() {
               width: '100%',
             }}
           />
-          {/* TODO: use actual picker instead of disabled textinput */}
-          <TextInput
-            placeholder='Currency'
-            value={currency}
-            onChangeText={setCurrency}
-            editable={false}
-            focusable={false}
-            style={{
-              width: '100%',
-              opacity: 0.5,
-            }}
+          <Picker
+            hint={t('createGroup.currency')}
+            items={currencyPickerItems}
+            selectedItem={currency}
+            onSelectionChange={setCurrency}
           />
         </Form>
       </Pane>
