@@ -50,4 +50,5 @@ export interface Theme {
   theme: ThemeType
   setTheme: (theme: ThemeType) => void
   colors: Colors
+  ready: boolean
 }

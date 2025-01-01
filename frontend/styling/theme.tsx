@@ -1,6 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Colors, Theme, ThemeType } from '@type/theme'
-import React from 'react'
-import { Appearance, Platform } from 'react-native'
+import React, { useEffect } from 'react'
+import { Appearance, Platform, useColorScheme } from 'react-native'
 import { SystemBars } from 'react-native-edge-to-edge'
 
 const ThemeContext = React.createContext<Theme | null>(null)
@@ -97,16 +98,49 @@ const lightColors: Colors = {
   balanceNeutral: '#9e8c90',
 }
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = React.useState<ThemeType>('dark')
+const THEME_KEY = 'application_theme'
 
-  if (Platform.OS !== 'web') {
-    Appearance.setColorScheme(theme)
-  }
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [ready, setReady] = React.useState(false)
+  const [theme, setTheme] = React.useState<ThemeType>('dark')
+  const systemTheme = useColorScheme()
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') {
+      Appearance.setColorScheme(theme)
+    }
+  }, [theme])
+
+  useEffect(() => {
+    AsyncStorage.getItem(THEME_KEY)
+      .then((value) => {
+        if ((value && value === 'dark') || value === 'light') {
+          setTheme(value)
+        } else {
+          setTheme(systemTheme ?? 'dark')
+        }
+      })
+      .finally(() => {
+        setReady(true)
+      })
+  }, [systemTheme])
 
   return (
     <ThemeContext.Provider
-      value={{ theme, setTheme, colors: theme === 'dark' ? darkColors : lightColors }}
+      value={{
+        theme,
+        setTheme: (theme: ThemeType | null) => {
+          setTheme(theme ?? systemTheme ?? 'dark')
+
+          if (theme) {
+            AsyncStorage.setItem(THEME_KEY, theme)
+          } else {
+            AsyncStorage.removeItem(THEME_KEY)
+          }
+        },
+        ready,
+        colors: theme === 'dark' ? darkColors : lightColors,
+      }}
     >
       <SystemBars style={theme === 'dark' ? 'light' : 'dark'} />
       {children}

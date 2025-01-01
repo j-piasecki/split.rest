@@ -36,7 +36,7 @@ function Content() {
   const { t } = useTranslation()
   const [fontsLoaded, _error] = useFonts()
 
-  const isLoading = user === undefined || !fontsLoaded
+  const isLoading = user === undefined || !fontsLoaded || !theme.ready
 
   const navigationTheme = useMemo(
     () => ({
