@@ -3790,6 +3790,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-picker/picker@patch:@react-native-picker/picker@npm%3A2.9.0#./.yarn/patches/@react-native-picker-picker-npm-2.9.0-fdf0591fce.patch::locator=split%40workspace%3A.":
+  version: 2.9.0
+  resolution: "@react-native-picker/picker@patch:@react-native-picker/picker@npm%3A2.9.0#./.yarn/patches/@react-native-picker-picker-npm-2.9.0-fdf0591fce.patch::version=2.9.0&hash=a2e03e&locator=split%40workspace%3A."
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 443e6d6f1c4575f9ac29ad35095d7d979331f4e8fb8eeea38110d64e141ceb7d8cf95505c0d6bcae35ce6648ffd55c9d1558a99547b7c87dde28941568c5d50c
+  languageName: node
+  linkType: hard
+
 "@react-native/assets-registry@npm:0.76.5":
   version: 0.76.5
   resolution: "@react-native/assets-registry@npm:0.76.5"

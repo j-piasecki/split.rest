@@ -1,0 +1,13 @@
+diff --git a/android/src/main/java/com/reactnativecommunity/picker/ReactDropdownPickerManager.java b/android/src/main/java/com/reactnativecommunity/picker/ReactDropdownPickerManager.java
+index 4083b28fce25bc9b44af3dde96ea8a493860ce8f..c09ac0c5f5140a6f2556853dd3ad0d9e7ee7e21b 100644
+--- a/android/src/main/java/com/reactnativecommunity/picker/ReactDropdownPickerManager.java
++++ b/android/src/main/java/com/reactnativecommunity/picker/ReactDropdownPickerManager.java
+@@ -45,6 +45,7 @@ public class ReactDropdownPickerManager extends ReactPickerManager implements RN
+   @NonNull
+   @Override
+   protected ReactPicker createViewInstance(@NonNull ThemedReactContext reactContext) {
+-    return new ReactPicker(reactContext, Spinner.MODE_DROPDOWN);
++    ContextThemeWrapper newContext = new ContextThemeWrapper(reactContext, android.R.style.Theme_Material_Light);
++    return new ReactPicker(newContext, Spinner.MODE_DROPDOWN);
+   }
+ }
