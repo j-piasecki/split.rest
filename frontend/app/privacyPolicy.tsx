@@ -165,6 +165,7 @@ export default function PrivacyPolicy() {
       </p>
       <ul>
         <li>Google</li>
+        <li>Apple</li>
       </ul>
       <p>
         If You decide to register through or otherwise grant us access to a Third-Party Social Media
