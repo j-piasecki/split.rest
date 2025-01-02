@@ -9,9 +9,9 @@ export async function createOrUpdateUser() {
 
   const user: User = {
     id: auth.currentUser.uid,
-    name: auth.currentUser.displayName!,
+    name: auth.currentUser.displayName || auth.currentUser.email?.split('@')[0] || 'Anonymous',
     email: auth.currentUser.email!,
-    photoUrl: auth.currentUser.photoURL!,
+    photoUrl: auth.currentUser.photoURL ?? undefined,
   }
 
   return await makeRequest('POST', 'createOrUpdateUser', user as unknown as Record<string, string>)
