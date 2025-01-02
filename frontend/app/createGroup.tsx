@@ -11,7 +11,7 @@ import { getLocales } from 'expo-localization'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 
 const CURRENCIES = ['eur', 'gbp', 'pln', 'usd'] as const
 
@@ -62,9 +62,10 @@ function CreateGroupForm() {
   }
 
   return (
-    <View
-      style={{
-        flex: 1,
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{
+        flexGrow: 1,
         gap: 16,
         justifyContent: 'space-between',
         paddingHorizontal: 16,
@@ -102,7 +103,7 @@ function CreateGroupForm() {
         {error && <ErrorText>{error}</ErrorText>}
         <Button title='Create' leftIcon='check' onPress={handlePress} isLoading={isPending} />
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
