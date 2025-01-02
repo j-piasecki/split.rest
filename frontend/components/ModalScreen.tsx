@@ -60,7 +60,7 @@ function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalP
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <View
           onLayout={onLayout}
-          style={{ flex: 1, paddingBottom: insets.bottom + (Platform.OS === 'web' ? 16 : 0) }}
+          style={{ flex: 1, paddingBottom: insets.bottom + (Platform.OS !== 'ios' ? 16 : 0) }}
         >
           {children}
         </View>
