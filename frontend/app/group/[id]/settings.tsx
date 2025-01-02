@@ -106,7 +106,7 @@ function DeleteConfirmationModal({
   const { t } = useTranslation()
 
   return (
-    <Modal transparent visible={isOpen}>
+    <Modal navigationBarTranslucent statusBarTranslucent transparent visible={isOpen}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Pressable
           style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.7)' }]}

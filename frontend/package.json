@@ -10,7 +10,8 @@
     "format": "prettier --write --list-different .",
     "lint": "eslint .",
     "build:web": "expo export -p web",
-    "check": "tsc --noEmit ; yarn lint"
+    "check": "tsc --noEmit ; yarn lint",
+    "prebuild": "node ./scripts/prebuild.js"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.0",

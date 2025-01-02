@@ -204,6 +204,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
   const anchorRect = useRef<Rect>()
   const scale = useSharedValue(1)
   const scaleTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const insets = useSafeAreaInsets()
 
   useImperativeHandle(ref, () => ({
     open: (anchor) => {
@@ -221,6 +222,10 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
   function measureAnchor(e: { nativeEvent: PointerEvent } | GestureResponderEvent | AnchorEvent) {
     touchPoint.current = { x: e.nativeEvent.pageX, y: e.nativeEvent.pageY }
     anchorRect.current = measure(anchorRef.current!)
+
+    if (Platform.OS === 'android') {
+      anchorRect.current.y += insets.top
+    }
   }
 
   const scaleStyle = useAnimatedStyle(() => {
@@ -283,6 +288,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
       </Pressable>
       <Modal
         visible={visible}
+        navigationBarTranslucent
         statusBarTranslucent
         onRequestClose={() => setVisible(false)}
         transparent

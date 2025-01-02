@@ -291,6 +291,7 @@ export default function GroupScreen() {
               <Modal
                 visible={membersExpanded}
                 transparent
+                navigationBarTranslucent
                 statusBarTranslucent
                 onRequestClose={() => {
                   setMembersExpanded(false)
