@@ -84,7 +84,6 @@ export function isUser(obj: any): obj is User {
   return (
     obj.id !== undefined &&
     obj.name !== undefined &&
-    obj.email !== undefined &&
-    obj.photoUrl !== undefined
+    obj.email !== undefined
   )
 }
