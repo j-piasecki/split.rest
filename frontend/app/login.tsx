@@ -44,10 +44,16 @@ export default function Screen() {
           left: 0,
           width: 0,
           height: 0,
-          borderBottomWidth: height / 2,
-          borderColor: 'transparent',
-          borderRightWidth: width,
-          borderRightColor: theme.colors.primaryContainer,
+          backgroundColor: 'transparent',
+          borderStyle: 'solid',
+          borderTopWidth: height / 2,
+          borderRightWidth: 0,
+          borderBottomWidth: 0,
+          borderLeftWidth: width,
+          borderTopColor: theme.colors.primaryContainer,
+          borderRightColor: 'transparent',
+          borderBottomColor: 'transparent',
+          borderLeftColor: 'transparent',
         }}
       />
       {user === undefined && (
@@ -66,6 +72,8 @@ export default function Screen() {
               source={require('@assets/icon.svg')}
               style={{ width: 160, height: 160 }}
               tintColor={theme.colors.primary}
+              // Android wasn't updating the tint correctly
+              key={theme.colors.primary}
             />
             <Text
               style={{

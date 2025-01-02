@@ -95,12 +95,28 @@ export default function Screen() {
             position: 'absolute',
             top: 0,
             left: 0,
+            right: 0,
+            height: insets.top,
+            backgroundColor: theme.colors.primaryContainer,
+          }}
+        />
+        <View
+          style={{
+            position: 'absolute',
+            top: insets.top,
+            left: 0,
             width: 0,
             height: 0,
-            borderBottomWidth: height / 2,
-            borderColor: 'transparent',
-            borderRightWidth: width,
-            borderRightColor: theme.colors.primaryContainer,
+            backgroundColor: 'transparent',
+            borderStyle: 'solid',
+            borderTopWidth: height / 2,
+            borderRightWidth: 0,
+            borderBottomWidth: 0,
+            borderLeftWidth: width,
+            borderTopColor: theme.colors.primaryContainer,
+            borderRightColor: 'transparent',
+            borderBottomColor: 'transparent',
+            borderLeftColor: 'transparent',
           }}
         />
 
