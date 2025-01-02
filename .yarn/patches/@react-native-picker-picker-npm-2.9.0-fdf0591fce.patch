@@ -1,8 +1,16 @@
 diff --git a/android/src/main/java/com/reactnativecommunity/picker/ReactDropdownPickerManager.java b/android/src/main/java/com/reactnativecommunity/picker/ReactDropdownPickerManager.java
-index 4083b28fce25bc9b44af3dde96ea8a493860ce8f..c09ac0c5f5140a6f2556853dd3ad0d9e7ee7e21b 100644
+index 4083b28fce25bc9b44af3dde96ea8a493860ce8f..29449247df8cb6d527f9d8371a354ebe3593407a 100644
 --- a/android/src/main/java/com/reactnativecommunity/picker/ReactDropdownPickerManager.java
 +++ b/android/src/main/java/com/reactnativecommunity/picker/ReactDropdownPickerManager.java
-@@ -45,6 +45,7 @@ public class ReactDropdownPickerManager extends ReactPickerManager implements RN
+@@ -7,6 +7,7 @@
+ 
+ package com.reactnativecommunity.picker;
+ 
++import android.view.ContextThemeWrapper;
+ import android.widget.Spinner;
+ 
+ import androidx.annotation.NonNull;
+@@ -45,6 +46,7 @@ public class ReactDropdownPickerManager extends ReactPickerManager implements RN
    @NonNull
    @Override
    protected ReactPicker createViewInstance(@NonNull ThemedReactContext reactContext) {
