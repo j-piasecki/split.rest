@@ -43,7 +43,7 @@ export class AppService {
   async createOrUpdateUser(user: User) {
     const result = await this.databaseService.createOrUpdateUser(user)
 
-    if (result.photoUrlUpdated || !fs.existsSync(`public/${user.id}.png`)) {
+    if (user.photoUrl && (result.photoUrlUpdated || !fs.existsSync(`public/${user.id}.png`))) {
       try {
         await downloadProfilePicture(user.photoUrl, user.id)
       } catch (error) {

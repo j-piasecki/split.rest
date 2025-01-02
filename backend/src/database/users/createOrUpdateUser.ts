@@ -11,7 +11,10 @@ export async function createOrUpdateUser(
   user: User
 ): Promise<CreateOrUpdateUserResult> {
   const name = user.name.length > 128 ? user.name.slice(0, 128) : user.name
-  const photoUrl = user.photoUrl.length > 512 ? user.photoUrl.slice(0, 512) : user.photoUrl
+  const photoUrl =
+    user.photoUrl && user.photoUrl.length > 512
+      ? user.photoUrl.slice(0, 512)
+      : (user.photoUrl ?? null)
 
   let previousEmail: string | null = null
   let previousPhotoUrl: string | null = null

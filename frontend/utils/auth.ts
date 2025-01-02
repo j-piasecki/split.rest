@@ -20,7 +20,7 @@ let authReady = false
 function createUser(user: FirebaseAuthTypes.User | null): User | null {
   if (user) {
     const uid = user.uid
-    const name = user.displayName || 'Anonymous'
+    const name = user.displayName || user.email?.split('@')[0] || 'Anonymous'
     const photoUrl = user.photoURL || ''
     return { name, email: user.email!, id: uid, photoUrl }
   }

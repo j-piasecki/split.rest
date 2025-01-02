@@ -23,7 +23,7 @@ const listeners: AuthListener[] = []
 function createUser(user: FirebaseUser | null): User | null {
   if (user) {
     const uid = user.uid
-    const name = user.displayName || 'Anonymous'
+    const name = user.displayName || user.email?.split('@')[0] || 'Anonymous'
     const photoUrl = user.photoURL || ''
     return { name, email: user.email!, id: uid, photoUrl }
   }
@@ -119,7 +119,9 @@ export function signInWithApple() {
   if (getDisplayClass() === DisplayClass.Small || isMobile) {
     signInWithRedirect(auth, provider)
   } else {
-    signInWithPopup(auth, provider)
+    signInWithPopup(auth, provider).catch((error) => {
+      console.error(error, error.message)
+    })
   }
 }
 
