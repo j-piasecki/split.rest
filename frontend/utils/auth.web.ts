@@ -84,7 +84,7 @@ export function useAuth(redirectToIndex = true) {
       if (path !== '/') {
         setTimeout(() => {
           router.replace('/')
-        }, 0)
+        }, 50)
       }
     }
   }, [path, router, user, redirectToIndex])
