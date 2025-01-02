@@ -1,7 +1,8 @@
+import { SignInWithAppleButton } from '@components/SignInWithAppleButton'
 import { SignInWithGoogleButton } from '@components/SignInWithGoogleButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
-import { login, useAuth } from '@utils/auth'
+import { signInWithApple, signInWithGoogle, useAuth } from '@utils/auth'
 import { Image } from 'expo-image'
 import { Redirect, useLocalSearchParams } from 'expo-router'
 import { Trans, useTranslation } from 'react-i18next'
@@ -99,7 +100,8 @@ export default function Screen() {
               gap: 16,
             }}
           >
-            <SignInWithGoogleButton onPress={login} />
+            <SignInWithGoogleButton onPress={signInWithGoogle} />
+            <SignInWithAppleButton onPress={() => signInWithApple()} />
           </View>
         </View>
       )}

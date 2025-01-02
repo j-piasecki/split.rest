@@ -7,6 +7,7 @@ export type IconName =
   | 'addMember'
   | 'addModerator'
   | 'add'
+  | 'appleLogo'
   | 'arrowDown'
   | 'arrowUp'
   | 'calendar'
@@ -62,6 +63,7 @@ const iconMap: Record<IconName, unknown> = {
   addMember: require('@assets/icons/add_member.svg'),
   addModerator: require('@assets/icons/add_moderator.svg'),
   add: require('@assets/icons/add.svg'),
+  appleLogo: require('@assets/icons/apple_logo.svg'),
   arrowDown: require('@assets/icons/arrow_down.svg'),
   arrowUp: require('@assets/icons/arrow_up.svg'),
   calendar: require('@assets/icons/calendar.svg'),
@@ -120,6 +122,7 @@ export function Icon({ name, size, color, style }: IconProps) {
       source={name === undefined ? null : iconMap[name]}
       style={[style, { width: size, height: size }]}
       tintColor={color}
+      contentFit='contain'
     />
   )
 }

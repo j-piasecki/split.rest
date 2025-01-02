@@ -4,10 +4,12 @@ import { queryClient } from './queryClient'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { AuthListener } from '@type/auth'
+import { getLocales } from 'expo-localization'
 import { usePathname, useRouter } from 'expo-router'
 import {
   User as FirebaseUser,
   GoogleAuthProvider,
+  OAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
   signInWithRedirect,
@@ -92,10 +94,28 @@ export function useAuth(redirectToIndex = true) {
   return user
 }
 
-export function login() {
+export function signInWithGoogle() {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
   const provider = new GoogleAuthProvider()
+  if (getDisplayClass() === DisplayClass.Small || isMobile) {
+    signInWithRedirect(auth, provider)
+  } else {
+    signInWithPopup(auth, provider)
+  }
+}
+
+export function signInWithApple() {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
+  const provider = new OAuthProvider('apple.com')
+  provider.addScope('email')
+  provider.addScope('name')
+
+  provider.setCustomParameters({
+    locale: getLocales()[0].languageCode ?? 'en',
+  })
+
   if (getDisplayClass() === DisplayClass.Small || isMobile) {
     signInWithRedirect(auth, provider)
   } else {

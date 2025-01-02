@@ -3019,6 +3019,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@invertase/react-native-apple-authentication@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@invertase/react-native-apple-authentication@npm:2.4.0"
+  checksum: 105dde0a27224e7f2a64d7e0a00465d43869b787359efe8672d60dc81d932189b400faf68d4ce18a57317edaa3b187224c7a2fa196e82480a55eb82feea50e7f
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -8781,6 +8788,7 @@ __metadata:
     "@babel/core": ^7.25.2
     "@expo/metro-runtime": ~4.0.0
     "@expo/vector-icons": ^14.0.2
+    "@invertase/react-native-apple-authentication": ^2.4.0
     "@react-native-async-storage/async-storage": 1.23.1
     "@react-native-firebase/app": ^21.6.1
     "@react-native-firebase/auth": ^21.6.1
@@ -8829,6 +8837,7 @@ __metadata:
     react-native-reanimated: ^3.16.6
     react-native-safe-area-context: 4.12.0
     react-native-screens: ~4.4.0
+    react-native-uuid: ^2.0.3
     react-native-web: ~0.19.13
     typescript: ^5.3.3
     use-debounce: ^10.0.4
@@ -13539,6 +13548,13 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 6e90539e8eb79ba4b3fd23f6c27b943e3595c9c275b3002e6b376eb0a1c17521bde9b05d0b2c4c7ab67042f20bdbec87c3d1e3d182a531b7e3115a2dace0e912
+  languageName: node
+  linkType: hard
+
+"react-native-uuid@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "react-native-uuid@npm:2.0.3"
+  checksum: e47774481feaed5d38f75fb4b03f5189c03e7452038f1b0fa56677add8a8bdef64ec7ad5e83f9fa761d8788cac5c8e554ade07e82a2818145337df7c883e2124
   languageName: node
   linkType: hard
 

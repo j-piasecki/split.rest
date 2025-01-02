@@ -1,8 +1,5 @@
+import { SignInWithGoogleButtonProps } from './props'
 import { GoogleSigninButton } from '@react-native-google-signin/google-signin'
-
-export interface SignInWithGoogleButtonProps {
-  onPress: () => void
-}
 
 export function SignInWithGoogleButton(props: SignInWithGoogleButtonProps) {
   return (
