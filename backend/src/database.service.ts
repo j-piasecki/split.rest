@@ -167,7 +167,7 @@ export class DatabaseService {
     return await getGroupInfo(this.pool, callerId, args)
   }
 
-  @RequirePermissions(['readMembers'])
+  // Permissions are checked in the function
   async getGroupMembersAutocompletions(
     callerId: string,
     args: GetGroupMembersAutocompletionsArguments

@@ -64,9 +64,10 @@ export function TextInputWithUserSuggestions({
 
   const getSuggestions = useCallback(
     async (val: string) => {
-      const suggestions = permissions?.canReadMembers()
-        ? await getGroupMemberAutocompletions(groupId, val)
-        : []
+      const suggestions =
+        permissions?.canReadMembers() || /.*@.+/.test(val)
+          ? await getGroupMemberAutocompletions(groupId, val)
+          : []
 
       return filterSuggestions ? filterSuggestions(suggestions) : suggestions
     },
@@ -82,7 +83,7 @@ export function TextInputWithUserSuggestions({
       autoCorrect={false}
       autoCapitalize='none'
       getSuggestions={getSuggestions}
-      suggestionsVisible={permissions?.canReadMembers()}
+      suggestionsVisible={true}
       onSuggestionSelect={onSuggestionSelect}
       renderSuggestion={(user, hovered, pressed) => {
         return <Suggestion user={user} hovered={hovered} pressed={pressed} />
