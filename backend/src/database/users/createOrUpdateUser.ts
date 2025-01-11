@@ -35,7 +35,7 @@ export async function createOrUpdateUser(
       INSERT INTO users(id, name, email, created_at, photo_url)
       VALUES ($1, $2, $3, $4, $5)
       ON CONFLICT (id) DO UPDATE
-      SET email = $3, photo_url = $5
+      SET email = $3, photo_url = $5, deleted = FALSE
     `,
     [user.id, name, user.email, Date.now(), photoUrl]
   )
