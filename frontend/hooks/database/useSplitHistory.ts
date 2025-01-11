@@ -25,6 +25,12 @@ export function useSplitHistory(groupId?: number, splitId?: number) {
             return nameComparison
           }
 
+          if (a.email === undefined) {
+            return -1
+          } else if (b.email === undefined) {
+            return 1
+          }
+
           return a.email.localeCompare(b.email)
         })
       })

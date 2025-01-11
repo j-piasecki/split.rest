@@ -84,6 +84,7 @@ export function SplitEntry({
         selectTextOnFocus
         focusIndex={focusIndex}
         containerStyle={{ flex: 5 }}
+        editable={typeof entry.userOrEmail === 'string' || entry.userOrEmail.email !== undefined}
         user={typeof entry.userOrEmail === 'string' ? undefined : entry.userOrEmail}
         onClearSelection={() => updateForm({ type: 'setUser', index, user: undefined })}
         onSuggestionSelect={(user) => {

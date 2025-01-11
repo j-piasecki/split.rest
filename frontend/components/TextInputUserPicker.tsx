@@ -19,6 +19,7 @@ export function TextInputUserPicker({
   onClearSelection,
   containerStyle,
   autoFocus,
+  editable,
   ...rest
 }: TextInputUserPickerProps) {
   const theme = useTheme()
@@ -34,11 +35,16 @@ export function TextInputUserPicker({
   return (
     <View style={containerStyle}>
       {!user && (
-        <TextInputWithUserSuggestions autoFocus={autoFocus || shouldFocusAfterClear} {...rest} />
+        <TextInputWithUserSuggestions
+          autoFocus={autoFocus || shouldFocusAfterClear}
+          editable={editable}
+          {...rest}
+        />
       )}
 
       {user && (
         <Pressable
+          disabled={editable === false}
           onPress={() => {
             onClearSelection?.()
             setShouldFocusAfterClear(true)

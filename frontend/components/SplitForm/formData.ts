@@ -83,7 +83,7 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
                 action.user ??
                 (typeof entry.userOrEmail === 'string'
                   ? entry.userOrEmail
-                  : entry.userOrEmail.email),
+                  : (entry.userOrEmail.email ?? '')),
             }
           : entry
       )
