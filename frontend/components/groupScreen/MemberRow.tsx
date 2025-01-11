@@ -122,9 +122,20 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
             <View style={{ flex: 1, justifyContent: 'center' }}>
               <Text
                 selectable={false}
-                style={{ fontSize: 20, fontWeight: '700', color: theme.colors.onSurface }}
+                style={{ fontSize: 20, fontWeight: 700, color: theme.colors.onSurface }}
               >
                 {member.name}
+                {member.deleted && (
+                  <Text
+                    style={{
+                      marginLeft: 8,
+                      color: theme.colors.outline,
+                      fontWeight: 200,
+                    }}
+                  >
+                    {t('deletedUser')}
+                  </Text>
+                )}
               </Text>
             </View>
             <View style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: 100 }}>

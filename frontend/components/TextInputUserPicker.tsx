@@ -5,6 +5,7 @@ import { TextInputWithUserSuggestions } from '@components/TextInputWithUserSugge
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Pressable, StyleProp, View, ViewStyle } from 'react-native'
 import { User } from 'shared'
 
@@ -23,6 +24,7 @@ export function TextInputUserPicker({
   ...rest
 }: TextInputUserPickerProps) {
   const theme = useTheme()
+  const { t } = useTranslation()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const [shouldFocusAfterClear, setShouldFocusAfterClear] = useState(false)
 
@@ -72,6 +74,11 @@ export function TextInputUserPicker({
             numberOfLines={1}
           >
             {user.name}
+            {user.deleted && (
+              <Text style={{ marginLeft: 8, color: theme.colors.outline, fontWeight: 200 }}>
+                {t('deletedUser')}
+              </Text>
+            )}
           </Text>
         </Pressable>
       )}
