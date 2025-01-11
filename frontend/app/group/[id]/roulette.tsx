@@ -27,27 +27,28 @@ interface RouletteProps {
 function Roulette({ groupId, setResult, user }: RouletteProps) {
   const { t } = useTranslation()
   const [entries, setEntries] = useState<PersonEntry[]>([
-    { email: user.email, user },
-    { email: '' },
+    { userOrEmail: user },
+    { userOrEmail: '' },
   ])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useTranslatedError()
 
   async function submit() {
     setError(null)
+    const filledEmails = entries
+      .filter((entry) => typeof entry.userOrEmail !== 'string')
+      .map((entry) => (entry.userOrEmail as User).email)
 
-    // there's always an empty entry at the end
-    if (entries.length < 3) {
+    if (filledEmails.length < 2) {
       setError(new TranslatableError('roulette.youNeedToAddAtLeastTwoUsers'))
       return
     }
 
     setLoading(true)
     try {
-      const balances = await getBalances(
-        groupId,
-        entries.filter((entry) => entry.email.trim() !== '').map((entry) => entry.email)
-      )
+      const balances = await getBalances(groupId, filledEmails)
+
+      console.log(balances)
 
       if (balances.length !== entries.length - 1) {
         // TODO: show which user was not found

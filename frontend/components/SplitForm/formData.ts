@@ -2,9 +2,8 @@ import React, { useReducer } from 'react'
 import { User } from 'shared'
 
 export interface SplitEntryData {
-  email: string
+  userOrEmail: string | User
   amount: string
-  user?: User
 }
 
 export interface FormData {
@@ -77,12 +76,18 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
 
     case 'setUser':
       newState.entries = newState.entries.map((entry, i) =>
-        i === action.index ? { ...entry, user: action.user } : entry
+        i === action.index
+          ? {
+              ...entry,
+              userOrEmail:
+                action.user ??
+                (typeof entry.userOrEmail === 'string'
+                  ? entry.userOrEmail
+                  : entry.userOrEmail.email),
+            }
+          : entry
       )
-
-      if (action.user) {
-        newState.entries[action.index].email = action.user.email
-      }
+      console.log(newState.entries, action)
       return newState
 
     case 'remove':
@@ -91,7 +96,7 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
 
     case 'setEmail':
       newState.entries = newState.entries.map((entry, i) =>
-        i === action.index ? { ...entry, email: action.email } : entry
+        i === action.index ? { ...entry, userOrEmail: action.email } : entry
       )
       break
 
@@ -102,18 +107,22 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
       break
   }
 
-  newState.entries = newState.entries.filter((entry) => entry.email !== '' || entry.amount !== '')
+  newState.entries = newState.entries.filter(
+    (entry) => entry.userOrEmail !== '' || entry.amount !== ''
+  )
 
   if (
     newState.entries.length === 0 ||
-    newState.entries[newState.entries.length - 1].email !== '' ||
+    newState.entries[newState.entries.length - 1].userOrEmail !== '' ||
     newState.entries[newState.entries.length - 1].amount !== ''
   ) {
-    newState.entries.push({ email: '', amount: '' })
+    newState.entries.push({ userOrEmail: '', amount: '' })
   }
 
   if (state.entries.length !== newState.entries.length) {
-    const newPaidByIndex = newState.entries.findIndex((entry) => entry.email === paidBy.email)
+    const newPaidByIndex = newState.entries.findIndex(
+      (entry) => entry.userOrEmail === paidBy.userOrEmail
+    )
     newState.paidByIndex = newPaidByIndex === -1 ? 0 : newPaidByIndex
   }
 

@@ -34,7 +34,10 @@ export function SplitEntry({
   const amountInputRef = useRef<TextInputRef>(null)
 
   const entry = formState.entries[index]
-  const showDeleteButton = entry.email.trim().length > 0 || entry.amount.trim().length > 0
+  const showDeleteButton =
+    typeof entry.userOrEmail !== 'string' ||
+    entry.userOrEmail.trim().length > 0 ||
+    entry.amount.trim().length > 0
 
   function scrollToThis() {
     if (layout.current && parentLayout?.current) {
@@ -61,7 +64,7 @@ export function SplitEntry({
       }}
     >
       <Pressable
-        disabled={formState.paidByIndex === index || entry.email.indexOf('@') === -1}
+        disabled={formState.paidByIndex === index || typeof entry.userOrEmail === 'string'}
         onPress={() => updateForm({ type: 'setPaidBy', index })}
         style={{ marginRight: 8 }}
         tabIndex={-1}
@@ -77,11 +80,11 @@ export function SplitEntry({
 
       <TextInputUserPicker
         groupId={groupId}
-        value={entry.email}
+        value={typeof entry.userOrEmail === 'string' ? entry.userOrEmail : entry.userOrEmail.email}
         selectTextOnFocus
         focusIndex={focusIndex}
         containerStyle={{ flex: 5 }}
-        user={entry.user}
+        user={typeof entry.userOrEmail === 'string' ? undefined : entry.userOrEmail}
         onClearSelection={() => updateForm({ type: 'setUser', index, user: undefined })}
         onSuggestionSelect={(user) => {
           updateForm({ type: 'setUser', index, user })
@@ -94,9 +97,13 @@ export function SplitEntry({
           scrollToThis()
           updateForm({ type: 'clearFocusOnMount', index })
         }}
-        filterSuggestions={(user) =>
-          user.filter(
-            (u) => u.email === entry.email || formState.entries.every((e) => e.email !== u.email)
+        filterSuggestions={(users) =>
+          users.filter(
+            (u) =>
+              u.email === entry.userOrEmail ||
+              formState.entries.every(
+                (e) => typeof e.userOrEmail === 'string' || e.userOrEmail.email !== u.email
+              )
           )
         }
       />

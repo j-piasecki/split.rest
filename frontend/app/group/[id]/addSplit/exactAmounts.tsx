@@ -17,17 +17,15 @@ function initialEntriesFromContext(currentUser: User): SplitEntryData[] {
 
   const initialEntries =
     splitContext.participants === null
-      ? [{ email: currentUser.email, amount: '', user: currentUser }]
-      : splitContext.participants.map((participant) => ({
-          email:
-            typeof participant.userOrEmail === 'string'
-              ? participant.userOrEmail
-              : participant.userOrEmail.email,
-          amount: '',
-          user: typeof participant.userOrEmail === 'string' ? undefined : participant.userOrEmail,
-        }))
+      ? [{ userOrEmail: currentUser, amount: '' }]
+      : splitContext.participants.map(
+          (participant): SplitEntryData => ({
+            userOrEmail: participant.userOrEmail,
+            amount: '',
+          })
+        )
 
-  initialEntries.push({ email: '', amount: '', user: undefined })
+  initialEntries.push({ userOrEmail: '', amount: '' })
 
   return initialEntries
 }
@@ -43,11 +41,14 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
       const { sumToSave } = await validateSplitForm(form)
 
       getSplitCreationContext().participants = form.entries.map((entry) => ({
-        userOrEmail: entry.user ?? entry.email,
+        userOrEmail: entry.userOrEmail,
         value: entry.amount,
       }))
 
-      getSplitCreationContext().paidByEmail = form.entries[form.paidByIndex].email
+      const paidBy = form.entries[form.paidByIndex]
+
+      getSplitCreationContext().paidByEmail =
+        typeof paidBy.userOrEmail === 'string' ? paidBy.userOrEmail : paidBy.userOrEmail.email
       getSplitCreationContext().title = form.title
       getSplitCreationContext().totalAmount = sumToSave.toFixed(2)
 

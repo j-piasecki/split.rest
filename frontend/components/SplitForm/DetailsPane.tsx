@@ -33,6 +33,7 @@ export function DetailsPane({
     // eslint-disable-next-line react-compiler/react-compiler
     toBePaid.current = sumFromEntries
   }
+  const paidBy = formState.entries[formState.paidByIndex]
 
   return (
     <Pane
@@ -77,8 +78,9 @@ export function DetailsPane({
               i18nKey='splitInfo.hasPaidText'
               values={{
                 payer:
-                  formState.entries[formState.paidByIndex].user?.name ??
-                  formState.entries[formState.paidByIndex].email,
+                  typeof paidBy.userOrEmail === 'string'
+                    ? paidBy.userOrEmail
+                    : paidBy.userOrEmail.name,
                 // eslint-disable-next-line react-compiler/react-compiler
                 amount: CurrencyUtils.format(toBePaid.current, groupInfo.currency),
               }}

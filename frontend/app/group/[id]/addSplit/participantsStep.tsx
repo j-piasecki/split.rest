@@ -17,16 +17,14 @@ function getInitialEntries(user: User): PersonEntry[] {
   const savedParticipants = getSplitCreationContext().participants
 
   if (savedParticipants) {
-    const result = savedParticipants.map((participant, index) => ({
-      user: typeof participant.userOrEmail === 'string' ? undefined : participant.userOrEmail,
-      email:
-        typeof participant.userOrEmail === 'string'
-          ? participant.userOrEmail
-          : participant.userOrEmail.email,
-      selected: index === getSplitCreationContext().paidByIndex,
-    }))
+    const result = savedParticipants.map(
+      (participant, index): PersonEntry => ({
+        userOrEmail: participant.userOrEmail,
+        selected: index === getSplitCreationContext().paidByIndex,
+      })
+    )
 
-    result.push({ email: '', user: undefined, selected: false })
+    result.push({ userOrEmail: '', selected: false })
 
     if (getSplitCreationContext().paidByIndex === undefined) {
       result[0].selected = true
@@ -35,7 +33,7 @@ function getInitialEntries(user: User): PersonEntry[] {
     return result
   }
 
-  return [{ user, email: user.email, selected: true }, { email: '' }]
+  return [{ userOrEmail: user, selected: true }, { userOrEmail: '' }]
 }
 
 function ParticipansPicker({ user }: { user: User }) {
@@ -52,7 +50,8 @@ function ParticipansPicker({ user }: { user: User }) {
       return
     }
 
-    const payerEmail = entries.find((entry) => entry.selected)?.email
+    const payer = entries.find((entry) => entry.selected)?.userOrEmail
+    const payerEmail = typeof payer === 'string' ? payer : payer?.email
 
     if (!payerEmail) {
       setError(new TranslatableError('splitValidation.thePayerDataMustBeFilledIn'))
@@ -61,7 +60,7 @@ function ParticipansPicker({ user }: { user: User }) {
 
     getSplitCreationContext().participants = entries
       .map((entry) => ({
-        userOrEmail: entry.user ?? entry.email,
+        userOrEmail: entry.userOrEmail,
       }))
       .filter((entry) => entry.userOrEmail)
 

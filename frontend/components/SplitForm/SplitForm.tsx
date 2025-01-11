@@ -53,13 +53,9 @@ export function SplitForm({
   const { t } = useTranslation()
 
   function submit() {
-    const toSave = formState.entries
-      .map((entry) => ({
-        email: entry.email.trim(),
-        amount: entry.amount.trim(),
-        user: entry.user,
-      }))
-      .filter((entry) => entry.email !== '' || entry.amount !== '')
+    const toSave = formState.entries.filter(
+      (entry) => typeof entry.userOrEmail !== 'string' || entry.amount !== ''
+    )
 
     onSubmit({
       title: formState.title,

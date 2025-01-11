@@ -1,6 +1,5 @@
 import { FormData } from '@components/SplitForm'
-import { getUserByEmail } from '@database/getUserByEmail'
-import { BalanceChange, TranslatableError } from 'shared'
+import { BalanceChange, TranslatableError, User } from 'shared'
 
 export interface ValidationResult {
   payerId: string
@@ -29,17 +28,28 @@ export async function validateSplitForm({
     throw new TranslatableError('splitValidation.atLeastTwoEntries')
   }
 
-  for (const { email, amount } of entries) {
-    if (email === '' && amount === '') {
+  for (const { userOrEmail, amount } of entries) {
+    if (userOrEmail === '' && amount === '') {
       continue
     }
 
-    if (email === '' || amount === '') {
+    if (userOrEmail === '' || amount === '') {
       throw new TranslatableError('splitValidation.youNeedToFillBothFields')
     }
   }
 
-  const paidBy = entries[paidByIndex].email
+  const entriesWithUsers = entries
+    .filter((entry) => typeof entry.userOrEmail !== 'string')
+    .map((entry) => ({
+      user: entry.userOrEmail as User,
+      amount: entry.amount,
+    }))
+
+  if (entriesWithUsers.length !== entries.length) {
+    throw new TranslatableError('splitValidation.youNeedToFillBothFields')
+  }
+
+  const paidBy = entriesWithUsers[paidByIndex].user
   const sumToSave = entries.reduce((acc, entry) => acc + Number(entry.amount), 0)
 
   if (Number.isNaN(sumToSave)) {
@@ -52,37 +62,26 @@ export async function validateSplitForm({
 
   validateSplitTitle(title)
 
-  if (entries.find((entry) => entry.email === paidBy) === undefined) {
+  if (!paidBy) {
     throw new TranslatableError('splitValidation.thePayerDataMustBeFilledIn')
   }
 
-  const emails = entries.map((entry) => entry.email)
+  const emails = entriesWithUsers.map((entry) => entry.user.email)
   if (new Set(emails).size !== emails.length) {
     throw new TranslatableError('splitValidation.duplicateEmailsAreNotAllowed')
   }
 
-  let payerId: string | undefined
-
   const balanceChange: (BalanceChange | undefined)[] = await Promise.all(
-    entries.map(async (entry) => {
+    entriesWithUsers.map(async (entry) => {
       const change =
-        entry.email === paidBy ? sumToSave - Number(entry.amount) : -Number(entry.amount)
-      const userData = await getUserByEmail(entry.email)
-
-      if (!userData) {
-        throw new TranslatableError('splitValidation.userWithEmailNotFound', { email: entry.email })
-      }
+        entry.user.id === paidBy.id ? sumToSave - Number(entry.amount) : -Number(entry.amount)
 
       if (Number(entry.amount) <= 0) {
         throw new TranslatableError('splitValidation.amountsMustBePositive')
       }
 
-      if (entry.email === paidBy) {
-        payerId = userData.id
-      }
-
       return {
-        id: userData.id,
+        id: entry.user.id,
         change: change.toFixed(2),
       }
     })
@@ -92,12 +91,8 @@ export async function validateSplitForm({
     throw new TranslatableError('splitValidation.userNotFound')
   }
 
-  if (!payerId) {
-    throw new TranslatableError('splitValidation.payerNotFound')
-  }
-
   return {
-    payerId,
+    payerId: paidBy.id,
     balanceChange: balanceChange.filter((change) => change !== undefined),
     sumToSave,
     timestamp,
