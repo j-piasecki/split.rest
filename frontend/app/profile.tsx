@@ -143,23 +143,24 @@ function Form({ user }: { user: User }) {
         {/* Don't show delete button on web on small screen; it uses redirect to sign in which requires
          * special handling which is not implemented yet. This will break on browsers in mobile devices.
          * which use redirect to sign in on all display classes. */}
-        {Platform.OS !== 'web' ||
-          (displayClass !== DisplayClass.Small && (
-            <Button
-              destructive
-              title={t('settings.deleteAccount.delete')}
-              onPress={() => {
-                reauthenticate()
-                  .then(() => {
-                    setDeleteModalVisible(true)
-                  })
-                  .catch(() => {
-                    alert(t('api.auth.tryAgain'))
-                  })
-              }}
-              leftIcon='delete'
-            />
-          ))}
+        {(Platform.OS !== 'web' || displayClass !== DisplayClass.Small) && (
+          <Button
+            destructive
+            title={t('settings.deleteAccount.deleteAccount')}
+            onPress={() => {
+              // skip sign in with apple reauthentication on ios, it's done automatically
+              // when refreshing token for revocation
+              reauthenticate(Platform.OS === 'ios')
+                .then(() => {
+                  setDeleteModalVisible(true)
+                })
+                .catch(() => {
+                  alert(t('api.auth.tryAgain'))
+                })
+            }}
+            leftIcon='delete'
+          />
+        )}
         <Button
           title={t('signOut')}
           onPress={() => {

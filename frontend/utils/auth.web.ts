@@ -6,7 +6,7 @@ import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { deleteUser as remoteDeleteUser } from '@database/deleteUser'
 import { AuthListener } from '@type/auth'
 import { getLocales } from 'expo-localization'
-import { usePathname, useRouter } from 'expo-router'
+import { router, usePathname, useRouter } from 'expo-router'
 import {
   User as FirebaseUser,
   GoogleAuthProvider,
@@ -137,7 +137,10 @@ export async function reauthenticate() {
 
 export async function deleteUser() {
   await remoteDeleteUser()
-  console.log('User deleted')
+  await auth.currentUser?.delete()
+
+  queryClient.clear()
+  router.dismissTo('/login')
 }
 
 export function signInWithGoogle() {

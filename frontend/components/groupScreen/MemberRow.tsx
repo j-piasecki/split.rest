@@ -57,7 +57,8 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
   const { mutate: setGroupAdminMutation } = useSetGroupAdminMutation(info.id, member.id)
 
   const hasContextActions = permissions?.canManageAccess() || permissions?.canManageAdmins()
-  const contextMenuDisabled = member.deleted || member.id === user?.id || iconOnly || !hasContextActions
+  const contextMenuDisabled =
+    member.deleted || member.id === user?.id || iconOnly || !hasContextActions
 
   return (
     <ContextMenu

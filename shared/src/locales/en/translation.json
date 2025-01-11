@@ -118,6 +118,7 @@
     "deleteAccount": {
       "cancel": "Cancel",
       "delete": "Delete",
+      "deleteAccount": "Delete acount",
       "doYouWantToDeleteAccount": "Do you want to delete your account?",
       "deletionNotReversible": "This action is not reversible"
     }

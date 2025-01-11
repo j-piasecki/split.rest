@@ -2,10 +2,11 @@ import { auth, authObj } from './firebase'
 import { queryClient } from './queryClient'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
+import { deleteUser as remoteDeleteUser } from '@database/deleteUser'
 import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication'
 import { FirebaseAuthTypes, firebase } from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
-import { usePathname, useRouter } from 'expo-router'
+import { router, usePathname, useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Platform } from 'react-native'
 import uuid from 'react-native-uuid'
@@ -69,7 +70,7 @@ export function useAuth(redirectToIndex = true) {
   return user
 }
 
-export async function reauthenticate() {
+export async function reauthenticate(skipAppleSignIn = false) {
   if (!auth.currentUser) {
     throw new TranslatableError('api.mustBeLoggedIn')
   }
@@ -80,8 +81,10 @@ export async function reauthenticate() {
     const googleCredential = await getGoogleCredential()
     await auth.currentUser?.reauthenticateWithCredential(googleCredential)
   } else if (providerId === 'apple.com') {
-    const appleCredential = await getAppleCredential()
-    await auth.currentUser?.reauthenticateWithCredential(appleCredential)
+    if (!skipAppleSignIn) {
+      const appleCredential = await getAppleCredential()
+      await auth.currentUser?.reauthenticateWithCredential(appleCredential)
+    }
   } else {
     throw new TranslatableError('api.auth.unknownProvider')
   }
@@ -92,10 +95,30 @@ export async function deleteUser() {
     throw new TranslatableError('api.mustBeLoggedIn')
   }
 
-  // const providerId = auth.currentUser.providerData[0].providerId
+  await remoteDeleteUser()
 
-  await sleep(1000)
-  console.log('Delete user')
+  if (Platform.OS === 'ios') {
+    const providerId = auth.currentUser.providerData[0].providerId
+
+    if (providerId === 'apple.com') {
+      const { authorizationCode } = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.REFRESH,
+      })
+
+      // Ensure Apple returned an authorizationCode
+      if (!authorizationCode) {
+        throw new Error('Apple Revocation failed - no authorizationCode returned')
+      }
+
+      // Revoke the token
+      await auth.revokeToken(authorizationCode)
+    }
+  }
+
+  await auth.currentUser?.delete()
+
+  queryClient.clear()
+  router.dismissAll()
 }
 
 export async function signInWithGoogle() {
