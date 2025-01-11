@@ -5,25 +5,107 @@ import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { ThemeType } from '@type/theme'
-import { logout, useAuth } from '@utils/auth'
+import { deleteUser, logout, reauthenticate, useAuth } from '@utils/auth'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import { User } from 'shared'
+
+interface DeleteAccountModalProps {
+  visible: boolean
+  onClose: () => void
+}
+
+function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
+  const theme = useTheme()
+  const { t } = useTranslation()
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  return (
+    <Modal
+      transparent
+      statusBarTranslucent
+      navigationBarTranslucent
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Pressable
+          style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.7)' }]}
+          onPress={onClose}
+        />
+        <View
+          style={{
+            backgroundColor: theme.colors.surface,
+            padding: 24,
+            borderRadius: 16,
+            margin: 16,
+            maxWidth: 500,
+          }}
+        >
+          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 22 }}>
+            {t('settings.deleteAccount.doYouWantToDeleteAccount')}
+          </Text>
+
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 16, marginTop: 16 }}
+          >
+            <Button title={t('settings.deleteAccount.cancel')} leftIcon='close' onPress={onClose} />
+            <Button
+              title={t('settings.deleteAccount.delete')}
+              leftIcon='delete'
+              isLoading={isDeleting}
+              destructive
+              onPress={async () => {
+                setIsDeleting(true)
+                deleteUser()
+                  .then(() => {
+                    onClose()
+                  })
+                  .catch(() => {
+                    alert(t('api.auth.tryAgain'))
+                  })
+                  .finally(() => {
+                    setIsDeleting(false)
+                  })
+              }}
+            />
+          </View>
+        </View>
+      </View>
+    </Modal>
+  )
+}
 
 function Form({ user }: { user: User }) {
   const theme = useTheme()
   const router = useRouter()
+  const displayClass = useDisplayClass()
   const { t } = useTranslation()
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false)
 
   return (
-    <View
+    <ScrollView
       style={{
         flex: 1,
+      }}
+      contentContainerStyle={{
+        flexGrow: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 24,
         paddingTop: 32,
+        gap: 16,
       }}
     >
       <View style={{ gap: 16, alignItems: 'center', width: '90%' }}>
@@ -52,7 +134,27 @@ function Form({ user }: { user: User }) {
           }}
         />
       </View>
-      <View style={{ width: '100%' }}>
+      <View style={{ width: '100%', flexDirection: 'column', gap: 16 }}>
+        {/* Don't show delete button on web on small screen; it uses redirect to sign in which requires
+         * special handling which is not implemented yet. This will break on browsers in mobile devices.
+         * which use redirect to sign in on all display classes. */}
+        {Platform.OS !== 'web' ||
+          (displayClass !== DisplayClass.Small && (
+            <Button
+              destructive
+              title={t('settings.deleteAccount.delete')}
+              onPress={() => {
+                reauthenticate()
+                  .then(() => {
+                    setDeleteModalVisible(true)
+                  })
+                  .catch(() => {
+                    alert(t('api.auth.tryAgain'))
+                  })
+              }}
+              leftIcon='delete'
+            />
+          ))}
         <Button
           title={t('signOut')}
           onPress={() => {
@@ -63,16 +165,21 @@ function Form({ user }: { user: User }) {
           rightIcon='logout'
         />
       </View>
-    </View>
+
+      <DeleteAccountModal
+        visible={deleteModalVisible}
+        onClose={() => setDeleteModalVisible(false)}
+      />
+    </ScrollView>
   )
 }
 
-export default function Modal() {
+export default function ProfileScreen() {
   const { t } = useTranslation()
   const user = useAuth()
   const theme = useTheme()
   return (
-    <ModalScreen returnPath='/home' title={t('screenName.profile')} maxWidth={400} maxHeight={500}>
+    <ModalScreen returnPath='/home' title={t('screenName.profile')} maxWidth={400} maxHeight={550}>
       {!user && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
       {user && <Form user={user} />}
     </ModalScreen>

@@ -11,6 +11,8 @@ import {
   GoogleAuthProvider,
   OAuthProvider,
   onAuthStateChanged,
+  reauthenticateWithPopup,
+  reauthenticateWithRedirect,
   signInWithPopup,
   signInWithRedirect,
 } from 'firebase/auth'
@@ -92,6 +94,49 @@ export function useAuth(redirectToIndex = true) {
   }, [path, router, user, redirectToIndex])
 
   return user
+}
+
+async function reauthenticateWithPopupOrRedirect(provider: GoogleAuthProvider | OAuthProvider) {
+  if (!auth.currentUser) {
+    throw new Error('User must be logged in')
+  }
+
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
+  if (getDisplayClass() === DisplayClass.Small || isMobile) {
+    await reauthenticateWithRedirect(auth.currentUser, provider)
+  } else {
+    await reauthenticateWithPopup(auth.currentUser, provider)
+  }
+}
+
+export async function reauthenticate() {
+  if (!auth.currentUser) {
+    throw new Error('User must be logged in')
+  }
+
+  const providerId = auth.currentUser.providerData[0].providerId
+
+  if (providerId === 'google.com') {
+    await reauthenticateWithPopupOrRedirect(new GoogleAuthProvider())
+  } else if (providerId === 'apple.com') {
+    const provider = new OAuthProvider('apple.com')
+    provider.addScope('email')
+    provider.addScope('name')
+
+    provider.setCustomParameters({
+      locale: getLocales()[0].languageCode ?? 'en',
+    })
+
+    await reauthenticateWithPopupOrRedirect(provider)
+  } else {
+    throw new Error('Provider not supported')
+  }
+}
+
+export async function deleteUser() {
+  await sleep(1000)
+  console.log('User deleted')
 }
 
 export function signInWithGoogle() {

@@ -45,9 +45,11 @@
     "invalidArguments": "Invalid arguments",
     "mustBeLoggedIn": "You must be logged in to do that",
     "auth": {
+      "unknownProvider": "Unknown provider",
       "missingToken": "Missing token",
       "invalidToken": "Invalid token",
-      "expiredToken": "Expired token"
+      "expiredToken": "Expired token",
+      "tryAgain": "An error occured, please try again"
     },
     "insufficientPermissions": {
       "group": {
@@ -111,6 +113,11 @@
       "light": "Light",
       "dark": "Dark",
       "system": "System"
+    },
+    "deleteAccount": {
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "doYouWantToDeleteAccount": "Do you want to delete your account?"
     }
   },
 
