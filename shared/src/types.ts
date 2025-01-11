@@ -1,8 +1,8 @@
 export interface User {
   id: string
   name: string
-  email?: string
-  photoUrl?: string
+  email: string | null
+  photoUrl: string | null
 }
 
 export enum GroupType {

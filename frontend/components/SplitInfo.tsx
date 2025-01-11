@@ -64,7 +64,8 @@ function UserRow({
         >
           {user.name}
         </Text>
-        <Text style={{ color: theme.colors.outline, fontSize: 12 }}>{user.email}</Text>
+        {/* TODO: show emails only in case of name conflict */}
+        {user.email && <Text style={{ color: theme.colors.outline, fontSize: 12 }}>{user.email}</Text>}
       </View>
       <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 20 }}>
         {CurrencyUtils.format(paidInThisSplit, groupInfo?.currency)}

@@ -4,7 +4,7 @@ export async function deleteUser(pool: Pool, userId: string) {
   await pool.query(
     `
       UPDATE users
-      SET name = NULL, email = NULL, photo_url = NULL, deleted = true
+      SET email = NULL, photo_url = NULL, deleted = true
       WHERE id = $1
     `,
     [userId]

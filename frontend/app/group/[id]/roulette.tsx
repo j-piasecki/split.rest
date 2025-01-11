@@ -38,7 +38,7 @@ function Roulette({ groupId, setResult, user }: RouletteProps) {
     const filledEmails = entries
       .filter((entry) => typeof entry.userOrEmail !== 'string')
       .map((entry) => (entry.userOrEmail as User).email)
-      .filter((email) => email !== undefined)
+      .filter((email) => email !== null)
 
     if (filledEmails.length < 2) {
       setError(new TranslatableError('roulette.youNeedToAddAtLeastTwoUsers'))
