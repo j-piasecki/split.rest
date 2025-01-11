@@ -417,4 +417,10 @@ export class AppController {
 
     return await this.appService.setGroupInviteRejected(request.user.sub, args)
   }
+
+  @UseGuards(AuthGuard)
+  @Post('deleteUser')
+  async deleteUser(@Req() request: Request) {
+    return await this.appService.deleteUser(request.user.sub)
+  }
 }

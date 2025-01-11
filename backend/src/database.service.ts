@@ -29,6 +29,7 @@ import { getSplitInfo } from './database/splits/getSplitInfo'
 import { restoreSplit } from './database/splits/restoreSplit'
 import { updateSplit } from './database/splits/updateSplit'
 import { createOrUpdateUser } from './database/users/createOrUpdateUser'
+import { deleteUser } from './database/users/deleteUser'
 import { getUserByEmail } from './database/users/getUserByEmail'
 import { getUserById } from './database/users/getUserById'
 import { Injectable } from '@nestjs/common'
@@ -244,5 +245,10 @@ export class DatabaseService {
   // Every user can ignore a group invite
   async setGroupInviteRejected(callerId: string, args: SetGroupInviteRejectedArguments) {
     return await setGroupInviteRejected(this.pool, callerId, args)
+  }
+
+  // Every user can delete their own account
+  async deleteUser(callerId: string) {
+    return await deleteUser(this.pool, callerId)
   }
 }

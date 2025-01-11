@@ -4,10 +4,11 @@ export async function createDatabase(pool: Pool) {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users(
       id VARCHAR(32) PRIMARY KEY,
-      name VARCHAR(128) NOT NULL,
-      email VARCHAR(512) NOT NULL,
+      name VARCHAR(128) NULL,
+      email VARCHAR(512) NULL,
       created_at BIGINT NOT NULL,
-      photo_url VARCHAR(512) NULL
+      photo_url VARCHAR(512) NULL,
+      deleted BOOLEAN NOT NULL DEFAULT FALSE
     )
   `)
 

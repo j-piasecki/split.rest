@@ -1,5 +1,6 @@
 import { Pool } from 'pg'
 import { User } from 'shared'
+import { BadRequestException } from 'src/errors/BadRequestException'
 
 export interface CreateOrUpdateUserResult {
   emailUpdated: boolean
@@ -10,6 +11,10 @@ export async function createOrUpdateUser(
   pool: Pool,
   user: User
 ): Promise<CreateOrUpdateUserResult> {
+  if (!user.name || !user.email) {
+    throw new BadRequestException('api.invalidArguments')
+  }
+
   const name = user.name.length > 128 ? user.name.slice(0, 128) : user.name
   const photoUrl =
     user.photoUrl && user.photoUrl.length > 512
