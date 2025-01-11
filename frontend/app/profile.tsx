@@ -49,12 +49,17 @@ function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
             backgroundColor: theme.colors.surface,
             padding: 24,
             borderRadius: 16,
-            margin: 16,
+            margin: 8,
             maxWidth: 500,
+            gap: 16,
           }}
         >
           <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 22 }}>
             {t('settings.deleteAccount.doYouWantToDeleteAccount')}
+          </Text>
+
+          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 16 }}>
+            {t('settings.deleteAccount.deletionNotReversible')}
           </Text>
 
           <View

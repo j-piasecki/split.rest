@@ -118,7 +118,8 @@
     "deleteAccount": {
       "cancel": "Cancel",
       "delete": "Delete",
-      "doYouWantToDeleteAccount": "Do you want to delete your account?"
+      "doYouWantToDeleteAccount": "Do you want to delete your account?",
+      "deletionNotReversible": "This action is not reversible"
     }
   },
 
