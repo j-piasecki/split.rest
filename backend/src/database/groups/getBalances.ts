@@ -18,7 +18,7 @@ export async function getBalances(
     throw new NotFoundException('api.notFound.group')
   }
 
-  let balances: Record<string, string>[] | null = null
+  let balances: Record<string, any>[] | null = null
   let targetLength: number | null = null
 
   if (isGetBalancesWithIdsArguments(args)) {
@@ -48,6 +48,7 @@ export async function getBalances(
           users.name, 
           users.email,
           users.photo_url,
+          users.deleted,
           group_members.balance
         FROM group_members
         INNER JOIN users ON group_members.user_id = users.id 
@@ -74,6 +75,7 @@ export async function getBalances(
     name: balance.name,
     email: balance.email,
     photoUrl: balance.photo_url,
+    deleted: balance.deleted,
     change: balance.balance,
   }))
 }

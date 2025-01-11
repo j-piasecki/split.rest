@@ -12,6 +12,7 @@ export async function createOrUpdateUser() {
     name: auth.currentUser.displayName || auth.currentUser.email?.split('@')[0] || 'Anonymous',
     email: auth.currentUser.email!,
     photoUrl: auth.currentUser.photoURL,
+    deleted: false,
   }
 
   return await makeRequest('POST', 'createOrUpdateUser', user as unknown as Record<string, string>)

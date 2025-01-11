@@ -3,6 +3,7 @@ export interface User {
   name: string
   email: string | null
   photoUrl: string | null
+  deleted: boolean
 }
 
 export enum GroupType {
@@ -81,5 +82,5 @@ export interface GroupInvite {
 }
 
 export function isUser(obj: any): obj is User {
-  return obj.id !== undefined && obj.name !== undefined
+  return obj.id !== undefined && obj.name !== undefined && obj.email !== undefined && obj.photoUrl !== undefined && obj.deleted !== undefined
 }

@@ -3,6 +3,7 @@ import { auth } from './firebase.web'
 import { queryClient } from './queryClient'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
+import { deleteUser as remoteDeleteUser } from '@database/deleteUser'
 import { AuthListener } from '@type/auth'
 import { getLocales } from 'expo-localization'
 import { usePathname, useRouter } from 'expo-router'
@@ -27,7 +28,7 @@ function createUser(user: FirebaseUser | null): User | null {
     const uid = user.uid
     const name = user.displayName || user.email?.split('@')[0] || 'Anonymous'
     const photoUrl = user.photoURL || ''
-    return { name, email: user.email!, id: uid, photoUrl }
+    return { name, email: user.email!, id: uid, photoUrl, deleted: false }
   }
 
   return null
@@ -135,7 +136,7 @@ export async function reauthenticate() {
 }
 
 export async function deleteUser() {
-  await sleep(1000)
+  await remoteDeleteUser()
   console.log('User deleted')
 }
 
