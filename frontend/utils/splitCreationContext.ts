@@ -13,7 +13,7 @@ export enum SplitMethod {
 
 export interface SplitCreationContextArguments {
   participants?: UserWithValue[]
-  paidByEmail?: string
+  paidById?: string
   splitType?: SplitMethod
   title?: string
   totalAmount?: string
@@ -22,7 +22,7 @@ export interface SplitCreationContextArguments {
 
 class SplitCreationContext {
   participants: UserWithValue[] | null = null
-  paidByEmail: string | null = null
+  paidById: string | null = null
   splitType: SplitMethod | null = null
   title: string | null = null
   totalAmount: string | null = null
@@ -30,7 +30,7 @@ class SplitCreationContext {
 
   constructor(args: SplitCreationContextArguments) {
     this.participants = args.participants ?? null
-    this.paidByEmail = args.paidByEmail ?? null
+    this.paidById = args.paidById ?? null
     this.splitType = args.splitType ?? null
     this.title = args.title ?? null
     this.totalAmount = args.totalAmount ?? null
@@ -38,12 +38,12 @@ class SplitCreationContext {
   }
 
   get paidByIndex(): number | undefined {
-    if (this.participants === null || this.paidByEmail === null) {
+    if (this.participants === null || this.paidById === null) {
       return undefined
     }
 
     const index = this.participants.findIndex((participant) => {
-      return participant.user.email === this.paidByEmail
+      return participant.user.id === this.paidById
     })
 
     return index === -1 ? undefined : index
@@ -76,9 +76,7 @@ class SplitCreationContext {
     return users.map((user, index) => {
       const amount = this.participants![index].value!
       const change =
-        user.email === this.paidByEmail
-          ? Number(this.totalAmount) - Number(amount)
-          : -Number(amount)
+        user.id === this.paidById ? Number(this.totalAmount) - Number(amount) : -Number(amount)
 
       return {
         ...user,
@@ -89,7 +87,7 @@ class SplitCreationContext {
 
   async buildSplitPreview(): Promise<SplitWithUsers> {
     const users = await this.getParticipantsData()
-    const paidById = users.find((user) => user.email === this.paidByEmail)?.id
+    const paidById = this.paidById
 
     if (!paidById) {
       throw new TranslatableError('splitValidation.payerNotFound')

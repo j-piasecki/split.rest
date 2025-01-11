@@ -159,7 +159,7 @@ function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId:
           onPress={() => {
             beginNewSplit({
               participants: result.map((user) => ({ user: user })),
-              paidByEmail: result[0].email,
+              paidById: result[0].id,
             })
             router.navigate(`/group/${groupId}/addSplit`)
           }}

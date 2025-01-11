@@ -10,7 +10,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupInfo, User } from 'shared'
+import { GroupInfo, TranslatableError, User } from 'shared'
 
 function initialEntriesFromContext(currentUser: User): SplitEntryData[] {
   const splitContext = getSplitCreationContext()
@@ -39,18 +39,23 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
     try {
       setWaiting(true)
       const { sumToSave } = await validateSplitForm(form)
+      const paidBy = form.entries[form.paidByIndex]
 
-      getSplitCreationContext().participants = form.entries
+      if (typeof paidBy.userOrEmail === 'string') {
+        setError(new TranslatableError('splitValidation.thePayerDataMustBeFilledIn'))
+        return
+      }
+
+      const userEntries = form.entries
         .filter((entry) => typeof entry.userOrEmail !== 'string')
         .map((entry) => ({
           user: entry.userOrEmail as User,
           value: entry.amount,
         }))
 
-      const paidBy = form.entries[form.paidByIndex]
+      getSplitCreationContext().participants = userEntries
 
-      getSplitCreationContext().paidByEmail =
-        typeof paidBy.userOrEmail === 'string' ? paidBy.userOrEmail : paidBy.userOrEmail.email
+      getSplitCreationContext().paidById = paidBy.userOrEmail.id
       getSplitCreationContext().title = form.title
       getSplitCreationContext().totalAmount = sumToSave.toFixed(2)
 

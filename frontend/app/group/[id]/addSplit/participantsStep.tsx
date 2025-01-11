@@ -45,28 +45,27 @@ function ParticipansPicker({ user }: { user: User }) {
   const [error, setError] = useTranslatedError()
 
   function submit() {
-    const userEntries = entries.filter((entry) => typeof entry.userOrEmail !== 'string')
+    const userEntries = entries
+      .filter((entry) => typeof entry.userOrEmail !== 'string')
+      .map((entry) => ({
+        user: entry.userOrEmail as User,
+        selected: entry.selected,
+      }))
 
     if (userEntries.length < 2) {
       setError(new TranslatableError('splitValidation.atLeastTwoEntries'))
       return
     }
 
-    const payer = userEntries.find((entry) => entry.selected)?.userOrEmail as User | undefined
-    const payerEmail = payer?.email
-
-    if (!payerEmail) {
+    const payer = userEntries.find((entry) => entry.selected)?.user
+    if (!payer) {
       setError(new TranslatableError('splitValidation.thePayerDataMustBeFilledIn'))
       return
     }
 
-    getSplitCreationContext().participants = userEntries
-      .map((entry) => ({
-        user: entry.userOrEmail as User,
-      }))
-      .filter((entry) => entry.user)
+    getSplitCreationContext().participants = userEntries.filter((entry) => entry.user)
 
-    getSplitCreationContext().paidByEmail = payerEmail
+    getSplitCreationContext().paidById = payer.id
 
     router.navigate(`/group/${id}/addSplit/summary`)
   }
