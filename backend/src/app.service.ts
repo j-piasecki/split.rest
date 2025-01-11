@@ -1,6 +1,6 @@
 import { DatabaseService } from './database.service'
 import { BadRequestException } from './errors/BadRequestException'
-import { downloadProfilePicture } from './profilePicture'
+import { deleteProfilePicture, downloadProfilePicture } from './profilePicture'
 import { Injectable } from '@nestjs/common'
 import * as fs from 'fs'
 import {
@@ -221,5 +221,15 @@ export class AppService {
 
   async setGroupInviteRejected(callerId: string, args: SetGroupInviteRejectedArguments) {
     return await this.databaseService.setGroupInviteRejected(callerId, args)
+  }
+
+  async deleteUser(callerId: string) {
+    try {
+      await deleteProfilePicture(callerId)
+    } catch {
+      // fail silently when profile picture deletion fails
+    }
+
+    return await this.databaseService.deleteUser(callerId)
   }
 }

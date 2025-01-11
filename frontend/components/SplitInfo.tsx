@@ -2,19 +2,13 @@ import { Icon, IconName } from '@components/Icon'
 import { Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
-import { getUserById } from '@database/getUserById'
+import { useUserById } from '@hooks/database/useUserById'
 import { useTheme } from '@styling/theme'
 import { CurrencyUtils } from '@utils/CurrencyUtils'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import {
-  GroupInfo,
-  LanguageTranslationKey,
-  SplitWithUsers,
-  User,
-  UserWithBalanceChange,
-} from 'shared'
+import { GroupInfo, LanguageTranslationKey, SplitWithUsers, UserWithBalanceChange } from 'shared'
 
 function UserRow({
   user,
@@ -28,6 +22,7 @@ function UserRow({
   last?: boolean
 }) {
   const theme = useTheme()
+  const { t } = useTranslation()
 
   const paidByThis = splitInfo.paidById === user.id
   let paidInThisSplit = user.change
@@ -64,7 +59,12 @@ function UserRow({
         >
           {user.name}
         </Text>
-        <Text style={{ color: theme.colors.outline, fontSize: 12 }}>{user.email}</Text>
+        {/* TODO: show emails only in case of name conflict */}
+        {(user.deleted || user.email) && (
+          <Text style={{ color: theme.colors.outline, fontSize: 12 }}>
+            {user.deleted ? t('deletedUser') : user.email}
+          </Text>
+        )}
       </View>
       <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 20 }}>
         {CurrencyUtils.format(paidInThisSplit, groupInfo?.currency)}
@@ -100,11 +100,7 @@ function IconInfoText({ icon, translationKey, values, userIdPhoto }: EditInfoTex
 
 function EditInfo({ splitInfo }: { splitInfo: SplitWithUsers }) {
   const { t } = useTranslation()
-  const [createdBy, setCreatedBy] = useState<User | null>(null)
-
-  useEffect(() => {
-    getUserById(splitInfo.createdById).then(setCreatedBy)
-  }, [splitInfo.createdById])
+  const { data: createdBy } = useUserById(splitInfo.createdById)
 
   if (splitInfo.version === 1) {
     return (

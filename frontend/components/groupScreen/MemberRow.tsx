@@ -57,7 +57,8 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
   const { mutate: setGroupAdminMutation } = useSetGroupAdminMutation(info.id, member.id)
 
   const hasContextActions = permissions?.canManageAccess() || permissions?.canManageAdmins()
-  const contextMenuDisabled = member.id === user?.id || iconOnly || !hasContextActions
+  const contextMenuDisabled =
+    member.deleted || member.id === user?.id || iconOnly || !hasContextActions
 
   return (
     <ContextMenu
@@ -122,9 +123,20 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
             <View style={{ flex: 1, justifyContent: 'center' }}>
               <Text
                 selectable={false}
-                style={{ fontSize: 20, fontWeight: '700', color: theme.colors.onSurface }}
+                style={{ fontSize: 20, fontWeight: 700, color: theme.colors.onSurface }}
               >
                 {member.name}
+                {member.deleted && (
+                  <Text
+                    style={{
+                      marginLeft: 8,
+                      color: theme.colors.outline,
+                      fontWeight: 200,
+                    }}
+                  >
+                    {t('deletedUser')}
+                  </Text>
+                )}
               </Text>
             </View>
             <View style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: 100 }}>

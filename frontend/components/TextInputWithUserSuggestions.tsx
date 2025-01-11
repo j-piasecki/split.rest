@@ -18,6 +18,7 @@ interface SuggestionProps {
 
 function Suggestion({ user, hovered, pressed }: SuggestionProps) {
   const theme = useTheme()
+  const { t } = useTranslation()
 
   return (
     <View
@@ -38,7 +39,9 @@ function Suggestion({ user, hovered, pressed }: SuggestionProps) {
         <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 500 }}>
           {user.name}
         </Text>
-        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}>{user.email}</Text>
+        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}>
+          {user.deleted ? t('deletedUser') : user.email}
+        </Text>
       </View>
     </View>
   )

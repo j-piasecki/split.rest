@@ -22,6 +22,7 @@ export async function getUserGroupInvites(
           users.name AS inviter_name,
           users.email AS inviter_email,
           users.photo_url AS inviter_photo_url,
+          users.deleted AS inviter_deleted,
           group_invites.created_at,
           group_invites.rejected
         FROM groups JOIN group_invites ON groups.id = group_invites.group_id JOIN users ON users.id = group_invites.created_by
@@ -40,6 +41,7 @@ export async function getUserGroupInvites(
       name: row.inviter_name,
       email: row.inviter_email,
       photoUrl: row.inviter_photo_url,
+      deleted: row.inviter_deleted,
     },
     groupInfo: {
       id: row.id,

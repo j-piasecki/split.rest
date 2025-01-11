@@ -41,7 +41,7 @@ export function SplitEntry({
 
   function scrollToThis() {
     if (layout.current && parentLayout?.current) {
-      const targetScroll = parentLayout.current.y + layout.current.y - 50
+      const targetScroll = parentLayout.current.y + layout.current.y
       setTimeout(() => {
         scrollRef?.current?.scrollTo({
           y: targetScroll,
@@ -80,11 +80,14 @@ export function SplitEntry({
 
       <TextInputUserPicker
         groupId={groupId}
-        value={typeof entry.userOrEmail === 'string' ? entry.userOrEmail : entry.userOrEmail.email}
+        value={
+          typeof entry.userOrEmail === 'string'
+            ? entry.userOrEmail
+            : (entry.userOrEmail.email ?? '')
+        }
         selectTextOnFocus
         focusIndex={focusIndex}
         containerStyle={{ flex: 5 }}
-        editable={typeof entry.userOrEmail === 'string' || entry.userOrEmail.email !== undefined}
         user={typeof entry.userOrEmail === 'string' ? undefined : entry.userOrEmail}
         onClearSelection={() => updateForm({ type: 'setUser', index, user: undefined })}
         onSuggestionSelect={(user) => {

@@ -2,10 +2,11 @@ import { auth, authObj } from './firebase'
 import { queryClient } from './queryClient'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
+import { deleteUser as remoteDeleteUser } from '@database/deleteUser'
 import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication'
 import { FirebaseAuthTypes, firebase } from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
-import { usePathname, useRouter } from 'expo-router'
+import { router, usePathname, useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Platform } from 'react-native'
 import uuid from 'react-native-uuid'
@@ -22,7 +23,7 @@ function createUser(user: FirebaseAuthTypes.User | null): User | null {
     const uid = user.uid
     const name = user.displayName || user.email?.split('@')[0] || 'Anonymous'
     const photoUrl = user.photoURL || ''
-    return { name, email: user.email!, id: uid, photoUrl }
+    return { name, email: user.email!, id: uid, photoUrl, deleted: false }
   }
 
   return null
@@ -69,21 +70,59 @@ export function useAuth(redirectToIndex = true) {
   return user
 }
 
-export async function signInWithGoogle() {
-  // Check if your device supports Google Play
-  await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true })
-  console.log('Google Play Services are available')
-  // Get the users ID token
-  const signInResult = await GoogleSignin.signIn()
-  console.log(signInResult)
-  // Try the new style of google-sign in result, from v13+ of that module
-  const idToken = signInResult.data?.idToken
-  if (!idToken) {
-    throw new TranslatableError('api.auth.missingToken')
+export async function reauthenticate(skipAppleSignIn = false) {
+  if (!auth.currentUser) {
+    throw new TranslatableError('api.mustBeLoggedIn')
   }
 
-  // Create a Google credential with the token
-  const googleCredential = authObj.GoogleAuthProvider.credential(idToken)
+  const providerId = auth.currentUser.providerData[0].providerId
+
+  if (providerId === 'google.com') {
+    const googleCredential = await getGoogleCredential()
+    await auth.currentUser?.reauthenticateWithCredential(googleCredential)
+  } else if (providerId === 'apple.com') {
+    if (!skipAppleSignIn) {
+      const appleCredential = await getAppleCredential()
+      await auth.currentUser?.reauthenticateWithCredential(appleCredential)
+    }
+  } else {
+    throw new TranslatableError('api.auth.unknownProvider')
+  }
+}
+
+export async function deleteUser() {
+  if (!auth.currentUser) {
+    throw new TranslatableError('api.mustBeLoggedIn')
+  }
+
+  await remoteDeleteUser()
+
+  if (Platform.OS === 'ios') {
+    const providerId = auth.currentUser.providerData[0].providerId
+
+    if (providerId === 'apple.com') {
+      const { authorizationCode } = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.REFRESH,
+      })
+
+      // Ensure Apple returned an authorizationCode
+      if (!authorizationCode) {
+        throw new Error('Apple Revocation failed - no authorizationCode returned')
+      }
+
+      // Revoke the token
+      await auth.revokeToken(authorizationCode)
+    }
+  }
+
+  await auth.currentUser?.delete()
+
+  queryClient.clear()
+  router.dismissAll()
+}
+
+export async function signInWithGoogle() {
+  const googleCredential = await getGoogleCredential()
 
   // Sign-in the user with the credential
   return auth
@@ -98,6 +137,37 @@ export async function signInWithGoogle() {
 }
 
 export async function signInWithApple() {
+  const appleCredential = await getAppleCredential()
+  const userCredential = await firebase.auth().signInWithCredential(appleCredential)
+
+  // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
+  console.warn(`Firebase authenticated via Apple, UID: ${userCredential.user.uid}`)
+}
+
+export function logout() {
+  auth.signOut()
+  queryClient.clear()
+}
+
+async function getGoogleCredential() {
+  await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true })
+  console.log('Google Play Services are available')
+  // Get the users ID token
+  const signInResult = await GoogleSignin.signIn()
+  console.log(signInResult)
+  // Try the new style of google-sign in result, from v13+ of that module
+  const idToken = signInResult.data?.idToken
+  if (!idToken) {
+    throw new TranslatableError('api.auth.missingToken')
+  }
+
+  // Create a Google credential with the token
+  const googleCredential = authObj.GoogleAuthProvider.credential(idToken)
+
+  return googleCredential
+}
+
+async function getAppleCredential() {
   if (Platform.OS === 'ios') {
     // 1). start a apple sign-in request
     const appleAuthRequestResponse = await appleAuth.performRequest({
@@ -113,15 +183,9 @@ export async function signInWithApple() {
       // 3). create a Firebase `AppleAuthProvider` credential
       const appleCredential = firebase.auth.AppleAuthProvider.credential(identityToken, nonce)
 
-      // 4). use the created `AppleAuthProvider` credential to start a Firebase auth request,
-      //     in this example `signInWithCredential` is used, but you could also call `linkWithCredential`
-      //     to link the account to an existing user
-      const userCredential = await firebase.auth().signInWithCredential(appleCredential)
-
-      // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
-      console.warn(`Firebase authenticated via Apple, UID: ${userCredential.user.uid}`)
+      return appleCredential
     } else {
-      // handle this - retry?
+      throw new TranslatableError('api.auth.missingToken')
     }
   } else {
     // Generate secure, random values for state and nonce
@@ -161,20 +225,9 @@ export async function signInWithApple() {
         rawNonce
       )
 
-      // 4). use the created `AppleAuthProvider` credential to start a Firebase auth request,
-      //     in this example `signInWithCredential` is used, but you could also call `linkWithCredential`
-      //     to link the account to an existing user
-      const userCredential = await firebase.auth().signInWithCredential(appleCredential)
-
-      // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
-      console.warn(`Firebase authenticated via Apple, UID: ${userCredential.user.uid}`)
+      return appleCredential
     } else {
-      // handle this - retry?
+      throw new TranslatableError('api.auth.missingToken')
     }
   }
-}
-
-export function logout() {
-  auth.signOut()
-  queryClient.clear()
 }

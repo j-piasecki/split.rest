@@ -31,7 +31,8 @@ export async function getSplitInfo(
           split_participants.change, 
           users.name, 
           users.email, 
-          users.photo_url 
+          users.photo_url,
+          users.deleted 
         FROM 
           users 
         INNER JOIN 
@@ -62,6 +63,7 @@ export async function getSplitInfo(
       email: p.email,
       photoUrl: p.photo_url,
       change: p.change,
+      deleted: p.deleted,
     })),
   }
 }

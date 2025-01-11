@@ -98,17 +98,10 @@ export interface GetSplitInfoArguments {
   splitId: number
 }
 
-export interface GetBalancesWithIdsArguments {
+export interface GetBalancesArguments {
   groupId: number
   users: string[]
 }
-
-export interface GetBalancesWithEmailsArguments {
-  groupId: number
-  emails: string[]
-}
-
-export type GetBalancesArguments = GetBalancesWithIdsArguments | GetBalancesWithEmailsArguments
 
 export interface SetGroupNameArguments {
   groupId: number

@@ -81,14 +81,13 @@ export function PeoplePicker({
             <TextInputUserPicker
               groupId={groupId}
               value={
-                typeof entry.userOrEmail === 'string' ? entry.userOrEmail : entry.userOrEmail.email
+                typeof entry.userOrEmail === 'string'
+                  ? entry.userOrEmail
+                  : (entry.userOrEmail.email ?? undefined)
               }
               user={typeof entry.userOrEmail === 'string' ? undefined : entry.userOrEmail}
               selectTextOnFocus
               focusIndex={index}
-              editable={
-                typeof entry.userOrEmail === 'string' || entry.userOrEmail.email !== undefined
-              }
               filterSuggestions={(suggestions) =>
                 suggestions.filter(
                   (s) =>

@@ -17,3 +17,7 @@ export async function downloadProfilePictureToBase64(url: string, id: string) {
 
   return 'data:' + contentType + ';base64,' + Buffer.from(buffer).toString('base64')
 }
+
+export async function deleteProfilePicture(id: string) {
+  fs.unlinkSync(`public/${id}.png`)
+}

@@ -7,6 +7,7 @@
   "noSplits": "No splits",
   "noMembers": "No members",
   "checkingIfYouAreLoggedIn": "Checking if you're logged in",
+  "deletedUser": "Deleted user",
 
   "index": {
     "headline": "Pay once and <Styled>split</Styled> between the <Styled>rest</Styled> of the group",
@@ -45,9 +46,11 @@
     "invalidArguments": "Invalid arguments",
     "mustBeLoggedIn": "You must be logged in to do that",
     "auth": {
+      "unknownProvider": "Unknown provider",
       "missingToken": "Missing token",
       "invalidToken": "Invalid token",
-      "expiredToken": "Expired token"
+      "expiredToken": "Expired token",
+      "tryAgain": "An error occured, please try again"
     },
     "insufficientPermissions": {
       "group": {
@@ -111,6 +114,13 @@
       "light": "Light",
       "dark": "Dark",
       "system": "System"
+    },
+    "deleteAccount": {
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleteAccount": "Delete acount",
+      "doYouWantToDeleteAccount": "Do you want to delete your account?",
+      "deletionNotReversible": "This action is not reversible"
     }
   },
 

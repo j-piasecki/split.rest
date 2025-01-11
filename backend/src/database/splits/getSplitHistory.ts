@@ -64,7 +64,8 @@ export async function getSplitHistory(
               split_participants_edits.change, 
               users.name, 
               users.email, 
-              users.photo_url 
+              users.photo_url,
+              users.deleted 
             FROM 
               users 
             INNER JOIN 
@@ -84,6 +85,7 @@ export async function getSplitHistory(
         email: row.email,
         photoUrl: row.photo_url,
         change: row.change,
+        deleted: row.deleted,
       }))
 
       splitHistory.push({

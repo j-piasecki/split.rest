@@ -3,9 +3,9 @@ import { GetBalancesArguments, UserWithBalanceChange } from 'shared'
 
 export async function getBalances(
   groupId: number,
-  emails: string[]
+  ids: string[]
 ): Promise<UserWithBalanceChange[]> {
-  const args: GetBalancesArguments = { groupId, emails }
+  const args: GetBalancesArguments = { groupId, users: ids }
 
   try {
     return (await makeRequest('GET', 'getBalances', args)) ?? []
