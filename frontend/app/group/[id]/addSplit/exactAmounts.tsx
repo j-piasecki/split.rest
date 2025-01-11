@@ -20,7 +20,7 @@ function initialEntriesFromContext(currentUser: User): SplitEntryData[] {
       ? [{ userOrEmail: currentUser, amount: '' }]
       : splitContext.participants.map(
           (participant): SplitEntryData => ({
-            userOrEmail: participant.userOrEmail,
+            userOrEmail: participant.user,
             amount: '',
           })
         )
@@ -40,10 +40,12 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
       setWaiting(true)
       const { sumToSave } = await validateSplitForm(form)
 
-      getSplitCreationContext().participants = form.entries.map((entry) => ({
-        userOrEmail: entry.userOrEmail,
-        value: entry.amount,
-      }))
+      getSplitCreationContext().participants = form.entries
+        .filter((entry) => typeof entry.userOrEmail !== 'string')
+        .map((entry) => ({
+          user: entry.userOrEmail as User,
+          value: entry.amount,
+        }))
 
       const paidBy = form.entries[form.paidByIndex]
 

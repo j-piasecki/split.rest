@@ -19,7 +19,7 @@ function getInitialEntries(user: User): PersonEntry[] {
   if (savedParticipants) {
     const result = savedParticipants.map(
       (participant, index): PersonEntry => ({
-        userOrEmail: participant.userOrEmail,
+        userOrEmail: participant.user,
         selected: index === getSplitCreationContext().paidByIndex,
       })
     )
@@ -45,24 +45,26 @@ function ParticipansPicker({ user }: { user: User }) {
   const [error, setError] = useTranslatedError()
 
   function submit() {
-    if (entries.length < 3) {
+    const userEntries = entries.filter((entry) => typeof entry.userOrEmail !== 'string')
+
+    if (userEntries.length < 2) {
       setError(new TranslatableError('splitValidation.atLeastTwoEntries'))
       return
     }
 
-    const payer = entries.find((entry) => entry.selected)?.userOrEmail
-    const payerEmail = typeof payer === 'string' ? payer : payer?.email
+    const payer = userEntries.find((entry) => entry.selected)?.userOrEmail as User | undefined
+    const payerEmail = payer?.email
 
     if (!payerEmail) {
       setError(new TranslatableError('splitValidation.thePayerDataMustBeFilledIn'))
       return
     }
 
-    getSplitCreationContext().participants = entries
+    getSplitCreationContext().participants = userEntries
       .map((entry) => ({
-        userOrEmail: entry.userOrEmail,
+        user: entry.userOrEmail as User,
       }))
-      .filter((entry) => entry.userOrEmail)
+      .filter((entry) => entry.user)
 
     getSplitCreationContext().paidByEmail = payerEmail
 

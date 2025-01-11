@@ -158,7 +158,7 @@ function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId:
           title={t('roulette.createSplit')}
           onPress={() => {
             beginNewSplit({
-              participants: result.map((user) => ({ userOrEmail: user })),
+              participants: result.map((user) => ({ user: user })),
               paidByEmail: result[0].email,
             })
             router.navigate(`/group/${groupId}/addSplit`)

@@ -1,9 +1,8 @@
 import { auth } from './firebase'
-import { getUserByEmail } from '@database/getUserByEmail'
 import { SplitType, SplitWithUsers, TranslatableError, User, UserWithBalanceChange } from 'shared'
 
 interface UserWithValue {
-  userOrEmail: User | string
+  user: User
   value?: string
 }
 
@@ -44,11 +43,7 @@ class SplitCreationContext {
     }
 
     const index = this.participants.findIndex((participant) => {
-      if (typeof participant.userOrEmail === 'string') {
-        return participant.userOrEmail === this.paidByEmail
-      }
-
-      return participant.userOrEmail.email === this.paidByEmail
+      return participant.user.email === this.paidByEmail
     })
 
     return index === -1 ? undefined : index
@@ -59,21 +54,9 @@ class SplitCreationContext {
       return []
     }
 
-    const asyncUsers = this.participants.map(async (participant) => {
-      if (typeof participant.userOrEmail === 'string') {
-        const user = await getUserByEmail(participant.userOrEmail)
-
-        if (!user) {
-          throw new TranslatableError('api.notFound.user')
-        }
-
-        return user
-      }
-
-      return participant.userOrEmail
+    const users = this.participants.map((participant) => {
+      return participant.user
     })
-
-    const users = await Promise.all(asyncUsers)
 
     if (this.splitType === SplitMethod.Equal) {
       const amount = Math.floor((Number(this.totalAmount) * 100) / users.length) / 100
