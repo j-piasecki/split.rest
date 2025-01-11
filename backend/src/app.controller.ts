@@ -264,7 +264,6 @@ export class AppController {
     const args: GetBalancesArguments = {
       groupId: parseInt(query.groupId),
       users: query.users?.split(','),
-      emails: query.emails?.split(','),
     }
 
     if (!isGetBalancesArguments(args)) {

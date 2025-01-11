@@ -35,21 +35,18 @@ function Roulette({ groupId, setResult, user }: RouletteProps) {
 
   async function submit() {
     setError(null)
-    const filledEmails = entries
+    const filledUsers = entries
       .filter((entry) => typeof entry.userOrEmail !== 'string')
-      .map((entry) => (entry.userOrEmail as User).email)
-      .filter((email) => email !== null)
+      .map((entry) => (entry.userOrEmail as User).id)
 
-    if (filledEmails.length < 2) {
+    if (filledUsers.length < 2) {
       setError(new TranslatableError('roulette.youNeedToAddAtLeastTwoUsers'))
       return
     }
 
     setLoading(true)
     try {
-      const balances = await getBalances(groupId, filledEmails)
-
-      console.log(balances)
+      const balances = await getBalances(groupId, filledUsers)
 
       if (balances.length !== entries.length - 1) {
         // TODO: show which user was not found

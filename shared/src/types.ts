@@ -82,5 +82,11 @@ export interface GroupInvite {
 }
 
 export function isUser(obj: any): obj is User {
-  return obj.id !== undefined && obj.name !== undefined && obj.email !== undefined && obj.photoUrl !== undefined && obj.deleted !== undefined
+  return (
+    obj.id !== undefined &&
+    obj.name !== undefined &&
+    obj.email !== undefined &&
+    obj.photoUrl !== undefined &&
+    obj.deleted !== undefined
+  )
 }

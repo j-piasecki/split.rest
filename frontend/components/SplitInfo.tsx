@@ -22,6 +22,7 @@ function UserRow({
   last?: boolean
 }) {
   const theme = useTheme()
+  const { t } = useTranslation()
 
   const paidByThis = splitInfo.paidById === user.id
   let paidInThisSplit = user.change
@@ -59,8 +60,10 @@ function UserRow({
           {user.name}
         </Text>
         {/* TODO: show emails only in case of name conflict */}
-        {user.email && (
-          <Text style={{ color: theme.colors.outline, fontSize: 12 }}>{user.email}</Text>
+        {(user.deleted || user.email) && (
+          <Text style={{ color: theme.colors.outline, fontSize: 12 }}>
+            {user.deleted ? t('deletedUser') : user.email}
+          </Text>
         )}
       </View>
       <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 20 }}>

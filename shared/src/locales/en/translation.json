@@ -7,6 +7,7 @@
   "noSplits": "No splits",
   "noMembers": "No members",
   "checkingIfYouAreLoggedIn": "Checking if you're logged in",
+  "deletedUser": "Deleted user",
 
   "index": {
     "headline": "Pay once and <Styled>split</Styled> between the <Styled>rest</Styled> of the group",

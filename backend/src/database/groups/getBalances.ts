@@ -1,12 +1,6 @@
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
-import {
-  GetBalancesArguments,
-  UserWithBalanceChange,
-  isGetBalancesWithEmailsArguments,
-  isGetBalancesWithIdsArguments,
-} from 'shared'
-import { BadRequestException } from 'src/errors/BadRequestException'
+import { GetBalancesArguments, UserWithBalanceChange } from 'shared'
 import { NotFoundException } from 'src/errors/NotFoundException'
 
 export async function getBalances(
@@ -18,11 +12,8 @@ export async function getBalances(
     throw new NotFoundException('api.notFound.group')
   }
 
-  let balances: Record<string, any>[] | null = null
-  let targetLength: number | null = null
-
-  if (isGetBalancesWithIdsArguments(args)) {
-    const result = await pool.query(
+  const rows = (
+    await pool.query(
       `
         SELECT 
           users.id,
@@ -38,39 +29,13 @@ export async function getBalances(
       `,
       [args.groupId, args.users]
     )
-    balances = result.rows
-    targetLength = result.rowCount
-  } else if (isGetBalancesWithEmailsArguments(args)) {
-    const result = await pool.query(
-      `
-        SELECT 
-          users.id,
-          users.name, 
-          users.email,
-          users.photo_url,
-          users.deleted,
-          group_members.balance
-        FROM group_members
-        INNER JOIN users ON group_members.user_id = users.id 
-        WHERE group_members.group_id = $1
-          AND users.email = ANY($2)
-        ORDER BY group_members.balance ASC
-      `,
-      [args.groupId, args.emails]
-    )
-    balances = result.rows
-    targetLength = result.rowCount
-  }
+  ).rows
 
-  if (targetLength === null || balances === null) {
-    throw new BadRequestException('api.invalidArguments')
-  }
-
-  if (balances.length !== targetLength) {
+  if (args.users.length !== rows.length) {
     throw new NotFoundException('api.notFound.user')
   }
 
-  return balances.map((balance) => ({
+  return rows.map((balance) => ({
     id: balance.id,
     name: balance.name,
     email: balance.email,

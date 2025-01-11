@@ -7,8 +7,6 @@ import {
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
-  GetBalancesWithEmailsArguments,
-  GetBalancesWithIdsArguments,
   GetGroupInfoArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberPermissionsArguments,
@@ -126,12 +124,8 @@ export function isGetBalancesArguments(obj: any): obj is GetBalancesArguments {
   )
 }
 
-export function isGetBalancesWithIdsArguments(obj: any): obj is GetBalancesWithIdsArguments {
+export function isGetBalancesWithIdsArguments(obj: any): obj is GetBalancesArguments {
   return obj.groupId !== undefined && obj.users !== undefined && Array.isArray(obj.users)
-}
-
-export function isGetBalancesWithEmailsArguments(obj: any): obj is GetBalancesWithEmailsArguments {
-  return obj.groupId !== undefined && obj.emails !== undefined && Array.isArray(obj.emails)
 }
 
 export function isDeleteGroupArguments(obj: any): obj is DeleteGroupArguments {
