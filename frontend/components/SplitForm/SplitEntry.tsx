@@ -35,9 +35,7 @@ export function SplitEntry({
 
   const entry = formState.entries[index]
   const showDeleteButton =
-    typeof entry.userOrEmail !== 'string' ||
-    entry.userOrEmail.trim().length > 0 ||
-    entry.amount.trim().length > 0
+    entry.user !== undefined || entry.entry.trim().length > 0 || entry.amount.trim().length > 0
 
   function scrollToThis() {
     if (layout.current && parentLayout?.current) {
@@ -64,7 +62,7 @@ export function SplitEntry({
       }}
     >
       <Pressable
-        disabled={formState.paidByIndex === index || typeof entry.userOrEmail === 'string'}
+        disabled={formState.paidByIndex === index || entry.user === undefined}
         onPress={() => updateForm({ type: 'setPaidBy', index })}
         style={{ marginRight: 8 }}
         tabIndex={-1}
@@ -80,15 +78,11 @@ export function SplitEntry({
 
       <TextInputUserPicker
         groupId={groupId}
-        value={
-          typeof entry.userOrEmail === 'string'
-            ? entry.userOrEmail
-            : (entry.userOrEmail.email ?? '')
-        }
+        value={entry.user?.email ?? entry.entry}
         selectTextOnFocus
         focusIndex={focusIndex}
         containerStyle={{ flex: 5 }}
-        user={typeof entry.userOrEmail === 'string' ? undefined : entry.userOrEmail}
+        user={entry.user}
         onClearSelection={() => updateForm({ type: 'setUser', index, user: undefined })}
         onSuggestionSelect={(user) => {
           updateForm({ type: 'setUser', index, user })
@@ -104,10 +98,8 @@ export function SplitEntry({
         filterSuggestions={(users) =>
           users.filter(
             (u) =>
-              u.email === entry.userOrEmail ||
-              formState.entries.every(
-                (e) => typeof e.userOrEmail === 'string' || e.userOrEmail.email !== u.email
-              )
+              u.email === entry.entry ||
+              formState.entries.every((e) => e.user === undefined || e.user.email !== u.email)
           )
         }
       />

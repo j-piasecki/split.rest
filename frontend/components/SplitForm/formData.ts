@@ -2,8 +2,9 @@ import React, { useReducer } from 'react'
 import { User } from 'shared'
 
 export interface SplitEntryData {
-  userOrEmail: string | User
+  entry: string
   amount: string
+  user?: User
 }
 
 export interface FormData {
@@ -79,15 +80,11 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
         i === action.index
           ? {
               ...entry,
-              userOrEmail:
-                action.user ??
-                (typeof entry.userOrEmail === 'string'
-                  ? entry.userOrEmail
-                  : (entry.userOrEmail.email ?? '')),
+              user: action.user,
+              entry: action.user?.email ?? entry.entry,
             }
           : entry
       )
-      console.log(newState.entries, action)
       return newState
 
     case 'remove':
@@ -96,7 +93,7 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
 
     case 'setEmail':
       newState.entries = newState.entries.map((entry, i) =>
-        i === action.index ? { ...entry, userOrEmail: action.email } : entry
+        i === action.index ? { ...entry, entry: action.email } : entry
       )
       break
 
@@ -108,21 +105,20 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
   }
 
   newState.entries = newState.entries.filter(
-    (entry) => entry.userOrEmail !== '' || entry.amount !== ''
+    (entry) => entry.user !== undefined || entry.entry !== '' || entry.amount !== ''
   )
 
   if (
     newState.entries.length === 0 ||
-    newState.entries[newState.entries.length - 1].userOrEmail !== '' ||
+    newState.entries[newState.entries.length - 1].user !== undefined ||
+    newState.entries[newState.entries.length - 1].entry !== '' ||
     newState.entries[newState.entries.length - 1].amount !== ''
   ) {
-    newState.entries.push({ userOrEmail: '', amount: '' })
+    newState.entries.push({ entry: '', amount: '' })
   }
 
   if (state.entries.length !== newState.entries.length) {
-    const newPaidByIndex = newState.entries.findIndex(
-      (entry) => entry.userOrEmail === paidBy.userOrEmail
-    )
+    const newPaidByIndex = newState.entries.findIndex((entry) => entry.user?.id === paidBy.user?.id)
     newState.paidByIndex = newPaidByIndex === -1 ? 0 : newPaidByIndex
   }
 

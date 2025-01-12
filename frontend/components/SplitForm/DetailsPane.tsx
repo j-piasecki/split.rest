@@ -77,10 +77,7 @@ export function DetailsPane({
             <Trans
               i18nKey='splitInfo.hasPaidText'
               values={{
-                payer:
-                  typeof paidBy.userOrEmail === 'string'
-                    ? paidBy.userOrEmail
-                    : paidBy.userOrEmail.name,
+                payer: paidBy.user?.email ?? paidBy.entry,
                 // eslint-disable-next-line react-compiler/react-compiler
                 amount: CurrencyUtils.format(toBePaid.current, groupInfo.currency),
               }}

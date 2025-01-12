@@ -46,13 +46,18 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
     ...splitInfo.users.map((user) => {
       if (user.id === splitInfo.paidById) {
         return {
-          userOrEmail: user,
+          user: user,
+          entry: user.email ?? '',
           amount: CurrencyUtils.format(Number(splitInfo.total) - Number(user.change)),
         }
       }
-      return { userOrEmail: user, amount: CurrencyUtils.format(-Number(user.change)) }
+      return {
+        user: user,
+        entry: user.email ?? '',
+        amount: CurrencyUtils.format(-Number(user.change)),
+      }
     }),
-    { userOrEmail: '', amount: '' },
+    { entry: '', amount: '' },
   ]
 
   const initialPaidByIndex = splitInfo.users.findIndex((user) => user.id === splitInfo.paidById)

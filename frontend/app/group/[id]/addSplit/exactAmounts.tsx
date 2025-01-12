@@ -15,17 +15,18 @@ import { GroupInfo, TranslatableError, User } from 'shared'
 function initialEntriesFromContext(currentUser: User): SplitEntryData[] {
   const splitContext = getSplitCreationContext()
 
-  const initialEntries =
+  const initialEntries: SplitEntryData[] =
     splitContext.participants === null
-      ? [{ userOrEmail: currentUser, amount: '' }]
+      ? [{ user: currentUser, entry: currentUser.email ?? '', amount: '' }]
       : splitContext.participants.map(
           (participant): SplitEntryData => ({
-            userOrEmail: participant.user,
+            user: participant.user,
+            entry: participant.user.email ?? '',
             amount: '',
           })
         )
 
-  initialEntries.push({ userOrEmail: '', amount: '' })
+  initialEntries.push({ entry: '', amount: '' })
 
   return initialEntries
 }
@@ -41,21 +42,21 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
       const { sumToSave } = await validateSplitForm(form)
       const paidBy = form.entries[form.paidByIndex]
 
-      if (typeof paidBy.userOrEmail === 'string') {
+      if (paidBy.user === undefined) {
         setError(new TranslatableError('splitValidation.thePayerDataMustBeFilledIn'))
         return
       }
 
       const userEntries = form.entries
-        .filter((entry) => typeof entry.userOrEmail !== 'string')
+        .filter((entry) => entry.user !== undefined)
         .map((entry) => ({
-          user: entry.userOrEmail as User,
+          user: entry.user!,
           value: entry.amount,
         }))
 
       getSplitCreationContext().participants = userEntries
 
-      getSplitCreationContext().paidById = paidBy.userOrEmail.id
+      getSplitCreationContext().paidById = paidBy.user.id
       getSplitCreationContext().title = form.title
       getSplitCreationContext().totalAmount = sumToSave.toFixed(2)
 

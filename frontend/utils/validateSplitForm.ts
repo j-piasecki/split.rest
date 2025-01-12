@@ -1,5 +1,5 @@
 import { FormData } from '@components/SplitForm'
-import { BalanceChange, TranslatableError, User } from 'shared'
+import { BalanceChange, TranslatableError } from 'shared'
 
 export interface ValidationResult {
   payerId: string
@@ -28,20 +28,20 @@ export async function validateSplitForm({
     throw new TranslatableError('splitValidation.atLeastTwoEntries')
   }
 
-  for (const { userOrEmail, amount } of entries) {
-    if (userOrEmail === '' && amount === '') {
+  for (const { entry, user, amount } of entries) {
+    if (user === undefined && entry === '' && amount === '') {
       continue
     }
 
-    if (userOrEmail === '' || amount === '') {
+    if (user === undefined || amount === '') {
       throw new TranslatableError('splitValidation.youNeedToFillBothFields')
     }
   }
 
   const entriesWithUsers = entries
-    .filter((entry) => typeof entry.userOrEmail !== 'string')
+    .filter((entry) => entry.user !== undefined)
     .map((entry) => ({
-      user: entry.userOrEmail as User,
+      user: entry.user!,
       amount: entry.amount,
     }))
 

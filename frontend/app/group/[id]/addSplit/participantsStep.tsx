@@ -19,12 +19,13 @@ function getInitialEntries(user: User): PersonEntry[] {
   if (savedParticipants) {
     const result = savedParticipants.map(
       (participant, index): PersonEntry => ({
-        userOrEmail: participant.user,
+        user: participant.user,
         selected: index === getSplitCreationContext().paidByIndex,
+        entry: participant.user?.email ?? '',
       })
     )
 
-    result.push({ userOrEmail: '', selected: false })
+    result.push({ entry: '', selected: false })
 
     if (getSplitCreationContext().paidByIndex === undefined) {
       result[0].selected = true
@@ -33,7 +34,7 @@ function getInitialEntries(user: User): PersonEntry[] {
     return result
   }
 
-  return [{ userOrEmail: user, selected: true }, { userOrEmail: '' }]
+  return [{ user: user, entry: user.email ?? '', selected: true }, { entry: '' }]
 }
 
 function ParticipansPicker({ user }: { user: User }) {
@@ -46,9 +47,9 @@ function ParticipansPicker({ user }: { user: User }) {
 
   function submit() {
     const userEntries = entries
-      .filter((entry) => typeof entry.userOrEmail !== 'string')
+      .filter((entry) => entry.user !== undefined)
       .map((entry) => ({
-        user: entry.userOrEmail as User,
+        user: entry.user!,
         selected: entry.selected,
       }))
 

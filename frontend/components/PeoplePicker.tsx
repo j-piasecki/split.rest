@@ -7,7 +7,8 @@ import { Pressable, View } from 'react-native'
 import { User } from 'shared'
 
 export interface PersonEntry {
-  userOrEmail: string | User
+  entry: string
+  user?: User
   selected?: boolean
 }
 
@@ -28,14 +29,14 @@ export function PeoplePicker({
 
   function cleanupEntries(entries: PersonEntry[]): PersonEntry[] {
     const newEntries = entries.filter(
-      (entry) => typeof entry.userOrEmail !== 'string' || entry.userOrEmail.trim() !== ''
+      (entry) => entry.user !== undefined || entry.entry.trim() !== ''
     )
 
     if (newEntries.length === 0) {
-      newEntries.push({ userOrEmail: '' })
+      newEntries.push({ entry: '' })
     }
-    if (newEntries[newEntries.length - 1].userOrEmail !== '') {
-      newEntries.push({ userOrEmail: '' })
+    if (newEntries[newEntries.length - 1].entry !== '' || newEntries[newEntries.length - 1].user) {
+      newEntries.push({ entry: '' })
     }
     if (selectable && newEntries.every((entry) => !entry.selected)) {
       newEntries[0].selected = true
@@ -51,8 +52,7 @@ export function PeoplePicker({
   return (
     <View style={{ gap: 8 }}>
       {entries.map((entry, index) => {
-        const deleteVisible =
-          typeof entry.userOrEmail !== 'string' || entry.userOrEmail.trim().length > 0
+        const deleteVisible = entry.user !== undefined || entry.entry.trim().length > 0
         return (
           <View
             key={index}
@@ -65,7 +65,7 @@ export function PeoplePicker({
           >
             {selectable && (
               <Pressable
-                disabled={entry.selected || typeof entry.userOrEmail === 'string'}
+                disabled={entry.selected || entry.user === undefined}
                 onPress={() => setEntries(entries.map((e, i) => ({ ...e, selected: i === index })))}
                 style={{ marginRight: 8 }}
                 tabIndex={-1}
@@ -80,47 +80,41 @@ export function PeoplePicker({
 
             <TextInputUserPicker
               groupId={groupId}
-              value={
-                typeof entry.userOrEmail === 'string'
-                  ? entry.userOrEmail
-                  : (entry.userOrEmail.email ?? undefined)
-              }
-              user={typeof entry.userOrEmail === 'string' ? undefined : entry.userOrEmail}
+              value={entry.user?.email ?? entry.entry}
+              user={entry.user}
               selectTextOnFocus
               focusIndex={index}
               filterSuggestions={(suggestions) =>
                 suggestions.filter(
-                  (s) =>
-                    (typeof entry.userOrEmail === 'string' && s.email === entry.userOrEmail) ||
-                    (typeof entry.userOrEmail !== 'string' &&
-                      s.email === entry.userOrEmail.email) ||
+                  (suggestion) =>
+                    suggestion.email === entry.entry ||
                     entries.find(
-                      (e) =>
-                        (typeof e.userOrEmail === 'string' && e.userOrEmail === s.email) ||
-                        (typeof e.userOrEmail !== 'string' && e.userOrEmail.email === s.email)
+                      (e) => e.entry === suggestion.email || e.user?.email === suggestion.email
                     ) === undefined
                 )
               }
               onChangeText={(val) => {
                 const newEntries = [...entries]
-                newEntries[index] = { userOrEmail: val, selected: entry.selected }
+                newEntries[index] = { entry: val, selected: entry.selected, user: entry.user }
 
                 setEntries(newEntries)
               }}
               onSuggestionSelect={(user) => {
                 const newEntries = [...entries]
-                newEntries[index] = { userOrEmail: user, selected: entry.selected }
+                newEntries[index] = {
+                  user: user,
+                  selected: entry.selected,
+                  entry: user.email ?? '',
+                }
 
                 setEntries(newEntries)
               }}
               onClearSelection={() => {
                 const newEntries = [...entries]
                 newEntries[index] = {
-                  userOrEmail:
-                    typeof entry.userOrEmail === 'string'
-                      ? entry.userOrEmail
-                      : (entry.userOrEmail.email ?? ''),
+                  entry: entry.entry,
                   selected: entry.selected,
+                  user: undefined,
                 }
 
                 setEntries(newEntries)

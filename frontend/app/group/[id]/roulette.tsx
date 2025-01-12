@@ -27,8 +27,8 @@ interface RouletteProps {
 function Roulette({ groupId, setResult, user }: RouletteProps) {
   const { t } = useTranslation()
   const [entries, setEntries] = useState<PersonEntry[]>([
-    { userOrEmail: user },
-    { userOrEmail: '' },
+    { user: user, entry: user.email ?? '' },
+    { entry: '' },
   ])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useTranslatedError()
@@ -36,8 +36,8 @@ function Roulette({ groupId, setResult, user }: RouletteProps) {
   async function submit() {
     setError(null)
     const filledUsers = entries
-      .filter((entry) => typeof entry.userOrEmail !== 'string')
-      .map((entry) => (entry.userOrEmail as User).id)
+      .filter((entry) => entry.user !== undefined)
+      .map((entry) => entry.user!.id)
 
     if (filledUsers.length < 2) {
       setError(new TranslatableError('roulette.youNeedToAddAtLeastTwoUsers'))
