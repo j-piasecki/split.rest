@@ -205,7 +205,7 @@
     "titleIsRequired": "Title is required",
     "titleIsTooLong": "Title is too long",
     "thePayerDataMustBeFilledIn": "The payer data must be filled in",
-    "duplicateEmailsAreNotAllowed": "Duplicate e-mails are not allowed",
+    "entriesMustBeUnique": "All users must be unique",
     "amountsMustBePositive": "Amounts must be positive",
     "tooLittleToDivide": "The amount is too small to divide between participants",
     "payerNotFound": "Payer not found",
@@ -224,7 +224,8 @@
     "amount": "Amount",
     "save": "Save",
     "totalPaid": "Total paid",
-    "back": "Go back"
+    "back": "Go back",
+    "nameOrEmail": "Name or e-mail"
   },
 
   "member": {

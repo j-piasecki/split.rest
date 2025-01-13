@@ -80,7 +80,7 @@ export function TextInputWithUserSuggestions({
   return (
     <TextInputWithSuggestions
       inputRef={ref}
-      placeholder={t('email')}
+      placeholder={t('form.nameOrEmail')}
       keyboardType='email-address'
       autoComplete='email'
       autoCorrect={false}

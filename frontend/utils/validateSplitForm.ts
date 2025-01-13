@@ -68,7 +68,7 @@ export async function validateSplitForm({
 
   const emails = entriesWithUsers.map((entry) => entry.user.email)
   if (new Set(emails).size !== emails.length) {
-    throw new TranslatableError('splitValidation.duplicateEmailsAreNotAllowed')
+    throw new TranslatableError('splitValidation.entriesMustBeUnique')
   }
 
   const balanceChange: (BalanceChange | undefined)[] = await Promise.all(
