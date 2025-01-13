@@ -2,6 +2,7 @@ import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { Picker } from '@components/Picker'
 import { ProfilePicture } from '@components/ProfilePicture'
+import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { ThemeType } from '@type/theme'
@@ -28,6 +29,7 @@ interface DeleteAccountModalProps {
 
 function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
   const theme = useTheme()
+  const snack = useSnack()
   const { t } = useTranslation()
   const [isDeleting, setIsDeleting] = useState(false)
 
@@ -76,6 +78,7 @@ function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
                 deleteUser()
                   .then(() => {
                     onClose()
+                    snack.show(t('settings.deleteAccount.accountDeleted'))
                   })
                   .catch(() => {
                     alert(t('api.auth.tryAgain'))

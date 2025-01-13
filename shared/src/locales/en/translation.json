@@ -120,7 +120,8 @@
       "delete": "Delete",
       "deleteAccount": "Delete acount",
       "doYouWantToDeleteAccount": "Do you want to delete your account?",
-      "deletionNotReversible": "This action is not reversible"
+      "deletionNotReversible": "This action is not reversible",
+      "accountDeleted": "Your account was deleted"
     }
   },
 
