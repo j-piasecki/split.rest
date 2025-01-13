@@ -8,7 +8,7 @@ const transparentNavTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: '#000000a0',
+    background: 'transparent',
   },
 }
 
@@ -17,9 +17,18 @@ export default function AddFlow() {
   const isSmallScreen = useDisplayClass() <= DisplayClass.Expanded
 
   return (
-    <Animated.View style={{ flex: 1 }} entering={isSmallScreen ? undefined : FadeIn.duration(100)}>
+    <Animated.View
+      style={{ flex: 1, backgroundColor: '#000000a0' }}
+      entering={isSmallScreen ? undefined : FadeIn.duration(100)}
+    >
       <ThemeProvider value={transparentNavTheme}>
-        <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            fullScreenGestureEnabled: true,
+            animation: isSmallScreen ? 'default' : 'none',
+          }}
+        >
           <Stack.Screen name='index' options={{ title: t('screenName.splitType') }} />
           <Stack.Screen name='summary' options={{ title: t('screenName.splitSummary') }} />
           <Stack.Screen name='detailsStep' options={{ title: t('screenName.detailsStep') }} />
