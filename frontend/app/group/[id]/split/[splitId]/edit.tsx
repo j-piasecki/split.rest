@@ -1,4 +1,5 @@
 import ModalScreen from '@components/ModalScreen'
+import { useSnack } from '@components/SnackBar'
 import { FormData, SplitForm } from '@components/SplitForm'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useSplitInfo } from '@hooks/database/useSplitInfo'
@@ -15,8 +16,10 @@ import { BalanceChange, GroupInfo, SplitWithUsers } from 'shared'
 
 function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: SplitWithUsers }) {
   const router = useRouter()
+  const snack = useSnack()
   const [error, setError] = useTranslatedError()
   const [waiting, setWaiting] = useState(false)
+  const { t } = useTranslation()
   const { mutateAsync: updateSplit } = useUpdateSplit()
 
   async function save(form: FormData) {
@@ -34,6 +37,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
         balances: balanceChange as BalanceChange[],
       })
 
+      snack.show(t('split.updated'))
       router.dismissTo(`/group/${groupInfo.id}`)
     } catch (error) {
       setError(error)

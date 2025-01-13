@@ -241,7 +241,9 @@
     "edit": "Edit split",
     "delete": "Delete",
     "deletedToast": "Deleted {{title}}",
-    "undo": "Undo"
+    "undo": "Undo",
+    "created": "Split created",
+    "updated": "Split updated"
   },
 
   "groupInfo": {

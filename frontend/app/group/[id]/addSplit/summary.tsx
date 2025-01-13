@@ -1,6 +1,7 @@
 import { Button } from '@components/Button'
 import { ErrorText } from '@components/ErrorText'
 import ModalScreen from '@components/ModalScreen'
+import { useSnack } from '@components/SnackBar'
 import { SplitInfo } from '@components/SplitInfo'
 import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
@@ -17,6 +18,7 @@ import { GroupInfo, SplitWithUsers } from 'shared'
 function Content({ groupInfo, split }: { groupInfo: GroupInfo; split: SplitWithUsers }) {
   const { t } = useTranslation()
   const router = useRouter()
+  const snack = useSnack()
   const [error, setError] = useTranslatedError()
   const { data: permissions } = useGroupPermissions(groupInfo.id)
   const { mutateAsync: createSplit, isPending } = useCreateSplit()
@@ -34,6 +36,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupInfo; split: SplitWithU
       })),
     })
       .then(() => {
+        snack.show(t('split.created'))
         router.dismissTo(`/group/${groupInfo.id}`)
       })
       .catch(setError)
