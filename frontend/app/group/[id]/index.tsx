@@ -26,6 +26,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupInfo } from 'shared'
 
 function MembersButton({ info }: { info: GroupInfo | undefined }) {
@@ -197,6 +198,7 @@ export default function GroupScreen() {
   const theme = useTheme()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
+  const insets = useSafeAreaInsets()
   const threeBarLayout = useThreeBarLayout()
   const groupId = Number(id as string)
   const displayClass = useDisplayClass()
@@ -307,7 +309,7 @@ export default function GroupScreen() {
                   style={{
                     width: 600,
                     bottom: 16,
-                    top: HEADER_HEIGHT,
+                    top: HEADER_HEIGHT + insets.top,
                     right: 16,
                     position: 'absolute',
                     backgroundColor: theme.colors.surfaceContainer,
