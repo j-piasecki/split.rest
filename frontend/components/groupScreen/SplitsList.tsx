@@ -42,13 +42,11 @@ export function SplitsList({
     permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
   )
 
-  if (!info) {
-    return null
-  }
-
   function refreshData() {
-    invalidateGroup(info!.id)
-    onRefresh?.()
+    if (info) {
+      invalidateGroup(info.id)
+      onRefresh?.()
+    }
   }
 
   return (

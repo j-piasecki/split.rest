@@ -30,8 +30,8 @@ export function Shimmer({ color, style }: ShimmerProps) {
     }
   })
 
-   const colorEdge = color + '00'
-   const colorCenter = color
+  const colorEdge = color + '00'
+  const colorCenter = color
 
   useLayoutEffect(() => {
     if (gradientRef.current) {
@@ -40,19 +40,25 @@ export function Shimmer({ color, style }: ShimmerProps) {
   }, [])
 
   useEffect(() => {
-    progress.value = withRepeat(withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.ease) }), -1)
+    progress.value = withRepeat(
+      withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
+      -1
+    )
   }, [progress])
 
   return (
     <View
-      style={[style,{
-        overflow: 'hidden',
-      }]}
+      style={[
+        style,
+        {
+          overflow: 'hidden',
+        },
+      ]}
     >
       <View ref={gradientRef} style={[StyleSheet.absoluteFill]}>
         <Animated.View style={[StyleSheet.absoluteFill, animatedStyles]}>
           <LinearGradient
-            style={[{position: 'absolute', top: 0, bottom: 0, width: width}]}
+            style={[{ position: 'absolute', top: 0, bottom: 0, width: width }]}
             colors={[colorEdge, colorCenter, colorEdge]}
             locations={[0, 0.5, 1]}
             start={{
@@ -64,7 +70,7 @@ export function Shimmer({ color, style }: ShimmerProps) {
               y: 0.5,
             }}
           />
-          </Animated.View>
+        </Animated.View>
       </View>
     </View>
   )

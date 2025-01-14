@@ -16,11 +16,6 @@ import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { GroupInfo, SplitInfo } from 'shared'
 
-export interface SplitRowProps {
-  split: SplitInfo
-  info: GroupInfo
-}
-
 function LinearInfo({ split, info }: { split: SplitInfo; info: GroupInfo }) {
   const theme = useTheme()
 
@@ -59,7 +54,12 @@ function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo }) {
   )
 }
 
-export function SplitRow({ split, info }: SplitRowProps) {
+export interface LoadedSplitRowProps {
+  split: SplitInfo
+  info: GroupInfo
+}
+
+function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
   const theme = useTheme()
   const router = useRouter()
   const snack = useSnack()
@@ -187,4 +187,17 @@ export function SplitRow({ split, info }: SplitRowProps) {
       </View>
     </ContextMenu>
   )
+}
+
+export interface SplitRowProps {
+  split: SplitInfo
+  info?: GroupInfo
+}
+
+export function SplitRow({ split, info }: SplitRowProps) {
+  if (!info) {
+    return null
+  }
+
+  return <LoadedSplitRow split={split} info={info} />
 }
