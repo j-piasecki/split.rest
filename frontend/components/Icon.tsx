@@ -10,6 +10,7 @@ export type IconName =
   | 'appleLogo'
   | 'arrowDown'
   | 'arrowUp'
+  | 'bug'
   | 'calendar'
   | 'check'
   | 'chevronBack'
@@ -66,6 +67,7 @@ const iconMap: Record<IconName, unknown> = {
   appleLogo: require('@assets/icons/apple_logo.svg'),
   arrowDown: require('@assets/icons/arrow_down.svg'),
   arrowUp: require('@assets/icons/arrow_up.svg'),
+  bug: require('@assets/icons/bug.svg'),
   calendar: require('@assets/icons/calendar.svg'),
   check: require('@assets/icons/check.svg'),
   chevronBack: require('@assets/icons/chevron_back.svg'),

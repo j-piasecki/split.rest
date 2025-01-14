@@ -19,6 +19,7 @@ export interface ButtonProps {
   destructive?: boolean
   disabled?: boolean
   style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
+  foregroundColor?: string
 }
 
 export function Button({
@@ -30,14 +31,17 @@ export function Button({
   destructive,
   disabled,
   style,
+  foregroundColor: foregroundColorProp,
 }: ButtonProps) {
   const theme = useTheme()
 
-  const foregroundColor = destructive
-    ? theme.colors.onErrorContainer
-    : isLoading
-      ? theme.colors.primary
-      : theme.colors.onPrimaryContainer
+  const foregroundColor =
+    foregroundColorProp ??
+    (destructive
+      ? theme.colors.onErrorContainer
+      : isLoading
+        ? theme.colors.primary
+        : theme.colors.onPrimaryContainer)
 
   return (
     <Pressable

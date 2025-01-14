@@ -24,4 +24,9 @@ const appCheck = initializeAppCheck(app, {
 
 auth.useDeviceLanguage()
 
-export { app, analytics, auth, appCheck }
+const crashlytics = {
+  // no-op on web, crashlytics is not supported
+  recordError: (_error: Error) => {},
+}
+
+export { app, analytics, auth, appCheck, crashlytics }

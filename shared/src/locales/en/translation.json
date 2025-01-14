@@ -279,6 +279,11 @@
     "splitTimeText": "On <Styled>{{date}}</Styled>"
   },
 
+  "errorBoundary": {
+    "error": "Something went wrong",
+    "tryAgain": "Try again"
+  },
+
   "calendar": {
     "header": "Date",
     "headerWithDate": "Date: {{date}}",
