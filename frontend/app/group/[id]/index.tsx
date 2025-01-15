@@ -2,6 +2,7 @@ import Header, { HEADER_HEIGHT } from '@components/Header'
 import { Icon } from '@components/Icon'
 import { Pane, PaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
+import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { GroupActionButtons, GroupInfoCard } from '@components/groupScreen/GroupInfoPage'
 import { MembersList } from '@components/groupScreen/MembersList'
@@ -33,16 +34,17 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
   const theme = useTheme()
   const { t } = useTranslation()
   const router = useRouter()
-  const { members } = useGroupMembers(info?.id)
+  const { members, isLoading } = useGroupMembers(info?.id)
   const iconsRef = useRef<View>(null)
   const [iconsToShow, setIconsToShow] = useState(20)
   const { width } = useWindowDimensions()
 
+  const singleIconSize = 28
+
   useLayoutEffect(() => {
-    const singleIconWidth = 28
     const width = measure(iconsRef.current!).width
 
-    setIconsToShow(Math.floor(width / singleIconWidth))
+    setIconsToShow(Math.floor(width / singleIconSize))
   }, [width])
 
   return (
@@ -85,29 +87,42 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
               style={{
                 flex: 1,
                 height: 40,
-                flexDirection: 'row-reverse',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
               }}
             >
-              {members.slice(0, iconsToShow).map((member, index) => {
-                return (
-                  <View
-                    key={member.id}
-                    style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: 16,
-                      borderWidth: 2,
-                      borderColor: theme.colors.surfaceContainer,
-                      transform: [{ translateX: index * 8 }],
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <ProfilePicture userId={member.id} size={28} />
-                  </View>
-                )
-              })}
+              <ShimmerPlaceholder
+                style={{
+                  flex: 1,
+                  flexDirection: 'row-reverse',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                }}
+                shimmerStyle={{
+                  width: iconsToShow > 0 ? '75%' : 0,
+                  minWidth: iconsToShow > 0 ? singleIconSize : 0,
+                  height: 28,
+                  alignSelf: 'flex-end',
+                }}
+                argument={info === undefined || isLoading ? undefined : members}
+              >
+                {members.slice(0, iconsToShow).map((member, index) => {
+                  return (
+                    <View
+                      key={member.id}
+                      style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: 16,
+                        borderWidth: 2,
+                        borderColor: theme.colors.surfaceContainer,
+                        transform: [{ translateX: index * 8 }],
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <ProfilePicture userId={member.id} size={singleIconSize} />
+                    </View>
+                  )
+                })}
+              </ShimmerPlaceholder>
             </View>
 
             <Icon
@@ -160,7 +175,7 @@ function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
                 <GroupInfoCard info={info} />
               </View>
             </Pane>
-            {info && <GroupActionButtons info={info} />}
+            <GroupActionButtons info={info} />
           </View>
           <MembersButton info={info} />
           <View

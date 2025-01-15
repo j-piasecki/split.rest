@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, {
   Easing,
+  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -13,20 +14,24 @@ import Animated, {
 export interface ShimmerProps {
   color: string
   style?: StyleProp<ViewStyle>
+  offset?: number
 }
 
-export function Shimmer({ color, style }: ShimmerProps) {
+export function Shimmer({ color, style, offset = 0 }: ShimmerProps) {
   const gradientRef = useRef<View>(null)
   const [width, setWidth] = useState(0)
-  const progress = useSharedValue(-1)
+  const progress = useSharedValue(0)
 
   if (!/^#([A-Fa-f0-9]{6})$/.test(color)) {
     throw new Error('Color must be in hex rgba format')
   }
 
   const animatedStyles = useAnimatedStyle(() => {
+    const progressWithOffset = Easing.inOut(Easing.ease)((progress.value + offset) % 1)
+    const left = interpolate(progressWithOffset, [0, 1], [-width, width], 'clamp')
+
     return {
-      left: width * progress.value,
+      left: left,
     }
   })
 
@@ -40,10 +45,7 @@ export function Shimmer({ color, style }: ShimmerProps) {
   }, [])
 
   useEffect(() => {
-    progress.value = withRepeat(
-      withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
-      -1
-    )
+    progress.value = withRepeat(withTiming(1, { duration: 1000, easing: Easing.linear }), -1)
   }, [progress])
 
   return (

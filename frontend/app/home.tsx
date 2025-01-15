@@ -4,6 +4,7 @@ import { Icon } from '@components/Icon'
 import { PaneHeader } from '@components/Pane'
 import { PullableFlatList } from '@components/PullableFlatList'
 import { RoundIconButton } from '@components/RoundIconButton'
+import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { useUserGroupInvites } from '@hooks/database/useUserGroupInvites'
 import { useUserGroups } from '@hooks/database/useUserGroups'
@@ -109,19 +110,26 @@ function InvitationsButton({ invites, isLoadingInvites }: InvitationsButtonProps
       })}
       onPress={() => router.navigate('/groupInvites')}
     >
-      {isLoadingInvites && (
-        <ActivityIndicator color={theme.colors.onSurface} style={{ margin: 16 }} />
-      )}
-      {!isLoadingInvites && (
-        <PaneHeader
-          icon='stackedEmail'
-          title={invites.length === 0 ? t('home.noGroupInvitesButton') : t('home.showGroupInvites')}
-          textLocation='start'
-          showSeparator={false}
-          adjustsFontSizeToFit
-          rightComponent={<Icon size={24} name={'chevronForward'} color={theme.colors.secondary} />}
-        />
-      )}
+      <ShimmerPlaceholder
+        argument={isLoadingInvites ? undefined : invites}
+        style={{ height: 56 }}
+        shimmerStyle={{ backgroundColor: theme.colors.surfaceContainer }}
+      >
+        {(invites) => (
+          <PaneHeader
+            icon='stackedEmail'
+            title={
+              invites.length === 0 ? t('home.noGroupInvitesButton') : t('home.showGroupInvites')
+            }
+            textLocation='start'
+            showSeparator={false}
+            adjustsFontSizeToFit
+            rightComponent={
+              <Icon size={24} name={'chevronForward'} color={theme.colors.secondary} />
+            }
+          />
+        )}
+      </ShimmerPlaceholder>
     </Pressable>
   )
 }
