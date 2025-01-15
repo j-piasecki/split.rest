@@ -276,7 +276,7 @@ export default function GroupScreen() {
                 }}
               >
                 <GroupInfoCard info={groupInfo} />
-                {groupInfo && <GroupActionButtons info={groupInfo} />}
+                <GroupActionButtons info={groupInfo} />
               </ScrollView>
             </Pane>
             <Pane
