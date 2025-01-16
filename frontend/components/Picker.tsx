@@ -4,7 +4,7 @@ import { Text } from './Text'
 import { useTheme } from '@styling/theme'
 import { Rect, measure } from '@utils/measure'
 import { resolveFontName } from '@utils/resolveFontName'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useLayoutEffect, useRef, useState } from 'react'
 import {
   Modal,
@@ -12,11 +12,18 @@ import {
   Pressable,
   ScrollView,
   StyleProp,
+  StyleSheet,
   View,
   ViewStyle,
   useWindowDimensions,
 } from 'react-native'
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  FadeIn,
+  ZoomIn,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface PickerItem {
@@ -36,11 +43,20 @@ export interface PickerProps {
 export function Picker({ hint, items, selectedItem, onSelectionChange, style }: PickerProps) {
   const theme = useTheme()
   const isFocused = useSharedValue(false)
+  const buttonRotation = useSharedValue(0)
   const wrapperRef = useRef<View>(null)
   const [isOpened, setIsOpened] = useState(false)
   const [wrapperLayout, setWrapperLayout] = useState<Rect>({ width: 0, height: 0, x: 0, y: 0 })
 
   const selected = items.find((item) => item.value === selectedItem) ?? items[0]
+
+  useEffect(() => {
+    if (isOpened) {
+      buttonRotation.value = withTiming(180, { duration: 200 })
+    } else {
+      buttonRotation.value = withTiming(0, { duration: 200 })
+    }
+  }, [buttonRotation, isOpened])
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -56,6 +72,12 @@ export function Picker({ hint, items, selectedItem, onSelectionChange, style }: 
       borderBottomColor: withTiming(isFocused.value ? theme.colors.primary : theme.colors.outline, {
         duration: 200,
       }),
+    }
+  })
+
+  const buttonStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotateZ: `${buttonRotation.value}deg` }],
     }
   })
 
@@ -104,23 +126,29 @@ export function Picker({ hint, items, selectedItem, onSelectionChange, style }: 
           >
             {selected.label}
           </Text>
-          <RoundIconButton
-            icon='arrowDown'
-            onPress={open}
-            color={isOpened ? theme.colors.primary : undefined}
-            style={{ position: 'absolute', right: -4, bottom: 0 }}
-          />
+          <Animated.View style={[buttonStyle, { position: 'absolute', right: -4, bottom: 0 }]}>
+            <RoundIconButton
+              icon={'arrowDown'}
+              onPress={open}
+              color={isOpened ? theme.colors.primary : undefined}
+            />
+          </Animated.View>
         </Animated.View>
       </Pressable>
 
       <Modal visible={isOpened} transparent statusBarTranslucent navigationBarTranslucent>
-        <Pressable
-          onPress={() => {
-            setIsOpened(false)
-            isFocused.value = false
-          }}
-          style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
-        />
+        <Animated.View style={StyleSheet.absoluteFill} entering={FadeIn.duration(200)}>
+          <Pressable
+            onPress={() => {
+              setIsOpened(false)
+              isFocused.value = false
+            }}
+            style={{
+              flex: 1,
+              backgroundColor: Platform.OS === 'web' ? 'transparent' : 'rgba(0, 0, 0, 0.4)',
+            }}
+          />
+        </Animated.View>
         <PickerContent
           items={items}
           selectedItem={selectedItem}
@@ -159,19 +187,21 @@ function PickerContent({
   useLayoutEffect(() => {
     if (containerRef.current) {
       const containerLayout = measure(containerRef.current)
+      const wrapperY = wrapperLayout.y + (Platform.OS === 'android' ? insets.top : 0)
 
       if (containerLayout.y + containerLayout.height > height - insets.bottom) {
-        setContainerPosition(wrapperLayout.y - containerLayout.height - 4)
+        setContainerPosition(wrapperY - containerLayout.height - 4)
         setContainerBelow(false)
       } else {
-        setContainerPosition(wrapperLayout.y + wrapperLayout.height)
+        setContainerPosition(wrapperY + wrapperLayout.height)
         setContainerBelow(true)
       }
     }
-  }, [height, insets.bottom, wrapperLayout])
+  }, [height, insets.bottom, insets.top, wrapperLayout])
 
   return (
-    <View
+    <Animated.View
+      entering={Platform.OS !== 'web' ? ZoomIn.duration(150) : undefined}
       ref={containerRef}
       style={[
         {
@@ -184,6 +214,7 @@ function PickerContent({
           maxHeight: 250,
           borderWidth: 1,
           borderColor: theme.colors.outlineVariant,
+          transformOrigin: containerBelow ? 'top' : 'bottom',
         },
         containerBelow
           ? { borderBottomLeftRadius: 12, borderBottomRightRadius: 12 }
@@ -199,7 +230,7 @@ function PickerContent({
                 padding: 16,
                 backgroundColor: pressed
                   ? theme.colors.surfaceContainerHighest
-                  : hovered
+                  : hovered || selectedItem === item.value
                     ? theme.colors.surfaceContainerHigh
                     : 'transparent',
                 userSelect: 'none',
@@ -234,6 +265,6 @@ function PickerContent({
           </React.Fragment>
         ))}
       </ScrollView>
-    </View>
+    </Animated.View>
   )
 }
