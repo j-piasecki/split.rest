@@ -3744,26 +3744,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-picker/picker@npm:2.9.0":
-  version: 2.9.0
-  resolution: "@react-native-picker/picker@npm:2.9.0"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 3f88ecbad85f071861bbd16c0d4891dd5eff13d638e6ecfe68da279a07e0a31dfa7844ae329fe2a2144695456f1c96d1be38e10185475dd164f8e918d6d083a1
-  languageName: node
-  linkType: hard
-
-"@react-native-picker/picker@patch:@react-native-picker/picker@npm%3A2.9.0#./.yarn/patches/@react-native-picker-picker-npm-2.9.0-fdf0591fce.patch::locator=split%40workspace%3A.":
-  version: 2.9.0
-  resolution: "@react-native-picker/picker@patch:@react-native-picker/picker@npm%3A2.9.0#./.yarn/patches/@react-native-picker-picker-npm-2.9.0-fdf0591fce.patch::version=2.9.0&hash=071341&locator=split%40workspace%3A."
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 950c1cda7fc944ab4d90af935f8e893e7bc92178631311fdd4328bd1096ea23008f7c1d78c129024e7d407b54db3ae0907c577ec867ee1a10bc68f96e98dfbf9
-  languageName: node
-  linkType: hard
-
 "@react-native/assets-registry@npm:0.76.6":
   version: 0.76.6
   resolution: "@react-native/assets-registry@npm:0.76.6"
@@ -8762,7 +8742,6 @@ __metadata:
     "@react-native-firebase/auth": ^21.6.1
     "@react-native-firebase/crashlytics": ^21.6.1
     "@react-native-google-signin/google-signin": ^13.1.0
-    "@react-native-picker/picker": 2.9.0
     "@tanstack/eslint-plugin-query": ^5.62.1
     "@tanstack/react-query": ^5.62.3
     "@trivago/prettier-plugin-sort-imports": ^4.3.0
@@ -13612,9 +13591,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@patch:react-native@npm%3A0.76.6#./.yarn/patches/react-native-npm-0.76.6-5d90f3e68d.patch::locator=split%40workspace%3A.":
+"react-native@patch:react-native@npm%3A0.76.6#./.yarn/patches/react-native-npm-0.76.6-e0887b733e.patch::locator=split%40workspace%3A.":
   version: 0.76.6
-  resolution: "react-native@patch:react-native@npm%3A0.76.6#./.yarn/patches/react-native-npm-0.76.6-5d90f3e68d.patch::version=0.76.6&hash=da8593&locator=split%40workspace%3A."
+  resolution: "react-native@patch:react-native@npm%3A0.76.6#./.yarn/patches/react-native-npm-0.76.6-e0887b733e.patch::version=0.76.6&hash=e6fba4&locator=split%40workspace%3A."
   dependencies:
     "@jest/create-cache-key-function": ^29.6.3
     "@react-native/assets-registry": 0.76.6
@@ -13662,7 +13641,7 @@ __metadata:
       optional: true
   bin:
     react-native: cli.js
-  checksum: e4604595a44a9ea973764fe0a45de0adedf3246cd4636eb1fb816af14a2a4fa2e9f9ddb1ff9906e1d31865480e841e8b1e46ff5909e4ed05d5ddd309eff728e2
+  checksum: 03a9f3a353f4500d56e3522b1cc4f9a61ec21205fd2e7788f0c3f80b898da94d6523ed103e18e1387e919b298c003bed0ee64dc59054408e657202fde2c9919c
   languageName: node
   linkType: hard
 
