@@ -64,6 +64,7 @@ function CreateGroupForm() {
   return (
     <ScrollView
       style={{ flex: 1 }}
+      keyboardShouldPersistTaps='handled'
       contentContainerStyle={{
         flexGrow: 1,
         gap: 16,
