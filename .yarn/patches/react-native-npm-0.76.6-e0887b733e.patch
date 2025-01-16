@@ -80,19 +80,6 @@ index 8407662ff18c974431d4841ee2f68215b125673c..0a8e5651b2b12c5d793d853cf9d7b558
  RCT_EXPORT_VIEW_PROPERTY(hardwareAccelerated, BOOL)
  RCT_EXPORT_VIEW_PROPERTY(animated, BOOL)
  RCT_EXPORT_VIEW_PROPERTY(onShow, RCTDirectEventBlock)
-diff --git a/ReactAndroid/src/main/java/com/facebook/react/defaults/DefaultNewArchitectureEntryPoint.kt b/ReactAndroid/src/main/java/com/facebook/react/defaults/DefaultNewArchitectureEntryPoint.kt
-index 38b3be0c8839e63d2f7c0fa180746e4940378ba5..edaee98743519c61505a520f82381fa514db1708 100644
---- a/ReactAndroid/src/main/java/com/facebook/react/defaults/DefaultNewArchitectureEntryPoint.kt
-+++ b/ReactAndroid/src/main/java/com/facebook/react/defaults/DefaultNewArchitectureEntryPoint.kt
-@@ -51,6 +51,8 @@ public object DefaultNewArchitectureEntryPoint {
-             // similar bugs related to pressable.
-             override fun enableEventEmitterRetentionDuringGesturesOnAndroid(): Boolean =
-                 fabricEnabled
-+
-+            override fun allowRecursiveCommitsWithSynchronousMountOnAndroid(): Boolean = true
-           })
-     }
- 
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.java b/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.java
 index 887dc73189815c208da569585ffe6a006406973f..f881753ca3db71abbfa6c842ad0c456f8101ed55 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.java
