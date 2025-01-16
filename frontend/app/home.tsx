@@ -8,6 +8,7 @@ import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { useUserGroupInvites } from '@hooks/database/useUserGroupInvites'
 import { useUserGroups } from '@hooks/database/useUserGroups'
+import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
@@ -35,12 +36,15 @@ function Group({ info }: { info: GroupInfo }) {
       onPress={() => {
         router.navigate(`/group/${info.id}`)
       }}
-      style={{
-        flex: 1,
-        paddingHorizontal: 16,
-        paddingVertical: isSmallScreen ? 16 : 20,
-        backgroundColor: theme.colors.surfaceContainer,
-      }}
+      style={[
+        {
+          flex: 1,
+          paddingHorizontal: 16,
+          paddingVertical: isSmallScreen ? 16 : 20,
+          backgroundColor: theme.colors.surfaceContainer,
+        },
+        styles.paneShadow,
+      ]}
     >
       <View
         style={{
@@ -102,12 +106,15 @@ function InvitationsButton({ invites, isLoadingInvites }: InvitationsButtonProps
 
   return (
     <Pressable
-      style={({ pressed }) => ({
-        backgroundColor: pressed
-          ? theme.colors.surfaceContainerHigh
-          : theme.colors.surfaceContainer,
-        borderRadius: 16,
-      })}
+      style={({ pressed }) => [
+        {
+          backgroundColor: pressed
+            ? theme.colors.surfaceContainerHigh
+            : theme.colors.surfaceContainer,
+          borderRadius: 16,
+        },
+        styles.paneShadow,
+      ]}
       onPress={() => router.navigate('/groupInvites')}
     >
       <ShimmerPlaceholder
@@ -209,11 +216,14 @@ export default function Home() {
                 <InvitationsButton invites={invites} isLoadingInvites={isLoadingInvites} />
 
                 <View
-                  style={{
-                    backgroundColor: theme.colors.surfaceContainer,
-                    borderTopLeftRadius: 16,
-                    borderTopRightRadius: 16,
-                  }}
+                  style={[
+                    {
+                      backgroundColor: theme.colors.surfaceContainer,
+                      borderTopLeftRadius: 16,
+                      borderTopRightRadius: 16,
+                    },
+                    styles.paneShadow,
+                  ]}
                 >
                   <PaneHeader
                     icon='group'
@@ -232,13 +242,16 @@ export default function Home() {
             }
             ListEmptyComponent={
               <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: theme.colors.surfaceContainer,
-                  paddingVertical: 32,
-                }}
+                style={[
+                  {
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: theme.colors.surfaceContainer,
+                    paddingVertical: 32,
+                  },
+                  styles.paneShadow,
+                ]}
               >
                 {visibleGroupsLoading && <ActivityIndicator color={theme.colors.onSurface} />}
                 {!visibleGroupsLoading && (
@@ -250,12 +263,15 @@ export default function Home() {
             }
             ListFooterComponent={
               <View
-                style={{
-                  height: 16,
-                  backgroundColor: theme.colors.surfaceContainer,
-                  borderBottomLeftRadius: 16,
-                  borderBottomRightRadius: 16,
-                }}
+                style={[
+                  {
+                    height: 16,
+                    backgroundColor: theme.colors.surfaceContainer,
+                    borderBottomLeftRadius: 16,
+                    borderBottomRightRadius: 16,
+                  },
+                  styles.paneShadow,
+                ]}
               />
             }
             onEndReached={() => {

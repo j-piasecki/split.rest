@@ -1,6 +1,7 @@
 import { Icon, IconName } from './Icon'
 import { useSnackFABInset } from './SnackBar'
 import { Text } from '@components/Text'
+import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
 import React, { useImperativeHandle, useRef } from 'react'
@@ -98,6 +99,7 @@ export const FloatingActionButton = React.forwardRef<
             opacity: state.pressed ? 0.7 : 1,
             overflow: 'hidden',
           },
+          styles.paneShadow,
         ]
       }}
     >
