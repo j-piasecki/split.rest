@@ -19,6 +19,7 @@ export type IconName =
   | 'close'
   | 'copy'
   | 'currency'
+  | 'darkTheme'
   | 'delete'
   | 'deleteForever'
   | 'deleteLink'
@@ -28,6 +29,7 @@ export type IconName =
   | 'exactAmount'
   | 'group'
   | 'home'
+  | 'lightTheme'
   | 'link'
   | 'listNumbered'
   | 'lockOpen'
@@ -46,6 +48,7 @@ export type IconName =
   | 'shield'
   | 'split'
   | 'stackedEmail'
+  | 'systemTheme'
   | 'tag'
   | 'undo'
   | 'user'
@@ -76,6 +79,7 @@ const iconMap: Record<IconName, unknown> = {
   close: require('@assets/icons/close.svg'),
   copy: require('@assets/icons/copy.svg'),
   currency: require('@assets/icons/currency.svg'),
+  darkTheme: require('@assets/icons/dark_theme.svg'),
   delete: require('@assets/icons/delete.svg'),
   deleteForever: require('@assets/icons/delete_forever.svg'),
   deleteLink: require('@assets/icons/delete_link.svg'),
@@ -85,6 +89,7 @@ const iconMap: Record<IconName, unknown> = {
   exactAmount: require('@assets/icons/exact_amount.svg'),
   group: require('@assets/icons/group.svg'),
   home: require('@assets/icons/home.svg'),
+  lightTheme: require('@assets/icons/light_theme.svg'),
   link: require('@assets/icons/link.svg'),
   listNumbered: require('@assets/icons/list_numbered.svg'),
   lockOpen: require('@assets/icons/lock_open.svg'),
@@ -103,6 +108,7 @@ const iconMap: Record<IconName, unknown> = {
   shield: require('@assets/icons/shield.svg'),
   split: require('@assets/icons/split.svg'),
   stackedEmail: require('@assets/icons/stacked_email.svg'),
+  systemTheme: require('@assets/icons/system_theme.svg'),
   tag: require('@assets/icons/tag.svg'),
   undo: require('@assets/icons/undo.svg'),
   user: require('@assets/icons/user.svg'),

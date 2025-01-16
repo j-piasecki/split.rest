@@ -129,9 +129,9 @@ function Form({ user }: { user: User }) {
           style={{ width: '100%' }}
           selectedItem={theme.userSelectedTheme ?? 'system'}
           items={[
-            { label: t('settings.theme.light'), value: 'light' },
-            { label: t('settings.theme.dark'), value: 'dark' },
-            { label: t('settings.theme.system'), value: 'system' },
+            { label: t('settings.theme.light'), value: 'light', icon: 'lightTheme' },
+            { label: t('settings.theme.dark'), value: 'dark', icon: 'darkTheme' },
+            { label: t('settings.theme.system'), value: 'system', icon: 'systemTheme' },
           ]}
           onSelectionChange={(selected) => {
             if (selected === 'system') {
