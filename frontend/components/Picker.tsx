@@ -19,7 +19,7 @@ import {
 } from 'react-native'
 import Animated, {
   FadeIn,
-  ZoomIn,
+  FadeInUp,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -201,7 +201,7 @@ function PickerContent({
 
   return (
     <Animated.View
-      entering={Platform.OS !== 'web' ? ZoomIn.duration(150) : undefined}
+      entering={Platform.OS !== 'web' ? FadeInUp.duration(150) : undefined}
       ref={containerRef}
       style={[
         {
@@ -210,7 +210,6 @@ function PickerContent({
           left: wrapperLayout.x,
           width: wrapperLayout.width,
           backgroundColor: theme.colors.surfaceContainer,
-          overflow: 'hidden',
           maxHeight: 250,
           borderWidth: 1,
           borderColor: theme.colors.outlineVariant,

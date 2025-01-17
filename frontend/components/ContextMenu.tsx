@@ -19,8 +19,7 @@ import {
 } from 'react-native'
 import { Modal, Pressable } from 'react-native'
 import Animated, {
-  FadeIn,
-  ZoomIn,
+  FadeInUp,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -110,6 +109,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
   const insets = useSafeAreaInsets()
   const [contentX, setContentX] = useState(touchPoint.x)
   const [contentY, setContentY] = useState(touchPoint.y)
+  const [isBelow, setIsBelow] = useState(true)
   const { width, height } = useWindowDimensions()
 
   useLayoutEffect(() => {
@@ -126,8 +126,10 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
     } else {
       if (anchorRect.y + anchorRect.height + frame.height > height - insets.bottom) {
         setContentY(anchorRect.y - frame.height - 8)
+        setIsBelow(false)
       } else {
         setContentY(anchorRect.y + anchorRect.height + 8)
+        setIsBelow(true)
       }
 
       setContentX(anchorRect.x + (anchorRect.width - frame.width) / 2)
@@ -136,9 +138,10 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
 
   return (
     <Animated.View
-      entering={Platform.OS !== 'web' ? ZoomIn.duration(150) : undefined}
+      entering={Platform.OS !== 'web' ? FadeInUp.duration(150) : undefined}
       ref={contentRef}
       style={{
+        transformOrigin: isBelow ? 'top' : 'bottom',
         position: 'absolute',
         top: contentY,
         left: contentX,
@@ -293,10 +296,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
         onRequestClose={() => setVisible(false)}
         transparent
       >
-        <Animated.View
-          style={StyleSheet.absoluteFillObject}
-          entering={isSmallScreen ? FadeIn.duration(300) : undefined}
-        >
+        <Animated.View style={StyleSheet.absoluteFillObject}>
           <Pressable
             onPress={() => setVisible(false)}
             // @ts-expect-error - onContextMenu does not exist on Pressable on mobile
