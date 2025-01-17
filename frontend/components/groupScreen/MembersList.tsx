@@ -120,6 +120,8 @@ export function MembersList({
         ListHeaderComponent={headerComponent}
         ListFooterComponent={footerComponent}
         onScroll={scrollHandler}
+        onScrollEndDrag={scrollHandler}
+        onMomentumScrollEnd={scrollHandler}
       />
 
       {permissions?.canInviteMembers() && (

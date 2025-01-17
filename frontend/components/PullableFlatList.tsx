@@ -75,7 +75,9 @@ export function PullableFlatList<T>(props: PullableFlatListProps<T>) {
         {Header}
         <Animated.FlatList
           ref={animatedRef}
-          scrollEventThrottle={1}
+          // scroll offset on ios is used to animate header, everywhere else to collapse/expand fab
+          // low values on android kill framerate on scroll when header is animating
+          scrollEventThrottle={Platform.OS === 'ios' ? 1 : 100}
           {...props}
           renderScrollComponent={(props) => {
             return (

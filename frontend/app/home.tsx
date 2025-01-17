@@ -210,6 +210,8 @@ export default function Home() {
             onEndReachedThreshold={0.5}
             keyExtractor={(item) => `${item.id}-${item.hidden}`}
             onScroll={scrollHandler}
+            onScrollEndDrag={scrollHandler}
+            onMomentumScrollEnd={scrollHandler}
             ItemSeparatorComponent={Divider}
             ListHeaderComponent={
               <View style={{ gap: 16 }}>

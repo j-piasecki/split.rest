@@ -9,7 +9,7 @@ import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Platform, Pressable, View, useWindowDimensions } from 'react-native'
+import { Pressable, View, useWindowDimensions } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   SharedValue,
@@ -23,8 +23,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const HEADER_HEIGHT = 68
 
-// TODO: rotation kills android framerate for some reason, remve when figured out
-const SHOW_ROTATION = Platform.OS !== 'android'
+const SHOW_ROTATION = true
 
 export interface HeaderProps {
   offset?: SharedValue<number>
@@ -32,8 +31,6 @@ export interface HeaderProps {
   onPull?: () => void
   showBackButton?: boolean
 }
-
-const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const icon = require('@assets/icon.svg')
@@ -182,12 +179,10 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
           .enabled(onPull !== undefined)
           .onStart(() => onPull?.())}
       >
-        <AnimatedImage
-          source={icon}
-          style={[{ position: 'absolute' }, animatedStyle]}
-          contentFit='contain'
-          tintColor={theme.colors.primary}
-        />
+        {/* don't animate the image directly, it causes it to be recreated every frame on ios */}
+        <Animated.View style={[{ position: 'absolute' }, animatedStyle]}>
+          <Image source={icon} style={{ width: 96, height: 96 }} tintColor={theme.colors.primary} />
+        </Animated.View>
       </GestureDetector>
 
       <Animated.View style={offsetStyle}>
