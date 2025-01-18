@@ -5,10 +5,9 @@ import { Button } from '@components/Button'
 import { CalendarPane } from '@components/CalendarPane'
 import { ErrorText } from '@components/ErrorText'
 import { IconName } from '@components/Icon'
-import { useTheme } from '@styling/theme'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { GroupInfo, LanguageTranslationKey } from 'shared'
 
 export interface SplitFormProps {
@@ -42,7 +41,6 @@ export function SplitForm({
   buttonTitle = 'form.save',
   buttonIconLocation = 'left',
 }: SplitFormProps) {
-  const theme = useTheme()
   const scrollRef = useRef<ScrollView>(null)
   const [formState, updateForm] = useFormData({
     title: initialTitle ?? '',
@@ -98,18 +96,13 @@ export function SplitForm({
 
       <View style={{ gap: 8 }}>
         {error && <ErrorText>{error}</ErrorText>}
-
-        <View>
-          {waiting && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
-          {!waiting && (
-            <Button
-              leftIcon={buttonIconLocation === 'left' ? buttonIcon : undefined}
-              rightIcon={buttonIconLocation === 'right' ? buttonIcon : undefined}
-              title={t(buttonTitle)}
-              onPress={submit}
-            />
-          )}
-        </View>
+        <Button
+          leftIcon={buttonIconLocation === 'left' ? buttonIcon : undefined}
+          rightIcon={buttonIconLocation === 'right' ? buttonIcon : undefined}
+          title={t(buttonTitle)}
+          onPress={submit}
+          isLoading={waiting}
+        />
       </View>
     </View>
   )

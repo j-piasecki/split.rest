@@ -9,7 +9,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { GroupInfo } from 'shared'
 
-export interface SplitFormProps {
+export interface DetailsPaneProps {
   groupInfo: GroupInfo
   formState: FormData
   updateForm: React.Dispatch<FormActionType>
@@ -23,7 +23,7 @@ export function DetailsPane({
   updateForm,
   titleEditable = true,
   showPaidByHint = true,
-}: SplitFormProps) {
+}: DetailsPaneProps) {
   const theme = useTheme()
   const { t } = useTranslation()
 

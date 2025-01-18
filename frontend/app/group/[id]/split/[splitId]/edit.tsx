@@ -1,12 +1,12 @@
 import ModalScreen from '@components/ModalScreen'
 import { useSnack } from '@components/SnackBar'
-import { FormData, SplitForm } from '@components/SplitForm'
+import { FormData } from '@components/SplitForm'
+import { SplitEditForm } from '@components/SplitForm/SplitEditForm'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useSplitInfo } from '@hooks/database/useSplitInfo'
 import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
-import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
@@ -46,33 +46,10 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: Split
     }
   }
 
-  const initialEntries = [
-    ...splitInfo.users.map((user) => {
-      if (user.id === splitInfo.paidById) {
-        return {
-          user: user,
-          entry: user.email ?? '',
-          amount: CurrencyUtils.format(Number(splitInfo.total) - Number(user.change)),
-        }
-      }
-      return {
-        user: user,
-        entry: user.email ?? '',
-        amount: CurrencyUtils.format(-Number(user.change)),
-      }
-    }),
-    { entry: '', amount: '' },
-  ]
-
-  const initialPaidByIndex = splitInfo.users.findIndex((user) => user.id === splitInfo.paidById)
-
   return (
     <View style={{ flex: 1, paddingHorizontal: 16 }}>
-      <SplitForm
-        initialTitle={splitInfo.title}
-        initialEntries={initialEntries}
-        initialPaidByIndex={initialPaidByIndex}
-        initialTimestamp={splitInfo.timestamp}
+      <SplitEditForm
+        splitInfo={splitInfo}
         groupInfo={groupInfo}
         onSubmit={save}
         waiting={waiting}
