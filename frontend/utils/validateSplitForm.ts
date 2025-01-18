@@ -57,7 +57,7 @@ export async function validateSplitForm({
   }
 
   if (sumToSave < 0.01) {
-    throw new TranslatableError('splitValidation.totalMustBeGreaterThanZero')
+    throw new TranslatableError('splitValidation.amountMustBeGreaterThanZero')
   }
 
   validateSplitTitle(title)

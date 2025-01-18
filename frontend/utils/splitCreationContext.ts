@@ -17,6 +17,7 @@ export interface SplitCreationContextArguments {
   splitType?: SplitMethod
   title?: string
   totalAmount?: string
+  amountPerUser?: string
   timestamp?: number
 }
 
@@ -26,6 +27,7 @@ class SplitCreationContext {
   splitType: SplitMethod | null = null
   title: string | null = null
   totalAmount: string | null = null
+  amountPerUser: string | null = null
   timestamp: number | null = null
 
   constructor(args: SplitCreationContextArguments) {
@@ -34,6 +36,7 @@ class SplitCreationContext {
     this.splitType = args.splitType ?? null
     this.title = args.title ?? null
     this.totalAmount = args.totalAmount ?? null
+    this.amountPerUser = args.amountPerUser ?? null
     this.timestamp = args.timestamp ?? null
   }
 
@@ -59,17 +62,27 @@ class SplitCreationContext {
     })
 
     if (this.splitType === SplitMethod.Equal) {
-      const amount = Math.floor((Number(this.totalAmount) * 100) / users.length) / 100
-      const totalRounded = amount * users.length
-      const difference = Math.floor((Number(this.totalAmount) - totalRounded) * 100)
-      let distributed = 0
+      if (this.amountPerUser !== null) {
+        const amount = Number(this.amountPerUser).toFixed(2)
 
-      this.participants.forEach((participant) => {
-        participant.value = (distributed++ < difference ? amount + 0.01 : amount).toFixed(2)
-      })
+        this.participants.forEach((participant) => {
+          participant.value = amount
+        })
+      } else if (this.totalAmount !== null) {
+        const amount = Math.floor((Number(this.totalAmount) * 100) / users.length) / 100
+        const totalRounded = amount * users.length
+        const difference = Math.floor((Number(this.totalAmount) - totalRounded) * 100)
+        let distributed = 0
 
-      if (this.participants.some((participant) => Number(participant.value) <= 0)) {
-        throw new TranslatableError('splitValidation.tooLittleToDivide')
+        this.participants.forEach((participant) => {
+          participant.value = (distributed++ < difference ? amount + 0.01 : amount).toFixed(2)
+        })
+
+        if (this.participants.some((participant) => Number(participant.value) <= 0)) {
+          throw new TranslatableError('splitValidation.tooLittleToDivide')
+        }
+      } else {
+        throw new TranslatableError('splitValidation.amountRequired')
       }
     }
 
@@ -85,7 +98,19 @@ class SplitCreationContext {
     })
   }
 
+  private tryFillMissingData() {
+    if (
+      this.participants &&
+      this.splitType === SplitMethod.Equal &&
+      !this.totalAmount &&
+      this.amountPerUser !== null
+    ) {
+      this.totalAmount = (Number(this.amountPerUser) * this.participants.length).toFixed(2)
+    }
+  }
+
   async buildSplitPreview(): Promise<SplitWithUsers> {
+    this.tryFillMissingData()
     const users = await this.getParticipantsData()
     const paidById = this.paidById
 
@@ -98,7 +123,7 @@ class SplitCreationContext {
     }
 
     if (!this.totalAmount) {
-      throw new TranslatableError('splitValidation.totalRequired')
+      throw new TranslatableError('splitValidation.amountRequired')
     }
 
     if (!auth.currentUser) {

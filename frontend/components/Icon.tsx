@@ -10,6 +10,7 @@ export type IconName =
   | 'appleLogo'
   | 'arrowDown'
   | 'arrowUp'
+  | 'balance'
   | 'bug'
   | 'calendar'
   | 'check'
@@ -44,6 +45,7 @@ export type IconName =
   | 'receipt'
   | 'removeModerator'
   | 'save'
+  | 'sell'
   | 'settings'
   | 'shield'
   | 'split'
@@ -70,6 +72,7 @@ const iconMap: Record<IconName, unknown> = {
   appleLogo: require('@assets/icons/apple_logo.svg'),
   arrowDown: require('@assets/icons/arrow_down.svg'),
   arrowUp: require('@assets/icons/arrow_up.svg'),
+  balance: require('@assets/icons/balance.svg'),
   bug: require('@assets/icons/bug.svg'),
   calendar: require('@assets/icons/calendar.svg'),
   check: require('@assets/icons/check.svg'),
@@ -104,6 +107,7 @@ const iconMap: Record<IconName, unknown> = {
   receipt: require('@assets/icons/receipt.svg'),
   removeModerator: require('@assets/icons/remove_moderator.svg'),
   save: require('@assets/icons/save.svg'),
+  sell: require('@assets/icons/sell.svg'),
   settings: require('@assets/icons/settings.svg'),
   shield: require('@assets/icons/shield.svg'),
   split: require('@assets/icons/split.svg'),

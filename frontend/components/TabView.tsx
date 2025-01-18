@@ -1,28 +1,25 @@
+import { Icon, IconName } from './Icon'
+import { Text } from './Text'
 import { useTheme } from '@styling/theme'
 import React, { useEffect, useState } from 'react'
-import { Pressable, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Pressable, StyleProp, View, ViewStyle } from 'react-native'
 
 export interface Tab {
-  header: (props: { selected: boolean }) => React.ReactNode
+  icon: IconName
+  title: string
   content: React.ReactNode
 }
 
 export interface TabViewProps {
-  openedTab: number
   tabs: Tab[]
+  openedTab: number
   onTabChange?: (index: number) => void
-  maxContentWidth?: number
-  headerLocation?: 'top' | 'bottom'
+  style?: StyleProp<ViewStyle>
 }
 
 export function TabView(props: TabViewProps) {
   const theme = useTheme()
   const [selectedItem, setSelectedItem] = useState(props.openedTab)
-  const insets = useSafeAreaInsets()
-
-  const headerLocation = props.headerLocation ?? 'top'
-  const bottomInset = headerLocation === 'bottom' ? insets.bottom : 0
 
   useEffect(() => {
     setSelectedItem(props.openedTab)
@@ -31,36 +28,40 @@ export function TabView(props: TabViewProps) {
   const item = Math.max(0, Math.min(selectedItem, props.tabs.length - 1))
 
   return (
-    <View style={{ width: '100%', flex: 1, alignItems: 'center' }}>
-      {headerLocation === 'bottom' && (
-        <View style={{ width: '100%', flex: 1, maxWidth: props.maxContentWidth }}>
-          {props.tabs[item].content}
-        </View>
-      )}
-
+    <View
+      style={[
+        { borderWidth: 1, borderColor: theme.colors.outlineVariant, borderRadius: 12 },
+        props.style,
+      ]}
+    >
       <View
         style={{
           width: '100%',
-          height: 56 + bottomInset,
-          paddingBottom: bottomInset,
+          height: 40,
           flexDirection: 'row',
-          backgroundColor: theme.colors.surfaceContainer,
         }}
       >
         {props.tabs.map((tab, index) => {
-          const Header = props.tabs[index].header
+          const selected = index === item
 
           return (
             <Pressable
               key={index}
-              style={({ pressed }) => {
+              style={({ pressed, hovered }) => {
                 return {
                   backgroundColor: pressed
-                    ? theme.colors.surfaceContainerHigh
-                    : theme.colors.transparent,
+                    ? theme.colors.surfaceContainerHighest
+                    : hovered || selected
+                      ? theme.colors.surfaceContainerHigh
+                      : theme.colors.transparent,
                   flex: 1,
+                  flexDirection: 'row',
                   justifyContent: 'center',
                   alignItems: 'center',
+                  borderTopLeftRadius: index === 0 ? 12 : 0,
+                  borderTopRightRadius: index === props.tabs.length - 1 ? 12 : 0,
+                  borderBottomWidth: 1,
+                  borderColor: theme.colors.outlineVariant,
                 }
               }}
               onPress={() => {
@@ -68,17 +69,31 @@ export function TabView(props: TabViewProps) {
                 props.onTabChange?.(index)
               }}
             >
-              <Header selected={index === item} />
+              <Icon
+                name={tab.icon}
+                size={20}
+                color={selected ? theme.colors.primary : theme.colors.outline}
+              />
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: 700,
+                  color: selected ? theme.colors.primary : theme.colors.outline,
+                  marginLeft: 8,
+                }}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+              >
+                {tab.title}
+              </Text>
             </Pressable>
           )
         })}
       </View>
 
-      {headerLocation === 'top' && (
-        <View style={{ width: '100%', flex: 1, maxWidth: props.maxContentWidth }}>
-          {props.tabs[item].content}
-        </View>
-      )}
+      <View key={item} style={{ width: '100%', flex: 1, padding: 8 }}>
+        {props.tabs[item].content}
+      </View>
     </View>
   )
 }

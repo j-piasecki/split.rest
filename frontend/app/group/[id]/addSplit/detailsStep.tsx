@@ -4,6 +4,7 @@ import { ErrorText } from '@components/ErrorText'
 import { Form } from '@components/Form'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
+import { TabView } from '@components/TabView'
 import { TextInput } from '@components/TextInput'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { CurrencyUtils } from '@utils/CurrencyUtils'
@@ -20,11 +21,17 @@ export default function Modal() {
   const { id } = useLocalSearchParams()
 
   const [title, setTitle] = useState(getSplitCreationContext().title ?? '')
-  const [total, setTotal] = useState(getSplitCreationContext().totalAmount ?? '')
   const [timestamp, setTimestamp] = useState(getSplitCreationContext().timestamp ?? Date.now())
   const [error, setError] = useTranslatedError()
 
-  const totalVisible = getSplitCreationContext().splitType === SplitMethod.Equal
+  // Fields for equal splits
+  const [total, setTotal] = useState(getSplitCreationContext().totalAmount ?? '')
+  const [amountPerUser, setAmountPerUser] = useState(getSplitCreationContext().amountPerUser ?? '')
+  const [splittingByTotal, setSplittingByTotal] = useState(
+    getSplitCreationContext().amountPerUser === null
+  )
+
+  const splittingEqually = getSplitCreationContext().splitType === SplitMethod.Equal
 
   function submit() {
     try {
@@ -34,23 +41,31 @@ export default function Modal() {
       return
     }
 
-    if (totalVisible) {
-      if (total === '') {
-        setError(t('splitValidation.totalRequired'))
+    if (splittingEqually) {
+      const toValidate = splittingByTotal ? total : amountPerUser
+
+      if (toValidate === '') {
+        setError(t('splitValidation.amountRequired'))
         return
       }
 
-      if (Number.isNaN(Number(total))) {
-        setError(t('splitValidation.totalAmountMustBeNumber'))
+      if (Number.isNaN(Number(toValidate))) {
+        setError(t('splitValidation.amountMustBeNumber'))
         return
       }
 
-      if (Number(total) <= 0) {
-        setError(t('splitValidation.totalMustBeGreaterThanZero'))
+      if (Number(toValidate) <= 0) {
+        setError(t('splitValidation.amountMustBeGreaterThanZero'))
         return
       }
 
-      getSplitCreationContext().totalAmount = total
+      if (splittingByTotal) {
+        getSplitCreationContext().totalAmount = total
+        getSplitCreationContext().amountPerUser = null
+      } else {
+        getSplitCreationContext().amountPerUser = amountPerUser
+        getSplitCreationContext().totalAmount = null
+      }
     }
 
     getSplitCreationContext().title = title
@@ -101,22 +116,57 @@ export default function Modal() {
               style={{ marginBottom: 8 }}
             />
 
-            {totalVisible && (
-              <TextInput
-                placeholder={t('form.totalPaid')}
-                keyboardType='decimal-pad'
-                value={total}
-                onChangeText={(value) => {
-                  setTotal(value.replace(',', '.'))
-                  setError(null)
-                }}
-                style={{ marginBottom: 8 }}
-                onBlur={() => {
-                  const amountNum = Number(total)
-                  if (!Number.isNaN(amountNum) && total.length > 0) {
-                    setTotal(CurrencyUtils.format(amountNum))
-                  }
-                }}
+            {/* TODO: this does look kinda out of place */}
+            {splittingEqually && (
+              <TabView
+                openedTab={splittingByTotal ? 0 : 1}
+                onTabChange={(index) => setSplittingByTotal(index === 0)}
+                tabs={[
+                  {
+                    icon: 'sell',
+                    title: t('form.byTotal'),
+                    content: (
+                      <TextInput
+                        placeholder={t('form.totalPaid')}
+                        keyboardType='decimal-pad'
+                        value={total}
+                        onChangeText={(value) => {
+                          setTotal(value.replace(',', '.'))
+                          setError(null)
+                        }}
+                        style={{ marginBottom: 8 }}
+                        onBlur={() => {
+                          const amountNum = Number(total)
+                          if (!Number.isNaN(amountNum) && total.length > 0) {
+                            setTotal(CurrencyUtils.format(amountNum))
+                          }
+                        }}
+                      />
+                    ),
+                  },
+                  {
+                    icon: 'user',
+                    title: t('form.perPerson'),
+                    content: (
+                      <TextInput
+                        placeholder={t('form.amountPerPerson')}
+                        keyboardType='decimal-pad'
+                        value={amountPerUser}
+                        onChangeText={(value) => {
+                          setAmountPerUser(value.replace(',', '.'))
+                          setError(null)
+                        }}
+                        style={{ marginBottom: 8 }}
+                        onBlur={() => {
+                          const amountNum = Number(amountPerUser)
+                          if (!Number.isNaN(amountNum) && total.length > 0) {
+                            setAmountPerUser(CurrencyUtils.format(amountNum))
+                          }
+                        }}
+                      />
+                    ),
+                  },
+                ]}
               />
             )}
           </Form>
