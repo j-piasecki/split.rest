@@ -4,6 +4,7 @@ import { Icon } from '@components/Icon'
 import { PaneHeader } from '@components/Pane'
 import { PullableFlatList } from '@components/PullableFlatList'
 import { RoundIconButton } from '@components/RoundIconButton'
+import { Shimmer } from '@components/Shimmer'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { useUserGroupInvites } from '@hooks/database/useUserGroupInvites'
@@ -17,9 +18,11 @@ import { router } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Pressable, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupInfo, GroupInvite } from 'shared'
+
+const GROUP_ROW_HEIGHT = 80
 
 function Group({ info }: { info: GroupInfo }) {
   const theme = useTheme()
@@ -36,12 +39,16 @@ function Group({ info }: { info: GroupInfo }) {
       onPress={() => {
         router.navigate(`/group/${info.id}`)
       }}
-      style={[
+      style={({ pressed, hovered }) => [
         {
-          flex: 1,
           paddingHorizontal: 16,
-          paddingVertical: isSmallScreen ? 16 : 20,
-          backgroundColor: theme.colors.surfaceContainer,
+          height: GROUP_ROW_HEIGHT,
+          justifyContent: 'center',
+          backgroundColor: pressed
+            ? theme.colors.surfaceContainerHighest
+            : hovered
+              ? theme.colors.surfaceContainerHigh
+              : theme.colors.surfaceContainer,
         },
         styles.paneShadow,
       ]}
@@ -61,12 +68,12 @@ function Group({ info }: { info: GroupInfo }) {
 
         <View
           style={{
-            flexDirection: isSmallScreen ? 'column-reverse' : 'row',
+            flexDirection: isSmallScreen ? 'column' : 'row',
             gap: isSmallScreen ? 4 : 20,
             alignItems: 'flex-end',
           }}
         >
-          <Text style={{ fontSize: 16, color: balanceColor }}>
+          <Text style={{ fontSize: 18, fontWeight: 600, color: balanceColor }}>
             {CurrencyUtils.format(info.balance, info.currency, true)}
           </Text>
           <View style={{ flexDirection: 'row', gap: 8 }}>
@@ -75,14 +82,16 @@ function Group({ info }: { info: GroupInfo }) {
               <Icon name='members' size={20} color={theme.colors.outline} />
             </View>
 
-            <Icon
-              name={info.isAdmin ? 'shield' : 'lock'}
-              size={16}
-              color={
-                info.hasAccess && !info.isAdmin ? theme.colors.transparent : theme.colors.outline
-              }
-              style={{ transform: [{ translateY: 2 }] }}
-            />
+            {(!isSmallScreen || !info.hasAccess || info.isAdmin) && (
+              <Icon
+                name={info.isAdmin ? 'shield' : 'lock'}
+                size={16}
+                color={
+                  info.hasAccess && !info.isAdmin ? theme.colors.transparent : theme.colors.outline
+                }
+                style={{ transform: [{ translateY: 2 }] }}
+              />
+            )}
           </View>
         </View>
       </View>
@@ -106,11 +115,13 @@ function InvitationsButton({ invites, isLoadingInvites }: InvitationsButtonProps
 
   return (
     <Pressable
-      style={({ pressed }) => [
+      style={({ pressed, hovered }) => [
         {
           backgroundColor: pressed
-            ? theme.colors.surfaceContainerHigh
-            : theme.colors.surfaceContainer,
+            ? theme.colors.surfaceContainerHighest
+            : hovered
+              ? theme.colors.surfaceContainerHigh
+              : theme.colors.surfaceContainer,
           borderRadius: 16,
         },
         styles.paneShadow,
@@ -141,6 +152,65 @@ function InvitationsButton({ invites, isLoadingInvites }: InvitationsButtonProps
   )
 }
 
+function GroupsShimmer({ count }: { count: number }) {
+  const isSmallScreen = useDisplayClass() === DisplayClass.Small
+
+  return (
+    <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
+      {Array.from({ length: count }).map((_, index) => (
+        <React.Fragment key={index}>
+          <View
+            style={{
+              width: '100%',
+              height: GROUP_ROW_HEIGHT,
+              gap: 20,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 16,
+            }}
+          >
+            <Shimmer
+              offset={1 - index * 0.05}
+              style={{
+                flex: 1,
+                height: 28,
+                borderRadius: 14,
+              }}
+            />
+
+            <View
+              style={{
+                flexDirection: isSmallScreen ? 'column' : 'row',
+                gap: isSmallScreen ? 4 : 20,
+                alignItems: 'flex-end',
+              }}
+            >
+              <Shimmer
+                offset={1 - index * 0.05 + 0.65}
+                style={{
+                  width: 60,
+                  height: 24,
+                  borderRadius: 14,
+                }}
+              />
+              <Shimmer
+                offset={1 - index * 0.05 + (isSmallScreen ? 0.65 : 0.7)}
+                style={{
+                  width: 60,
+                  height: 24,
+                  borderRadius: 14,
+                }}
+              />
+            </View>
+          </View>
+          {index !== count - 1 && <Divider />}
+        </React.Fragment>
+      ))}
+    </View>
+  )
+}
+
 export default function Home() {
   const theme = useTheme()
   const { t } = useTranslation()
@@ -155,6 +225,7 @@ export default function Home() {
     fetchNextPage: fetchNextVisibleGroups,
     isFetchingNextPage: isFetchingNextVisibleGroups,
     isRefetching: isRefetchingVisibleGroups,
+    error: groupsError,
   } = useUserGroups(false)
 
   const {
@@ -164,6 +235,7 @@ export default function Home() {
     fetchNextPage: fetchNextHiddenGroups,
     isFetchingNextPage: isFetchingNextHiddenGroups,
     isRefetching: isRefetchingHiddenGroups,
+    error: hiddenGroupsError,
   } = useUserGroups(true)
 
   const { invites, isLoading: isLoadingInvites } = useUserGroupInvites(false)
@@ -250,15 +322,16 @@ export default function Home() {
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: theme.colors.surfaceContainer,
-                    paddingVertical: 32,
                   },
                   styles.paneShadow,
                 ]}
               >
-                {visibleGroupsLoading && <ActivityIndicator color={theme.colors.onSurface} />}
+                {visibleGroupsLoading && <GroupsShimmer count={7} />}
                 {!visibleGroupsLoading && (
-                  <Text style={{ color: theme.colors.outline, fontSize: 20 }}>
-                    {showHidden ? t('home.noHiddenGroups') : t('home.noGroups')}
+                  <Text style={{ color: theme.colors.outline, fontSize: 20, paddingVertical: 32 }}>
+                    {showHidden
+                      ? t(hiddenGroupsError ? 'home.errorLoadingGroups' : 'home.noHiddenGroups')
+                      : t(groupsError ? 'home.errorLoadingGroups' : 'home.noGroups')}
                   </Text>
                 )}
               </View>

@@ -1,3 +1,4 @@
+import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -12,17 +13,20 @@ import Animated, {
 } from 'react-native-reanimated'
 
 export interface ShimmerProps {
-  color: string
+  color?: string
   style?: StyleProp<ViewStyle>
   offset?: number
 }
 
 export function Shimmer({ color, style, offset = 0 }: ShimmerProps) {
+  const theme = useTheme()
   const gradientRef = useRef<View>(null)
   const [width, setWidth] = useState(0)
   const progress = useSharedValue(0)
 
-  if (!/^#([A-Fa-f0-9]{6})$/.test(color)) {
+  const colorToUse = color ?? theme.colors.surfaceContainerHighest
+
+  if (!/^#([A-Fa-f0-9]{6})$/.test(colorToUse)) {
     throw new Error('Color must be in hex rgba format')
   }
 
@@ -35,8 +39,8 @@ export function Shimmer({ color, style, offset = 0 }: ShimmerProps) {
     }
   })
 
-  const colorEdge = color + '00'
-  const colorCenter = color
+  const colorEdge = colorToUse + '00'
+  const colorCenter = colorToUse
 
   useLayoutEffect(() => {
     if (gradientRef.current) {
@@ -51,6 +55,9 @@ export function Shimmer({ color, style, offset = 0 }: ShimmerProps) {
   return (
     <View
       style={[
+        {
+          backgroundColor: theme.colors.surfaceContainerHigh,
+        },
         style,
         {
           overflow: 'hidden',

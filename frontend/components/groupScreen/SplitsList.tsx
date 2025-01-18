@@ -1,6 +1,7 @@
 import { SplitRow } from './SplitRow'
 import Header from '@components/Header'
 import { PullableFlatList } from '@components/PullableFlatList'
+import { Shimmer } from '@components/Shimmer'
 import { Text } from '@components/Text'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useGroupSplits } from '@hooks/database/useGroupSplits'
@@ -8,13 +9,61 @@ import { useTheme } from '@styling/theme'
 import { invalidateGroup } from '@utils/queryClient'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 import { RefreshControl } from 'react-native-gesture-handler'
 import { GroupInfo, SplitPermissionType } from 'shared'
 
 function Divider() {
   const theme = useTheme()
   return <View style={{ width: '100%', height: 1, backgroundColor: theme.colors.outlineVariant }} />
+}
+
+function SplitsShimmer({ count }: { count: number }) {
+  return (
+    <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
+      {Array.from({ length: count }).map((_, index) => (
+        <React.Fragment key={index}>
+          <View
+            style={{
+              width: '100%',
+              height: 72,
+              gap: 8,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 16,
+            }}
+          >
+            <Shimmer
+              offset={1 - index * 0.05}
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+              }}
+            />
+            <Shimmer
+              offset={1 - index * 0.05 - 0.2}
+              style={{
+                flex: 2,
+                height: 28,
+                borderRadius: 14,
+              }}
+            />
+            <Shimmer
+              offset={1 - index * 0.05 - 0.6}
+              style={{
+                flex: 1,
+                height: 28,
+                borderRadius: 14,
+              }}
+            />
+          </View>
+          {index !== count - 1 && <Divider />}
+        </React.Fragment>
+      ))}
+    </View>
+  )
 }
 
 export interface SplitsListProps {
@@ -81,15 +130,14 @@ export function SplitsList({
         ListEmptyComponent={
           <View
             style={{
-              paddingVertical: 16,
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: theme.colors.surfaceContainer,
             }}
           >
-            {isLoading && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
-            {!isLoading && (
-              <Text style={{ fontSize: 20, color: theme.colors.outline }}>
+            {(isLoading || !info) && <SplitsShimmer count={5} />}
+            {!isLoading && info && (
+              <Text style={{ fontSize: 20, color: theme.colors.outline, paddingVertical: 32 }}>
                 {permissions?.canReadSplits() === SplitPermissionType.None
                   ? t('api.insufficientPermissions.group.readSplits')
                   : t('noSplits')}

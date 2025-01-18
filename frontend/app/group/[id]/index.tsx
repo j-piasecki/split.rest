@@ -49,11 +49,13 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
 
   return (
     <Pressable
-      style={({ pressed }) => [
+      style={({ pressed, hovered }) => [
         {
           backgroundColor: pressed
-            ? theme.colors.surfaceContainerHigh
-            : theme.colors.surfaceContainer,
+            ? theme.colors.surfaceContainerHighest
+            : hovered
+              ? theme.colors.surfaceContainerHigh
+              : theme.colors.surfaceContainer,
           borderRadius: 16,
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -142,6 +144,7 @@ function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
   const theme = useTheme()
   const displayClass = useDisplayClass()
   const { t } = useTranslation()
+  const { data: permissions } = useGroupPermissions(info?.id)
 
   const horizontalInfo =
     displayClass === DisplayClass.Expanded || displayClass === DisplayClass.Medium
@@ -177,7 +180,7 @@ function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
             </Pane>
             <GroupActionButtons info={info} />
           </View>
-          <MembersButton info={info} />
+          {(!permissions || permissions.canReadMembers()) && <MembersButton info={info} />}
           <View
             style={[
               {
@@ -287,7 +290,7 @@ export default function GroupScreen() {
             >
               <SplitsList info={groupInfo} />
             </Pane>
-            {permissions?.canReadMembers() && (
+            {(!permissions || permissions?.canReadMembers()) && (
               <Pane
                 icon='members'
                 title={t('tabs.members')}

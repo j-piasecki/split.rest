@@ -1,5 +1,4 @@
 import { Shimmer } from './Shimmer'
-import { useTheme } from '@styling/theme'
 import { StyleProp, View, ViewStyle } from 'react-native'
 
 export interface ShimmerPlaceholderProps<T> {
@@ -19,8 +18,6 @@ export function ShimmerPlaceholder<T>({
   shimmerStyle,
   offset,
 }: ShimmerPlaceholderProps<T>) {
-  const theme = useTheme()
-
   const renderedChild =
     argument === undefined || argument === null
       ? null
@@ -31,12 +28,11 @@ export function ShimmerPlaceholder<T>({
   return argument === undefined || argument === null ? (
     <View key='shimmer' style={[style, { flexDirection: 'column', justifyContent: 'center' }]}>
       <Shimmer
-        color={color ?? theme.colors.surfaceContainerHighest}
+        color={color}
         style={[
           {
             width: '100%',
             height: '100%',
-            backgroundColor: theme.colors.surfaceContainerHigh,
             borderRadius: 16,
           },
           shimmerStyle,

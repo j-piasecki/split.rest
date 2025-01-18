@@ -56,7 +56,7 @@ export function Button({
             backgroundColor: destructive
               ? theme.colors.errorContainer
               : theme.colors.primaryContainer,
-            opacity: disabled ? 0.5 : state.pressed ? 0.7 : 1,
+            opacity: disabled ? 0.5 : state.pressed ? 0.7 : state.hovered ? 0.9 : 1,
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'row',

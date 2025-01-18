@@ -37,5 +37,6 @@ export function useUserGroups(hidden: boolean) {
     hasNextPage: result.hasNextPage,
     isFetchingNextPage: result.isFetchingNextPage,
     isRefetching: result.isRefetching,
+    error: result.error,
   }
 }

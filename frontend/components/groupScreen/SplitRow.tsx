@@ -81,14 +81,16 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
       key={split.id}
       ref={contextMenuRef}
       disabled={contextMenuDisabled}
-      style={({ pressed }) => {
+      style={({ pressed, hovered }) => {
         return [
           {
             userSelect: 'none',
             backgroundColor:
               pressed && permissions?.canSeeSplitDetails(split)
-                ? theme.colors.surfaceContainerHigh
-                : theme.colors.surfaceContainer,
+                ? theme.colors.surfaceContainerHighest
+                : hovered
+                  ? theme.colors.surfaceContainerHigh
+                  : theme.colors.surfaceContainer,
           },
           displayClass <= DisplayClass.Medium && styles.paneShadow,
         ]

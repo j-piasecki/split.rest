@@ -3,6 +3,7 @@ import { PaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { PullableFlatList } from '@components/PullableFlatList'
 import { RoundIconButton } from '@components/RoundIconButton'
+import { Shimmer } from '@components/Shimmer'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { useAcceptInvite } from '@hooks/database/useAcceptInvite'
@@ -14,7 +15,7 @@ import { invalidateGroupInvites } from '@utils/queryClient'
 import { router } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupInvite } from 'shared'
 
@@ -33,7 +34,8 @@ function Invite({ invite }: { invite: GroupInvite }) {
         flex: 1,
         paddingLeft: 16,
         paddingRight: 8,
-        paddingVertical: isSmallScreen ? 16 : 20,
+        paddingTop: isSmallScreen ? 16 : 20,
+        paddingBottom: 4,
         backgroundColor: theme.colors.surfaceContainer,
       }}
     >
@@ -45,7 +47,7 @@ function Invite({ invite }: { invite: GroupInvite }) {
       >
         <View style={{ flex: 1 }}>
           <Text
-            style={{ flex: 1, fontSize: 18, fontWeight: 600, color: theme.colors.onSurfaceVariant }}
+            style={{ fontSize: 18, fontWeight: 600, color: theme.colors.onSurfaceVariant }}
             numberOfLines={1}
             adjustsFontSizeToFit
           >
@@ -116,7 +118,57 @@ function Divider() {
   return <View style={{ width: '100%', height: 1, backgroundColor: theme.colors.outlineVariant }} />
 }
 
-export default function Home() {
+function InvitesShimmer({ count }: { count: number }) {
+  return (
+    <View style={{ width: '100%' }}>
+      {new Array(count).fill(0).map((_, index) => {
+        const offset = 1 - index * 0.05
+        return (
+          <React.Fragment key={index}>
+            <View style={{ width: '100%', padding: 16, gap: 8 }}>
+              <Shimmer
+                offset={offset}
+                style={{
+                  width: '50%',
+                  height: 20,
+                  borderRadius: 10,
+                }}
+              />
+              <Shimmer
+                offset={offset}
+                style={{
+                  width: '100%',
+                  height: 24,
+                  borderRadius: 12,
+                }}
+              />
+              <Shimmer
+                offset={offset}
+                style={{
+                  width: '50%',
+                  height: 20,
+                  borderRadius: 10,
+                }}
+              />
+              <Shimmer
+                offset={offset - 0.1}
+                style={{
+                  width: 96,
+                  height: 28,
+                  borderRadius: 12,
+                  alignSelf: 'flex-end',
+                }}
+              />
+            </View>
+            {index !== count - 1 && <Divider />}
+          </React.Fragment>
+        )
+      })}
+    </View>
+  )
+}
+
+export default function Invites() {
   const theme = useTheme()
   const { t } = useTranslation()
   const displayClass = useDisplayClass()
@@ -129,6 +181,7 @@ export default function Home() {
     fetchNextPage: getchNextInvites,
     isFetchingNextPage: isFetchingNextInvites,
     isRefetching: isRefetchingInvites,
+    error: invitesError,
   } = useUserGroupInvites(false)
 
   function refresh() {
@@ -190,13 +243,12 @@ export default function Home() {
                   justifyContent: 'center',
                   alignItems: 'center',
                   backgroundColor: theme.colors.surfaceContainer,
-                  paddingVertical: 32,
                 }}
               >
-                {invitesLoading && <ActivityIndicator color={theme.colors.onSurface} />}
+                {invitesLoading && <InvitesShimmer count={3} />}
                 {!invitesLoading && (
-                  <Text style={{ color: theme.colors.outline, fontSize: 20 }}>
-                    {t('home.noGroupInvites')}
+                  <Text style={{ color: theme.colors.outline, fontSize: 20, paddingVertical: 32 }}>
+                    {t(invitesError ? 'home.errorLoadingInvites' : 'home.noGroupInvites')}
                   </Text>
                 )}
               </View>
