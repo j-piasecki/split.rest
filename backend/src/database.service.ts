@@ -101,8 +101,6 @@ export class DatabaseService {
     return await inviteUser(this.pool, callerId, args)
   }
 
-  // Every user can create a split in a group they have access to
-  // TODO: specific permission for creating splits?
   @RequirePermissions(['createSplit'])
   async createSplit(callerId: string, args: CreateSplitArguments) {
     return await createSplit(this.pool, callerId, args)

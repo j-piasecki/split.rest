@@ -266,8 +266,9 @@
 
   "splitInfo": {
     "splitNotFound": "Split not found",
-    "edit": "Edit",
+    "edit": "Edit split",
     "edited": "Edited",
+    "restoreVersion": "Restore this state",
     "details": "Details",
     "editInfo": "Edited",
     "authorInfo": "Author",

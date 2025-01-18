@@ -5,12 +5,16 @@ import { Text } from '@components/Text'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSplitHistory } from '@hooks/database/useSplitHistory'
+import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
 import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, Platform, ScrollView, View } from 'react-native'
+import { SplitWithUsers } from 'shared'
+
+// TODO: this file is a joke
 
 export default function SplitInfoScreen() {
   const theme = useTheme()
@@ -19,6 +23,7 @@ export default function SplitInfoScreen() {
   const { t } = useTranslation()
   const { data: groupInfo } = useGroupInfo(Number(id))
   const { data: permissions } = useGroupPermissions(groupInfo?.id)
+  const { mutateAsync: updateSplit, isPending: isRestoring } = useUpdateSplit()
   const {
     history,
     isLoading: isLoadingHistory,
@@ -26,6 +31,7 @@ export default function SplitInfoScreen() {
     fetchNextPage,
   } = useSplitHistory(Number(id), Number(splitId))
   const containerRef = useRef<View>(null)
+  const scrollableRef = useRef<FlatList | ScrollView | null>(null)
   const [maxWidth, setMaxWidth] = useState(500)
 
   const userScrollRef = useRef(false)
@@ -37,6 +43,31 @@ export default function SplitInfoScreen() {
       setMaxWidth(size.width)
     }
   }, [isLoadingHistory, groupInfo])
+
+  async function restoreSplitVersion(split: SplitWithUsers) {
+    try {
+      await updateSplit({
+        groupId: Number(id),
+        splitId: split.id,
+        paidBy: split.paidById,
+        title: split.title,
+        total: Number(split.total),
+        timestamp: split.timestamp,
+        balances: split.users.map((user) => ({
+          id: user.id,
+          change: user.change,
+        })),
+      })
+
+      if ((scrollableRef.current as FlatList)?.scrollToIndex) {
+        ;(scrollableRef.current as FlatList).scrollToIndex({ index: 0, animated: true })
+      } else if ((scrollableRef.current as ScrollView)?.scrollTo) {
+        ;(scrollableRef.current as ScrollView).scrollTo(0)
+      }
+    } catch {
+      alert(t('unknownError'))
+    }
+  }
 
   return (
     <Modal title={t('screenName.splitInfo')} returnPath={`/group/${id}`} maxWidth={600}>
@@ -73,9 +104,18 @@ export default function SplitInfoScreen() {
                   fetchNextPage()
                 }
               }}
-              renderItem={({ item }) => (
+              renderItem={({ item, index }) => (
                 <View style={{ width: maxWidth, transform: [{ scaleX: -1 }] }}>
                   <SplitInfo splitInfo={item} groupInfo={groupInfo} />
+                  {index !== 0 && permissions?.canUpdateSplit(history[0]) && (
+                    <Button
+                      title={t('splitInfo.restoreVersion')}
+                      style={{ marginHorizontal: 16, marginBottom: 8 }}
+                      leftIcon='undo'
+                      onPress={() => restoreSplitVersion(item)}
+                      isLoading={isRestoring}
+                    />
+                  )}
                 </View>
               )}
               scrollEventThrottle={250}
@@ -83,6 +123,7 @@ export default function SplitInfoScreen() {
                 userScrollRef.current = true
               }}
               ref={(ref) => {
+                scrollableRef.current = ref
                 if (history.length > 0) {
                   // TODO: this is kinda scuffed (and doesn't work on web), should probably figure out something better
                   setTimeout(() => {
@@ -120,6 +161,7 @@ export default function SplitInfoScreen() {
                 }
               }}
               ref={(ref) => {
+                scrollableRef.current = ref
                 if (history.length > 0) {
                   // TODO: this is kinda scuffed (and doesn't work on web), should probably figure out something better
                   setTimeout(() => {
@@ -134,12 +176,22 @@ export default function SplitInfoScreen() {
                 }
               }}
             >
-              {history.map((split) => (
+              {history.map((split, index) => (
                 <View
                   key={`${split.version}`}
                   style={{ flex: 1, width: maxWidth, transform: [{ scaleX: -1 }] }}
                 >
                   <SplitInfo splitInfo={split} groupInfo={groupInfo} />
+
+                  {index !== 0 && permissions?.canUpdateSplit(history[0]) && (
+                    <Button
+                      title={t('splitInfo.restoreVersion')}
+                      style={{ marginHorizontal: 16, marginBottom: 8 }}
+                      leftIcon='undo'
+                      onPress={() => restoreSplitVersion(split)}
+                      isLoading={isRestoring}
+                    />
+                  )}
                 </View>
               ))}
             </ScrollView>
@@ -149,6 +201,7 @@ export default function SplitInfoScreen() {
             <Button
               title={t('splitInfo.edit')}
               style={{ marginHorizontal: 16 }}
+              disabled={isRestoring}
               leftIcon='edit'
               onPress={() => router.navigate(`/group/${groupInfo?.id}/split/${history[0].id}/edit`)}
             />
