@@ -69,12 +69,11 @@ export default function Modal() {
   const [split, setSplit] = useState<SplitWithUsers | null>(null)
 
   useEffect(() => {
-    getSplitCreationContext()
-      .buildSplitPreview()
-      .then((split) => {
-        setSplit(split)
-      })
-      .catch(setError)
+    try {
+      setSplit(getSplitCreationContext().buildSplitPreview())
+    } catch (e) {
+      setError(e)
+    }
   }, [setError])
 
   return (

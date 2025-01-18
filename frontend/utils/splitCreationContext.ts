@@ -52,7 +52,7 @@ class SplitCreationContext {
     return index === -1 ? undefined : index
   }
 
-  private async getParticipantsData(): Promise<UserWithBalanceChange[]> {
+  private getParticipantsData(): UserWithBalanceChange[] {
     if (this.participants === null) {
       return []
     }
@@ -109,9 +109,9 @@ class SplitCreationContext {
     }
   }
 
-  async buildSplitPreview(): Promise<SplitWithUsers> {
+  buildSplitPreview(): SplitWithUsers {
     this.tryFillMissingData()
-    const users = await this.getParticipantsData()
+    const users = this.getParticipantsData()
     const paidById = this.paidById
 
     if (!paidById) {
