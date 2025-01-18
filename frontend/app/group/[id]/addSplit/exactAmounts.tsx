@@ -80,7 +80,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
         onSubmit={save}
         waiting={waiting}
         error={error}
-        buttonTitle='splitType.buttonNext'
+        buttonTitle='form.buttonNext'
         buttonIcon='chevronForward'
         buttonIconLocation='right'
       />

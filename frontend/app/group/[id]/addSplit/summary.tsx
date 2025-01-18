@@ -8,9 +8,10 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
-import { getSplitCreationContext } from '@utils/splitCreationContext'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
+import { useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import { GroupInfo, SplitWithUsers } from 'shared'
@@ -49,7 +50,20 @@ function Content({ groupInfo, split }: { groupInfo: GroupInfo; split: SplitWithU
       <View style={{ gap: 16, paddingHorizontal: 16 }}>
         {error && <ErrorText>{error}</ErrorText>}
         {permissions?.canCreateSplits() && (
-          <Button leftIcon='save' title={t('form.save')} isLoading={isPending} onPress={save} />
+          <>
+            {/* I don't think it makes sense to show edit button on splits by exact amounts, that's essentially the same form shown twice */}
+            {getSplitCreationContext().splitType !== SplitMethod.ExactAmounts && (
+              <Button
+                leftIcon='edit'
+                title={t('form.edit')}
+                disabled={isPending}
+                onPress={() => {
+                  router.navigate(`/group/${groupInfo.id}/addSplit/edit`)
+                }}
+              />
+            )}
+            <Button leftIcon='save' title={t('form.save')} isLoading={isPending} onPress={save} />
+          </>
         )}
         {!permissions?.canCreateSplits() && (
           <ErrorText translationKey='api.insufficientPermissions.group.createSplit' />
@@ -68,13 +82,13 @@ export default function Modal() {
   const [error, setError] = useTranslatedError()
   const [split, setSplit] = useState<SplitWithUsers | null>(null)
 
-  useEffect(() => {
+  useFocusEffect(() => {
     try {
       setSplit(getSplitCreationContext().buildSplitPreview())
     } catch (e) {
       setError(e)
     }
-  }, [setError])
+  })
 
   return (
     <ModalScreen

@@ -151,7 +151,6 @@
   },
 
   "splitType": {
-    "buttonNext": "Next",
     "selectType": "How would you like to split?",
     "exactAmounts": "By exact amounts",
     "equalAmounts": "Equally"
@@ -226,12 +225,14 @@
     "title": "Title",
     "amount": "Amount",
     "save": "Save",
+    "edit": "Edit",
     "totalPaid": "Total paid",
     "amountPerPerson": "Each person paid",
     "byTotal": "By total",
     "perPerson": "Per person",
     "back": "Go back",
-    "nameOrEmail": "Name or e-mail"
+    "nameOrEmail": "Name or e-mail",
+    "buttonNext": "Next"
   },
 
   "member": {

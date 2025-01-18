@@ -117,6 +117,7 @@ export default function Modal() {
             />
 
             {/* TODO: this does look kinda out of place */}
+            {/* TODO: remember which option was picked last time */}
             {splittingEqually && (
               <TabView
                 openedTab={splittingByTotal ? 0 : 1}
@@ -182,7 +183,7 @@ export default function Modal() {
 
       <View style={{ gap: 16, marginHorizontal: 16 }}>
         {error && <ErrorText>{error}</ErrorText>}
-        <Button rightIcon='chevronForward' title={t('splitType.buttonNext')} onPress={submit} />
+        <Button rightIcon='chevronForward' title={t('form.buttonNext')} onPress={submit} />
       </View>
     </ModalScreen>
   )

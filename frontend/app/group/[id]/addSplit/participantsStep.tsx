@@ -105,7 +105,7 @@ function ParticipansPicker({ user }: { user: User }) {
 
       <View style={{ gap: 8, paddingHorizontal: 16 }}>
         {error && <ErrorText>{error}</ErrorText>}
-        <Button rightIcon='chevronForward' title={t('splitType.buttonNext')} onPress={submit} />
+        <Button rightIcon='chevronForward' title={t('form.buttonNext')} onPress={submit} />
       </View>
     </View>
   )
