@@ -159,7 +159,7 @@ function ButtonPlaceholder<T>({ argument, children, offset }: ButtonPlaceholderP
         height: 48,
         minWidth: 180,
         borderRadius: 12,
-        backgroundColor: theme.colors.primaryContainer,
+        backgroundColor: argument ? 'transparent' : theme.colors.primaryContainer,
       }}
       shimmerStyle={{ borderRadius: 12, opacity: 0.25 }}
       color={theme.colors.onPrimaryContainer}
