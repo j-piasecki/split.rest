@@ -3,6 +3,7 @@ import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Pressable, ScrollView, View, ViewStyle } from 'react-native'
+import Animated, { FadeInUp } from 'react-native-reanimated'
 import { useDebounce } from 'use-debounce'
 
 type SuggestionRenderFunction<T> = (
@@ -203,7 +204,8 @@ export function TextInputWithSuggestions<T>({
         }}
       />
       {suggestionBoxVisible && (
-        <View
+        <Animated.View
+          entering={FadeInUp.duration(150)}
           ref={suggestionBoxRef}
           style={{
             position: 'absolute',
@@ -241,7 +243,7 @@ export function TextInputWithSuggestions<T>({
               </React.Fragment>
             ))}
           </ScrollView>
-        </View>
+        </Animated.View>
       )}
     </View>
   )
