@@ -110,7 +110,7 @@ export default function SplitInfoScreen() {
                   {index !== 0 && permissions?.canUpdateSplit(history[0]) && (
                     <Button
                       title={t('splitInfo.restoreVersion')}
-                      style={{ marginHorizontal: 16, marginBottom: 8 }}
+                      style={{ marginHorizontal: 16, marginBottom: 16 }}
                       leftIcon='undo'
                       onPress={() => restoreSplitVersion(item)}
                       isLoading={isRestoring}
@@ -186,7 +186,7 @@ export default function SplitInfoScreen() {
                   {index !== 0 && permissions?.canUpdateSplit(history[0]) && (
                     <Button
                       title={t('splitInfo.restoreVersion')}
-                      style={{ marginHorizontal: 16, marginBottom: 8 }}
+                      style={{ marginHorizontal: 16, marginBottom: 16 }}
                       leftIcon='undo'
                       onPress={() => restoreSplitVersion(split)}
                       isLoading={isRestoring}
