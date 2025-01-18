@@ -199,7 +199,7 @@ export default function SplitInfoScreen() {
 
           {permissions?.canUpdateSplit(history[0]) && (
             <Button
-              title={t('splitInfo.edit')}
+              title={t('split.edit')}
               style={{ marginHorizontal: 16 }}
               disabled={isRestoring}
               leftIcon='edit'
