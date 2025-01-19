@@ -12,7 +12,8 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "rest.split.app",
-      "usesAppleSignIn": true
+      "usesAppleSignIn": true,
+      "associatedDomains": ["applinks:split.rest"]
     },
     "android": {
       "versionCode": 5,
@@ -22,7 +23,21 @@
         "monochromeImage": "./assets/icon-foreground.png",
         "backgroundColor": "#8e004a"
       },
-      "package": "rest.split.app"
+      "package": "rest.split.app",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.split.rest",
+              "pathPrefix": "/*"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
