@@ -3681,6 +3681,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-firebase/analytics@npm:^21.7.0":
+  version: 21.7.0
+  resolution: "@react-native-firebase/analytics@npm:21.7.0"
+  dependencies:
+    superstruct: ^2.0.2
+  peerDependencies:
+    "@react-native-firebase/app": 21.7.0
+  checksum: e1ba25d0a369ac9b235067fee8140c02189b093a44e61e098fbc77ac18f7f1d3215808737fd631694b117145087a6fdd4ebda495860a7b3673d37d356ef37ba4
+  languageName: node
+  linkType: hard
+
 "@react-native-firebase/app@npm:^21.6.1":
   version: 21.6.1
   resolution: "@react-native-firebase/app@npm:21.6.1"
@@ -8738,6 +8749,7 @@ __metadata:
     "@expo/vector-icons": ^14.0.2
     "@invertase/react-native-apple-authentication": ^2.4.0
     "@react-native-async-storage/async-storage": 1.23.1
+    "@react-native-firebase/analytics": ^21.7.0
     "@react-native-firebase/app": ^21.6.1
     "@react-native-firebase/auth": ^21.6.1
     "@react-native-firebase/crashlytics": ^21.6.1
@@ -15012,6 +15024,13 @@ __metadata:
     mime: 2.6.0
     qs: ^6.11.0
   checksum: f471461b21f034d844fd0aca332128d61e3afb75c2ee5950f3339f2a3b5ca8b23e2861224f19ad9b43f21c9184d28b7d9384af5a4fde64fdef479efdb15036db
+  languageName: node
+  linkType: hard
+
+"superstruct@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "superstruct@npm:2.0.2"
+  checksum: a5f75b72cb8b14b86f4f7f750dae8c5ab0e4e1d92414b55e7625bae07bbcafad81c92486e7e32ccacd6ae1f553caff2b92a50ff42ad5093fd35b9cb7f4e5ec86
   languageName: node
   linkType: hard
 

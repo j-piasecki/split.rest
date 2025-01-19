@@ -17,6 +17,7 @@ import { ActivityIndicator, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
 import 'utils/firebase'
+import { logScreenView } from 'utils/firebase'
 
 SplashScreen.preventAutoHideAsync()
 SplashScreen.setOptions({
@@ -60,6 +61,10 @@ function Content() {
       SplashScreen.hide()
     }
   }, [isLoading])
+
+  useEffect(() => {
+    logScreenView(pathname, pathname)
+  }, [pathname])
 
   if (isLoading) {
     return (

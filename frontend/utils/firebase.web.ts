@@ -1,4 +1,4 @@
-import { getAnalytics } from 'firebase/analytics'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import { initializeApp } from 'firebase/app'
 import { ReCaptchaV3Provider, initializeAppCheck } from 'firebase/app-check'
 import { getAuth } from 'firebase/auth'
@@ -13,20 +13,25 @@ const firebaseConfig = {
   measurementId: 'G-KYEGQF5KND',
 }
 
-const app = initializeApp(firebaseConfig)
+export const app = initializeApp(firebaseConfig)
+export const auth = getAuth(app)
 const analytics = getAnalytics(app)
-const auth = getAuth(app)
 
-const appCheck = initializeAppCheck(app, {
+initializeAppCheck(app, {
   provider: new ReCaptchaV3Provider('6LcRp4cqAAAAADoaZ_lxCnRyYZlEtKiqU1y18icK'),
   isTokenAutoRefreshEnabled: true,
 })
 
 auth.useDeviceLanguage()
 
-const crashlytics = {
+export const crashlytics = {
   // no-op on web, crashlytics is not supported
   recordError: (_error: Error) => {},
 }
 
-export { app, analytics, auth, appCheck, crashlytics }
+export function logScreenView(screenName: string, screenClass: string) {
+  logEvent(analytics, 'screen_view', {
+    firebase_screen: screenName, 
+    firebase_screen_class: screenClass
+  });  
+}
