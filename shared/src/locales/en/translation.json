@@ -8,6 +8,8 @@
   "noMembers": "No members",
   "checkingIfYouAreLoggedIn": "Checking if you're logged in",
   "deletedUser": "Deleted user",
+  "youSeemLost": "You seem to be lost",
+  "goBack": "Go back",
 
   "index": {
     "headline": "Pay once and <Styled>split</Styled> between the <Styled>rest</Styled> of the group",
@@ -255,7 +257,7 @@
   },
 
   "groupInfo": {
-    "couldNotLoad": "Could not load group info",
+    "couldNotLoad": "Couldn't load group info",
     "yourBalance": "Your balance:",
     "numberOfMembers": "{{count}} members", 
     "accessToGroup": "You have access to this group",

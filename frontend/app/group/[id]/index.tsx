@@ -235,9 +235,17 @@ export default function GroupScreen() {
         }}
       >
         <Header showBackButton />
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
-          <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
-          <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 8,
+            paddingBottom: 128,
+          }}
+        >
+          <Text style={{ color: theme.colors.onSurface, fontSize: 64, opacity: 0.5 }}>{'😞'}</Text>
+          <Text style={{ color: theme.colors.onSurface, fontSize: 20, fontWeight: 600 }}>
             {t('groupInfo.couldNotLoad')}
           </Text>
         </View>
