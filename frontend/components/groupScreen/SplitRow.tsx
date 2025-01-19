@@ -14,9 +14,9 @@ import { useRouter } from 'expo-router'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { GroupInfo, SplitInfo } from 'shared'
+import { GroupUserInfo, SplitInfo } from 'shared'
 
-function LinearInfo({ split, info }: { split: SplitInfo; info: GroupInfo }) {
+function LinearInfo({ split, info }: { split: SplitInfo; info: GroupUserInfo }) {
   const theme = useTheme()
 
   return (
@@ -35,7 +35,7 @@ function LinearInfo({ split, info }: { split: SplitInfo; info: GroupInfo }) {
   )
 }
 
-function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo }) {
+function StackedInfo({ split, info }: { split: SplitInfo; info: GroupUserInfo }) {
   const theme = useTheme()
 
   return (
@@ -56,7 +56,7 @@ function StackedInfo({ split, info }: { split: SplitInfo; info: GroupInfo }) {
 
 export interface LoadedSplitRowProps {
   split: SplitInfo
-  info: GroupInfo
+  info: GroupUserInfo
 }
 
 function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
@@ -193,7 +193,7 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
 
 export interface SplitRowProps {
   split: SplitInfo
-  info?: GroupInfo
+  info?: GroupUserInfo
 }
 
 export function SplitRow({ split, info }: SplitRowProps) {

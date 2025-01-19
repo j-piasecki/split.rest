@@ -1,12 +1,12 @@
 import { NotFoundException } from '../../errors/NotFoundException'
 import { Pool } from 'pg'
-import { GroupMetadata } from 'shared'
+import { GroupInfo } from 'shared'
 import { GetGroupMetadataByLinkArguments } from 'shared/src/endpointArguments'
 
 export async function getGroupMetadataByLink(
   pool: Pool,
   args: GetGroupMetadataByLinkArguments
-): Promise<GroupMetadata> {
+): Promise<GroupInfo> {
   const { rows } = await pool.query(
     `
       SELECT 

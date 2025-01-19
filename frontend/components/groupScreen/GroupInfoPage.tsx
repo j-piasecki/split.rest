@@ -13,9 +13,9 @@ import { router } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { GroupInfo } from 'shared'
+import { GroupUserInfo } from 'shared'
 
-export function GroupInfoCard({ info }: { info: GroupInfo | undefined }) {
+export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
@@ -171,7 +171,7 @@ function ButtonPlaceholder<T>({ argument, children, offset }: ButtonPlaceholderP
   )
 }
 
-export function GroupActionButtons({ info }: { info: GroupInfo | undefined }) {
+export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }) {
   const user = useAuth()
 
   const { t } = useTranslation()

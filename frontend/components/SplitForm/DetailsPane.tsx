@@ -7,10 +7,10 @@ import { CurrencyUtils } from '@utils/CurrencyUtils'
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { GroupInfo } from 'shared'
+import { GroupUserInfo } from 'shared'
 
 export interface DetailsPaneProps {
-  groupInfo: GroupInfo
+  groupInfo: GroupUserInfo
   formState: FormData
   updateForm: React.Dispatch<FormActionType>
   titleEditable?: boolean

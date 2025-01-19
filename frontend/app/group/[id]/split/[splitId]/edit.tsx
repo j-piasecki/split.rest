@@ -12,9 +12,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { BalanceChange, GroupInfo, SplitWithUsers } from 'shared'
+import { BalanceChange, GroupUserInfo, SplitWithUsers } from 'shared'
 
-function Form({ groupInfo, splitInfo }: { groupInfo: GroupInfo; splitInfo: SplitWithUsers }) {
+function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: SplitWithUsers }) {
   const router = useRouter()
   const snack = useSnack()
   const [error, setError] = useTranslatedError()

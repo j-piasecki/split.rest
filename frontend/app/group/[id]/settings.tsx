@@ -20,13 +20,13 @@ import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
-import { GroupInfo } from 'shared'
+import { GroupUserInfo } from 'shared'
 
 function JoinLinkManager({
   info,
   permissions,
 }: {
-  info: GroupInfo
+  info: GroupUserInfo
   permissions: GroupPermissions
 }) {
   const theme = useTheme()
@@ -147,7 +147,7 @@ function DeleteConfirmationModal({
   )
 }
 
-function Form({ info }: { info: GroupInfo }) {
+function Form({ info }: { info: GroupUserInfo }) {
   const router = useRouter()
   const { t } = useTranslation()
   const snack = useSnack()

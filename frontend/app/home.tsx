@@ -20,11 +20,11 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupInfo, GroupInvite } from 'shared'
+import { GroupInvite, GroupUserInfo } from 'shared'
 
 const GROUP_ROW_HEIGHT = 80
 
-function Group({ info }: { info: GroupInfo }) {
+function Group({ info }: { info: GroupUserInfo }) {
   const theme = useTheme()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const balanceColor =

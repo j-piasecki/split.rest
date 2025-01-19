@@ -1,13 +1,13 @@
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
-import { GetGroupInfoArguments, GroupInfo } from 'shared'
+import { GetGroupInfoArguments, GroupUserInfo } from 'shared'
 
 export async function getGroupInfo(
   pool: Pool,
   callerId: string,
   args: GetGroupInfoArguments
-): Promise<GroupInfo | null> {
+): Promise<GroupUserInfo | null> {
   if (await isGroupDeleted(pool, args.groupId)) {
     throw new NotFoundException('api.notFound.group')
   }

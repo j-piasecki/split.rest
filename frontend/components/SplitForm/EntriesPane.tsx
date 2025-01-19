@@ -5,12 +5,12 @@ import { Pane } from '@components/Pane'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutRectangle, ScrollView } from 'react-native'
-import { GroupInfo } from 'shared'
+import { GroupUserInfo } from 'shared'
 
 interface SplitEntriesPaneProps {
   formState: FormData
   updateForm: React.Dispatch<FormActionType>
-  groupInfo: GroupInfo
+  groupInfo: GroupUserInfo
   scrollRef?: React.RefObject<ScrollView>
 }
 

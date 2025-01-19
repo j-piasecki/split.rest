@@ -8,7 +8,12 @@ import { CurrencyUtils } from '@utils/CurrencyUtils'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { GroupInfo, LanguageTranslationKey, SplitWithUsers, UserWithBalanceChange } from 'shared'
+import {
+  GroupUserInfo,
+  LanguageTranslationKey,
+  SplitWithUsers,
+  UserWithBalanceChange,
+} from 'shared'
 
 function UserRow({
   user,
@@ -18,7 +23,7 @@ function UserRow({
 }: {
   user: UserWithBalanceChange
   splitInfo: SplitWithUsers
-  groupInfo: GroupInfo | undefined
+  groupInfo: GroupUserInfo | undefined
   last?: boolean
 }) {
   const theme = useTheme()
@@ -168,7 +173,7 @@ export function SplitInfo({
   groupInfo,
 }: {
   splitInfo: SplitWithUsers
-  groupInfo: GroupInfo
+  groupInfo: GroupUserInfo
 }) {
   const theme = useTheme()
   const { t } = useTranslation()

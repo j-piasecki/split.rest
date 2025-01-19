@@ -11,9 +11,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { GroupInfo, SplitWithUsers } from 'shared'
+import { GroupUserInfo, SplitWithUsers } from 'shared'
 
-function Content({ groupInfo, split }: { groupInfo: GroupInfo; split: SplitWithUsers }) {
+function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitWithUsers }) {
   const router = useRouter()
   const snack = useSnack()
   const [waiting, setWaiting] = useState(false)

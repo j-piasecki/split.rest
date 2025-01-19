@@ -14,9 +14,9 @@ import { useState } from 'react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupInfo, SplitWithUsers } from 'shared'
+import { GroupUserInfo, SplitWithUsers } from 'shared'
 
-function Content({ groupInfo, split }: { groupInfo: GroupInfo; split: SplitWithUsers }) {
+function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitWithUsers }) {
   const { t } = useTranslation()
   const router = useRouter()
   const snack = useSnack()

@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { GetGroupMetadataByLinkArguments, GroupMetadata, TranslatableError } from 'shared'
+import { GetGroupMetadataByLinkArguments, GroupInfo, TranslatableError } from 'shared'
 
 export function useGroupMetadataByLink(uuid: string) {
   return useQuery({
     queryKey: ['groupMetadataByLink', uuid],
-    queryFn: async (): Promise<GroupMetadata> => {
+    queryFn: async (): Promise<GroupInfo> => {
       const args: GetGroupMetadataByLinkArguments = { uuid }
-      const info = await makeRequest<GetGroupMetadataByLinkArguments, GroupMetadata>(
+      const info = await makeRequest<GetGroupMetadataByLinkArguments, GroupInfo>(
         'GET',
         'getGroupMetadataByLink',
         args,

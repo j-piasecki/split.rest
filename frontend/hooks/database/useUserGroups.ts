@@ -1,13 +1,13 @@
 import { QueryFunctionContext, QueryKey, useInfiniteQuery } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
 import { useCallback } from 'react'
-import { GetUserGroupsArguments, GroupInfo } from 'shared'
+import { GetUserGroupsArguments, GroupUserInfo } from 'shared'
 
 export function useUserGroups(hidden: boolean) {
   const fetchGroups = useCallback(
     async ({ pageParam }: QueryFunctionContext<QueryKey, number>) => {
       const args: GetUserGroupsArguments = { hidden, startAfter: pageParam }
-      const result = await makeRequest<GetUserGroupsArguments, GroupInfo[]>(
+      const result = await makeRequest<GetUserGroupsArguments, GroupUserInfo[]>(
         'GET',
         'getUserGroups',
         args

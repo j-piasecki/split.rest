@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { RefreshControl } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupInfo } from 'shared'
+import { GroupUserInfo } from 'shared'
 
 function Divider() {
   const theme = useTheme()
@@ -76,7 +76,7 @@ function MembersShimmer({ count, iconOnly }: { count: number; iconOnly?: boolean
 }
 
 export interface MembersListProps {
-  info: GroupInfo | undefined
+  info: GroupUserInfo | undefined
   iconOnly?: boolean
   applyBottomInset?: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

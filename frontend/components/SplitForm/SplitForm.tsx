@@ -8,10 +8,10 @@ import { IconName } from '@components/Icon'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { GroupInfo, LanguageTranslationKey } from 'shared'
+import { GroupUserInfo, LanguageTranslationKey } from 'shared'
 
 export interface SplitFormProps {
-  groupInfo: GroupInfo
+  groupInfo: GroupUserInfo
   initialTitle?: string | null
   initialEntries: SplitEntryData[]
   initialPaidByIndex?: number

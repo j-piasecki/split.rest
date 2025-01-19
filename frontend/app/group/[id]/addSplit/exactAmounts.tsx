@@ -10,7 +10,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupInfo, TranslatableError, User } from 'shared'
+import { GroupUserInfo, TranslatableError, User } from 'shared'
 
 function initialEntriesFromContext(currentUser: User): SplitEntryData[] {
   const splitContext = getSplitCreationContext()
@@ -31,7 +31,7 @@ function initialEntriesFromContext(currentUser: User): SplitEntryData[] {
   return initialEntries
 }
 
-function Form({ groupInfo, user }: { groupInfo: GroupInfo; user: User }) {
+function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: User }) {
   const router = useRouter()
   const [error, setError] = useTranslatedError()
   const [waiting, setWaiting] = useState(false)

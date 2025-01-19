@@ -28,9 +28,9 @@ import {
   useWindowDimensions,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupInfo } from 'shared'
+import { GroupUserInfo } from 'shared'
 
-function MembersButton({ info }: { info: GroupInfo | undefined }) {
+function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const { t } = useTranslation()
   const router = useRouter()
@@ -140,7 +140,7 @@ function MembersButton({ info }: { info: GroupInfo | undefined }) {
   )
 }
 
-function SingleColumnLayout({ info }: { info: GroupInfo | undefined }) {
+function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const displayClass = useDisplayClass()
   const { t } = useTranslation()

@@ -10,7 +10,7 @@ export enum GroupType {
   Normal = 0,
 }
 
-export interface GroupMetadata {
+export interface GroupInfo {
   id: number
   name: string
   currency: string
@@ -20,7 +20,7 @@ export interface GroupMetadata {
   type: GroupType
 }
 
-export interface GroupInfo extends GroupMetadata {
+export interface GroupUserInfo extends GroupInfo {
   isAdmin: boolean
   hasAccess: boolean
   hidden: boolean
@@ -76,7 +76,7 @@ export interface GroupJoinLink {
 
 export interface GroupInvite {
   createdBy: User
-  groupInfo: GroupMetadata
+  groupInfo: GroupInfo
   createdAt: number
   rejected: boolean
 }

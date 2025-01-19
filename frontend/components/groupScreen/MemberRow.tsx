@@ -15,11 +15,11 @@ import React from 'react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { GroupInfo, Member } from 'shared'
+import { GroupUserInfo, Member } from 'shared'
 
 export interface MemberRowProps {
   member: Member
-  info: GroupInfo
+  info: GroupUserInfo
   iconOnly: boolean
 }
 

@@ -11,7 +11,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { RefreshControl } from 'react-native-gesture-handler'
-import { GroupInfo, SplitPermissionType } from 'shared'
+import { GroupUserInfo, SplitPermissionType } from 'shared'
 
 function Divider() {
   const theme = useTheme()
@@ -67,7 +67,7 @@ function SplitsShimmer({ count }: { count: number }) {
 }
 
 export interface SplitsListProps {
-  info: GroupInfo | undefined
+  info: GroupUserInfo | undefined
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   headerComponent?: React.ComponentType<any> | React.ReactElement
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

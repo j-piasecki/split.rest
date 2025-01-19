@@ -1,12 +1,12 @@
 import { addUserToGroup } from '../utils/addUserToGroup'
 import { Pool } from 'pg'
-import { CreateGroupArguments, GroupInfo, GroupType } from 'shared'
+import { CreateGroupArguments, GroupType, GroupUserInfo } from 'shared'
 
 export async function createGroup(
   pool: Pool,
   callerId: string,
   args: CreateGroupArguments
-): Promise<GroupInfo> {
+): Promise<GroupUserInfo> {
   const client = await pool.connect()
 
   try {
