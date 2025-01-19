@@ -64,7 +64,6 @@ export async function getSplitHistory(
               split_participants_edits.change, 
               users.name, 
               users.email, 
-              users.photo_url,
               users.deleted 
             FROM 
               users 
@@ -83,7 +82,7 @@ export async function getSplitHistory(
         id: row.id,
         name: row.name,
         email: row.email,
-        photoUrl: row.photo_url,
+        photoUrl: null,
         change: row.change,
         deleted: row.deleted,
       }))

@@ -19,7 +19,6 @@ export async function getBalances(
           users.id,
           users.name, 
           users.email,
-          users.photo_url,
           group_members.balance
         FROM group_members
         INNER JOIN users ON group_members.user_id = users.id 
@@ -39,7 +38,7 @@ export async function getBalances(
     id: balance.id,
     name: balance.name,
     email: balance.email,
-    photoUrl: balance.photo_url,
+    photoUrl: null,
     deleted: balance.deleted,
     change: balance.balance,
   }))

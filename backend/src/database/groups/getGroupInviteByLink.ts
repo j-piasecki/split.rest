@@ -21,7 +21,6 @@ export async function getGroupInviteByLink(
         users.id as inviter_id,
         users.name as inviter_name,
         users.email as inviter_email,
-        users.photo_url as inviter_photo_url,
         users.deleted as inviter_deleted
       FROM
         groups 
@@ -53,7 +52,7 @@ export async function getGroupInviteByLink(
       id: rows[0].inviter_id,
       name: rows[0].inviter_name,
       email: rows[0].inviter_email,
-      photoUrl: rows[0].inviter_photo_url,
+      photoUrl: null,
       deleted: rows[0].inviter_deleted,
     },
     createdAt: rows[0].created_at,

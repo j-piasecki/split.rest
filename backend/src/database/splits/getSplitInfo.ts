@@ -31,7 +31,6 @@ export async function getSplitInfo(
           split_participants.change, 
           users.name, 
           users.email, 
-          users.photo_url,
           users.deleted 
         FROM 
           users 
@@ -61,7 +60,7 @@ export async function getSplitInfo(
       id: p.id,
       name: p.name,
       email: p.email,
-      photoUrl: p.photo_url,
+      photoUrl: null,
       change: p.change,
       deleted: p.deleted,
     })),
