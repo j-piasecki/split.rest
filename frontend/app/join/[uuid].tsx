@@ -197,7 +197,7 @@ export default function JoinPage() {
       }}
     >
       {auth && <Header showBackButton />}
-      <View style={{ flex: 1, paddingBottom: insets.bottom }}>
+      <View style={{ flex: 1, paddingBottom: insets.bottom || 16 }}>
         {auth === undefined && <ActivityIndicator color={theme.colors.primary} />}
         {auth === null && <Redirect href={`/login?join=${uuid}`} withAnchor />}
         {auth && <JoinForm />}
