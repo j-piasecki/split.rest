@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { ButtonShimmer } from '@components/ButtonShimmer'
 import { Icon } from '@components/Icon'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
@@ -144,33 +145,6 @@ export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
   )
 }
 
-interface ButtonPlaceholderProps<T> {
-  argument: T
-  children: (arg: Exclude<T, undefined | null>) => React.ReactNode
-  offset?: number
-}
-
-function ButtonPlaceholder<T>({ argument, children, offset }: ButtonPlaceholderProps<T>) {
-  const theme = useTheme()
-
-  return (
-    <ShimmerPlaceholder
-      style={{
-        height: 48,
-        minWidth: 180,
-        borderRadius: 12,
-        backgroundColor: argument ? 'transparent' : theme.colors.primaryContainer,
-      }}
-      shimmerStyle={{ borderRadius: 12, opacity: 0.25 }}
-      color={theme.colors.onPrimaryContainer}
-      argument={argument}
-      offset={offset}
-    >
-      {children}
-    </ShimmerPlaceholder>
-  )
-}
-
 export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }) {
   const user = useAuth()
 
@@ -180,7 +154,7 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
 
   return (
     <View style={{ flexDirection: 'column', gap: 12 }}>
-      <ButtonPlaceholder argument={permissions}>
+      <ButtonShimmer argument={permissions}>
         {(permissions) =>
           permissions.canAccessRoulette() && (
             <Button
@@ -192,9 +166,9 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
             />
           )
         }
-      </ButtonPlaceholder>
+      </ButtonShimmer>
 
-      <ButtonPlaceholder argument={permissions} offset={-0.05}>
+      <ButtonShimmer argument={permissions} offset={-0.05}>
         {(permissions) =>
           permissions.canCreateSplits() && (
             <Button
@@ -207,9 +181,9 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
             />
           )
         }
-      </ButtonPlaceholder>
+      </ButtonShimmer>
 
-      <ButtonPlaceholder argument={info} offset={-0.1}>
+      <ButtonShimmer argument={info} offset={-0.1}>
         {(info) =>
           info.hidden ? (
             <Button
@@ -229,7 +203,7 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
             />
           )
         }
-      </ButtonPlaceholder>
+      </ButtonShimmer>
 
       {info && (info.isAdmin || info.owner === user?.id) && (
         <Button
