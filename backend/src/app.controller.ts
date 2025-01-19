@@ -13,11 +13,11 @@ import {
   DeleteSplitArguments,
   GetBalancesArguments,
   GetGroupInfoArguments,
+  GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
-  GetGroupMetadataByLinkArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -44,11 +44,11 @@ import {
   isDeleteSplitArguments,
   isGetBalancesArguments,
   isGetGroupInfoArguments,
+  isGetGroupInviteByLinkArguments,
   isGetGroupJoinLinkArguments,
   isGetGroupMemberPermissionsArguments,
   isGetGroupMembersArguments,
   isGetGroupMembersAutocompletionsArguments,
-  isGetGroupMetadataByLinkArguments,
   isGetGroupSplitsArguments,
   isGetSplitHistoryArguments,
   isGetSplitInfoArguments,
@@ -304,16 +304,16 @@ export class AppController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('getGroupMetadataByLink')
-  async getGroupMetadataByLink(
+  @Get('getGroupInviteByLink')
+  async getGroupInviteByLink(
     @Req() request: Request,
-    @Query() args: GetGroupMetadataByLinkArguments
+    @Query() args: GetGroupInviteByLinkArguments
   ) {
-    if (!isGetGroupMetadataByLinkArguments(args)) {
+    if (!isGetGroupInviteByLinkArguments(args)) {
       throw new BadRequestException('api.invalidArguments')
     }
 
-    return await this.appService.getGroupMetadataByLink(args)
+    return await this.appService.getGroupInviteByLink(args)
   }
 
   @UseGuards(AuthGuard)

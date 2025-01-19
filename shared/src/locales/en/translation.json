@@ -164,12 +164,14 @@
   },
 
   "joinGroup": {
+    "header": "Group invite",
     "youveBeenInvitedToJoin": "You've been invited to join",
     "group": "Group",
     "memberCount": "{{count}} members",
-    "currency": "({{currency}})",
+    "currency": "Currency - {{currency}}",
     "join": "Join",
-    "noGroupFoundForThisJoinLink": "No group found for this invitation link"
+    "noGroupFoundForThisJoinLink": "No group found for this invitation link",
+    "invitedBy": "By <Styled>{{name}}</Styled>"
   },
 
   "groupSettings": {

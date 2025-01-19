@@ -6,11 +6,11 @@ import { deleteGroup } from './database/groups/deleteGroup'
 import { deleteGroupJoinLink } from './database/groups/deleteGroupJoinLink'
 import { getBalances } from './database/groups/getBalances'
 import { getGroupInfo } from './database/groups/getGroupInfo'
+import { getGroupInviteByLink } from './database/groups/getGroupInviteByLink'
 import { getGroupJoinLink } from './database/groups/getGroupJoinLink'
 import { getGroupMemberPermissions } from './database/groups/getGroupMemberPermissions'
 import { getGroupMembers } from './database/groups/getGroupMembers'
 import { getGroupMembersAutocompletions } from './database/groups/getGroupMembersAutocompletions'
-import { getGroupMetadataByLink } from './database/groups/getGroupMetadataByLink'
 import { getGroupSplits } from './database/groups/getGroupSplits'
 import { getUserGroupInvites } from './database/groups/getUserGroupInvites'
 import { getUserGroups } from './database/groups/getUserGroups'
@@ -44,10 +44,10 @@ import {
   DeleteSplitArguments,
   GetBalancesArguments,
   GetGroupInfoArguments,
+  GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
-  GetGroupMetadataByLinkArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -200,9 +200,9 @@ export class DatabaseService {
     return await joinGroupByLink(this.pool, callerId, args)
   }
 
-  // Every user can get group metadata by link if they have it
-  async getGroupMetadataByLink(args: GetGroupMetadataByLinkArguments) {
-    return await getGroupMetadataByLink(this.pool, args)
+  // Every user can get group info by link if they have it
+  async getGroupInviteByLink(args: GetGroupInviteByLinkArguments) {
+    return await getGroupInviteByLink(this.pool, args)
   }
 
   @RequirePermissions(['createJoinLink'])

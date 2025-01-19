@@ -13,11 +13,11 @@ import {
   DeleteSplitArguments,
   GetBalancesArguments,
   GetGroupInfoArguments,
+  GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
-  GetGroupMetadataByLinkArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -187,8 +187,8 @@ export class AppService {
     return await this.databaseService.joinGroupByLink(callerId, args)
   }
 
-  async getGroupMetadataByLink(args: GetGroupMetadataByLinkArguments) {
-    return await this.databaseService.getGroupMetadataByLink(args)
+  async getGroupInviteByLink(args: GetGroupInviteByLinkArguments) {
+    return await this.databaseService.getGroupInviteByLink(args)
   }
 
   async createGroupJoinLink(callerId: string, args: CreateGroupJoinLinkArguments) {

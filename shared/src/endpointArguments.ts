@@ -120,7 +120,7 @@ export interface DeleteGroupJoinLinkArguments {
   groupId: number
 }
 
-export interface GetGroupMetadataByLinkArguments {
+export interface GetGroupInviteByLinkArguments {
   uuid: string
 }
 

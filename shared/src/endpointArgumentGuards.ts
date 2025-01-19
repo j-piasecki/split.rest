@@ -8,11 +8,11 @@ import {
   DeleteSplitArguments,
   GetBalancesArguments,
   GetGroupInfoArguments,
+  GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
-  GetGroupMetadataByLinkArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -148,9 +148,7 @@ export function isDeleteGroupJoinLinkArguments(obj: any): obj is DeleteGroupJoin
   return obj.groupId !== undefined
 }
 
-export function isGetGroupMetadataByLinkArguments(
-  obj: any
-): obj is GetGroupMetadataByLinkArguments {
+export function isGetGroupInviteByLinkArguments(obj: any): obj is GetGroupInviteByLinkArguments {
   return obj.uuid !== undefined
 }
 
