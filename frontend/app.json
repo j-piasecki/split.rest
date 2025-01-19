@@ -2,7 +2,7 @@
   "expo": {
     "name": "Split",
     "slug": "Split",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -16,7 +16,7 @@
       "associatedDomains": ["applinks:split.rest"]
     },
     "android": {
-      "versionCode": 5,
+      "versionCode": 6,
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon-foreground.png",
