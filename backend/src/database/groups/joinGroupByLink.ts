@@ -29,7 +29,7 @@ export async function joinGroupByLink(
     }
 
     if (await isUserMemberOfGroup(pool, groupId, callerId)) {
-      throw new ConflictException('api.group.userAlreadyInGroup')
+      throw new ConflictException('api.group.callerAlreadyInGroup')
     }
 
     await addUserToGroup(client, { groupId, userId: callerId })

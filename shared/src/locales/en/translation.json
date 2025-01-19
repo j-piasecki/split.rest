@@ -58,17 +58,17 @@
     },
     "insufficientPermissions": {
       "group": {
-        "createSplit": "You don't have permission to create splits in the group",
-        "readSplits": "You don't have permission to read splits in the group",
+        "createSplit": "You don't have permission to create splits in this group",
+        "readSplits": "You don't have permission to read splits in this group",
         "seeSplitDetails": "You don't have permission to see details of split",
         "deleteSplit": "You don't have permission to delete this split",
         "editSplit": "You don't have permission to edit this split",
         "restoreSplit": "You don't have permission to restore this split",
         "accessRoulette": "You don't have permission to access the roulette",
-        "readMembers": "You don't have permission to see members of the group",
-        "inviteMembers": "You don't have permission to invite members to the group",
-        "rename": "You don't have permission to rename the group",
-        "delete": "You don't have permission to delete the group",
+        "readMembers": "You don't have permission to see members of this group",
+        "inviteMembers": "You don't have permission to invite members to this group",
+        "rename": "You don't have permission to rename this group",
+        "delete": "You don't have permission to delete this group",
         "manageAccess": "You don't have permission to manage the group access",
         "manageAdmins": "You don't have permission to manage the group moderators",
         "readPermissions": "You don't have permission to read the group permissions",
@@ -95,8 +95,9 @@
       "totalValueMustBePositive": "Total value must be greater than zero"
     },
     "group": {
-      "userAlreadyInGroup": "You already are a member of the group",
-      "userNotInGroup": "You are not a member of the group",
+      "userAlreadyInGroup": "User is already a member of this group",
+      "callerAlreadyInGroup": "You already are a member of this group",
+      "callerNotInGroup": "You are not a member of this group",
       "joinLinkAlreadyExists": "A join link already exists for this group",
       "failedToCreateGroup": "Failed to create group"
     }

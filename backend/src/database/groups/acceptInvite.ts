@@ -35,7 +35,7 @@ export async function acceptGroupInvite(
     }
 
     if (await isUserMemberOfGroup(pool, args.groupId, callerId)) {
-      throw new ConflictException('api.group.userAlreadyInGroup')
+      throw new ConflictException('api.group.callerAlreadyInGroup')
     }
 
     await client.query(

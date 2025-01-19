@@ -25,7 +25,7 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
         case 'beGroupMember': {
           const args = unsafeArgs as PermissionArguments<['beGroupMember']>
           if (!(await isUserMemberOfGroup(client, args.groupId, callerId))) {
-            return 'api.group.userNotInGroup'
+            return 'api.group.callerNotInGroup'
           }
           continue
         }
