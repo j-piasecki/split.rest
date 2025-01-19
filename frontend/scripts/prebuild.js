@@ -33,6 +33,24 @@ function ensureBuildFromSource() {
   }
 }
 
+function ensureFullDebugSymbols() {
+  const filePath = path.join(process.cwd(), 'android', 'app', 'build.gradle')
+  const append = `android.buildTypes.release.ndk.debugSymbolLevel = 'full'`
+
+  if (!fs.existsSync(filePath)) {
+    console.error(`build.gradle file not found at ${filePath}`)
+    process.exit(1)
+  }
+
+  const fileContent = fs.readFileSync(filePath, 'utf8')
+  if (!fileContent.includes(append)) {
+    fs.appendFileSync(filePath, `\n${append}\n`)
+    console.log('full debug symbols set for Android')
+  } else {
+    console.log('full debug symbols are already set for Android')
+  }
+}
+
 // Run the `npx expo prebuild` command with passed arguments
 const expoPrebuild = spawn('npx', ['expo', 'prebuild', ...args], { stdio: 'inherit' })
 
@@ -45,4 +63,5 @@ expoPrebuild.on('close', (code) => {
   console.log('expo prebuild completed successfully.')
 
   ensureBuildFromSource()
+  ensureFullDebugSymbols()
 })
