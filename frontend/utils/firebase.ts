@@ -1,6 +1,6 @@
+import firebaseAnalytics from '@react-native-firebase/analytics'
 import firebaseAuth from '@react-native-firebase/auth'
 import firebaseCrashlytics from '@react-native-firebase/crashlytics'
-import firebaseAnalytics from "@react-native-firebase/analytics";
 
 export const authObj = firebaseAuth
 export const auth = firebaseAuth()

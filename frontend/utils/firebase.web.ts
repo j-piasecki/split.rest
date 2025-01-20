@@ -31,7 +31,7 @@ export const crashlytics = {
 
 export function logScreenView(screenName: string, screenClass: string) {
   logEvent(analytics, 'screen_view', {
-    firebase_screen: screenName, 
-    firebase_screen_class: screenClass
-  });  
+    firebase_screen: screenName,
+    firebase_screen_class: screenClass,
+  })
 }
