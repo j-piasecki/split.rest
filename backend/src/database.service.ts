@@ -73,11 +73,11 @@ export class DatabaseService {
 
   constructor() {
     this.pool = new Pool({
-      user: 'postgres',
-      password: 'zaq1@WSX',
-      host: 'localhost',
-      port: 5432,
-      database: 'split',
+      user: process.env.SPLIT_USER,
+      password: process.env.SPLIT_PASSWORD,
+      host: process.env.SPLIT_HOST,
+      port: Number(process.env.SPLIT_PORT),
+      database: process.env.SPLIT_DATABASE,
     })
 
     this.createDatabase()
