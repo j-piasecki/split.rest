@@ -201,7 +201,7 @@ function PickerContent({
 
   return (
     <Animated.View
-      entering={Platform.OS !== 'web' ? FadeInUp.duration(150) : undefined}
+      entering={FadeInUp.duration(150)}
       ref={containerRef}
       style={[
         {
@@ -214,6 +214,7 @@ function PickerContent({
           borderWidth: 1,
           borderColor: theme.colors.outlineVariant,
           transformOrigin: containerBelow ? 'top' : 'bottom',
+          overflow: 'hidden',
         },
         containerBelow
           ? { borderBottomLeftRadius: 12, borderBottomRightRadius: 12 }
