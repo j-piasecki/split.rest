@@ -13,7 +13,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "rest.split.app",
       "usesAppleSignIn": true,
-      "associatedDomains": ["applinks:split.rest"]
+      "associatedDomains": ["applinks:split.rest"],
+      "buildNumber": "1"
     },
     "android": {
       "versionCode": 6,
