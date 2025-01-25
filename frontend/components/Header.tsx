@@ -105,7 +105,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
       transform: [
         { scale: 0.5 + size / 96 + 0.125 - Math.sin(Math.abs(rotation.value - 180) / 1440) },
         { translateY: size / 1.25 },
-        { rotate: `${rotation.value}deg` },
+        { rotate: `${rotation.value + Math.sqrt(normalizedOffset)}deg` },
       ],
       width: 96,
       height: 96,
