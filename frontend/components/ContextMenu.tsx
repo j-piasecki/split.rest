@@ -19,6 +19,7 @@ import {
 } from 'react-native'
 import { Modal, Pressable } from 'react-native'
 import Animated, {
+  FadeIn,
   FadeInUp,
   useAnimatedStyle,
   useSharedValue,
@@ -138,7 +139,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
 
   return (
     <Animated.View
-      entering={Platform.OS !== 'web' ? FadeInUp.duration(150) : undefined}
+      entering={Platform.OS !== 'web' ? FadeInUp.duration(200) : undefined}
       ref={contentRef}
       style={{
         transformOrigin: isBelow ? 'top' : 'bottom',
@@ -297,18 +298,20 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
         transparent
       >
         <Animated.View style={StyleSheet.absoluteFillObject}>
-          <Pressable
-            onPress={() => setVisible(false)}
-            // @ts-expect-error - onContextMenu does not exist on Pressable on mobile
-            onContextMenu={(e) => {
-              setVisible(false)
-              e.preventDefault()
-            }}
-            style={[
-              StyleSheet.absoluteFillObject,
-              { backgroundColor: isSmallScreen ? 'rgba(0, 0, 0, 0.5)' : 'transparent' },
-            ]}
-          />
+          <Animated.View style={StyleSheet.absoluteFillObject} entering={FadeIn.duration(200)}>
+            <Pressable
+              onPress={() => setVisible(false)}
+              // @ts-expect-error - onContextMenu does not exist on Pressable on mobile
+              onContextMenu={(e) => {
+                setVisible(false)
+                e.preventDefault()
+              }}
+              style={[
+                StyleSheet.absoluteFillObject,
+                { backgroundColor: isSmallScreen ? 'rgba(0, 0, 0, 0.5)' : 'transparent' },
+              ]}
+            />
+          </Animated.View>
           {isSmallScreen && (
             <Animated.View
               style={[
