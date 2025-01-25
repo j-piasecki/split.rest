@@ -29,15 +29,13 @@ function createUser(user: FirebaseAuthTypes.User | null): User | null {
   return null
 }
 
-let createUserRetries = 5
-async function tryToCreateUser() {
+async function tryToCreateUser(createUserRetries = 5) {
   try {
     await createOrUpdateUser()
   } catch {
     if (createUserRetries > 0) {
-      createUserRetries--
       await sleep(100)
-      await tryToCreateUser()
+      await tryToCreateUser(createUserRetries - 1)
     }
   }
 }
@@ -75,16 +73,16 @@ export async function reauthenticate(skipAppleSignIn = false) {
     throw new TranslatableError('api.mustBeLoggedIn')
   }
 
-  const providerId = auth.currentUser.providerData[0].providerId
+  const providerIds = auth.currentUser.providerData.map((provider) => provider.providerId)
 
-  if (providerId === 'google.com') {
-    const googleCredential = await getGoogleCredential()
-    await auth.currentUser?.reauthenticateWithCredential(googleCredential)
-  } else if (providerId === 'apple.com') {
+  if (providerIds.includes('apple.com')) {
     if (!skipAppleSignIn) {
       const appleCredential = await getAppleCredential()
       await auth.currentUser?.reauthenticateWithCredential(appleCredential)
     }
+  } else if (providerIds.includes('google.com')) {
+    const googleCredential = await getGoogleCredential()
+    await auth.currentUser?.reauthenticateWithCredential(googleCredential)
   } else {
     throw new TranslatableError('api.auth.unknownProvider')
   }
@@ -98,9 +96,9 @@ export async function deleteUser() {
   await remoteDeleteUser()
 
   if (Platform.OS === 'ios') {
-    const providerId = auth.currentUser.providerData[0].providerId
+    const providerIds = auth.currentUser.providerData.map((provider) => provider.providerId)
 
-    if (providerId === 'apple.com') {
+    if (providerIds.includes('apple.com')) {
       const { authorizationCode } = await appleAuth.performRequest({
         requestedOperation: appleAuth.Operation.REFRESH,
       })

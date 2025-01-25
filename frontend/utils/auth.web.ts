@@ -47,15 +47,13 @@ function addAuthListener(listener: AuthListener) {
   }
 }
 
-let createUserRetries = 5
-async function tryToCreateUser() {
+async function tryToCreateUser(createUserRetries = 5) {
   try {
     await createOrUpdateUser()
   } catch {
     if (createUserRetries > 0) {
-      createUserRetries--
       await sleep(100)
-      await tryToCreateUser()
+      await tryToCreateUser(createUserRetries - 1)
     }
   }
 }
@@ -116,11 +114,11 @@ export async function reauthenticate() {
     throw new Error('User must be logged in')
   }
 
-  const providerId = auth.currentUser.providerData[0].providerId
+  const providerIds = auth.currentUser.providerData.map((provider) => provider.providerId)
 
-  if (providerId === 'google.com') {
+  if (providerIds.includes('google.com')) {
     await reauthenticateWithPopupOrRedirect(new GoogleAuthProvider())
-  } else if (providerId === 'apple.com') {
+  } else if (providerIds.includes('apple.com')) {
     const provider = new OAuthProvider('apple.com')
     provider.addScope('email')
     provider.addScope('name')
