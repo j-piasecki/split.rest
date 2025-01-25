@@ -1,154 +1,27 @@
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
-import { Icon } from '@components/Icon'
+import { GROUP_ROW_HEIGHT, GroupRow } from '@components/homeScreen/GroupRow'
+import { InvitationsButton } from '@components/homeScreen/InvitationsButton'
 import { PaneHeader } from '@components/Pane'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Shimmer } from '@components/Shimmer'
-import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { useUserGroupInvites } from '@hooks/database/useUserGroupInvites'
 import { useUserGroups } from '@hooks/database/useUserGroups'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
-import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { invalidateGroupInvites, invalidateUserGroups } from '@utils/queryClient'
 import { router } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, View } from 'react-native'
+import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupInvite, GroupUserInfo } from 'shared'
-
-const GROUP_ROW_HEIGHT = 80
-
-function Group({ info }: { info: GroupUserInfo }) {
-  const theme = useTheme()
-  const isSmallScreen = useDisplayClass() === DisplayClass.Small
-  const balanceColor =
-    Number(info.balance) === 0
-      ? theme.colors.balanceNeutral
-      : Number(info.balance) > 0
-        ? theme.colors.balancePositive
-        : theme.colors.balanceNegative
-
-  return (
-    <Pressable
-      onPress={() => {
-        router.navigate(`/group/${info.id}`)
-      }}
-      style={({ pressed, hovered }) => [
-        {
-          paddingHorizontal: 16,
-          height: GROUP_ROW_HEIGHT,
-          justifyContent: 'center',
-          backgroundColor: pressed
-            ? theme.colors.surfaceContainerHighest
-            : hovered
-              ? theme.colors.surfaceContainerHigh
-              : theme.colors.surfaceContainer,
-        },
-        styles.paneShadow,
-      ]}
-    >
-      <View
-        style={{
-          opacity: info.hidden ? 0.7 : 1,
-          gap: 20,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Text style={{ flex: 1, fontSize: 20, color: theme.colors.onSurface }} numberOfLines={2}>
-          {info.name}
-        </Text>
-
-        <View
-          style={{
-            flexDirection: isSmallScreen ? 'column' : 'row',
-            gap: isSmallScreen ? 4 : 20,
-            alignItems: 'flex-end',
-          }}
-        >
-          <Text style={{ fontSize: 18, fontWeight: 600, color: balanceColor }}>
-            {CurrencyUtils.format(info.balance, info.currency, true)}
-          </Text>
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <View style={{ flexDirection: 'row', gap: 4 }}>
-              <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.memberCount}</Text>
-              <Icon name='members' size={20} color={theme.colors.outline} />
-            </View>
-
-            {(!isSmallScreen || !info.hasAccess || info.isAdmin) && (
-              <Icon
-                name={info.isAdmin ? 'shield' : 'lock'}
-                size={16}
-                color={
-                  info.hasAccess && !info.isAdmin ? theme.colors.transparent : theme.colors.outline
-                }
-                style={{ transform: [{ translateY: 2 }] }}
-              />
-            )}
-          </View>
-        </View>
-      </View>
-    </Pressable>
-  )
-}
 
 function Divider() {
   const theme = useTheme()
   return <View style={{ width: '100%', height: 1, backgroundColor: theme.colors.outlineVariant }} />
-}
-
-interface InvitationsButtonProps {
-  invites: GroupInvite[]
-  isLoadingInvites: boolean
-}
-
-function InvitationsButton({ invites, isLoadingInvites }: InvitationsButtonProps) {
-  const theme = useTheme()
-  const { t } = useTranslation()
-
-  return (
-    <Pressable
-      style={({ pressed, hovered }) => [
-        {
-          backgroundColor: pressed
-            ? theme.colors.surfaceContainerHighest
-            : hovered
-              ? theme.colors.surfaceContainerHigh
-              : theme.colors.surfaceContainer,
-          borderRadius: 16,
-        },
-        styles.paneShadow,
-      ]}
-      onPress={() => router.navigate('/groupInvites')}
-    >
-      <ShimmerPlaceholder
-        argument={isLoadingInvites ? undefined : invites}
-        style={{ height: 56 }}
-        shimmerStyle={{ backgroundColor: theme.colors.surfaceContainer }}
-      >
-        {(invites) => (
-          <PaneHeader
-            icon='stackedEmail'
-            title={
-              invites.length === 0 ? t('home.noGroupInvitesButton') : t('home.showGroupInvites')
-            }
-            textLocation='start'
-            showSeparator={false}
-            adjustsFontSizeToFit
-            rightComponent={
-              <Icon size={24} name={'chevronForward'} color={theme.colors.secondary} />
-            }
-          />
-        )}
-      </ShimmerPlaceholder>
-    </Pressable>
-  )
 }
 
 function GroupsShimmer({ count }: { count: number }) {
@@ -263,7 +136,7 @@ export default function Home() {
               isRefetchingHiddenGroups
             }
             onRefresh={refresh}
-            renderItem={({ item }) => <Group info={item} />}
+            renderItem={({ item }) => <GroupRow info={item} />}
             contentContainerStyle={{
               width: '100%',
               maxWidth: 768,
