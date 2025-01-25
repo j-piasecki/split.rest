@@ -9,7 +9,7 @@ import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import i18n from '@utils/i18n'
 import { queryClient } from '@utils/queryClient'
 import { useLocales } from 'expo-localization'
-import { Stack, usePathname } from 'expo-router'
+import { Stack, usePathname, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -27,6 +27,7 @@ SplashScreen.setOptions({
 
 function Content() {
   const pathname = usePathname()
+  const segments = useSegments()
   const user = useAuth(
     !pathname.startsWith('/join') &&
       !pathname.startsWith('/login') &&
@@ -63,8 +64,8 @@ function Content() {
   }, [isLoading])
 
   useEffect(() => {
-    logScreenView(pathname, pathname)
-  }, [pathname])
+    logScreenView(pathname, segments.join('/'))
+  }, [segments, pathname])
 
   if (isLoading) {
     return (
