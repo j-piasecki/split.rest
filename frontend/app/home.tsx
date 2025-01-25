@@ -1,8 +1,7 @@
+import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
-import Header from '@components/Header'
 import { Icon } from '@components/Icon'
 import { PaneHeader } from '@components/Pane'
-import { PullableFlatList } from '@components/PullableFlatList'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Shimmer } from '@components/Shimmer'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
@@ -214,7 +213,6 @@ function GroupsShimmer({ count }: { count: number }) {
 export default function Home() {
   const theme = useTheme()
   const { t } = useTranslation()
-  const displayClass = useDisplayClass()
   const insets = useSafeAreaInsets()
   const [fabRef, scrollHandler] = useFABScrollHandler()
 
@@ -256,20 +254,15 @@ export default function Home() {
             width: '100%',
           }}
         >
-          <PullableFlatList
+          <FlatListWithHeader
             data={showHidden ? hiddenGroups : visibleGroups}
-            renderPullableHeader={(pullValue) => (
-              <Header
-                offset={pullValue}
-                isWaiting={
-                  visibleGroupsLoading ||
-                  hiddenGroupsLoading ||
-                  isRefetchingVisibleGroups ||
-                  isRefetchingHiddenGroups
-                }
-                onPull={refresh}
-              />
-            )}
+            refreshing={
+              visibleGroupsLoading ||
+              hiddenGroupsLoading ||
+              isRefetchingVisibleGroups ||
+              isRefetchingHiddenGroups
+            }
+            onRefresh={refresh}
             renderItem={({ item }) => <Group info={item} />}
             contentContainerStyle={{
               width: '100%',
@@ -277,13 +270,10 @@ export default function Home() {
               paddingHorizontal: 16,
               paddingBottom: 80 + insets.bottom,
               alignSelf: 'center',
-              paddingTop: displayClass <= DisplayClass.Medium ? 8 : 0,
             }}
             onEndReachedThreshold={0.5}
             keyExtractor={(item) => `${item.id}-${item.hidden}`}
-            onScroll={scrollHandler}
-            onScrollEndDrag={scrollHandler}
-            onMomentumScrollEnd={scrollHandler}
+            scrollHandler={scrollHandler}
             ItemSeparatorComponent={Divider}
             ListHeaderComponent={
               <View style={{ gap: 16 }}>

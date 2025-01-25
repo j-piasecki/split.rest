@@ -1,7 +1,6 @@
 import { MemberRow } from './MemberRow'
+import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
-import Header from '@components/Header'
-import { PullableFlatList } from '@components/PullableFlatList'
 import { Shimmer } from '@components/Shimmer'
 import { Text } from '@components/Text'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
@@ -13,7 +12,6 @@ import { useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { RefreshControl } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupUserInfo } from 'shared'
 
@@ -116,26 +114,11 @@ export function MembersList({
 
   return (
     <View style={{ width: '100%', flex: 1 }}>
-      <PullableFlatList
-        renderPullableHeader={
-          showPullableHeader
-            ? (pullValue) => {
-                return (
-                  <Header
-                    showBackButton
-                    offset={pullValue}
-                    isWaiting={isLoading || isRefetching}
-                    onPull={refreshData}
-                  />
-                )
-              }
-            : undefined
-        }
-        refreshControl={
-          showPullableHeader ? undefined : (
-            <RefreshControl refreshing={isRefetching} onRefresh={onRefresh} />
-          )
-        }
+      <FlatListWithHeader
+        refreshing={isLoading || isRefetching}
+        onRefresh={refreshData}
+        showBackButton
+        hideHeader={!showPullableHeader}
         contentContainerStyle={{
           maxWidth: 768,
           width: '100%',
@@ -173,9 +156,7 @@ export function MembersList({
         ItemSeparatorComponent={iconOnly ? undefined : Divider}
         ListHeaderComponent={headerComponent}
         ListFooterComponent={footerComponent}
-        onScroll={scrollHandler}
-        onScrollEndDrag={scrollHandler}
-        onMomentumScrollEnd={scrollHandler}
+        scrollHandler={scrollHandler}
       />
 
       {permissions?.canInviteMembers() && (

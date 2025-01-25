@@ -1,7 +1,6 @@
-import Header from '@components/Header'
+import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { PaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
-import { PullableFlatList } from '@components/PullableFlatList'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Shimmer } from '@components/Shimmer'
 import { useSnack } from '@components/SnackBar'
@@ -197,16 +196,11 @@ export default function Invites() {
             width: '100%',
           }}
         >
-          <PullableFlatList
+          <FlatListWithHeader
             data={invites}
-            renderPullableHeader={(pullValue) => (
-              <Header
-                offset={pullValue}
-                showBackButton
-                isWaiting={invitesLoading || isRefetchingInvites}
-                onPull={refresh}
-              />
-            )}
+            showBackButton
+            refreshing={invitesLoading || isRefetchingInvites}
+            onRefresh={refresh}
             renderItem={({ item }) => <Invite invite={item} />}
             contentContainerStyle={{
               width: '100%',

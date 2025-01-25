@@ -1,6 +1,5 @@
 import { SplitRow } from './SplitRow'
-import Header from '@components/Header'
-import { PullableFlatList } from '@components/PullableFlatList'
+import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { Shimmer } from '@components/Shimmer'
 import { Text } from '@components/Text'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
@@ -10,7 +9,7 @@ import { invalidateGroup } from '@utils/queryClient'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { RefreshControl } from 'react-native-gesture-handler'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupUserInfo, SplitPermissionType } from 'shared'
 
 function Divider() {
@@ -84,6 +83,7 @@ export function SplitsList({
   onRefresh,
 }: SplitsListProps) {
   const theme = useTheme()
+  const insets = useSafeAreaInsets()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
   const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching } = useGroupSplits(
@@ -100,31 +100,17 @@ export function SplitsList({
 
   return (
     <View style={{ width: '100%', flex: 1 }}>
-      <PullableFlatList
-        renderPullableHeader={
-          showPullableHeader
-            ? (pullValue) => {
-                return (
-                  <Header
-                    showBackButton
-                    offset={pullValue}
-                    isWaiting={isLoading || isRefetching}
-                    onPull={refreshData}
-                  />
-                )
-              }
-            : undefined
-        }
-        refreshControl={
-          showPullableHeader ? undefined : (
-            <RefreshControl refreshing={isRefetching} onRefresh={onRefresh} />
-          )
-        }
+      <FlatListWithHeader
+        showBackButton
+        refreshing={isLoading || isRefetching}
+        onRefresh={refreshData}
+        hideHeader={!showPullableHeader}
         contentContainerStyle={{
           maxWidth: 900,
           width: '100%',
           alignSelf: 'center',
-          paddingHorizontal: 16,
+          paddingLeft: insets.left + 16,
+          paddingRight: insets.right + 16,
           paddingBottom: 64,
         }}
         ListEmptyComponent={
