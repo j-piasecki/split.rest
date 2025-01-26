@@ -35,6 +35,13 @@ export function DetailsPane({
   }
   const paidBy = formState.entries[formState.paidByIndex]
 
+  // Show email if there are multiple users with the same name, otherwise show the name
+  const payerName = paidBy.user
+    ? formState.entries.filter((entry) => entry.user?.name === paidBy.user?.name).length > 1
+      ? paidBy.user.email
+      : paidBy.user.name
+    : paidBy.entry
+
   return (
     <Pane
       icon='receipt'
@@ -77,7 +84,7 @@ export function DetailsPane({
             <Trans
               i18nKey='splitInfo.hasPaidText'
               values={{
-                payer: paidBy.user?.email ?? paidBy.entry,
+                payer: payerName,
                 // eslint-disable-next-line react-compiler/react-compiler
                 amount: CurrencyUtils.format(toBePaid.current, groupInfo.currency),
               }}
