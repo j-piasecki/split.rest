@@ -15,7 +15,8 @@ import { useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native'
+import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native'
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupUserInfo } from 'shared'
 
@@ -104,7 +105,6 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
 
   return (
     <>
-      <Header showBackButton />
       <View
         style={{
           flex: 1,
@@ -113,9 +113,22 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           flexDirection: 'row',
           paddingHorizontal: 16,
           paddingBottom: 12 + insets.bottom,
+          paddingTop: HEADER_HEIGHT + insets.top,
           gap: 12,
         }}
       >
+        <View
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            right: 0,
+            height: HEADER_HEIGHT,
+            zIndex: 1,
+          }}
+        >
+          <Header showBackButton />
+        </View>
         <Pane
           icon='home'
           title={t('tabs.group')}
@@ -160,25 +173,24 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           </Pane>
         )}
 
-        {!membersAlwaysExpanded && (
-          <Modal
-            visible={membersExpanded}
-            transparent
-            navigationBarTranslucent
-            statusBarTranslucent
-            onRequestClose={() => {
-              setMembersExpanded(false)
-            }}
+        {!membersAlwaysExpanded && membersExpanded && (
+          <Animated.View
+            style={[StyleSheet.absoluteFillObject, { position: 'absolute', zIndex: 10 }]}
+            entering={FadeIn.duration(100)}
+            exiting={FadeOut.duration(100)}
           >
-            <Pressable
-              style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.6)' }]}
-              onPress={() => {
-                setMembersExpanded(false)
-              }}
-            />
+            <View style={StyleSheet.absoluteFill}>
+              <Pressable
+                style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.6)' }]}
+                onPress={() => {
+                  setMembersExpanded(false)
+                }}
+              />
+            </View>
             <View
               style={{
                 width: 600,
+                transformOrigin: 'right',
                 bottom: 12 + insets.bottom,
                 top: HEADER_HEIGHT + insets.top,
                 right: 16,
@@ -202,7 +214,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
                 <MembersList info={groupInfo} />
               </Pane>
             </View>
-          </Modal>
+          </Animated.View>
         )}
       </View>
     </>
