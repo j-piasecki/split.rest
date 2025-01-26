@@ -21,6 +21,7 @@ secrets/
 
 .yarn/*
 !.yarn/patches/
+!.yarn/releases/
 .firebase
 
 # Metro
