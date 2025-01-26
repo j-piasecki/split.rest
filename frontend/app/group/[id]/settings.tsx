@@ -12,6 +12,7 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupJoinLink } from '@hooks/database/useGroupJoinLink'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
+import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { GroupPermissions } from '@utils/GroupPermissions'
 import * as Clipboard from 'expo-clipboard'
@@ -152,6 +153,7 @@ function Form({ info }: { info: GroupUserInfo }) {
   const { t } = useTranslation()
   const snack = useSnack()
   const nameInputRef = React.useRef<EditableTextRef>(null)
+  const insets = useModalScreenInsets()
   const [name, setName] = useState(info.name)
   const [isEditingName, setIsEditingName] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
@@ -165,8 +167,10 @@ function Form({ info }: { info: GroupUserInfo }) {
       contentContainerStyle={{
         gap: 16,
         flexGrow: 1,
-        paddingHorizontal: 16,
-        paddingTop: 8,
+        paddingLeft: insets.left + 12,
+        paddingRight: insets.right + 12,
+        paddingTop: insets.top + 16,
+        paddingBottom: insets.bottom,
         justifyContent: 'space-between',
       }}
     >

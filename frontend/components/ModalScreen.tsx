@@ -25,7 +25,6 @@ function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalP
       style={{
         flex: 1,
         backgroundColor: theme.colors.surface,
-        gap: 8,
       }}
     >
       <View
@@ -57,11 +56,8 @@ function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalP
           {title}
         </Text>
       </View>
-      <KeyboardAvoidingView style={{ flex: 1 }}>
-        <View
-          onLayout={onLayout}
-          style={{ flex: 1, paddingBottom: insets.bottom + (Platform.OS !== 'ios' ? 16 : 0) }}
-        >
+      <KeyboardAvoidingView style={{ flex: 1 }} reduceInset={16}>
+        <View onLayout={onLayout} style={{ flex: 1 }}>
           {children}
         </View>
       </KeyboardAvoidingView>
@@ -120,7 +116,6 @@ function ModalScreen({
             alignItems: 'center',
             paddingHorizontal: 16,
             paddingTop: 12,
-            paddingBottom: 4,
             justifyContent: 'space-between',
           }}
         >

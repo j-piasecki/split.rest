@@ -111,8 +111,8 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           alignItems: 'center',
           flexDirection: 'row',
           paddingHorizontal: 16,
-          paddingBottom: 16,
-          gap: 16,
+          paddingBottom: 12 + insets.bottom,
+          gap: 12,
         }}
       >
         <Pane

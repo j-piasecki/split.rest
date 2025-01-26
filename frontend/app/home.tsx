@@ -140,8 +140,8 @@ export default function Home() {
             contentContainerStyle={{
               width: '100%',
               maxWidth: 768,
-              paddingHorizontal: 16,
-              paddingBottom: 80 + insets.bottom,
+              paddingHorizontal: 12,
+              paddingBottom: 88 + insets.bottom,
               alignSelf: 'center',
             }}
             onEndReachedThreshold={0.5}

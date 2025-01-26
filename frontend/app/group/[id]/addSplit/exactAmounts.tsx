@@ -1,6 +1,7 @@
 import ModalScreen from '@components/ModalScreen'
 import { FormData, SplitEntryData, SplitForm } from '@components/SplitForm'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -33,6 +34,7 @@ function initialEntriesFromContext(currentUser: User): SplitEntryData[] {
 
 function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: User }) {
   const router = useRouter()
+  const insets = useModalScreenInsets()
   const [error, setError] = useTranslatedError()
   const [waiting, setWaiting] = useState(false)
 
@@ -69,8 +71,16 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: User }) {
   }
 
   return (
-    <View style={{ flex: 1, paddingHorizontal: 16 }}>
+    <View
+      style={{
+        flex: 1,
+        paddingLeft: insets.left + 12,
+        paddingRight: insets.right + 12,
+        paddingBottom: insets.bottom,
+      }}
+    >
       <SplitForm
+        style={{ paddingTop: insets.top + 16 }}
         initialEntries={initialEntriesFromContext(user)}
         initialPaidByIndex={getSplitCreationContext().paidByIndex}
         initialTitle={getSplitCreationContext().title}

@@ -124,7 +124,7 @@ export function MembersList({
           width: '100%',
           alignSelf: 'center',
           paddingBottom: 88 + (applyBottomInset ? insets.bottom : 0),
-          paddingHorizontal: iconOnly ? 4 : 16,
+          paddingHorizontal: iconOnly ? 4 : 12,
         }}
         ListEmptyComponent={
           <View

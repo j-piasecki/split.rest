@@ -5,14 +5,16 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 export interface KeyboardAvoidingViewProps {
   children: React.ReactNode
   style?: StyleProp<ViewStyle>
+  reduceInset?: number
 }
 
-export function KeyboardAvoidingView({ children, style }: KeyboardAvoidingViewProps) {
+export function KeyboardAvoidingView({ children, style, reduceInset }: KeyboardAvoidingViewProps) {
   const { height } = useReanimatedKeyboardAnimation()
 
   const animatedStyle = useAnimatedStyle(() => {
+    const inset = Math.abs(height.value)
     return {
-      paddingBottom: Math.abs(height.value),
+      paddingBottom: inset - (reduceInset && inset > 0 ? reduceInset : 0),
     }
   })
 

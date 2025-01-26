@@ -9,6 +9,7 @@ import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { getUserByEmail } from '@database/getUserByEmail'
 import { useInviteUserToGroupMutation } from '@hooks/database/useInviteUserToGroup'
+import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -111,6 +112,7 @@ function UserPane({
 function UserPicker() {
   const router = useRouter()
   const snack = useSnack()
+  const insets = useModalScreenInsets()
   const { id: groupId } = useLocalSearchParams()
   const { t } = useTranslation()
 
@@ -148,8 +150,10 @@ function UserPicker() {
         flexGrow: 1,
         gap: 24,
         justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        paddingTop: 8,
+        paddingLeft: insets.left + 12,
+        paddingRight: insets.right + 12,
+        paddingBottom: insets.bottom,
+        paddingTop: insets.top + 16,
       }}
     >
       <View style={{ gap: 16 }}>

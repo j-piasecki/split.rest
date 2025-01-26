@@ -8,6 +8,7 @@ import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { getBalances } from '@database/getBalances'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -25,6 +26,7 @@ interface RouletteProps {
 }
 
 function Roulette({ groupId, setResult, user }: RouletteProps) {
+  const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const [entries, setEntries] = useState<PersonEntry[]>([
     { user: user, entry: user.email ?? '' },
@@ -65,8 +67,10 @@ function Roulette({ groupId, setResult, user }: RouletteProps) {
     <View
       style={{
         flex: 1,
-        paddingHorizontal: 16,
-        paddingTop: 8,
+        paddingLeft: insets.left + 12,
+        paddingRight: insets.right + 12,
+        paddingTop: insets.top + 16,
+        paddingBottom: insets.bottom,
         opacity: loading ? 0.5 : 1,
         pointerEvents: loading ? 'none' : 'auto',
       }}
@@ -104,51 +108,59 @@ function Roulette({ groupId, setResult, user }: RouletteProps) {
 function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId: number }) {
   const theme = useTheme()
   const router = useRouter()
+  const insets = useModalScreenInsets()
   const { data: permissions } = useGroupPermissions(groupId)
   const { t } = useTranslation()
 
   return (
-    <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 8 }}>
-      <ScrollView style={{ flex: 1 }}>
-        <Pane
-          containerStyle={{ padding: 16, paddingTop: 4 }}
-          icon='listNumbered'
-          title={t('roulette.result')}
-          textLocation='start'
-        >
-          {result.map((user, index) => {
-            const balanceNum = parseFloat(user.change)
-            const balanceColor =
-              balanceNum === 0
-                ? theme.colors.balanceNeutral
-                : balanceNum > 0
-                  ? theme.colors.balancePositive
-                  : theme.colors.balanceNegative
+    <ScrollView
+      contentContainerStyle={{
+        paddingLeft: insets.left + 12,
+        paddingRight: insets.right + 12,
+        paddingTop: insets.top + 16,
+        paddingBottom: insets.bottom,
+        flexGrow: 1,
+        justifyContent: 'space-between',
+      }}
+    >
+      <Pane
+        containerStyle={{ padding: 16, paddingTop: 4 }}
+        icon='listNumbered'
+        title={t('roulette.result')}
+        textLocation='start'
+      >
+        {result.map((user, index) => {
+          const balanceNum = parseFloat(user.change)
+          const balanceColor =
+            balanceNum === 0
+              ? theme.colors.balanceNeutral
+              : balanceNum > 0
+                ? theme.colors.balancePositive
+                : theme.colors.balanceNegative
 
-            return (
-              <View
-                key={user.id}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  borderBottomWidth: index === result.length - 1 ? 0 : 1,
-                  borderColor: theme.colors.outlineVariant,
-                  paddingVertical: 16,
-                  gap: 8,
-                }}
-              >
-                <ProfilePicture userId={user.id} size={28} />
-                <Text style={{ fontSize: 18, fontWeight: 800, color: theme.colors.onSurface }}>
-                  {user.name}
-                </Text>
-                <View style={{ flex: 1 }} />
-                <Text style={{ fontSize: 18, color: balanceColor }}>{user.change}</Text>
-              </View>
-            )
-          })}
-        </Pane>
-      </ScrollView>
+          return (
+            <View
+              key={user.id}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderBottomWidth: index === result.length - 1 ? 0 : 1,
+                borderColor: theme.colors.outlineVariant,
+                paddingVertical: 16,
+                gap: 8,
+              }}
+            >
+              <ProfilePicture userId={user.id} size={28} />
+              <Text style={{ fontSize: 18, fontWeight: 800, color: theme.colors.onSurface }}>
+                {user.name}
+              </Text>
+              <View style={{ flex: 1 }} />
+              <Text style={{ fontSize: 18, color: balanceColor }}>{user.change}</Text>
+            </View>
+          )
+        })}
+      </Pane>
 
       {permissions?.canCreateSplits() && (
         <Button
@@ -163,7 +175,7 @@ function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId:
           }}
         />
       )}
-    </View>
+    </ScrollView>
   )
 }
 

@@ -7,7 +7,7 @@ import { ErrorText } from '@components/ErrorText'
 import { IconName } from '@components/Icon'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, StyleProp, View, ViewStyle } from 'react-native'
 import { GroupUserInfo, LanguageTranslationKey } from 'shared'
 
 export interface SplitFormProps {
@@ -24,6 +24,7 @@ export interface SplitFormProps {
   buttonIcon?: IconName
   buttonTitle?: LanguageTranslationKey
   buttonIconLocation?: 'left' | 'right'
+  style?: StyleProp<ViewStyle>
 }
 
 export function SplitForm({
@@ -40,6 +41,7 @@ export function SplitForm({
   buttonIcon = 'save',
   buttonTitle = 'form.save',
   buttonIconLocation = 'left',
+  style,
 }: SplitFormProps) {
   const scrollRef = useRef<ScrollView>(null)
   const [formState, updateForm] = useFormData({
@@ -68,7 +70,7 @@ export function SplitForm({
       <ScrollView
         ref={scrollRef}
         style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 100, gap: 16, paddingTop: 8 }}
+        contentContainerStyle={[{ paddingBottom: 100, gap: 16 }, style]}
         keyboardShouldPersistTaps='handled'
       >
         {showDetails && (

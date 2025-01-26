@@ -7,7 +7,7 @@ import { useTheme } from '@styling/theme'
 import { CurrencyUtils } from '@utils/CurrencyUtils'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, StyleProp, View, ViewStyle } from 'react-native'
 import {
   GroupUserInfo,
   LanguageTranslationKey,
@@ -171,24 +171,18 @@ function EditInfo({ splitInfo }: { splitInfo: SplitWithUsers }) {
 export function SplitInfo({
   splitInfo,
   groupInfo,
+  style,
 }: {
   splitInfo: SplitWithUsers
   groupInfo: GroupUserInfo
+  style?: StyleProp<ViewStyle>
 }) {
   const theme = useTheme()
   const { t } = useTranslation()
   const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)!
 
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={{
-        paddingHorizontal: 16,
-        paddingTop: 8,
-        paddingBottom: 16,
-        justifyContent: 'space-between',
-      }}
-    >
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={style}>
       <View style={{ gap: 16 }}>
         <Pane
           icon='receipt'

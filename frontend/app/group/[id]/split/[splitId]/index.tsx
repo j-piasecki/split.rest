@@ -6,6 +6,7 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSplitHistory } from '@hooks/database/useSplitHistory'
 import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
+import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -19,6 +20,7 @@ import { SplitWithUsers } from 'shared'
 export default function SplitInfoScreen() {
   const theme = useTheme()
   const router = useRouter()
+  const insets = useModalScreenInsets()
   const { id, splitId } = useLocalSearchParams()
   const { t } = useTranslation()
   const { data: groupInfo } = useGroupInfo(Number(id))
@@ -86,7 +88,7 @@ export default function SplitInfoScreen() {
       )}
 
       {!isLoadingHistory && groupInfo && (
-        <View ref={containerRef} style={{ flex: 1 }}>
+        <View ref={containerRef} style={{ flex: 1, paddingBottom: insets.bottom }}>
           {/* Paginated horizontal flatlist breaks vertical scroll on web */}
           {Platform.OS !== 'web' && (
             <FlatList
@@ -105,12 +107,23 @@ export default function SplitInfoScreen() {
                 }
               }}
               renderItem={({ item, index }) => (
-                <View style={{ width: maxWidth, transform: [{ scaleX: -1 }] }}>
-                  <SplitInfo splitInfo={item} groupInfo={groupInfo} />
+                <View
+                  style={{
+                    width: maxWidth,
+                    transform: [{ scaleX: -1 }],
+                    paddingLeft: insets.left + 12,
+                    paddingRight: insets.right + 12,
+                  }}
+                >
+                  <SplitInfo
+                    splitInfo={item}
+                    groupInfo={groupInfo}
+                    style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}
+                  />
                   {index !== 0 && permissions?.canUpdateSplit(history[0]) && (
                     <Button
                       title={t('splitInfo.restoreVersion')}
-                      style={{ marginHorizontal: 16, marginBottom: 16 }}
+                      style={{ marginBottom: 16 }}
                       leftIcon='undo'
                       onPress={() => restoreSplitVersion(item)}
                       isLoading={isRestoring}
@@ -179,14 +192,24 @@ export default function SplitInfoScreen() {
               {history.map((split, index) => (
                 <View
                   key={`${split.version}`}
-                  style={{ flex: 1, width: maxWidth, transform: [{ scaleX: -1 }] }}
+                  style={{
+                    flex: 1,
+                    width: maxWidth,
+                    transform: [{ scaleX: -1 }],
+                    paddingLeft: insets.left + 12,
+                    paddingRight: insets.right + 12,
+                  }}
                 >
-                  <SplitInfo splitInfo={split} groupInfo={groupInfo} />
+                  <SplitInfo
+                    splitInfo={split}
+                    groupInfo={groupInfo}
+                    style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}
+                  />
 
                   {index !== 0 && permissions?.canUpdateSplit(history[0]) && (
                     <Button
                       title={t('splitInfo.restoreVersion')}
-                      style={{ marginHorizontal: 16, marginBottom: 16 }}
+                      style={{ marginBottom: 16 }}
                       leftIcon='undo'
                       onPress={() => restoreSplitVersion(split)}
                       isLoading={isRestoring}

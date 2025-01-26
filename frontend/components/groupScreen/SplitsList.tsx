@@ -109,8 +109,8 @@ export function SplitsList({
           maxWidth: 900,
           width: '100%',
           alignSelf: 'center',
-          paddingLeft: insets.left + 16,
-          paddingRight: insets.right + 16,
+          paddingLeft: insets.left + 12,
+          paddingRight: insets.right + 12,
           paddingBottom: 64,
         }}
         ListEmptyComponent={

@@ -4,6 +4,7 @@ import { FormData } from '@components/SplitForm'
 import { SplitEditForm } from '@components/SplitForm/SplitEditForm'
 import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { getSplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitForm } from '@utils/validateSplitForm'
@@ -16,6 +17,7 @@ import { GroupUserInfo, SplitWithUsers } from 'shared'
 function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitWithUsers }) {
   const router = useRouter()
   const snack = useSnack()
+  const insets = useModalScreenInsets()
   const [waiting, setWaiting] = useState(false)
   const [error, setError] = useTranslatedError()
   const { t } = useTranslation()
@@ -45,8 +47,18 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
   }
 
   return (
-    <View style={{ flex: 1, paddingHorizontal: 16 }}>
+    <View
+      style={{
+        flex: 1,
+        paddingBottom: insets.bottom,
+        paddingLeft: insets.left + 12,
+        paddingRight: insets.right + 12,
+      }}
+    >
       <SplitEditForm
+        style={{
+          paddingTop: insets.top + 16,
+        }}
         groupInfo={groupInfo}
         splitInfo={split}
         onSubmit={save}

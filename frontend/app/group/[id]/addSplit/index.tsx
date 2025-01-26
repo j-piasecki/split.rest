@@ -1,6 +1,7 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { Text } from '@components/Text'
+import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -10,6 +11,7 @@ import { View } from 'react-native'
 export default function Modal() {
   const theme = useTheme()
   const router = useRouter()
+  const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
 
@@ -21,7 +23,14 @@ export default function Modal() {
       opaque={false}
     >
       <View
-        style={{ flex: 1, paddingTop: 8, paddingHorizontal: 16, justifyContent: 'space-between' }}
+        style={{
+          flex: 1,
+          paddingLeft: insets.left + 12,
+          paddingRight: insets.right + 12,
+          paddingTop: insets.top + 16,
+          paddingBottom: insets.bottom,
+          justifyContent: 'space-between',
+        }}
       >
         <Text
           style={{

@@ -6,6 +6,7 @@ import { Pane } from '@components/Pane'
 import { Picker } from '@components/Picker'
 import { TextInput } from '@components/TextInput'
 import { useCreateGroup } from '@hooks/database/useCreateGroup'
+import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { getLocales } from 'expo-localization'
 import { useRouter } from 'expo-router'
@@ -28,6 +29,7 @@ function getDefaultCurrency() {
 
 function CreateGroupForm() {
   const router = useRouter()
+  const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const [name, setName] = useState('')
   const [currency, setCurrency] = useState(getDefaultCurrency())
@@ -69,8 +71,10 @@ function CreateGroupForm() {
         flexGrow: 1,
         gap: 16,
         justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        paddingTop: 8,
+        paddingLeft: insets.left + 12,
+        paddingRight: insets.right + 12,
+        paddingBottom: insets.bottom,
+        paddingTop: insets.top + 16,
       }}
     >
       <Pane

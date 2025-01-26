@@ -6,6 +6,7 @@ import { SplitInfo } from '@components/SplitInfo'
 import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
@@ -17,10 +18,11 @@ import { ActivityIndicator, View } from 'react-native'
 import { GroupUserInfo, SplitWithUsers } from 'shared'
 
 function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitWithUsers }) {
-  const { t } = useTranslation()
   const router = useRouter()
   const snack = useSnack()
+  const insets = useModalScreenInsets()
   const [error, setError] = useTranslatedError()
+  const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(groupInfo.id)
   const { mutateAsync: createSplit, isPending } = useCreateSplit()
 
@@ -44,10 +46,21 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <SplitInfo groupInfo={groupInfo} splitInfo={split} />
+    <View
+      style={{
+        flex: 1,
+        paddingLeft: insets.left + 12,
+        paddingRight: insets.right + 12,
+        paddingBottom: insets.bottom,
+      }}
+    >
+      <SplitInfo
+        groupInfo={groupInfo}
+        splitInfo={split}
+        style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}
+      />
 
-      <View style={{ gap: 16, paddingHorizontal: 16 }}>
+      <View style={{ gap: 16 }}>
         {error && <ErrorText>{error}</ErrorText>}
         {permissions?.canCreateSplits() && (
           <>

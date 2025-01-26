@@ -67,7 +67,7 @@ export default function Screen() {
       )}
       {user === null && (
         <View style={{ flex: 1 }}>
-          <View style={{ padding: 16, paddingTop: height / 4 - 80, alignItems: 'center', gap: 24 }}>
+          <View style={{ padding: 12, paddingTop: height / 4 - 80, alignItems: 'center', gap: 24 }}>
             <Image
               // eslint-disable-next-line @typescript-eslint/no-require-imports
               source={require('@assets/icon.svg')}

@@ -111,7 +111,7 @@ function Form({ user }: { user: User }) {
         flexGrow: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 24,
+        paddingHorizontal: 12,
         paddingTop: 32,
         gap: 16,
       }}

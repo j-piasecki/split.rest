@@ -4,6 +4,7 @@ import { Form } from '@components/Form'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
+import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useAuth } from '@utils/auth'
 import { getSplitCreationContext } from '@utils/splitCreationContext'
@@ -39,6 +40,7 @@ function getInitialEntries(user: User): PersonEntry[] {
 
 function ParticipansPicker({ user }: { user: User }) {
   const router = useRouter()
+  const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
 
@@ -72,14 +74,20 @@ function ParticipansPicker({ user }: { user: User }) {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View
+      style={{
+        flex: 1,
+        paddingLeft: insets.left + 12,
+        paddingRight: insets.right + 12,
+        paddingBottom: insets.bottom,
+      }}
+    >
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
           flexGrow: 1,
           paddingBottom: 100,
-          paddingHorizontal: 16,
-          paddingTop: 8,
+          paddingTop: insets.top + 16,
         }}
         keyboardShouldPersistTaps='handled'
       >

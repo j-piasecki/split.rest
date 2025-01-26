@@ -169,7 +169,7 @@ function JoinForm() {
   return (
     <View
       style={[
-        { flex: 1, paddingHorizontal: 16, paddingTop: 8 },
+        { flex: 1, paddingHorizontal: 12, paddingTop: 8 },
         (!isSmallScreen || groupDoesntExist) && { alignItems: 'center', paddingTop: 64 },
       ]}
     >

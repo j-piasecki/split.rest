@@ -87,10 +87,7 @@ export function FlatListWithHeader<T>({
   return (
     <PullableFlatList
       {...props}
-      contentContainerStyle={[
-        contentContainerStyle,
-        !hideHeader && { paddingTop: headerHeight + (displayClass <= DisplayClass.Medium ? 8 : 0) },
-      ]}
+      contentContainerStyle={[contentContainerStyle, !hideHeader && { paddingTop: headerHeight }]}
       onScroll={scrollHandlerWrapper}
       onScrollBeginDrag={scrollHandlerWrapper}
       onScrollEndDrag={scrollHandlerWrapper}
