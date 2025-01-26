@@ -11,6 +11,7 @@ import { useTheme } from '@styling/theme'
 import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { useRouter } from 'expo-router'
 import React from 'react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -49,6 +50,7 @@ function Badge({ icon }: { icon: IconName }) {
 export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
+  const router = useRouter()
   const contextMenuRef = useRef<ContextMenuRef>(null)
   const displayClass = useDisplayClass()
   const { t } = useTranslation()
@@ -94,6 +96,9 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
           },
           displayClass <= DisplayClass.Medium && styles.paneShadow,
         ]
+      }}
+      onPress={() => {
+        router.navigate(`/group/${info.id}/member/${member.id}`)
       }}
     >
       <View

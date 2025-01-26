@@ -116,14 +116,16 @@ function Form({ user }: { user: User }) {
         gap: 16,
       }}
     >
-      <View style={{ gap: 16, alignItems: 'center', width: '90%' }}>
+      <View style={{ gap: 24, alignItems: 'center', width: '90%' }}>
         <ProfilePicture userId={user?.id} size={96} />
-        <Text style={{ fontSize: 16, fontWeight: '400', color: theme.colors.onSurfaceVariant }}>
-          {user?.email}
-        </Text>
-        <Text style={{ fontSize: 24, fontWeight: '600', color: theme.colors.onSurface }}>
-          {user?.name}
-        </Text>
+        <View style={{ alignItems: 'center', gap: 4 }}>
+          <Text style={{ fontSize: 24, fontWeight: '600', color: theme.colors.onSurface }}>
+            {user?.name}
+          </Text>
+          <Text style={{ fontSize: 16, fontWeight: '400', color: theme.colors.onSurfaceVariant }}>
+            {user?.email}
+          </Text>
+        </View>
         <Picker
           hint={t('settings.theme.hint')}
           style={{ width: '100%' }}
