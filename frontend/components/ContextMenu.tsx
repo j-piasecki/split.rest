@@ -21,6 +21,7 @@ import { Modal, Pressable } from 'react-native'
 import Animated, {
   FadeIn,
   FadeInUp,
+  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -139,7 +140,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
 
   return (
     <Animated.View
-      entering={Platform.OS !== 'web' ? FadeInUp.duration(200) : undefined}
+      entering={Platform.OS !== 'web' ? FadeInUp.duration(250) : undefined}
       ref={contentRef}
       style={{
         transformOrigin: isBelow ? 'top' : 'bottom',
@@ -203,10 +204,12 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
   const theme = useTheme()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const [visible, setVisible] = useState(false)
+  const [pressed, setPressed] = useState(false)
+  const [hovered, setHovered] = useState(false)
   const anchorRef = useRef<View>(null)
   const touchPoint = useRef<Point>()
   const anchorRect = useRef<Rect>()
-  const scale = useSharedValue(1)
+  const scaleAnimation = useSharedValue(0)
   const scaleTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
   const insets = useSafeAreaInsets()
 
@@ -217,7 +220,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
         setVisible(true)
 
         if (isSmallScreen) {
-          scale.value = withTiming(1.02, { duration: 300 })
+          scaleAnimation.value = withTiming(1, { duration: 300 })
         }
       }
     },
@@ -234,15 +237,16 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
 
   const scaleStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ scale: scale.value }],
+      borderRadius: interpolate(scaleAnimation.value, [0, 1], [0, 8]),
+      transform: [{ scale: interpolate(scaleAnimation.value, [0, 1], [1, 1.02]) }],
     }
   })
 
   useEffect(() => {
     if (!visible) {
-      scale.value = withTiming(1, { duration: 200 })
+      scaleAnimation.value = withTiming(0, { duration: 200 })
     }
-  }, [scale, visible])
+  }, [scaleAnimation, visible])
 
   return (
     <>
@@ -252,19 +256,26 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
         unstable_pressDelay={50}
         delayLongPress={400}
         onPress={!props.pressDisabled ? props.onPress : undefined}
-        style={props.style}
         onPressIn={() => {
+          setPressed(true)
           if (isSmallScreen && !props.disabled) {
             scaleTimeoutRef.current = setTimeout(() => {
-              scale.value = withTiming(1.02, { duration: 500 })
+              scaleAnimation.value = withTiming(1, { duration: 500 })
             }, 100)
           }
         }}
         onPressOut={() => {
+          setPressed(false)
           if (!visible) {
-            scale.value = withTiming(1, { duration: 500 })
+            scaleAnimation.value = withTiming(0, { duration: 500 })
             clearTimeout(scaleTimeoutRef.current!)
           }
+        }}
+        onHoverIn={() => {
+          setHovered(true)
+        }}
+        onHoverOut={() => {
+          setHovered(false)
         }}
         onLongPress={(e) => {
           if (!props.disabled) {
@@ -284,11 +295,19 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
           setVisible(true)
 
           if (isSmallScreen) {
-            scale.value = withTiming(1.02, { duration: 300 })
+            scaleAnimation.value = withTiming(1, { duration: 300 })
           }
         }}
       >
-        <Animated.View style={[{ flex: 1 }, scaleStyle]}>{props.children}</Animated.View>
+        <Animated.View
+          style={[
+            { flex: 1 },
+            typeof props.style === 'function' ? props.style({ hovered, pressed }) : props.style,
+            scaleStyle,
+          ]}
+        >
+          {props.children}
+        </Animated.View>
       </Pressable>
       <Modal
         visible={visible}
@@ -297,8 +316,11 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
         onRequestClose={() => setVisible(false)}
         transparent
       >
-        <Animated.View style={StyleSheet.absoluteFillObject}>
-          <Animated.View style={StyleSheet.absoluteFillObject} entering={FadeIn.duration(200)}>
+        <Animated.View
+          style={StyleSheet.absoluteFillObject}
+          entering={Platform.OS !== 'web' ? FadeIn.duration(200) : undefined}
+        >
+          <Animated.View style={StyleSheet.absoluteFillObject}>
             <Pressable
               onPress={() => setVisible(false)}
               // @ts-expect-error - onContextMenu does not exist on Pressable on mobile

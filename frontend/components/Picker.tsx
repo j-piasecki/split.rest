@@ -201,7 +201,7 @@ function PickerContent({
 
   return (
     <Animated.View
-      entering={FadeInUp.duration(150)}
+      entering={FadeInUp.duration(200)}
       ref={containerRef}
       style={[
         {

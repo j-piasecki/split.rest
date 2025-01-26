@@ -82,21 +82,30 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
           },
         },
       ]}
+      style={({ pressed, hovered }) => {
+        return [
+          {
+            userSelect: 'none',
+            backgroundColor: pressed
+              ? theme.colors.surfaceContainerHighest
+              : hovered
+                ? theme.colors.surfaceContainerHigh
+                : theme.colors.surfaceContainer,
+          },
+          displayClass <= DisplayClass.Medium && styles.paneShadow,
+        ]
+      }}
     >
       <View
         key={member.id}
-        style={[
-          {
-            backgroundColor: theme.colors.surfaceContainer,
-            paddingVertical: 10,
-            paddingLeft: 10,
-            paddingRight: 8,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          },
-          displayClass <= DisplayClass.Medium && styles.paneShadow,
-        ]}
+        style={{
+          paddingVertical: 10,
+          paddingLeft: 10,
+          paddingRight: 8,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
       >
         <View
           style={{

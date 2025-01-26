@@ -53,8 +53,15 @@ export function ProfilePicture({ userId, size, style }: ProfilePictureProps) {
         onLoad={() => {
           setIsLoading(false)
         }}
-        tintColor={failed || isLoading ? theme.colors.secondary : undefined}
-        style={[{ width: imageSize, height: imageSize, borderRadius: imageSize / 2 }]}
+        tintColor={failed ? theme.colors.secondary : undefined}
+        style={[
+          {
+            width: imageSize,
+            height: imageSize,
+            borderRadius: imageSize / 2,
+            backgroundColor: theme.colors.surface,
+          },
+        ]}
       />
     </View>
   )
