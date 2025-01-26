@@ -89,7 +89,7 @@ export function GroupMembersScreen() {
   )
 }
 
-export default function GroupScreenWrapper() {
+export default function MembersScreenWrapper() {
   const user = useAuth()
   const theme = useTheme()
 
