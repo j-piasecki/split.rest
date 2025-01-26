@@ -6,7 +6,7 @@ import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React, { useCallback } from 'react'
 import { LayoutChangeEvent, Platform, Pressable, StyleSheet, View } from 'react-native'
-import Animated, { FadeIn } from 'react-native-reanimated'
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface FullscreenModalProps {
@@ -93,11 +93,14 @@ function ModalScreen({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: opaque ? '#000000a0' : 'transparent',
       }}
     >
-      <Pressable style={StyleSheet.absoluteFill} onPress={goBack} />
+      <Pressable
+        style={[StyleSheet.absoluteFill, { backgroundColor: opaque ? '#000000a0' : 'transparent' }]}
+        onPress={goBack}
+      />
       <Animated.View
+        entering={opaque ? FadeInDown.duration(200) : undefined}
         style={{
           width: '90%',
           height: '80%',
