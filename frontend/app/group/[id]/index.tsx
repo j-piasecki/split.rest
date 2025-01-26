@@ -32,6 +32,7 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
     <SplitsList
       info={info}
       showPullableHeader
+      applyBottomInset
       headerComponent={
         <View style={{ gap: 16 }}>
           <View
@@ -178,7 +179,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
             <View
               style={{
                 width: 600,
-                bottom: 16,
+                bottom: 12 + insets.bottom,
                 top: HEADER_HEIGHT + insets.top,
                 right: 16,
                 position: 'absolute',

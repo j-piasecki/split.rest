@@ -1,11 +1,15 @@
 import { SplitRow } from './SplitRow'
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
+import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
 import { Shimmer } from '@components/Shimmer'
 import { Text } from '@components/Text'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useGroupSplits } from '@hooks/database/useGroupSplits'
 import { useTheme } from '@styling/theme'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { invalidateGroup } from '@utils/queryClient'
+import { beginNewSplit } from '@utils/splitCreationContext'
+import { useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
@@ -73,6 +77,7 @@ export interface SplitsListProps {
   footerComponent?: React.ComponentType<any> | React.ReactElement
   showPullableHeader?: boolean
   onRefresh?: () => void
+  applyBottomInset?: boolean
 }
 
 export function SplitsList({
@@ -81,9 +86,13 @@ export function SplitsList({
   footerComponent,
   showPullableHeader,
   onRefresh,
+  applyBottomInset = false,
 }: SplitsListProps) {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
+  const router = useRouter()
+  const isSmallScreen = useDisplayClass() === DisplayClass.Small
+  const [fabRef, scrollHandler] = useFABScrollHandler()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
   const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching } = useGroupSplits(
@@ -111,7 +120,7 @@ export function SplitsList({
           alignSelf: 'center',
           paddingLeft: insets.left + 12,
           paddingRight: insets.right + 12,
-          paddingBottom: 64,
+          paddingBottom: 88 + (applyBottomInset ? insets.bottom : 0),
         }}
         ListEmptyComponent={
           <View
@@ -139,7 +148,28 @@ export function SplitsList({
         ItemSeparatorComponent={Divider}
         ListHeaderComponent={headerComponent}
         ListFooterComponent={footerComponent}
+        scrollHandler={scrollHandler}
       />
+
+      {isSmallScreen && permissions?.canCreateSplits() && (
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 16 + (applyBottomInset ? insets.bottom : 0),
+            right: 16,
+          }}
+        >
+          <FloatingActionButton
+            ref={fabRef}
+            icon='split'
+            title={t('groupInfo.addSplit')}
+            onPress={() => {
+              beginNewSplit()
+              router.navigate(`/group/${info?.id}/addSplit`)
+            }}
+          />
+        </View>
+      )}
     </View>
   )
 }
