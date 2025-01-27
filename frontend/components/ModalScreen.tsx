@@ -52,7 +52,16 @@ function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalP
           color={theme.colors.onSurface}
           style={{ padding: 12, borderRadius: 48 }}
         />
-        <Text style={{ fontSize: 20, color: theme.colors.onSurface, fontWeight: 600 }}>
+        <Text
+          style={{
+            flex: 1,
+            paddingRight: 48,
+            textAlign: Platform.OS === 'ios' ? 'center' : 'left',
+            fontSize: 20,
+            color: theme.colors.onSurface,
+            fontWeight: 600,
+          }}
+        >
           {title}
         </Text>
       </View>
