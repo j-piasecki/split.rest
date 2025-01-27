@@ -59,7 +59,6 @@ export function ProfilePicture({ userId, size, style }: ProfilePictureProps) {
             width: imageSize,
             height: imageSize,
             borderRadius: imageSize / 2,
-            backgroundColor: theme.colors.surface,
           },
         ]}
       />
