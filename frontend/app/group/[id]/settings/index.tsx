@@ -250,6 +250,7 @@ export default function Settings() {
       title={t('screenName.groupSettings')}
       maxWidth={500}
       maxHeight={600}
+      opaque={false}
     >
       {info && <Form info={info} />}
     </ModalScreen>

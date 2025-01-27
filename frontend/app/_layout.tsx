@@ -123,7 +123,7 @@ function Content() {
                 />
                 <Stack.Screen
                   name='group/[id]/addSplit'
-                  options={{ title: 'Add split', ...modalOptions }}
+                  options={{ title: t('screenName.addSplit'), ...modalOptions }}
                 />
                 <Stack.Screen
                   name='group/[id]/roulette'
