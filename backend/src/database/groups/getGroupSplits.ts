@@ -26,7 +26,19 @@ export async function getGroupSplits(
           splits.version,
           splits.deleted,
           splits.type,
-          ${args.onlyIfIncluded ? 'true AS user_participating' : `(SELECT EXISTS (SELECT 1 FROM split_participants WHERE split_participants.split_id = splits.id AND split_participants.user_id = $3)) AS user_participating`}
+          ${
+            args.onlyIfIncluded
+              ? 'true AS user_participating'
+              : `(SELECT EXISTS (
+                    (SELECT 1 WHERE splits.created_by = $3 OR splits.paid_by = $3)
+                    UNION
+                    (SELECT 1 FROM split_participants WHERE split_participants.split_id = splits.id AND split_participants.user_id = $3)
+                    UNION
+                    (SELECT 1 FROM split_edits WHERE split_edits.id = splits.id AND (split_edits.created_by = $3 OR split_edits.paid_by = $3))
+                    UNION
+                    (SELECT 1 FROM split_participants_edits WHERE split_participants_edits.split_id = splits.id AND split_participants_edits.user_id = $3)
+                 )) AS user_participating`
+          }
         FROM splits ${args.onlyIfIncluded ? 'INNER JOIN split_participants ON splits.id = split_participants.split_id' : ''}
         WHERE
           group_id = $1

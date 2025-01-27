@@ -98,7 +98,7 @@ export async function getSplitHistory(
         updatedAt: Number(row.updated_at),
         type: row.type,
         users: participants,
-        isUserParticipating: participants.some((participant) => participant.id === callerId),
+        isUserParticipating: upToDateInfo.isUserParticipating,
       })
     }
 

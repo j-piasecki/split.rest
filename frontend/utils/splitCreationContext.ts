@@ -143,9 +143,7 @@ class SplitCreationContext {
       version: 1,
       createdById: auth.currentUser.uid,
       updatedAt: Date.now(),
-      isUserParticipating: users.find((user) => user.email === auth.currentUser?.email)
-        ? true
-        : false,
+      isUserParticipating: true,
       type: SplitType.Normal,
       users: users,
     }

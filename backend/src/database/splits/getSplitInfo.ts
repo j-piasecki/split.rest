@@ -1,5 +1,6 @@
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
+import { isUserMemberOfSplit } from '../utils/isUserMemberOfSplit'
 import { Pool } from 'pg'
 import { GetSplitInfoArguments, SplitWithUsers } from 'shared'
 
@@ -45,6 +46,8 @@ export async function getSplitInfo(
     )
   ).rows
 
+  const isParticipating = await isUserMemberOfSplit(pool, args.splitId, callerId)
+
   return {
     id: splitRow.id,
     title: splitRow.name,
@@ -55,7 +58,7 @@ export async function getSplitInfo(
     version: splitRow.version,
     updatedAt: Number(splitRow.updated_at),
     type: splitRow.type,
-    isUserParticipating: participants.some((p) => p.id === callerId),
+    isUserParticipating: isParticipating,
     users: participants.map((p) => ({
       id: p.id,
       name: p.name,
