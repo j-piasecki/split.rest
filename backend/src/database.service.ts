@@ -12,6 +12,7 @@ import { getGroupMemberPermissions } from './database/groups/getGroupMemberPermi
 import { getGroupMembers } from './database/groups/getGroupMembers'
 import { getGroupMembersAutocompletions } from './database/groups/getGroupMembersAutocompletions'
 import { getGroupSplits } from './database/groups/getGroupSplits'
+import { getMemberInfo } from './database/groups/getMemberInfo'
 import { getUserGroupInvites } from './database/groups/getUserGroupInvites'
 import { getUserGroups } from './database/groups/getUserGroups'
 import { inviteUser } from './database/groups/inviteUser'
@@ -46,6 +47,7 @@ import {
   GetGroupInfoArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
+  GetGroupMemberInfoArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupSplitsArguments,
@@ -248,5 +250,10 @@ export class DatabaseService {
   // Every user can delete their own account
   async deleteUser(callerId: string) {
     return await deleteUser(this.pool, callerId)
+  }
+
+  @RequirePermissions(['readMembers'])
+  async getGroupMemberInfo(callerId: string, args: GetGroupMemberInfoArguments) {
+    return await getMemberInfo(this.pool, callerId, args)
   }
 }

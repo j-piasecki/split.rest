@@ -15,6 +15,7 @@ import {
   GetGroupInfoArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
+  GetGroupMemberInfoArguments,
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
@@ -231,5 +232,9 @@ export class AppService {
     }
 
     return await this.databaseService.deleteUser(callerId)
+  }
+
+  async getGroupMemberInfo(callerId: string, args: GetGroupMemberInfoArguments) {
+    return await this.databaseService.getGroupMemberInfo(callerId, args)
   }
 }

@@ -2,7 +2,7 @@ import ModalScreen from '@components/ModalScreen'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
-import { useUserById } from '@hooks/database/useUserById'
+import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
@@ -14,8 +14,8 @@ export function MemberScreen() {
   const theme = useTheme()
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
-  const { id: _groupId, memberId } = useLocalSearchParams()
-  const { data: memberInfo, error } = useUserById(String(memberId))
+  const { id: groupId, memberId } = useLocalSearchParams()
+  const { data: memberInfo, error } = useGroupMemberInfo(Number(groupId), String(memberId))
 
   if (error) {
     return (

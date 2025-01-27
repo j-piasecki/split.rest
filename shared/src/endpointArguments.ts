@@ -152,3 +152,8 @@ export interface SetGroupInviteRejectedArguments {
   groupId: number
   rejected: boolean
 }
+
+export interface GetGroupMemberInfoArguments {
+  groupId: number
+  memberId: string
+}

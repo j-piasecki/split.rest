@@ -99,6 +99,7 @@
       "userAlreadyInGroup": "User is already a member of this group",
       "callerAlreadyInGroup": "You already are a member of this group",
       "callerNotInGroup": "You are not a member of this group",
+      "userNotInGroup": "This user is not a member of this group",
       "joinLinkAlreadyExists": "A join link already exists for this group",
       "failedToCreateGroup": "Failed to create group"
     }

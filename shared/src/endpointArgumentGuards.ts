@@ -10,6 +10,7 @@ import {
   GetGroupInfoArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
+  GetGroupMemberInfoArguments,
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
@@ -178,4 +179,8 @@ export function isSetGroupInviteRejectedArguments(
   obj: any
 ): obj is SetGroupInviteRejectedArguments {
   return obj.groupId !== undefined && obj.rejected !== undefined
+}
+
+export function isGetGroupMemberInfoArguments(obj: any): obj is GetGroupMemberInfoArguments {
+  return obj.groupId !== undefined && obj.memberId !== undefined
 }

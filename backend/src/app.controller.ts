@@ -15,6 +15,7 @@ import {
   GetGroupInfoArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
+  GetGroupMemberInfoArguments,
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
@@ -46,6 +47,7 @@ import {
   isGetGroupInfoArguments,
   isGetGroupInviteByLinkArguments,
   isGetGroupJoinLinkArguments,
+  isGetGroupMemberInfoArguments,
   isGetGroupMemberPermissionsArguments,
   isGetGroupMembersArguments,
   isGetGroupMembersAutocompletionsArguments,
@@ -421,5 +423,18 @@ export class AppController {
   @Post('deleteUser')
   async deleteUser(@Req() request: Request) {
     return await this.appService.deleteUser(request.user.sub)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getGroupMemberInfo')
+  async getGroupMemberInfo(
+    @Req() request: Request,
+    @Query() args: Partial<GetGroupMemberInfoArguments>
+  ) {
+    if (!isGetGroupMemberInfoArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.getGroupMemberInfo(request.user.sub, args)
   }
 }
