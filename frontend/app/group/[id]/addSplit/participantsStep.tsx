@@ -130,6 +130,7 @@ export default function Modal() {
       title={t('screenName.splitParticipants')}
       maxWidth={500}
       opaque={false}
+      slideAnimation={false}
     >
       {user && <ParticipansPicker user={user} />}
     </ModalScreen>

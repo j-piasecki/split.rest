@@ -90,6 +90,7 @@ export default function Modal() {
       title={t('screenName.splitType')}
       maxWidth={500}
       opaque={false}
+      slideAnimation={false}
     >
       <View
         style={{

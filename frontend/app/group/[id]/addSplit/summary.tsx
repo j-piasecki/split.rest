@@ -109,6 +109,7 @@ export default function Modal() {
       title={t('screenName.splitSummary')}
       maxWidth={500}
       opaque={false}
+      slideAnimation={false}
     >
       {error && (
         <View style={{ flex: 1, paddingHorizontal: 16 }}>

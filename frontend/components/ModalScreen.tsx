@@ -79,6 +79,7 @@ export interface ModalScreenProps {
   title: string
   opaque: boolean
   children: React.ReactNode
+  slideAnimation?: boolean
   maxWidth?: number
   maxHeight?: number
   onLayout?: (event: LayoutChangeEvent) => void
@@ -90,6 +91,7 @@ function ModalScreen({
   opaque,
   children,
   onLayout,
+  slideAnimation = true,
   maxWidth = 768,
   maxHeight = 800,
 }: ModalScreenProps) {
@@ -109,7 +111,7 @@ function ModalScreen({
         onPress={goBack}
       />
       <Animated.View
-        entering={opaque ? FadeInDown.duration(200) : undefined}
+        entering={slideAnimation ? FadeInDown.duration(200) : undefined}
         style={{
           width: '90%',
           height: '80%',
@@ -152,6 +154,7 @@ export interface ModalProps {
   maxHeight?: number
   onLayout?: (event: LayoutChangeEvent) => void
   opaque?: boolean
+  slideAnimation?: boolean
 }
 
 export default function Modal({ returnPath, opaque = true, ...props }: ModalProps) {

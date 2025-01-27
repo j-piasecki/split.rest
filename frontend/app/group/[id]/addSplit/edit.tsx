@@ -81,6 +81,7 @@ export default function Modal() {
       title={t('screenName.editSplit')}
       maxWidth={500}
       opaque={false}
+      slideAnimation={false}
     >
       {groupInfo && <Content groupInfo={groupInfo} split={split} />}
     </ModalScreen>

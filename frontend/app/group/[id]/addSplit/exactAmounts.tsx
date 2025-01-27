@@ -111,6 +111,7 @@ export default function Modal() {
       title={t('screenName.exactAmounts')}
       maxWidth={500}
       opaque={false}
+      slideAnimation={false}
     >
       {(!user || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
