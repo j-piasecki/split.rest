@@ -77,8 +77,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
           runOnJS(onPull)()
         }
       }
-    },
-    [offset]
+    }
   )
 
   useAnimatedReaction(
