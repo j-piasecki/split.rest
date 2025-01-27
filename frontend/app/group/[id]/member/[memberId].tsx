@@ -3,21 +3,24 @@ import { ProfilePicture } from '@components/ProfilePicture'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams } from 'expo-router'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
 export function MemberScreen() {
   const theme = useTheme()
   const insets = useModalScreenInsets()
+  const { data: permissions } = useGroupPermissions()
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
   const { data: memberInfo, error } = useGroupMemberInfo(Number(groupId), String(memberId))
 
-  if (error) {
+  if (error || permissions?.canReadMembers() === false) {
     return (
       <View
         style={{
@@ -26,10 +29,18 @@ export function MemberScreen() {
         }}
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
-          <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
-          <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
-            {t('groupInfo.couldNotLoad')}
-          </Text>
+          {permissions?.canReadMembers() ? (
+            <>
+              <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
+              <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
+                {t('api.group.userNotInGroup')}
+              </Text>
+            </>
+          ) : (
+            <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
+              {t('api.insufficientPermissions.group.readMembers')}
+            </Text>
+          )}
         </View>
       </View>
     )

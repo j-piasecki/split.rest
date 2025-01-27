@@ -28,7 +28,7 @@ export function useGroupMemberInfo(groupId: number | undefined, memberId: string
       return member
     },
     retry: (failureCount, error) => {
-      if (error instanceof ApiError && error.statusCode === 404) {
+      if (error instanceof ApiError && (error.statusCode === 404 || error.statusCode === 403)) {
         return false
       }
 
