@@ -163,7 +163,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
           <Text
             style={{
               fontSize: 28,
-              fontWeight: '700',
+              fontWeight: 600,
               color: theme.colors.primary,
               letterSpacing: 1,
             }}
