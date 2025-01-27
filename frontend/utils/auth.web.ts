@@ -17,6 +17,7 @@ import {
   signInWithPopup,
   signInWithRedirect,
 } from 'firebase/auth'
+import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { User } from 'shared'
 
@@ -54,6 +55,8 @@ async function tryToCreateUser(createUserRetries = 5) {
     if (createUserRetries > 0) {
       await sleep(100)
       await tryToCreateUser(createUserRetries - 1)
+    } else {
+      alert(t('api.auth.createUserFailed'))
     }
   }
 }

@@ -7,6 +7,7 @@ import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authe
 import { FirebaseAuthTypes, firebase } from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { router, usePathname, useRouter } from 'expo-router'
+import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { Platform } from 'react-native'
 import uuid from 'react-native-uuid'
@@ -36,6 +37,8 @@ async function tryToCreateUser(createUserRetries = 5) {
     if (createUserRetries > 0) {
       await sleep(100)
       await tryToCreateUser(createUserRetries - 1)
+    } else {
+      alert(t('api.auth.createUserFailed'))
     }
   }
 }
@@ -137,6 +140,8 @@ export async function signInWithGoogle() {
 export async function signInWithApple() {
   const appleCredential = await getAppleCredential()
   const userCredential = await firebase.auth().signInWithCredential(appleCredential)
+
+  await tryToCreateUser()
 
   // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
   console.warn(`Firebase authenticated via Apple, UID: ${userCredential.user.uid}`)
