@@ -145,7 +145,7 @@ export function Picker({ hint, items, selectedItem, onSelectionChange, style }: 
             }}
             style={{
               flex: 1,
-              backgroundColor: Platform.OS === 'web' ? 'transparent' : 'rgba(0, 0, 0, 0.4)',
+              backgroundColor: 'transparent',
             }}
           />
         </Animated.View>
