@@ -4,6 +4,7 @@ import { Picker } from '@components/Picker'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
+import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { ThemeType } from '@type/theme'
 import { deleteUser, logout, reauthenticate, useAuth } from '@utils/auth'
@@ -99,6 +100,7 @@ function Form({ user }: { user: User }) {
   const theme = useTheme()
   const router = useRouter()
   const displayClass = useDisplayClass()
+  const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
 
@@ -111,8 +113,10 @@ function Form({ user }: { user: User }) {
         flexGrow: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 12,
-        paddingTop: 32,
+        paddingLeft: insets.left + 12,
+        paddingRight: insets.right + 12,
+        paddingBottom: insets.bottom,
+        paddingTop: insets.top + 32,
         gap: 16,
       }}
     >
