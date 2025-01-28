@@ -32,7 +32,8 @@ const ownerPermissions: GroupMemberPermissionsDTO = {
     ManagePermissionsDTO.ManageAdmins |
     ManagePermissionsDTO.ReadPermissions |
     ManagePermissionsDTO.ManagePermissions |
-    ManagePermissionsDTO.ManageDirectInvites,
+    ManagePermissionsDTO.ManageDirectInvites |
+    ManagePermissionsDTO.ManageAllDirectInvites,
 } as const
 
 const adminPermissions: GroupMemberPermissionsDTO = {
@@ -59,7 +60,8 @@ const adminPermissions: GroupMemberPermissionsDTO = {
     ManagePermissionsDTO.ManageAdmins |
     ManagePermissionsDTO.ReadPermissions |
     ManagePermissionsDTO.ManagePermissions |
-    ManagePermissionsDTO.ManageDirectInvites,
+    ManagePermissionsDTO.ManageDirectInvites |
+    ManagePermissionsDTO.ManageAllDirectInvites,
 } as const
 
 const memberPermissions: GroupMemberPermissionsDTO = {
