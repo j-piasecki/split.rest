@@ -102,7 +102,8 @@
       "callerNotInGroup": "You are not a member of this group",
       "userNotInGroup": "This user is not a member of this group",
       "joinLinkAlreadyExists": "A join link already exists for this group",
-      "failedToCreateGroup": "Failed to create group"
+      "failedToCreateGroup": "Failed to create group",
+      "userAlreadyInvited": "User is already invited to this group"
     }
   },
 

@@ -24,6 +24,19 @@ export async function inviteUser(pool: Pool, callerId: string, args: InviteUserT
       throw new ConflictException('api.group.userAlreadyInGroup')
     }
 
+    const inviteState = await client.query(
+      `
+        SELECT rejected, withdrawn
+        FROM group_invites
+        WHERE group_id = $1 AND user_id = $2
+      `,
+      [args.groupId, args.userId]
+    )
+
+    if (inviteState?.rowCount && !inviteState.rows[0].rejected && !inviteState.rows[0].withdrawn) {
+      throw new ConflictException('api.group.userAlreadyInvited')
+    }
+
     await client.query(
       `
         INSERT INTO group_invites (group_id, user_id, created_by, created_at)
