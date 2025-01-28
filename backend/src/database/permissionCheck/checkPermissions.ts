@@ -207,6 +207,13 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'manageDirectInvites': {
+          if (!callerPermissions?.canManageDirectInvites()) {
+            return 'api.insufficientPermissions.group.manageDirectInvites'
+          }
+          continue
+        }
+
         default:
           console.log('Unknown permission required:', permission)
           return 'unknownError'

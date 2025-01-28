@@ -75,6 +75,7 @@
         "readPermissions": "You don't have permission to read the group permissions",
         "managePermissions": "You don't have permission to manage the group permissions",
         "manageOwner": "You don't have permission to change permissions of the group owner",
+        "manageDirectInvites": "You don't have permission to manage invites",
         "joinLink": {
           "see": "You don't have permission to view invitation links",
           "create": "You don't have permission to create invitation links",

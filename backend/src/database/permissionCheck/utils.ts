@@ -22,6 +22,7 @@ export const PermissionToFieldMap = {
   manageAdmins: ['groupId'] as const,
   readPermissions: ['groupId', 'userId?'] as const,
   managePermissions: ['groupId'] as const,
+  manageDirectInvites: ['groupId'] as const,
 }
 
 export type PermissionToFieldMap = {
