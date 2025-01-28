@@ -4,10 +4,10 @@ import { useTheme } from '@styling/theme'
 import { router } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { GroupInvite } from 'shared'
+import { GroupInviteWithGroupInfo } from 'shared'
 
 export interface InvitationsButtonProps {
-  invites: GroupInvite[]
+  invites: GroupInviteWithGroupInfo[]
   isLoadingInvites: boolean
 }
 

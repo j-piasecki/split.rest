@@ -74,7 +74,7 @@ export interface GroupJoinLink {
   createdAt: number
 }
 
-export interface GroupInvite {
+export interface GroupInviteWithGroupInfo {
   createdBy: User
   groupInfo: GroupInfo
   createdAt: number

@@ -1,12 +1,12 @@
 import { NotFoundException } from '../../errors/NotFoundException'
 import { Pool } from 'pg'
-import { GroupInvite } from 'shared'
+import { GroupInviteWithGroupInfo } from 'shared'
 import { GetGroupInviteByLinkArguments } from 'shared/src/endpointArguments'
 
 export async function getGroupInviteByLink(
   pool: Pool,
   args: GetGroupInviteByLinkArguments
-): Promise<GroupInvite> {
+): Promise<GroupInviteWithGroupInfo> {
   const { rows } = await pool.query(
     `
       SELECT 

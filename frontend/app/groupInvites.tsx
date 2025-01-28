@@ -16,9 +16,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupInvite } from 'shared'
+import { GroupInviteWithGroupInfo } from 'shared'
 
-function Invite({ invite }: { invite: GroupInvite }) {
+function Invite({ invite }: { invite: GroupInviteWithGroupInfo }) {
   const theme = useTheme()
   const { t } = useTranslation()
   const snack = useSnack()

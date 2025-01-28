@@ -1,11 +1,11 @@
 import { Pool } from 'pg'
-import { GetUserInvitesArguments, GroupInvite } from 'shared'
+import { GetUserInvitesArguments, GroupInviteWithGroupInfo } from 'shared'
 
 export async function getUserGroupInvites(
   pool: Pool,
   callerId: string,
   args: GetUserInvitesArguments
-): Promise<GroupInvite[]> {
+): Promise<GroupInviteWithGroupInfo[]> {
   const rows = (
     await pool.query(
       `

@@ -1,13 +1,13 @@
 import { QueryFunctionContext, QueryKey, useInfiniteQuery } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
 import { useCallback } from 'react'
-import { GetUserInvitesArguments, GroupInvite } from 'shared'
+import { GetUserInvitesArguments, GroupInviteWithGroupInfo } from 'shared'
 
 export function useUserGroupInvites(rejected: boolean) {
   const fetchInvites = useCallback(
     async ({ pageParam }: QueryFunctionContext<QueryKey, number>) => {
       const args: GetUserInvitesArguments = { rejected, startAfter: pageParam }
-      const result = await makeRequest<GetUserInvitesArguments, GroupInvite[]>(
+      const result = await makeRequest<GetUserInvitesArguments, GroupInviteWithGroupInfo[]>(
         'GET',
         'getUserGroupInvites',
         args
