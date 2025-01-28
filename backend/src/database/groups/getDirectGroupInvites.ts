@@ -28,12 +28,14 @@ export async function getDirectGroupInvites(
           group_invites.rejected,
           group_invites.withdrawn
         FROM group_invites JOIN users AS inviter ON inviter.id = group_invites.created_by JOIN users AS invitee ON invitee.id = group_invites.user_id
-        WHERE group_invites.group_id = $1 AND group_invites.created_at < $2
+        WHERE group_invites.group_id = $1 AND group_invites.created_at < $2 ${args.onlyIfCreated ? 'AND group_invites.created_by = $3' : ''}
         ORDER BY
           group_invites.created_at DESC
         LIMIT 20;
       `,
-      [args.groupId, args.startAfter ?? Number.MAX_SAFE_INTEGER]
+      args.onlyIfCreated
+        ? [args.groupId, args.startAfter ?? Number.MAX_SAFE_INTEGER, callerId]
+        : [args.groupId, args.startAfter ?? Number.MAX_SAFE_INTEGER]
     )
   ).rows
 

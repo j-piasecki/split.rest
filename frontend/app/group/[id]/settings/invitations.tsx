@@ -92,10 +92,12 @@ function InviteRow({
   invite,
   info,
   showSeparator,
+  manageOnlyOwnInvites,
 }: {
   invite: GroupInviteWithInvitee
   info: GroupUserInfo
   showSeparator: boolean
+  manageOnlyOwnInvites: boolean
 }) {
   const theme = useTheme()
   const {
@@ -124,12 +126,13 @@ function InviteRow({
   )
 }
 
-function Form({ info }: { info: GroupUserInfo }) {
+function Form({ info, permissions }: { info: GroupUserInfo, permissions: GroupPermissions }) {
   const theme = useTheme()
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
-  const { data: permissions } = useGroupPermissions(info.id)
-  const { invites, hasNextPage, isFetchingNextPage, fetchNextPage } = useDirectGroupInvites(info.id)
+
+  const manageOnlyOwnInvites = !permissions.canManageAllDirectInvites() && permissions.canManageDirectInvites()
+  const { invites, hasNextPage, isFetchingNextPage, fetchNextPage } = useDirectGroupInvites(info.id, manageOnlyOwnInvites)
 
   return (
     <FlatList
@@ -143,7 +146,7 @@ function Form({ info }: { info: GroupUserInfo }) {
       }}
       data={invites}
       renderItem={({ item, index }) => (
-        <InviteRow invite={item} info={info} showSeparator={index !== invites.length - 1} />
+        <InviteRow invite={item} info={info} showSeparator={index !== invites.length - 1} manageOnlyOwnInvites={manageOnlyOwnInvites} />
       )}
       onEndReachedThreshold={0.5}
       onEndReached={() => !isFetchingNextPage && hasNextPage && fetchNextPage()}
@@ -216,6 +219,7 @@ export default function Settings() {
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()
   const { data: info } = useGroupInfo(Number(id))
+  const { data: permissions } = useGroupPermissions(Number(id))
 
   return (
     <ModalScreen
@@ -226,7 +230,7 @@ export default function Settings() {
       opaque={false}
       slideAnimation={false}
     >
-      {info && <Form info={info} />}
+      {info && permissions && <Form info={info} permissions={permissions} />}
     </ModalScreen>
   )
 }

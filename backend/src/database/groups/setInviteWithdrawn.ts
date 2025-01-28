@@ -1,3 +1,4 @@
+import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { Pool } from 'pg'
 import { SetGroupInviteWithdrawnArguments } from 'shared/src/endpointArguments'
@@ -7,18 +8,19 @@ export async function setGroupInviteWithdrawn(
   callerId: string,
   args: SetGroupInviteWithdrawnArguments
 ) {
-  const inviteExists =
-    (
-      await pool.query(
-        `
-        SELECT 1 FROM group_invites WHERE user_id = $1 AND group_id = $2
-      `,
-        [args.userId, args.groupId]
-      )
-    ).rowCount === 1
+  const invite = await pool.query(
+    `
+      SELECT created_by FROM group_invites WHERE user_id = $1 AND group_id = $2
+    `,
+    [args.userId, args.groupId]
+  )
 
-  if (!inviteExists) {
+  if (!invite?.rowCount) {
     throw new NotFoundException('api.notFound.invite')
+  }
+
+  if (args.onlyIfCreated && invite.rows[0].created_by !== callerId) {
+    throw new ForbiddenException('api.insufficientPermissions.group.manageDirectInvites')
   }
 
   await pool.query(

@@ -208,7 +208,19 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
         }
 
         case 'manageDirectInvites': {
-          if (!callerPermissions?.canManageDirectInvites()) {
+          const args = unsafeArgs as PermissionArguments<['manageDirectInvites']>
+          if (
+            !callerPermissions?.canManageAllDirectInvites() &&
+            (!callerPermissions?.canManageDirectInvites() || !args.onlyIfCreated)
+          ) {
+            return 'api.insufficientPermissions.group.manageDirectInvites'
+          }
+
+          continue
+        }
+
+        case 'manageAllDirectInvites': {
+          if (!callerPermissions?.canManageAllDirectInvites()) {
             return 'api.insufficientPermissions.group.manageDirectInvites'
           }
           continue

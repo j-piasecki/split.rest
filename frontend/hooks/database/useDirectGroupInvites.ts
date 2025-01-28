@@ -3,10 +3,10 @@ import { ApiError, makeRequest } from '@utils/makeApiRequest'
 import { useCallback } from 'react'
 import { GetDirectGroupInvitesArguments, GroupInviteWithInvitee } from 'shared'
 
-export function useDirectGroupInvites(groupId: number) {
+export function useDirectGroupInvites(groupId: number, onlyIfCreated?: boolean) {
   const fetchInvites = useCallback(
     async ({ pageParam }: QueryFunctionContext<QueryKey, number>) => {
-      const args: GetDirectGroupInvitesArguments = { groupId, startAfter: pageParam }
+      const args: GetDirectGroupInvitesArguments = { groupId, startAfter: pageParam, onlyIfCreated }
       const result = await makeRequest<GetDirectGroupInvitesArguments, GroupInviteWithInvitee[]>(
         'GET',
         'getDirectGroupInvites',
@@ -14,7 +14,7 @@ export function useDirectGroupInvites(groupId: number) {
       )
       return result ?? []
     },
-    [groupId]
+    [groupId, onlyIfCreated]
   )
 
   const result = useInfiniteQuery({

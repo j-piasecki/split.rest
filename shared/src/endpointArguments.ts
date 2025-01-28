@@ -160,10 +160,12 @@ export interface GetGroupMemberInfoArguments {
 
 export interface GetDirectGroupInvitesArguments {
   startAfter?: number
+  onlyIfCreated?: boolean
   groupId: number
 }
 
 export interface SetGroupInviteWithdrawnArguments {
+  onlyIfCreated: boolean | undefined
   groupId: number
   userId: string
   withdrawn: boolean
