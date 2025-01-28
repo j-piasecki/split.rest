@@ -130,6 +130,11 @@
       "doYouWantToDeleteAccount": "Do you want to delete your account?",
       "deletionNotReversible": "This action is not reversible",
       "accountDeleted": "Your account was deleted"
+    },
+    "invitations": {
+      "manageInvitations": "Manage invitations",
+      "directInvitations": "Direct invitations",
+      "noInvitations": "There are no invitations sent for this group"
     }
   },
 
@@ -138,13 +143,17 @@
     "group": "Group",
     "inviteMember": "Invite member",
     "roulette": "Roulette",
-    "groupSettings": "Settings",
     "splitInfo": "Split details",
     "editSplit": "Edit split",
     "profile": "Profile",
     "members": "Members",
     "memberInfo": "Member information",
     "addSplit":"Add split",
+
+    "groupSettings": {
+      "index": "Settings",
+      "invitations": "Manage invitations"
+    },
   
     "splitType": "New split",
     "splitSummary": "Summary",

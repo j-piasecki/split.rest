@@ -29,7 +29,11 @@ export default function AddFlow() {
             animation: isSmallScreen ? 'default' : 'none',
           }}
         >
-          <Stack.Screen name='index' options={{ title: t('screenName.groupSettings') }} />
+          <Stack.Screen name='index' options={{ title: t('screenName.groupSettings.index') }} />
+          <Stack.Screen
+            name='invitations'
+            options={{ title: t('screenName.groupSettings.invitations') }}
+          />
         </Stack>
       </ThemeProvider>
     </Animated.View>
