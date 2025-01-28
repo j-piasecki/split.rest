@@ -5,6 +5,7 @@ import { createGroupJoinLink } from './database/groups/createGroupJoinLink'
 import { deleteGroup } from './database/groups/deleteGroup'
 import { deleteGroupJoinLink } from './database/groups/deleteGroupJoinLink'
 import { getBalances } from './database/groups/getBalances'
+import { getDirectGroupInvites } from './database/groups/getDirectGroupInvites'
 import { getGroupInfo } from './database/groups/getGroupInfo'
 import { getGroupInviteByLink } from './database/groups/getGroupInviteByLink'
 import { getGroupJoinLink } from './database/groups/getGroupJoinLink'
@@ -44,6 +45,7 @@ import {
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
+  GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
@@ -255,5 +257,10 @@ export class DatabaseService {
   @RequirePermissions(['readMembers'])
   async getGroupMemberInfo(callerId: string, args: GetGroupMemberInfoArguments) {
     return await getMemberInfo(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['manageDirectInvites'])
+  async getDirectGroupInvites(callerId: string, args: GetDirectGroupInvitesArguments) {
+    return await getDirectGroupInvites(this.pool, callerId, args)
   }
 }

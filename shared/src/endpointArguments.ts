@@ -157,3 +157,8 @@ export interface GetGroupMemberInfoArguments {
   groupId: number
   memberId: string
 }
+
+export interface GetDirectGroupInvitesArguments {
+  startAfter?: number
+  groupId: number
+}

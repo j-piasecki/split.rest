@@ -12,6 +12,7 @@ import {
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
+  GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
@@ -236,5 +237,9 @@ export class AppService {
 
   async getGroupMemberInfo(callerId: string, args: GetGroupMemberInfoArguments) {
     return await this.databaseService.getGroupMemberInfo(callerId, args)
+  }
+
+  async getDirectGroupInvites(callerId: string, args: GetDirectGroupInvitesArguments) {
+    return await this.databaseService.getDirectGroupInvites(callerId, args)
   }
 }

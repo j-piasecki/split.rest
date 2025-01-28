@@ -12,6 +12,7 @@ import {
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
+  GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
@@ -44,6 +45,7 @@ import {
   isDeleteGroupJoinLinkArguments,
   isDeleteSplitArguments,
   isGetBalancesArguments,
+  isGetDirectGroupInvitesArguments,
   isGetGroupInfoArguments,
   isGetGroupInviteByLinkArguments,
   isGetGroupJoinLinkArguments,
@@ -436,5 +438,18 @@ export class AppController {
     }
 
     return await this.appService.getGroupMemberInfo(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getDirectGroupInvites')
+  async getDirectGroupInvites(
+    @Req() request: Request,
+    @Query() args: Partial<GetDirectGroupInvitesArguments>
+  ) {
+    if (!isGetDirectGroupInvitesArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.getDirectGroupInvites(request.user.sub, args)
   }
 }
