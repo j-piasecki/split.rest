@@ -28,7 +28,7 @@ export async function inviteUser(pool: Pool, callerId: string, args: InviteUserT
       `
         INSERT INTO group_invites (group_id, user_id, created_by, created_at)
         VALUES ($1, $2, $3, $4)
-        ON CONFLICT (group_id, user_id) DO UPDATE SET created_by = $3, created_at = $4, rejected = FALSE
+        ON CONFLICT (group_id, user_id) DO UPDATE SET created_by = $3, created_at = $4, rejected = FALSE, withdrawn = FALSE
       `,
       [args.groupId, args.userId, callerId, Date.now()]
     )
