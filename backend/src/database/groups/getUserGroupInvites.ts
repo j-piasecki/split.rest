@@ -25,7 +25,7 @@ export async function getUserGroupInvites(
           group_invites.created_at,
           group_invites.rejected
         FROM groups JOIN group_invites ON groups.id = group_invites.group_id JOIN users ON users.id = group_invites.created_by
-        WHERE group_invites.user_id = $1 AND group_invites.rejected = $2 AND group_invites.created_at < $3 AND groups.deleted = FALSE
+        WHERE group_invites.user_id = $1 AND group_invites.rejected = $2 AND group_invites.withdrawn = FALSE AND group_invites.created_at < $3 AND groups.deleted = FALSE
         ORDER BY
           groups.id DESC
         LIMIT 20;
@@ -53,5 +53,6 @@ export async function getUserGroupInvites(
     },
     createdAt: Number(row.created_at),
     rejected: row.rejected,
+    withdrawn: false,
   }))
 }

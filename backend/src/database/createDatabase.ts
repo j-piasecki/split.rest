@@ -134,6 +134,7 @@ export async function createDatabase(pool: Pool) {
       created_by VARCHAR(32) NOT NULL,
       created_at BIGINT NOT NULL,
       rejected BOOLEAN NOT NULL DEFAULT FALSE,
+      withdrawn BOOLEAN NOT NULL DEFAULT FALSE,
 
       PRIMARY KEY (group_id, user_id),
       FOREIGN KEY (group_id) REFERENCES groups(id),

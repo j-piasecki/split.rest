@@ -79,6 +79,7 @@ export interface GroupInvite {
   groupInfo: GroupInfo
   createdAt: number
   rejected: boolean
+  withdrawn: boolean
 }
 
 export function isUser(obj: any): obj is User {

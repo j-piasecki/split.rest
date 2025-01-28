@@ -20,8 +20,8 @@ export async function acceptGroupInvite(
       (
         await client.query(
           `
-        SELECT 1 FROM group_invites WHERE user_id = $1 AND group_id = $2
-      `,
+            SELECT 1 FROM group_invites WHERE user_id = $1 AND group_id = $2 and withdrawn = FALSE
+          `,
           [callerId, args.groupId]
         )
       ).rowCount === 1

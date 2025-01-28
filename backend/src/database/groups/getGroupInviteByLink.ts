@@ -57,5 +57,6 @@ export async function getGroupInviteByLink(
     },
     createdAt: rows[0].created_at,
     rejected: false,
+    withdrawn: false,
   }
 }
