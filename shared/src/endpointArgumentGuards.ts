@@ -29,6 +29,7 @@ import {
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
   SetGroupInviteRejectedArguments,
+  SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
 } from './endpointArguments'
@@ -188,4 +189,10 @@ export function isGetGroupMemberInfoArguments(obj: any): obj is GetGroupMemberIn
 
 export function isGetDirectGroupInvitesArguments(obj: any): obj is GetDirectGroupInvitesArguments {
   return obj.groupId !== undefined
+}
+
+export function isSetGroupInviteWithdrawnArguments(
+  obj: any
+): obj is SetGroupInviteWithdrawnArguments {
+  return obj.groupId !== undefined && obj.userId !== undefined && obj.withdrawn !== undefined
 }

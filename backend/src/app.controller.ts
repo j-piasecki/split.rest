@@ -34,6 +34,7 @@ import {
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
   SetGroupInviteRejectedArguments,
+  SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
   User,
@@ -67,6 +68,7 @@ import {
   isSetGroupAdminArguments,
   isSetGroupHiddenArguments,
   isSetGroupInviteRejectedArguments,
+  isSetGroupInviteWithdrawnArguments,
   isSetGroupNameArguments,
   isUpdateSplitArguments,
   isUser,
@@ -451,5 +453,18 @@ export class AppController {
     }
 
     return await this.appService.getDirectGroupInvites(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('setGroupInviteWithdrawn')
+  async setGroupInviteWithdrawn(
+    @Req() request: Request,
+    @Body() args: Partial<SetGroupInviteWithdrawnArguments>
+  ) {
+    if (!isSetGroupInviteWithdrawnArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.setGroupInviteWithdrawn(request.user.sub, args)
   }
 }

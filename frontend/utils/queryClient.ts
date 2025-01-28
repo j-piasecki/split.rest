@@ -22,10 +22,14 @@ export async function invalidateGroup(groupId: number) {
   await queryClient.invalidateQueries({ queryKey: ['groupMembers', groupId] })
   await queryClient.invalidateQueries({ queryKey: ['groupInfo', groupId] })
   await queryClient.invalidateQueries({ queryKey: ['groupPermissions', groupId] })
-  await queryClient.invalidateQueries({ queryKey: ['directGroupInvites', groupId] })
   await queryClient.invalidateQueries({ queryKey: ['groupJoinLink', groupId] })
   await invalidateUserGroups()
   await invalidateGroupJoinLink(groupId)
+  await invalidateDirectGroupInvites(groupId)
+}
+
+export async function invalidateDirectGroupInvites(groupId: number) {
+  await queryClient.invalidateQueries({ queryKey: ['directGroupInvites', groupId] })
 }
 
 export async function invalidateSplitRelatedQueries(groupId: number, splitId: number) {

@@ -23,6 +23,7 @@ import { setGroupAdmin } from './database/groups/setGroupAdmin'
 import { setGroupHidden } from './database/groups/setGroupHidden'
 import { setGroupName } from './database/groups/setGroupName'
 import { setGroupInviteRejected } from './database/groups/setInviteRejected'
+import { setGroupInviteWithdrawn } from './database/groups/setInviteWithdrawn'
 import { RequirePermissions } from './database/permissionCheck'
 import { createSplit } from './database/splits/createSplit'
 import { deleteSplit } from './database/splits/deleteSplit'
@@ -66,6 +67,7 @@ import {
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
   SetGroupInviteRejectedArguments,
+  SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
   User,
@@ -262,5 +264,10 @@ export class DatabaseService {
   @RequirePermissions(['manageDirectInvites'])
   async getDirectGroupInvites(callerId: string, args: GetDirectGroupInvitesArguments) {
     return await getDirectGroupInvites(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['manageDirectInvites'])
+  async setGroupInviteWithdrawn(callerId: string, args: SetGroupInviteWithdrawnArguments) {
+    return await setGroupInviteWithdrawn(this.pool, callerId, args)
   }
 }

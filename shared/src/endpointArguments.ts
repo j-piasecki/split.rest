@@ -162,3 +162,9 @@ export interface GetDirectGroupInvitesArguments {
   startAfter?: number
   groupId: number
 }
+
+export interface SetGroupInviteWithdrawnArguments {
+  groupId: number
+  userId: string
+  withdrawn: boolean
+}

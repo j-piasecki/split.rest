@@ -33,6 +33,7 @@ import {
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
   SetGroupInviteRejectedArguments,
+  SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
   User,
@@ -241,5 +242,9 @@ export class AppService {
 
   async getDirectGroupInvites(callerId: string, args: GetDirectGroupInvitesArguments) {
     return await this.databaseService.getDirectGroupInvites(callerId, args)
+  }
+
+  async setGroupInviteWithdrawn(callerId: string, args: SetGroupInviteWithdrawnArguments) {
+    return await this.databaseService.setGroupInviteWithdrawn(callerId, args)
   }
 }
