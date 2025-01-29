@@ -11,7 +11,7 @@ import { useTheme } from '@styling/theme'
 import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { GroupUserInfo, SplitInfo } from 'shared'
@@ -22,11 +22,11 @@ function LinearInfo({ split, info }: { split: SplitInfo; info: GroupUserInfo }) 
   return (
     <>
       <View style={{ minWidth: 132, alignItems: 'flex-end' }}>
-        <Text style={{ fontSize: 20, color: theme.colors.onSurface }}>
+        <Text style={{ fontSize: 20, fontWeight: 600, color: theme.colors.onSurface }}>
           {CurrencyUtils.format(split.total, info?.currency)}
         </Text>
       </View>
-      <View style={{ flex: 2, alignItems: 'center', overflow: 'hidden' }}>
+      <View style={{ alignItems: 'center', overflow: 'hidden', paddingLeft: 48, paddingRight: 32 }}>
         <Text style={{ fontSize: 20, color: theme.colors.outline }}>
           {new Date(split.timestamp).toLocaleDateString()}
         </Text>
@@ -64,12 +64,13 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
   const router = useRouter()
   const snack = useSnack()
   const { t } = useTranslation()
-  const contextMenuRef = useRef<ContextMenuRef>(null)
-  const { data: permissions } = useGroupPermissions(info.id)
   const displayClass = useDisplayClass()
+  const contextMenuRef = useRef<ContextMenuRef>(null)
+  const [width, setWidth] = useState(-1)
+  const { data: permissions } = useGroupPermissions(info.id)
   const { mutateAsync: deleteSplit, isPending } = useDeleteSplit(info.id)
 
-  const isSmallScreen = displayClass === DisplayClass.Small
+  const shouldUseStackedInfo = displayClass === DisplayClass.Small || (width < 660 && width > 0)
 
   const contextMenuDisabled =
     !permissions?.canSeeSplitDetails(split) &&
@@ -133,6 +134,12 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
       ]}
     >
       <View
+        onLayout={(e) => {
+          if (displayClass !== DisplayClass.Small) {
+            // Don't update the width if on a small screen, it wouldn't have any effect and we skip a render
+            setWidth(e.nativeEvent.layout.width)
+          }
+        }}
         style={{
           paddingVertical: 16,
           paddingLeft: 16,
@@ -145,7 +152,7 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
         <ProfilePicture
           userId={split.paidById}
           size={32}
-          style={{ marginRight: isSmallScreen ? 8 : 16 }}
+          style={{ marginRight: shouldUseStackedInfo ? 8 : 16 }}
         />
         <View style={{ flex: 2 }}>
           <Text
@@ -168,8 +175,8 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
           )}
         </View>
 
-        {isSmallScreen && <StackedInfo split={split} info={info} />}
-        {!isSmallScreen && <LinearInfo split={split} info={info} />}
+        {shouldUseStackedInfo && <StackedInfo split={split} info={info} />}
+        {!shouldUseStackedInfo && <LinearInfo split={split} info={info} />}
 
         <View style={{ width: 40 }}>
           <RoundIconButton
