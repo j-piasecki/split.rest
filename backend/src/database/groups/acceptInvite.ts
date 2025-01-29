@@ -16,17 +16,18 @@ export async function acceptGroupInvite(
   try {
     await client.query('BEGIN')
 
-    const inviteExists =
-      (
-        await client.query(
-          `
-            SELECT 1 FROM group_invites WHERE user_id = $1 AND group_id = $2 and withdrawn = FALSE
-          `,
-          [callerId, args.groupId]
-        )
-      ).rowCount === 1
+    const inviteInfo = (
+      await client.query<{
+        created_by: string
+      }>(
+        `
+        SELECT created_by FROM group_invites WHERE user_id = $1 AND group_id = $2 and withdrawn = FALSE
+      `,
+        [callerId, args.groupId]
+      )
+    ).rows[0]
 
-    if (!inviteExists) {
+    if (!inviteInfo) {
       throw new NotFoundException('api.notFound.invite')
     }
 
@@ -45,7 +46,11 @@ export async function acceptGroupInvite(
       [callerId, args.groupId]
     )
 
-    await addUserToGroup(client, { groupId: args.groupId, userId: callerId })
+    await addUserToGroup(client, {
+      groupId: args.groupId,
+      userId: callerId,
+      invitedBy: inviteInfo.created_by,
+    })
 
     await client.query(
       `

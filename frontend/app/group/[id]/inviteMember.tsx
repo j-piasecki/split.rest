@@ -119,9 +119,8 @@ function UserPicker() {
   const [email, setEmail] = useState('')
   const [user, waiting, error] = useUserByEmail(email)
   const [addingError, setAddingError] = useTranslatedError()
-  const { mutateAsync: addUserToGroup, isPending: isAddingToGroup } = useInviteUserToGroupMutation(
-    Number(groupId)
-  )
+  const { mutateAsync: inviteUserToGroup, isPending: isAddingToGroup } =
+    useInviteUserToGroupMutation(Number(groupId))
 
   function handlePress() {
     if (user === null) {
@@ -129,7 +128,7 @@ function UserPicker() {
       return
     }
 
-    addUserToGroup(user.id)
+    inviteUserToGroup(user.id)
       .then(() => {
         snack.show(t('inviteMember.inviteSent', { name: user.name }))
 

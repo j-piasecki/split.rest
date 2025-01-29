@@ -100,7 +100,10 @@ export class AppController {
 
   @UseGuards(AuthGuard)
   @Post('inviteUserToGroup')
-  async addUserToGroup(@Req() request: Request, @Body() args: Partial<InviteUserToGroupArguments>) {
+  async inviteUserToGroup(
+    @Req() request: Request,
+    @Body() args: Partial<InviteUserToGroupArguments>
+  ) {
     if (!isInviteUserToGroupArguments(args)) {
       throw new BadRequestException('api.invalidArguments')
     }

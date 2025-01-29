@@ -16,29 +16,36 @@ export async function joinGroupByLink(
   try {
     await client.query('BEGIN')
 
-    const groupId = (
-      await client.query('SELECT group_id FROM group_join_links WHERE uuid = $1', [args.uuid])
-    ).rows[0]?.group_id
+    const linkData = (
+      await client.query<{
+        group_id: number
+        created_by: string
+      }>('SELECT group_id, created_by FROM group_join_links WHERE uuid = $1', [args.uuid])
+    ).rows[0]
 
-    if (!groupId) {
+    if (!linkData) {
       throw new NotFoundException('api.notFound.group')
     }
 
-    if (await isGroupDeleted(pool, groupId)) {
+    if (await isGroupDeleted(pool, linkData.group_id)) {
       throw new NotFoundException('api.notFound.group')
     }
 
-    if (await isUserMemberOfGroup(pool, groupId, callerId)) {
+    if (await isUserMemberOfGroup(pool, linkData.group_id, callerId)) {
       throw new ConflictException('api.group.callerAlreadyInGroup')
     }
 
-    await addUserToGroup(client, { groupId, userId: callerId })
+    await addUserToGroup(client, {
+      groupId: linkData.group_id,
+      userId: callerId,
+      invitedBy: linkData.created_by,
+    })
 
     await client.query(
       `
         UPDATE groups SET member_count = member_count + 1 WHERE id = $1
       `,
-      [groupId]
+      [linkData.group_id]
     )
 
     await client.query('COMMIT')

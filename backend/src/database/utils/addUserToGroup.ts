@@ -6,6 +6,7 @@ export async function addUserToGroup(
     groupId: number
     userId: string
     isAdmin?: boolean
+    invitedBy: string
   }
 ) {
   await client.query(
@@ -17,9 +18,10 @@ export async function addUserToGroup(
         is_admin,
         has_access,
         is_hidden,
-        joined_at
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+        joined_at,
+        invited_by
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     `,
-    [data.groupId, data.userId, 0, data.isAdmin ?? false, true, false, Date.now()]
+    [data.groupId, data.userId, 0, data.isAdmin ?? false, true, false, Date.now(), data.invitedBy]
   )
 }
