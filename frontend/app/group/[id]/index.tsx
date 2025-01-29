@@ -52,7 +52,7 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
               <View
                 style={{
                   paddingHorizontal: 16,
-                  paddingTop: 4,
+                  paddingTop: 8,
                   paddingBottom: 24,
                 }}
               >

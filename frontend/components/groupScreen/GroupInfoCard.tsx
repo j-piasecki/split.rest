@@ -24,10 +24,10 @@ export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
         gap: 8,
       }}
     >
-      <ShimmerPlaceholder argument={info} shimmerStyle={{ height: 44, marginBottom: 8 }}>
+      <ShimmerPlaceholder argument={info} shimmerStyle={{ height: 44 }}>
         {(info) => (
           <Text
-            style={{ fontSize: 32, color: theme.colors.onSurfaceVariant, marginBottom: 8 }}
+            style={{ fontSize: 32, color: theme.colors.onSurfaceVariant }}
             numberOfLines={3}
             adjustsFontSizeToFit
           >
@@ -40,7 +40,11 @@ export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
         <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>
           {t('groupInfo.yourBalance')}
         </Text>
-        <ShimmerPlaceholder argument={info} style={{ flex: 1 }} shimmerStyle={{ height: 32 }}>
+        <ShimmerPlaceholder
+          argument={info}
+          style={{ flex: 1, paddingLeft: 32 }}
+          shimmerStyle={{ height: 32 }}
+        >
           {(info) => (
             <Text
               style={{
@@ -64,8 +68,7 @@ export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
       <View
         style={{
           justifyContent: 'center',
-          gap: 16,
-          marginTop: 8,
+          gap: 12,
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
