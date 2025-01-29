@@ -3,7 +3,12 @@ import { makeRequest } from '@utils/makeApiRequest'
 import { invalidateDirectGroupInvites } from '@utils/queryClient'
 import { SetGroupInviteWithdrawnArguments } from 'shared'
 
-async function setInviteWithdrawn(groupId: number, userId: string, withdrawn: boolean, onlyIfCreated?: boolean) {
+async function setInviteWithdrawn(
+  groupId: number,
+  userId: string,
+  withdrawn: boolean,
+  onlyIfCreated?: boolean
+) {
   const args: SetGroupInviteWithdrawnArguments = { groupId, userId, withdrawn, onlyIfCreated }
 
   await makeRequest('POST', 'setGroupInviteWithdrawn', args)
@@ -11,8 +16,13 @@ async function setInviteWithdrawn(groupId: number, userId: string, withdrawn: bo
   await invalidateDirectGroupInvites(groupId)
 }
 
-export function useSetInviteWithdrawnMutation(groupId: number, userId: string) {
+export function useSetInviteWithdrawnMutation(
+  groupId: number,
+  userId: string,
+  onlyIfCreated?: boolean
+) {
   return useMutation({
-    mutationFn: (withdrawn: boolean, onlyIfCreated?: boolean) => setInviteWithdrawn(groupId, userId, withdrawn, onlyIfCreated),
+    mutationFn: (withdrawn: boolean) =>
+      setInviteWithdrawn(groupId, userId, withdrawn, onlyIfCreated),
   })
 }
