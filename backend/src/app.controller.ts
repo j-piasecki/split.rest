@@ -452,6 +452,9 @@ export class AppController {
       throw new BadRequestException('api.invalidArguments')
     }
 
+    // @ts-expect-error onlyIfIncluded is a string due to being a get query parameter
+    args.onlyIfCreated = args.onlyIfCreated === 'true'
+
     return await this.appService.getDirectGroupInvites(request.user.sub, args)
   }
 

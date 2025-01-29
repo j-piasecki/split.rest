@@ -3,6 +3,11 @@ import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
 import { GetDirectGroupInvitesArguments, GroupInviteWithInvitee } from 'shared'
 
+// TODO: arbitrarily returns only the invites that were not withdrawn.
+// depending if needed, this could be easily be changed to return all invites
+// which would allow for a more complete view.
+// Though, at the moment accepting a withdrawn invite permamently deletes it,
+// so there may be little value in showing them.
 export async function getDirectGroupInvites(
   pool: Pool,
   callerId: string,
@@ -28,7 +33,7 @@ export async function getDirectGroupInvites(
           group_invites.rejected,
           group_invites.withdrawn
         FROM group_invites JOIN users AS inviter ON inviter.id = group_invites.created_by JOIN users AS invitee ON invitee.id = group_invites.user_id
-        WHERE group_invites.group_id = $1 AND group_invites.created_at < $2 ${args.onlyIfCreated ? 'AND group_invites.created_by = $3' : ''}
+        WHERE group_invites.group_id = $1 AND group_invites.withdrawn = FALSE AND group_invites.created_at < $2 ${args.onlyIfCreated ? 'AND group_invites.created_by = $3' : ''}
         ORDER BY
           group_invites.created_at DESC
         LIMIT 20;
