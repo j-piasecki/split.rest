@@ -2,93 +2,21 @@ import { Button } from '@components/Button'
 import { EditableText, EditableTextRef } from '@components/EditableText'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
+import { PaneButton } from '@components/PaneButton'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
-import { TextInput } from '@components/TextInput'
-import { useCreateGroupJoinLink } from '@hooks/database/useCreateGroupJoinLink'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
-import { useDeleteGroupJoinLink } from '@hooks/database/useDeleteGroupJoinLink'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
-import { useGroupJoinLink } from '@hooks/database/useGroupJoinLink'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
-import { GroupPermissions } from '@utils/GroupPermissions'
-import * as Clipboard from 'expo-clipboard'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
+import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import { GroupUserInfo } from 'shared'
-
-function JoinLinkManager({
-  info,
-  permissions,
-}: {
-  info: GroupUserInfo
-  permissions: GroupPermissions
-}) {
-  const theme = useTheme()
-  const { t } = useTranslation()
-  const { data: link, isLoading: isLoadingLink } = useGroupJoinLink(info.id)
-  const { mutateAsync: createJoinLink, isPending: isCreatingJoinLink } = useCreateGroupJoinLink()
-  const { mutateAsync: deleteJoinLink, isPending: isDeletingJoinLink } = useDeleteGroupJoinLink()
-
-  const linkText = __DEV__
-    ? `http://localhost:8081/join/${link?.uuid}`
-    : `https://split.rest/join/${link?.uuid}`
-
-  return (
-    <Pane
-      icon='link'
-      title={t('groupSettings.joinLink.joinLink')}
-      textLocation='start'
-      containerStyle={{ padding: 16 }}
-    >
-      {isLoadingLink && <ActivityIndicator color={theme.colors.primary} />}
-      {!isLoadingLink && (
-        <>
-          {!link && permissions.canCreateJoinLink() && (
-            <Button
-              leftIcon='addLink'
-              isLoading={isCreatingJoinLink}
-              title={t('groupSettings.joinLink.create')}
-              onPress={() => createJoinLink(info.id)}
-            />
-          )}
-          {link && (
-            <View style={{ gap: 16 }}>
-              <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
-                <TextInput
-                  value={linkText}
-                  editable={false}
-                  style={{ flex: 1 }}
-                  selectTextOnFocus
-                />
-                <Button
-                  leftIcon='copy'
-                  onPress={() => {
-                    Clipboard.setStringAsync(linkText)
-                  }}
-                />
-              </View>
-              {permissions.canDeleteJoinLink() && (
-                <Button
-                  leftIcon='deleteLink'
-                  title={t('groupSettings.joinLink.delete')}
-                  isLoading={isDeletingJoinLink}
-                  onPress={() => deleteJoinLink(info.id)}
-                />
-              )}
-            </View>
-          )}
-        </>
-      )}
-    </Pane>
-  )
-}
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean
@@ -208,7 +136,15 @@ function Form({ info }: { info: GroupUserInfo }) {
           />
         </Pane>
 
-        {permissions?.canSeeJoinLink() && <JoinLinkManager info={info} permissions={permissions} />}
+        {(permissions?.canSeeJoinLink() || permissions?.canManageDirectInvites()) && (
+          <PaneButton
+            icon='addMember'
+            title={t('settings.invitations.manageInvitations')}
+            onPress={() => {
+              router.navigate(`/group/${info.id}/settings/invitations`)
+            }}
+          />
+        )}
       </View>
       {permissions?.canDeleteGroup() && (
         <>
@@ -247,7 +183,7 @@ export default function Settings() {
   return (
     <ModalScreen
       returnPath={`/group/${id}`}
-      title={t('screenName.groupSettings')}
+      title={t('screenName.groupSettings.index')}
       maxWidth={500}
       maxHeight={600}
       opaque={false}

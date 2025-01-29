@@ -76,9 +76,17 @@ export interface GroupJoinLink {
 
 export interface GroupInvite {
   createdBy: User
-  groupInfo: GroupInfo
   createdAt: number
   rejected: boolean
+  withdrawn: boolean
+}
+
+export interface GroupInviteWithGroupInfo extends GroupInvite {
+  groupInfo: GroupInfo
+}
+
+export interface GroupInviteWithInvitee extends GroupInvite {
+  invitee: User
 }
 
 export function isUser(obj: any): obj is User {

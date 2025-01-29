@@ -10,6 +10,7 @@
   "deletedUser": "Deleted user",
   "youSeemLost": "You seem to be lost",
   "goBack": "Go back",
+  "undo": "Undo",
 
   "index": {
     "headline": "Pay once and <Styled>split</Styled> between the <Styled>rest</Styled> of the group",
@@ -42,8 +43,7 @@
     "createGroup": "Create group",
     "invitedToGroupMessage": "You've been invited to join",
     "invitedBy": "By {{name}}",
-    "rejectedInvite": "Rejected invite to {{name}}",
-    "undoReject": "Undo"
+    "rejectedInvite": "Rejected invite to {{name}}"
   },
 
   "api": {
@@ -75,6 +75,7 @@
         "readPermissions": "You don't have permission to read the group permissions",
         "managePermissions": "You don't have permission to manage the group permissions",
         "manageOwner": "You don't have permission to change permissions of the group owner",
+        "manageDirectInvites": "You don't have permission to manage invites",
         "joinLink": {
           "see": "You don't have permission to view invitation links",
           "create": "You don't have permission to create invitation links",
@@ -101,7 +102,8 @@
       "callerNotInGroup": "You are not a member of this group",
       "userNotInGroup": "This user is not a member of this group",
       "joinLinkAlreadyExists": "A join link already exists for this group",
-      "failedToCreateGroup": "Failed to create group"
+      "failedToCreateGroup": "Failed to create group",
+      "userAlreadyInvited": "User is already invited to this group"
     }
   },
 
@@ -129,6 +131,16 @@
       "doYouWantToDeleteAccount": "Do you want to delete your account?",
       "deletionNotReversible": "This action is not reversible",
       "accountDeleted": "Your account was deleted"
+    },
+    "invitations": {
+      "manageInvitations": "Manage invitations",
+      "directInvitations": "Direct invitations",
+      "noInvitations": "There appear to be no invitations you can access",
+      "invitedBy": "Invited by",
+      "invitedOn": "On {{date}}",
+      "inviteWasRejected": "This invite was rejected",
+      "inviteResent": "Invite resent",
+      "inviteWithdrawn": "Invite withdrawn"
     }
   },
 
@@ -137,13 +149,17 @@
     "group": "Group",
     "inviteMember": "Invite member",
     "roulette": "Roulette",
-    "groupSettings": "Settings",
     "splitInfo": "Split details",
     "editSplit": "Edit split",
     "profile": "Profile",
     "members": "Members",
     "memberInfo": "Member information",
     "addSplit":"Add split",
+
+    "groupSettings": {
+      "index": "Settings",
+      "invitations": "Manage invitations"
+    },
   
     "splitType": "New split",
     "splitSummary": "Summary",
@@ -256,7 +272,6 @@
     "edit": "Edit split",
     "delete": "Delete",
     "deletedToast": "Deleted {{title}}",
-    "undo": "Undo",
     "created": "Split created",
     "updated": "Split updated"
   },

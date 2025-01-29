@@ -131,7 +131,7 @@ function Content() {
                 />
                 <Stack.Screen
                   name='group/[id]/settings'
-                  options={{ title: t('screenName.groupSettings'), ...modalOptions }}
+                  options={{ title: t('screenName.groupSettings.index'), ...modalOptions }}
                 />
                 <Stack.Screen
                   name='group/[id]/split/[splitId]/index'

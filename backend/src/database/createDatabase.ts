@@ -37,10 +37,12 @@ export async function createDatabase(pool: Pool) {
       is_admin BOOLEAN NOT NULL,
       has_access BOOLEAN NOT NULL,
       is_hidden BOOLEAN NOT NULL,
+      invited_by VARCHAR(32) NOT NULL,
 
       PRIMARY KEY (group_id, user_id),
       FOREIGN KEY (group_id) REFERENCES groups(id),
-      FOREIGN KEY (user_id) REFERENCES users(id)
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (invited_by) REFERENCES users(id)
     )
   `)
 
@@ -134,6 +136,7 @@ export async function createDatabase(pool: Pool) {
       created_by VARCHAR(32) NOT NULL,
       created_at BIGINT NOT NULL,
       rejected BOOLEAN NOT NULL DEFAULT FALSE,
+      withdrawn BOOLEAN NOT NULL DEFAULT FALSE,
 
       PRIMARY KEY (group_id, user_id),
       FOREIGN KEY (group_id) REFERENCES groups(id),

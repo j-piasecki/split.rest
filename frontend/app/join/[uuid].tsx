@@ -18,10 +18,10 @@ import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupInvite } from 'shared'
+import { GroupInviteWithGroupInfo } from 'shared'
 
 interface InvitePaneProps {
-  invite?: GroupInvite
+  invite?: GroupInviteWithGroupInfo
   uuid: string
 }
 

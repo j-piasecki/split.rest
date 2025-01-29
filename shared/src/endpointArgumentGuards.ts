@@ -7,6 +7,7 @@ import {
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
+  GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
@@ -28,6 +29,7 @@ import {
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
   SetGroupInviteRejectedArguments,
+  SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
 } from './endpointArguments'
@@ -183,4 +185,14 @@ export function isSetGroupInviteRejectedArguments(
 
 export function isGetGroupMemberInfoArguments(obj: any): obj is GetGroupMemberInfoArguments {
   return obj.groupId !== undefined && obj.memberId !== undefined
+}
+
+export function isGetDirectGroupInvitesArguments(obj: any): obj is GetDirectGroupInvitesArguments {
+  return obj.groupId !== undefined
+}
+
+export function isSetGroupInviteWithdrawnArguments(
+  obj: any
+): obj is SetGroupInviteWithdrawnArguments {
+  return obj.groupId !== undefined && obj.userId !== undefined && obj.withdrawn !== undefined
 }

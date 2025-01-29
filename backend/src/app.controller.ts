@@ -12,6 +12,7 @@ import {
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
+  GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
@@ -33,6 +34,7 @@ import {
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
   SetGroupInviteRejectedArguments,
+  SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
   UpdateSplitArguments,
   User,
@@ -44,6 +46,7 @@ import {
   isDeleteGroupJoinLinkArguments,
   isDeleteSplitArguments,
   isGetBalancesArguments,
+  isGetDirectGroupInvitesArguments,
   isGetGroupInfoArguments,
   isGetGroupInviteByLinkArguments,
   isGetGroupJoinLinkArguments,
@@ -65,6 +68,7 @@ import {
   isSetGroupAdminArguments,
   isSetGroupHiddenArguments,
   isSetGroupInviteRejectedArguments,
+  isSetGroupInviteWithdrawnArguments,
   isSetGroupNameArguments,
   isUpdateSplitArguments,
   isUser,
@@ -96,7 +100,10 @@ export class AppController {
 
   @UseGuards(AuthGuard)
   @Post('inviteUserToGroup')
-  async addUserToGroup(@Req() request: Request, @Body() args: Partial<InviteUserToGroupArguments>) {
+  async inviteUserToGroup(
+    @Req() request: Request,
+    @Body() args: Partial<InviteUserToGroupArguments>
+  ) {
     if (!isInviteUserToGroupArguments(args)) {
       throw new BadRequestException('api.invalidArguments')
     }
@@ -436,5 +443,34 @@ export class AppController {
     }
 
     return await this.appService.getGroupMemberInfo(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getDirectGroupInvites')
+  async getDirectGroupInvites(
+    @Req() request: Request,
+    @Query() args: Partial<GetDirectGroupInvitesArguments>
+  ) {
+    if (!isGetDirectGroupInvitesArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    // @ts-expect-error onlyIfIncluded is a string due to being a get query parameter
+    args.onlyIfCreated = args.onlyIfCreated === 'true'
+
+    return await this.appService.getDirectGroupInvites(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('setGroupInviteWithdrawn')
+  async setGroupInviteWithdrawn(
+    @Req() request: Request,
+    @Body() args: Partial<SetGroupInviteWithdrawnArguments>
+  ) {
+    if (!isSetGroupInviteWithdrawnArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.setGroupInviteWithdrawn(request.user.sub, args)
   }
 }

@@ -1,6 +1,10 @@
 import { useMutation } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { invalidateGroupInfo, invalidateGroupMembers } from '@utils/queryClient'
+import {
+  invalidateDirectGroupInvites,
+  invalidateGroupInfo,
+  invalidateGroupMembers,
+} from '@utils/queryClient'
 import { InviteUserToGroupArguments } from 'shared'
 
 export function useInviteUserToGroupMutation(groupId: number) {
@@ -12,6 +16,7 @@ export function useInviteUserToGroupMutation(groupId: number) {
 
       invalidateGroupInfo(groupId)
       invalidateGroupMembers(groupId)
+      invalidateDirectGroupInvites(groupId)
     },
   })
 }

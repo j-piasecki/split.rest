@@ -27,6 +27,7 @@ export async function createGroup(
       groupId,
       userId: callerId,
       isAdmin: true,
+      invitedBy: callerId,
     })
 
     await client.query('COMMIT')
