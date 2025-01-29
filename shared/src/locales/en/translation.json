@@ -10,6 +10,7 @@
   "deletedUser": "Deleted user",
   "youSeemLost": "You seem to be lost",
   "goBack": "Go back",
+  "undo": "Undo",
 
   "index": {
     "headline": "Pay once and <Styled>split</Styled> between the <Styled>rest</Styled> of the group",
@@ -42,8 +43,7 @@
     "createGroup": "Create group",
     "invitedToGroupMessage": "You've been invited to join",
     "invitedBy": "By {{name}}",
-    "rejectedInvite": "Rejected invite to {{name}}",
-    "undoReject": "Undo"
+    "rejectedInvite": "Rejected invite to {{name}}"
   },
 
   "api": {
@@ -135,7 +135,12 @@
     "invitations": {
       "manageInvitations": "Manage invitations",
       "directInvitations": "Direct invitations",
-      "noInvitations": "There are no invitations sent for this group"
+      "noInvitations": "There appear to be no invitations you can access",
+      "invitedBy": "Invited by",
+      "invitedOn": "On {{date}}",
+      "inviteWasRejected": "This invite was rejected",
+      "inviteResent": "Invite resent",
+      "inviteWithdrawn": "Invite withdrawn"
     }
   },
 
@@ -267,7 +272,6 @@
     "edit": "Edit split",
     "delete": "Delete",
     "deletedToast": "Deleted {{title}}",
-    "undo": "Undo",
     "created": "Split created",
     "updated": "Split updated"
   },

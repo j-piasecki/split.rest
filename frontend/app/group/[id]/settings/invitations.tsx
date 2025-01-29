@@ -1,6 +1,9 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { Pane, PaneHeader } from '@components/Pane'
+import { ProfilePicture } from '@components/ProfilePicture'
+import { RoundIconButton } from '@components/RoundIconButton'
+import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { useCreateGroupJoinLink } from '@hooks/database/useCreateGroupJoinLink'
@@ -9,11 +12,14 @@ import { useDirectGroupInvites } from '@hooks/database/useDirectGroupInvites'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupJoinLink } from '@hooks/database/useGroupJoinLink'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { useInviteUserToGroupMutation } from '@hooks/database/useInviteUserToGroup'
 import { useSetInviteWithdrawnMutation } from '@hooks/database/useInviteWithdrawnMutation'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { GroupPermissions } from '@utils/GroupPermissions'
+import { ApiError } from '@utils/makeApiRequest'
+import { invalidateDirectGroupInvites } from '@utils/queryClient'
 import * as Clipboard from 'expo-clipboard'
 import { useLocalSearchParams } from 'expo-router'
 import React from 'react'
@@ -91,48 +97,124 @@ function JoinLinkManager({
 function InviteRow({
   invite,
   info,
+  permissions,
   showSeparator,
   manageOnlyOwnInvites,
 }: {
   invite: GroupInviteWithInvitee
   info: GroupUserInfo
+  permissions: GroupPermissions
   showSeparator: boolean
   manageOnlyOwnInvites: boolean
 }) {
   const theme = useTheme()
-  const {
-    mutateAsync: setInvitationWithdrawn,
-    isPending,
-    error,
-  } = useSetInviteWithdrawnMutation(info.id, invite.invitee.id)
+  const snack = useSnack()
+  const { t } = useTranslation()
+  const { mutateAsync: setInvitationWithdrawn, isPending: isWithdrawing } =
+    useSetInviteWithdrawnMutation(info.id, invite.invitee.id, manageOnlyOwnInvites)
+  const { mutateAsync: inviteUser, isPending: isInviting } = useInviteUserToGroupMutation(info.id)
+
+  function handleError(error: unknown) {
+    if (error instanceof ApiError) {
+      alert(t(error.message))
+    } else {
+      alert(t('unknownError'))
+    }
+  }
 
   return (
     <View
       style={[
         {
-          flexDirection: 'row',
-          alignItems: 'center',
           justifyContent: 'space-between',
           padding: 16,
+          paddingBottom: 48,
           backgroundColor: theme.colors.surfaceContainer,
           borderBottomWidth: showSeparator ? 1 : 0,
           borderColor: theme.colors.outlineVariant,
+          gap: 8,
         },
         styles.paneShadow,
       ]}
     >
-      <Text style={{ flex: 1, color: theme.colors.onSurface }}>{invite.invitee.name}</Text>
+      <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
+        <ProfilePicture userId={invite.invitee.id} size={32} />
+        <Text style={{ color: theme.colors.primary, fontSize: 20, fontWeight: 600 }}>
+          {invite.invitee.name}
+        </Text>
+      </View>
+
+      <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+        <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 500 }}>
+          {t('settings.invitations.invitedBy')}
+        </Text>
+        <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
+          <ProfilePicture userId={invite.createdBy.id} size={24} />
+          <Text style={{ color: theme.colors.primary, fontSize: 16, fontWeight: 500 }}>
+            {invite.createdBy.name}
+          </Text>
+        </View>
+      </View>
+
+      <Text style={{ color: theme.colors.outline, fontSize: 16, fontWeight: 500 }}>
+        {t('settings.invitations.invitedOn', {
+          date: new Date(invite.createdAt).toLocaleDateString(),
+        })}
+      </Text>
+      {invite.rejected && (
+        <Text style={{ color: theme.colors.error, fontSize: 16, fontWeight: 500 }}>
+          {t('settings.invitations.inviteWasRejected')}
+        </Text>
+      )}
+      <View style={{ flexDirection: 'row', gap: 8, position: 'absolute', right: 16, bottom: 8 }}>
+        {invite.rejected && permissions.canInviteMembers() && (
+          <RoundIconButton
+            icon='cached'
+            isLoading={isWithdrawing || isInviting}
+            onPress={() => {
+              inviteUser(invite.invitee.id)
+                .then(() => {
+                  snack.show(t('settings.invitations.inviteResent'))
+                })
+                .catch(handleError)
+            }}
+          />
+        )}
+        <RoundIconButton
+          icon='close'
+          isLoading={isWithdrawing || isInviting}
+          onPress={() => {
+            setInvitationWithdrawn(true)
+              .then(() => {
+                snack.show(t('settings.invitations.inviteWithdrawn'), t('undo'), async () => {
+                  try {
+                    await setInvitationWithdrawn(false)
+                  } catch (error) {
+                    handleError(error)
+                  }
+                })
+              })
+              .catch(handleError)
+          }}
+        />
+      </View>
     </View>
   )
 }
 
-function Form({ info, permissions }: { info: GroupUserInfo, permissions: GroupPermissions }) {
+function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPermissions }) {
   const theme = useTheme()
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
 
-  const manageOnlyOwnInvites = !permissions.canManageAllDirectInvites() && permissions.canManageDirectInvites()
-  const { invites, hasNextPage, isFetchingNextPage, fetchNextPage } = useDirectGroupInvites(info.id, manageOnlyOwnInvites)
+  const manageOnlyOwnInvites =
+    !permissions.canManageAllDirectInvites() && permissions.canManageDirectInvites()
+  const { invites, hasNextPage, isFetchingNextPage, fetchNextPage, isRefetching, isLoading } =
+    useDirectGroupInvites(info.id, manageOnlyOwnInvites)
+
+  function refresh() {
+    invalidateDirectGroupInvites(info.id)
+  }
 
   return (
     <FlatList
@@ -146,8 +228,16 @@ function Form({ info, permissions }: { info: GroupUserInfo, permissions: GroupPe
       }}
       data={invites}
       renderItem={({ item, index }) => (
-        <InviteRow invite={item} info={info} showSeparator={index !== invites.length - 1} manageOnlyOwnInvites={manageOnlyOwnInvites} />
+        <InviteRow
+          invite={item}
+          info={info}
+          permissions={permissions}
+          showSeparator={index !== invites.length - 1}
+          manageOnlyOwnInvites={manageOnlyOwnInvites}
+        />
       )}
+      onRefresh={refresh}
+      refreshing={isRefetching}
       onEndReachedThreshold={0.5}
       onEndReached={() => !isFetchingNextPage && hasNextPage && fetchNextPage()}
       keyExtractor={(item) => item.invitee.id}
@@ -192,23 +282,27 @@ function Form({ info, permissions }: { info: GroupUserInfo, permissions: GroupPe
           style={[
             {
               backgroundColor: theme.colors.surfaceContainer,
-              padding: 16,
+              paddingHorizontal: 16,
+              paddingVertical: 32,
               alignItems: 'center',
               justifyContent: 'center',
             },
             styles.paneShadow,
           ]}
         >
-          <Text
-            style={{
-              color: theme.colors.onSurface,
-              paddingVertical: 16,
-              fontSize: 20,
-              textAlign: 'center',
-            }}
-          >
-            {t('settings.invitations.noInvitations')}
-          </Text>
+          {/* TODO: shimmer */}
+          {isLoading && <ActivityIndicator color={theme.colors.primary} />}
+          {!isLoading && (
+            <Text
+              style={{
+                color: theme.colors.onSurface,
+                fontSize: 20,
+                textAlign: 'center',
+              }}
+            >
+              {t('settings.invitations.noInvitations')}
+            </Text>
+          )}
         </View>
       }
     />

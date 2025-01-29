@@ -98,7 +98,7 @@ function Invite({ invite }: { invite: GroupInviteWithGroupInfo }) {
               setInviteRejected(true).then(() => {
                 snack.show(
                   t('home.rejectedInvite', { name: invite.groupInfo.name }),
-                  t('home.undoReject'),
+                  t('undo'),
                   async () => {
                     await setInviteRejected(false)
                   }
