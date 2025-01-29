@@ -9,7 +9,7 @@ const ThemeContext = React.createContext<Theme | null>(null)
 const darkColors: Colors = {
   transparent: 'transparent',
 
-  primary: '#ffb1c8',
+  primary: '#fcc0d2',
   onPrimary: '#650033',
   primaryContainer: '#8e004a',
   onPrimaryContainer: '#ffd9e2',
