@@ -97,6 +97,8 @@ export function SplitsList({
   const [fabRef, scrollHandler] = useFABScrollHandler()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
+
+  // TODO: changing forceShowSplitsWithUser causes the list to reload, shouldn't it show the current data wile loading the new one?
   const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching } = useGroupSplits(
     info?.id,
     forceShowSplitsWithUser || permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
