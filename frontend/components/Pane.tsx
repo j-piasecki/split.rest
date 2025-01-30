@@ -83,6 +83,7 @@ export interface PaneProps {
   icon?: IconName
   title?: string
   style?: StyleProp<ViewStyle>
+  rightComponent?: React.ReactNode
   containerStyle?: StyleProp<ViewStyle>
   collapsible?: boolean
   collapsed?: boolean
@@ -103,6 +104,7 @@ export function Pane({
   icon,
   title,
   style,
+  rightComponent,
   containerStyle,
   collapsible = false,
   collapsed,
@@ -118,6 +120,7 @@ export function Pane({
   color,
 }: PaneProps) {
   const theme = useTheme()
+  const threeBarLayout = useThreeBarLayout()
   const [innerCollapsed, setInnerCollapsed] = useState(startCollapsed ?? false)
 
   const foregroundColor = color ?? theme.colors.secondary
@@ -152,19 +155,27 @@ export function Pane({
             icon={icon}
             title={title}
             rightComponent={
-              <RoundIconButton
-                icon={
-                  isCollapsed
-                    ? (expandIcon ?? (orientation === 'vertical' ? 'openRightPanel' : 'arrowDown'))
-                    : (collapseIcon ?? (orientation === 'vertical' ? 'closeRightPanel' : 'arrowUp'))
-                }
-                size={24}
-                onPress={() => {
-                  setInnerCollapsed(!isCollapsed)
-                  onCollapseChange?.(!isCollapsed)
-                }}
-                color={theme.colors.secondary}
-              />
+              <View style={{ position: 'absolute', right: threeBarLayout ? 16 : 24 }}>
+                {rightComponent ? (
+                  rightComponent
+                ) : (
+                  <RoundIconButton
+                    icon={
+                      isCollapsed
+                        ? (expandIcon ??
+                          (orientation === 'vertical' ? 'openRightPanel' : 'arrowDown'))
+                        : (collapseIcon ??
+                          (orientation === 'vertical' ? 'closeRightPanel' : 'arrowUp'))
+                    }
+                    size={24}
+                    onPress={() => {
+                      setInnerCollapsed(!isCollapsed)
+                      onCollapseChange?.(!isCollapsed)
+                    }}
+                    color={theme.colors.secondary}
+                  />
+                )}
+              </View>
             }
             rightComponentVisible={collapsible}
             textVisible={!collapsible || !isCollapsed || orientation === 'horizontal'}
