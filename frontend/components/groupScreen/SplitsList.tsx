@@ -76,6 +76,7 @@ export interface SplitsListProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   footerComponent?: React.ComponentType<any> | React.ReactElement
   showPullableHeader?: boolean
+  forceShowSplitsWithUser?: boolean
   onRefresh?: () => void
   applyBottomInset?: boolean
 }
@@ -86,6 +87,7 @@ export function SplitsList({
   footerComponent,
   showPullableHeader,
   onRefresh,
+  forceShowSplitsWithUser,
   applyBottomInset = false,
 }: SplitsListProps) {
   const theme = useTheme()
@@ -97,7 +99,7 @@ export function SplitsList({
   const { data: permissions } = useGroupPermissions(info?.id)
   const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching } = useGroupSplits(
     info?.id,
-    permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
+    forceShowSplitsWithUser || permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
   )
 
   function refreshData() {
@@ -135,7 +137,11 @@ export function SplitsList({
               <Text style={{ fontSize: 20, color: theme.colors.outline, paddingVertical: 32 }}>
                 {permissions?.canReadSplits() === SplitPermissionType.None
                   ? t('api.insufficientPermissions.group.readSplits')
-                  : t('noSplits')}
+                  : permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
+                    ? t('noAccessibleSplits')
+                    : forceShowSplitsWithUser
+                      ? t('noSplitsWhereIncluded')
+                      : t('noSplits')}
               </Text>
             )}
           </View>
