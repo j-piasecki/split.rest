@@ -1,5 +1,6 @@
 import Header, { HEADER_HEIGHT } from '@components/Header'
 import { Pane, PaneHeader } from '@components/Pane'
+import { SegmentedButton } from '@components/SegmentedButton'
 import { Text } from '@components/Text'
 import { GroupActionButtons } from '@components/groupScreen/GroupActionButtons'
 import { GroupInfoCard } from '@components/groupScreen/GroupInfoCard'
@@ -15,16 +16,60 @@ import { useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native'
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupUserInfo } from 'shared'
+import { GroupUserInfo, SplitPermissionType } from 'shared'
+
+function SplitsFilter({
+  style,
+  onChange,
+}: {
+  style?: StyleProp<ViewStyle>
+  onChange: (onlyIfIncluded: boolean) => void
+}) {
+  const [onlyIfIncluded, setOnlyIfIncluded] = useState(false)
+
+  return (
+    <SegmentedButton
+      // this seems to work with flex
+      style={[{ maxWidth: 112, minWidth: 112 }, style]}
+      items={[
+        {
+          icon: 'group',
+          selected: !onlyIfIncluded,
+          onPress: () => {
+            setOnlyIfIncluded(false)
+            onChange(false)
+          },
+        },
+        {
+          icon: 'user',
+          selected: onlyIfIncluded,
+          onPress: () => {
+            setOnlyIfIncluded(true)
+            onChange(true)
+          },
+        },
+      ]}
+    />
+  )
+}
 
 function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const displayClass = useDisplayClass()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
+  const [onlyShowSplitsIfIncluded, setOnlyShowSplitsIfIncluded] = useState(false)
 
   const horizontalInfo =
     displayClass === DisplayClass.Expanded || displayClass === DisplayClass.Medium
@@ -34,6 +79,7 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
       info={info}
       showPullableHeader
       applyBottomInset
+      forceShowSplitsWithUser={onlyShowSplitsIfIncluded}
       headerComponent={
         <View style={{ gap: 16 }}>
           <View
@@ -72,7 +118,17 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
               styles.paneShadow,
             ]}
           >
-            <PaneHeader icon='receipt' title={t('tabs.splits')} textLocation='start' />
+            <PaneHeader
+              icon='receipt'
+              title={t('tabs.splits')}
+              textLocation='start'
+              adjustsFontSizeToFit
+              rightComponent={
+                permissions?.canReadSplits() === SplitPermissionType.All && (
+                  <SplitsFilter onChange={setOnlyShowSplitsIfIncluded} />
+                )
+              }
+            />
           </View>
         </View>
       }
@@ -99,6 +155,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
   const insets = useSafeAreaInsets()
   const displayClass = useDisplayClass()
   const { data: permissions } = useGroupPermissions(groupInfo?.id)
+  const [onlyShowSplitsIfIncluded, setOnlyShowSplitsIfIncluded] = useState(false)
 
   const [membersExpanded, setMembersExpanded] = useState(false)
   const membersAlwaysExpanded = displayClass > DisplayClass.Large
@@ -153,8 +210,16 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           title={t('tabs.splits')}
           style={{ flex: 2, height: '100%' }}
           containerStyle={{ flex: 1 }}
+          collapsible
+          collapsed={false}
+          rightComponent={
+            permissions?.canReadSplits() === SplitPermissionType.All && (
+              // @ts-expect-error flex cannot really be null, but this way it can be overriden
+              <SplitsFilter style={{ flex: null }} onChange={setOnlyShowSplitsIfIncluded} />
+            )
+          }
         >
-          <SplitsList info={groupInfo} />
+          <SplitsList info={groupInfo} forceShowSplitsWithUser={onlyShowSplitsIfIncluded} />
         </Pane>
         {(!permissions || permissions?.canReadMembers()) && (
           <Pane
