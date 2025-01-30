@@ -8,7 +8,9 @@ import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { getUserByEmail } from '@database/getUserByEmail'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useInviteUserToGroupMutation } from '@hooks/database/useInviteUserToGroup'
+import { useSetInviteWithdrawnMutation } from '@hooks/database/useInviteWithdrawnMutation'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
@@ -116,11 +118,13 @@ function UserPicker() {
   const { id: groupId } = useLocalSearchParams()
   const { t } = useTranslation()
 
+  const { data: permissions } = useGroupPermissions(Number(groupId))
   const [email, setEmail] = useState('')
   const [user, waiting, error] = useUserByEmail(email)
   const [addingError, setAddingError] = useTranslatedError()
   const { mutateAsync: inviteUserToGroup, isPending: isAddingToGroup } =
     useInviteUserToGroupMutation(Number(groupId))
+  const { mutateAsync: setInviteWithdrawn } = useSetInviteWithdrawnMutation(Number(groupId), true)
 
   function handlePress() {
     if (user === null) {
@@ -130,7 +134,21 @@ function UserPicker() {
 
     inviteUserToGroup(user.id)
       .then(() => {
-        snack.show(t('inviteMember.inviteSent', { name: user.name }))
+        if (permissions?.canManageDirectInvites()) {
+          snack.show(t('inviteMember.inviteSent', { name: user.name }), t('undo'), async () => {
+            try {
+              await setInviteWithdrawn({ withdrawn: true, userId: user.id })
+            } catch (error) {
+              if (error instanceof TranslatableError) {
+                alert(t(error.message))
+              } else {
+                alert(t('unknownError'))
+              }
+            }
+          })
+        } else {
+          snack.show(t('inviteMember.inviteSent', { name: user.name }))
+        }
 
         if (router.canGoBack()) {
           router.back()

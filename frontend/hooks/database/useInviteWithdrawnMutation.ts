@@ -16,13 +16,9 @@ async function setInviteWithdrawn(
   await invalidateDirectGroupInvites(groupId)
 }
 
-export function useSetInviteWithdrawnMutation(
-  groupId: number,
-  userId: string,
-  onlyIfCreated?: boolean
-) {
+export function useSetInviteWithdrawnMutation(groupId: number, onlyIfCreated?: boolean) {
   return useMutation({
-    mutationFn: (withdrawn: boolean) =>
+    mutationFn: ({ withdrawn, userId }: { withdrawn: boolean; userId: string }) =>
       setInviteWithdrawn(groupId, userId, withdrawn, onlyIfCreated),
   })
 }

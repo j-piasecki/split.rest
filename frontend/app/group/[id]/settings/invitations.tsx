@@ -111,7 +111,7 @@ function InviteRow({
   const snack = useSnack()
   const { t } = useTranslation()
   const { mutateAsync: setInvitationWithdrawn, isPending: isWithdrawing } =
-    useSetInviteWithdrawnMutation(info.id, invite.invitee.id, manageOnlyOwnInvites)
+    useSetInviteWithdrawnMutation(info.id, manageOnlyOwnInvites)
   const { mutateAsync: inviteUser, isPending: isInviting } = useInviteUserToGroupMutation(info.id)
 
   function handleError(error: unknown) {
@@ -184,11 +184,11 @@ function InviteRow({
           icon='close'
           isLoading={isWithdrawing || isInviting}
           onPress={() => {
-            setInvitationWithdrawn(true)
+            setInvitationWithdrawn({ withdrawn: true, userId: invite.invitee.id })
               .then(() => {
                 snack.show(t('settings.invitations.inviteWithdrawn'), t('undo'), async () => {
                   try {
-                    await setInvitationWithdrawn(false)
+                    await setInvitationWithdrawn({ withdrawn: false, userId: invite.invitee.id })
                   } catch (error) {
                     handleError(error)
                   }
@@ -295,7 +295,7 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
           {!isLoading && (
             <Text
               style={{
-                color: theme.colors.onSurface,
+                color: theme.colors.outline,
                 fontSize: 20,
                 textAlign: 'center',
               }}
