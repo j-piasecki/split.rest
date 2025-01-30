@@ -14,9 +14,9 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { beginNewSplit } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { ActivityIndicator, LayoutRectangle, ScrollView, View } from 'react-native'
 import { TranslatableError, User, UserWithBalanceChange } from 'shared'
 
 interface RouletteProps {
@@ -27,6 +27,8 @@ interface RouletteProps {
 
 function Roulette({ groupId, setResult, user }: RouletteProps) {
   const insets = useModalScreenInsets()
+  const scrollViewRef = useRef<ScrollView>(null)
+  const paneLayout = useRef<LayoutRectangle | null>(null)
   const { t } = useTranslation()
   const [entries, setEntries] = useState<PersonEntry[]>([
     { user: user, entry: user.email ?? '' },
@@ -76,6 +78,7 @@ function Roulette({ groupId, setResult, user }: RouletteProps) {
       }}
     >
       <ScrollView
+        ref={scrollViewRef}
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 100 }}
         keyboardShouldPersistTaps='handled'
@@ -85,9 +88,18 @@ function Roulette({ groupId, setResult, user }: RouletteProps) {
           title={t('splitInfo.participants')}
           textLocation='start'
           containerStyle={{ gap: 16, padding: 16, paddingTop: 8 }}
+          onLayout={(e) => {
+            paneLayout.current = e.nativeEvent.layout
+          }}
         >
           <Form autofocus onSubmit={submit}>
-            <PeoplePicker groupId={groupId} entries={entries} onEntriesChange={setEntries} />
+            <PeoplePicker
+              groupId={groupId}
+              entries={entries}
+              onEntriesChange={setEntries}
+              parentLayout={paneLayout}
+              scrollRef={scrollViewRef}
+            />
           </Form>
         </Pane>
       </ScrollView>

@@ -9,9 +9,9 @@ import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useAuth } from '@utils/auth'
 import { getSplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
+import { LayoutRectangle, ScrollView, View } from 'react-native'
 import { TranslatableError, User } from 'shared'
 
 function getInitialEntries(user: User): PersonEntry[] {
@@ -41,6 +41,8 @@ function getInitialEntries(user: User): PersonEntry[] {
 function ParticipansPicker({ user }: { user: User }) {
   const router = useRouter()
   const insets = useModalScreenInsets()
+  const scrollViewRef = useRef<ScrollView>(null)
+  const paneLayout = useRef<LayoutRectangle | null>(null)
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
 
@@ -83,6 +85,7 @@ function ParticipansPicker({ user }: { user: User }) {
       }}
     >
       <ScrollView
+        ref={scrollViewRef}
         style={{ flex: 1 }}
         contentContainerStyle={{
           flexGrow: 1,
@@ -96,6 +99,9 @@ function ParticipansPicker({ user }: { user: User }) {
           title={t('splitInfo.participants')}
           textLocation='start'
           containerStyle={{ gap: 16, padding: 16, paddingTop: 8 }}
+          onLayout={(e) => {
+            paneLayout.current = e.nativeEvent.layout
+          }}
         >
           <Form autofocus={getSplitCreationContext().participants === null} onSubmit={submit}>
             <PeoplePicker
@@ -106,6 +112,8 @@ function ParticipansPicker({ user }: { user: User }) {
                 setEntries(entries)
                 setError(null)
               }}
+              parentLayout={paneLayout}
+              scrollRef={scrollViewRef}
             />
           </Form>
         </Pane>
