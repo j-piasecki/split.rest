@@ -18,6 +18,7 @@ import {
   useWindowDimensions,
 } from 'react-native'
 import { Modal, Pressable } from 'react-native'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   FadeIn,
   FadeInUp,
@@ -213,6 +214,41 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
   const scaleTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
   const insets = useSafeAreaInsets()
 
+  function onPressIn() {
+    setPressed(true)
+    if (isSmallScreen && !props.disabled) {
+      scaleTimeoutRef.current = setTimeout(() => {
+        scaleAnimation.value = withTiming(1, { duration: 500 })
+      }, 100)
+    }
+  }
+
+  function onPressOut() {
+    setPressed(false)
+    if (!visible) {
+      scaleAnimation.value = withTiming(0, { duration: 500 })
+      clearTimeout(scaleTimeoutRef.current!)
+    }
+  }
+
+  function onLongPress(e: AnchorEvent) {
+    if (!props.disabled) {
+      measureAnchor(e)
+      setVisible(true)
+      HapticFeedback.impactMedium()
+    }
+  }
+
+  const longPressGesture = Gesture.LongPress()
+    .enabled(!props.disabled && Platform.OS !== 'web')
+    .runOnJS(true)
+    .minDuration(400)
+    .onStart((e) => {
+      onLongPress({ nativeEvent: { pageX: e.absoluteX, pageY: e.absoluteY } })
+    })
+    .onBegin(onPressIn)
+    .onFinalize(onPressOut)
+
   useImperativeHandle(ref, () => ({
     open: (anchor) => {
       if (!props.disabled) {
@@ -226,7 +262,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
     },
   }))
 
-  function measureAnchor(e: { nativeEvent: PointerEvent } | GestureResponderEvent | AnchorEvent) {
+  function measureAnchor(e: AnchorEvent) {
     touchPoint.current = { x: e.nativeEvent.pageX, y: e.nativeEvent.pageY }
     anchorRect.current = measure(anchorRef.current!)
 
@@ -250,65 +286,60 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
 
   return (
     <>
-      <Pressable
-        disabled={props.disabled && (props.pressDisabled || !props.onPress)}
-        ref={anchorRef}
-        unstable_pressDelay={50}
-        delayLongPress={400}
-        onPress={!props.pressDisabled ? props.onPress : undefined}
-        onPressIn={() => {
-          setPressed(true)
-          if (isSmallScreen && !props.disabled) {
-            scaleTimeoutRef.current = setTimeout(() => {
-              scaleAnimation.value = withTiming(1, { duration: 500 })
-            }, 100)
-          }
-        }}
-        onPressOut={() => {
-          setPressed(false)
-          if (!visible) {
-            scaleAnimation.value = withTiming(0, { duration: 500 })
-            clearTimeout(scaleTimeoutRef.current!)
-          }
-        }}
-        onHoverIn={() => {
-          setHovered(true)
-        }}
-        onHoverOut={() => {
-          setHovered(false)
-        }}
-        onLongPress={(e) => {
-          if (!props.disabled) {
+      <GestureDetector gesture={longPressGesture}>
+        <Pressable
+          disabled={props.disabled && (props.pressDisabled || !props.onPress)}
+          ref={anchorRef}
+          unstable_pressDelay={50}
+          delayLongPress={400}
+          onPress={!props.pressDisabled ? props.onPress : undefined}
+          onPressIn={() => {
+            if (Platform.OS === 'web') {
+              onPressIn()
+            }
+          }}
+          onPressOut={() => {
+            if (Platform.OS === 'web') {
+              onPressOut()
+            }
+          }}
+          onHoverIn={() => {
+            setHovered(true)
+          }}
+          onHoverOut={() => {
+            setHovered(false)
+          }}
+          onLongPress={(e) => {
+            if (Platform.OS === 'web') {
+              onLongPress(e)
+            }
+          }}
+          // @ts-expect-error - onContextMenu does not exist on Pressable on mobile
+          onContextMenu={(e) => {
+            e.preventDefault()
+            if (props.disabled) {
+              return
+            }
+
             measureAnchor(e)
             setVisible(true)
-            HapticFeedback.impactMedium()
-          }
-        }}
-        // @ts-expect-error - onContextMenu does not exist on Pressable on mobile
-        onContextMenu={(e) => {
-          e.preventDefault()
-          if (props.disabled) {
-            return
-          }
 
-          measureAnchor(e)
-          setVisible(true)
-
-          if (isSmallScreen) {
-            scaleAnimation.value = withTiming(1, { duration: 300 })
-          }
-        }}
-      >
-        <Animated.View
-          style={[
-            { flex: 1 },
-            typeof props.style === 'function' ? props.style({ hovered, pressed }) : props.style,
-            scaleStyle,
-          ]}
+            if (isSmallScreen) {
+              scaleAnimation.value = withTiming(1, { duration: 300 })
+            }
+          }}
         >
-          {props.children}
-        </Animated.View>
-      </Pressable>
+          <Animated.View
+            style={[
+              { flex: 1 },
+              typeof props.style === 'function' ? props.style({ hovered, pressed }) : props.style,
+              scaleStyle,
+            ]}
+          >
+            {props.children}
+          </Animated.View>
+        </Pressable>
+      </GestureDetector>
       <Modal
         visible={visible}
         navigationBarTranslucent
