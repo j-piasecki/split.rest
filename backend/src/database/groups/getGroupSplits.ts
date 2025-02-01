@@ -45,7 +45,7 @@ export async function getGroupSplits(
           ${args.onlyIfIncluded ? 'AND split_participants.user_id = $3' : ''}
           AND deleted = false
           AND id < $2
-        ORDER BY timestamp DESC
+        ORDER BY timestamp DESC, id DESC
         LIMIT 20
       `,
       [args.groupId, args.startAfterId ?? 2147483647, callerId]
