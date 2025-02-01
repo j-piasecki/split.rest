@@ -135,19 +135,23 @@ function UserPicker() {
     inviteUserToGroup(user.id)
       .then(() => {
         if (permissions?.canManageDirectInvites()) {
-          snack.show(t('inviteMember.inviteSent', { name: user.name }), t('undo'), async () => {
-            try {
-              await setInviteWithdrawn({ withdrawn: true, userId: user.id })
-            } catch (error) {
-              if (error instanceof TranslatableError) {
-                alert(t(error.message))
-              } else {
-                alert(t('unknownError'))
+          snack.show({
+            message: t('inviteMember.inviteSent', { name: user.name }),
+            actionText: t('undo'),
+            action: async () => {
+              try {
+                await setInviteWithdrawn({ withdrawn: true, userId: user.id })
+              } catch (error) {
+                if (error instanceof TranslatableError) {
+                  alert(t(error.message))
+                } else {
+                  alert(t('unknownError'))
+                }
               }
-            }
+            },
           })
         } else {
-          snack.show(t('inviteMember.inviteSent', { name: user.name }))
+          snack.show({ message: t('inviteMember.inviteSent', { name: user.name }) })
         }
 
         if (router.canGoBack()) {

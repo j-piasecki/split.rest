@@ -37,7 +37,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         balances: balanceChange,
       })
 
-      snack.show(t('split.created'))
+      snack.show({ message: t('split.created') })
       router.dismissTo(`/group/${groupInfo.id}`)
     } catch (error) {
       setError(error)

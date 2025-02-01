@@ -174,7 +174,7 @@ function InviteRow({
             onPress={() => {
               inviteUser(invite.invitee.id)
                 .then(() => {
-                  snack.show(t('settings.invitations.inviteResent'))
+                  snack.show({ message: t('settings.invitations.inviteResent') })
                 })
                 .catch(handleError)
             }}
@@ -186,12 +186,16 @@ function InviteRow({
           onPress={() => {
             setInvitationWithdrawn({ withdrawn: true, userId: invite.invitee.id })
               .then(() => {
-                snack.show(t('settings.invitations.inviteWithdrawn'), t('undo'), async () => {
-                  try {
-                    await setInvitationWithdrawn({ withdrawn: false, userId: invite.invitee.id })
-                  } catch (error) {
-                    handleError(error)
-                  }
+                snack.show({
+                  message: t('settings.invitations.inviteWithdrawn'),
+                  actionText: t('undo'),
+                  action: async () => {
+                    try {
+                      await setInvitationWithdrawn({ withdrawn: false, userId: invite.invitee.id })
+                    } catch (error) {
+                      handleError(error)
+                    }
+                  },
                 })
               })
               .catch(handleError)

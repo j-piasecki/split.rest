@@ -94,9 +94,11 @@ export function SplitsList({
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
-  const [fabRef, scrollHandler] = useFABScrollHandler()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
+
+  const fabVisible = isSmallScreen && permissions?.canCreateSplits()
+  const [fabRef, scrollHandler] = useFABScrollHandler(fabVisible)
 
   // TODO: changing forceShowSplitsWithUser causes the list to reload, shouldn't it show the current data wile loading the new one?
   const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching } = useGroupSplits(
@@ -159,7 +161,7 @@ export function SplitsList({
         scrollHandler={scrollHandler}
       />
 
-      {isSmallScreen && permissions?.canCreateSplits() && (
+      {fabVisible && (
         <View
           style={{
             position: 'absolute',

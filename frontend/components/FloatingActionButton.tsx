@@ -24,8 +24,8 @@ export interface FloatingActionButtonRef {
   collapse: () => void
 }
 
-export function useFABScrollHandler() {
-  useSnackFABInset()
+export function useFABScrollHandler(fabVisible?: boolean) {
+  useSnackFABInset(fabVisible)
   const fab = useRef<FloatingActionButtonRef>(null)
   const previousOffset = useRef(0)
 

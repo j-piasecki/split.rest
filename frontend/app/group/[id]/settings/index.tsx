@@ -155,7 +155,7 @@ function Form({ info }: { info: GroupUserInfo }) {
             onSubmit={() => {
               deleteGroup(info.id).then(() => {
                 router.replace(`/home`)
-                snack.show(t('groupSettings.deleteGroupSuccess', { name: info.name }))
+                snack.show({ message: t('groupSettings.deleteGroupSuccess', { name: info.name }) })
               })
             }}
           />

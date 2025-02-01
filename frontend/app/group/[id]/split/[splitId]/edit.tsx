@@ -39,7 +39,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
         balances: balanceChange as BalanceChange[],
       })
 
-      snack.show(t('split.updated'))
+      snack.show({ message: t('split.updated') })
       router.dismissTo(`/group/${groupInfo.id}`)
     } catch (error) {
       setError(error)

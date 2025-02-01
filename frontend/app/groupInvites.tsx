@@ -96,13 +96,13 @@ function Invite({ invite }: { invite: GroupInviteWithGroupInfo }) {
             isLoading={isChangingVisibility}
             onPress={() => {
               setInviteRejected(true).then(() => {
-                snack.show(
-                  t('home.rejectedInvite', { name: invite.groupInfo.name }),
-                  t('undo'),
-                  async () => {
+                snack.show({
+                  message: t('home.rejectedInvite', { name: invite.groupInfo.name }),
+                  actionText: t('undo'),
+                  action: async () => {
                     await setInviteRejected(false)
-                  }
-                )
+                  },
+                })
               })
             }}
           />

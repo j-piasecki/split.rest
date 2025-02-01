@@ -3,7 +3,7 @@ import { Text } from './Text'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useFocusEffect } from 'expo-router'
-import React, { createContext, useRef, useState } from 'react'
+import React, { createContext, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable } from 'react-native'
 import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler'
@@ -17,11 +17,26 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { TranslatableError } from 'shared'
 
-const SNACK_DURATION = 5000
-const ACTIONABLE_SNACK_DURATION = 10000
+const SNACK_DURATION_SHORT = 2000
+const SNACK_DURATION_MEDIUM = 5000
+const SNACK_DURATION_LONG = 10000
+
+const DURATION = {
+  SHORT: SNACK_DURATION_SHORT,
+  MEDIUM: SNACK_DURATION_MEDIUM,
+  LONG: SNACK_DURATION_LONG,
+} as const
+
+interface SnackOptions {
+  message: string
+  actionText?: string
+  action?: () => Promise<void>
+  duration?: number
+}
 
 interface SnackBarContextType {
-  show: (message: string, actionText?: string, action?: () => Promise<void>) => void
+  duration: typeof DURATION
+  show: (options: SnackOptions) => void
   setBottomInset: (inset: number) => void
 }
 
@@ -30,6 +45,7 @@ interface SnackData {
   index: number
   actionText?: string
   action?: () => Promise<void>
+  duration: number
 }
 
 const SnackBarContext = createContext<SnackBarContextType | undefined>(undefined)
@@ -173,12 +189,9 @@ export function SnackBarProvider({ children }: { children: React.ReactNode }) {
 
   const scheduleDismissSnack = (snack: SnackData) => {
     if (!timeout.current) {
-      timeout.current = setTimeout(
-        () => {
-          dismissSnack()
-        },
-        snack.action ? ACTIONABLE_SNACK_DURATION : SNACK_DURATION
-      )
+      timeout.current = setTimeout(() => {
+        dismissSnack()
+      }, snack.duration)
     }
   }
 
@@ -198,8 +211,15 @@ export function SnackBarProvider({ children }: { children: React.ReactNode }) {
   return (
     <SnackBarContext.Provider
       value={{
-        show: (message: string, actionText?: string, action?: () => Promise<void>) => {
-          const newSnack = { message, index: nextIndex.current, actionText, action }
+        duration: DURATION,
+        show: ({ message, actionText, action, duration }: SnackOptions) => {
+          const newSnack = {
+            message,
+            index: nextIndex.current,
+            actionText,
+            action,
+            duration: duration ?? (action ? SNACK_DURATION_LONG : SNACK_DURATION_MEDIUM),
+          }
           if (snack) {
             queue.current.push(newSnack)
           } else {
@@ -251,13 +271,24 @@ export function useSnack() {
   return context
 }
 
-export function useSnackFABInset() {
+export function useSnackFABInset(fabVisible?: boolean) {
   const context = React.useContext(SnackBarContext)
   const displayClass = useDisplayClass()
 
+  useEffect(() => {
+    if (displayClass > DisplayClass.Medium || fabVisible === false) {
+      return
+    }
+
+    context?.setBottomInset(80)
+    return () => {
+      context?.setBottomInset(0)
+    }
+  }, [context, displayClass, fabVisible])
+
   // TODO: this will break on multiple insets at once
   useFocusEffect(() => {
-    if (displayClass > DisplayClass.Medium) {
+    if (displayClass > DisplayClass.Medium || fabVisible === false) {
       return
     }
 
