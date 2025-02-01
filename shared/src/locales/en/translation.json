@@ -285,7 +285,7 @@
     "noAccessibleSplits": "There are no splits you can access in this group",
     "noSplitsWhereIncluded": "There are no splits where you are included",
     "showingAllSplits": "Showing all splits",
-    "showingSplitsWithYou": "Showing only splits you participated in"
+    "showingSplitsWithYou": "Showing only splits including you"
   },
 
   "groupInfo": {
