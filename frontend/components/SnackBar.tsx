@@ -150,6 +150,7 @@ function Snack({
             paddingVertical: 0,
             paddingRight: 16,
             paddingLeft: 4,
+            marginLeft: 8,
             justifyContent: 'center',
             opacity: pressed ? 0.5 : 1,
           })}
