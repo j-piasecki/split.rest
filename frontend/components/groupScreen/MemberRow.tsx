@@ -139,11 +139,10 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
                 selectable={false}
                 style={{ fontSize: 20, fontWeight: 700, color: theme.colors.onSurface }}
               >
-                {member.name}
+                {member.name}{' '}
                 {member.deleted && (
                   <Text
                     style={{
-                      marginLeft: 8,
                       color: theme.colors.outline,
                       fontWeight: 200,
                     }}
