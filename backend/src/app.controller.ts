@@ -36,6 +36,7 @@ import {
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
+  SetUserNameArguments,
   UpdateSplitArguments,
   User,
   isAcceptGroupInviteArguments,
@@ -70,6 +71,7 @@ import {
   isSetGroupInviteRejectedArguments,
   isSetGroupInviteWithdrawnArguments,
   isSetGroupNameArguments,
+  isSetUserNameArguments,
   isUpdateSplitArguments,
   isUser,
 } from 'shared'
@@ -472,5 +474,15 @@ export class AppController {
     }
 
     return await this.appService.setGroupInviteWithdrawn(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('setUserName')
+  async setUserName(@Req() request: Request, @Body() args: Partial<SetUserNameArguments>) {
+    if (!isSetUserNameArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.setUserName(request.user.sub, args)
   }
 }

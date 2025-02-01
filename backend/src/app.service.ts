@@ -35,6 +35,7 @@ import {
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
+  SetUserNameArguments,
   UpdateSplitArguments,
   User,
 } from 'shared'
@@ -246,5 +247,9 @@ export class AppService {
 
   async setGroupInviteWithdrawn(callerId: string, args: SetGroupInviteWithdrawnArguments) {
     return await this.databaseService.setGroupInviteWithdrawn(callerId, args)
+  }
+
+  async setUserName(callerId: string, args: SetUserNameArguments) {
+    return await this.databaseService.setUserName(callerId, args)
   }
 }

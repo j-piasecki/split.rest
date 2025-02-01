@@ -31,6 +31,7 @@ import {
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
+  SetUserNameArguments,
   UpdateSplitArguments,
 } from './endpointArguments'
 
@@ -195,4 +196,8 @@ export function isSetGroupInviteWithdrawnArguments(
   obj: any
 ): obj is SetGroupInviteWithdrawnArguments {
   return obj.groupId !== undefined && obj.userId !== undefined && obj.withdrawn !== undefined
+}
+
+export function isSetUserNameArguments(obj: any): obj is SetUserNameArguments {
+  return obj.name !== undefined
 }

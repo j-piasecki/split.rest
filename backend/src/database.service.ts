@@ -35,6 +35,7 @@ import { createOrUpdateUser } from './database/users/createOrUpdateUser'
 import { deleteUser } from './database/users/deleteUser'
 import { getUserByEmail } from './database/users/getUserByEmail'
 import { getUserById } from './database/users/getUserById'
+import { setUserName } from './database/users/setUserName'
 import { Injectable } from '@nestjs/common'
 import { Pool } from 'pg'
 import {
@@ -69,6 +70,7 @@ import {
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
+  SetUserNameArguments,
   UpdateSplitArguments,
   User,
 } from 'shared'
@@ -269,5 +271,10 @@ export class DatabaseService {
   @RequirePermissions(['manageDirectInvites'])
   async setGroupInviteWithdrawn(callerId: string, args: SetGroupInviteWithdrawnArguments) {
     return await setGroupInviteWithdrawn(this.pool, callerId, args)
+  }
+
+  // Every user can set their own name
+  async setUserName(callerId: string, args: SetUserNameArguments) {
+    return await setUserName(this.pool, callerId, args)
   }
 }

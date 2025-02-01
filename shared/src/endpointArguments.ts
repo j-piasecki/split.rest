@@ -170,3 +170,7 @@ export interface SetGroupInviteWithdrawnArguments {
   userId: string
   withdrawn: boolean
 }
+
+export interface SetUserNameArguments {
+  name: string
+}
