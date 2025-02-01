@@ -1,9 +1,11 @@
 import { Button } from '@components/Button'
+import { EditableText } from '@components/EditableText'
 import ModalScreen from '@components/ModalScreen'
 import { Picker } from '@components/Picker'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
+import { useSetUserNameMutation } from '@hooks/database/useSetUserName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { ThemeType } from '@type/theme'
@@ -21,7 +23,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import { User } from 'shared'
+import { TranslatableError, User } from 'shared'
 
 interface DeleteAccountModalProps {
   visible: boolean
@@ -103,6 +105,27 @@ function Form({ user }: { user: User }) {
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+  const { mutateAsync: setUserName, isPending: isChangingName } = useSetUserNameMutation()
+
+  function setName(newName: string) {
+    if (newName.length === 0) {
+      alert(t('api.user.nameTooLong'))
+      return
+    }
+
+    if (newName.length > 128) {
+      alert(t('api.user.nameTooLong'))
+      return
+    }
+
+    setUserName(newName).catch((e) => {
+      if (e instanceof TranslatableError) {
+        alert(t(e.message))
+      } else {
+        alert(t('unknownError'))
+      }
+    })
+  }
 
   return (
     <ScrollView
@@ -112,27 +135,31 @@ function Form({ user }: { user: User }) {
       contentContainerStyle={{
         flexGrow: 1,
         justifyContent: 'space-between',
-        alignItems: 'center',
         paddingLeft: insets.left + 12,
         paddingRight: insets.right + 12,
         paddingBottom: insets.bottom,
         paddingTop: insets.top + 32,
         gap: 16,
       }}
+      keyboardShouldPersistTaps='handled'
     >
-      <View style={{ gap: 24, alignItems: 'center', width: '90%' }}>
+      <View style={{ gap: 24, alignItems: 'center', paddingHorizontal: 16 }}>
         <ProfilePicture userId={user?.id} size={96} />
-        <View style={{ alignItems: 'center', gap: 4 }}>
-          <Text style={{ fontSize: 24, fontWeight: '600', color: theme.colors.onSurface }}>
-            {user?.name}
-          </Text>
+        <View style={{ alignItems: 'center', gap: 4, alignSelf: 'stretch' }}>
+          <EditableText
+            value={user?.name}
+            placeholder={t('settings.username')}
+            isPending={isChangingName}
+            onSubmit={setName}
+            style={{ alignSelf: 'stretch', justifyContent: 'center' }}
+          />
           <Text style={{ fontSize: 16, fontWeight: '400', color: theme.colors.onSurfaceVariant }}>
             {user?.email}
           </Text>
         </View>
         <Picker
           hint={t('settings.theme.hint')}
-          style={{ width: '100%' }}
+          style={{ alignSelf: 'stretch' }}
           selectedItem={theme.userSelectedTheme ?? 'system'}
           items={[
             { label: t('settings.theme.light'), value: 'light', icon: 'lightTheme' },
@@ -148,7 +175,7 @@ function Form({ user }: { user: User }) {
           }}
         />
       </View>
-      <View style={{ width: '100%', flexDirection: 'column', gap: 16 }}>
+      <View style={{ flexDirection: 'column', gap: 16, marginTop: 24 }}>
         {/* Don't show delete button on web on small screen; it uses redirect to sign in which requires
          * special handling which is not implemented yet. This will break on browsers in mobile devices.
          * which use redirect to sign in on all display classes. */}

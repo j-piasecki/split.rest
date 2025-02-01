@@ -102,11 +102,16 @@ export const TextInput = React.forwardRef<TextInputRef, Props>(function TextInpu
     }
   })
 
-  const hintStyle = useAnimatedStyle(() => {
+  const hintWrapperStyle = useAnimatedStyle(() => {
     return {
       left: withTiming(value ? 0 : 8, { duration: 200 }),
       top: withTiming(value ? -2 : 16, { duration: 200 }),
       transform: [{ scale: withTiming(value ? 0.7 : 1, { duration: 200 }) }],
+    }
+  })
+
+  const hintStyle = useAnimatedStyle(() => {
+    return {
       color: withTiming(isFocused.value ? theme.colors.primary : theme.colors.outline, {
         duration: 200,
       }),
@@ -154,19 +159,20 @@ export const TextInput = React.forwardRef<TextInputRef, Props>(function TextInpu
         numberOfLines={1}
         {...rest}
       />
-      <Animated.Text
+      <Animated.View
         style={[
           {
             position: 'absolute',
             pointerEvents: 'none',
             transformOrigin: 'left',
-            fontFamily: resolveFontName(),
           },
-          hintStyle,
+          hintWrapperStyle,
         ]}
       >
-        {placeholder}
-      </Animated.Text>
+        <Animated.Text style={[{ fontFamily: resolveFontName() }, hintStyle]}>
+          {placeholder}
+        </Animated.Text>
+      </Animated.View>
     </Animated.View>
   )
 })

@@ -121,6 +121,7 @@
   },
 
   "settings": {
+    "username": "Display name",
     "theme": {
       "hint": "Choose your theme",
       "light": "Light",

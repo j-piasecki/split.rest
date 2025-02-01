@@ -5,6 +5,7 @@ import { TextInput } from '@components/TextInput'
 import { useTheme } from '@styling/theme'
 import React, { useEffect, useImperativeHandle } from 'react'
 import { useState } from 'react'
+import { StyleProp, ViewStyle } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 
@@ -17,6 +18,7 @@ export interface EditableTextProps {
   iconHidden?: boolean
   editing?: boolean
   onEditingChange?: (editing: boolean) => void
+  style?: StyleProp<ViewStyle>
 }
 
 export interface EditableTextRef {
@@ -26,7 +28,7 @@ export interface EditableTextRef {
 
 export const EditableText = React.forwardRef<EditableTextRef, EditableTextProps>(
   function EditableText(
-    { value, placeholder, onSubmit, isPending, disabled, iconHidden }: EditableTextProps,
+    { value, placeholder, onSubmit, isPending, disabled, iconHidden, style }: EditableTextProps,
     ref: React.Ref<EditableTextRef>
   ) {
     const theme = useTheme()
@@ -49,18 +51,29 @@ export const EditableText = React.forwardRef<EditableTextRef, EditableTextProps>
       },
     }))
 
+    function submit() {
+      if (text === value) {
+        setEditing(false)
+      } else {
+        onSubmit(text)
+      }
+    }
+
     if (editing || isPending) {
       return (
         <Animated.View
           key={'editing'}
           entering={FadeIn.duration(100)}
           exiting={FadeOut.duration(100)}
-          style={{
-            flexDirection: 'row',
-            gap: 8,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
+          style={[
+            {
+              flexDirection: 'row',
+              gap: 8,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            },
+            style,
+          ]}
         >
           <TextInput
             editable={!isPending}
@@ -69,15 +82,10 @@ export const EditableText = React.forwardRef<EditableTextRef, EditableTextProps>
             style={{ flex: 1 }}
             selectTextOnFocus
             placeholder={placeholder}
+            autoFocus
+            onSubmitEditing={submit}
           />
-          <Button
-            disabled={text === value}
-            leftIcon='check'
-            isLoading={isPending}
-            onPress={() => {
-              onSubmit(text)
-            }}
-          />
+          <Button leftIcon='check' isLoading={isPending} onPress={submit} />
         </Animated.View>
       )
     } else {
@@ -86,7 +94,7 @@ export const EditableText = React.forwardRef<EditableTextRef, EditableTextProps>
           key={'notEditing'}
           exiting={FadeOut.duration(100)}
           entering={FadeIn.duration(100)}
-          style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}
+          style={[{ flexDirection: 'row', gap: 8, alignItems: 'center' }, style]}
         >
           <Text style={{ fontSize: 24, fontWeight: '600', color: theme.colors.onSurface }}>
             {value}
