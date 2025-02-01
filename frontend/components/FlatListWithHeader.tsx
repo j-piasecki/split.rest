@@ -63,25 +63,27 @@ export function FlatListWithHeader<T>({
   function scrollHandlerWrapper(e: NativeSyntheticEvent<NativeScrollEvent>) {
     scrollHandler?.(e)
 
-    if (hideHeader || displayClass <= DisplayClass.Medium) {
-      if (e.nativeEvent.contentOffset.y < HEADER_HEIGHT) {
-        headerVisible.value = true
-      } else {
-        const diff = e.nativeEvent.contentOffset.y - lastScrollY.value
-
-        if (diff > 0) {
-          headerVisible.value = false
-        } else if (
-          diff < 0 &&
-          e.nativeEvent.contentSize.height >
-            e.nativeEvent.layoutMeasurement.height + e.nativeEvent.contentOffset.y
-        ) {
-          headerVisible.value = true
-        }
-      }
-
-      lastScrollY.value = e.nativeEvent.contentOffset.y
+    if (hideHeader || displayClass > DisplayClass.Medium) {
+      return
     }
+
+    if (e.nativeEvent.contentOffset.y < HEADER_HEIGHT) {
+      headerVisible.value = true
+    } else {
+      const diff = e.nativeEvent.contentOffset.y - lastScrollY.value
+
+      if (diff > 0) {
+        headerVisible.value = false
+      } else if (
+        diff < 0 &&
+        e.nativeEvent.contentSize.height >
+          e.nativeEvent.layoutMeasurement.height + e.nativeEvent.contentOffset.y
+      ) {
+        headerVisible.value = true
+      }
+    }
+
+    lastScrollY.value = e.nativeEvent.contentOffset.y
   }
 
   return (
