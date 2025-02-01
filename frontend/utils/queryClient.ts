@@ -66,6 +66,12 @@ export async function invalidateGroupJoinLink(groupId: number) {
   await queryClient.invalidateQueries({ queryKey: ['groupJoinLink', groupId] })
 }
 
+export async function invalidateUserById(userId?: string) {
+  if (userId) {
+    await queryClient.invalidateQueries({ queryKey: ['user', userId] })
+  }
+}
+
 export async function addCachedSplit(groupId: number, split: SplitInfo) {
   await queryClient.setQueryData(['groupSplits', groupId], (oldData?: { pages: SplitInfo[][] }) => {
     if (!oldData) {

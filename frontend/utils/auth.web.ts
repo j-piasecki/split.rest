@@ -4,6 +4,7 @@ import { queryClient } from './queryClient'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { deleteUser as remoteDeleteUser } from '@database/deleteUser'
+import { useUserById } from '@hooks/database/useUserById'
 import { AuthListener } from '@type/auth'
 import { getLocales } from 'expo-localization'
 import { router, usePathname, useRouter } from 'expo-router'
@@ -18,7 +19,7 @@ import {
   signInWithRedirect,
 } from 'firebase/auth'
 import { t } from 'i18next'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { User } from 'shared'
 
 let authReady = false
@@ -77,23 +78,27 @@ onAuthStateChanged(auth, async (user) => {
 export function useAuth(redirectToIndex = true) {
   const path = usePathname()
   const router = useRouter()
-  const [user, setUser] = useState<User | null | undefined>(
+  const [firebaseUser, setFirebaseUser] = useState<User | null | undefined>(
     authReady ? createUser(auth.currentUser) : undefined
   )
+  const { data: remoteUser } = useUserById(firebaseUser?.id)
+  const user = useMemo<User | null | undefined>(() => {
+    return remoteUser ?? firebaseUser
+  }, [remoteUser, firebaseUser])
 
   useEffect(() => {
-    return addAuthListener(setUser)
+    return addAuthListener(setFirebaseUser)
   }, [])
 
   useEffect(() => {
-    if (redirectToIndex && user === null) {
+    if (redirectToIndex && firebaseUser === null) {
       if (path !== '/') {
         setTimeout(() => {
           router.replace('/')
         }, 50)
       }
     }
-  }, [path, router, user, redirectToIndex])
+  }, [path, router, firebaseUser, redirectToIndex])
 
   return user
 }

@@ -3,12 +3,13 @@ import { queryClient } from './queryClient'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { deleteUser as remoteDeleteUser } from '@database/deleteUser'
+import { useUserById } from '@hooks/database/useUserById'
 import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication'
 import { FirebaseAuthTypes, firebase } from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { router, usePathname, useRouter } from 'expo-router'
 import { t } from 'i18next'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Platform } from 'react-native'
 import uuid from 'react-native-uuid'
 import { TranslatableError, User } from 'shared'
@@ -46,27 +47,31 @@ async function tryToCreateUser(createUserRetries = 5) {
 export function useAuth(redirectToIndex = true) {
   const path = usePathname()
   const router = useRouter()
-  const [user, setUser] = useState<User | null | undefined>(
+  const [firebaseUser, setFirebaseUser] = useState<User | null | undefined>(
     authReady ? createUser(auth.currentUser) : undefined
   )
+  const { data: remoteUser } = useUserById(firebaseUser?.id)
+  const user = useMemo<User | null | undefined>(() => {
+    return remoteUser ?? firebaseUser
+  }, [remoteUser, firebaseUser])
 
   useEffect(() => {
     const subscriber = auth.onAuthStateChanged((user) => {
       authReady = true
-      setUser(createUser(user))
+      setFirebaseUser(createUser(user))
     })
     return subscriber
   }, [])
 
   useEffect(() => {
-    if (redirectToIndex && user === null) {
+    if (redirectToIndex && firebaseUser === null) {
       if (path !== '/') {
         setTimeout(() => {
           router.replace('/')
         }, 0)
       }
     }
-  }, [path, router, user, redirectToIndex])
+  }, [path, router, firebaseUser, redirectToIndex])
 
   return user
 }
