@@ -1,5 +1,5 @@
-import React from 'react'
-import { Platform, View } from 'react-native'
+import React, { useRef } from 'react'
+import { LayoutRectangle, Platform, View } from 'react-native'
 import { Gesture, GestureDetector, PanGesture } from 'react-native-gesture-handler'
 import Animated, {
   AnimatedScrollViewProps,
@@ -23,6 +23,7 @@ export interface PullableFlatListProps<T> extends FlatListPropsWithLayout<T> {
 export function PullableFlatList<T>(props: PullableFlatListProps<T>) {
   const enablePull = props.refreshControl === undefined
 
+  const containerLayout = useRef<LayoutRectangle | null>(null)
   const animatedRef = useAnimatedRef<Animated.FlatList<T>>()
   const scrollOffset = useScrollViewOffset(animatedRef as unknown as null)
   const scrollEnabled = useSharedValue(true)
@@ -71,7 +72,12 @@ export function PullableFlatList<T>(props: PullableFlatListProps<T>) {
 
   return (
     <GestureDetector gesture={dragGesture} touchAction='none'>
-      <View style={{ flex: 1 }}>
+      <View
+        style={{ flex: 1 }}
+        onLayout={(e) => {
+          containerLayout.current = e.nativeEvent.layout
+        }}
+      >
         {Header}
         <Animated.FlatList
           ref={animatedRef}
@@ -89,6 +95,20 @@ export function PullableFlatList<T>(props: PullableFlatListProps<T>) {
                 {...props}
               />
             )
+          }}
+          onContentSizeChange={(_width, height) => {
+            if (props.onContentSizeChange && typeof props.onContentSizeChange !== 'function') {
+              throw new Error('onContentSizeChange must be a function')
+            }
+            props.onContentSizeChange?.(_width, height)
+
+            if (containerLayout.current) {
+              const distanceFromEnd = height - containerLayout.current.height
+
+              if (distanceFromEnd < 80 && typeof props.onEndReached === 'function') {
+                props.onEndReached?.({ distanceFromEnd })
+              }
+            }
           }}
         />
       </View>
