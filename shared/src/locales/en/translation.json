@@ -290,7 +290,7 @@
     "accessToGroup": "You have access to this group",
     "noAccessToGroup": "You don't have access to this group",
     "youAreAdmin": "You are a moderator of this group",
-    "totalTransactionsValue": "Total transactions value: {{value}}",
+    "totalTransactionsValue": "Value of all transactions: {{value}}",
     "inviteMember": "Invite member",
     "roulette": "Roulette",
     "addSplit": "Add split",
