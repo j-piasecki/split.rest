@@ -70,7 +70,11 @@ export function Form({ autofocus, children, onSubmit }: FormProps) {
           value.current.inputs[0].ref.current?.focus()
         }
       },
-      Platform.OS === 'web' ? 100 : 500
+      Platform.select({
+        android: 500,
+        ios: 700,
+        default: 100,
+      })
     )
   }, [autofocus])
 

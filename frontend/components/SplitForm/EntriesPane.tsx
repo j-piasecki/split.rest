@@ -38,7 +38,7 @@ export function EntriesPane({
         overflow: 'visible',
       }}
     >
-      <Form>
+      <Form autofocus>
         {formState.entries.map((entry, index) => (
           <React.Fragment key={index}>
             <SplitEntry
