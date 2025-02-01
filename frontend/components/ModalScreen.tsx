@@ -46,7 +46,7 @@ function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalP
         ]}
       >
         <RoundIconButton
-          icon='chevronBack'
+          icon={Platform.OS === 'android' ? 'arrowBack' : 'chevronBack'}
           onPress={goBack}
           size={24}
           color={theme.colors.onSurface}

@@ -9,6 +9,7 @@ import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Platform } from 'react-native'
 import { Pressable, View, useWindowDimensions } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
@@ -50,6 +51,9 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
   const isWaitingSV = useSharedValue(isWaiting ?? false)
   const rotation = useSharedValue(0)
   const { width } = useWindowDimensions()
+
+  const backButtonVisible =
+    Platform.OS === 'ios' && (showBackButton || displayClass > DisplayClass.Medium)
 
   const spin = useCallback(() => {
     'worklet'
@@ -139,7 +143,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
       }}
     >
       <Pressable
-        disabled={!showBackButton}
+        disabled={!backButtonVisible}
         style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
         onPress={() => {
           if (router.canGoBack()) {
@@ -152,7 +156,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
         <Animated.View
           style={[{ flexDirection: 'row', alignItems: 'center', gap: 8 }, offsetStyle]}
         >
-          {(showBackButton || displayClass > DisplayClass.Medium) && (
+          {backButtonVisible && (
             <Icon
               name='chevronBack'
               size={24}
@@ -186,7 +190,10 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
       </GestureDetector>
 
       <Animated.View style={offsetStyle}>
-        <Pressable onPress={() => router.navigate('/profile')}>
+        <Pressable
+          onPress={() => router.navigate('/profile')}
+          style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
+        >
           <ProfilePicture userId={user?.id} size={32} />
         </Pressable>
       </Animated.View>

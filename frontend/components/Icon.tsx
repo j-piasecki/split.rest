@@ -8,6 +8,7 @@ export type IconName =
   | 'addModerator'
   | 'add'
   | 'appleLogo'
+  | 'arrowBack'
   | 'arrowDown'
   | 'arrowUp'
   | 'balance'
@@ -71,6 +72,7 @@ const iconMap: Record<IconName, unknown> = {
   addModerator: require('@assets/icons/add_moderator.svg'),
   add: require('@assets/icons/add.svg'),
   appleLogo: require('@assets/icons/apple_logo.svg'),
+  arrowBack: require('@assets/icons/arrow_back.svg'),
   arrowDown: require('@assets/icons/arrow_down.svg'),
   arrowUp: require('@assets/icons/arrow_up.svg'),
   balance: require('@assets/icons/balance.svg'),
