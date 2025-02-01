@@ -74,6 +74,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
           onPress: () => {
             setGroupAccessMutation(!member.hasAccess)
           },
+          destructive: member.hasAccess,
         },
         {
           label: member.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin'),
