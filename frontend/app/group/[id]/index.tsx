@@ -1,6 +1,7 @@
 import Header, { HEADER_HEIGHT } from '@components/Header'
 import { Pane, PaneHeader } from '@components/Pane'
 import { SegmentedButton } from '@components/SegmentedButton'
+import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { GroupActionButtons } from '@components/groupScreen/GroupActionButtons'
 import { GroupInfoCard } from '@components/groupScreen/GroupInfoCard'
@@ -36,6 +37,8 @@ function SplitsFilter({
   style?: StyleProp<ViewStyle>
   onChange: (onlyIfIncluded: boolean) => void
 }) {
+  const snack = useSnack()
+  const { t } = useTranslation()
   const [onlyIfIncluded, setOnlyIfIncluded] = useState(false)
 
   return (
@@ -47,16 +50,28 @@ function SplitsFilter({
           icon: 'group',
           selected: !onlyIfIncluded,
           onPress: () => {
-            setOnlyIfIncluded(false)
-            onChange(false)
+            if (onlyIfIncluded) {
+              snack.show({
+                message: t('splitList.showingAllSplits'),
+                duration: snack.duration.SHORT,
+              })
+              setOnlyIfIncluded(false)
+              onChange(false)
+            }
           },
         },
         {
           icon: 'user',
           selected: onlyIfIncluded,
           onPress: () => {
-            setOnlyIfIncluded(true)
-            onChange(true)
+            if (!onlyIfIncluded) {
+              snack.show({
+                message: t('splitList.showingSplitsWithYou'),
+                duration: snack.duration.SHORT,
+              })
+              setOnlyIfIncluded(true)
+              onChange(true)
+            }
           },
         },
       ]}

@@ -4,9 +4,6 @@
   "email": "E-mail",
   "signIn": "Sign in",
   "signOut": "Sign out",
-  "noSplits": "There are no splits in this group",
-  "noAccessibleSplits": "There are no splits you can access in this group",
-  "noSplitsWhereIncluded": "There are no splits where you are included",
   "noMembers": "No members",
   "checkingIfYouAreLoggedIn": "Checking if you're logged in",
   "deletedUser": "Deleted user",
@@ -276,6 +273,14 @@
     "deletedToast": "Deleted {{title}}",
     "created": "Split created",
     "updated": "Split updated"
+  },
+
+  "splitList": {
+    "noSplits": "There are no splits in this group",
+    "noAccessibleSplits": "There are no splits you can access in this group",
+    "noSplitsWhereIncluded": "There are no splits where you are included",
+    "showingAllSplits": "Showing all splits",
+    "showingSplitsWithYou": "Showing only splits you participated in"
   },
 
   "groupInfo": {

@@ -142,10 +142,10 @@ export function SplitsList({
                 {permissions?.canReadSplits() === SplitPermissionType.None
                   ? t('api.insufficientPermissions.group.readSplits')
                   : permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
-                    ? t('noAccessibleSplits')
+                    ? t('splitList.noAccessibleSplits')
                     : forceShowSplitsWithUser
-                      ? t('noSplitsWhereIncluded')
-                      : t('noSplits')}
+                      ? t('splitList.noSplitsWhereIncluded')
+                      : t('splitList.noSplits')}
               </Text>
             )}
           </View>
