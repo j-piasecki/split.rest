@@ -14,7 +14,7 @@ import { useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { GroupUserInfo, SplitInfo } from 'shared'
+import { GroupUserInfo, SplitInfo, SplitType } from 'shared'
 
 function LinearInfo({ split, info }: { split: SplitInfo; info: GroupUserInfo }) {
   const theme = useTheme()
@@ -158,6 +158,11 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
           size={32}
           style={{ marginRight: shouldUseStackedInfo ? 8 : 16 }}
         />
+
+        {/* TODO: Show the type of the split in a better way */}
+        {Boolean(split.type & SplitType.Inversed) && <Text style={{color: theme.colors.onSurface}}>Inversed</Text>}
+        {Boolean(split.type & SplitType.SettleUp) && <Text style={{color: theme.colors.onSurface}}>Settle-up</Text>}
+
         <View style={{ flex: 2 }}>
           <Text
             style={{ fontSize: 18, fontWeight: 700, color: theme.colors.onSurface }}

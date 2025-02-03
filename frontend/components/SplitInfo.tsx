@@ -11,6 +11,7 @@ import { ScrollView, StyleProp, View, ViewStyle } from 'react-native'
 import {
   GroupUserInfo,
   LanguageTranslationKey,
+  SplitType,
   SplitWithUsers,
   UserWithBalanceChange,
 } from 'shared'
@@ -32,13 +33,22 @@ function UserRow({
   const paidByThis = splitInfo.paidById === user.id
   let paidInThisSplit = user.change
 
-  if (paidByThis) {
-    const total = Number(splitInfo.total)
-    const remainder = total - Number(paidInThisSplit)
+  if (splitInfo.type & SplitType.Inversed) {
+    if (paidByThis) {
+      const total = Number(splitInfo.total)
+      const remainder = total + Number(paidInThisSplit)
 
-    paidInThisSplit = remainder.toFixed(2)
+      paidInThisSplit = remainder.toFixed(2)
+    }
   } else {
-    paidInThisSplit = paidInThisSplit.substring(1)
+    if (paidByThis) {
+      const total = Number(splitInfo.total)
+      const remainder = total - Number(paidInThisSplit)
+
+      paidInThisSplit = remainder.toFixed(2)
+    } else {
+      paidInThisSplit = paidInThisSplit.substring(1)
+    }
   }
 
   return (
@@ -196,6 +206,7 @@ export function SplitInfo({
             {splitInfo.title}
           </Text>
 
+          {/* TODO: Update text for settle-ups (and inverse splits?) */}
           <IconInfoText
             icon='currency'
             translationKey='splitInfo.hasPaidText'
@@ -223,6 +234,7 @@ export function SplitInfo({
           collapsible
         >
           {splitInfo.users.map((user, index) => (
+            // TODO: Filter out users with 0 change
             <UserRow
               key={user.id}
               user={user}
