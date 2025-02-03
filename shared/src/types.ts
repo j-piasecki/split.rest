@@ -43,7 +43,13 @@ export interface UserWithBalanceChange extends User {
 }
 
 export enum SplitType {
+  // Change of payer balance should be positive, others negative
   Normal = 0,
+  // Change of payer balance should be negative, others positive.
+  // The only way to create this split is to settle up with a positive balance.
+  Inversed = 1 << 0,
+  // Split is a settle up split
+  SettleUp = 1 << 1,
 }
 
 export interface SplitInfo {
