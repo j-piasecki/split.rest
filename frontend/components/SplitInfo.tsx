@@ -99,11 +99,13 @@ function UserRow({
   user,
   groupInfo,
   splitInfo,
+  isNameUnique,
   last = false,
 }: {
   user: UserWithBalanceChange
   splitInfo: SplitWithUsers
   groupInfo: GroupUserInfo | undefined
+  isNameUnique: boolean
   last?: boolean
 }) {
   const theme = useTheme()
@@ -134,8 +136,7 @@ function UserRow({
         >
           {user.name}
         </Text>
-        {/* TODO: show emails only in case of name conflict */}
-        {(user.deleted || user.email) && (
+        {(user.deleted || (!isNameUnique && user.email)) && (
           <Text style={{ color: theme.colors.outline, fontSize: 12 }}>
             {user.deleted ? t('deletedUser') : user.email}
           </Text>
@@ -254,6 +255,14 @@ export function SplitInfo({
     return changeToShow !== '0.00'
   })
 
+  const nameCounts = usersToShow.reduce(
+    (acc, user) => {
+      acc[user.name] = (acc[user.name] || 0) + 1
+      return acc
+    },
+    {} as Record<string, number>
+  )
+
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={style}>
       <View style={{ gap: 16 }}>
@@ -308,6 +317,7 @@ export function SplitInfo({
               user={user}
               groupInfo={groupInfo}
               splitInfo={splitInfo}
+              isNameUnique={nameCounts[user.name] === 1}
               last={index === usersToShow.length - 1}
             />
           ))}
