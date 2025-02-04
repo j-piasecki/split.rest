@@ -1,3 +1,4 @@
+import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { splitExists } from '../utils/splitExists'
@@ -35,7 +36,9 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
       )
     ).rows[0]
 
-    // TODO: throw when trying to edit settle-up split?
+    if (splitInfo.type & SplitType.SettleUp) {
+      throw new ForbiddenException('api.split.cannotEditSettleUp')
+    }
 
     // Remove old balances
 

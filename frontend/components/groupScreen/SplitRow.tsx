@@ -1,4 +1,5 @@
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
+import { Icon } from '@components/Icon'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { useSnack } from '@components/SnackBar'
@@ -14,7 +15,7 @@ import { useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { GroupUserInfo, SplitInfo } from 'shared'
+import { GroupUserInfo, SplitInfo, SplitType } from 'shared'
 
 function LinearInfo({ split, info }: { split: SplitInfo; info: GroupUserInfo }) {
   const theme = useTheme()
@@ -70,6 +71,8 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
   const { data: permissions } = useGroupPermissions(info.id)
   const { mutateAsync: deleteSplit, isPending } = useDeleteSplit(info.id)
 
+  const isSettleUp = Boolean(split.type & SplitType.SettleUp)
+  const isInverse = Boolean(split.type & SplitType.Inversed)
   const shouldUseStackedInfo = displayClass === DisplayClass.Small || (width < 660 && width > 0)
 
   const contextMenuDisabled =
@@ -146,18 +149,64 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
         }}
         style={{
           paddingVertical: 16,
-          paddingLeft: 16,
+          paddingLeft: shouldUseStackedInfo ? 12 : 16,
           paddingRight: 8,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
         }}
       >
-        <ProfilePicture
-          userId={split.paidById}
-          size={32}
-          style={{ marginRight: shouldUseStackedInfo ? 8 : 16 }}
-        />
+        <View style={{ marginRight: shouldUseStackedInfo ? 10 : 16 }}>
+          <ProfilePicture userId={split.paidById} size={32} />
+
+          {isSettleUp && (
+            <View
+              style={[
+                {
+                  position: 'absolute',
+                  bottom: -6,
+                  right: -6,
+                  width: 20,
+                  height: 20,
+                  backgroundColor: theme.colors.surfaceContainerHighest,
+                  borderRadius: 8,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+                styles.paneShadow,
+              ]}
+            >
+              {isInverse ? (
+                <Icon
+                  name='merge'
+                  size={14}
+                  color={theme.colors.tertiary}
+                  style={{
+                    transform: [{ rotateZ: '-90deg' }],
+                  }}
+                />
+              ) : (
+                <Icon
+                  name='split'
+                  size={14}
+                  color={theme.colors.tertiary}
+                  style={{
+                    transform: [{ rotateZ: '90deg' }],
+                  }}
+                />
+              )}
+            </View>
+          )}
+        </View>
+
+        {/* {isSettleUp && isInverse && (
+          <Icon name='merge' size={20} color={theme.colors.tertiary} style={{ marginRight: shouldUseStackedInfo ? 2 : 4, transform: [{rotateZ: '-90deg'}] }} />
+        )}
+
+        {isSettleUp && !isInverse && (
+          <Icon name='split' size={20} color={theme.colors.tertiary} style={{ marginRight: shouldUseStackedInfo ? 2 : 4, transform: [{rotateZ: '90deg'}] }} />
+        )} */}
+
         <View style={{ flex: 2 }}>
           <Text
             style={{ fontSize: 18, fontWeight: 700, color: theme.colors.onSurface }}

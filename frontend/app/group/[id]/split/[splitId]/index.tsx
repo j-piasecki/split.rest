@@ -106,6 +106,7 @@ export default function SplitInfoScreen() {
                   fetchNextPage()
                 }
               }}
+              scrollEnabled={history.length > 1}
               renderItem={({ item, index }) => (
                 <View
                   style={{
@@ -163,6 +164,7 @@ export default function SplitInfoScreen() {
                 scrollContentWidth.current = width
               }}
               scrollEventThrottle={250}
+              scrollEnabled={history.length > 1}
               onScroll={(e) => {
                 userScrollRef.current = true
 

@@ -93,7 +93,8 @@
       "sumOfChangesMustBeZero": "Sum of changes must be equal to zero",
       "payerNotInTransaction": "Payer must be included in the transaction",
       "payerMustGetBackSumOthersLose": "Payer must get back an equal amount to the sum others lose",
-      "totalValueMustBePositive": "Total value must be greater than zero"
+      "totalValueMustBePositive": "Total value must be greater than zero",
+      "cannotEditSettleUp": "Settle-up splits cannot be updated"
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
@@ -318,7 +319,11 @@
     "editAuthorText": "<Styled>{{editor}}</Styled> has edited this split",
     "createAuthorText": "By <Styled>{{editor}}</Styled>",
     "hasPaidText": "<Styled>{{payer}}</Styled> has paid <Styled>{{amount}}</Styled>",
-    "splitTimeText": "On <Styled>{{date}}</Styled>"
+    "hasSettledUpGaveBack": "<Styled>{{payer}}</Styled> has settled up and given back <Styled>{{amount}}</Styled>",
+    "hasSettledUpGetsBack": "<Styled>{{payer}}</Styled> has settled up and got back <Styled>{{amount}}</Styled>",
+    "splitTimeText": "On <Styled>{{date}}</Styled>",
+    "gotBack": "Got back",
+    "gaveBack": "Gave back"
   },
 
   "errorBoundary": {
