@@ -40,6 +40,7 @@ export type IconName =
   | 'login'
   | 'logout'
   | 'members'
+  | 'merge'
   | 'money'
   | 'moreVertical'
   | 'openRightPanel'
@@ -104,6 +105,7 @@ const iconMap: Record<IconName, unknown> = {
   login: require('@assets/icons/login.svg'),
   logout: require('@assets/icons/logout.svg'),
   members: require('@assets/icons/members.svg'),
+  merge: require('@assets/icons/merge.svg'),
   money: require('@assets/icons/money.svg'),
   moreVertical: require('@assets/icons/more_vertical.svg'),
   openRightPanel: require('@assets/icons/open_right_panel.svg'),
