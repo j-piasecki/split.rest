@@ -86,17 +86,14 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
         },
       ]}
       style={({ pressed, hovered }) => {
-        return [
-          {
-            userSelect: 'none',
-            backgroundColor: pressed
-              ? theme.colors.surfaceContainerHighest
-              : hovered
-                ? theme.colors.surfaceContainerHigh
-                : theme.colors.surfaceContainer,
-          },
-          displayClass <= DisplayClass.Medium && styles.paneShadow,
-        ]
+        return {
+          userSelect: 'none',
+          backgroundColor: pressed
+            ? theme.colors.surfaceContainerHighest
+            : hovered
+              ? theme.colors.surfaceContainerHigh
+              : theme.colors.surfaceContainer,
+        }
       }}
       onPress={() => {
         router.navigate(`/group/${info.id}/member/${member.id}`)
@@ -104,14 +101,17 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
     >
       <View
         key={member.id}
-        style={{
-          paddingVertical: 10,
-          paddingLeft: 10,
-          paddingRight: 8,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
+        style={[
+          {
+            paddingVertical: 10,
+            paddingLeft: 10,
+            paddingRight: hasContextActions ? 8 : 12,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          },
+          displayClass <= DisplayClass.Medium && styles.paneShadow,
+        ]}
       >
         <View
           style={{

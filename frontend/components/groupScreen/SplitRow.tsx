@@ -86,18 +86,15 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
       ref={contextMenuRef}
       disabled={contextMenuDisabled}
       style={({ pressed, hovered }) => {
-        return [
-          {
-            userSelect: 'none',
-            backgroundColor:
-              pressed && permissions?.canSeeSplitDetails(split)
-                ? theme.colors.surfaceContainerHighest
-                : hovered
-                  ? theme.colors.surfaceContainerHigh
-                  : theme.colors.surfaceContainer,
-          },
-          displayClass <= DisplayClass.Medium && styles.paneShadow,
-        ]
+        return {
+          userSelect: 'none',
+          backgroundColor:
+            pressed && permissions?.canSeeSplitDetails(split)
+              ? theme.colors.surfaceContainerHighest
+              : hovered
+                ? theme.colors.surfaceContainerHigh
+                : theme.colors.surfaceContainer,
+        }
       }}
       onPress={() => {
         if (permissions?.canSeeSplitDetails(split)) {
@@ -147,14 +144,17 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
             setWidth(e.nativeEvent.layout.width)
           }
         }}
-        style={{
-          paddingVertical: 16,
-          paddingLeft: shouldUseStackedInfo ? 12 : 16,
-          paddingRight: 8,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
+        style={[
+          {
+            paddingVertical: 16,
+            paddingLeft: shouldUseStackedInfo ? 12 : 16,
+            paddingRight: 8,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          },
+          displayClass <= DisplayClass.Medium && styles.paneShadow,
+        ]}
       >
         <View style={{ marginRight: shouldUseStackedInfo ? 10 : 16 }}>
           <ProfilePicture userId={split.paidById} size={32} />
