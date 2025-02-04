@@ -319,7 +319,11 @@
     "editAuthorText": "<Styled>{{editor}}</Styled> has edited this split",
     "createAuthorText": "By <Styled>{{editor}}</Styled>",
     "hasPaidText": "<Styled>{{payer}}</Styled> has paid <Styled>{{amount}}</Styled>",
-    "splitTimeText": "On <Styled>{{date}}</Styled>"
+    "hasSettledUpGaveBack": "<Styled>{{payer}}</Styled> has settled up and given back <Styled>{{amount}}</Styled>",
+    "hasSettledUpGetsBack": "<Styled>{{payer}}</Styled> has settled up and got back <Styled>{{amount}}</Styled>",
+    "splitTimeText": "On <Styled>{{date}}</Styled>",
+    "gotBack": "Got back",
+    "gaveBack": "Gave back"
   },
 
   "errorBoundary": {

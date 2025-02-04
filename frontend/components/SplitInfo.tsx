@@ -5,6 +5,7 @@ import { Text } from '@components/Text'
 import { useUserById } from '@hooks/database/useUserById'
 import { useTheme } from '@styling/theme'
 import { CurrencyUtils } from '@utils/CurrencyUtils'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ScrollView, StyleProp, View, ViewStyle } from 'react-native'
@@ -41,6 +42,59 @@ function getVisibleBalanceChange(user: UserWithBalanceChange, splitInfo: SplitWi
   return paidInThisSplit
 }
 
+function PaidAmount({
+  user,
+  splitInfo,
+  groupInfo,
+}: {
+  user: UserWithBalanceChange
+  splitInfo: SplitWithUsers
+  groupInfo?: GroupUserInfo
+}) {
+  const theme = useTheme()
+  const paidByThis = splitInfo.paidById === user.id
+  const isSmallScreen = useDisplayClass() === DisplayClass.Small
+  const { t } = useTranslation()
+
+  const isSettleUp = Boolean(splitInfo.type & SplitType.SettleUp)
+  const isInverse = Boolean(splitInfo.type & SplitType.Inversed)
+
+  const paidInThisSplit = getVisibleBalanceChange(user, splitInfo)
+  const changeColor = isSettleUp
+    ? isInverse
+      ? theme.colors.balanceNegative
+      : theme.colors.balancePositive
+    : theme.colors.onSurfaceVariant
+
+  if (isSmallScreen) {
+    return (
+      <View style={{ flexDirection: 'column', alignItems: 'flex-end' }}>
+        {!paidByThis && isSettleUp && (
+          <Text style={{ color: changeColor, fontSize: 14 }}>
+            {isInverse ? t('splitInfo.gaveBack') : t('splitInfo.gotBack')}
+          </Text>
+        )}
+        <Text style={{ color: changeColor, fontSize: 20 }}>
+          {CurrencyUtils.format(paidInThisSplit, groupInfo?.currency)}
+        </Text>
+      </View>
+    )
+  }
+
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+      {!paidByThis && isSettleUp && (
+        <Text style={{ color: changeColor, fontSize: 16 }}>
+          {isInverse ? t('splitInfo.gaveBack') : t('splitInfo.gotBack')}
+        </Text>
+      )}
+      <Text style={{ color: changeColor, fontSize: 20 }}>
+        {CurrencyUtils.format(paidInThisSplit, groupInfo?.currency)}
+      </Text>
+    </View>
+  )
+}
+
 function UserRow({
   user,
   groupInfo,
@@ -56,7 +110,6 @@ function UserRow({
   const { t } = useTranslation()
 
   const paidByThis = splitInfo.paidById === user.id
-  const paidInThisSplit = getVisibleBalanceChange(user, splitInfo)
 
   return (
     <View
@@ -88,9 +141,7 @@ function UserRow({
           </Text>
         )}
       </View>
-      <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 20 }}>
-        {CurrencyUtils.format(paidInThisSplit, groupInfo?.currency)}
-      </Text>
+      <PaidAmount user={user} splitInfo={splitInfo} groupInfo={groupInfo} />
     </View>
   )
 }
@@ -218,10 +269,16 @@ export function SplitInfo({
             {splitInfo.title}
           </Text>
 
-          {/* TODO: Update text for settle-ups (and inverse splits?) */}
+          {/* TODO: Update text for inverse splits? */}
           <IconInfoText
             icon='currency'
-            translationKey='splitInfo.hasPaidText'
+            translationKey={
+              splitInfo.type & SplitType.SettleUp
+                ? splitInfo.type & SplitType.Inversed
+                  ? 'splitInfo.hasSettledUpGetsBack'
+                  : 'splitInfo.hasSettledUpGaveBack'
+                : 'splitInfo.hasPaidText'
+            }
             values={{
               payer: paidBy.name,
               amount: CurrencyUtils.format(splitInfo.total, groupInfo.currency),
