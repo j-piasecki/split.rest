@@ -16,20 +16,7 @@ import {
   UserWithBalanceChange,
 } from 'shared'
 
-function UserRow({
-  user,
-  groupInfo,
-  splitInfo,
-  last = false,
-}: {
-  user: UserWithBalanceChange
-  splitInfo: SplitWithUsers
-  groupInfo: GroupUserInfo | undefined
-  last?: boolean
-}) {
-  const theme = useTheme()
-  const { t } = useTranslation()
-
+function getVisibleBalanceChange(user: UserWithBalanceChange, splitInfo: SplitWithUsers) {
   const paidByThis = splitInfo.paidById === user.id
   let paidInThisSplit = user.change
 
@@ -50,6 +37,26 @@ function UserRow({
       paidInThisSplit = paidInThisSplit.substring(1)
     }
   }
+
+  return paidInThisSplit
+}
+
+function UserRow({
+  user,
+  groupInfo,
+  splitInfo,
+  last = false,
+}: {
+  user: UserWithBalanceChange
+  splitInfo: SplitWithUsers
+  groupInfo: GroupUserInfo | undefined
+  last?: boolean
+}) {
+  const theme = useTheme()
+  const { t } = useTranslation()
+
+  const paidByThis = splitInfo.paidById === user.id
+  const paidInThisSplit = getVisibleBalanceChange(user, splitInfo)
 
   return (
     <View
@@ -191,6 +198,11 @@ export function SplitInfo({
   const { t } = useTranslation()
   const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)!
 
+  const usersToShow = splitInfo.users.filter((user) => {
+    const changeToShow = getVisibleBalanceChange(user, splitInfo)
+    return changeToShow !== '0.00'
+  })
+
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={style}>
       <View style={{ gap: 16 }}>
@@ -233,14 +245,13 @@ export function SplitInfo({
           style={{ overflow: 'hidden' }}
           collapsible
         >
-          {splitInfo.users.map((user, index) => (
-            // TODO: Filter out users with 0 change
+          {usersToShow.map((user, index) => (
             <UserRow
               key={user.id}
               user={user}
               groupInfo={groupInfo}
               splitInfo={splitInfo}
-              last={index === splitInfo.users.length - 1}
+              last={index === usersToShow.length - 1}
             />
           ))}
         </Pane>
