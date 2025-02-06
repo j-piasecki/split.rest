@@ -65,6 +65,7 @@
         "editSplit": "You don't have permission to edit this split",
         "restoreSplit": "You don't have permission to restore this split",
         "accessRoulette": "You don't have permission to access the roulette",
+        "settleUp": "You don't have permission to settle up",
         "readMembers": "You don't have permission to see members of this group",
         "inviteMembers": "You don't have permission to invite members to this group",
         "rename": "You don't have permission to rename this group",
