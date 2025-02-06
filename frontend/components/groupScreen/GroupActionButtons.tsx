@@ -18,8 +18,10 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
   const { data: permissions } = useGroupPermissions(info?.id)
   const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info?.id)
 
+  let shimmerOffset = 0
+
   return (
-    <View style={{ flexDirection: 'column', gap: 12 }}>
+    <View style={{ flexDirection: 'column', gap: 12, justifyContent: 'center' }}>
       <ButtonShimmer argument={permissions}>
         {(permissions) =>
           permissions.canAccessRoulette() && (
@@ -35,7 +37,7 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
       </ButtonShimmer>
 
       {!isSmallScreen && (
-        <ButtonShimmer argument={permissions} offset={-0.05}>
+        <ButtonShimmer argument={permissions} offset={shimmerOffset -= 0.05}>
           {(permissions) =>
             permissions.canCreateSplits() && (
               <Button
@@ -51,8 +53,22 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
         </ButtonShimmer>
       )}
 
+      <ButtonShimmer argument={permissions} offset={shimmerOffset -= 0.05}>
+        {(permissions) =>
+          permissions.canSettleUp() && (
+            <Button
+              onPress={() => {
+                alert('Not implemented yet')
+              }}
+              title={t('groupInfo.settleUp')}
+              leftIcon='balance'
+            />
+          )
+        }
+      </ButtonShimmer>
+
       {/* Depend on permission to show all buttons at once */}
-      <ButtonShimmer argument={permissions && info} offset={-0.1}>
+      <ButtonShimmer argument={permissions && info} offset={shimmerOffset -= 0.05}>
         {(info) =>
           info.hidden ? (
             <Button
