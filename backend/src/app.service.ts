@@ -36,6 +36,7 @@ import {
   SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
   SetUserNameArguments,
+  SettleUpArguments,
   UpdateSplitArguments,
   User,
 } from 'shared'
@@ -251,5 +252,9 @@ export class AppService {
 
   async setUserName(callerId: string, args: SetUserNameArguments) {
     return await this.databaseService.setUserName(callerId, args)
+  }
+
+  async settleUp(callerId: string, args: SettleUpArguments) {
+    return await this.databaseService.settleUp(callerId, args)
   }
 }

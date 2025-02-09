@@ -37,6 +37,7 @@ import {
   SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
   SetUserNameArguments,
+  SettleUpArguments,
   UpdateSplitArguments,
   User,
   isAcceptGroupInviteArguments,
@@ -72,6 +73,7 @@ import {
   isSetGroupInviteWithdrawnArguments,
   isSetGroupNameArguments,
   isSetUserNameArguments,
+  isSettleUpArguments,
   isUpdateSplitArguments,
   isUser,
 } from 'shared'
@@ -484,5 +486,15 @@ export class AppController {
     }
 
     return await this.appService.setUserName(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('settleUp')
+  async settleUp(@Req() request: Request, @Body() args: Partial<SettleUpArguments>) {
+    if (!isSettleUpArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.settleUp(request.user.sub, args)
   }
 }

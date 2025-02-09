@@ -4,6 +4,7 @@ import { ConfirmationModal } from '@components/ConfirmationModal'
 import { useSnack } from '@components/SnackBar'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { useSettleUp } from '@hooks/database/useSettleUp'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { beginNewSplit } from '@utils/splitCreationContext'
@@ -15,12 +16,14 @@ import { GroupUserInfo } from 'shared'
 
 interface SettleUpModalProps {
   visible: boolean
+  groupInfo: GroupUserInfo | undefined
   onClose: () => void
 }
 
-function SettleUpModal({ visible, onClose }: SettleUpModalProps) {
+function SettleUpModal({ visible, groupInfo, onClose }: SettleUpModalProps) {
   const snack = useSnack()
   const { t } = useTranslation()
+  const { mutateAsync: settleUp } = useSettleUp()
 
   return (
     <ConfirmationModal
@@ -33,6 +36,7 @@ function SettleUpModal({ visible, onClose }: SettleUpModalProps) {
       cancelIcon='close'
       onConfirm={async () => {
         try {
+          await settleUp(groupInfo?.id)
           snack.show({ message: t('groupInfo.settleUp.settleUpSuccess') })
         } catch {
           alert(t('api.auth.tryAgain'))
@@ -57,6 +61,7 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
     <View style={{ flexDirection: 'column', gap: 12, justifyContent: 'center' }}>
       <SettleUpModal
         visible={settleUpModalVisible}
+        groupInfo={info}
         onClose={() => setSettleUpModalVisible(false)}
       />
 

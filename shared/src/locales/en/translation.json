@@ -95,7 +95,9 @@
       "payerNotInTransaction": "Payer must be included in the transaction",
       "payerMustGetBackSumOthersLose": "Payer must get back an equal amount to the sum others lose",
       "totalValueMustBePositive": "Total value must be greater than zero",
-      "cannotEditSettleUp": "Settle-up splits cannot be updated"
+      "cannotEditSettleUp": "Settle-up splits cannot be updated",
+      "cannotSettleUpNeutral": "You cannot settle up with neutral balance",
+      "settleUpFailed": "Failed to settle up"
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
