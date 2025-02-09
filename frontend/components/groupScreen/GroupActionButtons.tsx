@@ -1,15 +1,47 @@
 import { Button } from '@components/Button'
 import { ButtonShimmer } from '@components/ButtonShimmer'
+import { ConfirmationModal } from '@components/ConfirmationModal'
+import { useSnack } from '@components/SnackBar'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { beginNewSplit } from '@utils/splitCreationContext'
 import { router } from 'expo-router'
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { GroupUserInfo } from 'shared'
+
+interface SettleUpModalProps {
+  visible: boolean
+  onClose: () => void
+}
+
+function SettleUpModal({ visible, onClose }: SettleUpModalProps) {
+  const snack = useSnack()
+  const { t } = useTranslation()
+
+  return (
+    <ConfirmationModal
+      visible={visible}
+      title='groupInfo.settleUp.doYouWantToSettleUp'
+      message='groupInfo.settleUp.settleUpDescription'
+      confirmText='groupInfo.settleUp.settleUp'
+      confirmIcon='balance'
+      cancelText='groupInfo.settleUp.cancel'
+      cancelIcon='close'
+      onConfirm={async () => {
+        try {
+          snack.show({ message: t('groupInfo.settleUp.settleUpSuccess') })
+        } catch {
+          alert(t('api.auth.tryAgain'))
+        }
+      }}
+      onClose={onClose}
+    />
+  )
+}
 
 export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }) {
   const user = useAuth()
@@ -17,11 +49,17 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
   const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info?.id)
+  const [settleUpModalVisible, setSettleUpModalVisible] = useState(false)
 
   let shimmerOffset = 0
 
   return (
     <View style={{ flexDirection: 'column', gap: 12, justifyContent: 'center' }}>
+      <SettleUpModal
+        visible={settleUpModalVisible}
+        onClose={() => setSettleUpModalVisible(false)}
+      />
+
       <ButtonShimmer argument={permissions}>
         {(permissions) =>
           permissions.canAccessRoulette() && (
@@ -37,7 +75,7 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
       </ButtonShimmer>
 
       {!isSmallScreen && (
-        <ButtonShimmer argument={permissions} offset={shimmerOffset -= 0.05}>
+        <ButtonShimmer argument={permissions} offset={(shimmerOffset -= 0.05)}>
           {(permissions) =>
             permissions.canCreateSplits() && (
               <Button
@@ -53,14 +91,15 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
         </ButtonShimmer>
       )}
 
-      <ButtonShimmer argument={permissions} offset={shimmerOffset -= 0.05}>
+      <ButtonShimmer argument={permissions} offset={(shimmerOffset -= 0.05)}>
         {(permissions) =>
+          Number(info?.balance) !== 0 &&
           permissions.canSettleUp() && (
             <Button
               onPress={() => {
-                alert('Not implemented yet')
+                setSettleUpModalVisible(true)
               }}
-              title={t('groupInfo.settleUp')}
+              title={t('groupInfo.settleUp.settleUp')}
               leftIcon='balance'
             />
           )
@@ -68,7 +107,7 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
       </ButtonShimmer>
 
       {/* Depend on permission to show all buttons at once */}
-      <ButtonShimmer argument={permissions && info} offset={shimmerOffset -= 0.05}>
+      <ButtonShimmer argument={permissions && info} offset={(shimmerOffset -= 0.05)}>
         {(info) =>
           info.hidden ? (
             <Button

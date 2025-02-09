@@ -304,7 +304,13 @@
     "hideGroup": "Hide group",
     "showGroup": "Show group",
     "settings": "Settings",
-    "settleUp": "Settle up"
+    "settleUp": {
+      "settleUp": "Settle up",
+      "doYouWantToSettleUp": "Do you want to settle up?",
+      "settleUpDescription": "This action will create a split that will bring your balance to zero. Check its details too see who you owe money to or who owes you.",
+      "cancel": "Cancel",
+      "settleUpSuccess": "Settled up"
+    }
   },
 
   "splitInfo": {
