@@ -73,15 +73,20 @@ export async function invalidateUserById(userId?: string) {
 }
 
 export async function addCachedSplit(groupId: number, split: SplitInfo) {
-  await queryClient.setQueryData(['groupSplits', groupId], (oldData?: { pages: SplitInfo[][] }) => {
-    if (!oldData) {
-      return
-    }
+  [true, false].forEach((onlyIncluded) => {
+    queryClient.setQueryData(
+      ['groupSplits', groupId, 'onlyIncluded', onlyIncluded],
+      (oldData?: { pages: SplitInfo[][] }) => {
+        if (!oldData) {
+          return
+        }
 
-    return {
-      ...oldData,
-      pages: oldData.pages.map((page, index) => (index === 0 ? [split, ...page] : page)),
-    }
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page, index) => (index === 0 ? [split, ...page] : page)),
+        }
+      }
+    )
   })
 }
 
