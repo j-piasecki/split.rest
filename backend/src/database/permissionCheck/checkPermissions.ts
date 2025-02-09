@@ -130,7 +130,7 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
         }
 
         case 'settleUp': {
-          if (!callerPermissions?.canAccessRoulette()) {
+          if (!callerPermissions?.canSettleUp()) {
             return 'api.insufficientPermissions.group.settleUp'
           }
           continue
