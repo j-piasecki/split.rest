@@ -333,7 +333,8 @@
     "hasSettledUpGetsBack": "<Styled>{{payer}}</Styled> has settled up and got back <Styled>{{amount}}</Styled>",
     "splitTimeText": "On <Styled>{{date}}</Styled>",
     "gotBack": "Got back",
-    "gaveBack": "Gave back"
+    "gaveBack": "Gave back",
+    "settleUpTitle": "Settle up split"
   },
 
   "errorBoundary": {
