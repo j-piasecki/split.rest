@@ -12,6 +12,8 @@ export function calculateSettleUpEntries(
   balance: number,
   allMembers: Member[]
 ): BalanceChange[] {
+  // TODO: Better algorithm for this
+
   // This should result in a list of members with the opposite sign of the balance
   // grouped by whether they have access or not and sorted by balance descending.
   const members = allMembers
