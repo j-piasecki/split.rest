@@ -30,6 +30,9 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupUserInfo, SplitPermissionType } from 'shared'
 
+let allSplitsSnackShown = false
+let splitsWithYouSnackShown = false
+
 function SplitsFilter({
   style,
   onChange,
@@ -51,10 +54,14 @@ function SplitsFilter({
           selected: !onlyIfIncluded,
           onPress: () => {
             if (onlyIfIncluded) {
-              snack.show({
-                message: t('splitList.showingAllSplits'),
-                duration: snack.duration.SHORT,
-              })
+              if (!allSplitsSnackShown) {
+                // eslint-disable-next-line react-compiler/react-compiler
+                allSplitsSnackShown = true
+                snack.show({
+                  message: t('splitList.showingAllSplits'),
+                  duration: snack.duration.SHORT,
+                })
+              }
               setOnlyIfIncluded(false)
               onChange(false)
             }
@@ -65,10 +72,14 @@ function SplitsFilter({
           selected: onlyIfIncluded,
           onPress: () => {
             if (!onlyIfIncluded) {
-              snack.show({
-                message: t('splitList.showingSplitsWithYou'),
-                duration: snack.duration.SHORT,
-              })
+              if (!splitsWithYouSnackShown) {
+                // eslint-disable-next-line react-compiler/react-compiler
+                splitsWithYouSnackShown = true
+                snack.show({
+                  message: t('splitList.showingSplitsWithYou'),
+                  duration: snack.duration.SHORT,
+                })
+              }
               setOnlyIfIncluded(true)
               onChange(true)
             }
