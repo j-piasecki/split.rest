@@ -6,6 +6,7 @@ import { useUserById } from '@hooks/database/useUserById'
 import { useTheme } from '@styling/theme'
 import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { getSplitDisplayName } from '@utils/getSplitDisplayName'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ScrollView, StyleProp, View, ViewStyle } from 'react-native'
@@ -275,7 +276,7 @@ export function SplitInfo({
           collapsible
         >
           <Text style={{ color: theme.colors.onSurface, fontSize: 24, marginBottom: 8 }}>
-            {splitInfo.title}
+            {getSplitDisplayName(splitInfo)}
           </Text>
 
           {/* TODO: Update text for inverse splits? */}

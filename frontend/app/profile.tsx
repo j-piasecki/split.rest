@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { ConfirmationModal } from '@components/ConfirmationModal'
 import { EditableText } from '@components/EditableText'
 import ModalScreen from '@components/ModalScreen'
 import { Picker } from '@components/Picker'
@@ -14,15 +15,7 @@ import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  ActivityIndicator,
-  Modal,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import { ActivityIndicator, Platform, ScrollView, View } from 'react-native'
 import { TranslatableError, User } from 'shared'
 
 interface DeleteAccountModalProps {
@@ -31,70 +24,29 @@ interface DeleteAccountModalProps {
 }
 
 function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
-  const theme = useTheme()
   const snack = useSnack()
   const { t } = useTranslation()
-  const [isDeleting, setIsDeleting] = useState(false)
 
   return (
-    <Modal
-      transparent
-      statusBarTranslucent
-      navigationBarTranslucent
+    <ConfirmationModal
       visible={visible}
-      onRequestClose={onClose}
-    >
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Pressable
-          style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.7)' }]}
-          onPress={onClose}
-        />
-        <View
-          style={{
-            backgroundColor: theme.colors.surface,
-            padding: 24,
-            borderRadius: 16,
-            margin: 8,
-            maxWidth: 500,
-            gap: 16,
-          }}
-        >
-          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 22 }}>
-            {t('settings.deleteAccount.doYouWantToDeleteAccount')}
-          </Text>
-
-          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 16 }}>
-            {t('settings.deleteAccount.deletionNotReversible')}
-          </Text>
-
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 16, marginTop: 16 }}
-          >
-            <Button title={t('settings.deleteAccount.cancel')} leftIcon='close' onPress={onClose} />
-            <Button
-              title={t('settings.deleteAccount.delete')}
-              leftIcon='delete'
-              isLoading={isDeleting}
-              destructive
-              onPress={async () => {
-                setIsDeleting(true)
-                deleteUser()
-                  .then(() => {
-                    onClose()
-                    snack.show({ message: t('settings.deleteAccount.accountDeleted') })
-                  })
-                  .catch(() => {
-                    alert(t('api.auth.tryAgain'))
-                  })
-                  .finally(() => {
-                    setIsDeleting(false)
-                  })
-              }}
-            />
-          </View>
-        </View>
-      </View>
-    </Modal>
+      title='settings.deleteAccount.doYouWantToDeleteAccount'
+      message='settings.deleteAccount.deletionNotReversible'
+      confirmText='settings.deleteAccount.delete'
+      confirmIcon='delete'
+      cancelText='settings.deleteAccount.cancel'
+      cancelIcon='close'
+      destructive
+      onClose={onClose}
+      onConfirm={async () => {
+        try {
+          await deleteUser()
+          snack.show({ message: t('settings.deleteAccount.accountDeleted') })
+        } catch {
+          alert(t('api.auth.tryAgain'))
+        }
+      }}
+    />
   )
 }
 

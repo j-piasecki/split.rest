@@ -129,6 +129,13 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'settleUp': {
+          if (!callerPermissions?.canSettleUp()) {
+            return 'api.insufficientPermissions.group.settleUp'
+          }
+          continue
+        }
+
         case 'readMembers': {
           if (!callerPermissions?.canReadMembers()) {
             return 'api.insufficientPermissions.group.readMembers'

@@ -174,3 +174,7 @@ export interface SetGroupInviteWithdrawnArguments {
 export interface SetUserNameArguments {
   name: string
 }
+
+export interface SettleUpArguments {
+  groupId: number
+}

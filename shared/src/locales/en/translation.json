@@ -65,6 +65,7 @@
         "editSplit": "You don't have permission to edit this split",
         "restoreSplit": "You don't have permission to restore this split",
         "accessRoulette": "You don't have permission to access the roulette",
+        "settleUp": "You don't have permission to settle up",
         "readMembers": "You don't have permission to see members of this group",
         "inviteMembers": "You don't have permission to invite members to this group",
         "rename": "You don't have permission to rename this group",
@@ -94,7 +95,9 @@
       "payerNotInTransaction": "Payer must be included in the transaction",
       "payerMustGetBackSumOthersLose": "Payer must get back an equal amount to the sum others lose",
       "totalValueMustBePositive": "Total value must be greater than zero",
-      "cannotEditSettleUp": "Settle-up splits cannot be updated"
+      "cannotEditSettleUp": "Settle-up splits cannot be updated",
+      "cannotSettleUpNeutral": "You cannot settle up with neutral balance",
+      "settleUpFailed": "Failed to settle up"
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
@@ -302,7 +305,14 @@
     "addSplit": "Add split",
     "hideGroup": "Hide group",
     "showGroup": "Show group",
-    "settings": "Settings"
+    "settings": "Settings",
+    "settleUp": {
+      "settleUp": "Settle up",
+      "doYouWantToSettleUp": "Do you want to settle up?",
+      "settleUpDescription": "This action will create a split that will bring your balance to zero. Check its details too see who you owe money to or who owes you.",
+      "cancel": "Cancel",
+      "settleUpSuccess": "Settled up"
+    }
   },
 
   "splitInfo": {
@@ -323,7 +333,8 @@
     "hasSettledUpGetsBack": "<Styled>{{payer}}</Styled> has settled up and got back <Styled>{{amount}}</Styled>",
     "splitTimeText": "On <Styled>{{date}}</Styled>",
     "gotBack": "Got back",
-    "gaveBack": "Gave back"
+    "gaveBack": "Gave back",
+    "settleUpTitle": "Settle up split"
   },
 
   "errorBoundary": {

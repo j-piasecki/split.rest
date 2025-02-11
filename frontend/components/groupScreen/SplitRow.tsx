@@ -11,6 +11,7 @@ import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { getSplitDisplayName } from '@utils/getSplitDisplayName'
 import { useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -212,7 +213,7 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
             style={{ fontSize: 18, fontWeight: 700, color: theme.colors.onSurface }}
             numberOfLines={3}
           >
-            {split.title}
+            {getSplitDisplayName(split)}
           </Text>
           {split.version !== 1 && (
             <Text

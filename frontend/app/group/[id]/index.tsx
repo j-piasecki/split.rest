@@ -101,14 +101,14 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
             style={{
               gap: 16,
               flexDirection: horizontalInfo ? 'row' : 'column',
-              alignItems: horizontalInfo ? 'center' : undefined,
+              alignItems: horizontalInfo ? 'stretch' : undefined,
             }}
           >
             <Pane
               icon='group'
               title={t('tabs.group')}
               textLocation='start'
-              style={{ flex: 1, marginTop: 8 }}
+              style={{ flex: 1, marginTop: horizontalInfo ? 0 : 8 }}
             >
               <View
                 style={{
