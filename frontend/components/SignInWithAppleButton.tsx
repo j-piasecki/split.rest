@@ -15,12 +15,13 @@ export function SignInWithAppleButton(props: SignInWithAppleButtonProps) {
       onPress={props.onPress}
       style={{
         backgroundColor: theme.theme === 'dark' ? 'white' : 'black',
-        width: 256,
-        height: 48,
-        borderRadius: 5,
+        width: 248,
+        height: 40,
+        borderRadius: 2,
         flexDirection: 'row',
-        padding: 12,
+        paddingHorizontal: 12,
         alignItems: 'center',
+        gap: 18,
       }}
     >
       <Icon name='appleLogo' size={20} color={theme.theme === 'dark' ? 'black' : 'white'} />
@@ -30,7 +31,6 @@ export function SignInWithAppleButton(props: SignInWithAppleButtonProps) {
           fontSize: 16,
           fontWeight: 600,
           flex: 1,
-          textAlign: 'center',
         }}
       >
         Sign in with Apple
