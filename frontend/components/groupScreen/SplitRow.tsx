@@ -127,7 +127,7 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
           onPress: () => {
             deleteSplit(split.id).then(() => {
               snack.show({
-                message: t('split.deletedToast', { title: split.title }),
+                message: t('split.deletedToast', { title: getSplitDisplayName(split) }),
                 actionText: t('undo'),
                 action: async () => {
                   await restoreSplit(split.id, info.id)
