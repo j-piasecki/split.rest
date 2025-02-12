@@ -8,7 +8,7 @@ import { useSettleUp } from '@hooks/database/useSettleUp'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { beginNewSplit } from '@utils/splitCreationContext'
-import { router } from 'expo-router'
+import { router, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
@@ -22,6 +22,7 @@ interface SettleUpModalProps {
 
 function SettleUpModal({ visible, groupInfo, onClose }: SettleUpModalProps) {
   const snack = useSnack()
+  const router = useRouter()
   const { t } = useTranslation()
   const { mutateAsync: settleUp } = useSettleUp()
 
@@ -36,8 +37,13 @@ function SettleUpModal({ visible, groupInfo, onClose }: SettleUpModalProps) {
       cancelIcon='close'
       onConfirm={async () => {
         try {
-          await settleUp(groupInfo?.id)
+          const settleUpSplit = await settleUp(groupInfo?.id)
           snack.show({ message: t('groupInfo.settleUp.settleUpSuccess') })
+
+          // delay navigation a bit to allow the snackbar to show, otherwise animation breaks
+          setTimeout(() => {
+            router.navigate(`/group/${groupInfo?.id}/split/${settleUpSplit.id}`)
+          }, 50)
         } catch {
           alert(t('api.auth.tryAgain'))
         }

@@ -3,7 +3,7 @@ import { makeRequest } from '@utils/makeApiRequest'
 import { addCachedSplit, invalidateGroup } from '@utils/queryClient'
 import { SettleUpArguments, SplitInfo, TranslatableError } from 'shared'
 
-async function settleUp(groupId?: number) {
+async function settleUp(groupId?: number): Promise<SplitInfo> {
   if (!groupId) {
     throw new TranslatableError('api.notFound.group')
   }
@@ -17,6 +17,8 @@ async function settleUp(groupId?: number) {
 
   await addCachedSplit(args.groupId, splitInfo)
   await invalidateGroup(args.groupId)
+
+  return splitInfo
 }
 
 export function useSettleUp() {
