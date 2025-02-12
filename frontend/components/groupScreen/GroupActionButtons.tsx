@@ -5,7 +5,6 @@ import { useSnack } from '@components/SnackBar'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSettleUp } from '@hooks/database/useSettleUp'
-import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { beginNewSplit } from '@utils/splitCreationContext'
 import { router, useRouter } from 'expo-router'
@@ -54,7 +53,6 @@ function SettleUpModal({ visible, groupInfo, onClose }: SettleUpModalProps) {
 }
 
 export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }) {
-  const user = useAuth()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
@@ -139,15 +137,6 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
           )
         }
       </ButtonShimmer>
-
-      {/* Depend on permission to show all buttons at once */}
-      {permissions && info && (info.isAdmin || info.owner === user?.id) && (
-        <Button
-          title={t('groupInfo.settings')}
-          onPress={() => router.navigate(`/group/${info.id}/settings`)}
-          leftIcon='settings'
-        />
-      )}
     </View>
   )
 }

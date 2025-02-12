@@ -12,8 +12,9 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
+import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -90,9 +91,16 @@ function SplitsFilter({
   )
 }
 
+function useHasSettingsAccess(info: GroupUserInfo | undefined) {
+  const user = useAuth()
+  return info && (info.isAdmin || info.owner === user?.id)
+}
+
 function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
+  const router = useRouter()
   const displayClass = useDisplayClass()
+  const hasSettingsAccess = useHasSettingsAccess(info)
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
   const [onlyShowSplitsIfIncluded, setOnlyShowSplitsIfIncluded] = useState(false)
@@ -120,6 +128,10 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
               title={t('tabs.group')}
               textLocation='start'
               style={{ flex: 1, marginTop: horizontalInfo ? 0 : 8 }}
+              collapsible={hasSettingsAccess}
+              collapsed={false}
+              collapseIcon='settings'
+              onCollapseChange={() => router.navigate(`/group/${info?.id}/settings`)}
             >
               <View
                 style={{
@@ -179,7 +191,9 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
   const theme = useTheme()
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
+  const router = useRouter()
   const displayClass = useDisplayClass()
+  const hasSettingsAccess = useHasSettingsAccess(groupInfo)
   const { data: permissions } = useGroupPermissions(groupInfo?.id)
   const [onlyShowSplitsIfIncluded, setOnlyShowSplitsIfIncluded] = useState(false)
 
@@ -217,6 +231,12 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           title={t('tabs.group')}
           style={[{ flex: 1, height: '100%' }, Platform.OS === 'web' && { minWidth: 420 }]}
           containerStyle={{ flex: 1 }}
+          collapsible={hasSettingsAccess}
+          collapsed={false}
+          collapseIcon='settings'
+          onCollapseChange={() => {
+            router.navigate(`/group/${groupInfo?.id}/settings`)
+          }}
         >
           <ScrollView
             style={{ flex: 1 }}
