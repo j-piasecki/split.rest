@@ -51,6 +51,7 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
             style={{
               flex: 1,
               height: 40,
+              overflow: 'hidden',
             }}
           >
             <ShimmerPlaceholder
