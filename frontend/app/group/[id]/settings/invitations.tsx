@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { useFABScrollHandler } from '@components/FloatingActionButton'
 import ModalScreen from '@components/ModalScreen'
 import { Pane, PaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
@@ -6,6 +7,7 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
+import { InviteMemberFab } from '@components/groupScreen/InviteMemberFab'
 import { useCreateGroupJoinLink } from '@hooks/database/useCreateGroupJoinLink'
 import { useDeleteGroupJoinLink } from '@hooks/database/useDeleteGroupJoinLink'
 import { useDirectGroupInvites } from '@hooks/database/useDirectGroupInvites'
@@ -209,6 +211,7 @@ function InviteRow({
 function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPermissions }) {
   const theme = useTheme()
   const insets = useModalScreenInsets()
+  const [fabRef, scrollHandler] = useFABScrollHandler()
   const { t } = useTranslation()
 
   const manageOnlyOwnInvites =
@@ -221,95 +224,103 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
   }
 
   return (
-    <FlatList
-      style={{ flex: 1 }}
-      contentContainerStyle={{
-        flexGrow: 1,
-        paddingLeft: insets.left + 12,
-        paddingRight: insets.right + 12,
-        paddingTop: insets.top + 16,
-        paddingBottom: insets.bottom,
-      }}
-      data={invites}
-      renderItem={({ item, index }) => (
-        <InviteRow
-          invite={item}
-          info={info}
-          permissions={permissions}
-          showSeparator={index !== invites.length - 1}
-          manageOnlyOwnInvites={manageOnlyOwnInvites}
-        />
-      )}
-      onRefresh={refresh}
-      refreshing={isRefetching}
-      onEndReachedThreshold={0.5}
-      onEndReached={() => !isFetchingNextPage && hasNextPage && fetchNextPage()}
-      keyExtractor={(item) => item.invitee.id}
-      ListHeaderComponent={
-        <View style={{ gap: 16 }}>
-          {permissions?.canSeeJoinLink() && (
-            <JoinLinkManager info={info} permissions={permissions} />
-          )}
+    <View style={{ flex: 1 }}>
+      <FlatList
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingLeft: insets.left + 12,
+          paddingRight: insets.right + 12,
+          paddingTop: insets.top + 16,
+          paddingBottom: insets.bottom + 96,
+        }}
+        data={invites}
+        renderItem={({ item, index }) => (
+          <InviteRow
+            invite={item}
+            info={info}
+            permissions={permissions}
+            showSeparator={index !== invites.length - 1}
+            manageOnlyOwnInvites={manageOnlyOwnInvites}
+          />
+        )}
+        onRefresh={refresh}
+        refreshing={isRefetching}
+        onEndReachedThreshold={0.5}
+        onEndReached={() => !isFetchingNextPage && hasNextPage && fetchNextPage()}
+        keyExtractor={(item) => item.invitee.id}
+        ListHeaderComponent={
+          <View style={{ gap: 16 }}>
+            {permissions?.canSeeJoinLink() && (
+              <JoinLinkManager info={info} permissions={permissions} />
+            )}
+            <View
+              style={[
+                {
+                  backgroundColor: theme.colors.surfaceContainer,
+                  borderTopRightRadius: 16,
+                  borderTopLeftRadius: 16,
+                },
+                styles.paneShadow,
+              ]}
+            >
+              <PaneHeader
+                icon='stackedEmail'
+                title={t('settings.invitations.directInvitations')}
+                textLocation='start'
+              />
+            </View>
+          </View>
+        }
+        ListFooterComponent={
+          <View
+            style={[
+              {
+                height: 16,
+                backgroundColor: theme.colors.surfaceContainer,
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+              },
+              styles.paneShadow,
+            ]}
+          />
+        }
+        ListEmptyComponent={
           <View
             style={[
               {
                 backgroundColor: theme.colors.surfaceContainer,
-                borderTopRightRadius: 16,
-                borderTopLeftRadius: 16,
+                paddingHorizontal: 16,
+                paddingVertical: 32,
+                alignItems: 'center',
+                justifyContent: 'center',
               },
               styles.paneShadow,
             ]}
           >
-            <PaneHeader
-              icon='stackedEmail'
-              title={t('settings.invitations.directInvitations')}
-              textLocation='start'
-            />
+            {/* TODO: shimmer */}
+            {isLoading && <ActivityIndicator color={theme.colors.primary} />}
+            {!isLoading && (
+              <Text
+                style={{
+                  color: theme.colors.outline,
+                  fontSize: 20,
+                  textAlign: 'center',
+                }}
+              >
+                {t('settings.invitations.noInvitations')}
+              </Text>
+            )}
           </View>
-        </View>
-      }
-      ListFooterComponent={
-        <View
-          style={[
-            {
-              height: 16,
-              backgroundColor: theme.colors.surfaceContainer,
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            },
-            styles.paneShadow,
-          ]}
-        />
-      }
-      ListEmptyComponent={
-        <View
-          style={[
-            {
-              backgroundColor: theme.colors.surfaceContainer,
-              paddingHorizontal: 16,
-              paddingVertical: 32,
-              alignItems: 'center',
-              justifyContent: 'center',
-            },
-            styles.paneShadow,
-          ]}
-        >
-          {/* TODO: shimmer */}
-          {isLoading && <ActivityIndicator color={theme.colors.primary} />}
-          {!isLoading && (
-            <Text
-              style={{
-                color: theme.colors.outline,
-                fontSize: 20,
-                textAlign: 'center',
-              }}
-            >
-              {t('settings.invitations.noInvitations')}
-            </Text>
-          )}
-        </View>
-      }
-    />
+        }
+        onScroll={scrollHandler}
+        onScrollBeginDrag={scrollHandler}
+        onScrollEndDrag={scrollHandler}
+        onMomentumScrollEnd={scrollHandler}
+        onMomentumScrollBegin={scrollHandler}
+      />
+      <InviteMemberFab info={info} fabRef={fabRef} applyBottomInset />
+    </View>
   )
 }
 

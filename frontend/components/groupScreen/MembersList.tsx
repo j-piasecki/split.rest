@@ -1,6 +1,7 @@
+import { InviteMemberFab } from './InviteMemberFab'
 import { MemberRow } from './MemberRow'
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
-import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
+import { useFABScrollHandler } from '@components/FloatingActionButton'
 import { Shimmer } from '@components/Shimmer'
 import { Text } from '@components/Text'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
@@ -8,7 +9,6 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { queryClient } from '@utils/queryClient'
-import { useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
@@ -95,7 +95,6 @@ export function MembersList({
   onRefresh,
 }: MembersListProps) {
   const theme = useTheme()
-  const router = useRouter()
   const insets = useSafeAreaInsets()
   const threeBarLayout = useThreeBarLayout()
   const [fabRef, scrollHandler] = useFABScrollHandler()
@@ -159,24 +158,13 @@ export function MembersList({
         scrollHandler={scrollHandler}
       />
 
-      {permissions?.canInviteMembers() && (
-        <View
-          style={{
-            position: 'absolute',
-            bottom: (threeBarLayout ? 8 : 16) + (applyBottomInset ? insets.bottom : 0),
-            right: threeBarLayout ? 8 : 16,
-          }}
-        >
-          <FloatingActionButton
-            ref={fabRef}
-            icon='addMember'
-            title={iconOnly ? '' : t('inviteMember.inviteMember')}
-            onPress={() => {
-              router.navigate(`/group/${info?.id}/inviteMember`)
-            }}
-          />
-        </View>
-      )}
+      <InviteMemberFab
+        info={info}
+        iconOnly={iconOnly}
+        applyBottomInset={applyBottomInset}
+        threeBarLayout={threeBarLayout}
+        fabRef={fabRef}
+      />
     </View>
   )
 }

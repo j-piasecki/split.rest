@@ -176,6 +176,7 @@ function UserPicker() {
         paddingBottom: insets.bottom,
         paddingTop: insets.top + 16,
       }}
+      keyboardShouldPersistTaps='handled'
     >
       <View style={{ gap: 16 }}>
         <Pane
