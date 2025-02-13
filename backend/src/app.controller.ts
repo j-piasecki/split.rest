@@ -38,6 +38,7 @@ import {
   SetGroupNameArguments,
   SetUserNameArguments,
   SettleUpArguments,
+  SplitType,
   UpdateSplitArguments,
   User,
   isAcceptGroupInviteArguments,
@@ -120,6 +121,11 @@ export class AppController {
   async createSplit(@Req() request: Request, @Body() args: Partial<CreateSplitArguments>) {
     if (!isCreateSplitArguments(args)) {
       throw new BadRequestException('api.invalidArguments')
+    }
+
+    // TODO: remove this once deployed for a while
+    if (args.type === undefined) {
+      args.type = SplitType.Normal
     }
 
     return await this.appService.createSplit(request.user.sub, args)
