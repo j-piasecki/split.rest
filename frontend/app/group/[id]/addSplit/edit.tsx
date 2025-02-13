@@ -35,6 +35,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         total: sumToSave.toFixed(2),
         timestamp: timestamp,
         balances: balanceChange,
+        type: split.type,
       })
 
       snack.show({ message: t('split.created') })

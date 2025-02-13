@@ -15,7 +15,7 @@ import { useState } from 'react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupUserInfo, SplitWithUsers } from 'shared'
+import { GroupUserInfo, SplitType, SplitWithUsers } from 'shared'
 
 function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitWithUsers }) {
   const router = useRouter()
@@ -37,6 +37,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         id: user.id,
         change: user.change,
       })),
+      type: SplitType.Normal,
     })
       .then(() => {
         snack.show({ message: t('split.created') })
@@ -65,7 +66,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         {permissions?.canCreateSplits() && (
           <>
             {/* I don't think it makes sense to show edit button on splits by exact amounts, that's essentially the same form shown twice */}
-            {getSplitCreationContext().splitType !== SplitMethod.ExactAmounts && (
+            {getSplitCreationContext().splitMethod !== SplitMethod.ExactAmounts && (
               <Button
                 leftIcon='edit'
                 title={t('form.edit')}

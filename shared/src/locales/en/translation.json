@@ -97,7 +97,8 @@
       "totalValueMustBePositive": "Total value must be greater than zero",
       "cannotEditSettleUp": "Settle-up splits cannot be updated",
       "cannotSettleUpNeutral": "You cannot settle up with neutral balance",
-      "settleUpFailed": "Failed to settle up"
+      "settleUpFailed": "Failed to settle up",
+      "invalidSplitType": "Invalid split type"
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
@@ -246,7 +247,9 @@
     "payerNotFound": "Payer not found",
     "userNotFound": "User not found",
     "userWithEmailNotFound": "User with e-mail {{email}} not found",
-    "dateMustBeSelected": "Date must be selected"
+    "dateMustBeSelected": "Date must be selected",
+    "typeRequired": "Type is required",
+    "invalidType": "Ivalid split type"
   },
 
   "groupValidation": {
