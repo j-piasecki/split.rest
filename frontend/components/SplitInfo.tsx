@@ -35,7 +35,7 @@ function getVisibleBalanceChange(user: UserWithBalanceChange, splitInfo: SplitWi
       const remainder = total - Number(paidInThisSplit)
 
       paidInThisSplit = remainder.toFixed(2)
-    } else {
+    } else if (paidInThisSplit.startsWith('-')) {
       paidInThisSplit = paidInThisSplit.substring(1)
     }
   }
@@ -59,13 +59,21 @@ function PaidAmount({
 
   const isSettleUp = Boolean(splitInfo.type & SplitType.SettleUp)
   const isInverse = Boolean(splitInfo.type & SplitType.Inversed)
+  const isBalanceChange = splitInfo.type === SplitType.BalanceChange
 
   const paidInThisSplit = getVisibleBalanceChange(user, splitInfo)
+  const balanceChange = Number(user.change)
   const changeColor = isSettleUp
     ? isInverse
       ? theme.colors.balanceNegative
       : theme.colors.balancePositive
-    : theme.colors.onSurfaceVariant
+    : isBalanceChange
+      ? balanceChange > 0
+        ? theme.colors.balancePositive
+        : balanceChange < 0
+          ? theme.colors.balanceNegative
+          : theme.colors.balanceNeutral
+      : theme.colors.onSurfaceVariant
 
   if (isSmallScreen) {
     return (
@@ -249,7 +257,7 @@ export function SplitInfo({
 }) {
   const theme = useTheme()
   const { t } = useTranslation()
-  const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)!
+  const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)
 
   const usersToShow = splitInfo.users.filter((user) => {
     const changeToShow = getVisibleBalanceChange(user, splitInfo)
@@ -280,21 +288,23 @@ export function SplitInfo({
           </Text>
 
           {/* TODO: Update text for inverse splits? */}
-          <IconInfoText
-            icon='currency'
-            translationKey={
-              splitInfo.type & SplitType.SettleUp
-                ? splitInfo.type & SplitType.Inversed
-                  ? 'splitInfo.hasSettledUpGetsBack'
-                  : 'splitInfo.hasSettledUpGaveBack'
-                : 'splitInfo.hasPaidText'
-            }
-            values={{
-              payer: paidBy.name,
-              amount: CurrencyUtils.format(splitInfo.total, groupInfo.currency),
-            }}
-            userIdPhoto={paidBy.id}
-          />
+          {paidBy && (
+            <IconInfoText
+              icon='currency'
+              translationKey={
+                splitInfo.type & SplitType.SettleUp
+                  ? splitInfo.type & SplitType.Inversed
+                    ? 'splitInfo.hasSettledUpGetsBack'
+                    : 'splitInfo.hasSettledUpGaveBack'
+                  : 'splitInfo.hasPaidText'
+              }
+              values={{
+                payer: paidBy.name,
+                amount: CurrencyUtils.format(splitInfo.total, groupInfo.currency),
+              }}
+              userIdPhoto={paidBy.id}
+            />
+          )}
           <IconInfoText
             icon='calendar'
             translationKey='splitInfo.splitTimeText'

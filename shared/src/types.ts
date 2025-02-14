@@ -50,6 +50,9 @@ export enum SplitType {
   Inversed = 1 << 0,
   // Split is a settle up split
   SettleUp = 1 << 1,
+  // There is no single payer or recipient, there may be multiple payers and recipients.
+  // Sum of all changes should be 0.
+  BalanceChange = 1 << 2,
 }
 
 export interface SplitInfo {
@@ -57,7 +60,7 @@ export interface SplitInfo {
   title: string
   total: string
   timestamp: number
-  paidById: string
+  paidById?: string
   createdById: string
   version: number
   updatedAt: number

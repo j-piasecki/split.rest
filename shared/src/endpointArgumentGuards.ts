@@ -50,7 +50,6 @@ export function isCreateSplitArguments(obj: any): obj is CreateSplitArguments {
     obj.title !== undefined &&
     obj.total !== undefined &&
     obj.balances !== undefined &&
-    obj.paidBy !== undefined &&
     obj.timestamp !== undefined
   )
 }
@@ -70,7 +69,6 @@ export function isUpdateSplitArguments(obj: any): obj is UpdateSplitArguments {
     obj.title !== undefined &&
     obj.total !== undefined &&
     obj.balances !== undefined &&
-    obj.paidBy !== undefined &&
     obj.timestamp !== undefined
   )
 }

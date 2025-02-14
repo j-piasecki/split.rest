@@ -7,6 +7,7 @@ import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContex
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
+import { SplitType } from 'shared'
 
 export default function Modal() {
   const theme = useTheme()
@@ -44,11 +45,21 @@ export default function Modal() {
         </Text>
 
         <View style={{ gap: 16 }}>
+          {/* <Button
+            leftIcon='barChart'
+            title={t('splitType.balanceChanges')}
+            onPress={() => {
+              getSplitCreationContext().splitMethod = SplitMethod.BalanceChanges
+              getSplitCreationContext().splitType = SplitType.BalanceChange
+              router.navigate(`/group/${id}/addSplit/detailsStep`)
+            }}
+          /> */}
           <Button
             leftIcon='equal'
             title={t('splitType.equalAmounts')}
             onPress={() => {
-              getSplitCreationContext().splitType = SplitMethod.Equal
+              getSplitCreationContext().splitMethod = SplitMethod.Equal
+              getSplitCreationContext().splitType = SplitType.Normal
               router.navigate(`/group/${id}/addSplit/detailsStep`)
             }}
           />
@@ -56,7 +67,8 @@ export default function Modal() {
             leftIcon='exactAmount'
             title={t('splitType.exactAmounts')}
             onPress={() => {
-              getSplitCreationContext().splitType = SplitMethod.ExactAmounts
+              getSplitCreationContext().splitMethod = SplitMethod.ExactAmounts
+              getSplitCreationContext().splitType = SplitType.Normal
               router.navigate(`/group/${id}/addSplit/detailsStep`)
             }}
           />

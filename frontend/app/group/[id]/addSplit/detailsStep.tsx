@@ -33,7 +33,7 @@ export default function Modal() {
     getSplitCreationContext().amountPerUser === null
   )
 
-  const splittingEqually = getSplitCreationContext().splitType === SplitMethod.Equal
+  const splittingEqually = getSplitCreationContext().splitMethod === SplitMethod.Equal
 
   function submit() {
     try {
@@ -73,13 +73,17 @@ export default function Modal() {
     getSplitCreationContext().title = title
     getSplitCreationContext().timestamp = timestamp
 
-    switch (getSplitCreationContext().splitType) {
+    switch (getSplitCreationContext().splitMethod) {
       case SplitMethod.ExactAmounts:
         router.navigate(`/group/${id}/addSplit/exactAmounts`)
         break
 
       case SplitMethod.Equal:
         router.navigate(`/group/${id}/addSplit/participantsStep`)
+        break
+
+      case SplitMethod.BalanceChanges:
+        router.navigate(`/group/${id}/addSplit/balanceChanges`)
         break
     }
   }

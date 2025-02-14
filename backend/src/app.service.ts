@@ -37,6 +37,7 @@ import {
   SetGroupNameArguments,
   SetUserNameArguments,
   SettleUpArguments,
+  SplitType,
   UpdateSplitArguments,
   User,
 } from 'shared'
@@ -68,23 +69,13 @@ export class AppService {
   }
 
   async createSplit(callerId: string, args: CreateSplitArguments) {
-    if (args.balances.findIndex(({ id }) => id === args.paidBy) === -1) {
-      throw new BadRequestException('api.split.payerNotInTransaction')
+    if (args.type !== SplitType.Normal && args.type !== SplitType.BalanceChange) {
+      throw new BadRequestException('api.split.invalidSplitType')
     }
 
     const changeSum = args.balances.reduce((sum, { change }) => sum + Number(change), 0)
     if (Math.abs(changeSum) > 0.01) {
       throw new BadRequestException('api.split.sumOfChangesMustBeZero')
-    }
-
-    const payerGetsBack = args.balances.find(({ id }) => id === args.paidBy)?.change
-    const othersLose = args.balances.reduce(
-      (sum, { id, change }) => (id !== args.paidBy ? sum + Number(change) : sum),
-      0
-    )
-
-    if (payerGetsBack && Math.abs(Number(payerGetsBack) - Math.abs(othersLose)) > 0.01) {
-      throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
     }
 
     if (Number(args.total) < 0.01) {
@@ -103,25 +94,10 @@ export class AppService {
   }
 
   async updateSplit(callerId: string, args: UpdateSplitArguments) {
-    if (args.balances.findIndex(({ id }) => id === args.paidBy) === -1) {
-      throw new BadRequestException('api.split.payerNotInTransaction')
-    }
-
     const changeSum = args.balances.reduce((sum, { change }) => sum + Number(change), 0)
     if (Math.abs(changeSum) > 0.01) {
       throw new BadRequestException('api.split.sumOfChangesMustBeZero')
     }
-
-    const payerGetsBack = args.balances.find(({ id }) => id === args.paidBy)?.change
-    const othersLose = args.balances.reduce(
-      (sum, { id, change }) => (id !== args.paidBy ? sum + Number(change) : sum),
-      0
-    )
-
-    if (payerGetsBack && Math.abs(Number(payerGetsBack) - Math.abs(othersLose)) > 0.01) {
-      throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
-    }
-
     if (Number(args.total) < 0.01) {
       throw new BadRequestException('api.split.totalValueMustBePositive')
     }

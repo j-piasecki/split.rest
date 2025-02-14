@@ -74,6 +74,7 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
 
   const isSettleUp = Boolean(split.type & SplitType.SettleUp)
   const isInverse = Boolean(split.type & SplitType.Inversed)
+  const isBalanceChange = split.type === SplitType.BalanceChange
   const shouldUseStackedInfo = displayClass === DisplayClass.Small || (width < 660 && width > 0)
 
   const contextMenuDisabled =
@@ -158,7 +159,11 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
         ]}
       >
         <View style={{ marginRight: shouldUseStackedInfo ? 10 : 16 }}>
-          <ProfilePicture userId={split.paidById} size={32} />
+          {isBalanceChange ? (
+            <Icon name='barChart' size={24} color={theme.colors.tertiary} />
+          ) : (
+            <ProfilePicture userId={split.paidById} size={32} />
+          )}
 
           {isSettleUp && (
             <View
@@ -199,14 +204,6 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
             </View>
           )}
         </View>
-
-        {/* {isSettleUp && isInverse && (
-          <Icon name='merge' size={20} color={theme.colors.tertiary} style={{ marginRight: shouldUseStackedInfo ? 2 : 4, transform: [{rotateZ: '-90deg'}] }} />
-        )}
-
-        {isSettleUp && !isInverse && (
-          <Icon name='split' size={20} color={theme.colors.tertiary} style={{ marginRight: shouldUseStackedInfo ? 2 : 4, transform: [{rotateZ: '90deg'}] }} />
-        )} */}
 
         <View style={{ flex: 2 }}>
           <Text

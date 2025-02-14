@@ -1,14 +1,14 @@
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { userExists } from '../utils/userExists'
+import { validateNormalSplitArgs } from '../utils/validateNormalSplitArgs'
 import { Pool, PoolClient } from 'pg'
 import { CreateSplitArguments, SplitType } from 'shared'
 
 export async function createSplitNoTransaction(
   client: PoolClient,
   callerId: string,
-  args: CreateSplitArguments,
-  type: SplitType = SplitType.Normal
+  args: CreateSplitArguments
 ): Promise<number> {
   const splitId = (
     await client.query(
@@ -29,12 +29,12 @@ export async function createSplitNoTransaction(
       [
         args.groupId,
         args.total,
-        args.paidBy,
+        args.paidBy ?? null,
         callerId,
         args.title,
         args.timestamp,
         Date.now(),
-        type,
+        args.type,
       ]
     )
   ).rows[0].id
@@ -64,6 +64,10 @@ export async function createSplitNoTransaction(
 }
 
 export async function createSplit(pool: Pool, callerId: string, args: CreateSplitArguments) {
+  if (args.type === SplitType.Normal) {
+    validateNormalSplitArgs(args)
+  }
+
   const client = await pool.connect()
 
   try {

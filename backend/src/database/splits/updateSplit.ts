@@ -2,6 +2,7 @@ import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { splitExists } from '../utils/splitExists'
+import { validateNormalSplitArgs } from '../utils/validateNormalSplitArgs'
 import { Pool } from 'pg'
 import { SplitType, UpdateSplitArguments } from 'shared'
 
@@ -35,6 +36,10 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
         [args.groupId, args.splitId]
       )
     ).rows[0]
+
+    if (splitInfo.type === SplitType.Normal) {
+      validateNormalSplitArgs(args)
+    }
 
     if (splitInfo.type & SplitType.SettleUp) {
       throw new ForbiddenException('api.split.cannotEditSettleUp')
@@ -71,7 +76,7 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
         args.splitId,
         args.title,
         args.total,
-        args.paidBy,
+        args.paidBy ?? null,
         args.timestamp,
         Date.now(),
         callerId,

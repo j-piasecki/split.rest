@@ -97,7 +97,8 @@
       "totalValueMustBePositive": "Total value must be greater than zero",
       "cannotEditSettleUp": "Settle-up splits cannot be updated",
       "cannotSettleUpNeutral": "You cannot settle up with neutral balance",
-      "settleUpFailed": "Failed to settle up"
+      "settleUpFailed": "Failed to settle up",
+      "invalidSplitType": "Invalid split type"
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
@@ -173,6 +174,7 @@
     "splitSummary": "Summary",
     "detailsStep": "Details",
     "exactAmounts": "Exact amounts",
+    "balanceChanges": "Balance changes",
     "splitParticipants": "Participants"
   },
 
@@ -184,7 +186,8 @@
   "splitType": {
     "selectType": "How would you like to split?",
     "exactAmounts": "By exact amounts",
-    "equalAmounts": "Equally"
+    "equalAmounts": "Equally",
+    "balanceChanges": "By balance changes"
   },
 
   "roulette": {
@@ -246,7 +249,10 @@
     "payerNotFound": "Payer not found",
     "userNotFound": "User not found",
     "userWithEmailNotFound": "User with e-mail {{email}} not found",
-    "dateMustBeSelected": "Date must be selected"
+    "dateMustBeSelected": "Date must be selected",
+    "typeRequired": "Type is required",
+    "invalidType": "Ivalid split type",
+    "allEntriesMustSumToZero": "The sum of all entries must be equal to zero"
   },
 
   "groupValidation": {
@@ -265,7 +271,8 @@
     "perPerson": "Per person",
     "back": "Go back",
     "nameOrEmail": "Name or e-mail",
-    "buttonNext": "Next"
+    "buttonNext": "Next",
+    "unknownPayer": "Unknown"
   },
 
   "member": {

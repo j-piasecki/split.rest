@@ -102,19 +102,15 @@ async function createAndSaveSettleUpSplit(
   const entries = calculateSettleUpEntries(callerId, balance, members)
   const splitType = SplitType.SettleUp | (balance > 0 ? SplitType.Inversed : SplitType.Normal)
 
-  const splitId = await createSplitNoTransaction(
-    client,
-    callerId,
-    {
-      groupId: groupId,
-      total: Math.abs(balance).toFixed(2),
-      paidBy: callerId,
-      title: 'Settle up',
-      timestamp: Date.now(),
-      balances: entries,
-    },
-    splitType
-  )
+  const splitId = await createSplitNoTransaction(client, callerId, {
+    groupId: groupId,
+    total: Math.abs(balance).toFixed(2),
+    paidBy: callerId,
+    title: 'Settle up',
+    timestamp: Date.now(),
+    balances: entries,
+    type: splitType,
+  })
 
   return {
     id: splitId,

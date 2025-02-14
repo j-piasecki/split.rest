@@ -1,6 +1,6 @@
 import { SplitForm, SplitFormProps } from './SplitForm'
 import { CurrencyUtils } from '@utils/CurrencyUtils'
-import { SplitWithUsers } from 'shared'
+import { SplitType, SplitWithUsers } from 'shared'
 
 export interface SplitEditFormProps
   extends Omit<
@@ -13,6 +13,14 @@ export interface SplitEditFormProps
 export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
   const initialEntries = [
     ...splitInfo.users.map((user) => {
+      if (splitInfo.type === SplitType.BalanceChange) {
+        return {
+          user: user,
+          entry: user.email ?? '',
+          amount: CurrencyUtils.format(Number(user.change)),
+        }
+      }
+
       if (user.id === splitInfo.paidById) {
         return {
           user: user,

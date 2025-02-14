@@ -9,31 +9,34 @@ interface UserWithValue {
 export enum SplitMethod {
   ExactAmounts = 'exactAmounts',
   Equal = 'equal',
+  BalanceChanges = 'balanceChanges',
 }
 
 export interface SplitCreationContextArguments {
   participants?: UserWithValue[]
   paidById?: string
-  splitType?: SplitMethod
+  splitMethod?: SplitMethod
   title?: string
   totalAmount?: string
   amountPerUser?: string
   timestamp?: number
+  splitType?: number
 }
 
 class SplitCreationContext {
   participants: UserWithValue[] | null = null
   paidById: string | null = null
-  splitType: SplitMethod | null = null
+  splitMethod: SplitMethod | null = null
   title: string | null = null
   totalAmount: string | null = null
   amountPerUser: string | null = null
   timestamp: number | null = null
+  splitType: number | null = null
 
   constructor(args: SplitCreationContextArguments) {
     this.participants = args.participants ?? null
     this.paidById = args.paidById ?? null
-    this.splitType = args.splitType ?? null
+    this.splitMethod = args.splitMethod ?? null
     this.title = args.title ?? null
     this.totalAmount = args.totalAmount ?? null
     this.amountPerUser = args.amountPerUser ?? null
@@ -61,7 +64,7 @@ class SplitCreationContext {
       return participant.user
     })
 
-    if (this.splitType === SplitMethod.Equal) {
+    if (this.splitMethod === SplitMethod.Equal) {
       if (this.amountPerUser !== null) {
         const amount = Number(this.amountPerUser).toFixed(2)
 
@@ -86,6 +89,15 @@ class SplitCreationContext {
       }
     }
 
+    if (this.splitMethod === SplitMethod.BalanceChanges) {
+      return users.map((user, index) => {
+        return {
+          ...user,
+          change: Number(this.participants![index].value!).toFixed(2),
+        }
+      })
+    }
+
     return users.map((user, index) => {
       const amount = this.participants![index].value!
       const change =
@@ -101,7 +113,7 @@ class SplitCreationContext {
   private tryFillMissingData() {
     if (
       this.participants &&
-      this.splitType === SplitMethod.Equal &&
+      this.splitMethod === SplitMethod.Equal &&
       !this.totalAmount &&
       this.amountPerUser !== null
     ) {
@@ -114,7 +126,7 @@ class SplitCreationContext {
     const users = this.getParticipantsData()
     const paidById = this.paidById
 
-    if (!paidById) {
+    if (!paidById && this.splitType !== SplitType.BalanceChange) {
       throw new TranslatableError('splitValidation.payerNotFound')
     }
 
@@ -134,17 +146,23 @@ class SplitCreationContext {
       throw new TranslatableError('splitValidation.dateMustBeSelected')
     }
 
+    if (this.splitType === null) {
+      throw new TranslatableError('splitValidation.typeRequired')
+    } else if (this.splitType !== SplitType.Normal && this.splitType !== SplitType.BalanceChange) {
+      throw new TranslatableError('splitValidation.invalidType')
+    }
+
     return {
       id: -1,
       title: this.title,
       total: this.totalAmount,
       timestamp: this.timestamp,
-      paidById: paidById,
+      paidById: paidById ?? undefined,
       version: 1,
       createdById: auth.currentUser.uid,
       updatedAt: Date.now(),
       isUserParticipating: true,
-      type: SplitType.Normal,
+      type: this.splitType,
       users: users,
     }
   }

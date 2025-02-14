@@ -12,11 +12,12 @@ export interface InviteUserToGroupArguments {
 
 export interface CreateSplitArguments {
   groupId: number
-  paidBy: string
+  paidBy?: string
   title: string
   total: string
   timestamp: number
   balances: BalanceChange[]
+  type: number
 }
 
 export interface DeleteSplitArguments {
@@ -32,7 +33,7 @@ export interface RestoreSplitArguments {
 export interface UpdateSplitArguments {
   groupId: number
   splitId: number
-  paidBy: string
+  paidBy?: string
   title: string
   total: number
   timestamp: number

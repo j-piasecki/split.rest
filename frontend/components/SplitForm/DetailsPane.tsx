@@ -1,4 +1,4 @@
-import { FormActionType, FormData } from './formData'
+import { FormActionType, FormData, SplitEntryData } from './formData'
 import { Pane } from '@components/Pane'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
@@ -33,14 +33,16 @@ export function DetailsPane({
     // eslint-disable-next-line react-compiler/react-compiler
     toBePaid.current = sumFromEntries
   }
-  const paidBy = formState.entries[formState.paidByIndex]
+  const paidBy: SplitEntryData | undefined = formState.entries[formState.paidByIndex]
 
   // Show email if there are multiple users with the same name, otherwise show the name
-  const payerName = paidBy.user
-    ? formState.entries.filter((entry) => entry.user?.name === paidBy.user?.name).length > 1
-      ? paidBy.user.email
-      : paidBy.user.name
-    : paidBy.entry
+  const payerName = paidBy
+    ? paidBy.user
+      ? formState.entries.filter((entry) => entry.user?.name === paidBy.user?.name).length > 1
+        ? paidBy.user.email
+        : paidBy.user.name
+      : paidBy.entry
+    : t('form.unknownPayer')
 
   return (
     <Pane
