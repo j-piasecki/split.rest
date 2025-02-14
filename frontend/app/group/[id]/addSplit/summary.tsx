@@ -15,7 +15,7 @@ import { useState } from 'react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupUserInfo, SplitType, SplitWithUsers } from 'shared'
+import { GroupUserInfo, SplitWithUsers } from 'shared'
 
 function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitWithUsers }) {
   const router = useRouter()
@@ -37,7 +37,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         id: user.id,
         change: user.change,
       })),
-      type: SplitType.Normal,
+      type: split.type,
     })
       .then(() => {
         snack.show({ message: t('split.created') })
@@ -65,8 +65,8 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         {error && <ErrorText>{error}</ErrorText>}
         {permissions?.canCreateSplits() && (
           <>
-            {/* I don't think it makes sense to show edit button on splits by exact amounts, that's essentially the same form shown twice */}
-            {getSplitCreationContext().splitMethod !== SplitMethod.ExactAmounts && (
+            {/* Show the edit button only for equal splits not to show the same form twice */}
+            {getSplitCreationContext().splitMethod === SplitMethod.Equal && (
               <Button
                 leftIcon='edit'
                 title={t('form.edit')}
@@ -92,6 +92,7 @@ export default function Modal() {
   const { id } = useLocalSearchParams()
   const theme = useTheme()
   const router = useRouter()
+  const insets = useModalScreenInsets()
   const { data: groupInfo } = useGroupInfo(Number(id))
   const [error, setError] = useTranslatedError()
   const [split, setSplit] = useState<SplitWithUsers | null>(null)
@@ -113,7 +114,15 @@ export default function Modal() {
       slideAnimation={false}
     >
       {error && (
-        <View style={{ flex: 1, paddingHorizontal: 16 }}>
+        <View
+          style={{
+            flex: 1,
+            paddingLeft: insets.left + 12,
+            paddingRight: insets.right + 12,
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+          }}
+        >
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ErrorText>{error}</ErrorText>
           </View>
