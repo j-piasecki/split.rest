@@ -11,6 +11,7 @@ interface SplitEntriesPaneProps {
   formState: FormData
   updateForm: React.Dispatch<FormActionType>
   groupInfo: GroupUserInfo
+  showPayerSelector: boolean
   scrollRef?: React.RefObject<ScrollView>
 }
 
@@ -19,6 +20,7 @@ export function EntriesPane({
   updateForm,
   groupInfo,
   scrollRef,
+  showPayerSelector,
 }: SplitEntriesPaneProps) {
   const { t } = useTranslation()
   const layout = useRef<LayoutRectangle | null>(null)
@@ -49,6 +51,7 @@ export function EntriesPane({
               updateForm={updateForm}
               parentLayout={layout}
               focusIndex={index * 2}
+              showPayerSelector={showPayerSelector}
             />
           </React.Fragment>
         ))}

@@ -25,6 +25,8 @@ export interface SplitFormProps {
   buttonTitle?: LanguageTranslationKey
   buttonIconLocation?: 'left' | 'right'
   style?: StyleProp<ViewStyle>
+  showPayerSelector?: boolean
+  showPaidByHint?: boolean
 }
 
 export function SplitForm({
@@ -41,6 +43,8 @@ export function SplitForm({
   buttonIcon = 'save',
   buttonTitle = 'form.save',
   buttonIconLocation = 'left',
+  showPayerSelector = true,
+  showPaidByHint = true,
   style,
 }: SplitFormProps) {
   const scrollRef = useRef<ScrollView>(null)
@@ -74,7 +78,12 @@ export function SplitForm({
         keyboardShouldPersistTaps='handled'
       >
         {showDetails && (
-          <DetailsPane formState={formState} groupInfo={groupInfo} updateForm={updateForm} />
+          <DetailsPane
+            formState={formState}
+            groupInfo={groupInfo}
+            updateForm={updateForm}
+            showPaidByHint={showPaidByHint}
+          />
         )}
 
         {showCalendar && (
@@ -93,6 +102,7 @@ export function SplitForm({
           groupInfo={groupInfo}
           updateForm={updateForm}
           scrollRef={scrollRef}
+          showPayerSelector={showPayerSelector}
         />
       </ScrollView>
 

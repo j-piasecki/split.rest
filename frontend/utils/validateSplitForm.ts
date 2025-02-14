@@ -2,7 +2,7 @@ import { FormData } from '@components/SplitForm'
 import { BalanceChange, TranslatableError } from 'shared'
 
 export interface ValidationResult {
-  payerId: string
+  payerId: string | undefined
   balanceChange: BalanceChange[]
   sumToSave: number
   timestamp: number
@@ -18,12 +18,11 @@ export function validateSplitTitle(title: string): void {
   }
 }
 
-export async function validateSplitForm({
-  title,
-  paidByIndex,
-  entries,
-  timestamp,
-}: FormData): Promise<ValidationResult> {
+export async function validateSplitForm(
+  { title, paidByIndex, entries, timestamp }: FormData,
+  singlePayer = true,
+  requirePositiveValues = true
+): Promise<ValidationResult> {
   if (entries.length < 2) {
     throw new TranslatableError('splitValidation.atLeastTwoEntries')
   }
@@ -49,8 +48,8 @@ export async function validateSplitForm({
     throw new TranslatableError('splitValidation.youNeedToFillBothFields')
   }
 
-  const paidBy = entriesWithUsers[paidByIndex].user
-  const sumToSave = entries.reduce((acc, entry) => acc + Number(entry.amount), 0)
+  const paidBy = entriesWithUsers[paidByIndex]?.user
+  const sumToSave = entries.reduce((acc, entry) => acc + Math.max(0, Number(entry.amount)), 0)
 
   if (Number.isNaN(sumToSave)) {
     throw new TranslatableError('splitValidation.amountsMustBeNumbers')
@@ -62,7 +61,7 @@ export async function validateSplitForm({
 
   validateSplitTitle(title)
 
-  if (!paidBy) {
+  if (!paidBy && singlePayer) {
     throw new TranslatableError('splitValidation.thePayerDataMustBeFilledIn')
   }
 
@@ -73,10 +72,13 @@ export async function validateSplitForm({
 
   const balanceChange: (BalanceChange | undefined)[] = await Promise.all(
     entriesWithUsers.map(async (entry) => {
-      const change =
-        entry.user.id === paidBy.id ? sumToSave - Number(entry.amount) : -Number(entry.amount)
+      const change = singlePayer
+        ? entry.user.id === paidBy.id
+          ? sumToSave - Number(entry.amount)
+          : -Number(entry.amount)
+        : Number(entry.amount)
 
-      if (Number(entry.amount) <= 0) {
+      if (Number(entry.amount) <= 0 && requirePositiveValues) {
         throw new TranslatableError('splitValidation.amountsMustBePositive')
       }
 
@@ -92,7 +94,7 @@ export async function validateSplitForm({
   }
 
   return {
-    payerId: paidBy.id,
+    payerId: paidBy?.id,
     balanceChange: balanceChange.filter((change) => change !== undefined),
     sumToSave,
     timestamp,

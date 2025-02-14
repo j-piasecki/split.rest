@@ -34,6 +34,7 @@ export default function AddFlow() {
           <Stack.Screen name='summary' options={{ title: t('screenName.splitSummary') }} />
           <Stack.Screen name='detailsStep' options={{ title: t('screenName.detailsStep') }} />
           <Stack.Screen name='exactAmounts' options={{ title: t('screenName.exactAmounts') }} />
+          <Stack.Screen name='balanceChanges' options={{ title: t('screenName.balanceChanges') }} />
           <Stack.Screen
             name='participantsStep'
             options={{ title: t('screenName.splitParticipants') }}

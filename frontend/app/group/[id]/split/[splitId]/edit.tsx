@@ -13,7 +13,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { BalanceChange, GroupUserInfo, SplitWithUsers } from 'shared'
+import { BalanceChange, GroupUserInfo, SplitType, SplitWithUsers } from 'shared'
 
 function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: SplitWithUsers }) {
   const router = useRouter()
@@ -27,7 +27,10 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
   async function save(form: FormData) {
     try {
       setWaiting(true)
-      const { payerId, sumToSave, balanceChange, timestamp } = await validateSplitForm(form)
+      const { payerId, sumToSave, balanceChange, timestamp } = await (splitInfo.type ===
+      SplitType.BalanceChange
+        ? validateSplitForm(form, false, false)
+        : validateSplitForm(form))
 
       await updateSplit({
         splitId: splitInfo.id,
@@ -64,6 +67,8 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
         onSubmit={save}
         waiting={waiting}
         error={error}
+        showPayerSelector={splitInfo.type !== SplitType.BalanceChange}
+        showPaidByHint={splitInfo.type !== SplitType.BalanceChange}
       />
     </View>
   )

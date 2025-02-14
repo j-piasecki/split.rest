@@ -81,6 +81,10 @@ export default function Modal() {
       case SplitMethod.Equal:
         router.navigate(`/group/${id}/addSplit/participantsStep`)
         break
+
+      case SplitMethod.BalanceChanges:
+        router.navigate(`/group/${id}/addSplit/balanceChanges`)
+        break
     }
   }
 

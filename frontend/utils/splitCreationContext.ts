@@ -9,6 +9,7 @@ interface UserWithValue {
 export enum SplitMethod {
   ExactAmounts = 'exactAmounts',
   Equal = 'equal',
+  BalanceChanges = 'balanceChanges',
 }
 
 export interface SplitCreationContextArguments {
@@ -88,6 +89,15 @@ class SplitCreationContext {
       }
     }
 
+    if (this.splitMethod === SplitMethod.BalanceChanges) {
+      return users.map((user, index) => {
+        return {
+          ...user,
+          change: Number(this.participants![index].value!).toFixed(2),
+        }
+      })
+    }
+
     return users.map((user, index) => {
       const amount = this.participants![index].value!
       const change =
@@ -116,7 +126,7 @@ class SplitCreationContext {
     const users = this.getParticipantsData()
     const paidById = this.paidById
 
-    if (!paidById) {
+    if (!paidById && this.splitType !== SplitType.BalanceChange) {
       throw new TranslatableError('splitValidation.payerNotFound')
     }
 
@@ -147,7 +157,7 @@ class SplitCreationContext {
       title: this.title,
       total: this.totalAmount,
       timestamp: this.timestamp,
-      paidById: paidById,
+      paidById: paidById ?? undefined,
       version: 1,
       createdById: auth.currentUser.uid,
       updatedAt: Date.now(),

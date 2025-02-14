@@ -15,6 +15,7 @@ export interface SplitEntryProps {
   formState: FormData
   updateForm: React.Dispatch<FormActionType>
   index: number
+  showPayerSelector: boolean
   parentLayout?: React.RefObject<LayoutRectangle | null>
   focusIndex?: number
 }
@@ -27,6 +28,7 @@ export function SplitEntry({
   index,
   parentLayout,
   focusIndex,
+  showPayerSelector,
 }: SplitEntryProps) {
   const theme = useTheme()
   const layout = useRef<LayoutRectangle | null>(null)
@@ -61,20 +63,22 @@ export function SplitEntry({
         zIndex: formState.entries.length - index,
       }}
     >
-      <Pressable
-        disabled={formState.paidByIndex === index || entry.user === undefined}
-        onPress={() => updateForm({ type: 'setPaidBy', index })}
-        style={{ marginRight: 8 }}
-        tabIndex={-1}
-      >
-        <Icon
-          name='currency'
-          size={24}
-          color={
-            formState.paidByIndex === index ? theme.colors.secondary : theme.colors.outlineVariant
-          }
-        />
-      </Pressable>
+      {showPayerSelector && (
+        <Pressable
+          disabled={formState.paidByIndex === index || entry.user === undefined}
+          onPress={() => updateForm({ type: 'setPaidBy', index })}
+          style={{ marginRight: 8 }}
+          tabIndex={-1}
+        >
+          <Icon
+            name='currency'
+            size={24}
+            color={
+              formState.paidByIndex === index ? theme.colors.secondary : theme.colors.outlineVariant
+            }
+          />
+        </Pressable>
+      )}
 
       <TextInputUserPicker
         groupId={groupId}
