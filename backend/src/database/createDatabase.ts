@@ -75,7 +75,7 @@ export async function createDatabase(pool: Pool) {
       version INTEGER NOT NULL,
       group_id INTEGER NOT NULL,
       total DECIMAL(10, 2) NOT NULL,
-      paid_by VARCHAR(32) NOT NULL,
+      paid_by VARCHAR(32) NULL,
       created_by VARCHAR(32) NOT NULL,
       name VARCHAR(512) NOT NULL,
       timestamp BIGINT NOT NULL,
