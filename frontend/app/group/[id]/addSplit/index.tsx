@@ -45,7 +45,7 @@ export default function Modal() {
         </Text>
 
         <View style={{ gap: 16 }}>
-          <Button
+          {/* <Button
             leftIcon='barChart'
             title={t('splitType.balanceChanges')}
             onPress={() => {
@@ -53,7 +53,7 @@ export default function Modal() {
               getSplitCreationContext().splitType = SplitType.BalanceChange
               router.navigate(`/group/${id}/addSplit/detailsStep`)
             }}
-          />
+          /> */}
           <Button
             leftIcon='equal'
             title={t('splitType.equalAmounts')}
