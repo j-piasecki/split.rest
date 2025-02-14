@@ -174,7 +174,7 @@
     "splitSummary": "Summary",
     "detailsStep": "Details",
     "exactAmounts": "Exact amounts",
-    "balanceChanges": "Balance differences",
+    "balanceChanges": "Balance changes",
     "splitParticipants": "Participants"
   },
 
@@ -187,7 +187,7 @@
     "selectType": "How would you like to split?",
     "exactAmounts": "By exact amounts",
     "equalAmounts": "Equally",
-    "balanceChanges": "Balance differences"
+    "balanceChanges": "By balance changes"
   },
 
   "roulette": {
