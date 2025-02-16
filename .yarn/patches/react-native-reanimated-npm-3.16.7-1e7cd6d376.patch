@@ -1,8 +1,8 @@
 diff --git a/Common/cpp/reanimated/Fabric/ReanimatedCommitHook.cpp b/Common/cpp/reanimated/Fabric/ReanimatedCommitHook.cpp
-index 3faba2b4dcbb4573bde61be11a91470e5f8736d5..89b4c53437ffffc58b0d054331914a2a4cd51651 100644
+index 4ad84635f203bad14a6dd6bf35e24fd38ae6a3db..70ccf811cd7ac9f2c10fc198f531f99f4ec628f2 100644
 --- a/Common/cpp/reanimated/Fabric/ReanimatedCommitHook.cpp
 +++ b/Common/cpp/reanimated/Fabric/ReanimatedCommitHook.cpp
-@@ -70,7 +70,7 @@ RootShadowNode::Unshared ReanimatedCommitHook::shadowTreeWillCommit(
+@@ -78,7 +78,7 @@ RootShadowNode::Unshared ReanimatedCommitHook::shadowTreeWillCommit(
            propsMap[&family].emplace_back(props);
          });
  
