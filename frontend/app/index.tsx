@@ -8,7 +8,7 @@ import { useAuth } from '@utils/auth'
 import { Image } from 'expo-image'
 import { Redirect, useRouter } from 'expo-router'
 import { Trans, useTranslation } from 'react-i18next'
-import { Platform, ScrollView, View, useWindowDimensions } from 'react-native'
+import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const mock1 = require('@assets/mocks/mock1.png')
@@ -22,6 +22,16 @@ interface CardProps {
   description: string
   image: any
   reversed?: boolean
+}
+
+function StoreButton(props: { src: string; href: string }) {
+  const router = useRouter()
+
+  return (
+    <Pressable onPress={() => router.navigate(props.href)}>
+      <Image source={props.src} style={{ width: 135, height: 40 }} contentFit='contain' />
+    </Pressable>
+  )
 }
 
 function Card({ title, description, image, reversed }: CardProps) {
@@ -127,7 +137,7 @@ export default function Screen() {
             style={{ width: 160, height: 160 }}
             tintColor={theme.colors.primary}
           />
-          <View style={{ position: 'absolute', bottom: -176, alignItems: 'center', padding: 8 }}>
+          <View style={{ position: 'absolute', bottom: -224, alignItems: 'center', padding: 8 }}>
             <Text style={{ fontSize: 32, fontWeight: 700, color: theme.colors.primary }}>
               {t('appName')}
               <Text style={{ color: theme.colors.outlineVariant }}>.rest</Text>
@@ -155,6 +165,17 @@ export default function Screen() {
               leftIcon='login'
               style={{ marginTop: 16 }}
             />
+
+            <View style={{ flexDirection: 'row', gap: 16, marginTop: 16 }}>
+              <StoreButton
+                src='./google_play.png'
+                href='https://play.google.com/store/apps/details?id=rest.split.app'
+              />
+              <StoreButton
+                src='./app_store.png'
+                href='https://apps.apple.com/us/app/split-rest/id6740080711?platform=iphone'
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -162,7 +183,7 @@ export default function Screen() {
       <View
         style={{
           width: '100%',
-          marginTop: 64,
+          marginTop: 128,
           maxWidth: 1280,
           alignSelf: 'center',
           padding: 24,
