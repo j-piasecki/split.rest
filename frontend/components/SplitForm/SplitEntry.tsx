@@ -118,7 +118,9 @@ export function SplitEntry({
         keyboardType={
           // TODO: do a nice ui for negative numbers, ios doesn't have a numeric keyboard with a minus sign WTF?
           getSplitCreationContext().splitMethod === SplitMethod.BalanceChanges
-            ? Platform.OS === 'android' ? 'phone-pad' : 'numbers-and-punctuation'
+            ? Platform.OS === 'android'
+              ? 'phone-pad'
+              : 'numbers-and-punctuation'
             : 'decimal-pad'
         }
         onChangeText={(val) => {
