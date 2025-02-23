@@ -61,6 +61,7 @@ interface TriangleProps {
   height: number
   color: string
   top?: number
+  maxHeight?: number
   orientation?: TriangleOrientation
 }
 
@@ -69,6 +70,7 @@ function Triangle({
   height,
   color,
   top = 0,
+  maxHeight = Number.MAX_SAFE_INTEGER,
   orientation = TriangleOrientation.TopRight,
 }: TriangleProps) {
   let transform: TransformsStyle['transform'] = []
@@ -98,7 +100,7 @@ function Triangle({
         height: 0,
         backgroundColor: 'transparent',
         borderStyle: 'solid',
-        borderTopWidth: height,
+        borderTopWidth: Math.min(height, maxHeight),
         borderRightWidth: 0,
         borderBottomWidth: 0,
         borderLeftWidth: width,
@@ -127,44 +129,46 @@ function Footer() {
         paddingVertical: 128,
         paddingHorizontal: mediumScreenOnLess ? 16 : 128,
         backgroundColor: theme.colors.surfaceContainer,
-        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
-      <View
-        style={[
-          { gap: 24, alignItems: 'center' },
-          mediumScreenOnLess
-            ? { flexDirection: 'column-reverse' }
-            : { flexDirection: 'row', justifyContent: 'space-between' },
-        ]}
-      >
+      <View style={{ flex: 1, width: '100%', maxWidth: 1400, justifyContent: 'center' }}>
         <View
-          style={{
-            flexDirection: 'row',
-            gap: 16,
-            alignItems: 'center',
-          }}
+          style={[
+            { gap: 24, alignItems: 'center' },
+            mediumScreenOnLess
+              ? { flexDirection: 'column-reverse' }
+              : { flexDirection: 'row', justifyContent: 'space-between' },
+          ]}
         >
-          <Image
-            source={require('@assets/icon.svg')}
-            style={{ width: 48, height: 48 }}
-            tintColor={theme.colors.primary}
-          />
-          <Text style={{ color: theme.colors.onSurface, fontSize: 18, fontWeight: 400 }}>
-            © {new Date().getFullYear()} Split.rest
+          <View
+            style={{
+              flexDirection: 'row',
+              gap: 16,
+              alignItems: 'center',
+            }}
+          >
+            <Image
+              source={require('@assets/icon.svg')}
+              style={{ width: 48, height: 48 }}
+              tintColor={theme.colors.primary}
+            />
+            <Text style={{ color: theme.colors.onSurface, fontSize: 18, fontWeight: 400 }}>
+              © {new Date().getFullYear()} Split.rest
+            </Text>
+          </View>
+
+          <Text
+            style={{
+              color: theme.colors.onSurface,
+              fontSize: 18,
+              fontWeight: 400,
+              textAlign: 'center',
+            }}
+          >
+            Made in Poland 🇵🇱, with ❤️
           </Text>
         </View>
-
-        <Text
-          style={{
-            color: theme.colors.onSurface,
-            fontSize: 18,
-            fontWeight: 400,
-            textAlign: 'center',
-          }}
-        >
-          Made in Poland 🇵🇱, with ❤️
-        </Text>
       </View>
     </View>
   )
@@ -194,12 +198,9 @@ function HomePage() {
         style={{
           width: '100%',
           minHeight: (height * 2) / 3 + insets.top,
-          alignItems: 'center',
-          justifyContent: 'space-around',
           paddingTop: 32,
           paddingHorizontal: mediumScreenOnLess ? 16 : 48,
-          gap: 24,
-          flexDirection: mediumScreenOnLess ? 'column' : 'row',
+          alignItems: 'center',
         }}
       >
         <View
@@ -215,101 +216,113 @@ function HomePage() {
         <Triangle
           width={width}
           height={(height * 2) / 3}
+          maxHeight={(1600 * 2) / 3}
           color={theme.colors.primaryContainer}
           top={insets.top}
           orientation={TriangleOrientation.TopRight}
         />
 
-        <View>
-          <View style={{ alignItems: 'center', gap: 8 }}>
-            <Text style={{ fontSize: 40, fontWeight: 700, color: theme.colors.primary }}>
-              {t('appName')}
-              <Text style={{ color: theme.colors.outline }}>.rest</Text>
-            </Text>
-            <Image
-              source={require('@assets/icon.svg')}
-              style={{ width: 160, height: 160 }}
-              tintColor={theme.colors.primary}
-            />
-          </View>
+        <View
+          style={{
+            width: '100%',
+            maxWidth: 1400,
+            gap: 24,
+            flexDirection: mediumScreenOnLess ? 'column' : 'row',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+          }}
+        >
+          <View>
+            <View style={{ alignItems: 'center', gap: 8 }}>
+              <Text style={{ fontSize: 40, fontWeight: 700, color: theme.colors.primary }}>
+                {t('appName')}
+                <Text style={{ color: theme.colors.outline }}>.rest</Text>
+              </Text>
+              <Image
+                source={require('@assets/icon.svg')}
+                style={{ width: 160, height: 160 }}
+                tintColor={theme.colors.primary}
+              />
+            </View>
 
-          <View
-            style={{
-              flex: 1,
-              maxWidth: mediumScreenOnLess ? undefined : 600,
-              alignItems: 'center',
-              paddingHorizontal: 16,
-              paddingTop: 48,
-              paddingBottom: 16,
-              gap: 8,
-            }}
-          >
-            <Text
+            <View
               style={{
-                fontSize: 24,
-                fontWeight: 600,
-                color: theme.colors.onSurface,
-                textAlign: 'center',
+                flex: 1,
+                maxWidth: mediumScreenOnLess ? undefined : 600,
+                alignItems: 'center',
+                paddingHorizontal: 16,
+                paddingTop: 48,
+                paddingBottom: 16,
+                gap: 8,
               }}
             >
-              <Trans
-                i18nKey={'index.headline'}
-                components={{ Styled: <Text style={{ color: theme.colors.primary }} /> }}
-              />
-            </Text>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 400,
-                color: theme.colors.onSurface,
-                textAlign: 'center',
-              }}
-            >
-              {t('index.tagLine')}
-            </Text>
-
-            <View style={{ marginTop: 16 }}>
-              <Button
-                title={t('signIn')}
-                onPress={() => {
-                  router.navigate('/login')
-                }}
-                leftIcon='login'
-                style={{ marginTop: 16, marginHorizontal: 16 }}
-              />
-
-              <View
+              <Text
                 style={{
-                  width: '100%',
-                  flexDirection: 'row',
-                  gap: 16,
-                  alignItems: 'center',
-                  marginVertical: 12,
+                  fontSize: 24,
+                  fontWeight: 600,
+                  color: theme.colors.onSurface,
+                  textAlign: 'center',
                 }}
               >
-                <View style={{ flex: 1, height: 1, backgroundColor: theme.colors.outline }} />
-                <Text style={{ color: theme.colors.outline }}>{t('index.or')}</Text>
-                <View style={{ flex: 1, height: 1, backgroundColor: theme.colors.outline }} />
-              </View>
+                <Trans
+                  i18nKey={'index.headline'}
+                  components={{ Styled: <Text style={{ color: theme.colors.primary }} /> }}
+                />
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: 400,
+                  color: theme.colors.onSurface,
+                  textAlign: 'center',
+                }}
+              >
+                {t('index.tagLine')}
+              </Text>
 
-              <View style={{ flexDirection: 'row', gap: 8, paddingHorizontal: 16 }}>
-                <StoreButton
-                  src='./google_play.png'
-                  href='https://play.google.com/store/apps/details?id=rest.split.app'
+              <View style={{ marginTop: 16 }}>
+                <Button
+                  title={t('signIn')}
+                  onPress={() => {
+                    router.navigate('/login')
+                  }}
+                  leftIcon='login'
+                  style={{ marginTop: 16, marginHorizontal: 16 }}
                 />
-                <StoreButton
-                  src='./app_store.png'
-                  href='https://apps.apple.com/us/app/split-rest/id6740080711?platform=iphone'
-                />
+
+                <View
+                  style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    gap: 16,
+                    alignItems: 'center',
+                    marginVertical: 12,
+                  }}
+                >
+                  <View style={{ flex: 1, height: 1, backgroundColor: theme.colors.outline }} />
+                  <Text style={{ color: theme.colors.outline }}>{t('index.or')}</Text>
+                  <View style={{ flex: 1, height: 1, backgroundColor: theme.colors.outline }} />
+                </View>
+
+                <View style={{ flexDirection: 'row', gap: 8, paddingHorizontal: 16 }}>
+                  <StoreButton
+                    src='./google_play.png'
+                    href='https://play.google.com/store/apps/details?id=rest.split.app'
+                  />
+                  <StoreButton
+                    src='./app_store.png'
+                    href='https://apps.apple.com/us/app/split-rest/id6740080711?platform=iphone'
+                  />
+                </View>
               </View>
             </View>
           </View>
-        </View>
 
-        <Image
-          source={require('@assets/mocks/mock_group.png')}
-          style={{ width: '100%', maxWidth: 400, height: 'auto', aspectRatio: 0.5 }}
-        />
+          <Image
+            source={require('@assets/mocks/mock_group.png')}
+            style={{ width: '100%', maxWidth: 400, height: 'auto', aspectRatio: 0.5 }}
+          />
+        </View>
       </View>
 
       <Footer />
