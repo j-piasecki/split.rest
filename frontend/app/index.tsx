@@ -5,84 +5,180 @@ import { Button } from '@components/Button'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { Image } from 'expo-image'
 import { Redirect, useRouter } from 'expo-router'
+import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Platform, Pressable, ScrollView, View, useWindowDimensions } from 'react-native'
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  TransformsStyle,
+  View,
+  useWindowDimensions,
+} from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-
-const mock1 = require('@assets/mocks/mock1.png')
-const mock2 = require('@assets/mocks/mock2.png')
-const mock3 = require('@assets/mocks/mock3.png')
-const mock4 = require('@assets/mocks/mock4.png')
-const mock5 = require('@assets/mocks/mock5.png')
-
-interface CardProps {
-  title: string
-  description: string
-  image: any
-  reversed?: boolean
-}
 
 function StoreButton(props: { src: string; href: string }) {
   const router = useRouter()
 
   return (
     <Pressable onPress={() => router.navigate(props.href)}>
-      <Image source={props.src} style={{ width: 135, height: 40 }} contentFit='contain' />
-    </Pressable>
-  )
-}
-
-function Card({ title, description, image, reversed }: CardProps) {
-  const theme = useTheme()
-  const isColumn = useWindowDimensions().width < 900
-
-  return (
-    <View
-      style={{
-        width: '100%',
-        flexDirection: isColumn ? 'column' : reversed ? 'row-reverse' : 'row',
-        gap: 16,
-        padding: 16,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
       <Image
-        source={image}
-        style={{ maxWidth: 500, width: '100%', aspectRatio: 1 }}
+        source={props.src}
+        style={{ width: 135, height: 40 }}
         contentFit='contain'
+        contentPosition='right center'
       />
-      <View
-        style={{
-          flex: 1,
-          height: isColumn ? 'auto' : '100%',
-          paddingVertical: isColumn ? 0 : 24,
-          paddingLeft: !isColumn && reversed ? 48 : 0,
-          paddingRight: !isColumn && !reversed ? 48 : 0,
-        }}
-      >
-        <Text style={{ color: theme.colors.onSurface, fontSize: 30, fontWeight: 600 }}>
-          {title}
-        </Text>
-        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 24, fontWeight: 600 }}>
-          {description}
-        </Text>
-      </View>
-    </View>
+    </Pressable>
   )
 }
 
 // This screen shouldn't be acccessible on mobile
 
 export default function Screen() {
+  const user = useAuth(false)
+
+  return (
+    <>
+      {Platform.OS !== 'web' && <Redirect href='/login' withAnchor />}
+      {Platform.OS === 'web' && user && <Redirect href='/home' withAnchor />}
+      {Platform.OS === 'web' && <HomePage />}
+    </>
+  )
+}
+
+enum TriangleOrientation {
+  TopRight,
+  BottomRight,
+  BottomLeft,
+  TopLeft,
+}
+
+interface TriangleProps {
+  width: number
+  height: number
+  color: string
+  top?: number
+  orientation?: TriangleOrientation
+}
+
+function Triangle({
+  width,
+  height,
+  color,
+  top = 0,
+  orientation = TriangleOrientation.TopRight,
+}: TriangleProps) {
+  let transform: TransformsStyle['transform'] = []
+
+  switch (orientation) {
+    case TriangleOrientation.TopRight:
+      // no transform needed
+      break
+    case TriangleOrientation.BottomRight:
+      transform = [{ scaleY: -1 }]
+      break
+    case TriangleOrientation.BottomLeft:
+      transform = [{ rotate: '180deg' }]
+      break
+    case TriangleOrientation.TopLeft:
+      transform = [{ rotate: '180deg' }, { scaleY: -1 }]
+      break
+  }
+
+  return (
+    <View
+      style={{
+        position: 'absolute',
+        top: top,
+        left: 0,
+        width: 0,
+        height: 0,
+        backgroundColor: 'transparent',
+        borderStyle: 'solid',
+        borderTopWidth: height,
+        borderRightWidth: 0,
+        borderBottomWidth: 0,
+        borderLeftWidth: width,
+        borderTopColor: color,
+        borderRightColor: 'transparent',
+        borderBottomColor: 'transparent',
+        borderLeftColor: 'transparent',
+        transform: transform,
+      }}
+    />
+  )
+}
+
+function Footer() {
+  const theme = useTheme()
+  const displayClass = useDisplayClass()
+
+  const mediumScreenOnLess = displayClass <= DisplayClass.Medium
+
+  return (
+    <View
+      style={{
+        width: '100%',
+        flexGrow: 1,
+        marginTop: 32,
+        paddingVertical: 128,
+        paddingHorizontal: mediumScreenOnLess ? 16 : 128,
+        backgroundColor: theme.colors.surfaceContainer,
+        justifyContent: 'center',
+      }}
+    >
+      <View
+        style={[
+          { gap: 24, alignItems: 'center' },
+          mediumScreenOnLess
+            ? { flexDirection: 'column-reverse' }
+            : { flexDirection: 'row', justifyContent: 'space-between' },
+        ]}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: 16,
+            alignItems: 'center',
+          }}
+        >
+          <Image
+            source={require('@assets/icon.svg')}
+            style={{ width: 48, height: 48 }}
+            tintColor={theme.colors.primary}
+          />
+          <Text style={{ color: theme.colors.onSurface, fontSize: 18, fontWeight: 400 }}>
+            © {new Date().getFullYear()} Split.rest
+          </Text>
+        </View>
+
+        <Text
+          style={{
+            color: theme.colors.onSurface,
+            fontSize: 18,
+            fontWeight: 400,
+            textAlign: 'center',
+          }}
+        >
+          Made in Poland 🇵🇱, with ❤️
+        </Text>
+      </View>
+    </View>
+  )
+}
+
+function HomePage() {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
   const router = useRouter()
-  const user = useAuth(false)
   const { t } = useTranslation()
   const { width, height } = useWindowDimensions()
+  const displayClass = useDisplayClass()
+
+  const mediumScreenOnLess = displayClass <= DisplayClass.Medium
 
   return (
     <ScrollView
@@ -94,11 +190,17 @@ export default function Screen() {
         paddingBottom: insets.bottom,
       }}
     >
-      {Platform.OS !== 'web' && <Redirect href='/login' withAnchor />}
-      {Platform.OS === 'web' && user && <Redirect href='/home' withAnchor />}
-
       <View
-        style={{ width: width, height: height / 2, justifyContent: 'center', alignItems: 'center' }}
+        style={{
+          width: '100%',
+          minHeight: (height * 2) / 3 + insets.top,
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          paddingTop: 32,
+          paddingHorizontal: mediumScreenOnLess ? 16 : 48,
+          gap: 24,
+          flexDirection: mediumScreenOnLess ? 'column' : 'row',
+        }}
       >
         <View
           style={{
@@ -110,42 +212,41 @@ export default function Screen() {
             backgroundColor: theme.colors.primaryContainer,
           }}
         />
-        <View
-          style={{
-            position: 'absolute',
-            top: insets.top,
-            left: 0,
-            width: 0,
-            height: 0,
-            backgroundColor: 'transparent',
-            borderStyle: 'solid',
-            borderTopWidth: height / 2,
-            borderRightWidth: 0,
-            borderBottomWidth: 0,
-            borderLeftWidth: width,
-            borderTopColor: theme.colors.primaryContainer,
-            borderRightColor: 'transparent',
-            borderBottomColor: 'transparent',
-            borderLeftColor: 'transparent',
-          }}
+        <Triangle
+          width={width}
+          height={(height * 2) / 3}
+          color={theme.colors.primaryContainer}
+          top={insets.top}
+          orientation={TriangleOrientation.TopRight}
         />
 
-        <View style={{ padding: 16, gap: 16, alignItems: 'center', width: '100%' }}>
-          <Image
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
-            source={require('@assets/icon.svg')}
-            style={{ width: 160, height: 160 }}
-            tintColor={theme.colors.primary}
-          />
-          <View style={{ position: 'absolute', bottom: -224, alignItems: 'center', padding: 8 }}>
-            <Text style={{ fontSize: 32, fontWeight: 700, color: theme.colors.primary }}>
+        <View>
+          <View style={{ alignItems: 'center', gap: 8 }}>
+            <Text style={{ fontSize: 40, fontWeight: 700, color: theme.colors.primary }}>
               {t('appName')}
-              <Text style={{ color: theme.colors.outlineVariant }}>.rest</Text>
+              <Text style={{ color: theme.colors.outline }}>.rest</Text>
             </Text>
+            <Image
+              source={require('@assets/icon.svg')}
+              style={{ width: 160, height: 160 }}
+              tintColor={theme.colors.primary}
+            />
+          </View>
 
+          <View
+            style={{
+              flex: 1,
+              maxWidth: mediumScreenOnLess ? undefined : 600,
+              alignItems: 'center',
+              paddingHorizontal: 16,
+              paddingTop: 48,
+              paddingBottom: 16,
+              gap: 8,
+            }}
+          >
             <Text
               style={{
-                fontSize: 20,
+                fontSize: 24,
                 fontWeight: 600,
                 color: theme.colors.onSurface,
                 textAlign: 'center',
@@ -156,61 +257,62 @@ export default function Screen() {
                 components={{ Styled: <Text style={{ color: theme.colors.primary }} /> }}
               />
             </Text>
-
-            <Button
-              title={t('signIn')}
-              onPress={() => {
-                router.navigate('/login')
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 400,
+                color: theme.colors.onSurface,
+                textAlign: 'center',
               }}
-              leftIcon='login'
-              style={{ marginTop: 16 }}
-            />
+            >
+              {t('index.tagLine')}
+            </Text>
 
-            <View style={{ flexDirection: 'row', gap: 16, marginTop: 16 }}>
-              <StoreButton
-                src='./google_play.png'
-                href='https://play.google.com/store/apps/details?id=rest.split.app'
+            <View style={{ marginTop: 16 }}>
+              <Button
+                title={t('signIn')}
+                onPress={() => {
+                  router.navigate('/login')
+                }}
+                leftIcon='login'
+                style={{ marginTop: 16, marginHorizontal: 16 }}
               />
-              <StoreButton
-                src='./app_store.png'
-                href='https://apps.apple.com/us/app/split-rest/id6740080711?platform=iphone'
-              />
+
+              <View
+                style={{
+                  width: '100%',
+                  flexDirection: 'row',
+                  gap: 16,
+                  alignItems: 'center',
+                  marginVertical: 12,
+                }}
+              >
+                <View style={{ flex: 1, height: 1, backgroundColor: theme.colors.outline }} />
+                <Text style={{ color: theme.colors.outline }}>{t('index.or')}</Text>
+                <View style={{ flex: 1, height: 1, backgroundColor: theme.colors.outline }} />
+              </View>
+
+              <View style={{ flexDirection: 'row', gap: 8, paddingHorizontal: 16 }}>
+                <StoreButton
+                  src='./google_play.png'
+                  href='https://play.google.com/store/apps/details?id=rest.split.app'
+                />
+                <StoreButton
+                  src='./app_store.png'
+                  href='https://apps.apple.com/us/app/split-rest/id6740080711?platform=iphone'
+                />
+              </View>
             </View>
           </View>
         </View>
+
+        <Image
+          source={require('@assets/mocks/mock_group.png')}
+          style={{ width: '100%', maxWidth: 400, height: 'auto', aspectRatio: 0.5 }}
+        />
       </View>
 
-      <View
-        style={{
-          width: '100%',
-          marginTop: 128,
-          maxWidth: 1280,
-          alignSelf: 'center',
-          padding: 24,
-          gap: 16,
-        }}
-      >
-        <Card
-          title={t('index.mock1Header')}
-          description={t('index.mock1Text')}
-          image={mock1}
-          reversed
-        />
-        <Card title={t('index.mock2Header')} description={t('index.mock2Text')} image={mock2} />
-        <Card
-          title={t('index.mock3Header')}
-          description={t('index.mock3Text')}
-          image={mock3}
-          reversed
-        />
-        <Card title={t('index.mock4Header')} description={t('index.mock4Text')} image={mock4} />
-        <Card
-          title={t('index.mock5Header')}
-          description={t('index.mock5Text')}
-          image={mock5}
-          reversed
-        />
-      </View>
+      <Footer />
     </ScrollView>
   )
 }

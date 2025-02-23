@@ -12,7 +12,9 @@
   "undo": "Undo",
 
   "index": {
+    "or": "OR",
     "headline": "Pay once and <Styled>split</Styled> between the <Styled>rest</Styled> of the group",
+    "tagLine": "Easily split expenses with friends, family, or colleagues. Using Split.rest, one person pays, and the rest of the group settles up — simple, fair, and hassle-free.",
     "mock1Header": "Easily manage balances in the group",
     "mock1Text": "Keep track of the balances of every group member and total value of transactions in the group.",
     "mock2Header": "Always know whose turn to pay it is",
@@ -26,7 +28,7 @@
   },
 
   "login": {
-    "youMustSignIn": "You must sign in to start <Styled>splitting</Styled>"
+    "youMustSignIn": "Sign in to start <Styled>splitting</Styled>"
   },
 
   "home": {
