@@ -106,6 +106,7 @@ export default function Modal() {
       >
         <ScrollView
           style={{ flex: 1 }}
+          keyboardShouldPersistTaps='handled'
           contentContainerStyle={{
             flexGrow: 1,
             paddingTop: insets.top + 16,
