@@ -15,16 +15,15 @@
     "or": "OR",
     "headline": "Pay once and <Styled>split</Styled> between the <Styled>rest</Styled> of the group",
     "tagLine": "Easily split expenses with friends, family, or colleagues. Using Split.rest, one person pays, and the rest of the group settles up — simple, fair, and hassle-free.",
-    "mock1Header": "Easily manage balances in the group",
-    "mock1Text": "Keep track of the balances of every group member and total value of transactions in the group.",
-    "mock2Header": "Always know whose turn to pay it is",
-    "mock2Text": "Use the roulette to find out whose balance is the lowest.",
-    "mock3Header": "Submit splits to keep track of expenses",
-    "mock3Text": "Easily split expenses between between its participants.",
-    "mock4Header": "Update splits and see the individual updates",
-    "mock4Text": "We all end up forgetting something.",
-    "mock5Header": "Manage members of the group",
-    "mock5Text": "Easily see individual balances and manage who can access and moderate the group."
+    "mockLightMode": "Available in bright colors if you are not the dead inside type",
+    "mockSplit": "Easily view the details of each split, including edit history!",
+    "mockSplitTypes": "Multiple split types to choose from",
+    "mockRoulette": "Never be in doubt who should pay next with the roulette (it's fair, we promise)",
+    "mockSettleUp": "Settle up with a single click. Well, two actually, but who's counting?",
+    "mockMembers": "Easily manage group members",
+    "mockBig": "Works great on both small and big screens",
+    "privacyPolicy": "Privacy policy",
+    "contact": "Contact"
   },
 
   "login": {
