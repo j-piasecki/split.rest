@@ -123,7 +123,7 @@ function Landing() {
   const { width, height } = useWindowDimensions()
   const displayClass = useDisplayClass()
 
-  const mediumScreenOnLess = displayClass <= DisplayClass.Medium
+  const mediumScreenOrLess = displayClass <= DisplayClass.Medium
 
   return (
     <View
@@ -131,7 +131,7 @@ function Landing() {
         width: '100%',
         minHeight: (height * 2) / 3 + insets.top,
         paddingTop: 32,
-        paddingHorizontal: mediumScreenOnLess ? 16 : 48,
+        paddingHorizontal: mediumScreenOrLess ? 16 : 48,
         alignItems: 'center',
       }}
     >
@@ -159,7 +159,7 @@ function Landing() {
           width: '100%',
           maxWidth: 1400,
           gap: 24,
-          flexDirection: mediumScreenOnLess ? 'column' : 'row',
+          flexDirection: mediumScreenOrLess ? 'column' : 'row',
           justifyContent: 'space-around',
           alignItems: 'center',
         }}
@@ -180,7 +180,7 @@ function Landing() {
           <View
             style={{
               flex: 1,
-              maxWidth: mediumScreenOnLess ? undefined : 600,
+              maxWidth: mediumScreenOrLess ? undefined : 600,
               alignItems: 'center',
               paddingHorizontal: 16,
               paddingTop: 48,
@@ -264,7 +264,7 @@ function Footer() {
   const displayClass = useDisplayClass()
   const { t } = useTranslation()
 
-  const mediumScreenOnLess = displayClass <= DisplayClass.Medium
+  const expandedScreenOrLess = displayClass <= DisplayClass.Expanded
 
   return (
     <View
@@ -273,13 +273,13 @@ function Footer() {
         flexGrow: 1,
         marginTop: 32,
         paddingVertical: 128,
-        paddingHorizontal: mediumScreenOnLess ? 16 : 128,
+        paddingHorizontal: expandedScreenOrLess ? 16 : 128,
         backgroundColor: theme.colors.surfaceContainer,
         alignItems: 'center',
       }}
     >
       <View style={{ flex: 1, width: '100%', maxWidth: 1400, justifyContent: 'center', gap: 16 }}>
-        <View style={{ width: '100%', justifyContent: 'flex-start', gap: 6 }}>
+        <View style={{ width: '100%', justifyContent: 'flex-start', alignItems: expandedScreenOrLess ? 'center' : undefined, gap: 6 }}>
           <Link
             href='/privacyPolicy'
             style={{ color: theme.colors.onSurface, fontSize: 14, fontWeight: 400 }}
@@ -297,7 +297,7 @@ function Footer() {
         <View
           style={[
             { gap: 24, alignItems: 'center' },
-            mediumScreenOnLess
+            expandedScreenOrLess
               ? { flexDirection: 'column-reverse' }
               : { flexDirection: 'row', justifyContent: 'space-between' },
           ]}
@@ -327,7 +327,7 @@ function Footer() {
               textAlign: 'center',
             }}
           >
-            Made in Poland 🇵🇱, with ❤️
+            Made in Poland 🇵🇱 with ❤️
           </Text>
         </View>
       </View>
@@ -354,7 +354,7 @@ function Section({
   const { width, height } = useWindowDimensions()
   const displayClass = useDisplayClass()
 
-  const mediumScreenOnLess = displayClass <= DisplayClass.Medium
+  const mediumScreenOrLess = displayClass <= DisplayClass.Medium
 
   return (
     <View
@@ -362,7 +362,7 @@ function Section({
         width: '100%',
         minHeight: (height * 4) / 3,
         paddingTop: 32,
-        paddingHorizontal: mediumScreenOnLess ? 16 : 48,
+        paddingHorizontal: mediumScreenOrLess ? 16 : 48,
         alignItems: 'center',
         justifyContent: 'center',
       }}
@@ -396,7 +396,7 @@ function Section({
           maxWidth: 1400,
           maxHeight: height,
           gap: 24,
-          flexDirection: mediumScreenOnLess
+          flexDirection: mediumScreenOrLess
             ? 'column'
             : backgroundLocation === 'left'
               ? 'row'
@@ -409,7 +409,7 @@ function Section({
           style={{
             flex: 1,
             maxWidth: 500,
-            transform: [{ translateY: mediumScreenOnLess ? 0 : -140 }],
+            transform: [{ translateY: mediumScreenOrLess ? 0 : -140 }],
           }}
         >
           <Text
