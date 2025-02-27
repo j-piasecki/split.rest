@@ -16,6 +16,7 @@ interface SuggestionContainerProps<T> {
   inputRef: React.RefObject<TextInputRef | null>
   renderSuggestion: SuggestionRenderFunction<T>
   suggestion: T
+  last?: boolean
   onSelect?: (suggestion: T) => void
   highlighted?: boolean
 }
@@ -26,6 +27,7 @@ function SuggestionContainer<T>({
   suggestion,
   onSelect,
   highlighted,
+  last,
 }: SuggestionContainerProps<T>) {
   const [hovered, setHovered] = useState(false)
   const [pressed, setPressed] = useState(false)
@@ -33,6 +35,11 @@ function SuggestionContainer<T>({
   return (
     <Pressable
       tabIndex={-1}
+      style={{
+        borderBottomLeftRadius: last ? 12 : 0,
+        borderBottomRightRadius: last ? 12 : 0,
+        overflow: 'hidden',
+      }}
       onPressIn={() => {
         setPressed(true)
         inputRef.current?.focus()
@@ -231,6 +238,7 @@ export function TextInputWithSuggestions<T>({
                   renderSuggestion={renderSuggestion}
                   suggestion={suggestion}
                   onSelect={selectSuggestion}
+                  last={index === suggestions.length - 1}
                   highlighted={
                     keyboardHighligtedSuggestion === null
                       ? undefined
