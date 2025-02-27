@@ -1,7 +1,7 @@
 import { Icon, IconName } from './Icon'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
-import React from 'react'
+import React, { useState } from 'react'
 import {
   ActivityIndicator,
   Pressable,
@@ -35,6 +35,8 @@ export function Button({
   foregroundColor: foregroundColorProp,
 }: ButtonProps) {
   const theme = useTheme()
+  const [isPressed, setIsPressed] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
 
   const foregroundColor =
     foregroundColorProp ??
@@ -45,28 +47,38 @@ export function Button({
         : theme.colors.onPrimaryContainer)
 
   return (
-    // TODO: move props styles to the container View?
     <View
-      style={{
-        borderRadius: 12,
-        backgroundColor: destructive ? theme.colors.errorContainer : theme.colors.primaryContainer,
-      }}
+      style={[
+        {
+          borderRadius: 12,
+          backgroundColor: destructive
+            ? theme.colors.errorContainer
+            : theme.colors.primaryContainer,
+        },
+        typeof style === 'function'
+          ? style({
+              pressed: isPressed,
+              hovered: isHovered,
+            })
+          : style,
+      ]}
     >
       <Pressable
         onPress={onPress}
         disabled={disabled || isLoading}
+        onPressIn={() => setIsPressed(true)}
+        onPressOut={() => setIsPressed(false)}
+        onHoverIn={() => setIsHovered(true)}
+        onHoverOut={() => setIsHovered(false)}
         style={(state) => {
-          return [
-            {
-              opacity: disabled ? 0.5 : state.pressed ? 0.8 : state.hovered ? 0.9 : 1,
-              backgroundColor: state.pressed
-                ? `${theme.colors.surface}44`
-                : state.hovered
-                  ? `${theme.colors.surface}22`
-                  : 'transparent',
-            },
-            typeof style === 'function' ? style(state) : style,
-          ]
+          return {
+            opacity: disabled ? 0.5 : state.pressed ? 0.8 : state.hovered ? 0.9 : 1,
+            backgroundColor: state.pressed
+              ? `${theme.colors.surface}44`
+              : state.hovered
+                ? `${theme.colors.surface}22`
+                : 'transparent',
+          }
         }}
       >
         <View
