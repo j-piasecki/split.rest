@@ -43,7 +43,9 @@
     "createGroup": "Create group",
     "invitedToGroupMessage": "You've been invited to join",
     "invitedBy": "By {{name}}",
-    "rejectedInvite": "Rejected invite to {{name}}"
+    "rejectedInvite": "Rejected invite to {{name}}",
+    "showingHiddenGroups": "Showing hidden groups",
+    "showingVisibleGroups": "Showing visible groups"
   },
 
   "api": {

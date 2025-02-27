@@ -1,8 +1,9 @@
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
 import { PaneHeader } from '@components/Pane'
-import { RoundIconButton } from '@components/RoundIconButton'
+import { SegmentedButton } from '@components/SegmentedButton'
 import { Shimmer } from '@components/Shimmer'
+import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { GROUP_ROW_HEIGHT, GroupRow } from '@components/homeScreen/GroupRow'
 import { InvitationsButton } from '@components/homeScreen/InvitationsButton'
@@ -16,7 +17,7 @@ import { router } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { StyleProp, View, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function Divider() {
@@ -80,6 +81,65 @@ function GroupsShimmer({ count }: { count: number }) {
         </React.Fragment>
       ))}
     </View>
+  )
+}
+
+let visibleGroupsSnackShown = false
+let hiddenGroupsSnackShown = false
+function VisibilityFilter({
+  style,
+  onChange,
+}: {
+  style?: StyleProp<ViewStyle>
+  onChange: (hidden: boolean) => void
+}) {
+  const snack = useSnack()
+  const { t } = useTranslation()
+  const [hidden, setHidden] = useState(false)
+
+  return (
+    <SegmentedButton
+      // this seems to work with flex
+      style={[{ maxWidth: 112, minWidth: 112 }, style]}
+      items={[
+        {
+          icon: 'visibility',
+          selected: !hidden,
+          onPress: () => {
+            if (hidden) {
+              if (!visibleGroupsSnackShown) {
+                // eslint-disable-next-line react-compiler/react-compiler
+                visibleGroupsSnackShown = true
+                snack.show({
+                  message: t('home.showingVisibleGroups'),
+                  duration: snack.duration.SHORT,
+                })
+              }
+              setHidden(false)
+              onChange(false)
+            }
+          },
+        },
+        {
+          icon: 'visibilityOff',
+          selected: hidden,
+          onPress: () => {
+            if (!hidden) {
+              if (!hiddenGroupsSnackShown) {
+                // eslint-disable-next-line react-compiler/react-compiler
+                hiddenGroupsSnackShown = true
+                snack.show({
+                  message: t('home.showingHiddenGroups'),
+                  duration: snack.duration.SHORT,
+                })
+              }
+              setHidden(true)
+              onChange(true)
+            }
+          },
+        },
+      ]}
+    />
   )
 }
 
@@ -168,9 +228,10 @@ export default function Home() {
                     textLocation='start'
                     rightComponentVisible
                     rightComponent={
-                      <RoundIconButton
-                        icon={showHidden ? 'visibilityOff' : 'visibility'}
-                        onPress={() => setShowHidden((hidden) => !hidden)}
+                      <VisibilityFilter
+                        onChange={(hidden) => {
+                          setShowHidden(hidden)
+                        }}
                       />
                     }
                   />
