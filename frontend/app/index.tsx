@@ -279,7 +279,14 @@ function Footer() {
       }}
     >
       <View style={{ flex: 1, width: '100%', maxWidth: 1400, justifyContent: 'center', gap: 16 }}>
-        <View style={{ width: '100%', justifyContent: 'flex-start', alignItems: expandedScreenOrLess ? 'center' : undefined, gap: 6 }}>
+        <View
+          style={{
+            width: '100%',
+            justifyContent: 'flex-start',
+            alignItems: expandedScreenOrLess ? 'center' : undefined,
+            gap: 6,
+          }}
+        >
           <Link
             href='/privacyPolicy'
             style={{ color: theme.colors.onSurface, fontSize: 14, fontWeight: 400 }}
