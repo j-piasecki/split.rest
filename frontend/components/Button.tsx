@@ -7,6 +7,7 @@ import {
   Pressable,
   PressableStateCallbackType,
   StyleProp,
+  View,
   ViewStyle,
 } from 'react-native'
 
@@ -44,39 +45,53 @@ export function Button({
         : theme.colors.onPrimaryContainer)
 
   return (
-    <Pressable
-      onPress={onPress}
-      disabled={disabled || isLoading}
-      style={(state) => {
-        return [
-          {
+    // TODO: move props styles to the container View?
+    <View
+      style={{
+        borderRadius: 12,
+        backgroundColor: destructive ? theme.colors.errorContainer : theme.colors.primaryContainer,
+      }}
+    >
+      <Pressable
+        onPress={onPress}
+        disabled={disabled || isLoading}
+        style={(state) => {
+          return [
+            {
+              opacity: disabled ? 0.5 : state.pressed ? 0.8 : state.hovered ? 0.9 : 1,
+              backgroundColor: state.pressed
+                ? `${theme.colors.surface}44`
+                : state.hovered
+                  ? `${theme.colors.surface}22`
+                  : 'transparent',
+            },
+            typeof style === 'function' ? style(state) : style,
+          ]
+        }}
+      >
+        <View
+          style={{
             paddingVertical: 12,
             paddingHorizontal: title ? 24 : 12,
-            borderRadius: 12,
-            backgroundColor: destructive
-              ? theme.colors.errorContainer
-              : theme.colors.primaryContainer,
-            opacity: disabled ? 0.5 : state.pressed ? 0.7 : state.hovered ? 0.9 : 1,
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'row',
             gap: 8,
-          },
-          typeof style === 'function' ? style(state) : style,
-        ]
-      }}
-    >
-      {isLoading && <ActivityIndicator size='small' color={foregroundColor} />}
-      {leftIcon && !isLoading && <Icon name={leftIcon} size={24} color={foregroundColor} />}
-      {title !== undefined && title.length > 0 && (
-        <Text
-          selectable={false}
-          style={{ fontSize: 18, fontWeight: '700', color: foregroundColor }}
+          }}
         >
-          {title}
-        </Text>
-      )}
-      {rightIcon && <Icon name={rightIcon} size={24} color={foregroundColor} />}
-    </Pressable>
+          {isLoading && <ActivityIndicator size='small' color={foregroundColor} />}
+          {leftIcon && !isLoading && <Icon name={leftIcon} size={24} color={foregroundColor} />}
+          {title !== undefined && title.length > 0 && (
+            <Text
+              selectable={false}
+              style={{ fontSize: 18, fontWeight: '700', color: foregroundColor }}
+            >
+              {title}
+            </Text>
+          )}
+          {rightIcon && <Icon name={rightIcon} size={24} color={foregroundColor} />}
+        </View>
+      </Pressable>
+    </View>
   )
 }

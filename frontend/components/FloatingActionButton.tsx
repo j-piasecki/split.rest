@@ -5,7 +5,7 @@ import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
 import React, { useImperativeHandle, useRef } from 'react'
-import { NativeScrollEvent, NativeSyntheticEvent, Pressable } from 'react-native'
+import { NativeScrollEvent, NativeSyntheticEvent, Pressable, View } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
 const springConfig = {
@@ -84,50 +84,60 @@ export const FloatingActionButton = React.forwardRef<
   }))
 
   return (
-    <Pressable
-      ref={(ref) => {
-        if (ref && !expandedWidth.value) {
-          expandedWidth.value = measure(ref).width
-        }
-      }}
-      onPress={onPress}
-      style={(state) => {
-        return [
-          {
-            borderRadius: 16,
-            backgroundColor: theme.colors.primaryContainer,
-            opacity: state.pressed ? 0.7 : 1,
-            overflow: 'hidden',
-          },
-          styles.paneShadow,
-        ]
-      }}
+    <View
+      style={[
+        {
+          borderRadius: 16,
+          backgroundColor: theme.colors.primaryContainer,
+          overflow: 'hidden',
+        },
+        styles.paneShadow,
+      ]}
     >
-      <Animated.View
-        style={[
-          {
-            height: 56,
-            paddingHorizontal: 16,
-            alignItems: 'center',
-            flexDirection: 'row',
-            gap: 8,
-          },
-          animatedStyle,
-        ]}
+      <Pressable
+        ref={(ref) => {
+          if (ref && !expandedWidth.value) {
+            expandedWidth.value = measure(ref).width
+          }
+        }}
+        onPress={onPress}
+        style={(state) => {
+          return {
+            opacity: state.pressed ? 0.8 : state.hovered ? 0.9 : 1,
+            backgroundColor: state.pressed
+              ? `${theme.colors.surface}44`
+              : state.hovered
+                ? `${theme.colors.surface}22`
+                : 'transparent',
+          }
+        }}
       >
-        <Icon name={icon} size={24} color={theme.colors.onPrimaryContainer} />
-        {title !== undefined && title.length > 0 && (
-          <Animated.View style={textScale}>
-            <Text
-              selectable={false}
-              numberOfLines={1}
-              style={{ fontSize: 18, fontWeight: '700', color: theme.colors.onPrimaryContainer }}
-            >
-              {title}
-            </Text>
-          </Animated.View>
-        )}
-      </Animated.View>
-    </Pressable>
+        <Animated.View
+          style={[
+            {
+              height: 56,
+              paddingHorizontal: 16,
+              alignItems: 'center',
+              flexDirection: 'row',
+              gap: 8,
+            },
+            animatedStyle,
+          ]}
+        >
+          <Icon name={icon} size={24} color={theme.colors.onPrimaryContainer} />
+          {title !== undefined && title.length > 0 && (
+            <Animated.View style={textScale}>
+              <Text
+                selectable={false}
+                numberOfLines={1}
+                style={{ fontSize: 18, fontWeight: '700', color: theme.colors.onPrimaryContainer }}
+              >
+                {title}
+              </Text>
+            </Animated.View>
+          )}
+        </Animated.View>
+      </Pressable>
+    </View>
   )
 })
