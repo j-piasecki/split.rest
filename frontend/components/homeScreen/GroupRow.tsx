@@ -1,12 +1,16 @@
+import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
 import { Icon } from '@components/Icon'
+import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
+import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { router } from 'expo-router'
-import React from 'react'
-import { Pressable, View } from 'react-native'
+import React, { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { View } from 'react-native'
 import { GroupUserInfo } from 'shared'
 
 export const GROUP_ROW_HEIGHT = 80
@@ -17,7 +21,11 @@ export interface GroupRowProps {
 
 export function GroupRow({ info }: GroupRowProps) {
   const theme = useTheme()
+  const contextMenuRef = useRef<ContextMenuRef>(null)
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
+  const { t } = useTranslation()
+  const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info?.id)
+
   const balanceColor =
     Number(info.balance) === 0
       ? theme.colors.balanceNeutral
@@ -26,15 +34,22 @@ export function GroupRow({ info }: GroupRowProps) {
         : theme.colors.balanceNegative
 
   return (
-    <Pressable
+    <ContextMenu
+      ref={contextMenuRef}
+      items={[
+        {
+          label: info.hidden ? t('home.showGroup') : t('home.hideGroup'),
+          icon: info.hidden ? 'visibility' : 'visibilityOff',
+          onPress: () => {
+            setGroupHiddenMutation(!info.hidden)
+          },
+        },
+      ]}
       onPress={() => {
         router.navigate(`/group/${info.id}`)
       }}
       style={({ pressed, hovered }) => [
         {
-          paddingHorizontal: 16,
-          height: GROUP_ROW_HEIGHT,
-          justifyContent: 'center',
           backgroundColor: pressed
             ? theme.colors.surfaceContainerHighest
             : hovered
@@ -46,14 +61,19 @@ export function GroupRow({ info }: GroupRowProps) {
     >
       <View
         style={{
+          paddingLeft: 16,
+          paddingRight: 8,
+          height: GROUP_ROW_HEIGHT,
           opacity: info.hidden ? 0.7 : 1,
-          gap: 20,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
-        <Text style={{ flex: 1, fontSize: 20, color: theme.colors.onSurface }} numberOfLines={2}>
+        <Text
+          style={{ flex: 1, fontSize: 20, color: theme.colors.onSurface, marginRight: 8 }}
+          numberOfLines={2}
+        >
           {info.name}
         </Text>
 
@@ -85,7 +105,15 @@ export function GroupRow({ info }: GroupRowProps) {
             )}
           </View>
         </View>
+
+        <RoundIconButton
+          icon='moreVertical'
+          onPress={(e) => {
+            contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
+          }}
+          style={{ marginLeft: 8 }}
+        />
       </View>
-    </Pressable>
+    </ContextMenu>
   )
 }

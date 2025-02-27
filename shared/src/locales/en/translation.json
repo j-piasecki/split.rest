@@ -45,7 +45,9 @@
     "invitedBy": "By {{name}}",
     "rejectedInvite": "Rejected invite to {{name}}",
     "showingHiddenGroups": "Showing hidden groups",
-    "showingVisibleGroups": "Showing visible groups"
+    "showingVisibleGroups": "Showing visible groups",
+    "hideGroup": "Hide group",
+    "showGroup": "Show group"
   },
 
   "api": {
@@ -313,8 +315,6 @@
     "inviteMember": "Invite member",
     "roulette": "Roulette",
     "addSplit": "Add split",
-    "hideGroup": "Hide group",
-    "showGroup": "Show group",
     "settings": "Settings",
     "settleUp": {
       "settleUp": "Settle up",

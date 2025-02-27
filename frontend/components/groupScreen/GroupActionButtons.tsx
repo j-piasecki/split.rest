@@ -2,7 +2,6 @@ import { Button } from '@components/Button'
 import { ButtonShimmer } from '@components/ButtonShimmer'
 import { ConfirmationModal } from '@components/ConfirmationModal'
 import { useSnack } from '@components/SnackBar'
-import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSettleUp } from '@hooks/database/useSettleUp'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
@@ -56,7 +55,6 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
-  const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info?.id)
   const [settleUpModalVisible, setSettleUpModalVisible] = useState(false)
 
   let shimmerOffset = 0
@@ -110,29 +108,6 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
               }}
               title={t('groupInfo.settleUp.settleUp')}
               leftIcon='balance'
-            />
-          )
-        }
-      </ButtonShimmer>
-
-      {/* Depend on permission to show all buttons at once */}
-      <ButtonShimmer argument={permissions && info} offset={(shimmerOffset -= 0.05)}>
-        {(info) =>
-          info.hidden ? (
-            <Button
-              title={t('groupInfo.showGroup')}
-              onPress={() => {
-                setGroupHiddenMutation(false)
-              }}
-              leftIcon='visibility'
-            />
-          ) : (
-            <Button
-              title={t('groupInfo.hideGroup')}
-              onPress={() => {
-                setGroupHiddenMutation(true)
-              }}
-              leftIcon='visibilityOff'
             />
           )
         }
