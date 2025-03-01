@@ -143,8 +143,11 @@ function UserRow({
             fontWeight: paidByThis ? 700 : 400,
           }}
         >
-          {user.name}
+          {user.displayName ?? user.name}
         </Text>
+        {user.displayName && (
+          <Text style={{ color: theme.colors.outline, fontSize: 12 }}>{user.name}</Text>
+        )}
         {(user.deleted || (!isNameUnique && user.email)) && (
           <Text style={{ color: theme.colors.outline, fontSize: 12 }}>
             {user.deleted ? t('deletedUser') : user.email}
@@ -246,6 +249,14 @@ function EditInfo({ splitInfo }: { splitInfo: SplitWithUsers }) {
   )
 }
 
+function getNameKey(user: UserWithBalanceChange) {
+  if (user.displayName === null) {
+    return user.name
+  }
+
+  return user.name + user.displayName
+}
+
 export function SplitInfo({
   splitInfo,
   groupInfo,
@@ -266,7 +277,8 @@ export function SplitInfo({
 
   const nameCounts = usersToShow.reduce(
     (acc, user) => {
-      acc[user.name] = (acc[user.name] || 0) + 1
+      const key = getNameKey(user)
+      acc[key] = (acc[key] || 0) + 1
       return acc
     },
     {} as Record<string, number>
@@ -328,7 +340,7 @@ export function SplitInfo({
               user={user}
               groupInfo={groupInfo}
               splitInfo={splitInfo}
-              isNameUnique={nameCounts[user.name] === 1}
+              isNameUnique={nameCounts[getNameKey(user)] === 1}
               last={index === usersToShow.length - 1}
             />
           ))}

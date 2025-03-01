@@ -35,7 +35,7 @@ export interface Member extends User {
 }
 
 export interface UserWithDisplayName extends User {
-  displayName: string
+  displayName: string | null
 }
 
 export interface BalanceChange {
@@ -43,7 +43,7 @@ export interface BalanceChange {
   change: string
 }
 
-export interface UserWithBalanceChange extends User {
+export interface UserWithBalanceChange extends UserWithDisplayName {
   change: string
 }
 

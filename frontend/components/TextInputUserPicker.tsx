@@ -7,10 +7,10 @@ import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, StyleProp, View, ViewStyle } from 'react-native'
-import { User } from 'shared'
+import { UserWithDisplayName } from 'shared'
 
 export interface TextInputUserPickerProps extends TextInputWithUserSuggestionsProps {
-  user?: User
+  user?: UserWithDisplayName
   onClearSelection?: () => void
   containerStyle?: StyleProp<ViewStyle>
 }
@@ -63,23 +63,43 @@ export function TextInputUserPicker({
           }}
         >
           <ProfilePicture userId={user.id} size={isSmallScreen ? 20 : 24} />
-          <Text
+          <View
             style={{
               flex: 1,
               marginLeft: 6,
-              color: theme.colors.onSurface,
-              fontSize: isSmallScreen ? 16 : 18,
-              fontWeight: 600,
             }}
-            numberOfLines={1}
           >
-            {user.name}
-            {user.deleted && (
-              <Text style={{ marginLeft: 8, color: theme.colors.outline, fontWeight: 200 }}>
-                {t('deletedUser')}
+            <Text
+              style={{
+                flex: 1,
+                color: theme.colors.onSurface,
+                fontSize: isSmallScreen ? 16 : 18,
+                fontWeight: 600,
+              }}
+              numberOfLines={1}
+            >
+              {user.displayName ?? user.name}{' '}
+              {user.deleted && (
+                <Text style={{ color: theme.colors.outline, fontWeight: 200 }}>
+                  {t('deletedUser')}
+                </Text>
+              )}
+            </Text>
+
+            {user.displayName && (
+              <Text
+                style={{
+                  flex: 1,
+                  color: theme.colors.outline,
+                  fontSize: 10,
+                  fontWeight: 600,
+                }}
+                numberOfLines={1}
+              >
+                {user.name}
               </Text>
             )}
-          </Text>
+          </View>
         </Pressable>
       )}
     </View>

@@ -4,6 +4,7 @@ import { Form } from '@components/Form'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
+import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useAuth } from '@utils/auth'
@@ -12,9 +13,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutRectangle, ScrollView, View } from 'react-native'
-import { TranslatableError, User } from 'shared'
+import { TranslatableError, UserWithDisplayName } from 'shared'
 
-function getInitialEntries(user: User): PersonEntry[] {
+function getInitialEntries(user: UserWithDisplayName): PersonEntry[] {
   const savedParticipants = getSplitCreationContext().participants
 
   if (savedParticipants) {
@@ -38,7 +39,7 @@ function getInitialEntries(user: User): PersonEntry[] {
   return [{ user: user, entry: user.email ?? '', selected: true }, { entry: '' }]
 }
 
-function ParticipansPicker({ user }: { user: User }) {
+function ParticipansPicker({ user }: { user: UserWithDisplayName }) {
   const router = useRouter()
   const insets = useModalScreenInsets()
   const scrollViewRef = useRef<ScrollView>(null)
@@ -131,6 +132,7 @@ export default function Modal() {
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
   const user = useAuth()
+  const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
 
   return (
     <ModalScreen
@@ -140,7 +142,7 @@ export default function Modal() {
       opaque={false}
       slideAnimation={false}
     >
-      {user && <ParticipansPicker user={user} />}
+      {memberInfo && <ParticipansPicker user={memberInfo} />}
     </ModalScreen>
   )
 }

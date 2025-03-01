@@ -1,8 +1,14 @@
 import { auth } from './firebase'
-import { SplitType, SplitWithUsers, TranslatableError, User, UserWithBalanceChange } from 'shared'
+import {
+  SplitType,
+  SplitWithUsers,
+  TranslatableError,
+  UserWithBalanceChange,
+  UserWithDisplayName,
+} from 'shared'
 
 interface UserWithValue {
-  user: User
+  user: UserWithDisplayName
   value?: string
 }
 

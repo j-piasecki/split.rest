@@ -1,10 +1,10 @@
 import React, { useReducer } from 'react'
-import { User } from 'shared'
+import { UserWithDisplayName } from 'shared'
 
 export interface SplitEntryData {
   entry: string
   amount: string
-  user?: User
+  user?: UserWithDisplayName
 }
 
 export interface FormData {
@@ -32,7 +32,7 @@ export type FormActionType =
   | {
       type: 'setUser'
       index: number
-      user: User | undefined
+      user: UserWithDisplayName | undefined
     }
   | {
       type: 'setPaidBy'

@@ -7,6 +7,7 @@ import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { getBalances } from '@database/getBalances'
+import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
@@ -17,12 +18,12 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, LayoutRectangle, ScrollView, View } from 'react-native'
-import { TranslatableError, User, UserWithBalanceChange } from 'shared'
+import { TranslatableError, UserWithBalanceChange, UserWithDisplayName } from 'shared'
 
 interface RouletteProps {
   groupId: number
   setResult: (result: UserWithBalanceChange[]) => void
-  user: User
+  user: UserWithDisplayName
 }
 
 function Roulette({ groupId, setResult, user }: RouletteProps) {
@@ -197,18 +198,19 @@ export default function Modal() {
   const theme = useTheme()
   const user = useAuth()
   const { data: permissions } = useGroupPermissions(Number(id))
+  const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
   const [result, setResult] = useState<UserWithBalanceChange[] | null>(null)
 
   const canAccessRoulette = permissions?.canAccessRoulette() ?? false
 
   return (
     <ModalScreen returnPath={`/group/${id}`} title={t('screenName.roulette')} maxWidth={500}>
-      {!user && (
+      {!memberInfo && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
           <ActivityIndicator color={theme.colors.onSurface} />
         </View>
       )}
-      {user && (
+      {memberInfo && (
         <>
           {!canAccessRoulette && (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
@@ -218,7 +220,7 @@ export default function Modal() {
             </View>
           )}
           {canAccessRoulette && result === null && (
-            <Roulette groupId={Number(id)} setResult={setResult} user={user} />
+            <Roulette groupId={Number(id)} setResult={setResult} user={memberInfo} />
           )}
           {canAccessRoulette && result !== null && <Result groupId={Number(id)} result={result} />}
         </>
