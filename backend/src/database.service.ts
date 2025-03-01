@@ -37,7 +37,9 @@ import { createOrUpdateUser } from './database/users/createOrUpdateUser'
 import { deleteUser } from './database/users/deleteUser'
 import { getUserByEmail } from './database/users/getUserByEmail'
 import { getUserById } from './database/users/getUserById'
+import { registerOrUpdateNotificationToken } from './database/users/registerOrUpdateNotificationToken'
 import { setUserName } from './database/users/setUserName'
+import { unregisterNotificationToken } from './database/users/unregisterNotificationToken'
 import { Injectable } from '@nestjs/common'
 import { Pool } from 'pg'
 import {
@@ -65,6 +67,7 @@ import {
   GetUserInvitesArguments,
   InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
+  RegisterOrUpdateNotificationTokenArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -75,6 +78,7 @@ import {
   SetUserDisplayNameArguments,
   SetUserNameArguments,
   SettleUpArguments,
+  UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
   User,
 } from 'shared'
@@ -290,5 +294,18 @@ export class DatabaseService {
   @RequirePermissions(['changeDisplayName'])
   async setUserDisplayName(callerId: string, args: SetUserDisplayNameArguments) {
     return await setUserDisplayName(this.pool, callerId, args)
+  }
+
+  // Every user can update their notification token
+  async registerOrUpdateNotificationToken(
+    callerId: string,
+    args: RegisterOrUpdateNotificationTokenArguments
+  ) {
+    return await registerOrUpdateNotificationToken(this.pool, callerId, args)
+  }
+
+  // Every user can delete their notification token
+  async unregisterNotificationToken(callerId: string, args: UnregisterNotificationTokenArguments) {
+    return await unregisterNotificationToken(this.pool, callerId, args)
   }
 }

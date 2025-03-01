@@ -29,6 +29,7 @@ import {
   GetUserInvitesArguments,
   InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
+  RegisterOrUpdateNotificationTokenArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -40,6 +41,7 @@ import {
   SetUserNameArguments,
   SettleUpArguments,
   SplitType,
+  UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
   User,
   isAcceptGroupInviteArguments,
@@ -67,6 +69,7 @@ import {
   isGetUserInvitesArguments,
   isInviteUserToGroupArguments,
   isJoinGroupByLinkArguments,
+  isRegisterOrUpdateNotificationTokenArguments,
   isRestoreSplitArguments,
   isSetGroupAccessArguments,
   isSetGroupAdminArguments,
@@ -77,6 +80,7 @@ import {
   isSetUserDisplayNameArguments,
   isSetUserNameArguments,
   isSettleUpArguments,
+  isUnregisterNotificationTokenArguments,
   isUpdateSplitArguments,
   isUser,
 } from 'shared'
@@ -517,5 +521,31 @@ export class AppController {
     }
 
     return await this.appService.setUserDisplayName(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('registerOrUpdateNotificationToken')
+  async registerOrUpdateNotificationToken(
+    @Req() request: Request,
+    @Body() args: Partial<RegisterOrUpdateNotificationTokenArguments>
+  ) {
+    if (!isRegisterOrUpdateNotificationTokenArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.registerOrUpdateNotificationToken(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('unregisterNotificationToken')
+  async unregisterNotificationToken(
+    @Req() request: Request,
+    @Body() args: Partial<UnregisterNotificationTokenArguments>
+  ) {
+    if (!isUnregisterNotificationTokenArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.unregisterNotificationToken(request.user.sub, args)
   }
 }

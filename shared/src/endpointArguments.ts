@@ -185,3 +185,12 @@ export interface SetUserDisplayNameArguments {
   userId: string
   displayName: string | null
 }
+
+export interface RegisterOrUpdateNotificationTokenArguments {
+  token: string,
+  language: string
+}
+
+export interface UnregisterNotificationTokenArguments {
+  token: string
+}

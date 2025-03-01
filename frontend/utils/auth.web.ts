@@ -180,7 +180,7 @@ export function signInWithApple() {
   }
 }
 
-export function logout() {
+export async function logout() {
   auth.signOut()
   queryClient.clear()
 }
