@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-import admin = require('firebase-admin')
-import serviceAccount = require('../secrets/notificationServiceAccountKey.json')
+import serviceAccount from '../secrets/notificationServiceAccountKey.json'
+import admin from 'firebase-admin'
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as any),
 })
 
-function sendNotification(
+export function sendNotification(
   token: string,
   title: string,
   body?: string,
