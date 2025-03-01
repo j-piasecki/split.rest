@@ -31,6 +31,7 @@ import {
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
+  SetUserDisplayNameArguments,
   SetUserNameArguments,
   SettleUpArguments,
   UpdateSplitArguments,
@@ -203,4 +204,8 @@ export function isSetUserNameArguments(obj: any): obj is SetUserNameArguments {
 
 export function isSettleUpArguments(obj: any): obj is SettleUpArguments {
   return obj.groupId !== undefined
+}
+
+export function isSetUserDisplayNameArguments(obj: any): obj is SetUserDisplayNameArguments {
+  return obj.groupId !== undefined && obj.userId !== undefined && obj.displayName !== undefined
 }

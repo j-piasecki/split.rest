@@ -8,10 +8,10 @@ import { useTheme } from '@styling/theme'
 import { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { User } from 'shared'
+import { UserWithDisplayName } from 'shared'
 
 interface SuggestionProps {
-  user: User
+  user: UserWithDisplayName
   hovered?: boolean
   pressed?: boolean
 }
@@ -37,8 +37,13 @@ function Suggestion({ user, hovered, pressed }: SuggestionProps) {
       <ProfilePicture userId={user.id} size={24} />
       <View style={{ flex: 1 }}>
         <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 500 }}>
-          {user.name}
+          {user.displayName ?? user.name}
         </Text>
+        {user.displayName && (
+          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10, fontWeight: 500 }}>
+            {user.name}
+          </Text>
+        )}
         <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}>
           {user.deleted ? t('deletedUser') : user.email}
         </Text>
@@ -48,10 +53,13 @@ function Suggestion({ user, hovered, pressed }: SuggestionProps) {
 }
 
 export interface TextInputWithUserSuggestionsProps
-  extends Omit<TextInputWithSuggestionsProps<User>, 'getSuggestions' | 'renderSuggestion'> {
+  extends Omit<
+    TextInputWithSuggestionsProps<UserWithDisplayName>,
+    'getSuggestions' | 'renderSuggestion'
+  > {
   groupId: number
-  onSuggestionSelect: (user: User) => void
-  filterSuggestions?: (suggestions: User[]) => User[]
+  onSuggestionSelect: (user: UserWithDisplayName) => void
+  filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
 }
 
 export function TextInputWithUserSuggestions({

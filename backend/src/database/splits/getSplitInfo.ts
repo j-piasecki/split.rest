@@ -32,17 +32,16 @@ export async function getSplitInfo(
           split_participants.change, 
           users.name, 
           users.email, 
-          users.deleted 
-        FROM 
-          users 
-        INNER JOIN 
-          split_participants 
-        ON 
-          users.id = split_participants.user_id 
+          users.deleted,
+          group_members.display_name
+        FROM users INNER JOIN split_participants 
+          ON users.id = split_participants.user_id
+          INNER JOIN group_members
+          ON users.id = group_members.user_id
         WHERE 
-          split_id = $1
+          split_id = $1 AND group_id = $2
       `,
-      [args.splitId]
+      [args.splitId, args.groupId]
     )
   ).rows
 
@@ -66,6 +65,7 @@ export async function getSplitInfo(
       photoUrl: null,
       change: p.change,
       deleted: p.deleted,
+      displayName: p.display_name,
     })),
   }
 }

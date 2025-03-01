@@ -31,6 +31,11 @@ export interface Member extends User {
   balance: string
   isAdmin: boolean
   hasAccess: boolean
+  displayName: string | null
+}
+
+export interface UserWithDisplayName extends User {
+  displayName: string | null
 }
 
 export interface BalanceChange {
@@ -38,7 +43,7 @@ export interface BalanceChange {
   change: string
 }
 
-export interface UserWithBalanceChange extends User {
+export interface UserWithBalanceChange extends UserWithDisplayName {
   change: string
 }
 

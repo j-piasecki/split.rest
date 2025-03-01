@@ -5,7 +5,7 @@ import { TextInput } from '@components/TextInput'
 import { useTheme } from '@styling/theme'
 import React, { useEffect, useImperativeHandle } from 'react'
 import { useState } from 'react'
-import { StyleProp, ViewStyle } from 'react-native'
+import { StyleProp, TextStyle, ViewStyle } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 
@@ -19,6 +19,7 @@ export interface EditableTextProps {
   editing?: boolean
   onEditingChange?: (editing: boolean) => void
   style?: StyleProp<ViewStyle>
+  textStyle?: StyleProp<TextStyle>
 }
 
 export interface EditableTextRef {
@@ -28,7 +29,16 @@ export interface EditableTextRef {
 
 export const EditableText = React.forwardRef<EditableTextRef, EditableTextProps>(
   function EditableText(
-    { value, placeholder, onSubmit, isPending, disabled, iconHidden, style }: EditableTextProps,
+    {
+      value,
+      placeholder,
+      onSubmit,
+      isPending,
+      disabled,
+      iconHidden,
+      style,
+      textStyle,
+    }: EditableTextProps,
     ref: React.Ref<EditableTextRef>
   ) {
     const theme = useTheme()
@@ -96,7 +106,9 @@ export const EditableText = React.forwardRef<EditableTextRef, EditableTextProps>
           entering={FadeIn.duration(100)}
           style={[{ flexDirection: 'row', gap: 8, alignItems: 'center' }, style]}
         >
-          <Text style={{ fontSize: 24, fontWeight: '600', color: theme.colors.onSurface }}>
+          <Text
+            style={[{ fontSize: 24, fontWeight: '600', color: theme.colors.onSurface }, textStyle]}
+          >
             {value}
           </Text>
           {!disabled && !iconHidden && (

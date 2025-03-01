@@ -179,3 +179,9 @@ export interface SetUserNameArguments {
 export interface SettleUpArguments {
   groupId: number
 }
+
+export interface SetUserDisplayNameArguments {
+  groupId: number
+  userId: string
+  displayName: string | null
+}

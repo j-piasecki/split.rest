@@ -38,6 +38,7 @@ export async function createDatabase(pool: Pool) {
       has_access BOOLEAN NOT NULL,
       is_hidden BOOLEAN NOT NULL,
       invited_by VARCHAR(32) NOT NULL,
+      display_name VARCHAR(128) NULL DEFAULT NULL,
 
       PRIMARY KEY (group_id, user_id),
       FOREIGN KEY (group_id) REFERENCES groups(id),

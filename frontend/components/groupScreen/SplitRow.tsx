@@ -41,7 +41,7 @@ function StackedInfo({ split, info }: { split: SplitInfo; info: GroupUserInfo })
   const theme = useTheme()
 
   return (
-    <View style={{ paddingHorizontal: 8, alignItems: 'flex-end' }}>
+    <View style={{ paddingLeft: 8, paddingRight: 4, alignItems: 'flex-end' }}>
       <View style={{ alignItems: 'flex-end' }}>
         <Text style={{ fontSize: 18, fontWeight: 600, color: theme.colors.onSurface }}>
           {CurrencyUtils.format(split.total, info?.currency)}
@@ -150,7 +150,7 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
           {
             paddingVertical: 16,
             paddingLeft: shouldUseStackedInfo ? 12 : 16,
-            paddingRight: 8,
+            paddingRight: 4,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',

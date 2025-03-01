@@ -25,6 +25,7 @@ export const PermissionToFieldMap = {
   managePermissions: ['groupId'] as const,
   manageDirectInvites: ['groupId', 'onlyIfCreated?'] as const,
   manageAllDirectInvites: ['groupId'] as const,
+  changeDisplayName: ['groupId', 'userId'] as const,
 }
 
 export type PermissionToFieldMap = {

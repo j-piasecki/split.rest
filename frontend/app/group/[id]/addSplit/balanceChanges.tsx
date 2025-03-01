@@ -1,6 +1,7 @@
 import ModalScreen from '@components/ModalScreen'
 import { FormData, SplitEntryData, SplitForm } from '@components/SplitForm'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
@@ -11,9 +12,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupUserInfo, TranslatableError, User } from 'shared'
+import { GroupUserInfo, TranslatableError, UserWithDisplayName } from 'shared'
 
-function initialEntriesFromContext(currentUser: User): SplitEntryData[] {
+function initialEntriesFromContext(currentUser: UserWithDisplayName): SplitEntryData[] {
   const splitContext = getSplitCreationContext()
 
   const initialEntries: SplitEntryData[] =
@@ -32,7 +33,7 @@ function initialEntriesFromContext(currentUser: User): SplitEntryData[] {
   return initialEntries
 }
 
-function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: User }) {
+function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDisplayName }) {
   const router = useRouter()
   const insets = useModalScreenInsets()
   const [error, setError] = useTranslatedError()
@@ -106,6 +107,7 @@ export default function Modal() {
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
   const { data: groupInfo } = useGroupInfo(Number(id))
+  const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
 
   return (
     <ModalScreen
@@ -115,12 +117,12 @@ export default function Modal() {
       opaque={false}
       slideAnimation={false}
     >
-      {(!user || !groupInfo) && (
+      {(!memberInfo || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={theme.colors.onSurface} />
         </View>
       )}
-      {user && groupInfo && <Form user={user} groupInfo={groupInfo} />}
+      {memberInfo && groupInfo && <Form user={memberInfo} groupInfo={groupInfo} />}
     </ModalScreen>
   )
 }

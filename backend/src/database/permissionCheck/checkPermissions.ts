@@ -233,6 +233,19 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'changeDisplayName': {
+          if (callerPermissions?.canChangeEveryoneDisplayName()) {
+            continue
+          }
+
+          const args = unsafeArgs as PermissionArguments<['changeDisplayName']>
+          if (callerPermissions?.canChangeDisplayName() && args.userId === callerId) {
+            continue
+          }
+
+          return 'api.insufficientPermissions.group.changeDisplayName'
+        }
+
         default:
           console.log('Unknown permission required:', permission)
           return 'unknownError'

@@ -62,7 +62,7 @@ export function GroupRow({ info }: GroupRowProps) {
       <View
         style={{
           paddingLeft: 16,
-          paddingRight: 8,
+          paddingRight: 4,
           height: GROUP_ROW_HEIGHT,
           opacity: info.hidden ? 0.7 : 1,
           flexDirection: 'row',
@@ -111,7 +111,7 @@ export function GroupRow({ info }: GroupRowProps) {
           onPress={(e) => {
             contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
           }}
-          style={{ marginLeft: 8 }}
+          style={{ marginLeft: 4 }}
         />
       </View>
     </ContextMenu>
