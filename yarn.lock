@@ -3860,6 +3860,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-firebase/messaging@npm:^21.11.0":
+  version: 21.11.0
+  resolution: "@react-native-firebase/messaging@npm:21.11.0"
+  peerDependencies:
+    "@react-native-firebase/app": 21.11.0
+    expo: ">=47.0.0"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+  checksum: 6739979244ecd403a177e93ac88e5b14bca0b8fca3dfe4860f6b30e58f7f6fddf39f761ab0480499aed7661e1ce7f32ea744646688762e90fa093570e0590e64
+  languageName: node
+  linkType: hard
+
 "@react-native-google-signin/google-signin@npm:^13.2.0":
   version: 13.2.0
   resolution: "@react-native-google-signin/google-signin@npm:13.2.0"
@@ -9019,6 +9032,7 @@ __metadata:
     "@react-native-firebase/app": ^21.6.1
     "@react-native-firebase/auth": ^21.6.1
     "@react-native-firebase/crashlytics": ^21.6.1
+    "@react-native-firebase/messaging": ^21.11.0
     "@react-native-google-signin/google-signin": ^13.2.0
     "@tanstack/eslint-plugin-query": ^5.62.1
     "@tanstack/react-query": ^5.62.3
