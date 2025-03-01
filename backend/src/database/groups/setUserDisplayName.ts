@@ -16,20 +16,16 @@ export async function setUserDisplayName(
     args.displayName = null
   }
 
-  try {
-    if (await isGroupDeleted(pool, args.groupId)) {
-      throw new NotFoundException('api.notFound.group')
-    }
-
-    if (!(await userExists(pool, args.userId))) {
-      throw new NotFoundException('api.notFound.user')
-    }
-
-    await pool.query(
-      'UPDATE group_members SET display_name = $1 WHERE group_id = $2 AND user_id = $3',
-      [args.displayName, args.groupId, args.userId]
-    )
-  } catch (e) {
-    throw e
+  if (await isGroupDeleted(pool, args.groupId)) {
+    throw new NotFoundException('api.notFound.group')
   }
+
+  if (!(await userExists(pool, args.userId))) {
+    throw new NotFoundException('api.notFound.user')
+  }
+
+  await pool.query(
+    'UPDATE group_members SET display_name = $1 WHERE group_id = $2 AND user_id = $3',
+    [args.displayName, args.groupId, args.userId]
+  )
 }
