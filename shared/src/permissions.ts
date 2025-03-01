@@ -20,6 +20,7 @@ export const PermissionKeys = [
   'managePermissions',
   'manageDirectInvites',
   'manageAllDirectInvites',
+  'changeDisplayName',
 ] as const
 
 export const enum SplitPermissionsDTO {
@@ -75,6 +76,8 @@ export const enum ManagePermissionsDTO {
   ManagePermissions = 1 << 8, // Manage permissions of the group (cannot grant permissions that the doer does not have)
   ManageDirectInvites = 1 << 9, // Manage direct invites to the group created by the user
   ManageAllDirectInvites = 1 << 10, // Manage all direct invites to the group
+  ChangeDisplayName = 1 << 11, // Change display name  of the user in the group
+  ChangeEveryoneDisplayName = 1 << 12, // Change the display name of everyone in the group
 }
 
 export interface GroupMemberPermissionsDTO {
@@ -222,6 +225,14 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return Boolean(this.manage & ManagePermissionsDTO.ManageAllDirectInvites)
   }
 
+  canChangeDisplayName(): boolean {
+    return Boolean(this.manage & ManagePermissionsDTO.ChangeDisplayName)
+  }
+
+  canChangeEveryoneDisplayName(): boolean {
+    return Boolean(this.manage & ManagePermissionsDTO.ChangeEveryoneDisplayName)
+  }
+
   toObject() {
     return {
       createSplit: this.canCreateSplits(),
@@ -245,6 +256,8 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
       managePermissions: this.canManagePermissions(),
       manageDirectInvites: this.canManageDirectInvites(),
       manageAllDirectInvites: this.canManageAllDirectInvites(),
+      changeDisplayName: this.canChangeDisplayName(),
+      changeEveryoneDisplayName: this.canChangeEveryoneDisplayName(),
     }
   }
 }
