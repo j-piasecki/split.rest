@@ -34,6 +34,10 @@ export interface Member extends User {
   displayName: string | null
 }
 
+export interface UserWithDisplayName extends User {
+  displayName: string
+}
+
 export interface BalanceChange {
   id: string
   change: string

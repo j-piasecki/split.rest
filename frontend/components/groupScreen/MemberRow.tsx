@@ -105,7 +105,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
           {
             paddingVertical: 10,
             paddingLeft: 10,
-            paddingRight: hasContextActions ? 8 : 12,
+            paddingRight: hasContextActions ? 4 : 12,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -135,12 +135,19 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
         </View>
         {!iconOnly && (
           <>
-            <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={{ flex: 1, justifyContent: 'center', marginRight: 8 }}>
               <Text
                 selectable={false}
-                style={{ fontSize: 20, fontWeight: 700, color: theme.colors.onSurface }}
+                style={{
+                  fontSize: 18,
+                  fontWeight: 600,
+                  color: theme.colors.onSurface,
+                  marginTop: member.displayName !== null ? 4 : 0,
+                }}
+                numberOfLines={2}
+                adjustsFontSizeToFit
               >
-                {member.name}{' '}
+                {member.displayName ?? member.name}{' '}
                 {member.deleted && (
                   <Text
                     style={{
@@ -152,12 +159,23 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
                   </Text>
                 )}
               </Text>
+
+              {member.displayName && (
+                <Text
+                  selectable={false}
+                  numberOfLines={1}
+                  style={{ fontSize: 10, color: theme.colors.outline }}
+                >
+                  {member.name}
+                </Text>
+              )}
             </View>
             <View style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: 100 }}>
               <Text
                 selectable={false}
                 style={{
                   fontSize: 20,
+                  fontWeight: 600,
                   color:
                     Number(member.balance) === 0
                       ? theme.colors.balanceNeutral
@@ -177,7 +195,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
                 onPress={(e) => {
                   contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
                 }}
-                style={{ marginLeft: 8, opacity: contextMenuDisabled ? 0.4 : 1 }}
+                style={{ marginLeft: 4, opacity: contextMenuDisabled ? 0.4 : 1 }}
               />
             )}
           </>

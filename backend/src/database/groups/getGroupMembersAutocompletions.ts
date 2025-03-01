@@ -2,13 +2,13 @@ import { NotFoundException } from '../../errors/NotFoundException'
 import { getMemberPermissions } from '../utils/getMemberPermissions'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
-import { GetGroupMembersAutocompletionsArguments, User } from 'shared'
+import { GetGroupMembersAutocompletionsArguments, UserWithDisplayName } from 'shared'
 
 export async function getGroupMembersAutocompletions(
   pool: Pool,
   callerId: string,
   args: GetGroupMembersAutocompletionsArguments
-): Promise<User[]> {
+): Promise<UserWithDisplayName[]> {
   if (await isGroupDeleted(pool, args.groupId)) {
     throw new NotFoundException('api.notFound.group')
   }
@@ -27,7 +27,8 @@ export async function getGroupMembersAutocompletions(
               users.name, 
               users.email, 
               users.photo_url,
-              users.deleted
+              users.deleted,
+              group_members.display_name
             FROM users JOIN group_members ON users.id = group_members.user_id
             WHERE group_members.group_id = $1 AND (users.name ILIKE $2 OR users.email ILIKE $2 OR group_members.display_name ILIKE $2)
             ORDER BY users.name
@@ -43,7 +44,8 @@ export async function getGroupMembersAutocompletions(
               users.id, 
               users.name, 
               users.email, 
-              users.deleted
+              users.deleted,
+              group_members.display_name
             FROM users JOIN group_members ON users.id = group_members.user_id
             WHERE group_members.group_id = $1 AND users.email = $2
           `,
@@ -57,5 +59,6 @@ export async function getGroupMembersAutocompletions(
     email: row.email,
     photoUrl: null,
     deleted: row.deleted,
+    displayName: row.display_name,
   }))
 }

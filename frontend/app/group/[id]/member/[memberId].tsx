@@ -77,9 +77,20 @@ export function MemberScreen() {
                   textAlign: 'center',
                 }}
               >
-                {memberInfo.name}
+                {memberInfo.displayName ?? memberInfo.name}
               </Text>
             )}
+          </ShimmerPlaceholder>
+          <ShimmerPlaceholder argument={memberInfo} shimmerStyle={{ width: 240, height: 22 }}>
+            {(memberInfo) =>
+              memberInfo.displayName && (
+                <Text
+                  style={{ fontSize: 16, fontWeight: '400', color: theme.colors.onSurfaceVariant }}
+                >
+                  {memberInfo.name}
+                </Text>
+              )
+            }
           </ShimmerPlaceholder>
           <ShimmerPlaceholder argument={memberInfo} shimmerStyle={{ width: 240, height: 22 }}>
             {(memberInfo) => (
