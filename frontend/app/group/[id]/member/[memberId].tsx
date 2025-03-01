@@ -19,19 +19,19 @@ export function MemberScreen() {
   const user = useAuth()
   const theme = useTheme()
   const insets = useModalScreenInsets()
-  const { data: permissions } = useGroupPermissions()
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
+  const { data: userPermissions } = useGroupPermissions(Number(groupId))
   const { data: memberInfo, error } = useGroupMemberInfo(Number(groupId), String(memberId))
 
   const { mutateAsync: setDisplayName, isPending: isChangingDisplayName } =
     useSetUserDisplayNameMutation(Number(groupId), String(memberId))
 
   const canEditDisplayName =
-    permissions?.canChangeEveryoneDisplayName() ||
-    (permissions?.canChangeDisplayName() && user?.id === memberId)
+    userPermissions?.canChangeEveryoneDisplayName() ||
+    (userPermissions?.canChangeDisplayName() && user?.id === memberId)
 
-  if (error || permissions?.canReadMembers() === false) {
+  if (error || userPermissions?.canReadMembers() === false) {
     return (
       <View
         style={{
@@ -40,7 +40,7 @@ export function MemberScreen() {
         }}
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
-          {permissions?.canReadMembers() ? (
+          {userPermissions?.canReadMembers() ? (
             <>
               <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
               <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
