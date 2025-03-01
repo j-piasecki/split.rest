@@ -1,5 +1,5 @@
 import { SplitForm, SplitFormProps } from './SplitForm'
-import { CurrencyUtils } from '@utils/CurrencyUtils'
+import { CurrencyUtils } from 'shared'
 import { SplitType, SplitWithUsers } from 'shared'
 
 export interface SplitEditFormProps
