@@ -31,6 +31,7 @@ export interface Member extends User {
   balance: string
   isAdmin: boolean
   hasAccess: boolean
+  displayName: string | null
 }
 
 export interface BalanceChange {

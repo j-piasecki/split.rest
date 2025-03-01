@@ -22,31 +22,31 @@ export async function getGroupMembersAutocompletions(
     ? (
         await pool.query(
           `
-        SELECT 
-          users.id, 
-          users.name, 
-          users.email, 
-          users.photo_url,
-          users.deleted
-        FROM users JOIN group_members ON users.id = group_members.user_id
-        WHERE group_members.group_id = $1 AND (users.name ILIKE $2 OR users.email ILIKE $2)
-        ORDER BY users.name
-        LIMIT 5
-      `,
+            SELECT 
+              users.id, 
+              users.name, 
+              users.email, 
+              users.photo_url,
+              users.deleted
+            FROM users JOIN group_members ON users.id = group_members.user_id
+            WHERE group_members.group_id = $1 AND (users.name ILIKE $2 OR users.email ILIKE $2 OR group_members.display_name ILIKE $2)
+            ORDER BY users.name
+            LIMIT 5
+          `,
           [args.groupId, `%${args.query}%`]
         )
       ).rows
     : (
         await pool.query(
           `
-        SELECT 
-          users.id, 
-          users.name, 
-          users.email, 
-          users.deleted
-        FROM users JOIN group_members ON users.id = group_members.user_id
-        WHERE group_members.group_id = $1 AND users.email = $2
-      `,
+            SELECT 
+              users.id, 
+              users.name, 
+              users.email, 
+              users.deleted
+            FROM users JOIN group_members ON users.id = group_members.user_id
+            WHERE group_members.group_id = $1 AND users.email = $2
+          `,
           [args.groupId, args.query]
         )
       ).rows

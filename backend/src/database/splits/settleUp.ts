@@ -165,7 +165,8 @@ export async function settleUp(
             users.deleted,
             group_members.balance,
             group_members.has_access,
-            group_members.is_admin 
+            group_members.is_admin,
+            group_members.display_name
           FROM group_members 
           JOIN users ON group_members.user_id = users.id 
           WHERE group_id = $1 
@@ -182,6 +183,7 @@ export async function settleUp(
       balance: row.balance,
       hasAccess: row.has_access,
       isAdmin: row.is_admin,
+      displayName: row.display_name,
     }))
 
     const split = await createAndSaveSettleUpSplit(client, callerId, balance, members, args.groupId)

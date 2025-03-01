@@ -22,7 +22,8 @@ export async function getMemberInfo(
           users.deleted,
           group_members.balance,
           group_members.has_access,
-          group_members.is_admin 
+          group_members.is_admin,
+          group_members.display_name
         FROM group_members 
         JOIN users ON group_members.user_id = users.id 
         WHERE group_id = $1 AND users.id = $2 
@@ -44,5 +45,6 @@ export async function getMemberInfo(
     balance: rows[0].balance,
     hasAccess: rows[0].has_access,
     isAdmin: rows[0].is_admin,
+    displayName: rows[0].display_name,
   }
 }
