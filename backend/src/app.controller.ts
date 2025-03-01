@@ -36,6 +36,7 @@ import {
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
+  SetUserDisplayNameArguments,
   SetUserNameArguments,
   SettleUpArguments,
   SplitType,
@@ -73,6 +74,7 @@ import {
   isSetGroupInviteRejectedArguments,
   isSetGroupInviteWithdrawnArguments,
   isSetGroupNameArguments,
+  isSetUserDisplayNameArguments,
   isSetUserNameArguments,
   isSettleUpArguments,
   isUpdateSplitArguments,
@@ -502,5 +504,18 @@ export class AppController {
     }
 
     return await this.appService.settleUp(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('setUserDisplayName')
+  async setUserDisplayName(
+    @Req() request: Request,
+    @Body() args: Partial<SetUserDisplayNameArguments>
+  ) {
+    if (!isSetUserDisplayNameArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.setUserDisplayName(request.user.sub, args)
   }
 }

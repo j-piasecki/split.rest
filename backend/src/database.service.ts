@@ -24,6 +24,7 @@ import { setGroupHidden } from './database/groups/setGroupHidden'
 import { setGroupName } from './database/groups/setGroupName'
 import { setGroupInviteRejected } from './database/groups/setInviteRejected'
 import { setGroupInviteWithdrawn } from './database/groups/setInviteWithdrawn'
+import { setUserDisplayName } from './database/groups/setUserDisplayName'
 import { RequirePermissions } from './database/permissionCheck'
 import { createSplit } from './database/splits/createSplit'
 import { deleteSplit } from './database/splits/deleteSplit'
@@ -71,6 +72,7 @@ import {
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
+  SetUserDisplayNameArguments,
   SetUserNameArguments,
   SettleUpArguments,
   UpdateSplitArguments,
@@ -283,5 +285,10 @@ export class DatabaseService {
   @RequirePermissions(['settleUp'])
   async settleUp(callerId: string, args: SettleUpArguments) {
     return await settleUp(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['changeDisplayName'])
+  async setUserDisplayName(callerId: string, args: SetUserDisplayNameArguments) {
+    return await setUserDisplayName(this.pool, callerId, args)
   }
 }

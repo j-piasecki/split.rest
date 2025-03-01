@@ -35,6 +35,7 @@ import {
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
   SetGroupNameArguments,
+  SetUserDisplayNameArguments,
   SetUserNameArguments,
   SettleUpArguments,
   SplitType,
@@ -232,5 +233,9 @@ export class AppService {
 
   async settleUp(callerId: string, args: SettleUpArguments) {
     return await this.databaseService.settleUp(callerId, args)
+  }
+
+  async setUserDisplayName(callerId: string, args: SetUserDisplayNameArguments) {
+    return await this.databaseService.setUserDisplayName(callerId, args)
   }
 }
