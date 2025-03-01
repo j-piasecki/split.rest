@@ -46,6 +46,10 @@ export async function invalidateGroupMembers(groupId: number) {
   await queryClient.invalidateQueries({ queryKey: ['groupMembers', groupId] })
 }
 
+export async function invalidateGroupMember(groupId: number, userId: string) {
+  await queryClient.invalidateQueries({ queryKey: ['group', groupId, 'member', userId] })
+}
+
 export async function invalidateUserGroups(hidden?: boolean) {
   if (hidden === undefined) {
     await queryClient.invalidateQueries({ queryKey: ['userGroups'] })
