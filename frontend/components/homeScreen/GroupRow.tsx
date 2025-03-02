@@ -5,12 +5,12 @@ import { Text } from '@components/Text'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
-import { CurrencyUtils } from 'shared'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { router } from 'expo-router'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
+import { CurrencyUtils } from 'shared'
 import { GroupUserInfo } from 'shared'
 
 export const GROUP_ROW_HEIGHT = 80

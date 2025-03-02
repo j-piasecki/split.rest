@@ -12,11 +12,13 @@ function handleNotification(notification: FirebaseMessagingTypes.RemoteMessage) 
 export function useNotificationListener() {
   useEffect(() => {
     if (Platform.OS !== 'web') {
-      messaging().getInitialNotification().then((notification) => {
-        if (notification) {
-          handleNotification(notification)
-        }
-      })
+      messaging()
+        .getInitialNotification()
+        .then((notification) => {
+          if (notification) {
+            handleNotification(notification)
+          }
+        })
 
       return messaging().onNotificationOpenedApp((notification) => {
         handleNotification(notification)

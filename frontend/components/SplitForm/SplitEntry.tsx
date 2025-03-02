@@ -4,11 +4,11 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { TextInput, TextInputRef } from '@components/TextInput'
 import { TextInputUserPicker } from '@components/TextInputUserPicker'
 import { useTheme } from '@styling/theme'
-import { CurrencyUtils } from 'shared'
 import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutRectangle, Platform, Pressable, ScrollView, View } from 'react-native'
+import { CurrencyUtils } from 'shared'
 
 export interface SplitEntryProps {
   scrollRef?: React.RefObject<ScrollView>

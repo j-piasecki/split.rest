@@ -2,11 +2,11 @@ import { Icon } from '@components/Icon'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
-import { CurrencyUtils } from 'shared'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
+import { CurrencyUtils } from 'shared'
 import { GroupUserInfo } from 'shared'
 
 export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {

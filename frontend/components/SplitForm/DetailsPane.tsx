@@ -3,10 +3,10 @@ import { Pane } from '@components/Pane'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { useTheme } from '@styling/theme'
-import { CurrencyUtils } from 'shared'
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
+import { CurrencyUtils } from 'shared'
 import { GroupUserInfo } from 'shared'
 
 export interface DetailsPaneProps {

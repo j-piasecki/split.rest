@@ -4,12 +4,12 @@ import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { useUserById } from '@hooks/database/useUserById'
 import { useTheme } from '@styling/theme'
-import { CurrencyUtils } from 'shared'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getSplitDisplayName } from '@utils/getSplitDisplayName'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ScrollView, StyleProp, View, ViewStyle } from 'react-native'
+import { CurrencyUtils } from 'shared'
 import {
   GroupUserInfo,
   LanguageTranslationKey,

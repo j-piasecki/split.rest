@@ -56,7 +56,7 @@ function fixIconColor() {
   const content = fs.readFileSync(filePath, 'utf8')
   const newContent = content.replace(
     '<meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/iconBackground"/>',
-    '<meta-data tools:replace="android:resource" android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/iconBackground"/>',
+    '<meta-data tools:replace="android:resource" android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/iconBackground"/>'
   )
   fs.writeFileSync(filePath, newContent)
   console.log('icon color fixed for Android')
