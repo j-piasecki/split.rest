@@ -50,6 +50,13 @@
     "showGroup": "Show group"
   },
 
+  "notification": {
+    "createSplit": {
+      "youOwe": "{{splitName}} — you owe {{amount}}",
+      "youAreOwed": "{{splitName}} — you are owed {{amount}}"
+    }
+  },
+
   "api": {
     "invalidArguments": "Invalid arguments",
     "mustBeLoggedIn": "You must be logged in to do that",

@@ -32,16 +32,25 @@ function getString(value: StringOrTranslatable, language: string) {
   return i18n.t(value.key, { ...value.args, lng: language })
 }
 
-export default class NotificationUtils {
-  static async sendNotification(
-    token: Token,
-    title: StringOrTranslatable,
-    body?: StringOrTranslatable,
-    data?: Record<string, string>
-  ) {
-    const titleToSend = getString(title, token.language)
-    const bodyToSend = body ? getString(body, token.language) : undefined
+interface Notification {
+  token: Token
+  title: StringOrTranslatable
+  body?: StringOrTranslatable
+  data?: Record<string, string>
+}
 
-    return await sendNotification(token.token, titleToSend, bodyToSend, data)
+export default class NotificationUtils {
+  static async sendNotification(notification: Notification) {
+    const titleToSend = getString(notification.title, notification.token.language)
+    const bodyToSend = notification.body
+      ? getString(notification.body, notification.token.language)
+      : undefined
+
+    return await sendNotification(
+      notification.token.token,
+      titleToSend,
+      bodyToSend,
+      notification.data
+    )
   }
 }
