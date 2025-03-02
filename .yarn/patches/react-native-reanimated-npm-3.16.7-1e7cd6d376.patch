@@ -12,7 +12,7 @@ index 4ad84635f203bad14a6dd6bf35e24fd38ae6a3db..70ccf811cd7ac9f2c10fc198f531f99f
      // If the commit comes from React Native then pause commits from
      // Reanimated since the ShadowTree to be committed by Reanimated may not
 diff --git a/Common/cpp/reanimated/Fabric/ShadowTreeCloner.cpp b/Common/cpp/reanimated/Fabric/ShadowTreeCloner.cpp
-index 5795b731241a1c989f398a0b71be956d433211e3..02637a60c6d62a94367f8374d940ea20bd8443f2 100644
+index 5795b731241a1c989f398a0b71be956d433211e3..047c4160935c890845b1d063d61fcbb00e40a74f 100644
 --- a/Common/cpp/reanimated/Fabric/ShadowTreeCloner.cpp
 +++ b/Common/cpp/reanimated/Fabric/ShadowTreeCloner.cpp
 @@ -1,5 +1,6 @@
@@ -63,7 +63,7 @@ index 5795b731241a1c989f398a0b71be956d433211e3..02637a60c6d62a94367f8374d940ea20
 +    const ChildrenMap &childrenMap,
      const PropsMap &propsMap) {
 -  ChildrenMap childrenMap;
-+  if (oldShadowNode->getHasBeenPromoted()) {
++  if (oldShadowNode->getSealed()) {
 +    return cloneShadowTreeWithNewPropsRecursive(
 +        *oldShadowNode, childrenMap, propsMap);
 +  }

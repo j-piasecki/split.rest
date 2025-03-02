@@ -13891,7 +13891,7 @@ __metadata:
 
 "react-native-reanimated@patch:react-native-reanimated@npm%3A3.16.7#./.yarn/patches/react-native-reanimated-npm-3.16.7-1e7cd6d376.patch::locator=split%40workspace%3A.":
   version: 3.16.7
-  resolution: "react-native-reanimated@patch:react-native-reanimated@npm%3A3.16.7#./.yarn/patches/react-native-reanimated-npm-3.16.7-1e7cd6d376.patch::version=3.16.7&hash=5423aa&locator=split%40workspace%3A."
+  resolution: "react-native-reanimated@patch:react-native-reanimated@npm%3A3.16.7#./.yarn/patches/react-native-reanimated-npm-3.16.7-1e7cd6d376.patch::version=3.16.7&hash=52c16b&locator=split%40workspace%3A."
   dependencies:
     "@babel/plugin-transform-arrow-functions": ^7.0.0-0
     "@babel/plugin-transform-class-properties": ^7.0.0-0
@@ -13908,7 +13908,7 @@ __metadata:
     "@babel/core": ^7.0.0-0
     react: "*"
     react-native: "*"
-  checksum: 7e6cb37e4d01d9e9377e9a177cb3b6f0ea1523316b11afe79142a25540089356cce0d5bb2c5387bd829ef7ce832d30a7875c03d4c21d2cf48afcf7e11b8ccb5a
+  checksum: e2faef23b0385b9799c30f19ce1fa923a2b56bc51fffda541040f754c4bff27e8bb995a8905686c05d01a20fc392a962b7b2e75375b13cc4f49d0c1b4e9ff823
   languageName: node
   linkType: hard
 
@@ -13974,7 +13974,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:0.77.1, react-native@npm:~0.77.1":
+"react-native@npm:0.77.1":
   version: 0.77.1
   resolution: "react-native@npm:0.77.1"
   dependencies:
@@ -14029,7 +14029,7 @@ __metadata:
 
 "react-native@patch:react-native@npm%3A0.77.1#./.yarn/patches/react-native-npm-0.77.1-508c57ca1f.patch::locator=split%40workspace%3A.":
   version: 0.77.1
-  resolution: "react-native@patch:react-native@npm%3A0.77.1#./.yarn/patches/react-native-npm-0.77.1-508c57ca1f.patch::version=0.77.1&hash=c3a9a1&locator=split%40workspace%3A."
+  resolution: "react-native@patch:react-native@npm%3A0.77.1#./.yarn/patches/react-native-npm-0.77.1-508c57ca1f.patch::version=0.77.1&hash=d8f12b&locator=split%40workspace%3A."
   dependencies:
     "@jest/create-cache-key-function": ^29.6.3
     "@react-native/assets-registry": 0.77.1
@@ -14076,7 +14076,7 @@ __metadata:
       optional: true
   bin:
     react-native: cli.js
-  checksum: e498218f3492e6d04ad257bcd7dc8a24e0f2c713768e470d4a9d6aad393366c06b92607f955267e8bef0ba9a03fcf79a5f90c5319ae04adfc9b7e0b22a294052
+  checksum: 118446eda78c8a57e1ab367553363e561ee2a83d195f22d330149cc013bdf647ebed91a2e2596ec506e87ed4b2ea3a2669c97d2539970689b679d12ad5af7e64
   languageName: node
   linkType: hard
 

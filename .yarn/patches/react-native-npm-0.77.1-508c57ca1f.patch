@@ -58,6 +58,63 @@ index 427ddde767330f0d8bbe1f6a60d21b7b8d32cf5d..b992dfb55c381737c5c0aadfb97c7d73
    }
  
    @JvmStatic
+diff --git a/ReactCommon/react/renderer/core/Sealable.cpp b/ReactCommon/react/renderer/core/Sealable.cpp
+index 6edb6f7721378c60c4b968f019f5c4a295b7cb5d..ccd72de2118bba94eb2f99b2296a4d2f280224fb 100644
+--- a/ReactCommon/react/renderer/core/Sealable.cpp
++++ b/ReactCommon/react/renderer/core/Sealable.cpp
+@@ -24,8 +24,6 @@ namespace facebook::react {
+  * http://en.cppreference.com/w/cpp/language/rule_of_three
+  */
+ 
+-#ifdef REACT_NATIVE_DEBUG
+-
+ Sealable::Sealable() : sealed_(false) {}
+ 
+ Sealable::Sealable(const Sealable& /*other*/) : sealed_(false){};
+@@ -56,9 +54,9 @@ bool Sealable::getSealed() const {
+ }
+ 
+ void Sealable::ensureUnsealed() const {
++#ifdef REACT_NATIVE_DEBUG
+   react_native_assert(!sealed_ && "Attempt to mutate a sealed object.");
+-}
+-
+ #endif
++}
+ 
+ } // namespace facebook::react
+diff --git a/ReactCommon/react/renderer/core/Sealable.h b/ReactCommon/react/renderer/core/Sealable.h
+index 72603b510f0a8f5aead3ffdffb297a823151cff7..537bb6a26c09a79f9b4202261178f1b9e8aa67d7 100644
+--- a/ReactCommon/react/renderer/core/Sealable.h
++++ b/ReactCommon/react/renderer/core/Sealable.h
+@@ -43,20 +43,6 @@ namespace facebook::react {
+  *      must be prevented.
+  */
+ 
+-#ifndef REACT_NATIVE_DEBUG
+-
+-// Release-mode, production version
+-class Sealable {
+- public:
+-  inline void seal() const {}
+-  inline bool getSealed() const {
+-    return true;
+-  }
+-  inline void ensureUnsealed() const {}
+-};
+-
+-#else
+-
+ // Debug version
+ class Sealable {
+  public:
+@@ -88,6 +74,4 @@ class Sealable {
+   mutable std::atomic<bool> sealed_{false};
+ };
+ 
+-#endif
+-
+ } // namespace facebook::react
 diff --git a/ReactCommon/react/renderer/core/ShadowNode.cpp b/ReactCommon/react/renderer/core/ShadowNode.cpp
 index a9ca4d71c9d6a8649ab8a9d529fed6e3bb867f37..e9c13b6919e082bd896cb7cdf277bc43b11188e5 100644
 --- a/ReactCommon/react/renderer/core/ShadowNode.cpp

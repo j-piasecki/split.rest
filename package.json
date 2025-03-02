@@ -21,7 +21,8 @@
     "@react-native-picker/picker@2.9.0": "patch:@react-native-picker/picker@npm%3A2.9.0#./.yarn/patches/@react-native-picker-picker-npm-2.9.0-fdf0591fce.patch",
     "react-native-reanimated@~3.16.7": "patch:react-native-reanimated@npm%3A3.16.7#./.yarn/patches/react-native-reanimated-npm-3.16.7-1e7cd6d376.patch",
     "react-native@~0.77.0": "patch:react-native@npm%3A0.77.1#./.yarn/patches/react-native-npm-0.77.1-508c57ca1f.patch",
-    "react-native@*": "patch:react-native@npm%3A0.77.1#./.yarn/patches/react-native-npm-0.77.1-508c57ca1f.patch"
+    "react-native@*": "patch:react-native@npm%3A0.77.1#./.yarn/patches/react-native-npm-0.77.1-508c57ca1f.patch",
+    "react-native@~0.77.1": "patch:react-native@npm%3A0.77.1#./.yarn/patches/react-native-npm-0.77.1-508c57ca1f.patch"
   },
   "packageManager": "yarn@3.6.4",
   "expo": {
