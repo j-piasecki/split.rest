@@ -85,7 +85,7 @@ export function GroupRow({ info }: GroupRowProps) {
           }}
         >
           <Text style={{ fontSize: 18, fontWeight: 600, color: balanceColor }}>
-            {CurrencyUtils.format(info.balance, info.currency, true)}
+            {CurrencyUtils.format(info.balance, info.currency, true, true)}
           </Text>
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <View style={{ flexDirection: 'row', gap: 4 }}>

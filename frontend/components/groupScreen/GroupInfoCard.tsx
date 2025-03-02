@@ -59,7 +59,7 @@ export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
                       : theme.colors.balanceNegative,
               }}
             >
-              {CurrencyUtils.format(info.balance, info.currency, true)}
+              {CurrencyUtils.format(info.balance, info.currency, true, true)}
             </Text>
           )}
         </ShimmerPlaceholder>

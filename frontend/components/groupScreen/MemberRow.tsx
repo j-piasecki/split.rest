@@ -184,7 +184,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
                         : theme.colors.balanceNegative,
                 }}
               >
-                {CurrencyUtils.format(member.balance, info.currency, true)}
+                {CurrencyUtils.format(member.balance, info.currency, true, true)}
               </Text>
             </View>
 
