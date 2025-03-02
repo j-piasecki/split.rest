@@ -1,4 +1,5 @@
 import { EditableText } from '@components/EditableText'
+import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
@@ -11,7 +12,7 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams } from 'expo-router'
 import React from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { isTranslatableError } from 'shared'
 
@@ -126,6 +127,69 @@ export function MemberScreen() {
               </Text>
             )}
           </ShimmerPlaceholder>
+          <ShimmerPlaceholder argument={memberInfo} shimmerStyle={{ width: 240, height: 28 }}>
+            {(memberInfo) => (
+              <Text style={{ fontSize: 22, fontWeight: '500', color: theme.colors.onSurface }}>
+                <Trans
+                  values={{ balance: memberInfo.balance }}
+                  i18nKey={'memberInfo.balance'}
+                  components={{
+                    Styled: (
+                      <Text
+                        style={{
+                          fontWeight: '600',
+                          color:
+                            Number(memberInfo.balance) === 0
+                              ? theme.colors.balanceNeutral
+                              : Number(memberInfo.balance) > 0
+                                ? theme.colors.balancePositive
+                                : theme.colors.balanceNegative,
+                        }}
+                      />
+                    ),
+                  }}
+                />
+              </Text>
+            )}
+          </ShimmerPlaceholder>
+
+          {memberInfo && (
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                paddingHorizontal: 16,
+              }}
+            >
+              {!memberInfo.hasAccess ? (
+                <>
+                  <View style={{ width: 24, alignItems: 'center' }}>
+                    <Icon name={'lock'} size={20} color={theme.colors.error} />
+                  </View>
+                  <Text
+                    style={{
+                      color: theme.colors.error,
+                      fontSize: 18,
+                    }}
+                  >
+                    {t('memberInfo.noAccess')}
+                  </Text>
+                </>
+              ) : memberInfo.isAdmin ? (
+                <>
+                  <View style={{ width: 24, alignItems: 'center' }}>
+                    <Icon name='shield' size={20} color={theme.colors.onSurface} />
+                  </View>
+                  <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
+                    {t('memberInfo.admin')}
+                  </Text>
+                </>
+              ) : null}
+            </View>
+          )}
         </View>
       </View>
     </View>

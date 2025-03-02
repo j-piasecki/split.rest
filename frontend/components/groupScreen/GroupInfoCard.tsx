@@ -27,7 +27,7 @@ export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
       <ShimmerPlaceholder argument={info} shimmerStyle={{ height: 44 }}>
         {(info) => (
           <Text
-            style={{ fontSize: 32, color: theme.colors.onSurfaceVariant }}
+            style={{ fontSize: 32, color: theme.colors.onSurface }}
             numberOfLines={3}
             adjustsFontSizeToFit
           >
@@ -73,7 +73,7 @@ export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <View style={{ width: 24, alignItems: 'center' }}>
-            <Icon name='members' size={20} color={theme.colors.outline} />
+            <Icon name='members' size={20} color={theme.colors.secondary} />
           </View>
           <ShimmerPlaceholder
             argument={info}
@@ -81,7 +81,7 @@ export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
             shimmerStyle={{ height: 24 }}
           >
             {(info) => (
-              <Text style={{ color: theme.colors.outline, fontSize: 18, flex: 1 }}>
+              <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
                 {t('groupInfo.numberOfMembers', { count: info.memberCount })}
               </Text>
             )}
@@ -90,7 +90,7 @@ export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <View style={{ width: 24, alignItems: 'center' }}>
-            <Icon name='money' size={20} color={theme.colors.outline} />
+            <Icon name='money' size={20} color={theme.colors.secondary} />
           </View>
           <ShimmerPlaceholder
             argument={info}
@@ -98,7 +98,7 @@ export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
             shimmerStyle={{ height: 24 }}
           >
             {(info) => (
-              <Text style={{ color: theme.colors.outline, fontSize: 18, flex: 1 }}>
+              <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
                 {t('groupInfo.totalTransactionsValue', {
                   value: CurrencyUtils.format(info.total, info.currency),
                 })}
@@ -127,9 +127,9 @@ export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
             ) : info.isAdmin ? (
               <>
                 <View style={{ width: 24, alignItems: 'center' }}>
-                  <Icon name='shield' size={20} color={theme.colors.outline} />
+                  <Icon name='shield' size={20} color={theme.colors.secondary} />
                 </View>
-                <Text style={{ color: theme.colors.outline, fontSize: 18, flex: 1 }}>
+                <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
                   {t('groupInfo.youAreAdmin')}
                 </Text>
               </>

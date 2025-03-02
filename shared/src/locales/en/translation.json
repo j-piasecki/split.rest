@@ -183,6 +183,12 @@
     }
   },
 
+  "memberInfo": {
+    "balance": "Balance: <Styled>{{balance}}</Styled>",
+    "admin": "Moderator of this group",
+    "noAccess": "No access to this group"
+  },
+
   "screenName": {
     "createGroup": "Create group",
     "group": "Group",
