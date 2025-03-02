@@ -3,7 +3,7 @@
   "name": "split",
   "scripts": {
     "start": "yarn workspace frontend start",
-    "build": "yarn workspace shared build && yarn workspace frontend build:web && yarn workspace backend build",
+    "build": "yarn workspace shared build && yarn workspace frontend build:web",
     "format": "yarn workspace frontend format && yarn workspace backend format && yarn workspace backups format && yarn workspace shared format",
     "lint": "yarn workspace frontend lint && yarn workspace backend lint",
     "check": "yarn workspace frontend check ; yarn workspace backend check ; yarn workspace shared check",
