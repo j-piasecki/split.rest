@@ -5,7 +5,7 @@ import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { userExists } from '../utils/userExists'
 import { validateNormalSplitArgs } from '../utils/validateNormalSplitArgs'
 import { Pool, PoolClient } from 'pg'
-import { CreateSplitArguments, CurrencyUtils, SplitType } from 'shared'
+import { AndroidNotificationChannel, CreateSplitArguments, CurrencyUtils, SplitType } from 'shared'
 
 export async function createSplitNoTransaction(
   client: PoolClient,
@@ -107,6 +107,7 @@ async function dispatchNotifications(
         data: {
           pathToOpen: `/group/${args.groupId}/split/${splitId}/`,
         },
+        androidChannel: AndroidNotificationChannel.NewSplits,
       })
     })
   })

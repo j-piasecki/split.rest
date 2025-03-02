@@ -1,8 +1,11 @@
 import { registerOrUpdateNotificationToken } from '@database/registerOrUpdateNotificationToken'
 import messaging from '@react-native-firebase/messaging'
-import { useEffect } from 'react'
-import { PermissionsAndroid, Platform } from 'react-native'
 import { auth } from '@utils/firebase'
+import * as Notifications from 'expo-notifications'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { PermissionsAndroid, Platform } from 'react-native'
+import { AndroidNotificationChannel } from 'shared'
 
 async function requestPermissionAndGetToken(): Promise<string | null> {
   if (Platform.OS === 'ios') {
@@ -30,7 +33,32 @@ async function requestPermissionAndGetToken(): Promise<string | null> {
 }
 
 export async function useNotificationPermission() {
+  const { t } = useTranslation()
+
   useEffect(() => {
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync(AndroidNotificationChannel.NewSplits, {
+        name: t('notification.channel.newSplits'),
+        importance: Notifications.AndroidImportance.HIGH,
+        sound: 'default',
+        enableVibrate: true,
+      })
+
+      Notifications.setNotificationChannelAsync(AndroidNotificationChannel.SplitUpdates, {
+        name: t('notification.channel.splitUpdates'),
+        importance: Notifications.AndroidImportance.HIGH,
+        sound: 'default',
+        enableVibrate: true,
+      })
+
+      Notifications.setNotificationChannelAsync(AndroidNotificationChannel.GroupInvites, {
+        name: t('notification.channel.groupInvites'),
+        importance: Notifications.AndroidImportance.HIGH,
+        sound: 'default',
+        enableVibrate: true,
+      })
+    }
+
     if (Platform.OS !== 'web') {
       async function tryUpdateToken() {
         const token = await requestPermissionAndGetToken()
@@ -41,5 +69,5 @@ export async function useNotificationPermission() {
 
       tryUpdateToken()
     }
-  }, [])
+  }, [t])
 }

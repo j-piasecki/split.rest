@@ -5,7 +5,13 @@ import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { splitExists } from '../utils/splitExists'
 import { validateNormalSplitArgs } from '../utils/validateNormalSplitArgs'
 import { Pool, PoolClient } from 'pg'
-import { CurrencyUtils, LanguageTranslationKey, SplitType, UpdateSplitArguments } from 'shared'
+import {
+  AndroidNotificationChannel,
+  CurrencyUtils,
+  LanguageTranslationKey,
+  SplitType,
+  UpdateSplitArguments,
+} from 'shared'
 import NotificationUtils from 'src/notifications/NotificationUtils'
 
 async function dispatchNotificationBatch(
@@ -29,6 +35,7 @@ async function dispatchNotificationBatch(
           },
         },
         data: data,
+        androidChannel: AndroidNotificationChannel.SplitUpdates,
       })
     })
   })

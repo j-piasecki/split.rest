@@ -5,7 +5,7 @@ import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { userExists } from '../utils/userExists'
 import { Pool, PoolClient } from 'pg'
-import { InviteUserToGroupArguments } from 'shared'
+import { AndroidNotificationChannel, InviteUserToGroupArguments } from 'shared'
 import NotificationUtils from 'src/notifications/NotificationUtils'
 
 async function dispatchNotification(client: PoolClient, args: InviteUserToGroupArguments) {
@@ -24,6 +24,7 @@ async function dispatchNotification(client: PoolClient, args: InviteUserToGroupA
       data: {
         pathToOpen: `/groupInvites/`,
       },
+      androidChannel: AndroidNotificationChannel.GroupInvites,
     })
   })
 }

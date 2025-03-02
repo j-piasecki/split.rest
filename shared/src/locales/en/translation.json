@@ -51,6 +51,11 @@
   },
 
   "notification": {
+    "channel": {
+      "newSplits": "New splits",
+      "splitUpdates": "Split updates",
+      "groupInvites": "Group Invites"
+    },
     "createSplit": {
       "youOwe": "{{splitName}} — you owe {{amount}}",
       "youAreOwed": "{{splitName}} — you are owed {{amount}}"

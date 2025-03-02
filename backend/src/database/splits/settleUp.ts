@@ -7,6 +7,7 @@ import { createSplitNoTransaction } from './createSplit'
 import assert from 'assert'
 import { Pool, PoolClient } from 'pg'
 import {
+  AndroidNotificationChannel,
   BalanceChange,
   CurrencyUtils,
   Member,
@@ -145,6 +146,7 @@ async function dispatchNotifications(
         data: {
           pathToOpen: `/group/${groupId}/split/${splitId}/`,
         },
+        androidChannel: AndroidNotificationChannel.NewSplits,
       })
     })
   })

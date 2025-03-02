@@ -1,6 +1,6 @@
 import { sendNotification } from './sendNotification'
 import i18n from 'i18next'
-import { LanguageTranslationKey, translation } from 'shared'
+import { AndroidNotificationChannel, LanguageTranslationKey, translation } from 'shared'
 
 i18n.init({
   fallbackLng: 'en',
@@ -37,6 +37,7 @@ interface Notification {
   title: StringOrTranslatable
   body?: StringOrTranslatable
   data?: Record<string, string>
+  androidChannel?: AndroidNotificationChannel
 }
 
 export default class NotificationUtils {
@@ -50,7 +51,8 @@ export default class NotificationUtils {
       notification.token.token,
       titleToSend,
       bodyToSend,
-      notification.data
+      notification.data,
+      notification.androidChannel
     )
   }
 }
