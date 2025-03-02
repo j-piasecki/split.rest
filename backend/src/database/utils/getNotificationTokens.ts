@@ -1,6 +1,6 @@
 import { Client, Pool, PoolClient } from 'pg'
 
-interface NotificationToken {
+export interface NotificationToken {
   token: string
   language: string
 }

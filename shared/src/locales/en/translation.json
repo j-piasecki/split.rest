@@ -54,6 +54,11 @@
     "createSplit": {
       "youOwe": "{{splitName}} — you owe {{amount}}",
       "youAreOwed": "{{splitName}} — you are owed {{amount}}"
+    },
+    "updateSplit": {
+      "added": "{{splitName}} — you owe {{amount}}",
+      "removed": "You were removed from split {{splitName}} — you got back {{amount}}",
+      "updated": "{{splitName}} was updated — you now owe {{amount}}"
     }
   },
 
