@@ -187,7 +187,7 @@ export interface SetUserDisplayNameArguments {
 }
 
 export interface RegisterOrUpdateNotificationTokenArguments {
-  token: string,
+  token: string
   language: string
 }
 

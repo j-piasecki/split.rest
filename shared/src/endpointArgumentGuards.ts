@@ -212,10 +212,14 @@ export function isSetUserDisplayNameArguments(obj: any): obj is SetUserDisplayNa
   return obj.groupId !== undefined && obj.userId !== undefined && obj.displayName !== undefined
 }
 
-export function isRegisterOrUpdateNotificationTokenArguments(obj: any): obj is RegisterOrUpdateNotificationTokenArguments {
+export function isRegisterOrUpdateNotificationTokenArguments(
+  obj: any
+): obj is RegisterOrUpdateNotificationTokenArguments {
   return obj.token !== undefined && obj.language !== undefined
 }
 
-export function isUnregisterNotificationTokenArguments(obj: any): obj is UnregisterNotificationTokenArguments {
+export function isUnregisterNotificationTokenArguments(
+  obj: any
+): obj is UnregisterNotificationTokenArguments {
   return obj.token !== undefined
 }

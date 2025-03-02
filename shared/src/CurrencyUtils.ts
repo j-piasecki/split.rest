@@ -8,7 +8,12 @@ const formatters: Record<string, (amount: string) => string> = {
 // TODO: no intl support in hermes :sadge:
 
 export class CurrencyUtils {
-  static format(amount: number | string, currency?: string, keepSign = true, includePositiveSign = false): string {
+  static format(
+    amount: number | string,
+    currency?: string,
+    keepSign = true,
+    includePositiveSign = false
+  ): string {
     const stringAmount = typeof amount === 'number' ? amount.toFixed(2) : amount
     const formattedNumber = stringAmount.startsWith('-') ? stringAmount.substring(1) : stringAmount
     let signToAdd = keepSign && includePositiveSign && Number(amount) > 0 ? '+' : ''
