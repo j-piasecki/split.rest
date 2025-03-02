@@ -1,10 +1,130 @@
 import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
+import { NotificationToken, getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { splitExists } from '../utils/splitExists'
 import { validateNormalSplitArgs } from '../utils/validateNormalSplitArgs'
-import { Pool } from 'pg'
-import { SplitType, UpdateSplitArguments } from 'shared'
+import { Pool, PoolClient } from 'pg'
+import {
+  AndroidNotificationChannel,
+  CurrencyUtils,
+  LanguageTranslationKey,
+  SplitType,
+  UpdateSplitArguments,
+} from 'shared'
+import NotificationUtils from 'src/notifications/NotificationUtils'
+
+async function dispatchNotificationBatch(
+  groupName: string,
+  currency: string,
+  splitName: string,
+  message: LanguageTranslationKey,
+  data: Record<string, string>,
+  batch: { tokens: NotificationToken[]; change: number }[]
+) {
+  batch.forEach((notification) => {
+    notification.tokens.forEach((token) => {
+      NotificationUtils.sendNotification({
+        token: token,
+        title: groupName,
+        body: {
+          key: message,
+          args: {
+            splitName: splitName,
+            amount: CurrencyUtils.format(notification.change, currency, false),
+          },
+        },
+        data: data,
+        androidChannel: AndroidNotificationChannel.SplitUpdates,
+      })
+    })
+  })
+}
+
+async function dispatchNotifications(
+  client: PoolClient,
+  callerId: string,
+  splitName: string,
+  args: UpdateSplitArguments,
+  previousParticipants: { user_id: string; change: string }[]
+) {
+  const groupInfo = (
+    await client.query('SELECT name, currency FROM groups WHERE id = $1', [args.groupId])
+  ).rows[0]
+
+  const oldParticipants = new Map<string, string>(
+    previousParticipants.map((participant) => [participant.user_id, participant.change])
+  )
+  const newParticipants = new Map<string, string>(
+    args.balances.map((balance) => [balance.id, balance.change])
+  )
+
+  const addedToSplit = await Promise.all(
+    args.balances
+      .map((balance) => ({
+        id: balance.id,
+        change: Number(balance.change),
+      }))
+      .filter((balance) => !oldParticipants.has(balance.id) && balance.change !== 0)
+      .map(async (balance) => ({
+        ...balance,
+        tokens: await getNotificationTokens(client, balance.id),
+      }))
+  )
+  const removedFromSplit = await Promise.all(
+    previousParticipants
+      .filter((participant) => !newParticipants.has(participant.user_id))
+      .map(async (participant) => ({
+        id: participant.user_id,
+        change: Number(participant.change),
+        tokens: await getNotificationTokens(client, participant.user_id),
+      }))
+  )
+  const updated = await Promise.all(
+    args.balances
+      .filter(
+        (balance) =>
+          oldParticipants.has(balance.id) &&
+          newParticipants.has(balance.id) &&
+          oldParticipants.get(balance.id) !== balance.change
+      )
+      .map(async (balance) => ({
+        id: balance.id,
+        change: Number(balance.change),
+        tokens: await getNotificationTokens(client, balance.id),
+      }))
+  )
+
+  const data = {
+    pathToOpen: `/group/${args.groupId}/split/${args.splitId}/`,
+  }
+
+  ;(
+    [
+      {
+        batch: addedToSplit,
+        message: 'notification.updateSplit.added',
+      },
+      {
+        batch: removedFromSplit,
+        message: 'notification.updateSplit.removed',
+      },
+      {
+        batch: updated,
+        message: 'notification.updateSplit.updated',
+      },
+    ] as const
+  ).forEach((notification) => {
+    dispatchNotificationBatch(
+      groupInfo.name,
+      groupInfo.currency,
+      splitName,
+      notification.message,
+      data,
+      notification.batch
+    )
+  })
+}
 
 export async function updateSplit(pool: Pool, callerId: string, args: UpdateSplitArguments) {
   const client = await pool.connect()
@@ -48,9 +168,10 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
     // Remove old balances
 
     const splitParticipants = (
-      await client.query('SELECT user_id, change FROM split_participants WHERE split_id = $1', [
-        args.splitId,
-      ])
+      await client.query<{ user_id: string; change: string }>(
+        'SELECT user_id, change FROM split_participants WHERE split_id = $1',
+        [args.splitId]
+      )
     ).rows
 
     for (const participant of splitParticipants) {
@@ -137,6 +258,8 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
     ])
 
     await client.query('COMMIT')
+
+    await dispatchNotifications(client, callerId, splitInfo.name, args, splitParticipants)
   } catch (e) {
     await client.query('ROLLBACK')
     throw e

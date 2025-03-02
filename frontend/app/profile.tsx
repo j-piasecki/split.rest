@@ -57,6 +57,7 @@ function Form({ user }: { user: User }) {
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+  const [isSigningOut, setIsSigningOut] = useState(false)
   const { mutateAsync: setUserName, isPending: isChangingName } = useSetUserNameMutation()
 
   function setName(newName: string) {
@@ -151,11 +152,14 @@ function Form({ user }: { user: User }) {
         )}
         <Button
           title={t('signOut')}
-          onPress={() => {
+          onPress={async () => {
+            setIsSigningOut(true)
+            await logout()
+            setIsSigningOut(false)
             router.dismissAll()
             router.replace('/login')
-            logout()
           }}
+          isLoading={isSigningOut}
           rightIcon='logout'
         />
       </View>

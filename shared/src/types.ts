@@ -60,6 +60,12 @@ export enum SplitType {
   BalanceChange = 1 << 2,
 }
 
+export enum AndroidNotificationChannel {
+  NewSplits = 'new-splits',
+  SplitUpdates = 'split-updates',
+  GroupInvites = 'group-invites',
+}
+
 export interface SplitInfo {
   id: number
   title: string

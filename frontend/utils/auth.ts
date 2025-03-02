@@ -3,9 +3,11 @@ import { queryClient } from './queryClient'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
 import { deleteUser as remoteDeleteUser } from '@database/deleteUser'
+import { unregisterNotificationToken } from '@database/unregisterNotificationToken'
 import { useUserById } from '@hooks/database/useUserById'
 import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication'
 import { FirebaseAuthTypes, firebase } from '@react-native-firebase/auth'
+import messaging from '@react-native-firebase/messaging'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { router, usePathname, useRouter } from 'expo-router'
 import { t } from 'i18next'
@@ -42,6 +44,13 @@ async function tryToCreateUser(createUserRetries = 5) {
       alert(t('api.auth.createUserFailed'))
     }
   }
+}
+
+async function unregisterNotifications() {
+  const token = await messaging().getToken()
+  await unregisterNotificationToken(token)
+  await messaging().deleteToken()
+  await messaging().unregisterDeviceForRemoteMessages()
 }
 
 export function useAuth(redirectToIndex = true) {
@@ -101,6 +110,7 @@ export async function deleteUser() {
     throw new TranslatableError('api.mustBeLoggedIn')
   }
 
+  await unregisterNotifications()
   await remoteDeleteUser()
 
   if (Platform.OS === 'ios') {
@@ -152,7 +162,8 @@ export async function signInWithApple() {
   console.warn(`Firebase authenticated via Apple, UID: ${userCredential.user.uid}`)
 }
 
-export function logout() {
+export async function logout() {
+  await unregisterNotifications()
   auth.signOut()
   queryClient.clear()
 }

@@ -1,6 +1,7 @@
 import { ErrorBoundary } from '@components/ErrorBoundary'
 import { SnackBarProvider } from '@components/SnackBar'
 import { useFonts } from '@hooks/useFonts'
+import { useNotificationListener } from '@hooks/useNotificationListener'
 import { DefaultTheme, ThemeProvider as NavigationThemeProvider } from '@react-navigation/native'
 import { ThemeProvider, useTheme } from '@styling/theme'
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -51,6 +52,8 @@ function Content() {
     }),
     [theme.colors.surface]
   )
+
+  useNotificationListener()
 
   useEffect(() => {
     i18n.changeLanguage(locales[0].languageCode!)

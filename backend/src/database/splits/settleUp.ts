@@ -1,11 +1,21 @@
 import { BadRequestException } from '../../errors/BadRequestException'
 import { NotFoundException } from '../../errors/NotFoundException'
+import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { createSplitNoTransaction } from './createSplit'
 import assert from 'assert'
 import { Pool, PoolClient } from 'pg'
-import { BalanceChange, Member, SettleUpArguments, SplitInfo, SplitType } from 'shared'
+import {
+  AndroidNotificationChannel,
+  BalanceChange,
+  CurrencyUtils,
+  Member,
+  SettleUpArguments,
+  SplitInfo,
+  SplitType,
+} from 'shared'
+import NotificationUtils from 'src/notifications/NotificationUtils'
 
 export function calculateSettleUpEntries(
   payerId: string,
@@ -92,6 +102,56 @@ export function calculateSettleUpEntries(
   return entries
 }
 
+async function dispatchNotifications(
+  client: PoolClient,
+  callerId: string,
+  groupId: number,
+  splitId: number,
+  entries: BalanceChange[]
+) {
+  const groupInfo = (
+    await client.query('SELECT name, currency FROM groups WHERE id = $1', [groupId])
+  ).rows[0]
+
+  const callerInfo = (await client.query('SELECT name FROM users WHERE id = $1', [callerId]))
+    .rows[0]
+
+  const notificationTargets = await Promise.all(
+    entries
+      .map((entry) => ({
+        id: entry.id,
+        change: Number(entry.change),
+      }))
+      .filter((entry) => entry.id !== callerId && entry.change !== 0)
+      .map(async (entry) => ({
+        id: entry.id,
+        change: entry.change,
+        tokens: await getNotificationTokens(client, entry.id),
+      }))
+  )
+
+  notificationTargets.forEach((target) => {
+    target.tokens.forEach((row) => {
+      NotificationUtils.sendNotification({
+        token: { token: row.token, language: row.language },
+        title: groupInfo.name,
+        body: {
+          key:
+            target.change > 0 ? 'notification.settleUp.youOwe' : 'notification.settleUp.youAreOwed',
+          args: {
+            userName: callerInfo.name,
+            amount: CurrencyUtils.format(target.change, groupInfo.currency, false),
+          },
+        },
+        data: {
+          pathToOpen: `/group/${groupId}/split/${splitId}/`,
+        },
+        androidChannel: AndroidNotificationChannel.NewSplits,
+      })
+    })
+  })
+}
+
 async function createAndSaveSettleUpSplit(
   client: PoolClient,
   callerId: string,
@@ -111,6 +171,8 @@ async function createAndSaveSettleUpSplit(
     balances: entries,
     type: splitType,
   })
+
+  await dispatchNotifications(client, callerId, groupId, splitId, entries)
 
   return {
     id: splitId,

@@ -24,6 +24,7 @@ import {
   GetUserInvitesArguments,
   InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
+  RegisterOrUpdateNotificationTokenArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -34,6 +35,7 @@ import {
   SetUserDisplayNameArguments,
   SetUserNameArguments,
   SettleUpArguments,
+  UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
 } from './endpointArguments'
 
@@ -208,4 +210,16 @@ export function isSettleUpArguments(obj: any): obj is SettleUpArguments {
 
 export function isSetUserDisplayNameArguments(obj: any): obj is SetUserDisplayNameArguments {
   return obj.groupId !== undefined && obj.userId !== undefined && obj.displayName !== undefined
+}
+
+export function isRegisterOrUpdateNotificationTokenArguments(
+  obj: any
+): obj is RegisterOrUpdateNotificationTokenArguments {
+  return obj.token !== undefined && obj.language !== undefined
+}
+
+export function isUnregisterNotificationTokenArguments(
+  obj: any
+): obj is UnregisterNotificationTokenArguments {
+  return obj.token !== undefined
 }

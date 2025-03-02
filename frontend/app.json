@@ -14,7 +14,10 @@
       "bundleIdentifier": "rest.split.app",
       "usesAppleSignIn": true,
       "associatedDomains": ["applinks:split.rest"],
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "entitlements": {
+        "aps-environment": "production"
+      }
     },
     "android": {
       "versionCode": 13,
@@ -48,6 +51,8 @@
       "reactCompiler": true
     },
     "plugins": [
+      "./plugins/copy-android-res.js",
+      "./plugins/setup-notification-icon.js",
       "expo-router",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",

@@ -9,6 +9,7 @@ import { GROUP_ROW_HEIGHT, GroupRow } from '@components/homeScreen/GroupRow'
 import { InvitationsButton } from '@components/homeScreen/InvitationsButton'
 import { useUserGroupInvites } from '@hooks/database/useUserGroupInvites'
 import { useUserGroups } from '@hooks/database/useUserGroups'
+import { useNotificationPermission } from '@hooks/useNotificationPermission'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
@@ -148,6 +149,8 @@ export default function Home() {
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
   const [fabRef, scrollHandler] = useFABScrollHandler()
+
+  useNotificationPermission()
 
   const {
     groups: visibleGroups,

@@ -145,4 +145,16 @@ export async function createDatabase(pool: Pool) {
       FOREIGN KEY (created_by) REFERENCES users(id)
     )
   `)
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS notification_tokens(
+      user_id VARCHAR(32) NOT NULL,
+      token VARCHAR(512) NOT NULL,
+      language VARCHAR(4) NOT NULL,
+      updated_at BIGINT NOT NULL,
+
+      PRIMARY KEY (user_id, token),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+  `)
 }

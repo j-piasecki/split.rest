@@ -8,13 +8,13 @@ import { TabView } from '@components/TabView'
 import { TextInput } from '@components/TextInput'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
-import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
+import { CurrencyUtils } from 'shared'
 
 export default function Modal() {
   const router = useRouter()

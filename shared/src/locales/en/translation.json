@@ -50,6 +50,30 @@
     "showGroup": "Show group"
   },
 
+  "notification": {
+    "channel": {
+      "newSplits": "New splits",
+      "splitUpdates": "Split updates",
+      "groupInvites": "Group Invites"
+    },
+    "createSplit": {
+      "youOwe": "{{splitName}} — you owe {{amount}}",
+      "youAreOwed": "{{splitName}} — you are owed {{amount}}"
+    },
+    "updateSplit": {
+      "added": "{{splitName}} — you owe {{amount}}",
+      "removed": "You were removed from split {{splitName}} — you got back {{amount}}",
+      "updated": "{{splitName}} was updated — you now owe {{amount}}"
+    },
+    "groupInvite": {
+      "message": "You've been invited to join the group"
+    },
+    "settleUp": {
+      "youOwe":"{{userName}} has settled up — pay them back {{amount}}",
+      "youAreOwed":"{{userName}} has settled up — they will pay you back {{amount}}"
+    }
+  },
+
   "api": {
     "invalidArguments": "Invalid arguments",
     "mustBeLoggedIn": "You must be logged in to do that",

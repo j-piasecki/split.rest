@@ -29,6 +29,7 @@ import {
   GetUserInvitesArguments,
   InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
+  RegisterOrUpdateNotificationTokenArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
@@ -39,6 +40,7 @@ import {
   SetUserNameArguments,
   SettleUpArguments,
   SplitType,
+  UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
   User,
 } from 'shared'
@@ -237,5 +239,16 @@ export class AppService {
 
   async setUserDisplayName(callerId: string, args: SetUserDisplayNameArguments) {
     return await this.databaseService.setUserDisplayName(callerId, args)
+  }
+
+  async registerOrUpdateNotificationToken(
+    callerId: string,
+    args: RegisterOrUpdateNotificationTokenArguments
+  ) {
+    return await this.databaseService.registerOrUpdateNotificationToken(callerId, args)
+  }
+
+  async unregisterNotificationToken(callerId: string, args: UnregisterNotificationTokenArguments) {
+    return await this.databaseService.unregisterNotificationToken(callerId, args)
   }
 }

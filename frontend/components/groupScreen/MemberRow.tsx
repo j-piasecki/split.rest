@@ -8,7 +8,6 @@ import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
-import { CurrencyUtils } from '@utils/CurrencyUtils'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
@@ -16,6 +15,7 @@ import React from 'react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
+import { CurrencyUtils } from 'shared'
 import { GroupUserInfo, Member } from 'shared'
 
 export interface MemberRowProps {
@@ -184,7 +184,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
                         : theme.colors.balanceNegative,
                 }}
               >
-                {CurrencyUtils.format(member.balance, info.currency, true)}
+                {CurrencyUtils.format(member.balance, info.currency, true, true)}
               </Text>
             </View>
 
