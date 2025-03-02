@@ -59,6 +59,9 @@
       "added": "{{splitName}} — you owe {{amount}}",
       "removed": "You were removed from split {{splitName}} — you got back {{amount}}",
       "updated": "{{splitName}} was updated — you now owe {{amount}}"
+    },
+    "groupInvite": {
+      "message": "You've been invited to join the group"
     }
   },
 

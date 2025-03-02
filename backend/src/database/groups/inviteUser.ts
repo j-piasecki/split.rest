@@ -1,10 +1,32 @@
 import { ConflictException } from '../../errors/ConflictException'
 import { NotFoundException } from '../../errors/NotFoundException'
+import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { userExists } from '../utils/userExists'
-import { Pool } from 'pg'
+import { Pool, PoolClient } from 'pg'
 import { InviteUserToGroupArguments } from 'shared'
+import NotificationUtils from 'src/notifications/NotificationUtils'
+
+async function dispatchNotification(client: PoolClient, args: InviteUserToGroupArguments) {
+  const groupInfo = (await client.query('SELECT name FROM groups WHERE id = $1', [args.groupId]))
+    .rows[0]
+
+  const tokens = await getNotificationTokens(client, args.userId)
+
+  tokens.forEach((token) => {
+    NotificationUtils.sendNotification({
+      token: token,
+      title: groupInfo.name,
+      body: {
+        key: 'notification.groupInvite.message',
+      },
+      data: {
+        pathToOpen: `/groupInvites/`,
+      },
+    })
+  })
+}
 
 export async function inviteUser(pool: Pool, callerId: string, args: InviteUserToGroupArguments) {
   const client = await pool.connect()
@@ -23,6 +45,19 @@ export async function inviteUser(pool: Pool, callerId: string, args: InviteUserT
     if (await isUserMemberOfGroup(client, args.groupId, args.userId)) {
       throw new ConflictException('api.group.userAlreadyInGroup')
     }
+
+    const latestInvite = (
+      await client.query(
+        `
+        SELECT created_at
+        FROM group_invites
+        WHERE user_id = $1
+        ORDER BY created_at DESC
+        LIMIT 1
+      `,
+        [args.userId]
+      )
+    ).rows[0]
 
     const inviteState = await client.query(
       `
@@ -47,6 +82,11 @@ export async function inviteUser(pool: Pool, callerId: string, args: InviteUserT
     )
 
     await client.query('COMMIT')
+
+    // send max notification per hour
+    if (!latestInvite || Date.now() - latestInvite.created_at > 1000 * 60 * 60) {
+      await dispatchNotification(client, args)
+    }
   } catch (e) {
     await client.query('ROLLBACK')
     throw e
