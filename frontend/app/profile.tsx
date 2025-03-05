@@ -61,8 +61,10 @@ function Form({ user }: { user: User }) {
   const { mutateAsync: setUserName, isPending: isChangingName } = useSetUserNameMutation()
 
   function setName(newName: string) {
+    newName = newName.trim()
+
     if (newName.length === 0) {
-      alert(t('api.user.nameTooLong'))
+      alert(t('api.user.nameCannotBeEmpty'))
       return
     }
 
