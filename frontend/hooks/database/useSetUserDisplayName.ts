@@ -7,7 +7,7 @@ import {
 } from '@utils/queryClient'
 import { SetUserDisplayNameArguments } from 'shared'
 
-async function setUserDisplayName(groupId: number, userId: string, name: string) {
+async function setUserDisplayName(groupId: number, userId: string, name: string | null) {
   const args: SetUserDisplayNameArguments = { groupId, userId, displayName: name }
 
   await makeRequest('POST', 'setUserDisplayName', args)
@@ -18,6 +18,6 @@ async function setUserDisplayName(groupId: number, userId: string, name: string)
 
 export function useSetUserDisplayNameMutation(groupId: number, userId: string) {
   return useMutation({
-    mutationFn: (name: string) => setUserDisplayName(groupId, userId, name),
+    mutationFn: (name: string | null) => setUserDisplayName(groupId, userId, name),
   })
 }

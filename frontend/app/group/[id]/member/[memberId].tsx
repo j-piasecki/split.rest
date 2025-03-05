@@ -87,16 +87,20 @@ export function MemberScreen() {
             {(memberInfo) => (
               <EditableText
                 value={memberInfo.displayName ?? memberInfo.name}
-                placeholder='placeholder'
+                placeholder={t('memberInfo.displayNamePlaceholder')}
                 isPending={isChangingDisplayName}
                 disabled={!canEditDisplayName}
-                onSubmit={(name) =>
-                  setDisplayName(name).catch((e) => {
+                onSubmit={(name) => {
+                  let newName: string | null = name.trim()
+                  if (newName === memberInfo.name) {
+                    newName = null
+                  }
+                  setDisplayName(newName).catch((e) => {
                     if (isTranslatableError(e)) {
                       alert(t(e.message))
                     }
                   })
-                }
+                }}
                 style={{ alignSelf: 'stretch', justifyContent: 'center' }}
                 textStyle={{
                   fontSize: 24,

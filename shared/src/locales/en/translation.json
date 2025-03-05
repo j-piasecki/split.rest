@@ -61,9 +61,12 @@
       "youAreOwed": "{{splitName}} — you are owed {{amount}}"
     },
     "updateSplit": {
-      "added": "{{splitName}} — you owe {{amount}}",
-      "removed": "You were removed from split {{splitName}} — you got back {{amount}}",
-      "updated": "{{splitName}} was updated — you now owe {{amount}}"
+      "addedYouOwe": "{{splitName}} — you owe {{amount}}",
+      "addedYouAreOwed": "{{splitName}} — you are owed {{amount}}",
+      "removedYouOwe": "You were removed from split {{splitName}} — you no longer owe {{amount}}",
+      "removedYouAreOwed": "You were removed from split {{splitName}} — you are no longer owed {{amount}}",
+      "updatedYouOwe": "{{splitName}} was updated — you now owe {{amount}}",
+      "updatedYouAreOwed": "{{splitName}} was updated — you are now owed {{amount}}"
     },
     "groupInvite": {
       "message": "You've been invited to join the group"
@@ -184,6 +187,7 @@
   },
 
   "memberInfo": {
+    "displayNamePlaceholder": "Display name",
     "balance": "Balance: <Styled>{{balance}}</Styled>",
     "admin": "Moderator of this group",
     "noAccess": "No access to this group"

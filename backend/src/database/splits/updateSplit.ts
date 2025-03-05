@@ -18,7 +18,8 @@ async function dispatchNotificationBatch(
   groupName: string,
   currency: string,
   splitName: string,
-  message: LanguageTranslationKey,
+  messagePositive: LanguageTranslationKey,
+  messageNegative: LanguageTranslationKey,
   data: Record<string, string>,
   batch: { tokens: NotificationToken[]; change: number }[]
 ) {
@@ -28,7 +29,7 @@ async function dispatchNotificationBatch(
         token: token,
         title: groupName,
         body: {
-          key: message,
+          key: notification.change > 0 ? messagePositive : messageNegative,
           args: {
             splitName: splitName,
             amount: CurrencyUtils.format(notification.change, currency, false),
@@ -103,15 +104,18 @@ async function dispatchNotifications(
     [
       {
         batch: addedToSplit,
-        message: 'notification.updateSplit.added',
+        messagePositive: 'notification.updateSplit.addedYouAreOwed',
+        messageNegative: 'notification.updateSplit.addedYouOwe',
       },
       {
         batch: removedFromSplit,
-        message: 'notification.updateSplit.removed',
+        messagePositive: 'notification.updateSplit.removedYouAreOwed',
+        messageNegative: 'notification.updateSplit.removedYouOwe',
       },
       {
         batch: updated,
-        message: 'notification.updateSplit.updated',
+        messagePositive: 'notification.updateSplit.updatedYouAreOwed',
+        messageNegative: 'notification.updateSplit.updatedYouOwe',
       },
     ] as const
   ).forEach((notification) => {
@@ -119,7 +123,8 @@ async function dispatchNotifications(
       groupInfo.name,
       groupInfo.currency,
       splitName,
-      notification.message,
+      notification.messagePositive,
+      notification.messageNegative,
       data,
       notification.batch
     )
