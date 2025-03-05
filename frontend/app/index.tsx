@@ -401,7 +401,6 @@ function Section({
         style={{
           width: '100%',
           maxWidth: 1400,
-          maxHeight: height,
           gap: 24,
           flexDirection: mediumScreenOrLess
             ? 'column'
