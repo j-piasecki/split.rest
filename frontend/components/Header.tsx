@@ -53,7 +53,8 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
   const { width } = useWindowDimensions()
 
   const backButtonVisible =
-    Platform.OS === 'ios' && (showBackButton || displayClass > DisplayClass.Medium)
+    (Platform.OS === 'ios' || Platform.OS === 'web') &&
+    (showBackButton || displayClass > DisplayClass.Medium)
 
   const spin = useCallback(() => {
     'worklet'
