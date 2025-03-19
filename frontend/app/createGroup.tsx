@@ -14,7 +14,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 
-const CURRENCIES = ['eur', 'gbp', 'pln', 'usd'] as const
+const CURRENCIES = ['eur', 'gbp', 'inr', 'pln', 'usd'] as const
 
 function getDefaultCurrency() {
   const locale = getLocales()[0]

@@ -421,7 +421,8 @@
     "pln": "PLN (Złoty)",
     "usd": "USD (United States Dollar)",
     "eur": "EUR (Euro)",
-    "gbp": "GBP (Pound Sterling)"
+    "gbp": "GBP (Pound Sterling)",
+    "inr": "INR (Indian Rupee)"
   }
 }
 
