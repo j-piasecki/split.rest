@@ -48,6 +48,13 @@ export async function joinGroupByLink(
       [linkData.group_id]
     )
 
+    await client.query(
+      `
+        DELETE FROM group_invites WHERE user_id = $1 AND group_id = $2
+      `,
+      [callerId, linkData.group_id]
+    )
+
     await client.query('COMMIT')
   } catch (error) {
     await client.query('ROLLBACK')
