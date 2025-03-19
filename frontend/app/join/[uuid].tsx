@@ -13,6 +13,7 @@ import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import i18n from '@utils/i18n'
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -32,6 +33,12 @@ function InvitePane({ invite, uuid }: InvitePaneProps) {
   const { t } = useTranslation()
   const { mutateAsync: joinGroup, isPending: isJoiningGroup } = useJoinGroupByLink()
   const [error, setError] = useTranslatedError()
+
+  const currencyKey = invite?.groupInfo.currency?.toLocaleLowerCase()
+  const currencyText = i18n.exists(`currency.${currencyKey}`)
+    ? // @ts-expect-error Handled by the condition above
+      t(`currency.${currencyKey}`)
+    : currencyKey
 
   return (
     <View
@@ -92,7 +99,7 @@ function InvitePane({ invite, uuid }: InvitePaneProps) {
           shimmerStyle={{ height: 25, width: '70%' }}
           offset={0.9}
         >
-          {(invite) => (
+          {(_invite) => (
             <View style={{ flexDirection: 'row' }}>
               <Icon
                 name='currency'
@@ -101,7 +108,7 @@ function InvitePane({ invite, uuid }: InvitePaneProps) {
                 style={{ marginRight: 12 }}
               />
               <Text style={{ color: theme.colors.onSurface, fontSize: 18, width: '70%' }}>
-                {t('joinGroup.currency', { currency: invite.groupInfo.currency })}
+                {t('joinGroup.currency', { currency: currencyText })}
               </Text>
             </View>
           )}
