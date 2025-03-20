@@ -1,4 +1,4 @@
-import { Button } from '@components/Button'
+import { ButtonWithInfo } from '@components/ButtonWithInfo'
 import ModalScreen from '@components/ModalScreen'
 import { Text } from '@components/Text'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
@@ -45,7 +45,9 @@ export default function Modal() {
         </Text>
 
         <View style={{ gap: 16 }}>
-          <Button
+          <ButtonWithInfo
+            infoTitle='splitType.balanceChanges'
+            infoMessage='splitTypeDescription.balanceChanges'
             leftIcon='barChart'
             title={t('splitType.balanceChanges')}
             onPress={() => {
@@ -54,7 +56,9 @@ export default function Modal() {
               router.navigate(`/group/${id}/addSplit/detailsStep`)
             }}
           />
-          <Button
+          <ButtonWithInfo
+            infoTitle='splitType.equalAmounts'
+            infoMessage='splitTypeDescription.equalAmounts'
             leftIcon='equal'
             title={t('splitType.equalAmounts')}
             onPress={() => {
@@ -63,7 +67,9 @@ export default function Modal() {
               router.navigate(`/group/${id}/addSplit/detailsStep`)
             }}
           />
-          <Button
+          <ButtonWithInfo
+            infoTitle='splitType.exactAmounts'
+            infoMessage='splitTypeDescription.exactAmounts'
             leftIcon='exactAmount'
             title={t('splitType.exactAmounts')}
             onPress={() => {

@@ -21,6 +21,7 @@ export interface ButtonProps {
   disabled?: boolean
   style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
   foregroundColor?: string
+  children?: React.ReactNode
 }
 
 export function Button({
@@ -33,6 +34,7 @@ export function Button({
   disabled,
   style,
   foregroundColor: foregroundColorProp,
+  children,
 }: ButtonProps) {
   const theme = useTheme()
   const [isPressed, setIsPressed] = useState(false)
@@ -103,6 +105,7 @@ export function Button({
           )}
           {rightIcon && <Icon name={rightIcon} size={24} color={foregroundColor} />}
         </View>
+        {children}
       </Pressable>
     </View>
   )
