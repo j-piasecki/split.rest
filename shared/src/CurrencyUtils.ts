@@ -4,6 +4,7 @@ const formatters: Record<string, (amount: string) => string> = {
   eur: (amount: string) => `€${amount}`,
   gbp: (amount: string) => `£${amount}`,
   inr: (amount: string) => `₹${amount}`,
+  cad: (amount: string) => `$${amount}`,
 }
 
 // TODO: no intl support in hermes :sadge:

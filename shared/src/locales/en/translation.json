@@ -430,7 +430,8 @@
     "usd": "USD (United States Dollar)",
     "eur": "EUR (Euro)",
     "gbp": "GBP (Pound Sterling)",
-    "inr": "INR (Indian Rupee)"
+    "inr": "INR (Indian Rupee)",
+    "cad": "CAD (Canadian Dollar)"
   }
 }
 
