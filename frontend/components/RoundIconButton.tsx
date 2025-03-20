@@ -45,9 +45,9 @@ export function RoundIconButton({
         return [
           {
             backgroundColor: pressed
-              ? theme.colors.surfaceContainerHighest
+              ? `${theme.colors.onSurface}33`
               : hovered
-                ? theme.colors.surfaceContainerHigh
+                ? `${theme.colors.onSurface}11`
                 : 'transparent',
             padding: 8,
             borderRadius: 20,
