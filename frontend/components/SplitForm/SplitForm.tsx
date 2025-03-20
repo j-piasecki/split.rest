@@ -17,6 +17,7 @@ export interface SplitFormProps {
   initialPaidByIndex?: number
   initialTimestamp?: number
   waiting?: boolean
+  cleanError: () => void
   onSubmit: (data: FormData) => void
   error?: string | null
   showDetails?: boolean
@@ -38,6 +39,7 @@ export function SplitForm({
   waiting,
   onSubmit,
   error,
+  cleanError,
   showDetails = true,
   showCalendar = true,
   buttonIcon = 'save',
@@ -48,12 +50,15 @@ export function SplitForm({
   style,
 }: SplitFormProps) {
   const scrollRef = useRef<ScrollView>(null)
-  const [formState, updateForm] = useFormData({
-    title: initialTitle ?? '',
-    timestamp: initialTimestamp ?? Date.now(),
-    paidByIndex: initialPaidByIndex ?? 0,
-    entries: initialEntries,
-  })
+  const [formState, updateForm] = useFormData(
+    {
+      title: initialTitle ?? '',
+      timestamp: initialTimestamp ?? Date.now(),
+      paidByIndex: initialPaidByIndex ?? 0,
+      entries: initialEntries,
+    },
+    cleanError
+  )
   const { t } = useTranslation()
 
   function submit() {

@@ -92,6 +92,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
         onSubmit={save}
         waiting={waiting}
         error={error}
+        cleanError={() => setError(null)}
         buttonTitle='form.buttonNext'
         buttonIcon='chevronForward'
         buttonIconLocation='right'

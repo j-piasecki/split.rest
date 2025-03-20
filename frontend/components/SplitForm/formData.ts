@@ -125,10 +125,17 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
   return newState
 }
 
-export function useFormData(initial: FormData) {
-  return useReducer<React.Reducer<FormData, FormActionType>, FormData>(
+export function useFormData(initial: FormData, onUpdate?: () => void) {
+  const [form, updateForm] = useReducer<React.Reducer<FormData, FormActionType>, FormData>(
     entriesReducer,
     {} as FormData,
     () => initial
   )
+
+  const updateFormWrapper = (action: FormActionType) => {
+    onUpdate?.()
+    updateForm(action)
+  }
+
+  return [form, updateFormWrapper] as const
 }

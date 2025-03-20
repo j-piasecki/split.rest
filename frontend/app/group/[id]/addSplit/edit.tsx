@@ -64,6 +64,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         splitInfo={split}
         onSubmit={save}
         error={error}
+        cleanError={() => setError(null)}
         waiting={waiting}
       />
     </View>

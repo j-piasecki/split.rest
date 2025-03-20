@@ -67,6 +67,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
         onSubmit={save}
         waiting={waiting}
         error={error}
+        cleanError={() => setError(null)}
         showPayerSelector={splitInfo.type !== SplitType.BalanceChange}
         showPaidByHint={splitInfo.type !== SplitType.BalanceChange}
       />
