@@ -12,7 +12,7 @@ export interface ConfirmationModalProps {
   title: LanguageTranslationKey
   confirmText: LanguageTranslationKey
   confirmIcon?: IconName
-  cancelText: LanguageTranslationKey
+  cancelText?: LanguageTranslationKey
   cancelIcon?: IconName
   message?: LanguageTranslationKey
   onConfirm: () => Promise<void>
@@ -68,13 +68,15 @@ export function ConfirmationModal({
           <View
             style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 16, marginTop: 16 }}
           >
-            <Button
-              title={t(cancelText)}
-              leftIcon={cancelIcon}
-              onPress={onClose}
-              style={{ flexGrow: 1, backgroundColor: theme.colors.secondaryContainer }}
-              foregroundColor={theme.colors.onSecondaryContainer}
-            />
+            {(cancelText || cancelIcon) && (
+              <Button
+                title={cancelText ? t(cancelText) : undefined}
+                leftIcon={cancelIcon}
+                onPress={onClose}
+                style={{ flexGrow: 1, backgroundColor: theme.colors.secondaryContainer }}
+                foregroundColor={theme.colors.onSecondaryContainer}
+              />
+            )}
             <Button
               title={t(confirmText)}
               leftIcon={confirmIcon}
