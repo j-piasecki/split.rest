@@ -1,10 +1,10 @@
-import { LanguageTranslationKey } from 'shared'
 import { Button, ButtonProps } from './Button'
 import { ConfirmationModal } from './ConfirmationModal'
 import { RoundIconButton } from './RoundIconButton'
 import { useTheme } from '@styling/theme'
 import { useState } from 'react'
 import { View } from 'react-native'
+import { LanguageTranslationKey } from 'shared'
 
 export interface ButtonWithInfoProps extends ButtonProps {
   infoTitle: LanguageTranslationKey
@@ -29,7 +29,7 @@ export function ButtonWithInfo({ infoTitle, infoMessage, ...rest }: ButtonWithIn
           }}
         >
           <RoundIconButton
-            style={{opacity: 0.7}}
+            style={{ opacity: 0.7 }}
             color={theme.colors.onPrimaryContainer}
             icon='info'
             onPress={() => {

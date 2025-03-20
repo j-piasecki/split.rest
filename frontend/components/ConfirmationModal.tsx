@@ -62,7 +62,7 @@ export function ConfirmationModal({
           <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 22 }}>{t(title)}</Text>
 
           {message && (
-            <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 16, }}>{t(message)}</Text>
+            <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 16 }}>{t(message)}</Text>
           )}
 
           <View
