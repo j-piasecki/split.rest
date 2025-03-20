@@ -33,6 +33,7 @@ export type IconName =
   | 'exactAmount'
   | 'group'
   | 'home'
+  | 'info'
   | 'lightTheme'
   | 'link'
   | 'listNumbered'
@@ -99,6 +100,7 @@ const iconMap: Record<IconName, unknown> = {
   exactAmount: require('@assets/icons/exact_amount.svg'),
   group: require('@assets/icons/group.svg'),
   home: require('@assets/icons/home.svg'),
+  info: require('@assets/icons/info.svg'),
   lightTheme: require('@assets/icons/light_theme.svg'),
   link: require('@assets/icons/link.svg'),
   listNumbered: require('@assets/icons/list_numbered.svg'),
