@@ -28,8 +28,8 @@ export async function validateSplitForm(
   }
 
   for (const { entry, user, amount } of entries) {
-    if (user === undefined && entry === '' && amount === '') {
-      continue
+    if (user === undefined && entry !== '') {
+      throw new TranslatableError('splitValidation.youMustSelectUser', { entry: entry })
     }
 
     if (user === undefined || amount === '') {
@@ -45,7 +45,7 @@ export async function validateSplitForm(
     }))
 
   if (entriesWithUsers.length !== entries.length) {
-    throw new TranslatableError('splitValidation.youNeedToFillBothFields')
+    throw new TranslatableError('splitValidation.youMustSelectUser', { entry: '' })
   }
 
   const paidBy = entriesWithUsers[paidByIndex]?.user

@@ -58,7 +58,7 @@ export function SplitForm({
 
   function submit() {
     const toSave = formState.entries.filter(
-      (entry) => entry.user !== undefined || entry.amount !== ''
+      (entry) => entry.entry.trim().length > 0 || entry.user !== undefined || entry.amount !== ''
     )
 
     onSubmit({

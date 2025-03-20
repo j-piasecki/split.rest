@@ -292,7 +292,8 @@
     "dateMustBeSelected": "Date must be selected",
     "typeRequired": "Type is required",
     "invalidType": "Ivalid split type",
-    "allEntriesMustSumToZero": "The sum of all entries must be equal to zero"
+    "allEntriesMustSumToZero": "The sum of all entries must be equal to zero",
+    "youMustSelectUser": "You must select a member ({{entry}})"
   },
 
   "groupValidation": {
