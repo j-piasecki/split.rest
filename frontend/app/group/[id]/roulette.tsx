@@ -5,28 +5,30 @@ import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
 import { ProfilePicture } from '@components/ProfilePicture'
+import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
-import { getBalances } from '@database/getBalances'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import { useRouletteQuery } from '@hooks/useRouletteQuery'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { beginNewSplit } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, LayoutRectangle, ScrollView, View } from 'react-native'
-import { TranslatableError, UserWithBalanceChange, UserWithDisplayName } from 'shared'
+import { ActivityIndicator, LayoutRectangle, Platform, ScrollView, View } from 'react-native'
+import Animated, { LinearTransition } from 'react-native-reanimated'
+import { TranslatableError, UserWithDisplayName } from 'shared'
 
 interface RouletteProps {
   groupId: number
-  setResult: (result: UserWithBalanceChange[]) => void
+  setQuery: (result: PersonEntry[]) => void
   user: UserWithDisplayName
 }
 
-function Roulette({ groupId, setResult, user }: RouletteProps) {
+function Roulette({ groupId, setQuery, user }: RouletteProps) {
   const insets = useModalScreenInsets()
   const scrollViewRef = useRef<ScrollView>(null)
   const paneLayout = useRef<LayoutRectangle | null>(null)
@@ -35,35 +37,18 @@ function Roulette({ groupId, setResult, user }: RouletteProps) {
     { user: user, entry: user.email ?? '' },
     { entry: '' },
   ])
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useTranslatedError()
 
   async function submit() {
     setError(null)
-    const filledUsers = entries
-      .filter((entry) => entry.user !== undefined)
-      .map((entry) => entry.user!.id)
+    const filledUsers = entries.filter((entry) => entry.user !== undefined)
 
     if (filledUsers.length < 2) {
       setError(new TranslatableError('roulette.youNeedToAddAtLeastTwoUsers'))
       return
     }
 
-    setLoading(true)
-    try {
-      const balances = await getBalances(groupId, filledUsers)
-
-      if (balances.length !== entries.length - 1) {
-        // TODO: show which user was not found
-        throw new TranslatableError('api.notFound.user')
-      }
-
-      setResult(balances)
-    } catch (e) {
-      setError(e)
-    } finally {
-      setLoading(false)
-    }
+    setQuery(filledUsers)
   }
 
   return (
@@ -90,8 +75,6 @@ function Roulette({ groupId, setResult, user }: RouletteProps) {
             gap: 16,
             padding: 16,
             paddingTop: 8,
-            opacity: loading ? 0.5 : 1,
-            pointerEvents: loading ? 'none' : 'auto',
           }}
           onLayout={(e) => {
             paneLayout.current = e.nativeEvent.layout
@@ -111,23 +94,32 @@ function Roulette({ groupId, setResult, user }: RouletteProps) {
 
       <View style={{ gap: 8 }}>
         {error && <ErrorText>{error}</ErrorText>}
-        <Button
-          leftIcon='check'
-          title={t('roulette.submit')}
-          onPress={submit}
-          isLoading={loading}
-        />
+        <Button leftIcon='check' title={t('roulette.submit')} onPress={submit} />
       </View>
     </View>
   )
 }
 
-function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId: number }) {
+interface ResultProps {
+  query: PersonEntry[]
+  groupId: number
+  setQuery: (result: PersonEntry[] | null) => void
+}
+
+function Result({ query, groupId, setQuery }: ResultProps) {
   const theme = useTheme()
   const router = useRouter()
   const insets = useModalScreenInsets()
   const { data: permissions } = useGroupPermissions(groupId)
   const { t } = useTranslation()
+  const { error, result, finished } = useRouletteQuery(groupId, query)
+
+  useEffect(() => {
+    if (error) {
+      alert(error)
+      setQuery(null)
+    }
+  }, [error, setQuery])
 
   return (
     <View
@@ -154,7 +146,7 @@ function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId:
           textLocation='start'
         >
           {result.map((user, index) => {
-            const balanceNum = parseFloat(user.change)
+            const balanceNum = parseFloat(user.change ?? '')
             const balanceColor =
               balanceNum === 0
                 ? theme.colors.balanceNeutral
@@ -163,8 +155,16 @@ function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId:
                   : theme.colors.balanceNegative
 
             return (
-              <View
+              <Animated.View
                 key={user.id}
+                layout={
+                  Platform.OS !== 'web'
+                    ? LinearTransition.springify()
+                        .damping(100)
+                        .stiffness(200)
+                        .delay(50 * index)
+                    : undefined
+                }
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -176,12 +176,23 @@ function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId:
                 }}
               >
                 <ProfilePicture userId={user.id} size={28} />
-                <Text style={{ fontSize: 18, fontWeight: 800, color: theme.colors.onSurface }}>
-                  {user.name}
-                </Text>
+                <View style={{ flexDirection: 'column' }}>
+                  <Text style={{ fontSize: 18, fontWeight: 800, color: theme.colors.onSurface }}>
+                    {user.displayName ?? user.name}
+                  </Text>
+
+                  {user.displayName && (
+                    <Text style={{ fontSize: 10, fontWeight: 600, color: theme.colors.outline }}>
+                      {user.name}
+                    </Text>
+                  )}
+                </View>
                 <View style={{ flex: 1 }} />
-                <Text style={{ fontSize: 18, color: balanceColor }}>{user.change}</Text>
-              </View>
+
+                <ShimmerPlaceholder argument={user.change} shimmerStyle={{ width: 64, height: 24 }}>
+                  <Text style={{ fontSize: 18, color: balanceColor }}>{user.change}</Text>
+                </ShimmerPlaceholder>
+              </Animated.View>
             )
           })}
         </Pane>
@@ -198,6 +209,7 @@ function Result({ result, groupId }: { result: UserWithBalanceChange[]; groupId:
             })
             router.navigate(`/group/${groupId}/addSplit`)
           }}
+          isLoading={!finished}
         />
       )}
     </View>
@@ -211,7 +223,7 @@ export default function Modal() {
   const user = useAuth()
   const { data: permissions } = useGroupPermissions(Number(id))
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
-  const [result, setResult] = useState<UserWithBalanceChange[] | null>(null)
+  const [query, setQuery] = useState<PersonEntry[] | null>(null)
 
   const canAccessRoulette = permissions?.canAccessRoulette() ?? false
 
@@ -231,10 +243,12 @@ export default function Modal() {
               </Text>
             </View>
           )}
-          {canAccessRoulette && result === null && (
-            <Roulette groupId={Number(id)} setResult={setResult} user={memberInfo} />
+          {canAccessRoulette && query === null && (
+            <Roulette groupId={Number(id)} setQuery={setQuery} user={memberInfo} />
           )}
-          {canAccessRoulette && result !== null && <Result groupId={Number(id)} result={result} />}
+          {canAccessRoulette && query !== null && (
+            <Result groupId={Number(id)} query={query} setQuery={setQuery} />
+          )}
         </>
       )}
     </ModalScreen>
