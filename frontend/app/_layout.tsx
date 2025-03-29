@@ -1,5 +1,6 @@
 import { ErrorBoundary } from '@components/ErrorBoundary'
 import { SnackBarProvider } from '@components/SnackBar'
+import { SpinningLogo } from '@components/SpinningLogo'
 import { useFonts } from '@hooks/useFonts'
 import { useNotificationListener } from '@hooks/useNotificationListener'
 import { DefaultTheme, ThemeProvider as NavigationThemeProvider } from '@react-navigation/native'
@@ -14,7 +15,7 @@ import { Stack, usePathname, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
 import 'utils/firebase'
@@ -80,7 +81,7 @@ function Content() {
           backgroundColor: theme.colors.surfaceDim,
         }}
       >
-        <ActivityIndicator size='small' color={theme.colors.onSurface} />
+        <SpinningLogo />
       </View>
     )
   }
