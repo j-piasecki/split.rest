@@ -8365,7 +8365,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-image@npm:~2.0.7":
+"expo-image@npm:2.0.7":
   version: 2.0.7
   resolution: "expo-image@npm:2.0.7"
   peerDependencies:
@@ -8377,6 +8377,21 @@ __metadata:
     react-native-web:
       optional: true
   checksum: 07a6b41295e1acea62c4ed6c1ef00736a357a436aecce07579858430e99c236a5b3e77044502b205aa63411a8b95e3f6b11d4eb65c34d3f5313ce7fb73438688
+  languageName: node
+  linkType: hard
+
+"expo-image@patch:expo-image@npm%3A2.0.7#./.yarn/patches/expo-image-npm-2.0.7-9cd877c671.patch::locator=split%40workspace%3A.":
+  version: 2.0.7
+  resolution: "expo-image@patch:expo-image@npm%3A2.0.7#./.yarn/patches/expo-image-npm-2.0.7-9cd877c671.patch::version=2.0.7&hash=fb2548&locator=split%40workspace%3A."
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+    react-native-web: "*"
+  peerDependenciesMeta:
+    react-native-web:
+      optional: true
+  checksum: aa88d548db696a90a434407a2df7abcece2470480695472236daca70aad775b843ff0182d53d74173b4487e335fc6da7b0f7a49ff6de8c70af0d839dc3748e66
   languageName: node
   linkType: hard
 
