@@ -2,7 +2,7 @@ import { Button, ButtonProps } from './Button'
 import { ConfirmationModal } from './ConfirmationModal'
 import { RoundIconButton } from './RoundIconButton'
 import { useTheme } from '@styling/theme'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { View } from 'react-native'
 import { LanguageTranslationKey } from 'shared'
 

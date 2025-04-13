@@ -2,9 +2,7 @@ import { SplitRow } from './SplitRow'
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
 import { Shimmer } from '@components/Shimmer'
-import { Text } from '@components/Text'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
-import { useGroupSplits } from '@hooks/database/useGroupSplits'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { invalidateGroup } from '@utils/queryClient'
@@ -14,7 +12,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupUserInfo, SplitPermissionType } from 'shared'
+import { GroupUserInfo, SplitInfo } from 'shared'
 
 function Divider() {
   const theme = useTheme()
@@ -75,10 +73,16 @@ export interface SplitsListProps {
   headerComponent?: React.ComponentType<any> | React.ReactElement
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   footerComponent?: React.ComponentType<any> | React.ReactElement
+  emptyComponent?: React.ReactElement
   showPullableHeader?: boolean
-  forceShowSplitsWithUser?: boolean
+  hideFab?: boolean
   onRefresh?: () => void
   applyBottomInset?: boolean
+  splits: SplitInfo[]
+  isLoading: boolean
+  isRefetching: boolean
+  isFetchingNextPage: boolean
+  fetchNextPage: () => void
 }
 
 export function SplitsList({
@@ -87,8 +91,14 @@ export function SplitsList({
   footerComponent,
   showPullableHeader,
   onRefresh,
-  forceShowSplitsWithUser,
+  emptyComponent,
   applyBottomInset = false,
+  hideFab = false,
+  splits,
+  isLoading,
+  fetchNextPage,
+  isFetchingNextPage,
+  isRefetching,
 }: SplitsListProps) {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
@@ -97,14 +107,8 @@ export function SplitsList({
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
 
-  const fabVisible = isSmallScreen && permissions?.canCreateSplits()
+  const fabVisible = !hideFab && isSmallScreen && permissions?.canCreateSplits()
   const [fabRef, scrollHandler] = useFABScrollHandler(fabVisible)
-
-  // TODO: changing forceShowSplitsWithUser causes the list to reload, shouldn't it show the current data wile loading the new one?
-  const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching } = useGroupSplits(
-    info?.id,
-    forceShowSplitsWithUser || permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
-  )
 
   function refreshData() {
     if (info) {
@@ -137,17 +141,7 @@ export function SplitsList({
             }}
           >
             {(isLoading || !info) && <SplitsShimmer count={5} />}
-            {!isLoading && info && (
-              <Text style={{ fontSize: 20, color: theme.colors.outline, paddingVertical: 32 }}>
-                {permissions?.canReadSplits() === SplitPermissionType.None
-                  ? t('api.insufficientPermissions.group.readSplits')
-                  : permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
-                    ? t('splitList.noAccessibleSplits')
-                    : forceShowSplitsWithUser
-                      ? t('splitList.noSplitsWhereIncluded')
-                      : t('splitList.noSplits')}
-              </Text>
-            )}
+            {!isLoading && info && emptyComponent}
           </View>
         }
         data={splits}

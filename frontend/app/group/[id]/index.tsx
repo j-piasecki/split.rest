@@ -5,9 +5,9 @@ import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { GroupActionButtons } from '@components/groupScreen/GroupActionButtons'
 import { GroupInfoCard } from '@components/groupScreen/GroupInfoCard'
+import { GroupSplitsList } from '@components/groupScreen/GroupSplitsList'
 import { MembersButton } from '@components/groupScreen/MembersButton'
 import { MembersList } from '@components/groupScreen/MembersList'
-import { SplitsList } from '@components/groupScreen/SplitsList'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { styles } from '@styling/styles'
@@ -109,7 +109,7 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
     displayClass === DisplayClass.Expanded || displayClass === DisplayClass.Medium
 
   return (
-    <SplitsList
+    <GroupSplitsList
       info={info}
       showPullableHeader
       applyBottomInset
@@ -265,7 +265,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
             )
           }
         >
-          <SplitsList info={groupInfo} forceShowSplitsWithUser={onlyShowSplitsIfIncluded} />
+          <GroupSplitsList info={groupInfo} forceShowSplitsWithUser={onlyShowSplitsIfIncluded} />
         </Pane>
         {(!permissions || permissions?.canReadMembers()) && (
           <Pane
