@@ -11,6 +11,7 @@ export const PermissionToFieldMap = {
   deleteSplit: ['groupId', 'splitId'] as const,
   restoreSplit: ['groupId', 'splitId'] as const,
   completeSplitEntry: ['groupId', 'splitId', 'userId'] as const,
+  uncompleteSplitEntry: ['groupId', 'splitId', 'userId'] as const,
   accessRoulette: ['groupId'] as const,
   settleUp: ['groupId'] as const,
   readMembers: ['groupId'] as const,

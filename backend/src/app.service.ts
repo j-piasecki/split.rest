@@ -256,4 +256,8 @@ export class AppService {
   async completeSplitEntry(callerId: string, args: CompleteSplitEntryArguments) {
     return await this.databaseService.completeSplitEntry(callerId, args)
   }
+
+  async uncompleteSplitEntry(callerId: string, args: CompleteSplitEntryArguments) {
+    return await this.databaseService.uncompleteSplitEntry(callerId, args)
+  }
 }

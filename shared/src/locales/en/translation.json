@@ -78,7 +78,9 @@
     },
     "completeSplit": {
       "payerCompletedEntry": "{{userName}} has marked your entry in {{splitName}} as completed",
-      "payeeCompletedEntry": "{{userName}} has marked their entry in {{splitName}} as completed"
+      "payeeCompletedEntry": "{{userName}} has marked their entry in {{splitName}} as completed",
+      "payerUncompletedEntry": "{{userName}} has marked your entry in {{splitName}} as not completed",
+      "payeeUncompletedEntry": "{{userName}} has marked their entry in {{splitName}} as not completed"
     }
   },
 
@@ -104,6 +106,7 @@
         "accessRoulette": "You don't have permission to access the roulette",
         "settleUp": "You don't have permission to settle up",
         "completeSplitEntry": "You don't have permission to complete splits",
+        "uncompleteSplitEntry": "You don't have permission to mark splits as not completed",
         "readMembers": "You don't have permission to see members of this group",
         "inviteMembers": "You don't have permission to invite members to this group",
         "rename": "You don't have permission to rename this group",
@@ -138,7 +141,8 @@
       "cannotSettleUpNeutral": "You cannot settle up with neutral balance",
       "settleUpFailed": "Failed to settle up",
       "invalidSplitType": "Invalid split type",
-      "callerCannotCompleteEntry": "You cannot complete this entry"
+      "callerCannotCompleteEntry": "You cannot complete this entry",
+      "callerCannotUncompleteEntry": "You cannot mark this entry as not completed"
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
@@ -342,7 +346,8 @@
     "delete": "Delete",
     "deletedToast": "Deleted {{title}}",
     "created": "Split created",
-    "updated": "Split updated"
+    "updated": "Split updated",
+    "completed": "Entry completed"
   },
 
   "splitList": {

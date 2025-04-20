@@ -563,4 +563,17 @@ export class AppController {
 
     return await this.appService.completeSplitEntry(request.user.sub, args)
   }
+
+  @UseGuards(AuthGuard)
+  @Post('uncompleteSplitEntry')
+  async uncompleteSplitEntry(
+    @Req() request: Request,
+    @Body() args: Partial<CompleteSplitEntryArguments>
+  ) {
+    if (!isCompleteSplitEntryArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.uncompleteSplitEntry(request.user.sub, args)
+  }
 }
