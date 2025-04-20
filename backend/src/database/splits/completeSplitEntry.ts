@@ -23,9 +23,6 @@ export async function completeSplitEntry(
       throw new NotFoundException('api.notFound.split')
     }
 
-    const groupName =
-      (await client.query(`SELECT name from groups WHERE id = $1`, [args.groupId])).rows[0]?.name ??
-      ''
     const paidById = (
       await client.query(`SELECT paid_by from splits WHERE id = $1`, [args.splitId])
     ).rows[0]?.paid_by
@@ -66,6 +63,19 @@ export async function completeSplitEntry(
 
     await client.query('COMMIT')
 
+    const groupName =
+      (await client.query(`SELECT name from groups WHERE id = $1`, [args.groupId])).rows[0]?.name ??
+      ''
+    const callerName =
+      (await client.query(`SELECT name from users WHERE id = $1`, [callerId])).rows[0]?.name ?? ''
+    const splitName =
+      (
+        await client.query(`SELECT name from splits WHERE id = $1 AND group_id = $2`, [
+          args.splitId,
+          args.groupId,
+        ])
+      ).rows[0]?.name ?? ''
+
     let notificationTokens: NotificationToken[]
     let notificationMessage: LanguageTranslationKey
 
@@ -81,7 +91,13 @@ export async function completeSplitEntry(
       NotificationUtils.sendNotification({
         token: token,
         title: groupName,
-        body: notificationMessage,
+        body: {
+          key: notificationMessage,
+          args: {
+            userName: callerName,
+            splitName: splitName,
+          },
+        },
         data: {
           pathToOpen: `/group/${args.groupId}/split/${args.splitId}/`,
         },
