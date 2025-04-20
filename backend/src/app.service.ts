@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common'
 import * as fs from 'fs'
 import {
   AcceptGroupInviteArguments,
+  CompleteSplitEntryArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -250,5 +251,9 @@ export class AppService {
 
   async unregisterNotificationToken(callerId: string, args: UnregisterNotificationTokenArguments) {
     return await this.databaseService.unregisterNotificationToken(callerId, args)
+  }
+
+  async completeSplitEntry(callerId: string, args: CompleteSplitEntryArguments) {
+    return await this.databaseService.completeSplitEntry(callerId, args)
   }
 }

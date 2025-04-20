@@ -99,6 +99,7 @@
         "restoreSplit": "You don't have permission to restore this split",
         "accessRoulette": "You don't have permission to access the roulette",
         "settleUp": "You don't have permission to settle up",
+        "completeSplitEntry": "You don't have permission to complete splits",
         "readMembers": "You don't have permission to see members of this group",
         "inviteMembers": "You don't have permission to invite members to this group",
         "rename": "You don't have permission to rename this group",
@@ -132,7 +133,8 @@
       "cannotEditSettleUp": "Settle-up splits cannot be updated",
       "cannotSettleUpNeutral": "You cannot settle up with neutral balance",
       "settleUpFailed": "Failed to settle up",
-      "invalidSplitType": "Invalid split type"
+      "invalidSplitType": "Invalid split type",
+      "callerCannotCompleteEntry": "You cannot complete this entry"
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
@@ -383,10 +385,15 @@
     "createAuthorText": "By <Styled>{{editor}}</Styled>",
     "hasPaidText": "<Styled>{{payer}}</Styled> has paid <Styled>{{amount}}</Styled>",
     "hasSettledUpGaveBack": "<Styled>{{payer}}</Styled> has settled up and given back <Styled>{{amount}}</Styled>",
+    "hasSettledUpWillGiveBack": "<Styled>{{payer}}</Styled> has settled up and will give back <Styled>{{amount}}</Styled>",
     "hasSettledUpGetsBack": "<Styled>{{payer}}</Styled> has settled up and got back <Styled>{{amount}}</Styled>",
+    "hasSettledUpWillGetBack": "<Styled>{{payer}}</Styled> has settled up and will get back <Styled>{{amount}}</Styled>",
     "splitTimeText": "On <Styled>{{date}}</Styled>",
     "gotBack": "Got back",
+    "willGetBack": "Will get back",
     "gaveBack": "Gave back",
+    "willGiveBack": "Will give back",
+    "markCompleted": "Mark as complete",
     "settleUpTitle": "Settle up split"
   },
 

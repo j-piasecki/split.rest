@@ -194,3 +194,9 @@ export interface RegisterOrUpdateNotificationTokenArguments {
 export interface UnregisterNotificationTokenArguments {
   token: string
 }
+
+export interface CompleteSplitEntryArguments {
+  groupId: number
+  splitId: number
+  userId: string
+}

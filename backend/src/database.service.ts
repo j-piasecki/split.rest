@@ -26,6 +26,7 @@ import { setGroupInviteRejected } from './database/groups/setInviteRejected'
 import { setGroupInviteWithdrawn } from './database/groups/setInviteWithdrawn'
 import { setUserDisplayName } from './database/groups/setUserDisplayName'
 import { RequirePermissions } from './database/permissionCheck'
+import { completeSplitEntry } from './database/splits/completeSplitEntry'
 import { createSplit } from './database/splits/createSplit'
 import { deleteSplit } from './database/splits/deleteSplit'
 import { getSplitHistory } from './database/splits/getSplitHistory'
@@ -44,6 +45,7 @@ import { Injectable } from '@nestjs/common'
 import { Pool } from 'pg'
 import {
   AcceptGroupInviteArguments,
+  CompleteSplitEntryArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -307,5 +309,10 @@ export class DatabaseService {
   // Every user can delete their notification token
   async unregisterNotificationToken(callerId: string, args: UnregisterNotificationTokenArguments) {
     return await unregisterNotificationToken(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['completeSplitEntry'])
+  async completeSplitEntry(callerId: string, args: CompleteSplitEntryArguments) {
+    return await completeSplitEntry(this.pool, callerId, args)
   }
 }

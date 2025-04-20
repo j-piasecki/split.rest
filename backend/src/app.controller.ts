@@ -5,6 +5,7 @@ import { Body, Controller, Delete, Get, Post, Query, Req, UseGuards } from '@nes
 import { Request } from 'express'
 import {
   AcceptGroupInviteArguments,
+  CompleteSplitEntryArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -45,6 +46,7 @@ import {
   UpdateSplitArguments,
   User,
   isAcceptGroupInviteArguments,
+  isCompleteSplitEntryArguments,
   isCreateGroupArguments,
   isCreateGroupJoinLinkArguments,
   isCreateSplitArguments,
@@ -547,5 +549,18 @@ export class AppController {
     }
 
     return await this.appService.unregisterNotificationToken(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('completeSplitEntry')
+  async completeSplitEntry(
+    @Req() request: Request,
+    @Body() args: Partial<CompleteSplitEntryArguments>
+  ) {
+    if (!isCompleteSplitEntryArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.completeSplitEntry(request.user.sub, args)
   }
 }
