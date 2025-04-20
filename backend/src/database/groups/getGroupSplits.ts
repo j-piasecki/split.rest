@@ -15,7 +15,7 @@ export async function getGroupSplits(
   const rows = (
     await pool.query(
       `
-        SELECT 
+        SELECT DISTINCT ON (splits.id)
           splits.id,
           splits.name,
           splits.total,
@@ -43,7 +43,7 @@ export async function getGroupSplits(
         FROM splits INNER JOIN split_participants ON splits.id = split_participants.split_id
         WHERE
           group_id = $1
-          AND split_participants.user_id = $3
+          ${args.onlyIfIncluded ? 'AND split_participants.user_id = $3' : ''}
           AND deleted = false
           AND id < $2
         ORDER BY id DESC
