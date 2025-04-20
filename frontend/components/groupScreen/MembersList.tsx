@@ -100,9 +100,8 @@ export function MembersList({
   const [fabRef, scrollHandler] = useFABScrollHandler()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
-  const { members, isLoading, fetchNextPage, isFetchingNextPage, isRefetching } = useGroupMembers(
-    info?.id
-  )
+  const { members, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =
+    useGroupMembers(info?.id)
 
   function refreshData() {
     if (info) {
@@ -147,7 +146,7 @@ export function MembersList({
         }
         data={members}
         onEndReachedThreshold={0.5}
-        onEndReached={() => !isFetchingNextPage && fetchNextPage()}
+        onEndReached={() => !isFetchingNextPage && hasNextPage && fetchNextPage()}
         keyExtractor={(item) => item.id}
         renderItem={({ item: member }) =>
           info ? <MemberRow member={member} info={info} iconOnly={iconOnly ?? false} /> : null

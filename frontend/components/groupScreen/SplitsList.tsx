@@ -82,6 +82,7 @@ export interface SplitsListProps {
   isLoading: boolean
   isRefetching: boolean
   isFetchingNextPage: boolean
+  hasNextPage: boolean
   fetchNextPage: () => void
 }
 
@@ -99,6 +100,7 @@ export function SplitsList({
   fetchNextPage,
   isFetchingNextPage,
   isRefetching,
+  hasNextPage,
 }: SplitsListProps) {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
@@ -146,7 +148,7 @@ export function SplitsList({
         }
         data={splits}
         onEndReachedThreshold={0.5}
-        onEndReached={() => !isFetchingNextPage && fetchNextPage()}
+        onEndReached={() => !isFetchingNextPage && hasNextPage && fetchNextPage()}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item: split }) => <SplitRow split={split} info={info} />}
         ItemSeparatorComponent={Divider}

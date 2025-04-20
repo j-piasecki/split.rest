@@ -21,11 +21,12 @@ export function GroupSplitsList(props: GroupSplitsListProps) {
   const { data: permissions } = useGroupPermissions(props.info?.id)
 
   // TODO: changing forceShowSplitsWithUser causes the list to reload, shouldn't it show the current data wile loading the new one?
-  const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching } = useGroupSplits(
-    props.info?.id,
-    props.forceShowSplitsWithUser ||
-      permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
-  )
+  const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =
+    useGroupSplits(
+      props.info?.id,
+      props.forceShowSplitsWithUser ||
+        permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
+    )
 
   return (
     <SplitsList
@@ -35,6 +36,7 @@ export function GroupSplitsList(props: GroupSplitsListProps) {
       isRefetching={isRefetching}
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
+      hasNextPage={hasNextPage}
       emptyComponent={
         <Text style={{ fontSize: 20, color: theme.colors.outline, paddingVertical: 32 }}>
           {permissions?.canReadSplits() === SplitPermissionType.None
