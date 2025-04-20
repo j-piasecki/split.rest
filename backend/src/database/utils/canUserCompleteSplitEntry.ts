@@ -6,26 +6,23 @@ export async function canUserCompleteSplitEntry(
   userId: string,
   callerId: string
 ) {
+  const targetEntry = await client.query(
+    'SELECT 1 FROM split_participants WHERE split_id = $1 AND user_id = $2 AND pending = true',
+    [splitId, userId]
+  )
+  const targetEntryExists = Boolean(targetEntry.rowCount)
+
   const paidByUser = await client.query('SELECT 1 FROM splits WHERE id = $1 AND paid_by = $2', [
     splitId,
     callerId,
   ])
 
   if (paidByUser.rowCount) {
-    return true
+    return targetEntryExists
   }
 
-  if (userId !== callerId) {
-    return false
-  }
-
-  const result = await client.query(
-    'SELECT 1 FROM split_participants WHERE split_id = $1 AND user_id = $2 AND pending = true',
-    [splitId, userId]
-  )
-
-  if (result.rowCount) {
-    return true
+  if (userId === callerId) {
+    return targetEntryExists
   }
 
   return false

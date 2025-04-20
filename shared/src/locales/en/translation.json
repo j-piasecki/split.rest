@@ -75,6 +75,10 @@
     "settleUp": {
       "youOwe":"{{userName}} has settled up — pay them back {{amount}}",
       "youAreOwed":"{{userName}} has settled up — they will pay you back {{amount}}"
+    },
+    "completeSplit": {
+      "payerCompletedEntry": "{{userName}} has marked your entry in {{splitName}} as completed",
+      "payeeCompletedEntry": "{{userName}} has marked their entry in {{splitName}} as completed"
     }
   },
 
