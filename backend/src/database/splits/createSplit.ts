@@ -47,14 +47,16 @@ export async function createSplitNoTransaction(
     }
 
     await client.query(
-      'INSERT INTO split_participants (split_id, user_id, change) VALUES ($1, $2, $3)',
-      [splitId, balance.id, balance.change]
+      'INSERT INTO split_participants (split_id, user_id, change, pending) VALUES ($1, $2, $3, $4)',
+      [splitId, balance.id, balance.change, balance.pending]
     )
 
-    await client.query(
-      'UPDATE group_members SET balance = balance + $1 WHERE group_id = $2 AND user_id = $3',
-      [balance.change, args.groupId, balance.id]
-    )
+    if (!balance.pending) {
+      await client.query(
+        'UPDATE group_members SET balance = balance + $1 WHERE group_id = $2 AND user_id = $3',
+        [balance.change, args.groupId, balance.id]
+      )
+    }
   }
 
   await client.query('UPDATE groups SET total = total + $1 WHERE id = $2', [
@@ -126,6 +128,11 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
     if (await isGroupDeleted(client, args.groupId)) {
       throw new NotFoundException('api.notFound.group')
     }
+
+    args.balances.forEach((balance) => {
+      // TODO: allow creating pending splits in other way that settle up
+      balance.pending = false
+    })
 
     const splitId = await createSplitNoTransaction(client, callerId, args)
 

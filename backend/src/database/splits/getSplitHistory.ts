@@ -3,7 +3,7 @@ import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { splitExists } from '../utils/splitExists'
 import { getSplitInfo } from './getSplitInfo'
 import { Pool } from 'pg'
-import { SplitWithUsers, UserWithBalanceChange } from 'shared'
+import { SplitWithUsers, UserWithPendingBalanceChange } from 'shared'
 import { GetSplitHistoryArguments } from 'shared/src/endpointArguments'
 
 export async function getSplitHistory(
@@ -62,6 +62,7 @@ export async function getSplitHistory(
             SELECT 
               users.id, 
               split_participants_edits.change, 
+              split_participants_edits.pending, 
               users.name, 
               users.email, 
               users.deleted,
@@ -77,12 +78,13 @@ export async function getSplitHistory(
         )
       ).rows
 
-      const participants: UserWithBalanceChange[] = participantRows.map((row) => ({
+      const participants: UserWithPendingBalanceChange[] = participantRows.map((row) => ({
         id: row.id,
         name: row.name,
         email: row.email,
         photoUrl: null,
         change: row.change,
+        pending: row.pending,
         deleted: row.deleted,
         displayName: row.display_name,
       }))
@@ -99,6 +101,7 @@ export async function getSplitHistory(
         type: row.type,
         users: participants,
         isUserParticipating: upToDateInfo.isUserParticipating,
+        pending: participants.some((p) => p.pending),
       })
     }
 

@@ -59,5 +59,7 @@ export function useSplitHistory(groupId?: number, splitId?: number) {
     fetchNextPage: result.fetchNextPage,
     hasNextPage: result.hasNextPage,
     isFetchingNextPage: result.isFetchingNextPage,
+    refetch: result.refetch,
+    isRefetching: result.isRefetching,
   }
 }

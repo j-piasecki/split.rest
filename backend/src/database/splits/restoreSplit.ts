@@ -25,9 +25,10 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
     ).rows[0]
 
     const splitParticipants = (
-      await client.query('SELECT user_id, change FROM split_participants WHERE split_id = $1', [
-        args.splitId,
-      ])
+      await client.query(
+        'SELECT user_id, change FROM split_participants WHERE split_id = $1 AND pending = false',
+        [args.splitId]
+      )
     ).rows
 
     for (const participant of splitParticipants) {

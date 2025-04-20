@@ -1,24 +1,30 @@
+import { RoundIconButton } from './RoundIconButton'
+import { useSnack } from './SnackBar'
 import { Icon, IconName } from '@components/Icon'
 import { Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
+import { useCompleteSplitEntryMutation } from '@hooks/database/useCompleteSplitEntryMutation'
+import { useUncompleteSplitEntryMutation } from '@hooks/database/useUncompleteSplitEntryMutation'
 import { useUserById } from '@hooks/database/useUserById'
+import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
+import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getSplitDisplayName } from '@utils/getSplitDisplayName'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ScrollView, StyleProp, View, ViewStyle } from 'react-native'
-import { CurrencyUtils } from 'shared'
+import { RefreshControl, ScrollView, StyleProp, View, ViewStyle } from 'react-native'
+import { CurrencyUtils, isTranslatableError } from 'shared'
 import {
   GroupUserInfo,
   LanguageTranslationKey,
   SplitType,
   SplitWithUsers,
-  UserWithBalanceChange,
+  UserWithPendingBalanceChange,
 } from 'shared'
 
-function getVisibleBalanceChange(user: UserWithBalanceChange, splitInfo: SplitWithUsers) {
+function getVisibleBalanceChange(user: UserWithPendingBalanceChange, splitInfo: SplitWithUsers) {
   const paidByThis = splitInfo.paidById === user.id
   let paidInThisSplit = user.change
 
@@ -48,7 +54,7 @@ function PaidAmount({
   splitInfo,
   groupInfo,
 }: {
-  user: UserWithBalanceChange
+  user: UserWithPendingBalanceChange
   splitInfo: SplitWithUsers
   groupInfo?: GroupUserInfo
 }) {
@@ -75,26 +81,23 @@ function PaidAmount({
           : theme.colors.balanceNeutral
       : theme.colors.onSurfaceVariant
 
-  if (isSmallScreen) {
-    return (
-      <View style={{ flexDirection: 'column', alignItems: 'flex-end' }}>
-        {!paidByThis && isSettleUp && (
-          <Text style={{ color: changeColor, fontSize: 14 }}>
-            {isInverse ? t('splitInfo.gaveBack') : t('splitInfo.gotBack')}
-          </Text>
-        )}
-        <Text style={{ color: changeColor, fontSize: 20 }}>
-          {CurrencyUtils.format(paidInThisSplit, groupInfo?.currency)}
-        </Text>
-      </View>
-    )
-  }
-
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+    <View
+      style={
+        isSmallScreen
+          ? { flexDirection: 'column', alignItems: 'flex-end' }
+          : { flexDirection: 'row', alignItems: 'center', gap: 8 }
+      }
+    >
       {!paidByThis && isSettleUp && (
-        <Text style={{ color: changeColor, fontSize: 16 }}>
-          {isInverse ? t('splitInfo.gaveBack') : t('splitInfo.gotBack')}
+        <Text style={{ color: changeColor, fontSize: isSmallScreen ? 14 : 16 }}>
+          {isInverse
+            ? user.pending
+              ? t('splitInfo.willGiveBack')
+              : t('splitInfo.gaveBack')
+            : user.pending
+              ? t('splitInfo.willGetBack')
+              : t('splitInfo.gotBack')}
         </Text>
       )}
       <Text style={{ color: changeColor, fontSize: 20 }}>
@@ -111,50 +114,122 @@ function UserRow({
   isNameUnique,
   last = false,
 }: {
-  user: UserWithBalanceChange
+  user: UserWithPendingBalanceChange
   splitInfo: SplitWithUsers
   groupInfo: GroupUserInfo | undefined
   isNameUnique: boolean
   last?: boolean
 }) {
+  const appUser = useAuth()
   const theme = useTheme()
+  const snack = useSnack()
   const { t } = useTranslation()
+  const { mutateAsync: completeEntry, isPending: isCompleting } = useCompleteSplitEntryMutation(
+    groupInfo?.id,
+    splitInfo.id
+  )
+  const { mutateAsync: uncompleteEntry } = useUncompleteSplitEntryMutation(
+    groupInfo?.id,
+    splitInfo.id
+  )
 
   const paidByThis = splitInfo.paidById === user.id
+  const canCompleteSplit =
+    user.pending && (appUser?.id === splitInfo.paidById || appUser?.id === user.id)
 
   return (
     <View
       style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-        paddingVertical: 12,
+        paddingTop: 12,
+        paddingBottom: canCompleteSplit ? 4 : 12,
         paddingHorizontal: 16,
         borderBottomWidth: last ? 0 : 1,
         borderColor: theme.colors.outlineVariant,
+        gap: 4,
       }}
     >
-      <ProfilePicture userId={user.id} size={32} />
-      <View style={{ flex: 1 }}>
-        <Text
-          style={{
-            color: paidByThis ? theme.colors.primary : theme.colors.onSurface,
-            fontSize: 20,
-            fontWeight: paidByThis ? 700 : 400,
-          }}
-        >
-          {user.displayName ?? user.name}
-        </Text>
-        {user.displayName && (
-          <Text style={{ color: theme.colors.outline, fontSize: 12 }}>{user.name}</Text>
-        )}
-        {(user.deleted || (!isNameUnique && user.email)) && (
-          <Text style={{ color: theme.colors.outline, fontSize: 12 }}>
-            {user.deleted ? t('deletedUser') : user.email}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 8,
+          opacity: user.pending ? 0.85 : 1,
+        }}
+      >
+        <View>
+          <ProfilePicture userId={user.id} size={32} />
+
+          {user.pending && (
+            <View
+              style={[
+                {
+                  position: 'absolute',
+                  bottom: -6,
+                  right: -6,
+                  width: 22,
+                  height: 22,
+                  backgroundColor: theme.colors.surfaceContainerHighest,
+                  borderRadius: 11,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+                styles.paneShadow,
+              ]}
+            >
+              <Icon name='schedule' size={18} color={theme.colors.tertiary} />
+            </View>
+          )}
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text
+            style={{
+              color: paidByThis ? theme.colors.primary : theme.colors.onSurface,
+              fontSize: 20,
+              fontWeight: paidByThis ? 700 : 400,
+            }}
+          >
+            {user.displayName ?? user.name}
           </Text>
-        )}
+          {user.displayName && (
+            <Text style={{ color: theme.colors.outline, fontSize: 12 }}>{user.name}</Text>
+          )}
+          {(user.deleted || (!isNameUnique && user.email)) && (
+            <Text style={{ color: theme.colors.outline, fontSize: 12 }}>
+              {user.deleted ? t('deletedUser') : user.email}
+            </Text>
+          )}
+        </View>
+        <PaidAmount user={user} splitInfo={splitInfo} groupInfo={groupInfo} />
       </View>
-      <PaidAmount user={user} splitInfo={splitInfo} groupInfo={groupInfo} />
+
+      {canCompleteSplit && (
+        <View style={{ alignItems: 'flex-end' }}>
+          <RoundIconButton
+            icon='check'
+            isLoading={isCompleting}
+            text={t('splitInfo.markCompleted')}
+            onPress={() => {
+              completeEntry(user.id)
+                .then(() => {
+                  snack.show({
+                    message: t('split.completed'),
+                    actionText: t('undo'),
+                    action: async () => {
+                      await uncompleteEntry(user.id)
+                    },
+                  })
+                })
+                .catch((error) => {
+                  if (isTranslatableError(error)) {
+                    alert(t(error.message))
+                  } else {
+                    alert(t('unknownError'))
+                  }
+                })
+            }}
+          />
+        </View>
+      )}
     </View>
   )
 }
@@ -175,7 +250,8 @@ function IconInfoText({ icon, translationKey, values, userIdPhoto }: EditInfoTex
       {userIdPhoto && <ProfilePicture userId={userIdPhoto} size={20} style={{ marginRight: 8 }} />}
       <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
         <Trans
-          i18nKey={translationKey}
+          // typescript broke :(
+          i18nKey={translationKey as never}
           values={values}
           components={{ Styled: <Text style={{ color: theme.colors.primary, fontWeight: 600 }} /> }}
         />
@@ -249,7 +325,7 @@ function EditInfo({ splitInfo }: { splitInfo: SplitWithUsers }) {
   )
 }
 
-function getNameKey(user: UserWithBalanceChange) {
+function getNameKey(user: UserWithPendingBalanceChange) {
   if (user.displayName === null) {
     return user.name
   }
@@ -261,16 +337,25 @@ export function SplitInfo({
   splitInfo,
   groupInfo,
   style,
+  isRefreshing = false,
+  onRefresh,
 }: {
   splitInfo: SplitWithUsers
   groupInfo: GroupUserInfo
   style?: StyleProp<ViewStyle>
+  isRefreshing?: boolean
+  onRefresh?: () => void
 }) {
   const theme = useTheme()
   const { t } = useTranslation()
   const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)
 
+  const isSettleUp = Boolean(splitInfo.type & SplitType.SettleUp)
   const usersToShow = splitInfo.users.filter((user) => {
+    if (isSettleUp && user.id === splitInfo.paidById) {
+      return false
+    }
+
     const changeToShow = getVisibleBalanceChange(user, splitInfo)
     return changeToShow !== '0.00'
   })
@@ -285,7 +370,13 @@ export function SplitInfo({
   )
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={style}>
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={style}
+      refreshControl={
+        onRefresh && <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={{ gap: 16 }}>
         <Pane
           icon='receipt'
@@ -306,8 +397,12 @@ export function SplitInfo({
               translationKey={
                 splitInfo.type & SplitType.SettleUp
                   ? splitInfo.type & SplitType.Inversed
-                    ? 'splitInfo.hasSettledUpGetsBack'
-                    : 'splitInfo.hasSettledUpGaveBack'
+                    ? splitInfo.pending
+                      ? 'splitInfo.hasSettledUpWillGetBack'
+                      : 'splitInfo.hasSettledUpGetsBack'
+                    : splitInfo.pending
+                      ? 'splitInfo.hasSettledUpWillGiveBack'
+                      : 'splitInfo.hasSettledUpGaveBack'
                   : 'splitInfo.hasPaidText'
               }
               values={{

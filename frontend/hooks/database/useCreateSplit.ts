@@ -17,6 +17,7 @@ async function createSplit(args: CreateSplitArguments) {
     total: String(args.total),
     type: args.type,
     isUserParticipating: true,
+    pending: false,
   })
 
   await invalidateSplitRelatedQueries(args.groupId, splitId ?? -1)

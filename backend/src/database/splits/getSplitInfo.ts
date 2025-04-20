@@ -30,6 +30,7 @@ export async function getSplitInfo(
         SELECT 
           users.id, 
           split_participants.change, 
+          split_participants.pending, 
           users.name, 
           users.email, 
           users.deleted,
@@ -46,6 +47,7 @@ export async function getSplitInfo(
   ).rows
 
   const isParticipating = await isUserMemberOfSplit(pool, args.splitId, callerId)
+  const isPending = participants.some((p) => p.pending)
 
   return {
     id: splitRow.id,
@@ -58,12 +60,14 @@ export async function getSplitInfo(
     updatedAt: Number(splitRow.updated_at),
     type: splitRow.type,
     isUserParticipating: isParticipating,
+    pending: isPending,
     users: participants.map((p) => ({
       id: p.id,
       name: p.name,
       email: p.email,
       photoUrl: null,
       change: p.change,
+      pending: p.pending,
       deleted: p.deleted,
       displayName: p.display_name,
     })),

@@ -75,6 +75,12 @@
     "settleUp": {
       "youOwe":"{{userName}} has settled up — pay them back {{amount}}",
       "youAreOwed":"{{userName}} has settled up — they will pay you back {{amount}}"
+    },
+    "completeSplit": {
+      "payerCompletedEntry": "{{userName}} has marked your entry in {{splitName}} as completed",
+      "payeeCompletedEntry": "{{userName}} has marked their entry in {{splitName}} as completed",
+      "payerUncompletedEntry": "{{userName}} has marked your entry in {{splitName}} as not completed",
+      "payeeUncompletedEntry": "{{userName}} has marked their entry in {{splitName}} as not completed"
     }
   },
 
@@ -99,6 +105,8 @@
         "restoreSplit": "You don't have permission to restore this split",
         "accessRoulette": "You don't have permission to access the roulette",
         "settleUp": "You don't have permission to settle up",
+        "completeSplitEntry": "You don't have permission to complete splits",
+        "uncompleteSplitEntry": "You don't have permission to mark splits as not completed",
         "readMembers": "You don't have permission to see members of this group",
         "inviteMembers": "You don't have permission to invite members to this group",
         "rename": "You don't have permission to rename this group",
@@ -132,7 +140,9 @@
       "cannotEditSettleUp": "Settle-up splits cannot be updated",
       "cannotSettleUpNeutral": "You cannot settle up with neutral balance",
       "settleUpFailed": "Failed to settle up",
-      "invalidSplitType": "Invalid split type"
+      "invalidSplitType": "Invalid split type",
+      "callerCannotCompleteEntry": "You cannot complete this entry",
+      "callerCannotUncompleteEntry": "You cannot mark this entry as not completed"
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
@@ -336,7 +346,8 @@
     "delete": "Delete",
     "deletedToast": "Deleted {{title}}",
     "created": "Split created",
-    "updated": "Split updated"
+    "updated": "Split updated",
+    "completed": "Entry completed"
   },
 
   "splitList": {
@@ -383,10 +394,15 @@
     "createAuthorText": "By <Styled>{{editor}}</Styled>",
     "hasPaidText": "<Styled>{{payer}}</Styled> has paid <Styled>{{amount}}</Styled>",
     "hasSettledUpGaveBack": "<Styled>{{payer}}</Styled> has settled up and given back <Styled>{{amount}}</Styled>",
+    "hasSettledUpWillGiveBack": "<Styled>{{payer}}</Styled> has settled up and will give back <Styled>{{amount}}</Styled>",
     "hasSettledUpGetsBack": "<Styled>{{payer}}</Styled> has settled up and got back <Styled>{{amount}}</Styled>",
+    "hasSettledUpWillGetBack": "<Styled>{{payer}}</Styled> has settled up and will get back <Styled>{{amount}}</Styled>",
     "splitTimeText": "On <Styled>{{date}}</Styled>",
     "gotBack": "Got back",
+    "willGetBack": "Will get back",
     "gaveBack": "Gave back",
+    "willGiveBack": "Will give back",
+    "markCompleted": "Mark as complete",
     "settleUpTitle": "Settle up split"
   },
 

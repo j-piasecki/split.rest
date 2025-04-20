@@ -1,5 +1,6 @@
 import {
   AcceptGroupInviteArguments,
+  CompleteSplitEntryArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -222,4 +223,8 @@ export function isUnregisterNotificationTokenArguments(
   obj: any
 ): obj is UnregisterNotificationTokenArguments {
   return obj.token !== undefined
+}
+
+export function isCompleteSplitEntryArguments(obj: any): obj is CompleteSplitEntryArguments {
+  return obj.groupId !== undefined && obj.splitId !== undefined && obj.userId !== undefined
 }

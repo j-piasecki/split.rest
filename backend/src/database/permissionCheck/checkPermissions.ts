@@ -1,4 +1,8 @@
 import { canQuickRestoreSplit } from '../utils/canQuickRestoreSplit'
+import {
+  canUserCompleteSplitEntry,
+  canUserUncompleteSplitEntry,
+} from '../utils/canUserCompleteSplitEntry'
 import { getMemberPermissions } from '../utils/getMemberPermissions'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { isUserMemberOfSplit } from '../utils/isUserMemberOfSplit'
@@ -118,6 +122,30 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
             !(await isUserMemberOfSplit(client, args.splitId, callerId))
           ) {
             return 'api.insufficientPermissions.group.restoreSplit'
+          }
+          continue
+        }
+
+        case 'completeSplitEntry': {
+          const args = unsafeArgs as PermissionArguments<['completeSplitEntry']>
+          if (!callerPermissions?.canCompleteSplitEntry()) {
+            return 'api.insufficientPermissions.group.completeSplitEntry'
+          }
+
+          if (!(await canUserCompleteSplitEntry(client, args.splitId, args.userId, callerId))) {
+            return 'api.split.callerCannotCompleteEntry'
+          }
+          continue
+        }
+
+        case 'uncompleteSplitEntry': {
+          const args = unsafeArgs as PermissionArguments<['uncompleteSplitEntry']>
+          if (!callerPermissions?.canUncompleteSplitEntry()) {
+            return 'api.insufficientPermissions.group.uncompleteSplitEntry'
+          }
+
+          if (!(await canUserUncompleteSplitEntry(client, args.splitId, args.userId, callerId))) {
+            return 'api.split.callerCannotUncompleteEntry'
           }
           continue
         }

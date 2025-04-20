@@ -15,7 +15,7 @@ export async function getGroupSplits(
   const rows = (
     await pool.query(
       `
-        SELECT 
+        SELECT DISTINCT ON (splits.id)
           splits.id,
           splits.name,
           splits.total,
@@ -26,6 +26,7 @@ export async function getGroupSplits(
           splits.version,
           splits.deleted,
           splits.type,
+          (SELECT EXISTS (SELECT 1 FROM split_participants WHERE split_participants.split_id = splits.id AND pending = true)) AS pending,
           ${
             args.onlyIfIncluded
               ? 'true AS user_participating'
@@ -39,7 +40,7 @@ export async function getGroupSplits(
                     (SELECT 1 FROM split_participants_edits WHERE split_participants_edits.split_id = splits.id AND split_participants_edits.user_id = $3)
                  )) AS user_participating`
           }
-        FROM splits ${args.onlyIfIncluded ? 'INNER JOIN split_participants ON splits.id = split_participants.split_id' : ''}
+        FROM splits INNER JOIN split_participants ON splits.id = split_participants.split_id
         WHERE
           group_id = $1
           ${args.onlyIfIncluded ? 'AND split_participants.user_id = $3' : ''}
@@ -63,5 +64,6 @@ export async function getGroupSplits(
     updatedAt: Number(row.updated_at),
     type: row.type,
     isUserParticipating: row.user_participating,
+    pending: row.pending,
   }))
 }

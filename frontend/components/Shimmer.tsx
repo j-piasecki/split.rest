@@ -8,6 +8,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
@@ -16,9 +17,11 @@ export interface ShimmerProps {
   color?: string
   style?: StyleProp<ViewStyle>
   offset?: number
+  delay?: number
+  repeat?: number
 }
 
-export function Shimmer({ color, style, offset = 0 }: ShimmerProps) {
+export function Shimmer({ color, style, offset = 0, delay = 0, repeat = -1 }: ShimmerProps) {
   const theme = useTheme()
   const gradientRef = useRef<View>(null)
   const [width, setWidth] = useState(0)
@@ -49,8 +52,11 @@ export function Shimmer({ color, style, offset = 0 }: ShimmerProps) {
   }, [])
 
   useEffect(() => {
-    progress.value = withRepeat(withTiming(1, { duration: 1000, easing: Easing.linear }), -1)
-  }, [progress])
+    progress.value = withRepeat(
+      withDelay(delay, withTiming(1, { duration: 1000, easing: Easing.linear })),
+      repeat
+    )
+  }, [progress, delay, repeat])
 
   return (
     <View

@@ -154,6 +154,7 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
+            opacity: split.pending ? 0.85 : 1,
           },
           displayClass <= DisplayClass.Medium && styles.paneShadow,
         ]}
@@ -172,20 +173,22 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
                   position: 'absolute',
                   bottom: -6,
                   right: -6,
-                  width: 20,
-                  height: 20,
+                  width: 22,
+                  height: 22,
                   backgroundColor: theme.colors.surfaceContainerHighest,
-                  borderRadius: 8,
+                  borderRadius: 11,
                   justifyContent: 'center',
                   alignItems: 'center',
                 },
                 styles.paneShadow,
               ]}
             >
-              {isInverse ? (
+              {split.pending ? (
+                <Icon name='schedule' size={16} color={theme.colors.tertiary} />
+              ) : isInverse ? (
                 <Icon
                   name='merge'
-                  size={14}
+                  size={16}
                   color={theme.colors.tertiary}
                   style={{
                     transform: [{ rotateZ: '-90deg' }],
@@ -194,7 +197,7 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
               ) : (
                 <Icon
                   name='split'
-                  size={14}
+                  size={16}
                   color={theme.colors.tertiary}
                   style={{
                     transform: [{ rotateZ: '90deg' }],

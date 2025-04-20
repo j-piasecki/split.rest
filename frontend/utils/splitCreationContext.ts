@@ -3,8 +3,8 @@ import {
   SplitType,
   SplitWithUsers,
   TranslatableError,
-  UserWithBalanceChange,
   UserWithDisplayName,
+  UserWithPendingBalanceChange,
 } from 'shared'
 
 interface UserWithValue {
@@ -61,7 +61,7 @@ class SplitCreationContext {
     return index === -1 ? undefined : index
   }
 
-  private getParticipantsData(): UserWithBalanceChange[] {
+  private getParticipantsData(): UserWithPendingBalanceChange[] {
     if (this.participants === null) {
       return []
     }
@@ -100,6 +100,7 @@ class SplitCreationContext {
         return {
           ...user,
           change: Number(this.participants![index].value!).toFixed(2),
+          pending: false,
         }
       })
     }
@@ -112,6 +113,7 @@ class SplitCreationContext {
       return {
         ...user,
         change: change.toFixed(2),
+        pending: false,
       }
     })
   }
@@ -170,6 +172,7 @@ class SplitCreationContext {
       isUserParticipating: true,
       type: this.splitType,
       users: users,
+      pending: false,
     }
   }
 }

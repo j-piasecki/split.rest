@@ -31,6 +31,9 @@ export default function SplitInfoScreen() {
     isLoading: isLoadingHistory,
     isFetchingNextPage,
     fetchNextPage,
+    hasNextPage,
+    refetch,
+    isRefetching,
   } = useSplitHistory(Number(id), Number(splitId))
   const containerRef = useRef<View>(null)
   const scrollableRef = useRef<FlatList | ScrollView | null>(null)
@@ -58,6 +61,7 @@ export default function SplitInfoScreen() {
         balances: split.users.map((user) => ({
           id: user.id,
           change: user.change,
+          pending: user.pending,
         })),
       })
 
@@ -102,7 +106,7 @@ export default function SplitInfoScreen() {
               pagingEnabled
               onEndReachedThreshold={0.5}
               onEndReached={() => {
-                if (!isFetchingNextPage) {
+                if (!isFetchingNextPage && hasNextPage) {
                   fetchNextPage()
                 }
               }}
@@ -120,6 +124,8 @@ export default function SplitInfoScreen() {
                     splitInfo={item}
                     groupInfo={groupInfo}
                     style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}
+                    isRefreshing={isRefetching}
+                    onRefresh={refetch}
                   />
                   {index !== 0 && permissions?.canUpdateSplit(history[0]) && (
                     <Button
@@ -170,7 +176,8 @@ export default function SplitInfoScreen() {
 
                 if (
                   e.nativeEvent.contentOffset.x / scrollContentWidth.current > 0.5 &&
-                  !isFetchingNextPage
+                  !isFetchingNextPage &&
+                  hasNextPage
                 ) {
                   fetchNextPage()
                 }
@@ -206,6 +213,8 @@ export default function SplitInfoScreen() {
                     splitInfo={split}
                     groupInfo={groupInfo}
                     style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}
+                    isRefreshing={isRefetching}
+                    onRefresh={refetch}
                   />
 
                   {index !== 0 && permissions?.canUpdateSplit(history[0]) && (
