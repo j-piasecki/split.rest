@@ -173,13 +173,17 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
     // Remove old balances
 
     const splitParticipants = (
-      await client.query<{ user_id: string; change: string }>(
-        'SELECT user_id, change FROM split_participants WHERE split_id = $1',
+      await client.query<{ user_id: string; change: string; pending: boolean }>(
+        'SELECT user_id, change, pending FROM split_participants WHERE split_id = $1',
         [args.splitId]
       )
     ).rows
 
     for (const participant of splitParticipants) {
+      if (participant.pending) {
+        continue
+      }
+
       await client.query(
         'UPDATE group_members SET balance = balance - $1 WHERE group_id = $2 AND user_id = $3',
         [participant.change, args.groupId, participant.user_id]
@@ -227,8 +231,14 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
 
     for (const participant of splitParticipants) {
       await client.query(
-        'INSERT INTO split_participants_edits (split_id, user_id, version, change) VALUES ($1, $2, $3, $4)',
-        [args.splitId, participant.user_id, splitInfo.version, participant.change]
+        'INSERT INTO split_participants_edits (split_id, user_id, version, change, pending) VALUES ($1, $2, $3, $4, $5)',
+        [
+          args.splitId,
+          participant.user_id,
+          splitInfo.version,
+          participant.change,
+          participant.pending,
+        ]
       )
     }
 
@@ -247,14 +257,16 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
       }
 
       await client.query(
-        'INSERT INTO split_participants (split_id, user_id, change) VALUES ($1, $2, $3)',
-        [args.splitId, balance.id, balance.change]
+        'INSERT INTO split_participants (split_id, user_id, change, pending) VALUES ($1, $2, $3, $4)',
+        [args.splitId, balance.id, balance.change, false] // TODO: allow creating pending splits other in way than settle up?
       )
 
-      await client.query(
-        'UPDATE group_members SET balance = balance + $1 WHERE group_id = $2 AND user_id = $3',
-        [balance.change, args.groupId, balance.id]
-      )
+      if (!balance.pending) {
+        await client.query(
+          'UPDATE group_members SET balance = balance + $1 WHERE group_id = $2 AND user_id = $3',
+          [balance.change, args.groupId, balance.id]
+        )
+      }
     }
 
     await client.query('UPDATE groups SET total = total + $1 WHERE id = $2', [

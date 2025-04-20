@@ -47,8 +47,8 @@ export async function createSplitNoTransaction(
     }
 
     await client.query(
-      'INSERT INTO split_participants (split_id, user_id, change) VALUES ($1, $2, $3)',
-      [splitId, balance.id, balance.change]
+      'INSERT INTO split_participants (split_id, user_id, change, pending) VALUES ($1, $2, $3, $4)',
+      [splitId, balance.id, balance.change, false] // TODO: allow creating pending splits other in way than settle up?
     )
 
     await client.query(

@@ -36,6 +36,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
       balances: split.users.map((user) => ({
         id: user.id,
         change: user.change,
+        pending: false,
       })),
       type: split.type,
     })

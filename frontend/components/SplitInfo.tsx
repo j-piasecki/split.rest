@@ -15,10 +15,10 @@ import {
   LanguageTranslationKey,
   SplitType,
   SplitWithUsers,
-  UserWithBalanceChange,
+  UserWithPendingBalanceChange,
 } from 'shared'
 
-function getVisibleBalanceChange(user: UserWithBalanceChange, splitInfo: SplitWithUsers) {
+function getVisibleBalanceChange(user: UserWithPendingBalanceChange, splitInfo: SplitWithUsers) {
   const paidByThis = splitInfo.paidById === user.id
   let paidInThisSplit = user.change
 
@@ -48,7 +48,7 @@ function PaidAmount({
   splitInfo,
   groupInfo,
 }: {
-  user: UserWithBalanceChange
+  user: UserWithPendingBalanceChange
   splitInfo: SplitWithUsers
   groupInfo?: GroupUserInfo
 }) {
@@ -111,7 +111,7 @@ function UserRow({
   isNameUnique,
   last = false,
 }: {
-  user: UserWithBalanceChange
+  user: UserWithPendingBalanceChange
   splitInfo: SplitWithUsers
   groupInfo: GroupUserInfo | undefined
   isNameUnique: boolean
@@ -249,7 +249,7 @@ function EditInfo({ splitInfo }: { splitInfo: SplitWithUsers }) {
   )
 }
 
-function getNameKey(user: UserWithBalanceChange) {
+function getNameKey(user: UserWithPendingBalanceChange) {
   if (user.displayName === null) {
     return user.name
   }

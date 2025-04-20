@@ -41,10 +41,16 @@ export interface UserWithDisplayName extends User {
 export interface BalanceChange {
   id: string
   change: string
+  pending: boolean
 }
 
 export interface UserWithBalanceChange extends UserWithDisplayName {
   change: string
+}
+
+export interface UserWithPendingBalanceChange extends UserWithBalanceChange {
+  change: string
+  pending: boolean
 }
 
 export enum SplitType {
@@ -77,6 +83,7 @@ export interface SplitInfo {
   updatedAt: number
   type: SplitType
   isUserParticipating: boolean
+  pending: boolean
 }
 
 export interface SplitWithChanges extends SplitInfo {
@@ -84,7 +91,7 @@ export interface SplitWithChanges extends SplitInfo {
 }
 
 export interface SplitWithUsers extends SplitInfo {
-  users: UserWithBalanceChange[]
+  users: UserWithPendingBalanceChange[]
 }
 
 export interface GroupJoinLink {

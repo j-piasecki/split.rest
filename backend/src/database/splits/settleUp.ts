@@ -53,7 +53,7 @@ export function calculateSettleUpEntries(
     })
 
   let workingBalance = balance
-  const entries: BalanceChange[] = [{ id: payerId, change: (-balance).toFixed(2) }]
+  const entries: BalanceChange[] = [{ id: payerId, change: (-balance).toFixed(2), pending: false }]
 
   for (const member of members) {
     const memberBalance = Number(member.balance)
@@ -64,12 +64,14 @@ export function calculateSettleUpEntries(
         entries.push({
           id: member.id,
           change: workingBalance.toFixed(2),
+          pending: false,
         })
         workingBalance = 0
       } else {
         entries.push({
           id: member.id,
           change: (-memberBalance).toFixed(2),
+          pending: false,
         })
         workingBalance += memberBalance
       }
@@ -82,12 +84,14 @@ export function calculateSettleUpEntries(
         entries.push({
           id: member.id,
           change: workingBalance.toFixed(2),
+          pending: false,
         })
         workingBalance = 0
       } else {
         entries.push({
           id: member.id,
           change: (-memberBalance).toFixed(2),
+          pending: false,
         })
         workingBalance += memberBalance
       }
@@ -185,6 +189,7 @@ async function createAndSaveSettleUpSplit(
     updatedAt: Date.now(),
     isUserParticipating: true,
     type: splitType,
+    pending: false,
   }
 }
 

@@ -58,6 +58,7 @@ export default function SplitInfoScreen() {
         balances: split.users.map((user) => ({
           id: user.id,
           change: user.change,
+          pending: user.pending,
         })),
       })
 

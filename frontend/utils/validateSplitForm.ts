@@ -85,6 +85,7 @@ export async function validateSplitForm(
       return {
         id: entry.user.id,
         change: change.toFixed(2),
+        pending: false,
       }
     })
   )

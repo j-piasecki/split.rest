@@ -96,6 +96,7 @@ export async function createDatabase(pool: Pool) {
       split_id INTEGER,
       user_id VARCHAR(32) NOT NULL,
       change DECIMAL(10, 2) NOT NULL,
+      pending BOOLEAN NOT NULL DEFAULT FALSE,
 
       PRIMARY KEY (split_id, user_id),
       FOREIGN KEY (split_id) REFERENCES splits(id),
@@ -109,6 +110,7 @@ export async function createDatabase(pool: Pool) {
       user_id VARCHAR(32) NOT NULL,
       version INTEGER NOT NULL,
       change DECIMAL(10, 2) NOT NULL,
+      pending BOOLEAN NOT NULL DEFAULT FALSE,
 
       PRIMARY KEY (split_id, user_id, version),
       FOREIGN KEY (split_id) REFERENCES splits(id),
