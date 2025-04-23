@@ -260,4 +260,8 @@ export class AppService {
   async uncompleteSplitEntry(callerId: string, args: CompleteSplitEntryArguments) {
     return await this.databaseService.uncompleteSplitEntry(callerId, args)
   }
+
+  async getSettleUpPreview(callerId: string, args: SettleUpArguments) {
+    return await this.databaseService.getSettleUpPreview(callerId, args)
+  }
 }

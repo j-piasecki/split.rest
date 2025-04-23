@@ -576,4 +576,14 @@ export class AppController {
 
     return await this.appService.uncompleteSplitEntry(request.user.sub, args)
   }
+
+  @UseGuards(AuthGuard)
+  @Get('getSettleUpPreview')
+  async getSettleUpPreview(@Req() request: Request, @Query() args: Partial<SettleUpArguments>) {
+    if (!isSettleUpArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.getSettleUpPreview(request.user.sub, args)
+  }
 }

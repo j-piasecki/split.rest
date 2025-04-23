@@ -29,6 +29,7 @@ import { RequirePermissions } from './database/permissionCheck'
 import { completeSplitEntry } from './database/splits/completeSplitEntry'
 import { createSplit } from './database/splits/createSplit'
 import { deleteSplit } from './database/splits/deleteSplit'
+import { getSettleUpPreview } from './database/splits/getSettleUpPreview'
 import { getSplitHistory } from './database/splits/getSplitHistory'
 import { getSplitInfo } from './database/splits/getSplitInfo'
 import { restoreSplit } from './database/splits/restoreSplit'
@@ -320,5 +321,10 @@ export class DatabaseService {
   @RequirePermissions(['uncompleteSplitEntry'])
   async uncompleteSplitEntry(callerId: string, args: CompleteSplitEntryArguments) {
     return await uncompleteSplitEntry(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['settleUp'])
+  async getSettleUpPreview(callerId: string, args: SettleUpArguments) {
+    return await getSettleUpPreview(this.pool, callerId, args)
   }
 }

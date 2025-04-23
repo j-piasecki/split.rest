@@ -201,6 +201,8 @@ export async function settleUp(
   const client = await pool.connect()
 
   try {
+    await client.query('BEGIN')
+
     if (await isGroupDeleted(client, args.groupId)) {
       throw new NotFoundException('api.notFound.group')
     }
