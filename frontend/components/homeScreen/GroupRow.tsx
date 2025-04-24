@@ -6,6 +6,7 @@ import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutatio
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { getBalanceColor } from '@utils/getBalanceColor'
 import { router } from 'expo-router'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -26,12 +27,7 @@ export function GroupRow({ info }: GroupRowProps) {
   const { t } = useTranslation()
   const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info?.id)
 
-  const balanceColor =
-    Number(info.balance) === 0
-      ? theme.colors.balanceNeutral
-      : Number(info.balance) > 0
-        ? theme.colors.balancePositive
-        : theme.colors.balanceNegative
+  const balanceColor = getBalanceColor(Number(info.balance), theme)
 
   return (
     <ContextMenu

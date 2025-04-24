@@ -14,6 +14,7 @@ import { useRouletteQuery } from '@hooks/useRouletteQuery'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { getBalanceColor } from '@utils/getBalanceColor'
 import { beginNewSplit } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useRef, useState } from 'react'
@@ -147,12 +148,7 @@ function Result({ query, groupId, setQuery }: ResultProps) {
         >
           {result.map((user, index) => {
             const balanceNum = parseFloat(user.change ?? '')
-            const balanceColor =
-              balanceNum === 0
-                ? theme.colors.balanceNeutral
-                : balanceNum > 0
-                  ? theme.colors.balancePositive
-                  : theme.colors.balanceNegative
+            const balanceColor = getBalanceColor(balanceNum, theme)
 
             return (
               <Animated.View

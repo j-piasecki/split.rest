@@ -3,6 +3,7 @@ import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
+import { getBalanceColor } from '@utils/getBalanceColor'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
@@ -51,12 +52,7 @@ export function GroupInfoCard({ info }: { info: GroupUserInfo | undefined }) {
                 flex: 1,
                 textAlign: 'right',
                 fontSize: 24,
-                color:
-                  Number(info.balance) === 0
-                    ? theme.colors.balanceNeutral
-                    : Number(info.balance) > 0
-                      ? theme.colors.balancePositive
-                      : theme.colors.balanceNegative,
+                color: getBalanceColor(Number(info.balance), theme),
               }}
             >
               {CurrencyUtils.format(info.balance, info.currency, true, true)}

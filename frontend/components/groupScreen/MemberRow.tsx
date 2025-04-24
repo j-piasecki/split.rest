@@ -10,6 +10,7 @@ import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { getBalanceColor } from '@utils/getBalanceColor'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { useRef } from 'react'
@@ -120,12 +121,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
             padding: 2,
             borderWidth: 2,
             borderRadius: 24,
-            borderColor:
-              Number(member.balance) === 0
-                ? theme.colors.balanceNeutral
-                : Number(member.balance) < 0
-                  ? theme.colors.balanceNegative
-                  : theme.colors.balancePositive,
+            borderColor: getBalanceColor(Number(member.balance), theme),
           }}
         >
           <ProfilePicture userId={member.id} size={36} />
@@ -176,12 +172,7 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
                 style={{
                   fontSize: 20,
                   fontWeight: 600,
-                  color:
-                    Number(member.balance) === 0
-                      ? theme.colors.balanceNeutral
-                      : Number(member.balance) > 0
-                        ? theme.colors.balancePositive
-                        : theme.colors.balanceNegative,
+                  color: getBalanceColor(Number(member.balance), theme),
                 }}
               >
                 {CurrencyUtils.format(member.balance, info.currency, true, true)}

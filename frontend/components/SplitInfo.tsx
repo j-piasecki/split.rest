@@ -11,6 +11,7 @@ import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { getBalanceColor } from '@utils/getBalanceColor'
 import { getSplitDisplayName } from '@utils/getSplitDisplayName'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -74,11 +75,7 @@ function PaidAmount({
       ? theme.colors.balanceNegative
       : theme.colors.balancePositive
     : isBalanceChange
-      ? balanceChange > 0
-        ? theme.colors.balancePositive
-        : balanceChange < 0
-          ? theme.colors.balanceNegative
-          : theme.colors.balanceNeutral
+      ? getBalanceColor(balanceChange, theme)
       : theme.colors.onSurfaceVariant
 
   return (

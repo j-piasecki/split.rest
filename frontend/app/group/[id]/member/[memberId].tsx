@@ -10,6 +10,7 @@ import { useSetUserDisplayNameMutation } from '@hooks/database/useSetUserDisplay
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { getBalanceColor } from '@utils/getBalanceColor'
 import { useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -142,12 +143,7 @@ export function MemberScreen() {
                       <Text
                         style={{
                           fontWeight: '600',
-                          color:
-                            Number(memberInfo.balance) === 0
-                              ? theme.colors.balanceNeutral
-                              : Number(memberInfo.balance) > 0
-                                ? theme.colors.balancePositive
-                                : theme.colors.balanceNegative,
+                          color: getBalanceColor(Number(memberInfo.balance), theme),
                         }}
                       />
                     ),
