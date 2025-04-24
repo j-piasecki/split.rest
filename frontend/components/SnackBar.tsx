@@ -122,7 +122,7 @@ function Snack({
                   // don't dismiss in case of an error, retrying might be necessary
                   alert(
                     error instanceof TranslatableError
-                      ? t(error.message)
+                      ? t(error.message, error.args)
                       : error instanceof Error
                         ? error.message
                         : error

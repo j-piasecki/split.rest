@@ -225,7 +225,7 @@ function UserRow({
                 })
                 .catch((error) => {
                   if (isTranslatableError(error)) {
-                    alert(t(error.message))
+                    alert(t(error.message, error.args))
                   } else {
                     alert(t('unknownError'))
                   }

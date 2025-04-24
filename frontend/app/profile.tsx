@@ -75,7 +75,7 @@ function Form({ user }: { user: User }) {
 
     setUserName(newName).catch((e) => {
       if (e instanceof TranslatableError) {
-        alert(t(e.message))
+        alert(t(e.message, e.args))
       } else {
         alert(t('unknownError'))
       }
