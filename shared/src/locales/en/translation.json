@@ -373,6 +373,7 @@
     "settings": "Settings",
     "settleUp": {
       "settleUp": "Settle up",
+      "confirm": "Confirm",
       "cancel": "Cancel",
       "settleUpSuccess": "Settled up"
     }
