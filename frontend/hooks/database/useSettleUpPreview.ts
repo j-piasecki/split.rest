@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { makeRequest } from '@utils/makeApiRequest'
+import { ApiError, makeRequest } from '@utils/makeApiRequest'
 import { SettleUpArguments, SplitWithHashedChanges, TranslatableError } from 'shared'
 
 export function useSettleUpPreview(groupId?: number) {
   return useQuery({
-    queryKey: ['settleUpPreview', groupId],
-    staleTime: 0,
+    queryKey: ['settleUpPreview', groupId, Math.random()],
     queryFn: async (): Promise<SplitWithHashedChanges | null> => {
       if (groupId === undefined) {
         return null
@@ -23,6 +22,13 @@ export function useSettleUpPreview(groupId?: number) {
       }
 
       return info
+    },
+    retry: (failureCount, error) => {
+      if (error instanceof ApiError && error.statusCode === 400) {
+        return false
+      }
+
+      return failureCount < 3
     },
   })
 }

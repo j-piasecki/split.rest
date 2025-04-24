@@ -3,8 +3,8 @@ import { NotFoundException } from '../../errors/NotFoundException'
 import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
+import { loadSettleUpData, prepareSettleUp } from '../utils/prepareSettleUp'
 import { createSplitNoTransaction } from './createSplit'
-import { calculateSettleUpEntries } from './settleUp'
 import hash from 'object-hash'
 import { Pool, PoolClient } from 'pg'
 import {
@@ -12,7 +12,6 @@ import {
   BalanceChange,
   ConfirmSettleUpArguments,
   CurrencyUtils,
-  Member,
   SplitInfo,
   SplitType,
 } from 'shared'
@@ -135,38 +134,13 @@ export async function confirmSettleUp(
       throw new BadRequestException('api.split.cannotSettleUpNeutral')
     }
 
-    const members: Member[] = (
-      await client.query(
-        `
-          SELECT 
-            users.id,
-            users.name,
-            users.email, 
-            users.deleted,
-            group_members.balance,
-            group_members.has_access,
-            group_members.is_admin,
-            group_members.display_name
-          FROM group_members 
-          JOIN users ON group_members.user_id = users.id 
-          WHERE group_id = $1 
-          ORDER BY users.id 
-        `,
-        [args.groupId]
-      )
-    ).rows.map((row) => ({
-      id: row.id,
-      name: row.name,
-      email: row.email,
-      photoUrl: null,
-      deleted: row.deleted,
-      balance: row.balance,
-      hasAccess: row.has_access,
-      isAdmin: row.is_admin,
-      displayName: row.display_name,
-    }))
-
-    const entries = calculateSettleUpEntries(callerId, balance, members)
+    const settleUpData = await loadSettleUpData(client, args.groupId)
+    const entries = prepareSettleUp(
+      callerId,
+      balance,
+      settleUpData.members,
+      settleUpData.pendingChanges
+    )
     const entriesHash = hash(entries, { algorithm: 'sha1', encoding: 'base64' })
 
     if (entriesHash !== args.entriesHash) {

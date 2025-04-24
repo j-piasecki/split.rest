@@ -6,29 +6,25 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useSettleUpPreview } from '@hooks/database/useSettleUpPreview'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
+import { invalidateGroup } from '@utils/queryClient'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupUserInfo, isTranslatableError, SplitWithHashedChanges } from 'shared'
+import { GroupUserInfo, SplitWithHashedChanges, isTranslatableError } from 'shared'
 
 interface SettleUpPreviewProps {
   preview: SplitWithHashedChanges
   groupInfo: GroupUserInfo
+  goBack: () => void
 }
 
 function SettleUpPreview(props: SettleUpPreviewProps) {
   const insets = useModalScreenInsets()
-  const router = useRouter()
   const { t } = useTranslation()
-  const { mutateAsync: confirmSettleUp, isPending: isCompleting } = useConfirmSettleUpMutation(props.groupInfo.id)
-
-  const goBack = () => {
-    if (router.canGoBack()) {
-      router.back()
-    } else {
-      router.replace(`/group/${props.groupInfo.id}`)
-    }
-  }
+  const { mutateAsync: confirmSettleUp, isPending: isCompleting } = useConfirmSettleUpMutation(
+    props.groupInfo.id
+  )
 
   return (
     <View
@@ -50,22 +46,25 @@ function SettleUpPreview(props: SettleUpPreviewProps) {
         leftIcon='save'
         title={t('groupInfo.settleUp.confirm')}
         onPress={async () => {
-          await confirmSettleUp(props.preview.entriesHash).then(() => {
-            goBack()
-          }).catch((error) => {
-            if (isTranslatableError(error)) {
-              alert(t(error.message, error.args))
-            } else {
-              alert(t('unknownError'))
-            }
-          })
+          await confirmSettleUp(props.preview.entriesHash)
+            .catch((error) => {
+              if (isTranslatableError(error)) {
+                alert(t(error.message, error.args))
+                invalidateGroup(props.groupInfo.id)
+              } else {
+                alert(t('unknownError'))
+              }
+            })
+            .then(() => {
+              props.goBack()
+            })
         }}
         isLoading={isCompleting}
       />
       <Button
         leftIcon='close'
         title={t('groupInfo.settleUp.cancel')}
-        onPress={goBack}
+        onPress={props.goBack}
         destructive
         disabled={isCompleting}
       />
@@ -77,13 +76,33 @@ export default function SettleUp() {
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
   const { data: groupInfo } = useGroupInfo(Number(id))
-  const { data: settleUpPreview } = useSettleUpPreview(Number(id))
+  const { data: settleUpPreview, error: settleUpError } = useSettleUpPreview(Number(id))
+  const router = useRouter()
   const theme = useTheme()
+
+  const goBack = useCallback(() => {
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace(`/group/${id}`)
+    }
+  }, [router, id])
+
+  useEffect(() => {
+    if (settleUpError) {
+      if (isTranslatableError(settleUpError)) {
+        alert(t(settleUpError.message, settleUpError.args))
+        goBack()
+      } else {
+        alert(t('unknownError'))
+      }
+    }
+  }, [settleUpError, t, goBack])
 
   return (
     <Modal title={t('screenName.settleUp')} returnPath={`/group/${id}`} maxWidth={600}>
       {settleUpPreview && groupInfo ? (
-        <SettleUpPreview preview={settleUpPreview} groupInfo={groupInfo} />
+        <SettleUpPreview preview={settleUpPreview} groupInfo={groupInfo} goBack={goBack} />
       ) : (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size='large' color={theme.colors.onSurface} />
