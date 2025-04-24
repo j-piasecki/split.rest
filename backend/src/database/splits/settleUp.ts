@@ -1,5 +1,6 @@
 import { BadRequestException } from '../../errors/BadRequestException'
 import { NotFoundException } from '../../errors/NotFoundException'
+import NotificationUtils from '../../notifications/NotificationUtils'
 import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
@@ -15,7 +16,6 @@ import {
   SplitInfo,
   SplitType,
 } from 'shared'
-import NotificationUtils from 'src/notifications/NotificationUtils'
 
 export function calculateSettleUpEntries(
   payerId: string,
