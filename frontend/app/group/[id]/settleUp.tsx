@@ -1,6 +1,7 @@
 import { Button } from '@components/Button'
 import Modal from '@components/ModalScreen'
 import { SplitInfo } from '@components/SplitInfo'
+import { useConfirmSettleUpMutation } from '@hooks/database/useConfirmSettleUpMutation'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useSettleUpPreview } from '@hooks/database/useSettleUpPreview'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
@@ -8,7 +9,7 @@ import { useTheme } from '@styling/theme'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupUserInfo, SplitWithHashedChanges } from 'shared'
+import { GroupUserInfo, isTranslatableError, SplitWithHashedChanges } from 'shared'
 
 interface SettleUpPreviewProps {
   preview: SplitWithHashedChanges
@@ -19,6 +20,15 @@ function SettleUpPreview(props: SettleUpPreviewProps) {
   const insets = useModalScreenInsets()
   const router = useRouter()
   const { t } = useTranslation()
+  const { mutateAsync: confirmSettleUp, isPending: isCompleting } = useConfirmSettleUpMutation(props.groupInfo.id)
+
+  const goBack = () => {
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace(`/group/${props.groupInfo.id}`)
+    }
+  }
 
   return (
     <View
@@ -39,21 +49,25 @@ function SettleUpPreview(props: SettleUpPreviewProps) {
       <Button
         leftIcon='save'
         title={t('groupInfo.settleUp.confirm')}
-        onPress={() => {
-          alert('TODO: implement settle up')
+        onPress={async () => {
+          await confirmSettleUp(props.preview.entriesHash).then(() => {
+            goBack()
+          }).catch((error) => {
+            if (isTranslatableError(error)) {
+              alert(t(error.message, error.args))
+            } else {
+              alert(t('unknownError'))
+            }
+          })
         }}
+        isLoading={isCompleting}
       />
       <Button
         leftIcon='close'
         title={t('groupInfo.settleUp.cancel')}
-        onPress={() => {
-          if (router.canGoBack()) {
-            router.back()
-          } else {
-            router.replace(`/group/${props.groupInfo.id}`)
-          }
-        }}
+        onPress={goBack}
         destructive
+        disabled={isCompleting}
       />
     </View>
   )
