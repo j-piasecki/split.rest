@@ -504,6 +504,7 @@ export class AppController {
     return await this.appService.setUserName(request.user.sub, args)
   }
 
+  // TODO: remove this and related parts of the code after deployed for a while
   @UseGuards(AuthGuard)
   @Post('settleUp')
   async settleUp(@Req() request: Request, @Body() args: Partial<SettleUpArguments>) {
