@@ -6,6 +6,7 @@ import * as fs from 'fs'
 import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
+  ConfirmSettleUpArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -259,5 +260,13 @@ export class AppService {
 
   async uncompleteSplitEntry(callerId: string, args: CompleteSplitEntryArguments) {
     return await this.databaseService.uncompleteSplitEntry(callerId, args)
+  }
+
+  async getSettleUpPreview(callerId: string, args: SettleUpArguments) {
+    return await this.databaseService.getSettleUpPreview(callerId, args)
+  }
+
+  async confirmSettleUp(callerId: string, args: ConfirmSettleUpArguments) {
+    return await this.databaseService.confirmSettleUp(callerId, args)
   }
 }

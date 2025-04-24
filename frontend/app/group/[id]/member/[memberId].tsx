@@ -97,7 +97,7 @@ export function MemberScreen() {
                   }
                   setDisplayName(newName).catch((e) => {
                     if (isTranslatableError(e)) {
-                      alert(t(e.message))
+                      alert(t(e.message, e.args))
                     }
                   })
                 }}

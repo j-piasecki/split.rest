@@ -118,7 +118,7 @@ function InviteRow({
 
   function handleError(error: unknown) {
     if (error instanceof ApiError) {
-      alert(t(error.message))
+      alert(t(error.message, error.args))
     } else {
       alert(t('unknownError'))
     }

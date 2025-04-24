@@ -27,8 +27,10 @@ import { setGroupInviteWithdrawn } from './database/groups/setInviteWithdrawn'
 import { setUserDisplayName } from './database/groups/setUserDisplayName'
 import { RequirePermissions } from './database/permissionCheck'
 import { completeSplitEntry } from './database/splits/completeSplitEntry'
+import { confirmSettleUp } from './database/splits/confirmSettleUp'
 import { createSplit } from './database/splits/createSplit'
 import { deleteSplit } from './database/splits/deleteSplit'
+import { getSettleUpPreview } from './database/splits/getSettleUpPreview'
 import { getSplitHistory } from './database/splits/getSplitHistory'
 import { getSplitInfo } from './database/splits/getSplitInfo'
 import { restoreSplit } from './database/splits/restoreSplit'
@@ -47,6 +49,7 @@ import { Pool } from 'pg'
 import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
+  ConfirmSettleUpArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -320,5 +323,15 @@ export class DatabaseService {
   @RequirePermissions(['uncompleteSplitEntry'])
   async uncompleteSplitEntry(callerId: string, args: CompleteSplitEntryArguments) {
     return await uncompleteSplitEntry(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['settleUp'])
+  async getSettleUpPreview(callerId: string, args: SettleUpArguments) {
+    return await getSettleUpPreview(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['settleUp'])
+  async confirmSettleUp(callerId: string, args: ConfirmSettleUpArguments) {
+    return await confirmSettleUp(this.pool, callerId, args)
   }
 }

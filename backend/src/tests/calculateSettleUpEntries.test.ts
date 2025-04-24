@@ -33,10 +33,12 @@ describe('calculateSettleUpEntries', () => {
       {
         id: '1',
         change: '10.00',
+        pending: false,
       },
       {
         id: '2',
         change: '-10.00',
+        pending: false,
       },
     ])
   })
@@ -48,14 +50,17 @@ describe('calculateSettleUpEntries', () => {
       {
         id: '5',
         change: '25.00',
+        pending: false,
       },
       {
         id: '2',
         change: '-20.00',
+        pending: false,
       },
       {
         id: '3',
         change: '-5.00',
+        pending: false,
       },
     ])
   })
@@ -67,10 +72,12 @@ describe('calculateSettleUpEntries', () => {
       {
         id: '3',
         change: '-10.00',
+        pending: false,
       },
       {
         id: '6',
         change: '10.00',
+        pending: false,
       },
     ])
   })
@@ -82,14 +89,17 @@ describe('calculateSettleUpEntries', () => {
       {
         id: '5',
         change: '30.00',
+        pending: false,
       },
       {
         id: '2',
         change: '-20.00',
+        pending: false,
       },
       {
         id: '3',
         change: '-10.00',
+        pending: false,
       },
     ])
   })
@@ -101,22 +111,27 @@ describe('calculateSettleUpEntries', () => {
       {
         id: '6',
         change: '95.00',
+        pending: false,
       },
       {
         id: '2',
         change: '-20.00',
+        pending: false,
       },
       {
         id: '3',
         change: '-10.00',
+        pending: false,
       },
       {
         id: '4',
         change: '-10.00',
+        pending: false,
       },
       {
         id: '7',
         change: '-55.00',
+        pending: false,
       },
     ])
   })

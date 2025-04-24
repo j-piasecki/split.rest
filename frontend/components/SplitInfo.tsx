@@ -113,12 +113,14 @@ function UserRow({
   splitInfo,
   isNameUnique,
   last = false,
+  showCompleteButton = true,
 }: {
   user: UserWithPendingBalanceChange
   splitInfo: SplitWithUsers
   groupInfo: GroupUserInfo | undefined
   isNameUnique: boolean
   last?: boolean
+  showCompleteButton?: boolean
 }) {
   const appUser = useAuth()
   const theme = useTheme()
@@ -135,7 +137,9 @@ function UserRow({
 
   const paidByThis = splitInfo.paidById === user.id
   const canCompleteSplit =
-    user.pending && (appUser?.id === splitInfo.paidById || appUser?.id === user.id)
+    showCompleteButton &&
+    user.pending &&
+    (appUser?.id === splitInfo.paidById || appUser?.id === user.id)
 
   return (
     <View
@@ -221,7 +225,7 @@ function UserRow({
                 })
                 .catch((error) => {
                   if (isTranslatableError(error)) {
-                    alert(t(error.message))
+                    alert(t(error.message, error.args))
                   } else {
                     alert(t('unknownError'))
                   }
@@ -337,12 +341,14 @@ export function SplitInfo({
   splitInfo,
   groupInfo,
   style,
+  showCompleteButton = true,
   isRefreshing = false,
   onRefresh,
 }: {
   splitInfo: SplitWithUsers
   groupInfo: GroupUserInfo
   style?: StyleProp<ViewStyle>
+  showCompleteButton?: boolean
   isRefreshing?: boolean
   onRefresh?: () => void
 }) {
@@ -437,6 +443,7 @@ export function SplitInfo({
               splitInfo={splitInfo}
               isNameUnique={nameCounts[getNameKey(user)] === 1}
               last={index === usersToShow.length - 1}
+              showCompleteButton={showCompleteButton}
             />
           ))}
         </Pane>

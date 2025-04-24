@@ -6,6 +6,7 @@ import { Request } from 'express'
 import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
+  ConfirmSettleUpArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -47,6 +48,7 @@ import {
   User,
   isAcceptGroupInviteArguments,
   isCompleteSplitEntryArguments,
+  isConfirmSettleUpArguments,
   isCreateGroupArguments,
   isCreateGroupJoinLinkArguments,
   isCreateSplitArguments,
@@ -502,6 +504,7 @@ export class AppController {
     return await this.appService.setUserName(request.user.sub, args)
   }
 
+  // TODO: remove this and related parts of the code after deployed for a while
   @UseGuards(AuthGuard)
   @Post('settleUp')
   async settleUp(@Req() request: Request, @Body() args: Partial<SettleUpArguments>) {
@@ -575,5 +578,25 @@ export class AppController {
     }
 
     return await this.appService.uncompleteSplitEntry(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getSettleUpPreview')
+  async getSettleUpPreview(@Req() request: Request, @Query() args: Partial<SettleUpArguments>) {
+    if (!isSettleUpArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.getSettleUpPreview(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('confirmSettleUp')
+  async confirmSettleUp(@Req() request: Request, @Body() args: Partial<ConfirmSettleUpArguments>) {
+    if (!isConfirmSettleUpArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.confirmSettleUp(request.user.sub, args)
   }
 }

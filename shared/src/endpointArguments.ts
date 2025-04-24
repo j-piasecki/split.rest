@@ -180,6 +180,11 @@ export interface SettleUpArguments {
   groupId: number
 }
 
+export interface ConfirmSettleUpArguments {
+  groupId: number
+  entriesHash: string
+}
+
 export interface SetUserDisplayNameArguments {
   groupId: number
   userId: string

@@ -94,6 +94,10 @@ export interface SplitWithUsers extends SplitInfo {
   users: UserWithPendingBalanceChange[]
 }
 
+export interface SplitWithHashedChanges extends SplitWithUsers {
+  entriesHash: string
+}
+
 export interface GroupJoinLink {
   uuid: string
   groupId: number

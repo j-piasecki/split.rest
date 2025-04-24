@@ -1,6 +1,7 @@
 import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
+  ConfirmSettleUpArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -207,6 +208,10 @@ export function isSetUserNameArguments(obj: any): obj is SetUserNameArguments {
 
 export function isSettleUpArguments(obj: any): obj is SettleUpArguments {
   return obj.groupId !== undefined
+}
+
+export function isConfirmSettleUpArguments(obj: any): obj is ConfirmSettleUpArguments {
+  return obj.groupId !== undefined && obj.entriesHash !== undefined
 }
 
 export function isSetUserDisplayNameArguments(obj: any): obj is SetUserDisplayNameArguments {

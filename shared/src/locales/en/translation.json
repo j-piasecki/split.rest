@@ -140,6 +140,8 @@
       "cannotEditSettleUp": "Settle-up splits cannot be updated",
       "cannotSettleUpNeutral": "You cannot settle up with neutral balance",
       "settleUpFailed": "Failed to settle up",
+      "settledUpButPending": "You are already settled up, but the transaction hasn't been confirmed yet by you or the other party",
+      "settleUpHashChanged": "The state of the group has changed, please try again",
       "invalidSplitType": "Invalid split type",
       "callerCannotCompleteEntry": "You cannot complete this entry",
       "callerCannotUncompleteEntry": "You cannot mark this entry as not completed"
@@ -215,6 +217,7 @@
     "members": "Members",
     "memberInfo": "Member information",
     "addSplit":"Add split",
+    "settleUp": "Settle up",
 
     "groupSettings": {
       "index": "Settings",
@@ -372,8 +375,7 @@
     "settings": "Settings",
     "settleUp": {
       "settleUp": "Settle up",
-      "doYouWantToSettleUp": "Do you want to settle up?",
-      "settleUpDescription": "This action will create a split that will bring your balance to zero. Check its details too see who you owe money to or who owes you.",
+      "confirm": "Confirm",
       "cancel": "Cancel",
       "settleUpSuccess": "Settled up"
     }

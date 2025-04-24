@@ -143,7 +143,7 @@ function UserPicker() {
                 await setInviteWithdrawn({ withdrawn: true, userId: user.id })
               } catch (error) {
                 if (error instanceof TranslatableError) {
-                  alert(t(error.message))
+                  alert(t(error.message, error.args))
                 } else {
                   alert(t('unknownError'))
                 }

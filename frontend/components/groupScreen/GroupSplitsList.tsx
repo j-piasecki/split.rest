@@ -10,7 +10,7 @@ import { SplitPermissionType } from 'shared'
 export interface GroupSplitsListProps
   extends Omit<
     SplitsListProps,
-    'splits' | 'isLoading' | 'isRefetching' | 'isFetchingNextPage' | 'fetchNextPage'
+    'splits' | 'isLoading' | 'isRefetching' | 'isFetchingNextPage' | 'fetchNextPage' | 'hasNextPage'
   > {
   forceShowSplitsWithUser?: boolean
 }
