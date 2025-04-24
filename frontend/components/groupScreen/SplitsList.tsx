@@ -4,7 +4,7 @@ import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingA
 import { Shimmer } from '@components/Shimmer'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
 import { invalidateGroup } from '@utils/queryClient'
 import { beginNewSplit } from '@utils/splitCreationContext'
 import { useRouter } from 'expo-router'
@@ -105,10 +105,12 @@ export function SplitsList({
   const theme = useTheme()
   const insets = useSafeAreaInsets()
   const router = useRouter()
-  const isSmallScreen = useDisplayClass() === DisplayClass.Small
+  const displayClass = useDisplayClass()
+  const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
-
+  
+  const isSmallScreen = displayClass === DisplayClass.Small
   const fabVisible = !hideFab && isSmallScreen && permissions?.canCreateSplits()
   const [fabRef, scrollHandler] = useFABScrollHandler(fabVisible)
 
@@ -127,11 +129,11 @@ export function SplitsList({
         onRefresh={refreshData}
         hideHeader={!showPullableHeader}
         contentContainerStyle={{
-          maxWidth: 900,
+          maxWidth: displayClass < DisplayClass.Large ? 900 : undefined,
           width: '100%',
           alignSelf: 'center',
-          paddingLeft: insets.left + 12,
-          paddingRight: insets.right + 12,
+          paddingLeft: insets.left + (threeBarLayout ? 0 : 12),
+          paddingRight: insets.right + (threeBarLayout ? 0 : 12),
           paddingBottom: 88 + (applyBottomInset ? insets.bottom : 0),
         }}
         ListEmptyComponent={

@@ -9,7 +9,7 @@ import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { getSplitDisplayName } from '@utils/getSplitDisplayName'
 import { useRouter } from 'expo-router'
@@ -91,6 +91,7 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
   const snack = useSnack()
   const { t } = useTranslation()
   const displayClass = useDisplayClass()
+  const threeBarLayout = useThreeBarLayout()
   const contextMenuRef = useRef<ContextMenuRef>(null)
   const [width, setWidth] = useState(-1)
   const { data: permissions } = useGroupPermissions(info.id)
@@ -173,13 +174,16 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
         style={[
           {
             paddingVertical: 8,
-            paddingLeft: shouldUseStackedInfo ? 12 : 16,
-            paddingRight: 4,
+            paddingLeft: (shouldUseStackedInfo ? 12 : 16) + (threeBarLayout ? 12 : 0),
+            paddingRight: 4 + (threeBarLayout ? 12 : 0),
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
             opacity: split.pending ? 0.85 : 1,
             minHeight: 68,
+            maxWidth: 1200,
+            width: '100%',
+            alignSelf: 'center',
           },
           displayClass <= DisplayClass.Medium && styles.paneShadow,
         ]}
