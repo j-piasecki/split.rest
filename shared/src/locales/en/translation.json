@@ -140,6 +140,7 @@
       "cannotEditSettleUp": "Settle-up splits cannot be updated",
       "cannotSettleUpNeutral": "You cannot settle up with neutral balance",
       "settleUpFailed": "Failed to settle up",
+      "settleUpHashChanged": "The state of the group has changed, please try again",
       "invalidSplitType": "Invalid split type",
       "callerCannotCompleteEntry": "You cannot complete this entry",
       "callerCannotUncompleteEntry": "You cannot mark this entry as not completed"

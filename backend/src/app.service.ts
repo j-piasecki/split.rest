@@ -6,6 +6,7 @@ import * as fs from 'fs'
 import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
+  ConfirmSettleUpArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -263,5 +264,9 @@ export class AppService {
 
   async getSettleUpPreview(callerId: string, args: SettleUpArguments) {
     return await this.databaseService.getSettleUpPreview(callerId, args)
+  }
+
+  async confirmSettleUp(callerId: string, args: ConfirmSettleUpArguments) {
+    return await this.databaseService.confirmSettleUp(callerId, args)
   }
 }

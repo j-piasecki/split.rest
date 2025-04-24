@@ -6,6 +6,7 @@ import { Request } from 'express'
 import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
+  ConfirmSettleUpArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateSplitArguments,
@@ -47,6 +48,7 @@ import {
   User,
   isAcceptGroupInviteArguments,
   isCompleteSplitEntryArguments,
+  isConfirmSettleUpArguments,
   isCreateGroupArguments,
   isCreateGroupJoinLinkArguments,
   isCreateSplitArguments,
@@ -585,5 +587,15 @@ export class AppController {
     }
 
     return await this.appService.getSettleUpPreview(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('confirmSettleUp')
+  async confirmSettleUp(@Req() request: Request, @Body() args: Partial<ConfirmSettleUpArguments>) {
+    if (!isConfirmSettleUpArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.confirmSettleUp(request.user.sub, args)
   }
 }
