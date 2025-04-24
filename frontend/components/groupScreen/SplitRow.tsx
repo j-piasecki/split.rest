@@ -10,6 +10,7 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { getBalanceColor } from '@utils/getBalanceColor'
 import { getSplitDisplayName } from '@utils/getSplitDisplayName'
 import { useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
@@ -24,9 +25,21 @@ function LinearInfo({ split, info }: { split: SplitInfo; info: GroupUserInfo }) 
   return (
     <>
       <View style={{ minWidth: 132, alignItems: 'flex-end' }}>
-        <Text style={{ fontSize: 20, fontWeight: 600, color: theme.colors.onSurface }}>
+        <Text style={{ fontSize: 18, fontWeight: 600, color: theme.colors.onSurface }}>
           {CurrencyUtils.format(split.total, info?.currency)}
         </Text>
+
+        {split.userChange && Number(split.userChange) !== 0 && (
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: 400,
+              color: getBalanceColor(Number(split.userChange), theme),
+            }}
+          >
+            {CurrencyUtils.format(split.userChange, info?.currency, true, true)}
+          </Text>
+        )}
       </View>
       <View style={{ alignItems: 'center', overflow: 'hidden', paddingLeft: 48, paddingRight: 32 }}>
         <Text style={{ fontSize: 20, color: theme.colors.outline }}>
@@ -46,6 +59,17 @@ function StackedInfo({ split, info }: { split: SplitInfo; info: GroupUserInfo })
         <Text style={{ fontSize: 18, fontWeight: 600, color: theme.colors.onSurface }}>
           {CurrencyUtils.format(split.total, info?.currency)}
         </Text>
+        {split.userChange && Number(split.userChange) !== 0 && (
+          <Text
+            style={{
+              fontWeight: 400,
+              fontSize: 12,
+              color: getBalanceColor(Number(split.userChange ?? '0'), theme),
+            }}
+          >
+            {CurrencyUtils.format(split.userChange ?? '0', info?.currency, true, true)}
+          </Text>
+        )}
       </View>
       <View style={{ alignItems: 'flex-end' }}>
         <Text style={{ fontSize: 14, color: theme.colors.outline }}>
@@ -148,13 +172,14 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
         }}
         style={[
           {
-            paddingVertical: 16,
+            paddingVertical: 8,
             paddingLeft: shouldUseStackedInfo ? 12 : 16,
             paddingRight: 4,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
             opacity: split.pending ? 0.85 : 1,
+            minHeight: 68,
           },
           displayClass <= DisplayClass.Medium && styles.paneShadow,
         ]}

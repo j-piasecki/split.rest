@@ -27,6 +27,7 @@ export async function getGroupSplits(
           splits.deleted,
           splits.type,
           (SELECT EXISTS (SELECT 1 FROM split_participants WHERE split_participants.split_id = splits.id AND pending = true)) AS pending,
+          (SELECT change FROM split_participants WHERE split_participants.split_id = splits.id AND split_participants.user_id = $3) AS user_change,
           ${
             args.onlyIfIncluded
               ? 'true AS user_participating'
@@ -65,5 +66,6 @@ export async function getGroupSplits(
     type: row.type,
     isUserParticipating: row.user_participating,
     pending: row.pending,
+    userChange: row.user_change,
   }))
 }

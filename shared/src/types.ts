@@ -84,6 +84,7 @@ export interface SplitInfo {
   type: SplitType
   isUserParticipating: boolean
   pending: boolean
+  userChange?: string
 }
 
 export interface SplitWithChanges extends SplitInfo {
