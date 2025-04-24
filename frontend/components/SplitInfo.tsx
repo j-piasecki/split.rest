@@ -160,7 +160,7 @@ function UserRow({
         <View>
           <ProfilePicture userId={user.id} size={32} />
 
-          {user.pending && (
+          {user.pending && showCompleteButton && (
             <View
               style={[
                 {
