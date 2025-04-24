@@ -47,8 +47,8 @@ const darkColors: Colors = {
   inversePrimary: '#ad4065',
   inverseOnSurface: '#372e30',
 
-  balancePositive: '#1fc24d',
-  balanceNegative: '#C62828',
+  balancePositive: '#1dd150',
+  balanceNegative: '#eb4646',
   balanceNeutral: '#9e8c90',
 }
 
