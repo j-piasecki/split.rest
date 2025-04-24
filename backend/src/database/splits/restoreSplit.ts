@@ -13,7 +13,7 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
       throw new NotFoundException('api.notFound.group')
     }
 
-    if (!(await splitExists(client, args.groupId, args.splitId))) {
+    if (!(await splitExists(client, args.groupId, args.splitId, true))) {
       throw new NotFoundException('api.notFound.split')
     }
 

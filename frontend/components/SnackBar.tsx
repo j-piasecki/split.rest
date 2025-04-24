@@ -15,7 +15,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { TranslatableError } from 'shared'
+import { isTranslatableError } from 'shared'
 
 const SNACK_DURATION_SHORT = 2500
 const SNACK_DURATION_MEDIUM = 5000
@@ -121,7 +121,7 @@ function Snack({
                   // TODO: handle this gracefully
                   // don't dismiss in case of an error, retrying might be necessary
                   alert(
-                    error instanceof TranslatableError
+                    isTranslatableError(error)
                       ? t(error.message, error.args)
                       : error instanceof Error
                         ? error.message

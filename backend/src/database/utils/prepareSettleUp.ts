@@ -118,7 +118,7 @@ export function prepareSettleUp(
     })
 
   let workingBalance = balance
-  const entries: BalanceChange[] = [{ id: payerId, change: (-balance).toFixed(2), pending: true }]
+  const entries: BalanceChange[] = [{ id: payerId, change: '0.00', pending: false }]
 
   for (const member of members) {
     const memberBalance = Number(member.balance)
