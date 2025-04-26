@@ -13,11 +13,18 @@ import { queryClient } from '@utils/queryClient'
 import { useLocales } from 'expo-localization'
 import { Stack, usePathname, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withTiming,
+} from 'react-native-reanimated'
 import 'utils/firebase'
 import { logScreenView } from 'utils/firebase'
 
@@ -41,7 +48,27 @@ function Content() {
   const { t } = useTranslation()
   const [fontsLoaded, _error] = useFonts()
 
+  const [loadingVisible, setLoadingVisible] = useState(Platform.OS === 'web')
+  const loadingOpacity = useSharedValue(1)
+
   const isLoading = user === undefined || !fontsLoaded || !theme.ready
+
+  const loadingStyle = useAnimatedStyle(() => {
+    return {
+      opacity: loadingOpacity.value,
+    }
+  })
+
+  useEffect(() => {
+    if (!isLoading && Platform.OS === 'web') {
+      loadingOpacity.value = withDelay(
+        50,
+        withTiming(0, { duration: 100 }, () => {
+          runOnJS(setLoadingVisible)(false)
+        })
+      )
+    }
+  }, [isLoading, loadingOpacity])
 
   const navigationTheme = useMemo(
     () => ({
@@ -71,21 +98,6 @@ function Content() {
     logScreenView(pathname, segments.join('/'))
   }, [segments, pathname])
 
-  if (isLoading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: theme.colors.surfaceDim,
-        }}
-      >
-        <SpinningLogo />
-      </View>
-    )
-  }
-
   const modalOptions: Record<string, unknown> = {
     presentation: isSmallScreen ? 'card' : 'transparentModal',
     animation: isSmallScreen ? undefined : 'fade',
@@ -97,59 +109,81 @@ function Content() {
         <NavigationThemeProvider value={navigationTheme}>
           <SnackBarProvider>
             <ErrorBoundary>
-              <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
-                <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
-                <Stack.Screen name='home' options={{ title: t('appName'), animation: 'none' }} />
-                <Stack.Screen name='login' options={{ title: t('appName'), animation: 'none' }} />
-                <Stack.Screen name='group/[id]/index' options={{ title: t('screenName.group') }} />
-                <Stack.Screen
-                  name='group/[id]/members'
-                  options={{ title: t('screenName.members') }}
-                />
-                <Stack.Screen
-                  name='group/[id]/settleUp'
-                  options={{ title: t('screenName.settleUp'), ...modalOptions }}
-                />
-                <Stack.Screen
-                  name='group/[id]/member/[memberId]'
-                  options={{ title: t('screenName.memberInfo'), ...modalOptions }}
-                />
-                <Stack.Screen
-                  name='createGroup'
-                  options={{
-                    title: t('screenName.createGroup'),
-                    ...modalOptions,
-                  }}
-                />
-                <Stack.Screen
-                  name='profile'
-                  options={{ title: t('screenName.profile'), ...modalOptions }}
-                />
-                <Stack.Screen
-                  name='group/[id]/inviteMember'
-                  options={{ title: t('screenName.inviteMember'), ...modalOptions }}
-                />
-                <Stack.Screen
-                  name='group/[id]/addSplit'
-                  options={{ title: t('screenName.addSplit'), ...modalOptions }}
-                />
-                <Stack.Screen
-                  name='group/[id]/roulette'
-                  options={{ title: t('screenName.roulette'), ...modalOptions }}
-                />
-                <Stack.Screen
-                  name='group/[id]/settings'
-                  options={{ title: t('screenName.groupSettings.index'), ...modalOptions }}
-                />
-                <Stack.Screen
-                  name='group/[id]/split/[splitId]/index'
-                  options={{ title: t('screenName.splitInfo'), ...modalOptions }}
-                />
-                <Stack.Screen
-                  name='group/[id]/split/[splitId]/edit'
-                  options={{ title: t('screenName.editSplit'), ...modalOptions }}
-                />
-              </Stack>
+              {!isLoading && (
+                <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
+                  <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
+                  <Stack.Screen name='home' options={{ title: t('appName'), animation: 'none' }} />
+                  <Stack.Screen name='login' options={{ title: t('appName'), animation: 'none' }} />
+                  <Stack.Screen
+                    name='group/[id]/index'
+                    options={{ title: t('screenName.group') }}
+                  />
+                  <Stack.Screen
+                    name='group/[id]/members'
+                    options={{ title: t('screenName.members') }}
+                  />
+                  <Stack.Screen
+                    name='group/[id]/settleUp'
+                    options={{ title: t('screenName.settleUp'), ...modalOptions }}
+                  />
+                  <Stack.Screen
+                    name='group/[id]/member/[memberId]'
+                    options={{ title: t('screenName.memberInfo'), ...modalOptions }}
+                  />
+                  <Stack.Screen
+                    name='createGroup'
+                    options={{
+                      title: t('screenName.createGroup'),
+                      ...modalOptions,
+                    }}
+                  />
+                  <Stack.Screen
+                    name='profile'
+                    options={{ title: t('screenName.profile'), ...modalOptions }}
+                  />
+                  <Stack.Screen
+                    name='group/[id]/inviteMember'
+                    options={{ title: t('screenName.inviteMember'), ...modalOptions }}
+                  />
+                  <Stack.Screen
+                    name='group/[id]/addSplit'
+                    options={{ title: t('screenName.addSplit'), ...modalOptions }}
+                  />
+                  <Stack.Screen
+                    name='group/[id]/roulette'
+                    options={{ title: t('screenName.roulette'), ...modalOptions }}
+                  />
+                  <Stack.Screen
+                    name='group/[id]/settings'
+                    options={{ title: t('screenName.groupSettings.index'), ...modalOptions }}
+                  />
+                  <Stack.Screen
+                    name='group/[id]/split/[splitId]/index'
+                    options={{ title: t('screenName.splitInfo'), ...modalOptions }}
+                  />
+                  <Stack.Screen
+                    name='group/[id]/split/[splitId]/edit'
+                    options={{ title: t('screenName.editSplit'), ...modalOptions }}
+                  />
+                </Stack>
+              )}
+
+              {loadingVisible && (
+                <Animated.View
+                  style={[
+                    {
+                      backgroundColor: theme.colors.surfaceDim,
+                      pointerEvents: 'none',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    },
+                    StyleSheet.absoluteFillObject,
+                    loadingStyle,
+                  ]}
+                >
+                  <SpinningLogo />
+                </Animated.View>
+              )}
             </ErrorBoundary>
           </SnackBarProvider>
         </NavigationThemeProvider>

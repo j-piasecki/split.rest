@@ -109,7 +109,7 @@ export function SplitsList({
   const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
-  
+
   const isSmallScreen = displayClass === DisplayClass.Small
   const fabVisible = !hideFab && isSmallScreen && permissions?.canCreateSplits()
   const [fabRef, scrollHandler] = useFABScrollHandler(fabVisible)
