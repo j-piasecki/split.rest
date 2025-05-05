@@ -1,9 +1,11 @@
+import { Button } from '@components/Button'
 import { EditableText } from '@components/EditableText'
 import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
+import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSetUserDisplayNameMutation } from '@hooks/database/useSetUserDisplayName'
@@ -23,6 +25,7 @@ export function MemberScreen() {
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
+  const { data: groupInfo } = useGroupInfo(Number(groupId))
   const { data: userPermissions } = useGroupPermissions(Number(groupId))
   const { data: memberInfo, error } = useGroupMemberInfo(Number(groupId), String(memberId))
 
@@ -190,6 +193,19 @@ export function MemberScreen() {
               ) : null}
             </View>
           )}
+
+          {userPermissions?.canSettleUp() &&
+            Math.sign(Number(groupInfo?.balance) * Number(memberInfo?.balance)) === -1 && (
+              <View style={{ width: '100%' }}>
+                <Button
+                  leftIcon='balance'
+                  title={t('memberInfo.settleUpWithMember')}
+                  onPress={() => {
+                    alert('TODO')
+                  }}
+                />
+              </View>
+            )}
         </View>
       </View>
     </View>
