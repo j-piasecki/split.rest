@@ -5,10 +5,10 @@ import { Button } from '@components/Button'
 import { CalendarPane } from '@components/CalendarPane'
 import { ErrorText } from '@components/ErrorText'
 import { IconName } from '@components/Icon'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleProp, View, ViewStyle } from 'react-native'
-import { GroupUserInfo, LanguageTranslationKey } from 'shared'
+import { GroupUserInfo, LanguageTranslationKey, UserWithDisplayName } from 'shared'
 
 export interface SplitFormProps {
   groupInfo: GroupUserInfo
@@ -28,6 +28,7 @@ export interface SplitFormProps {
   style?: StyleProp<ViewStyle>
   showPayerSelector?: boolean
   showPaidByHint?: boolean
+  showAddAllMembers?: boolean
 }
 
 export function SplitForm({
@@ -47,9 +48,11 @@ export function SplitForm({
   buttonIconLocation = 'left',
   showPayerSelector = true,
   showPaidByHint = true,
+  showAddAllMembers = true,
   style,
 }: SplitFormProps) {
   const scrollRef = useRef<ScrollView>(null)
+  const [fetchingMembers, setFetchingMembers] = useState(false)
   const [formState, updateForm] = useFormData(
     {
       title: initialTitle ?? '',
@@ -72,6 +75,31 @@ export function SplitForm({
       paidByIndex: formState.paidByIndex,
       entries: toSave,
     })
+  }
+
+  async function setMembers(fetchMembers: () => Promise<UserWithDisplayName[]>) {
+    if (fetchingMembers) {
+      return
+    }
+
+    setFetchingMembers(true)
+    const entries = (await fetchMembers()).map((member) => {
+      const entry = formState.entries.find((entry) => entry.user?.id === member.id)
+      return {
+        user: member,
+        entry: member.email ?? entry?.entry ?? '',
+        amount: entry?.amount ?? '',
+      }
+    })
+    const paidById = formState.entries[formState.paidByIndex].user?.id ?? initialEntries[0].user?.id
+    const paidByIndex = entries.findIndex((entry) => entry.user?.id === paidById)
+
+    updateForm({
+      type: 'setEntries',
+      paidByIndex: paidByIndex === -1 ? 0 : paidByIndex,
+      entries: entries,
+    })
+    setFetchingMembers(false)
   }
 
   return (
@@ -108,6 +136,8 @@ export function SplitForm({
           updateForm={updateForm}
           scrollRef={scrollRef}
           showPayerSelector={showPayerSelector}
+          showAddAllMembers={showAddAllMembers}
+          setMembers={setMembers}
         />
       </ScrollView>
 
@@ -118,7 +148,7 @@ export function SplitForm({
           rightIcon={buttonIconLocation === 'right' ? buttonIcon : undefined}
           title={t(buttonTitle)}
           onPress={submit}
-          isLoading={waiting}
+          isLoading={waiting || fetchingMembers}
         />
       </View>
     </View>

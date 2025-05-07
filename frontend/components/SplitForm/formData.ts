@@ -50,6 +50,11 @@ export type FormActionType =
       type: 'setTimestamp'
       timestamp: number
     }
+  | {
+      type: 'setEntries'
+      paidByIndex: number
+      entries: SplitEntryData[]
+    }
 
 function entriesReducer(state: FormData, action: FormActionType): FormData {
   const newState = { ...state }
@@ -101,6 +106,11 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
       newState.entries = newState.entries.map((entry, i) =>
         i === action.index ? { ...entry, amount: action.amount } : entry
       )
+      break
+
+    case 'setEntries':
+      newState.paidByIndex = action.paidByIndex
+      newState.entries = action.entries
       break
   }
 
