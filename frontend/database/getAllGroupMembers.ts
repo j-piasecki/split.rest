@@ -1,5 +1,5 @@
-import { makeRequest } from "@utils/makeApiRequest";
-import { GetGroupMembersArguments, Member, TranslatableError } from "shared";
+import { makeRequest } from '@utils/makeApiRequest'
+import { GetGroupMembersArguments, Member, TranslatableError } from 'shared'
 
 export async function getAllGroupMembers(groupId: number): Promise<Member[]> {
   let nextPageParam: string | undefined = undefined

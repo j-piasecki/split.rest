@@ -4,7 +4,9 @@ import { Form } from '@components/Form'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
+import { getAllGroupMembers } from '@database/getAllGroupMembers'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useAuth } from '@utils/auth'
@@ -46,7 +48,9 @@ function ParticipansPicker({ user }: { user: UserWithDisplayName }) {
   const paneLayout = useRef<LayoutRectangle | null>(null)
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
+  const { data: permissions } = useGroupPermissions(Number(id), user.id)
 
+  const [waiting, setWaiting] = useState(false)
   const [entries, setEntries] = useState<PersonEntry[]>(getInitialEntries(user))
   const [error, setError] = useTranslatedError()
 
@@ -76,6 +80,23 @@ function ParticipansPicker({ user }: { user: UserWithDisplayName }) {
     router.navigate(`/group/${id}/addSplit/summary`)
   }
 
+  async function addAllMembers() {
+    if (waiting) {
+      return
+    }
+
+    setWaiting(true)
+    const members = await getAllGroupMembers(Number(id))
+    setEntries(
+      members.map((member) => ({
+        user: member,
+        entry: member.email ?? '',
+        selected: member.id === user.id,
+      }))
+    )
+    setWaiting(false)
+  }
+
   return (
     <View
       style={{
@@ -103,6 +124,10 @@ function ParticipansPicker({ user }: { user: UserWithDisplayName }) {
           onLayout={(e) => {
             paneLayout.current = e.nativeEvent.layout
           }}
+          collapsible={permissions?.canReadMembers()}
+          collapsed={false}
+          collapseIcon='addAllMembers'
+          onCollapseChange={permissions?.canReadMembers() ? addAllMembers : undefined}
         >
           <Form autofocus={getSplitCreationContext().participants === null} onSubmit={submit}>
             <PeoplePicker
@@ -120,9 +145,14 @@ function ParticipansPicker({ user }: { user: UserWithDisplayName }) {
         </Pane>
       </ScrollView>
 
-      <View style={{ gap: 8, paddingHorizontal: 16 }}>
+      <View style={{ gap: 8 }}>
         {error && <ErrorText>{error}</ErrorText>}
-        <Button rightIcon='chevronForward' title={t('form.buttonNext')} onPress={submit} />
+        <Button
+          isLoading={waiting}
+          rightIcon='chevronForward'
+          title={t('form.buttonNext')}
+          onPress={submit}
+        />
       </View>
     </View>
   )
