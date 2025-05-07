@@ -78,13 +78,13 @@ class SplitCreationContext {
           participant.value = amount
         })
       } else if (this.totalAmount !== null) {
-        const amount = Math.floor((Number(this.totalAmount) * 100) / users.length) / 100
-        const totalRounded = amount * users.length
-        const difference = Math.floor((Number(this.totalAmount) - totalRounded) * 100)
-        let distributed = 0
+        const totalInCents = Math.floor(Number(this.totalAmount) * 100)
+        const baseAmount = Math.floor(totalInCents / users.length)
+        const remainder = totalInCents - baseAmount * users.length
 
-        this.participants.forEach((participant) => {
-          participant.value = (distributed++ < difference ? amount + 0.01 : amount).toFixed(2)
+        this.participants.forEach((participant, index) => {
+          const amount = index < remainder ? baseAmount + 1 : baseAmount
+          participant.value = (amount / 100).toFixed(2)
         })
 
         if (this.participants.some((participant) => Number(participant.value) <= 0)) {
