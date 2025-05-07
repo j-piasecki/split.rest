@@ -70,6 +70,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
         cleanError={() => setError(null)}
         showPayerSelector={splitInfo.type !== SplitType.BalanceChange}
         showPaidByHint={splitInfo.type !== SplitType.BalanceChange}
+        showAddAllMembers={false}
       />
     </View>
   )
