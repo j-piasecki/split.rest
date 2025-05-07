@@ -3,6 +3,7 @@ import { Image, ImageStyle } from 'expo-image'
 import { StyleProp, View } from 'react-native'
 
 export type IconName =
+  | 'addAllMembers'
   | 'addLink'
   | 'addMember'
   | 'addModerator'
@@ -71,6 +72,7 @@ export interface IconProps {
 }
 
 const iconMap: Record<IconName, unknown> = {
+  addAllMembers: require('@assets/icons/add_all_members.svg'),
   addLink: require('@assets/icons/add_link.svg'),
   addMember: require('@assets/icons/add_member.svg'),
   addModerator: require('@assets/icons/add_moderator.svg'),
