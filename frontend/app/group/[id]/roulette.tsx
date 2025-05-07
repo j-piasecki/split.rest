@@ -7,6 +7,7 @@ import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
+import { getAllGroupMembers } from '@database/getAllGroupMembers'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
@@ -34,11 +35,28 @@ function Roulette({ groupId, setQuery, user }: RouletteProps) {
   const scrollViewRef = useRef<ScrollView>(null)
   const paneLayout = useRef<LayoutRectangle | null>(null)
   const { t } = useTranslation()
+  const { data: permissions } = useGroupPermissions(groupId)
   const [entries, setEntries] = useState<PersonEntry[]>([
     { user: user, entry: user.email ?? '' },
     { entry: '' },
   ])
   const [error, setError] = useTranslatedError()
+  const [waiting, setWaiting] = useState(false)
+
+  async function addAllMembers() {
+    if (waiting) {
+      return
+    }
+
+    setWaiting(true)
+    const allMembers = await getAllGroupMembers(groupId)
+    const memberEntries = allMembers.map((member) => ({
+      user: member,
+      entry: member.email ?? '',
+    }))
+    setEntries(memberEntries)
+    setWaiting(false)
+  }
 
   async function submit() {
     setError(null)
@@ -80,6 +98,14 @@ function Roulette({ groupId, setQuery, user }: RouletteProps) {
           onLayout={(e) => {
             paneLayout.current = e.nativeEvent.layout
           }}
+          collapsible={permissions?.canReadMembers()}
+          collapsed={false}
+          collapseIcon='addAllMembers'
+          onCollapseChange={() => {
+            if (permissions?.canReadMembers()) {
+              addAllMembers()
+            }
+          }}
         >
           <Form autofocus onSubmit={submit}>
             <PeoplePicker
@@ -95,7 +121,12 @@ function Roulette({ groupId, setQuery, user }: RouletteProps) {
 
       <View style={{ gap: 8 }}>
         {error && <ErrorText>{error}</ErrorText>}
-        <Button leftIcon='check' title={t('roulette.submit')} onPress={submit} />
+        <Button
+          isLoading={waiting}
+          leftIcon='check'
+          title={t('roulette.submit')}
+          onPress={submit}
+        />
       </View>
     </View>
   )
