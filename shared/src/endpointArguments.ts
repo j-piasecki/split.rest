@@ -178,11 +178,13 @@ export interface SetUserNameArguments {
 
 export interface SettleUpArguments {
   groupId: number
+  withMembers?: string[]
 }
 
 export interface ConfirmSettleUpArguments {
   groupId: number
   entriesHash: string
+  withMembers?: string[]
 }
 
 export interface SetUserDisplayNameArguments {

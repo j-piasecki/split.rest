@@ -204,7 +204,8 @@
     "displayNamePlaceholder": "Display name",
     "balance": "Balance: <Styled>{{balance}}</Styled>",
     "admin": "Moderator of this group",
-    "noAccess": "No access to this group"
+    "noAccess": "No access to this group",
+    "settleUpWithMember": "Settle up with this person"
   },
 
   "screenName": {
@@ -378,7 +379,8 @@
       "settleUp": "Settle up",
       "confirm": "Confirm",
       "cancel": "Cancel",
-      "settleUpSuccess": "Settled up"
+      "settleUpSuccess": "Settled up",
+      "openSettleUp": "Show"
     }
   },
 

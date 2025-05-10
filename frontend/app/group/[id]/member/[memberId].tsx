@@ -1,9 +1,11 @@
+import { Button } from '@components/Button'
 import { EditableText } from '@components/EditableText'
 import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
+import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSetUserDisplayNameMutation } from '@hooks/database/useSetUserDisplayName'
@@ -11,18 +13,20 @@ import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { getBalanceColor } from '@utils/getBalanceColor'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { isTranslatableError } from 'shared'
+import { CurrencyUtils, isTranslatableError } from 'shared'
 
 export function MemberScreen() {
   const user = useAuth()
   const theme = useTheme()
   const insets = useModalScreenInsets()
+  const router = useRouter()
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
+  const { data: groupInfo } = useGroupInfo(Number(groupId))
   const { data: userPermissions } = useGroupPermissions(Number(groupId))
   const { data: memberInfo, error } = useGroupMemberInfo(Number(groupId), String(memberId))
 
@@ -136,7 +140,9 @@ export function MemberScreen() {
             {(memberInfo) => (
               <Text style={{ fontSize: 22, fontWeight: '500', color: theme.colors.onSurface }}>
                 <Trans
-                  values={{ balance: memberInfo.balance }}
+                  values={{
+                    balance: CurrencyUtils.format(memberInfo.balance, groupInfo?.currency),
+                  }}
                   i18nKey={'memberInfo.balance'}
                   components={{
                     Styled: (
@@ -190,6 +196,20 @@ export function MemberScreen() {
               ) : null}
             </View>
           )}
+
+          {userPermissions?.canSettleUp() &&
+            memberId !== user?.id &&
+            Number(groupInfo?.balance) !== 0 && (
+              <View style={{ width: '100%' }}>
+                <Button
+                  leftIcon='balance'
+                  title={t('memberInfo.settleUpWithMember')}
+                  onPress={() => {
+                    router.navigate(`/group/${groupId}/settleUp?withMembers=${memberId}`)
+                  }}
+                />
+              </View>
+            )}
         </View>
       </View>
     </View>

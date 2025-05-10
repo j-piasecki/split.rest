@@ -582,8 +582,14 @@ export class AppController {
 
   @UseGuards(AuthGuard)
   @Get('getSettleUpPreview')
-  async getSettleUpPreview(@Req() request: Request, @Query() args: Partial<SettleUpArguments>) {
-    if (!isSettleUpArguments(args)) {
+  async getSettleUpPreview(@Req() request: Request, @Query() query: Record<string, string>) {
+    const args: SettleUpArguments = {
+      groupId: parseInt(query.groupId),
+      withMembers: query.withMembers?.split?.(','),
+    }
+
+    // TODO: add support for full subgroup settle up (only one on one settle up for now)
+    if (!isSettleUpArguments(args) || (args.withMembers?.length ?? 0) > 1) {
       throw new BadRequestException('api.invalidArguments')
     }
 
@@ -593,7 +599,8 @@ export class AppController {
   @UseGuards(AuthGuard)
   @Post('confirmSettleUp')
   async confirmSettleUp(@Req() request: Request, @Body() args: Partial<ConfirmSettleUpArguments>) {
-    if (!isConfirmSettleUpArguments(args)) {
+    // TODO: add support for full subgroup settle up (only one on one settle up for now)
+    if (!isConfirmSettleUpArguments(args) || (args.withMembers?.length ?? 0) > 1) {
       throw new BadRequestException('api.invalidArguments')
     }
 

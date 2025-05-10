@@ -17,7 +17,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { isTranslatableError } from 'shared'
 
-const SNACK_DURATION_SHORT = 2500
+const SNACK_DURATION_SHORT = 3000
 const SNACK_DURATION_MEDIUM = 5000
 const SNACK_DURATION_LONG = 10000
 

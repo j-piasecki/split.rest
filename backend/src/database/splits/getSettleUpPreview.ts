@@ -42,7 +42,8 @@ export async function getSettleUpPreview(
       callerId,
       balance,
       settleUpData.members,
-      settleUpData.pendingChanges
+      settleUpData.pendingChanges,
+      args.withMembers
     )
 
     if (entries.length === 1) {
