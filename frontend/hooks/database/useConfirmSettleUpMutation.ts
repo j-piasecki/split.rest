@@ -10,9 +10,8 @@ async function confirmSettleUp(groupId: number, hash: string, withMembers?: stri
   await invalidateGroup(groupId)
 }
 
-export function useConfirmSettleUpMutation(groupId: number) {
+export function useConfirmSettleUpMutation(groupId: number, withMembers?: string[]) {
   return useMutation({
-    mutationFn: (hash: string, withMembers?: string[]) =>
-      confirmSettleUp(groupId, hash, withMembers),
+    mutationFn: (hash: string) => confirmSettleUp(groupId, hash, withMembers),
   })
 }
