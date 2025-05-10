@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import Modal from '@components/ModalScreen'
+import { useSnack } from '@components/SnackBar'
 import { SplitInfo } from '@components/SplitInfo'
 import { useConfirmSettleUpMutation } from '@hooks/database/useConfirmSettleUpMutation'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
@@ -22,6 +23,8 @@ interface SettleUpPreviewProps {
 
 function SettleUpPreview(props: SettleUpPreviewProps) {
   const insets = useModalScreenInsets()
+  const snack = useSnack()
+  const router = useRouter()
   const { t } = useTranslation()
   const { mutateAsync: confirmSettleUp, isPending: isCompleting } = useConfirmSettleUpMutation(
     props.groupInfo.id,
@@ -57,7 +60,14 @@ function SettleUpPreview(props: SettleUpPreviewProps) {
                 alert(t('unknownError'))
               }
             })
-            .then(() => {
+            .then((split) => {
+              snack.show({
+                message: t('groupInfo.settleUp.settleUpSuccess'),
+                actionText: t('groupInfo.settleUp.openSettleUp'),
+                action: async () => {
+                  router.navigate(`/group/${props.groupInfo.id}/split/${split!.id}`)
+                },
+              })
               props.goBack()
             })
         }}

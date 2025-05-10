@@ -13,7 +13,7 @@ import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { getBalanceColor } from '@utils/getBalanceColor'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
@@ -23,6 +23,7 @@ export function MemberScreen() {
   const user = useAuth()
   const theme = useTheme()
   const insets = useModalScreenInsets()
+  const router = useRouter()
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
   const { data: groupInfo } = useGroupInfo(Number(groupId))
@@ -195,13 +196,14 @@ export function MemberScreen() {
           )}
 
           {userPermissions?.canSettleUp() &&
-            Math.sign(Number(groupInfo?.balance) * Number(memberInfo?.balance)) === -1 && (
+            memberId !== user?.id &&
+            Number(groupInfo?.balance) !== 0 && (
               <View style={{ width: '100%' }}>
                 <Button
                   leftIcon='balance'
                   title={t('memberInfo.settleUpWithMember')}
                   onPress={() => {
-                    alert('TODO')
+                    router.navigate(`/group/${groupId}/settleUp?withMembers=${memberId}`)
                   }}
                 />
               </View>

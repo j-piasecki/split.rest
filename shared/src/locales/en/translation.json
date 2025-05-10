@@ -378,7 +378,8 @@
       "settleUp": "Settle up",
       "confirm": "Confirm",
       "cancel": "Cancel",
-      "settleUpSuccess": "Settled up"
+      "settleUpSuccess": "Settled up",
+      "openSettleUp": "Show"
     }
   },
 
