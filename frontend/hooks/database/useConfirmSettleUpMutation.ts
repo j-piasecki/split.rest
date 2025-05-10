@@ -3,8 +3,8 @@ import { makeRequest } from '@utils/makeApiRequest'
 import { invalidateGroup } from '@utils/queryClient'
 import { ConfirmSettleUpArguments } from 'shared'
 
-async function confirmSettleUp(groupId: number, hash: string) {
-  const args: ConfirmSettleUpArguments = { groupId, entriesHash: hash }
+async function confirmSettleUp(groupId: number, hash: string, withMembers?: string[]) {
+  const args: ConfirmSettleUpArguments = { groupId, entriesHash: hash, withMembers }
 
   await makeRequest('POST', 'confirmSettleUp', args)
   await invalidateGroup(groupId)
@@ -12,6 +12,7 @@ async function confirmSettleUp(groupId: number, hash: string) {
 
 export function useConfirmSettleUpMutation(groupId: number) {
   return useMutation({
-    mutationFn: (hash: string) => confirmSettleUp(groupId, hash),
+    mutationFn: (hash: string, withMembers?: string[]) =>
+      confirmSettleUp(groupId, hash, withMembers),
   })
 }

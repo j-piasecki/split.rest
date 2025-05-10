@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ApiError, makeRequest } from '@utils/makeApiRequest'
 import { SettleUpArguments, SplitWithHashedChanges, TranslatableError } from 'shared'
 
-export function useSettleUpPreview(groupId?: number) {
+export function useSettleUpPreview(groupId?: number, withMembers?: string[]) {
   return useQuery({
     queryKey: ['settleUpPreview', groupId, Math.random()],
     queryFn: async (): Promise<SplitWithHashedChanges | null> => {
@@ -10,7 +10,7 @@ export function useSettleUpPreview(groupId?: number) {
         return null
       }
 
-      const args: SettleUpArguments = { groupId: groupId }
+      const args: SettleUpArguments = { groupId: groupId, withMembers: withMembers }
       const info = await makeRequest<SettleUpArguments, SplitWithHashedChanges>(
         'GET',
         'getSettleUpPreview',

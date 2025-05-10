@@ -68,9 +68,11 @@ export function prepareSettleUp(
   payerId: string,
   balance: number,
   allMembers: Member[],
-  pendingChanges: TargetedBalanceChange[]
+  pendingChanges: TargetedBalanceChange[],
+  withMembers?: string[]
 ): BalanceChange[] {
   // TODO: Better algorithm for this
+  const entries: BalanceChange[] = [{ id: payerId, change: '0.00', pending: false }]
 
   pendingChanges.forEach((change) => {
     const member = allMembers.find((m) => m.id === change.id)
@@ -88,6 +90,17 @@ export function prepareSettleUp(
       }
     }
   })
+
+  if (withMembers !== undefined) {
+    // TODO: add support for full subgroup settle up (only one on one settle up for now)
+    assert(withMembers.length === 1)
+
+    const member = allMembers.find((m) => m.id === withMembers[0])
+    assert(member !== undefined)
+
+    entries.push({ id: member.id, change: balance.toFixed(2), pending: true })
+    return entries
+  }
 
   // This should result in a list of members with the opposite sign of the balance
   // grouped by whether they have access or not and sorted by balance descending.
@@ -118,7 +131,6 @@ export function prepareSettleUp(
     })
 
   let workingBalance = balance
-  const entries: BalanceChange[] = [{ id: payerId, change: '0.00', pending: false }]
 
   for (const member of members) {
     const memberBalance = Number(member.balance)
