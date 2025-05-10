@@ -17,7 +17,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { isTranslatableError } from 'shared'
+import { CurrencyUtils, isTranslatableError } from 'shared'
 
 export function MemberScreen() {
   const user = useAuth()
@@ -140,7 +140,9 @@ export function MemberScreen() {
             {(memberInfo) => (
               <Text style={{ fontSize: 22, fontWeight: '500', color: theme.colors.onSurface }}>
                 <Trans
-                  values={{ balance: memberInfo.balance }}
+                  values={{
+                    balance: CurrencyUtils.format(memberInfo.balance, groupInfo?.currency),
+                  }}
                   i18nKey={'memberInfo.balance'}
                   components={{
                     Styled: (

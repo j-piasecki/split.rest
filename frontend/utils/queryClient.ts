@@ -18,6 +18,7 @@ export async function deleteGroupQueries(groupId: number) {
 }
 
 export async function invalidateGroup(groupId: number) {
+  await queryClient.invalidateQueries({ queryKey: ['group', groupId] })
   await queryClient.invalidateQueries({ queryKey: ['groupSplits', groupId] })
   await queryClient.invalidateQueries({ queryKey: ['groupMembers', groupId] })
   await queryClient.invalidateQueries({ queryKey: ['groupInfo', groupId] })
