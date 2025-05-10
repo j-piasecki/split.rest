@@ -98,7 +98,10 @@ export function prepareSettleUp(
     const member = allMembers.find((m) => m.id === withMembers[0])
     assert(member !== undefined)
 
-    entries.push({ id: member.id, change: balance.toFixed(2), pending: true })
+    if (balance !== 0) {
+      entries.push({ id: member.id, change: balance.toFixed(2), pending: true })
+    }
+
     return entries
   }
 
