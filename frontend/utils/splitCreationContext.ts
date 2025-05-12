@@ -1,4 +1,5 @@
 import { auth } from './firebase'
+import currency from 'currency.js'
 import {
   SplitType,
   SplitWithUsers,
@@ -78,13 +79,11 @@ class SplitCreationContext {
           participant.value = amount
         })
       } else if (this.totalAmount !== null) {
-        const totalInCents = Math.floor(Number(this.totalAmount) * 100)
-        const baseAmount = Math.floor(totalInCents / users.length)
-        const remainder = totalInCents - baseAmount * users.length
-
+        const distribution = currency(this.totalAmount, { precision: 2 }).distribute(
+          this.participants.length
+        )
         this.participants.forEach((participant, index) => {
-          const amount = index < remainder ? baseAmount + 1 : baseAmount
-          participant.value = (amount / 100).toFixed(2)
+          participant.value = distribution[index].toString()
         })
 
         if (this.participants.some((participant) => Number(participant.value) <= 0)) {
