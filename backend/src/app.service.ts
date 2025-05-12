@@ -79,7 +79,7 @@ export class AppService {
     }
 
     const changeSum = args.balances.reduce((sum, { change }) => sum + Number(change), 0)
-    if (Math.abs(changeSum) > 0.01) {
+    if (Math.abs(changeSum) >= 0.005) {
       throw new BadRequestException('api.split.sumOfChangesMustBeZero')
     }
 
@@ -100,7 +100,7 @@ export class AppService {
 
   async updateSplit(callerId: string, args: UpdateSplitArguments) {
     const changeSum = args.balances.reduce((sum, { change }) => sum + Number(change), 0)
-    if (Math.abs(changeSum) > 0.01) {
+    if (Math.abs(changeSum) >= 0.005) {
       throw new BadRequestException('api.split.sumOfChangesMustBeZero')
     }
     if (Number(args.total) < 0.01) {
