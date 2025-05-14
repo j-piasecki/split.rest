@@ -55,6 +55,8 @@ export type IconName =
   | 'sell'
   | 'settings'
   | 'shield'
+  | 'sortAscending'
+  | 'sortDescending'
   | 'split'
   | 'stackedEmail'
   | 'systemTheme'
@@ -124,6 +126,8 @@ const iconMap: Record<IconName, unknown> = {
   sell: require('@assets/icons/sell.svg'),
   settings: require('@assets/icons/settings.svg'),
   shield: require('@assets/icons/shield.svg'),
+  sortAscending: require('@assets/icons/sort_ascending.svg'),
+  sortDescending: require('@assets/icons/sort_descending.svg'),
   split: require('@assets/icons/split.svg'),
   stackedEmail: require('@assets/icons/stacked_email.svg'),
   systemTheme: require('@assets/icons/system_theme.svg'),
