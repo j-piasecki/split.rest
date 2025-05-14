@@ -208,6 +208,11 @@ export class AppController {
       throw new BadRequestException('api.invalidArguments')
     }
 
+    if (args.lowToHigh !== undefined) {
+      // @ts-expect-error lowToHigh is a string due to being a get query parameter
+      args.lowToHigh = args.lowToHigh === 'true'
+    }
+
     return await this.appService.getGroupMembers(request.user.sub, args)
   }
 

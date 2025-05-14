@@ -13,8 +13,9 @@ export async function getGroupMembers(
   }
 
   const rows = (
-    await pool.query(
-      `
+    args.lowToHigh === undefined
+      ? await pool.query(
+          `
         SELECT 
           users.id,
           users.name,
@@ -31,8 +32,34 @@ export async function getGroupMembers(
         ORDER BY users.id 
         LIMIT 20
       `,
-      [args.groupId, args.startAfter ?? '']
-    )
+          [args.groupId, args.startAfter ?? '']
+        )
+      : await pool.query(
+          `
+        SELECT 
+          users.id,
+          users.name,
+          users.email, 
+          users.deleted,
+          group_members.balance,
+          group_members.has_access,
+          group_members.is_admin,
+          group_members.display_name
+        FROM group_members 
+        JOIN users ON group_members.user_id = users.id 
+        WHERE group_id = $1 
+          AND users.id > $2 
+          AND group_members.balance ${args.lowToHigh ? '>=' : '<='} $3 
+        ORDER BY group_members.balance ${args.lowToHigh ? 'ASC' : 'DESC'}, users.id 
+        LIMIT 20
+      `,
+          [
+            args.groupId,
+            args.startAfter ?? '',
+            args.startAfterBalance ??
+              (args.lowToHigh ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER),
+          ]
+        )
   ).rows
 
   return rows.map((row) => ({

@@ -60,6 +60,8 @@ export interface SetGroupHiddenArguments {
 export interface GetGroupMembersArguments {
   groupId: number
   startAfter?: string
+  lowToHigh?: boolean
+  startAfterBalance?: string
 }
 
 export interface GetGroupSplitsArguments {
