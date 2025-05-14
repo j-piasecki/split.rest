@@ -1,5 +1,6 @@
 import Header, { HEADER_HEIGHT } from '@components/Header'
 import { Pane, PaneHeader } from '@components/Pane'
+import { RoundIconButton } from '@components/RoundIconButton'
 import { SegmentedButton } from '@components/SegmentedButton'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
@@ -8,6 +9,7 @@ import { GroupInfoCard } from '@components/groupScreen/GroupInfoCard'
 import { GroupSplitsList } from '@components/groupScreen/GroupSplitsList'
 import { MembersButton } from '@components/groupScreen/MembersButton'
 import { MembersList } from '@components/groupScreen/MembersList'
+import { MembersOrderFilter } from '@components/groupScreen/MembersOrderFilter'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { styles } from '@styling/styles'
@@ -196,6 +198,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
   const hasSettingsAccess = useHasSettingsAccess(groupInfo)
   const { data: permissions } = useGroupPermissions(groupInfo?.id)
   const [onlyShowSplitsIfIncluded, setOnlyShowSplitsIfIncluded] = useState(false)
+  const [membersLowToHigh, setMembersLowToHigh] = useState(true)
 
   const [membersExpanded, setMembersExpanded] = useState(false)
   const membersAlwaysExpanded = displayClass > DisplayClass.Large
@@ -271,16 +274,30 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           <Pane
             icon='members'
             title={t('tabs.members')}
-            collapsible={!membersAlwaysExpanded}
-            collapsed
+            collapsible={true}
+            collapsed={!membersAlwaysExpanded}
             orientation='vertical'
             onCollapseChange={() => {
               setMembersExpanded(!membersExpanded)
             }}
+            rightComponent={
+              membersAlwaysExpanded && (
+                <MembersOrderFilter
+                  // @ts-expect-error flex cannot really be null, but this way it can be overriden
+                  style={{ flex: null }}
+                  onChange={setMembersLowToHigh}
+                  lowToHigh={membersLowToHigh}
+                />
+              )
+            }
             style={{ minWidth: membersAlwaysExpanded ? 500 : undefined, height: '100%' }}
             containerStyle={{ flex: 1 }}
           >
-            <MembersList info={groupInfo} iconOnly={!membersAlwaysExpanded} />
+            <MembersList
+              info={groupInfo}
+              iconOnly={!membersAlwaysExpanded}
+              lowToHigh={membersLowToHigh}
+            />
           </Pane>
         )}
 
@@ -319,10 +336,25 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
                 onCollapseChange={() => {
                   setMembersExpanded(false)
                 }}
+                rightComponent={
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                    <MembersOrderFilter
+                      // @ts-expect-error flex cannot really be null, but this way it can be overriden
+                      style={{ flex: null }}
+                      onChange={setMembersLowToHigh}
+                      lowToHigh={membersLowToHigh}
+                    />
+                    <RoundIconButton
+                      icon='closeRightPanel'
+                      color={theme.colors.secondary}
+                      onPress={() => setMembersExpanded(false)}
+                    />
+                  </View>
+                }
                 style={{ height: '100%', overflow: 'hidden' }}
                 containerStyle={{ flex: 1 }}
               >
-                <MembersList info={groupInfo} />
+                <MembersList info={groupInfo} lowToHigh={membersLowToHigh} />
               </Pane>
             </View>
           </Animated.View>

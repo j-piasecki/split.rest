@@ -75,6 +75,7 @@ function MembersShimmer({ count, iconOnly }: { count: number; iconOnly?: boolean
 
 export interface MembersListProps {
   info: GroupUserInfo | undefined
+  lowToHigh?: boolean
   iconOnly?: boolean
   applyBottomInset?: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -87,6 +88,7 @@ export interface MembersListProps {
 
 export function MembersList({
   info,
+  lowToHigh,
   iconOnly,
   headerComponent,
   footerComponent,
@@ -101,7 +103,7 @@ export function MembersList({
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
   const { members, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =
-    useGroupMembers(info?.id)
+    useGroupMembers(info?.id, lowToHigh)
 
   function refreshData() {
     if (info) {

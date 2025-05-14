@@ -2,15 +2,25 @@ import Header from '@components/Header'
 import { PaneHeader } from '@components/Pane'
 import { Text } from '@components/Text'
 import { MembersList } from '@components/groupScreen/MembersList'
+import { MembersOrderFilter } from '@components/groupScreen/MembersOrderFilter'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams } from 'expo-router'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
-function ListHeader({ children }: { children: React.ReactNode }) {
+function ListHeader({
+  children,
+  onChange,
+  lowToHigh,
+}: {
+  children?: React.ReactNode
+  onChange: (lowToHigh: boolean) => void
+  lowToHigh: boolean
+}) {
   const theme = useTheme()
   const { t } = useTranslation()
   return (
@@ -32,6 +42,10 @@ function ListHeader({ children }: { children: React.ReactNode }) {
         title={t('tabs.members')}
         showSeparator={false}
         textLocation='start'
+        rightComponent={
+          // @ts-expect-error flex cannot really be null, but this way it can be overriden
+          <MembersOrderFilter style={{ flex: null }} onChange={onChange} lowToHigh={lowToHigh} />
+        }
       />
       {children}
     </View>
@@ -44,6 +58,7 @@ export function GroupMembersScreen() {
   const { id } = useLocalSearchParams()
   const groupId = Number(id as string)
   const { data: groupInfo, error } = useGroupInfo(groupId)
+  const [membersLowToHigh, setMembersLowToHigh] = useState(true)
 
   if (error) {
     return (
@@ -70,7 +85,10 @@ export function GroupMembersScreen() {
         showPullableHeader
         applyBottomInset
         info={groupInfo}
-        headerComponent={ListHeader}
+        lowToHigh={membersLowToHigh}
+        headerComponent={() => (
+          <ListHeader onChange={setMembersLowToHigh} lowToHigh={membersLowToHigh} />
+        )}
         footerComponent={
           <View
             style={[

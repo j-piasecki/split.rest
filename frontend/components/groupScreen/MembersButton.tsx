@@ -15,7 +15,7 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const { t } = useTranslation()
   const router = useRouter()
-  const { members, isLoading } = useGroupMembers(info?.id)
+  const { members, isLoading } = useGroupMembers(info?.id, true)
   const iconsRef = useRef<View>(null)
   const [iconsToShow, setIconsToShow] = useState(20)
   const { width } = useWindowDimensions()

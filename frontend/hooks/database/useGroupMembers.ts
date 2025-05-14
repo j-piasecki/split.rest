@@ -3,14 +3,21 @@ import { ApiError, makeRequest } from '@utils/makeApiRequest'
 import { useCallback } from 'react'
 import { GetGroupMembersArguments, Member } from 'shared'
 
-export function useGroupMembers(groupId: number | undefined) {
+type PageParam = { id: string; balance?: string }
+
+export function useGroupMembers(groupId: number | undefined, lowToHigh?: boolean | undefined) {
   const fetchMembers = useCallback(
-    async ({ pageParam }: QueryFunctionContext<QueryKey, string>) => {
+    async ({ pageParam }: QueryFunctionContext<QueryKey, PageParam>) => {
       if (!groupId) {
         return []
       }
 
-      const args: GetGroupMembersArguments = { groupId, startAfter: pageParam }
+      const args: GetGroupMembersArguments = {
+        groupId,
+        startAfter: pageParam.id,
+        startAfterBalance: pageParam.balance,
+        lowToHigh,
+      }
 
       try {
         const result = await makeRequest<GetGroupMembersArguments, Member[]>(
@@ -27,19 +34,22 @@ export function useGroupMembers(groupId: number | undefined) {
         }
       }
     },
-    [groupId]
+    [groupId, lowToHigh]
   )
 
   const result = useInfiniteQuery({
-    queryKey: ['groupMembers', groupId],
+    queryKey: ['groupMembers', groupId, lowToHigh],
     queryFn: fetchMembers,
-    initialPageParam: '',
-    getNextPageParam: (lastPage) => {
+    initialPageParam: { id: '', balance: undefined },
+    getNextPageParam: (lastPage): PageParam | undefined => {
       if (lastPage.length === 0) {
         return undefined
       }
 
-      return lastPage[lastPage.length - 1].id
+      return {
+        id: lastPage[lastPage.length - 1].id,
+        balance: lastPage[lastPage.length - 1].balance,
+      }
     },
   })
 
