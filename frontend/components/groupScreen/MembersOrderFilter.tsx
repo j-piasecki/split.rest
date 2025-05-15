@@ -7,28 +7,37 @@ export function MembersOrderFilter({
   onChange,
 }: {
   style?: StyleProp<ViewStyle>
-  lowToHigh: boolean
-  onChange: (lowToHigh: boolean) => void
+  lowToHigh: boolean | undefined
+  onChange: (lowToHigh: boolean | undefined) => void
 }) {
   return (
     <SegmentedButton
       // this seems to work with flex
-      style={[{ maxWidth: 112, minWidth: 112 }, style]}
+      style={[{ maxWidth: 144, minWidth: 144 }, style]}
       items={[
         {
           icon: 'sortDescending',
-          selected: !lowToHigh,
+          selected: lowToHigh === false,
           onPress: () => {
-            if (lowToHigh) {
+            if (lowToHigh !== false) {
               onChange(false)
             }
           },
         },
         {
-          icon: 'sortAscending',
-          selected: lowToHigh,
+          icon: 'menu',
+          selected: lowToHigh === undefined,
           onPress: () => {
-            if (!lowToHigh) {
+            if (lowToHigh !== undefined) {
+              onChange(undefined)
+            }
+          },
+        },
+        {
+          icon: 'sortAscending',
+          selected: lowToHigh === true,
+          onPress: () => {
+            if (lowToHigh !== true) {
               onChange(true)
             }
           },

@@ -16,6 +16,7 @@ export interface PaneHeaderProps {
   textLocation?: 'center' | 'start'
   showSeparator?: boolean
   adjustsFontSizeToFit?: boolean
+  headerOffset?: number
   color?: string
 }
 
@@ -28,6 +29,7 @@ export function PaneHeader({
   textLocation = 'center',
   showSeparator = true,
   adjustsFontSizeToFit = false,
+  headerOffset = 0,
   color,
 }: PaneHeaderProps) {
   const theme = useTheme()
@@ -53,7 +55,9 @@ export function PaneHeader({
         <View
           style={[
             { flexDirection: 'row', gap: 16 },
-            textLocation === 'center' ? { justifyContent: 'center' } : {},
+            textLocation === 'center'
+              ? { justifyContent: 'center' }
+              : { paddingLeft: headerOffset },
             adjustsFontSizeToFit ? { flex: 1 } : { flexGrow: 1, flexShrink: 0 },
           ]}
         >
@@ -91,6 +95,7 @@ export interface PaneProps {
   onCollapseChange?: (collapsed: boolean) => void
   wholeHeaderInteractive?: boolean
   textLocation?: 'center' | 'start'
+  headerOffset?: number
   expandIcon?: IconName
   collapseIcon?: IconName
   orientation?: 'vertical' | 'horizontal'
@@ -112,6 +117,7 @@ export function Pane({
   wholeHeaderInteractive = true,
   onCollapseChange,
   textLocation = 'center',
+  headerOffset,
   expandIcon,
   collapseIcon,
   orientation = 'horizontal',
@@ -180,6 +186,7 @@ export function Pane({
             rightComponentVisible={collapsible}
             textVisible={!collapsible || !isCollapsed || orientation === 'horizontal'}
             textLocation={textLocation}
+            headerOffset={headerOffset}
             showSeparator={!isCollapsed || orientation === 'vertical'}
             color={foregroundColor}
           />

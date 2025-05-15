@@ -18,8 +18,8 @@ function ListHeader({
   lowToHigh,
 }: {
   children?: React.ReactNode
-  onChange: (lowToHigh: boolean) => void
-  lowToHigh: boolean
+  onChange: (lowToHigh: boolean | undefined) => void
+  lowToHigh: boolean | undefined
 }) {
   const theme = useTheme()
   const { t } = useTranslation()
@@ -58,7 +58,7 @@ export function GroupMembersScreen() {
   const { id } = useLocalSearchParams()
   const groupId = Number(id as string)
   const { data: groupInfo, error } = useGroupInfo(groupId)
-  const [membersLowToHigh, setMembersLowToHigh] = useState(true)
+  const [membersLowToHigh, setMembersLowToHigh] = useState<boolean | undefined>(true)
 
   if (error) {
     return (

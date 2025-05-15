@@ -198,7 +198,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
   const hasSettingsAccess = useHasSettingsAccess(groupInfo)
   const { data: permissions } = useGroupPermissions(groupInfo?.id)
   const [onlyShowSplitsIfIncluded, setOnlyShowSplitsIfIncluded] = useState(false)
-  const [membersLowToHigh, setMembersLowToHigh] = useState(true)
+  const [membersLowToHigh, setMembersLowToHigh] = useState<boolean | undefined>(true)
 
   const [membersExpanded, setMembersExpanded] = useState(false)
   const membersAlwaysExpanded = displayClass > DisplayClass.Large
@@ -277,6 +277,8 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
             collapsible={true}
             collapsed={!membersAlwaysExpanded}
             orientation='vertical'
+            textLocation='start'
+            headerOffset={96}
             onCollapseChange={() => {
               setMembersExpanded(!membersExpanded)
             }}
@@ -333,6 +335,8 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
                 title={t('tabs.members')}
                 orientation='vertical'
                 collapsible
+                textLocation='start'
+                headerOffset={128}
                 onCollapseChange={() => {
                   setMembersExpanded(false)
                 }}
