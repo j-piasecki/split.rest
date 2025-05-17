@@ -116,21 +116,28 @@ export default function SplitInfoScreen() {
                   style={{
                     width: maxWidth,
                     transform: [{ scaleX: -1 }],
-                    paddingLeft: insets.left + 12,
-                    paddingRight: insets.right + 12,
                   }}
                 >
                   <SplitInfo
                     splitInfo={item}
                     groupInfo={groupInfo}
-                    style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}
+                    style={{
+                      paddingTop: insets.top + 16,
+                      paddingBottom: 16,
+                      paddingLeft: insets.left + 12,
+                      paddingRight: insets.right + 12,
+                    }}
                     isRefreshing={isRefetching}
                     onRefresh={refetch}
                   />
                   {index !== 0 && permissions?.canUpdateSplit(history[0]) && (
                     <Button
                       title={t('splitInfo.restoreVersion')}
-                      style={{ marginBottom: 16 }}
+                      style={{
+                        marginBottom: 16,
+                        marginLeft: insets.left + 12,
+                        marginRight: insets.right + 12,
+                      }}
                       leftIcon='undo'
                       onPress={() => restoreSplitVersion(item)}
                       isLoading={isRestoring}
@@ -205,14 +212,17 @@ export default function SplitInfoScreen() {
                     flex: 1,
                     width: maxWidth,
                     transform: [{ scaleX: -1 }],
-                    paddingLeft: insets.left + 12,
-                    paddingRight: insets.right + 12,
                   }}
                 >
                   <SplitInfo
                     splitInfo={split}
                     groupInfo={groupInfo}
-                    style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}
+                    style={{
+                      paddingTop: insets.top + 16,
+                      paddingBottom: 16,
+                      paddingLeft: insets.left + 12,
+                      paddingRight: insets.right + 12,
+                    }}
                     isRefreshing={isRefetching}
                     onRefresh={refetch}
                   />
@@ -220,7 +230,11 @@ export default function SplitInfoScreen() {
                   {index !== 0 && permissions?.canUpdateSplit(history[0]) && (
                     <Button
                       title={t('splitInfo.restoreVersion')}
-                      style={{ marginBottom: 16 }}
+                      style={{
+                        marginBottom: 16,
+                        marginLeft: insets.left + 12,
+                        marginRight: insets.right + 12,
+                      }}
                       leftIcon='undo'
                       onPress={() => restoreSplitVersion(split)}
                       isLoading={isRestoring}
@@ -234,7 +248,7 @@ export default function SplitInfoScreen() {
           {permissions?.canUpdateSplit(history[0]) && (
             <Button
               title={t('split.edit')}
-              style={{ marginHorizontal: 16 }}
+              style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
               disabled={isRestoring}
               leftIcon='edit'
               onPress={() => router.navigate(`/group/${groupInfo?.id}/split/${history[0].id}/edit`)}

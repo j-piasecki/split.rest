@@ -74,8 +74,6 @@ function Roulette({ groupId, setQuery, user }: RouletteProps) {
     <View
       style={{
         flex: 1,
-        paddingLeft: insets.left + 12,
-        paddingRight: insets.right + 12,
         paddingTop: insets.top + 16,
         paddingBottom: insets.bottom,
       }}
@@ -83,7 +81,11 @@ function Roulette({ groupId, setQuery, user }: RouletteProps) {
       <ScrollView
         ref={scrollViewRef}
         style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{
+          paddingBottom: 100,
+          paddingLeft: insets.left + 12,
+          paddingRight: insets.right + 12,
+        }}
         keyboardShouldPersistTaps='handled'
       >
         <Pane
@@ -119,7 +121,7 @@ function Roulette({ groupId, setQuery, user }: RouletteProps) {
         </Pane>
       </ScrollView>
 
-      <View style={{ gap: 8 }}>
+      <View style={{ gap: 8, paddingLeft: insets.left + 12, paddingRight: insets.right + 12 }}>
         {error && <ErrorText>{error}</ErrorText>}
         <Button
           isLoading={waiting}
@@ -157,8 +159,6 @@ function Result({ query, groupId, setQuery }: ResultProps) {
     <View
       style={{
         flex: 1,
-        paddingLeft: insets.left + 12,
-        paddingRight: insets.right + 12,
         paddingTop: insets.top + 16,
         paddingBottom: insets.bottom,
       }}
@@ -169,6 +169,8 @@ function Result({ query, groupId, setQuery }: ResultProps) {
           flexGrow: 1,
           justifyContent: 'space-between',
           paddingBottom: 16,
+          paddingLeft: insets.left + 12,
+          paddingRight: insets.right + 12,
         }}
       >
         <Pane
@@ -229,6 +231,7 @@ function Result({ query, groupId, setQuery }: ResultProps) {
         <Button
           leftIcon='split'
           title={t('roulette.createSplit')}
+          style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
           onPress={() => {
             beginNewSplit({
               participants: result.map((user) => ({ user: user })),
