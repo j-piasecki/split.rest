@@ -47,8 +47,11 @@ export async function getGroupMembers(
             group_members.display_name
           FROM group_members 
           JOIN users ON group_members.user_id = users.id 
-          WHERE group_id = $1 
-            AND (${args.lowToHigh ? 'group_members.balance, users.id' : 'group_members.balance, users.id'}) ${args.lowToHigh ? '>' : '<'} ($2, $3)
+          WHERE group_members.group_id = $1
+            AND (
+              group_members.balance ${args.lowToHigh ? '>' : '<'} $2
+              OR (group_members.balance = $2 AND users.id > $3)
+            )
           ORDER BY group_members.balance ${args.lowToHigh ? 'ASC' : 'DESC'}, users.id
           LIMIT 20
           `,
