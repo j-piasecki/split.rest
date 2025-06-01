@@ -13,7 +13,7 @@ interface SplitEntriesPaneProps {
   updateForm: React.Dispatch<FormActionType>
   groupInfo: GroupUserInfo
   showPayerSelector: boolean
-  scrollRef?: React.RefObject<ScrollView>
+  scrollRef?: React.RefObject<ScrollView | null>
   showAddAllMembers?: boolean
   setMembers?: (fetchMembers: () => Promise<UserWithDisplayName[]>) => void
 }

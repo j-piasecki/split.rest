@@ -20,7 +20,7 @@ interface PersonRowProps {
   index: number
   entry: PersonEntry
   parentLayout?: React.RefObject<LayoutRectangle | null>
-  scrollRef?: React.RefObject<ScrollView>
+  scrollRef?: React.RefObject<ScrollView | null>
 }
 
 function PersonRow({
@@ -151,7 +151,7 @@ export interface PeoplePickerProps {
   onEntriesChange: (entries: PersonEntry[]) => void
   selectable?: boolean
   parentLayout?: React.RefObject<LayoutRectangle | null>
-  scrollRef?: React.RefObject<ScrollView>
+  scrollRef?: React.RefObject<ScrollView | null>
 }
 
 export function PeoplePicker({

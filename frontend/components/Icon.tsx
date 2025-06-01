@@ -145,12 +145,12 @@ Image.prefetch(Object.values(iconMap))
 
 export function Icon({ name, size, color, style }: IconProps) {
   if (color === 'transparent') {
-    // @ts-expect-error style type doesn't match but it should be fine
     return <View style={[style, { width: size, height: size }]} />
   }
 
   return (
     <Image
+      // @ts-expect-error - source type doesn't match but it should be fine
       source={name === undefined ? null : iconMap[name]}
       style={[style, { width: size, height: size }]}
       tintColor={color}

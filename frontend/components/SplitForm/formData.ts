@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import { useReducer } from 'react'
 import { UserWithDisplayName } from 'shared'
 
 export interface SplitEntryData {
@@ -136,11 +136,7 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
 }
 
 export function useFormData(initial: FormData, onUpdate?: () => void) {
-  const [form, updateForm] = useReducer<React.Reducer<FormData, FormActionType>, FormData>(
-    entriesReducer,
-    {} as FormData,
-    () => initial
-  )
+  const [form, updateForm] = useReducer<FormData, [FormActionType]>(entriesReducer, initial)
 
   const updateFormWrapper = (action: FormActionType) => {
     onUpdate?.()

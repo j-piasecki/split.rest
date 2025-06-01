@@ -11,7 +11,7 @@ export interface InviteMemberFabProps {
   iconOnly?: boolean
   applyBottomInset?: boolean
   threeBarLayout?: boolean
-  fabRef?: React.RefObject<FloatingActionButtonRef>
+  fabRef?: React.RefObject<FloatingActionButtonRef | null>
 }
 
 export function InviteMemberFab({

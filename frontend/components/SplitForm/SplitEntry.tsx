@@ -11,7 +11,7 @@ import { LayoutRectangle, Platform, Pressable, ScrollView, View } from 'react-na
 import { CurrencyUtils } from 'shared'
 
 export interface SplitEntryProps {
-  scrollRef?: React.RefObject<ScrollView>
+  scrollRef?: React.RefObject<ScrollView | null>
   groupId: number
   formState: FormData
   updateForm: React.Dispatch<FormActionType>

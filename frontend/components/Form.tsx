@@ -3,8 +3,8 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from 'rea
 import { Platform, TextInput } from 'react-native'
 
 export interface FormContextType {
-  inputs: { focusIndex: number; ref: React.RefObject<TextInput> }[]
-  registerInput: (focusIndex: number, ref: React.RefObject<TextInput>) => () => void
+  inputs: { focusIndex: number; ref: React.RefObject<TextInput | null> }[]
+  registerInput: (focusIndex: number, ref: React.RefObject<TextInput | null>) => () => void
   focusNext: (focusIndex: number) => void
   nextIndex: number
   getNextIndex(): number
@@ -91,7 +91,7 @@ export function Form({ autofocus, children, onSubmit }: FormProps) {
   return <FormContext.Provider value={value}>{children}</FormContext.Provider>
 }
 
-export function useFormContext(ref: React.RefObject<TextInput>, focusIndex?: number) {
+export function useFormContext(ref: React.RefObject<TextInput | null>, focusIndex?: number) {
   const context = useContext(FormContext)
 
   // focus index doesn't matter if context doesn't exist, it wouldn't be used anyway

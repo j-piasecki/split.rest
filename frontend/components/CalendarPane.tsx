@@ -63,7 +63,6 @@ export function CalendarPane({
     >
       <View ref={containerRef} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <View style={{ width: calendarWidth }}>
-          {/* @ts-expect-error types are broken again */}
           <CalendarPicker
             ref={calendarRef}
             onDateChange={(date) => {

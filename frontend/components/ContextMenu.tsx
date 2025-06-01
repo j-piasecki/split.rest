@@ -155,6 +155,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
         borderColor: theme.colors.outlineVariant,
         paddingVertical: 8,
         overflow: 'hidden',
+        // @ts-expect-error - userSelect doesn't exist?
         userSelect: 'none',
       }}
     >
@@ -208,10 +209,10 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
   const [pressed, setPressed] = useState(false)
   const [hovered, setHovered] = useState(false)
   const anchorRef = useRef<View>(null)
-  const touchPoint = useRef<Point>()
-  const anchorRect = useRef<Rect>()
+  const touchPoint = useRef<Point>(undefined)
+  const anchorRect = useRef<Rect>(undefined)
   const scaleAnimation = useSharedValue(0)
-  const scaleTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const scaleTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const insets = useSafeAreaInsets()
 
   function onPressIn() {

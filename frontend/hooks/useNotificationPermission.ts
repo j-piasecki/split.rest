@@ -32,7 +32,7 @@ async function requestPermissionAndGetToken(): Promise<string | null> {
   return null
 }
 
-export async function useNotificationPermission() {
+export function useNotificationPermission() {
   const { t } = useTranslation()
 
   useEffect(() => {
