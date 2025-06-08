@@ -62,6 +62,7 @@ export type IconName =
   | 'stackedEmail'
   | 'systemTheme'
   | 'tag'
+  | 'timeline'
   | 'undo'
   | 'user'
   | 'visibilityOff'
@@ -134,6 +135,7 @@ const iconMap: Record<IconName, unknown> = {
   stackedEmail: require('@assets/icons/stacked_email.svg'),
   systemTheme: require('@assets/icons/system_theme.svg'),
   tag: require('@assets/icons/tag.svg'),
+  timeline: require('@assets/icons/timeline.svg'),
   undo: require('@assets/icons/undo.svg'),
   user: require('@assets/icons/user.svg'),
   visibilityOff: require('@assets/icons/visibility_off.svg'),
