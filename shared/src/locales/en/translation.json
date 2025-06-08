@@ -389,12 +389,11 @@
     "edited": "Edited",
     "restoreVersion": "Restore this state",
     "details": "Details",
-    "editInfo": "Edited",
-    "authorInfo": "Author",
+    "editHistory": "Edit history",
     "participants": "Participants",
     "versionText": "This is edit <Styled>{{version}}</Styled> of the split",
-    "editTimeText": "On <Styled>{{date}}</Styled>",
-    "createTimeText": "This split was submitted on <Styled>{{date}}</Styled>",
+    "editTimeText": "Edited on <Styled>{{date}}</Styled>",
+    "createTimeText": "Created on <Styled>{{date}}</Styled>",
     "editAuthorText": "<Styled>{{editor}}</Styled> has edited this split",
     "createAuthorText": "By <Styled>{{editor}}</Styled>",
     "hasPaidText": "<Styled>{{payer}}</Styled> has paid <Styled>{{amount}}</Styled>",
@@ -408,7 +407,8 @@
     "gaveBack": "Gave back",
     "willGiveBack": "Will give back",
     "markCompleted": "Mark as complete",
-    "settleUpTitle": "Settle up split"
+    "settleUpTitle": "Settle up split",
+    "loadMoreHistory": "Load more history"
   },
 
   "errorBoundary": {

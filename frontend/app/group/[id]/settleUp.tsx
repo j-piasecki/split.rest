@@ -42,7 +42,7 @@ function SettleUpPreview(props: SettleUpPreviewProps) {
       }}
     >
       <SplitInfo
-        splitInfo={props.preview}
+        splitHistory={[props.preview]}
         groupInfo={props.groupInfo}
         style={{ paddingTop: insets.top + 16 }}
         showCompleteButton={false}

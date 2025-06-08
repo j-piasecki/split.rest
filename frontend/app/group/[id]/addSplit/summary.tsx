@@ -58,7 +58,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
     >
       <SplitInfo
         groupInfo={groupInfo}
-        splitInfo={split}
+        splitHistory={[split]}
         style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}
       />
 

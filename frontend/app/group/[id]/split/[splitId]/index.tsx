@@ -12,10 +12,7 @@ import { measure } from '@utils/measure'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, FlatList, Platform, ScrollView, View } from 'react-native'
-import { SplitWithUsers } from 'shared'
-
-// TODO: this file is a joke
+import { ActivityIndicator, FlatList, ScrollView, View } from 'react-native'
 
 export default function SplitInfoScreen() {
   const theme = useTheme()
@@ -39,9 +36,6 @@ export default function SplitInfoScreen() {
   const scrollableRef = useRef<FlatList | ScrollView | null>(null)
   const [maxWidth, setMaxWidth] = useState(500)
 
-  const userScrollRef = useRef(false)
-  const scrollContentWidth = useRef(0)
-
   useLayoutEffect(() => {
     if (containerRef.current) {
       const size = measure(containerRef.current)
@@ -49,7 +43,14 @@ export default function SplitInfoScreen() {
     }
   }, [isLoadingHistory, groupInfo])
 
-  async function restoreSplitVersion(split: SplitWithUsers) {
+  async function restoreSplitVersion(version: number) {
+    const split = history.find((split) => split.version === version)
+    if (!split) {
+      throw new Error(
+        `Split version ${version} not found in history for split ${splitId} in group ${id} when restoring version`
+      )
+    }
+
     try {
       await updateSplit({
         groupId: Number(id),
@@ -93,157 +94,32 @@ export default function SplitInfoScreen() {
 
       {!isLoadingHistory && groupInfo && (
         <View ref={containerRef} style={{ flex: 1, paddingBottom: insets.bottom }}>
-          {/* Paginated horizontal flatlist breaks vertical scroll on web */}
-          {Platform.OS !== 'web' && (
-            <FlatList
-              // inverted flatlist breaks pagination on web, so we use scaleX to flip it
-              // this reverses scroll direction on web but I guess it's better than not working at all
-              horizontal
-              style={{ transform: [{ scaleX: -1 }] }}
-              data={history}
-              keyExtractor={(item) => `${item.version}`}
-              showsHorizontalScrollIndicator={false}
-              pagingEnabled
-              onEndReachedThreshold={0.5}
-              onEndReached={() => {
-                if (!isFetchingNextPage && hasNextPage) {
-                  fetchNextPage()
-                }
+          <View
+            style={{
+              flex: 1,
+              width: maxWidth,
+            }}
+          >
+            <SplitInfo
+              splitHistory={history}
+              groupInfo={groupInfo}
+              style={{
+                paddingTop: insets.top + 16,
+                paddingBottom: 16,
+                paddingLeft: insets.left + 12,
+                paddingRight: insets.right + 12,
               }}
-              scrollEnabled={history.length > 1}
-              renderItem={({ item, index }) => (
-                <View
-                  style={{
-                    width: maxWidth,
-                    transform: [{ scaleX: -1 }],
-                  }}
-                >
-                  <SplitInfo
-                    splitInfo={item}
-                    groupInfo={groupInfo}
-                    style={{
-                      paddingTop: insets.top + 16,
-                      paddingBottom: 16,
-                      paddingLeft: insets.left + 12,
-                      paddingRight: insets.right + 12,
-                    }}
-                    isRefreshing={isRefetching}
-                    onRefresh={refetch}
-                  />
-                  {index !== 0 && permissions?.canUpdateSplit(history[0]) && (
-                    <Button
-                      title={t('splitInfo.restoreVersion')}
-                      style={{
-                        marginBottom: 16,
-                        marginLeft: insets.left + 12,
-                        marginRight: insets.right + 12,
-                      }}
-                      leftIcon='undo'
-                      onPress={() => restoreSplitVersion(item)}
-                      isLoading={isRestoring}
-                    />
-                  )}
-                </View>
-              )}
-              scrollEventThrottle={250}
-              onScroll={() => {
-                userScrollRef.current = true
-              }}
-              ref={(ref) => {
-                scrollableRef.current = ref
-                if (history.length > 0) {
-                  // TODO: this is kinda scuffed (and doesn't work on web), should probably figure out something better
-                  setTimeout(() => {
-                    if (!userScrollRef.current) {
-                      ref?.scrollToOffset({ offset: 30, animated: true })
-
-                      setTimeout(() => {
-                        ref?.scrollToIndex({ index: 0, animated: true })
-                      }, 200)
-                    }
-                  }, 1000)
-                }
-              }}
+              isRefreshing={isRefetching}
+              onRefresh={refetch}
+              hasMoreHistory={hasNextPage && history[history.length - 1].version !== 1}
+              onLoadMoreHistory={fetchNextPage}
+              isLoadingHistory={isLoadingHistory || isFetchingNextPage}
+              onRestoreVersion={
+                permissions?.canUpdateSplit(history[0]) ? restoreSplitVersion : undefined
+              }
+              isRestoringVersion={isRestoring}
             />
-          )}
-
-          {Platform.OS === 'web' && (
-            <ScrollView
-              horizontal
-              style={{ transform: [{ scaleX: -1 }] }}
-              showsHorizontalScrollIndicator={false}
-              pagingEnabled
-              onContentSizeChange={(width) => {
-                scrollContentWidth.current = width
-              }}
-              scrollEventThrottle={250}
-              scrollEnabled={history.length > 1}
-              onScroll={(e) => {
-                userScrollRef.current = true
-
-                if (
-                  e.nativeEvent.contentOffset.x / scrollContentWidth.current > 0.5 &&
-                  !isFetchingNextPage &&
-                  hasNextPage
-                ) {
-                  fetchNextPage()
-                }
-              }}
-              ref={(ref) => {
-                scrollableRef.current = ref
-                if (history.length > 0) {
-                  // TODO: this is kinda scuffed (and doesn't work on web), should probably figure out something better
-                  setTimeout(() => {
-                    if (!userScrollRef.current) {
-                      ref?.scrollTo({ x: 30, animated: true })
-
-                      setTimeout(() => {
-                        ref?.scrollTo({ x: 0, animated: true })
-                      }, 200)
-                    }
-                  }, 1000)
-                }
-              }}
-            >
-              {history.map((split, index) => (
-                <View
-                  key={`${split.version}`}
-                  style={{
-                    flex: 1,
-                    width: maxWidth,
-                    transform: [{ scaleX: -1 }],
-                  }}
-                >
-                  <SplitInfo
-                    splitInfo={split}
-                    groupInfo={groupInfo}
-                    style={{
-                      paddingTop: insets.top + 16,
-                      paddingBottom: 16,
-                      paddingLeft: insets.left + 12,
-                      paddingRight: insets.right + 12,
-                    }}
-                    isRefreshing={isRefetching}
-                    onRefresh={refetch}
-                  />
-
-                  {index !== 0 && permissions?.canUpdateSplit(history[0]) && (
-                    <Button
-                      title={t('splitInfo.restoreVersion')}
-                      style={{
-                        marginBottom: 16,
-                        marginLeft: insets.left + 12,
-                        marginRight: insets.right + 12,
-                      }}
-                      leftIcon='undo'
-                      onPress={() => restoreSplitVersion(split)}
-                      isLoading={isRestoring}
-                    />
-                  )}
-                </View>
-              ))}
-            </ScrollView>
-          )}
+          </View>
 
           {permissions?.canUpdateSplit(history[0]) && (
             <Button

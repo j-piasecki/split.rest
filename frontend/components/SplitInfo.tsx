@@ -13,9 +13,9 @@ import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { getSplitDisplayName } from '@utils/getSplitDisplayName'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { RefreshControl, ScrollView, StyleProp, View, ViewStyle } from 'react-native'
+import { Pressable, RefreshControl, ScrollView, StyleProp, View, ViewStyle } from 'react-native'
 import { CurrencyUtils, isTranslatableError } from 'shared'
 import {
   GroupUserInfo,
@@ -261,67 +261,238 @@ function IconInfoText({ icon, translationKey, values, userIdPhoto }: EditInfoTex
   )
 }
 
-function EditInfo({ splitInfo }: { splitInfo: SplitWithUsers }) {
-  const { t } = useTranslation()
-  const { data: createdBy } = useUserById(splitInfo.createdById)
+enum EditHistoryItemType {
+  First,
+  Middle,
+  Last,
+  Only,
+}
 
-  if (splitInfo.version === 1) {
-    return (
-      <Pane
-        icon='editAlt'
-        title={t('splitInfo.authorInfo')}
-        textLocation='start'
-        containerStyle={{ padding: 16, paddingTop: 12 }}
-        style={{ overflow: 'hidden' }}
-        collapsible
-        startCollapsed
+function EditHistoryItem({
+  split,
+  isSelected,
+  onSelect,
+  onRestore,
+  isRestoringVersion,
+  type,
+}: {
+  split: SplitWithUsers
+  isSelected: boolean
+  onSelect: () => void
+  onRestore: () => void
+  isRestoringVersion?: boolean
+  type: EditHistoryItemType
+}) {
+  const theme = useTheme()
+  const { data: createdBy } = useUserById(split.createdById)
+  const { t } = useTranslation()
+
+  return (
+    <Pressable
+      style={({ pressed, hovered }) => ({
+        backgroundColor: hovered
+          ? theme.colors.surfaceContainerHigh
+          : pressed
+            ? theme.colors.surfaceContainerHighest
+            : 'transparent',
+      })}
+      onPress={onSelect}
+    >
+      <View
+        style={{
+          flex: 1,
+          paddingHorizontal: 16,
+          gap: 8,
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}
       >
-        <IconInfoText
-          icon='calendar'
-          translationKey='splitInfo.createTimeText'
-          values={{ date: new Date(splitInfo.updatedAt).toLocaleString() }}
-        />
-        {createdBy && (
-          <IconInfoText
-            icon='edit'
-            translationKey='splitInfo.createAuthorText'
-            values={{ editor: createdBy.name }}
-            userIdPhoto={createdBy.id}
-          />
+        {type !== EditHistoryItemType.Only && (
+          <View
+            style={{
+              width: 16,
+              alignSelf: 'stretch',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <View
+              style={{
+                position: 'absolute',
+                left: 6,
+                top: type === EditHistoryItemType.First ? '50%' : 0,
+                width: 4,
+                height: type === EditHistoryItemType.Middle ? '100%' : '50%',
+                backgroundColor: theme.colors.outlineVariant,
+              }}
+            />
+            <View
+              style={{
+                width: 16,
+                height: 16,
+                backgroundColor: isSelected ? theme.colors.tertiary : theme.colors.outline,
+                borderRadius: 8,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Icon
+                name={
+                  type === EditHistoryItemType.Last
+                    ? 'split'
+                    : type === EditHistoryItemType.First
+                      ? 'check'
+                      : 'editAlt'
+                }
+                size={10}
+                color={isSelected ? theme.colors.onTertiary : theme.colors.outlineVariant}
+              />
+            </View>
+          </View>
         )}
-      </Pane>
-    )
-  }
+        <View
+          style={{
+            flex: 1,
+            paddingTop: type === EditHistoryItemType.First ? 0 : 4,
+            paddingBottom: type === EditHistoryItemType.Last ? 0 : 4,
+            opacity: isSelected ? 1 : 0.75,
+          }}
+        >
+          <IconInfoText
+            icon='calendar'
+            translationKey={
+              type === EditHistoryItemType.Last || type === EditHistoryItemType.Only
+                ? 'splitInfo.createTimeText'
+                : 'splitInfo.editTimeText'
+            }
+            values={{ date: new Date(split.updatedAt).toLocaleString() }}
+          />
+          {createdBy && (
+            <IconInfoText
+              icon='edit'
+              translationKey='splitInfo.createAuthorText'
+              values={{ editor: createdBy.name }}
+              userIdPhoto={createdBy.id}
+            />
+          )}
+          {isSelected &&
+            type !== EditHistoryItemType.Only &&
+            type !== EditHistoryItemType.First && (
+              <View style={{ flexDirection: 'row', paddingLeft: 16 }}>
+                <RoundIconButton
+                  icon='undo'
+                  isLoading={isRestoringVersion}
+                  text={t('splitInfo.restoreVersion')}
+                  onPress={onRestore}
+                />
+              </View>
+            )}
+        </View>
+      </View>
+    </Pressable>
+  )
+}
+
+function EditHistory({
+  splitHistory,
+  hasMoreHistory,
+  isLoadingHistory,
+  onLoadMoreHistory,
+  onRestoreVersion,
+  isRestoringVersion,
+  selectedVersion,
+  setSelectedVersion,
+}: {
+  splitHistory: SplitWithUsers[]
+  hasMoreHistory?: boolean
+  isLoadingHistory?: boolean
+  onLoadMoreHistory?: () => void
+  onRestoreVersion?: (version: number) => Promise<void>
+  isRestoringVersion?: boolean
+  selectedVersion: number
+  setSelectedVersion: (version: number) => void
+}) {
+  const theme = useTheme()
+  const { t } = useTranslation()
 
   return (
     <Pane
-      icon='editAlt'
-      title={t('splitInfo.editInfo')}
+      icon='timeline'
+      title={t('splitInfo.editHistory')}
       textLocation='start'
-      containerStyle={{ padding: 16, paddingTop: 12 }}
+      containerStyle={{ paddingVertical: 16 }}
       style={{ overflow: 'hidden' }}
       collapsible
       startCollapsed
     >
-      {createdBy && (
-        <IconInfoText
-          icon='edit'
-          translationKey='splitInfo.editAuthorText'
-          values={{ editor: createdBy.name }}
-          userIdPhoto={createdBy.id}
+      {splitHistory.map((item, index) => (
+        <EditHistoryItem
+          key={item.version}
+          split={item}
+          isSelected={item.version === selectedVersion}
+          onSelect={() => setSelectedVersion(item.version)}
+          onRestore={() => onRestoreVersion?.(item.version)}
+          isRestoringVersion={isRestoringVersion}
+          type={
+            splitHistory.length === 1
+              ? EditHistoryItemType.Only
+              : item.version === 1
+                ? EditHistoryItemType.Last
+                : index === 0
+                  ? EditHistoryItemType.First
+                  : EditHistoryItemType.Middle
+          }
         />
+      ))}
+
+      {hasMoreHistory && (
+        <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: 16 }}>
+          <View
+            style={{ width: 16, alignSelf: 'stretch', alignItems: 'center', gap: 6, paddingTop: 4 }}
+          >
+            <View
+              style={{
+                width: 4,
+                height: 4,
+                backgroundColor: theme.colors.outlineVariant,
+                borderRadius: 2,
+              }}
+            />
+            <View
+              style={{
+                width: 4,
+                height: 4,
+                backgroundColor: theme.colors.outlineVariant,
+                borderRadius: 2,
+              }}
+            />
+            <View
+              style={{
+                width: 4,
+                height: 4,
+                backgroundColor: theme.colors.outlineVariant,
+                borderRadius: 2,
+              }}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1,
+              marginTop: 8,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <RoundIconButton
+              icon='arrowDown'
+              isLoading={isLoadingHistory}
+              text={t('splitInfo.loadMoreHistory')}
+              onPress={() => onLoadMoreHistory?.()}
+            />
+          </View>
+        </View>
       )}
-      <IconInfoText
-        icon='calendar'
-        translationKey='splitInfo.editTimeText'
-        values={{ date: new Date(splitInfo.updatedAt).toLocaleString() }}
-      />
-      <IconInfoText
-        icon='tag'
-        translationKey='splitInfo.versionText'
-        // I started versioning at 1, for some reason?
-        values={{ version: (splitInfo.version - 1).toString() }}
-      />
     </Pane>
   )
 }
@@ -335,22 +506,47 @@ function getNameKey(user: UserWithPendingBalanceChange) {
 }
 
 export function SplitInfo({
-  splitInfo,
+  splitHistory,
   groupInfo,
   style,
   showCompleteButton = true,
   isRefreshing = false,
   onRefresh,
+  hasMoreHistory = false,
+  onLoadMoreHistory,
+  isLoadingHistory = false,
+  onRestoreVersion,
+  isRestoringVersion,
 }: {
-  splitInfo: SplitWithUsers
+  splitHistory: SplitWithUsers[]
   groupInfo: GroupUserInfo
   style?: StyleProp<ViewStyle>
   showCompleteButton?: boolean
   isRefreshing?: boolean
   onRefresh?: () => void
+  hasMoreHistory?: boolean
+  isLoadingHistory?: boolean
+  onLoadMoreHistory?: () => void
+  onRestoreVersion?: (version: number) => Promise<void>
+  isRestoringVersion?: boolean
 }) {
   const theme = useTheme()
   const { t } = useTranslation()
+
+  const [selectedVersion, setSelectedVersion] = useState(splitHistory[0].version)
+
+  const splitInfo = splitHistory.find((split) => split.version === selectedVersion)
+  if (!splitInfo) {
+    throw new Error(
+      `Split version ${selectedVersion} not found in history for split ${splitHistory[0].id} in group ${groupInfo.id}`
+    )
+  }
+
+  const latestVersion = splitHistory[0].version
+  useEffect(() => {
+    setSelectedVersion(latestVersion)
+  }, [latestVersion])
+
   const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)
 
   const isSettleUp = Boolean(splitInfo.type & SplitType.SettleUp)
@@ -371,6 +567,20 @@ export function SplitInfo({
     },
     {} as Record<string, number>
   )
+
+  {
+    /* <Button
+  title={t('splitInfo.restoreVersion')}
+  style={{
+    marginBottom: 16,
+    marginLeft: insets.left + 12,
+    marginRight: insets.right + 12,
+  }}
+  leftIcon='undo'
+  onPress={() => restoreSplitVersion(item)}
+  isLoading={isRestoring}
+/> */
+  }
 
   return (
     <ScrollView
@@ -422,7 +632,16 @@ export function SplitInfo({
           />
         </Pane>
 
-        <EditInfo splitInfo={splitInfo} />
+        <EditHistory
+          splitHistory={splitHistory}
+          hasMoreHistory={hasMoreHistory}
+          isLoadingHistory={isLoadingHistory}
+          onLoadMoreHistory={onLoadMoreHistory}
+          onRestoreVersion={onRestoreVersion}
+          isRestoringVersion={isRestoringVersion}
+          selectedVersion={selectedVersion}
+          setSelectedVersion={setSelectedVersion}
+        />
 
         <Pane
           icon='group'
