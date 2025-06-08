@@ -21,6 +21,10 @@ export function useSettleUpPreview(groupId?: number, withMembers?: string[]) {
         throw new TranslatableError('api.notFound.split')
       }
 
+      info.users.forEach((user) => {
+        user.pending = false
+      })
+
       return info
     },
     retry: (failureCount, error) => {
