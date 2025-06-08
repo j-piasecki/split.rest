@@ -50,7 +50,7 @@ export async function getSplitHistory(
         FROM split_edits
         WHERE group_id = $1 AND id = $2 AND version < $3
         ORDER BY version DESC
-        LIMIT 20
+        LIMIT 10
       `,
       [args.groupId, args.splitId, args.startAfter ?? 2147483647]
     )
