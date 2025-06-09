@@ -16,6 +16,7 @@ import { getSplitDisplayName } from '@utils/getSplitDisplayName'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Pressable, RefreshControl, ScrollView, StyleProp, View, ViewStyle } from 'react-native'
+import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { CurrencyUtils, isTranslatableError } from 'shared'
 import {
   GroupUserInfo,
@@ -287,6 +288,18 @@ function EditHistoryItem({
   const { data: createdBy } = useUserById(split.createdById)
   const { t } = useTranslation()
 
+  const indicatorStyle = useAnimatedStyle(() => ({
+    backgroundColor: withTiming(isSelected ? theme.colors.tertiary : theme.colors.outline, {
+      duration: 250,
+    }),
+  }))
+
+  const infoContainerStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(isSelected ? 1 : 0.65, {
+      duration: 250,
+    }),
+  }))
+
   return (
     <Pressable
       style={({ pressed, hovered }) => ({
@@ -326,15 +339,17 @@ function EditHistoryItem({
                 backgroundColor: theme.colors.outlineVariant,
               }}
             />
-            <View
-              style={{
-                width: 16,
-                height: 16,
-                backgroundColor: isSelected ? theme.colors.tertiary : theme.colors.outline,
-                borderRadius: 8,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+            <Animated.View
+              style={[
+                indicatorStyle,
+                {
+                  width: 16,
+                  height: 16,
+                  borderRadius: 8,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+              ]}
             >
               <Icon
                 name={
@@ -347,16 +362,18 @@ function EditHistoryItem({
                 size={10}
                 color={isSelected ? theme.colors.onTertiary : theme.colors.outlineVariant}
               />
-            </View>
+            </Animated.View>
           </View>
         )}
-        <View
-          style={{
-            flex: 1,
-            paddingTop: type === EditHistoryItemType.First ? 0 : 4,
-            paddingBottom: type === EditHistoryItemType.Last ? 0 : 4,
-            opacity: isSelected ? 1 : 0.75,
-          }}
+        <Animated.View
+          style={[
+            infoContainerStyle,
+            {
+              flex: 1,
+              paddingTop: type === EditHistoryItemType.First ? 0 : 4,
+              paddingBottom: type === EditHistoryItemType.Last ? 0 : 4,
+            },
+          ]}
         >
           <IconInfoText
             icon='calendar'
@@ -387,7 +404,7 @@ function EditHistoryItem({
                 />
               </View>
             )}
-        </View>
+        </Animated.View>
       </View>
     </Pressable>
   )
