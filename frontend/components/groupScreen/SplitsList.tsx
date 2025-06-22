@@ -16,24 +16,31 @@ import { GroupUserInfo, SplitInfo } from 'shared'
 
 function Divider() {
   const theme = useTheme()
-  return <View style={{ width: '100%', height: 1, backgroundColor: theme.colors.outlineVariant }} />
+  return <View style={{ width: '100%', height: 2, backgroundColor: theme.colors.surface }} />
 }
 
 function SplitsShimmer({ count }: { count: number }) {
+  const theme = useTheme()
+
   return (
     <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
       {Array.from({ length: count }).map((_, index) => (
         <React.Fragment key={index}>
           <View
-            style={{
-              width: '100%',
-              height: 72,
-              gap: 8,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 16,
-            }}
+            style={[
+              {
+                width: '100%',
+                height: 72,
+                gap: 8,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 16,
+                borderRadius: 4,
+                backgroundColor: theme.colors.surfaceContainer,
+              },
+              index === count - 1 && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
+            ]}
           >
             <Shimmer
               offset={1 - index * 0.05}
@@ -131,6 +138,7 @@ export function SplitsList({
         contentContainerStyle={{
           maxWidth: displayClass < DisplayClass.Large ? 900 : undefined,
           width: '100%',
+          flexGrow: 1,
           alignSelf: 'center',
           paddingLeft: insets.left + (threeBarLayout ? 0 : 12),
           paddingRight: insets.right + (threeBarLayout ? 0 : 12),
@@ -141,18 +149,40 @@ export function SplitsList({
             style={{
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: theme.colors.surfaceContainer,
             }}
           >
             {(isLoading || !info) && <SplitsShimmer count={5} />}
-            {!isLoading && info && emptyComponent}
+            {!isLoading && info && (
+              <View
+                style={{
+                  flex: 1,
+                  width: '100%',
+                  backgroundColor: theme.colors.surfaceContainer,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 4,
+                  borderBottomLeftRadius: 16,
+                  borderBottomRightRadius: 16,
+                }}
+              >
+                {emptyComponent}
+              </View>
+            )}
           </View>
         }
         data={splits}
         onEndReachedThreshold={0.5}
         onEndReached={() => !isFetchingNextPage && hasNextPage && fetchNextPage()}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item: split }) => <SplitRow split={split} info={info} />}
+        renderItem={({ item: split, index }) => (
+            <SplitRow split={split} info={info} style={[
+              { borderRadius: 4 },
+              index === splits.length - 1 && {
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+              },
+            ]} />
+        )}
         ItemSeparatorComponent={Divider}
         ListHeaderComponent={headerComponent}
         ListFooterComponent={footerComponent}

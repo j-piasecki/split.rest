@@ -12,7 +12,6 @@ import { MembersList } from '@components/groupScreen/MembersList'
 import { MembersOrderFilter } from '@components/groupScreen/MembersOrderFilter'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
-import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
@@ -154,8 +153,10 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
                 backgroundColor: theme.colors.surfaceContainer,
                 borderTopRightRadius: 16,
                 borderTopLeftRadius: 16,
+                borderBottomLeftRadius: 4,
+                borderBottomRightRadius: 4,
+                marginBottom: 2,
               },
-              styles.paneShadow,
             ]}
           >
             <PaneHeader
@@ -171,19 +172,6 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
             />
           </View>
         </View>
-      }
-      footerComponent={
-        <View
-          style={[
-            {
-              height: 16,
-              backgroundColor: theme.colors.surfaceContainer,
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            },
-            styles.paneShadow,
-          ]}
-        />
       }
     />
   )
@@ -214,7 +202,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           paddingHorizontal: 16,
           paddingBottom: 12 + insets.bottom,
           paddingTop: HEADER_HEIGHT + insets.top,
-          gap: 12,
+          gap: 8,
         }}
       >
         <View
@@ -325,7 +313,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
                 top: HEADER_HEIGHT + insets.top,
                 right: 16,
                 position: 'absolute',
-                backgroundColor: theme.colors.surfaceContainer,
+                // backgroundColor: theme.colors.surfaceContainer,
                 borderRadius: 16,
                 overflow: 'hidden',
               }}

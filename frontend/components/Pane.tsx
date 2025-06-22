@@ -1,7 +1,6 @@
 import { Icon, IconName } from '@components/Icon'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
-import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { useState } from 'react'
@@ -14,7 +13,6 @@ export interface PaneHeaderProps {
   rightComponentVisible?: boolean
   textVisible?: boolean
   textLocation?: 'center' | 'start'
-  showSeparator?: boolean
   adjustsFontSizeToFit?: boolean
   headerOffset?: number
   color?: string
@@ -27,7 +25,6 @@ export function PaneHeader({
   rightComponent,
   textVisible = true,
   textLocation = 'center',
-  showSeparator = true,
   adjustsFontSizeToFit = false,
   headerOffset = 0,
   color,
@@ -41,7 +38,6 @@ export function PaneHeader({
     <View
       style={{
         width: '100%',
-        borderBottomWidth: showSeparator ? 1 : 0,
         paddingHorizontal: threeBarLayout ? 16 : 24,
         borderBottomColor: theme.colors.outlineVariant,
         height: 54,
@@ -136,11 +132,7 @@ export function Pane({
     <View
       onLayout={onLayout}
       style={[
-        {
-          backgroundColor: theme.colors.surfaceContainer,
-          borderRadius: 16,
-        },
-        styles.paneShadow,
+        // styles.paneShadow,
         collapsible && isCollapsed
           ? orientation === 'vertical'
             ? { width: 72 }
@@ -156,6 +148,17 @@ export function Pane({
             setInnerCollapsed(!isCollapsed)
             onCollapseChange?.(!isCollapsed)
           }}
+          style={[
+            {
+              backgroundColor: theme.colors.surfaceContainer,
+              borderRadius: 16,
+            },
+            (!isCollapsed || orientation === 'vertical') && {
+              borderBottomLeftRadius: 4,
+              borderBottomRightRadius: 4,
+              marginBottom: 2,
+            },
+          ]}
         >
           <PaneHeader
             icon={icon}
@@ -187,14 +190,22 @@ export function Pane({
             textVisible={!collapsible || !isCollapsed || orientation === 'horizontal'}
             textLocation={textLocation}
             headerOffset={headerOffset}
-            showSeparator={!isCollapsed || orientation === 'vertical'}
             color={foregroundColor}
           />
         </Pressable>
       )}
       <Pressable
         disabled={!isCollapsed || !collapsible}
-        style={containerStyle}
+        style={[
+          containerStyle,
+          {
+            backgroundColor: theme.colors.surfaceContainer,
+            borderRadius: 16,
+            borderTopLeftRadius: 4,
+            borderTopRightRadius: 4,
+            overflow: 'hidden',
+          },
+        ]}
         onPress={() => {
           setInnerCollapsed(false)
           onCollapseChange?.(false)

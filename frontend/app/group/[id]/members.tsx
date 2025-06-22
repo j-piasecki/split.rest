@@ -40,7 +40,6 @@ function ListHeader({
       <PaneHeader
         icon='members'
         title={t('tabs.members')}
-        showSeparator={false}
         textLocation='start'
         rightComponent={
           // @ts-expect-error flex cannot really be null, but this way it can be overriden

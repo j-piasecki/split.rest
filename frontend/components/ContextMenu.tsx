@@ -215,6 +215,9 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
   const scaleTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const insets = useSafeAreaInsets()
 
+  const resolvedStyle = typeof props.style === 'function' ? props.style({ hovered, pressed }) : props.style
+  const flattenedStyle = StyleSheet.flatten(resolvedStyle)
+  
   function onPressIn() {
     setPressed(true)
     if (isSmallScreen && !props.disabled) {
@@ -273,8 +276,29 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
   }
 
   const scaleStyle = useAnimatedStyle(() => {
+    let borderTopLeftRadius = flattenedStyle?.borderTopLeftRadius ?? flattenedStyle?.borderRadius ?? 0
+    let borderTopRightRadius = flattenedStyle?.borderTopRightRadius ?? flattenedStyle?.borderRadius ?? 0
+    let borderBottomLeftRadius = flattenedStyle?.borderBottomLeftRadius ?? flattenedStyle?.borderRadius ?? 0
+    let borderBottomRightRadius = flattenedStyle?.borderBottomRightRadius ?? flattenedStyle?.borderRadius ?? 0
+
+    if (typeof borderTopLeftRadius !== 'number') {
+      borderTopLeftRadius = 0
+    }
+    if (typeof borderTopRightRadius !== 'number') {
+      borderTopRightRadius = 0
+    }
+    if (typeof borderBottomLeftRadius !== 'number') {
+      borderBottomLeftRadius = 0
+    }
+    if (typeof borderBottomRightRadius !== 'number') {
+      borderBottomRightRadius = 0
+    }
+
     return {
-      borderRadius: interpolate(scaleAnimation.value, [0, 1], [0, 8]),
+      borderTopLeftRadius: interpolate(scaleAnimation.value, [0, 1], [borderTopLeftRadius, 8]),
+      borderTopRightRadius: interpolate(scaleAnimation.value, [0, 1], [borderTopRightRadius, 8]),
+      borderBottomLeftRadius: interpolate(scaleAnimation.value, [0, 1], [borderBottomLeftRadius, 8]),
+      borderBottomRightRadius: interpolate(scaleAnimation.value, [0, 1], [borderBottomRightRadius, 8]),
       transform: [{ scale: interpolate(scaleAnimation.value, [0, 1], [1, 1.02]) }],
     }
   })
@@ -333,7 +357,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
           <Animated.View
             style={[
               { flex: 1 },
-              typeof props.style === 'function' ? props.style({ hovered, pressed }) : props.style,
+              resolvedStyle,
               scaleStyle,
             ]}
           >
