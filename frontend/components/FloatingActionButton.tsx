@@ -1,11 +1,12 @@
 import { Icon, IconName } from './Icon'
 import { useSnackFABInset } from './SnackBar'
 import { Text } from '@components/Text'
+import { buttonCornerSpringConfig } from '@styling/animationConfigs'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
-import React, { useImperativeHandle, useRef } from 'react'
-import { NativeScrollEvent, NativeSyntheticEvent, Pressable, View } from 'react-native'
+import React, { useImperativeHandle, useRef, useState } from 'react'
+import { NativeScrollEvent, NativeSyntheticEvent, Pressable } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
 const springConfig = {
@@ -53,6 +54,7 @@ export const FloatingActionButton = React.forwardRef<
   FloatingActionButtonRef,
   FloatingActionButtonProps
 >(function FloatingActionButton({ icon, title, onPress }, ref) {
+  const [isPressed, setIsPressed] = useState(false)
   const expandedWidth = useSharedValue<number | undefined>(undefined)
   const expanded = useSharedValue(true)
   const theme = useTheme()
@@ -74,6 +76,13 @@ export const FloatingActionButton = React.forwardRef<
     }
   })
 
+  const outerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      borderRadius: withSpring(isPressed ? 30 : 12, buttonCornerSpringConfig),
+      transform: [{ scale: withSpring(isPressed ? 1.05 : 1, buttonCornerSpringConfig) }],
+    }
+  })
+
   useImperativeHandle(ref, () => ({
     expand: () => {
       expanded.value = true
@@ -84,10 +93,10 @@ export const FloatingActionButton = React.forwardRef<
   }))
 
   return (
-    <View
+    <Animated.View
       style={[
+        outerAnimatedStyle,
         {
-          borderRadius: 16,
           backgroundColor: theme.colors.primaryContainer,
           overflow: 'hidden',
         },
@@ -101,6 +110,8 @@ export const FloatingActionButton = React.forwardRef<
           }
         }}
         onPress={onPress}
+        onPressIn={() => setIsPressed(true)}
+        onPressOut={() => setIsPressed(false)}
         style={(state) => {
           return {
             opacity: state.pressed ? 0.8 : state.hovered ? 0.9 : 1,
@@ -138,6 +149,6 @@ export const FloatingActionButton = React.forwardRef<
           )}
         </Animated.View>
       </Pressable>
-    </View>
+    </Animated.View>
   )
 })

@@ -1,5 +1,6 @@
 import { Icon, IconName } from './Icon'
 import { Text } from '@components/Text'
+import { buttonCornerSpringConfig, buttonPaddingSpringConfig } from '@styling/animationConfigs'
 import { useTheme } from '@styling/theme'
 import React, { useState } from 'react'
 import {
@@ -7,9 +8,9 @@ import {
   Pressable,
   PressableStateCallbackType,
   StyleProp,
-  View,
   ViewStyle,
 } from 'react-native'
+import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
 
 export interface ButtonProps {
   title?: string
@@ -48,11 +49,23 @@ export function Button({
         ? theme.colors.primary
         : theme.colors.onPrimaryContainer)
 
+  const outerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      borderRadius: withSpring(isPressed ? 28 : 12, buttonCornerSpringConfig),
+    }
+  })
+
+  const innerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      paddingVertical: withSpring(isPressed ? 16 : 12, buttonPaddingSpringConfig),
+    }
+  })
+
   return (
-    <View
+    <Animated.View
       style={[
+        outerAnimatedStyle,
         {
-          borderRadius: 12,
           backgroundColor: destructive
             ? theme.colors.errorContainer
             : theme.colors.primaryContainer,
@@ -83,15 +96,17 @@ export function Button({
           }
         }}
       >
-        <View
-          style={{
-            paddingVertical: 12,
-            paddingHorizontal: title ? 24 : 12,
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'row',
-            gap: 8,
-          }}
+        <Animated.View
+          style={[
+            innerAnimatedStyle,
+            {
+              paddingHorizontal: title ? 24 : 12,
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+              gap: 8,
+            },
+          ]}
         >
           {isLoading && <ActivityIndicator size='small' color={foregroundColor} />}
           {leftIcon && !isLoading && <Icon name={leftIcon} size={24} color={foregroundColor} />}
@@ -104,9 +119,9 @@ export function Button({
             </Text>
           )}
           {rightIcon && <Icon name={rightIcon} size={24} color={foregroundColor} />}
-        </View>
+        </Animated.View>
         {children}
       </Pressable>
-    </View>
+    </Animated.View>
   )
 }

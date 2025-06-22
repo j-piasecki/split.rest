@@ -13,7 +13,7 @@ export function ButtonShimmer<T>({ argument, children, offset }: ButtonShimmerPr
   return (
     <ShimmerPlaceholder
       style={{
-        height: 48,
+        height: argument ? undefined : 48,
         minWidth: 180,
         borderRadius: 12,
         backgroundColor: argument ? 'transparent' : theme.colors.primaryContainer,
