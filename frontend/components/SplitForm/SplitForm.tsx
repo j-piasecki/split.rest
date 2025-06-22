@@ -7,7 +7,7 @@ import { ErrorText } from '@components/ErrorText'
 import { IconName } from '@components/Icon'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, StyleProp, View, ViewStyle } from 'react-native'
+import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import { GroupUserInfo, LanguageTranslationKey, UserWithDisplayName } from 'shared'
 
 export interface SplitFormProps {
@@ -63,6 +63,8 @@ export function SplitForm({
     cleanError
   )
   const { t } = useTranslation()
+
+  const flattenedStyles = StyleSheet.flatten(style) ?? {}
 
   function submit() {
     const toSave = formState.entries.filter(
@@ -141,7 +143,13 @@ export function SplitForm({
         />
       </ScrollView>
 
-      <View style={{ gap: 8 }}>
+      <View
+        style={{
+          gap: 8,
+          paddingLeft: flattenedStyles.paddingLeft,
+          paddingRight: flattenedStyles.paddingRight,
+        }}
+      >
         {error && <ErrorText>{error}</ErrorText>}
         <Button
           leftIcon={buttonIconLocation === 'left' ? buttonIcon : undefined}

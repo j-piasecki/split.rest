@@ -56,12 +56,14 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
       style={{
         flex: 1,
         paddingBottom: insets.bottom,
-        paddingLeft: insets.left + 12,
-        paddingRight: insets.right + 12,
       }}
     >
       <SplitEditForm
-        style={{ paddingTop: insets.top + 16 }}
+        style={{
+          paddingTop: insets.top + 16,
+          paddingLeft: insets.left + 12,
+          paddingRight: insets.right + 12,
+        }}
         splitInfo={splitInfo}
         groupInfo={groupInfo}
         onSubmit={save}

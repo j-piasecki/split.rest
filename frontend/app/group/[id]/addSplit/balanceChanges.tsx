@@ -78,13 +78,15 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
     <View
       style={{
         flex: 1,
-        paddingLeft: insets.left + 12,
-        paddingRight: insets.right + 12,
         paddingBottom: insets.bottom,
       }}
     >
       <SplitForm
-        style={{ paddingTop: insets.top + 16 }}
+        style={{
+          paddingTop: insets.top + 16,
+          paddingLeft: insets.left + 12,
+          paddingRight: insets.right + 12,
+        }}
         initialEntries={initialEntriesFromContext(user)}
         initialPaidByIndex={getSplitCreationContext().paidByIndex}
         initialTitle={getSplitCreationContext().title}
