@@ -1,4 +1,5 @@
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
+import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { PaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
@@ -14,11 +15,17 @@ import { invalidateGroupInvites } from '@utils/queryClient'
 import { router } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { StyleProp, View, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupInviteWithGroupInfo } from 'shared'
 
-function Invite({ invite }: { invite: GroupInviteWithGroupInfo }) {
+function Invite({
+  invite,
+  style,
+}: {
+  invite: GroupInviteWithGroupInfo
+  style?: StyleProp<ViewStyle>
+}) {
   const theme = useTheme()
   const { t } = useTranslation()
   const snack = useSnack()
@@ -29,14 +36,17 @@ function Invite({ invite }: { invite: GroupInviteWithGroupInfo }) {
 
   return (
     <View
-      style={{
-        flex: 1,
-        paddingLeft: 16,
-        paddingRight: 8,
-        paddingTop: isSmallScreen ? 16 : 20,
-        paddingBottom: 4,
-        backgroundColor: theme.colors.surfaceContainer,
-      }}
+      style={[
+        {
+          flex: 1,
+          paddingLeft: 16,
+          paddingRight: 8,
+          paddingTop: isSmallScreen ? 16 : 20,
+          paddingBottom: 4,
+          backgroundColor: theme.colors.surfaceContainer,
+        },
+        style,
+      ]}
     >
       <View
         style={{
@@ -113,18 +123,33 @@ function Invite({ invite }: { invite: GroupInviteWithGroupInfo }) {
 }
 
 function Divider() {
-  const theme = useTheme()
-  return <View style={{ width: '100%', height: 1, backgroundColor: theme.colors.outlineVariant }} />
+  return <View style={{ width: '100%', height: 2, backgroundColor: 'transparent' }} />
 }
 
 function InvitesShimmer({ count }: { count: number }) {
+  const theme = useTheme()
+
   return (
     <View style={{ width: '100%' }}>
       {new Array(count).fill(0).map((_, index) => {
         const offset = 1 - index * 0.05
         return (
           <React.Fragment key={index}>
-            <View style={{ width: '100%', padding: 16, gap: 8 }}>
+            <View
+              style={[
+                {
+                  width: '100%',
+                  padding: 16,
+                  gap: 8,
+                  backgroundColor: theme.colors.surfaceContainer,
+                  borderRadius: 4,
+                },
+                index === count - 1 && {
+                  borderBottomLeftRadius: 16,
+                  borderBottomRightRadius: 16,
+                },
+              ]}
+            >
               <Shimmer
                 offset={offset}
                 style={{
@@ -201,7 +226,18 @@ export default function Invites() {
             showBackButton
             refreshing={invitesLoading || isRefetchingInvites}
             onRefresh={refresh}
-            renderItem={({ item }) => <Invite invite={item} />}
+            renderItem={({ item, index }) => (
+              <Invite
+                invite={item}
+                style={[
+                  { borderRadius: 4 },
+                  index === invites.length - 1 && {
+                    borderBottomLeftRadius: 16,
+                    borderBottomRightRadius: 16,
+                  },
+                ]}
+              />
+            )}
             contentContainerStyle={{
               width: '100%',
               maxWidth: 768,
@@ -214,12 +250,14 @@ export default function Invites() {
             keyExtractor={(item) => `${item.groupInfo.id}-${item.rejected}`}
             ItemSeparatorComponent={Divider}
             ListHeaderComponent={
-              <View style={{ gap: 16 }}>
+              <View style={{ gap: 12 }}>
                 <View
                   style={{
                     backgroundColor: theme.colors.surfaceContainer,
-                    borderTopLeftRadius: 16,
-                    borderTopRightRadius: 16,
+                    borderRadius: 16,
+                    borderBottomLeftRadius: 4,
+                    borderBottomRightRadius: 4,
+                    marginBottom: 2,
                   }}
                 >
                   <PaneHeader
@@ -231,30 +269,10 @@ export default function Invites() {
               </View>
             }
             ListEmptyComponent={
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: theme.colors.surfaceContainer,
-                }}
-              >
-                {invitesLoading && <InvitesShimmer count={3} />}
-                {!invitesLoading && (
-                  <Text style={{ color: theme.colors.outline, fontSize: 20, paddingVertical: 32 }}>
-                    {t(invitesError ? 'home.errorLoadingInvites' : 'home.noGroupInvites')}
-                  </Text>
-                )}
-              </View>
-            }
-            ListFooterComponent={
-              <View
-                style={{
-                  height: 16,
-                  backgroundColor: theme.colors.surfaceContainer,
-                  borderBottomLeftRadius: 16,
-                  borderBottomRightRadius: 16,
-                }}
+              <ListEmptyComponent
+                isLoading={invitesLoading}
+                emptyText={t(invitesError ? 'home.errorLoadingInvites' : 'home.noGroupInvites')}
+                loadingPlaceholder={<InvitesShimmer count={3} />}
               />
             }
             onEndReached={() => {

@@ -140,99 +140,108 @@ function UserRow({
     (appUser?.id === splitInfo.paidById || appUser?.id === user.id)
 
   return (
-    <View
-      style={{
-        paddingTop: 12,
-        paddingBottom: canCompleteSplit ? 4 : 12,
-        paddingHorizontal: 16,
-        borderBottomWidth: last ? 0 : 1,
-        borderColor: theme.colors.outlineVariant,
-        gap: 4,
-      }}
-    >
+    <>
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 8,
-          opacity: user.pending ? 0.85 : 1,
-        }}
+        style={[
+          {
+            backgroundColor: theme.colors.surfaceContainer,
+            paddingTop: 12,
+            paddingBottom: canCompleteSplit ? 4 : 12,
+            paddingHorizontal: 16,
+            gap: 4,
+            borderRadius: 4,
+          },
+          last && {
+            borderBottomLeftRadius: 16,
+            borderBottomRightRadius: 16,
+          },
+        ]}
       >
-        <View>
-          <ProfilePicture userId={user.id} size={32} />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 8,
+            opacity: user.pending ? 0.85 : 1,
+          }}
+        >
+          <View>
+            <ProfilePicture userId={user.id} size={32} />
 
-          {user.pending && showCompleteButton && (
-            <View
-              style={[
-                {
-                  position: 'absolute',
-                  bottom: -6,
-                  right: -6,
-                  width: 22,
-                  height: 22,
-                  backgroundColor: theme.colors.surfaceContainerHighest,
-                  borderRadius: 11,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                },
-                styles.paneShadow,
-              ]}
+            {user.pending && showCompleteButton && (
+              <View
+                style={[
+                  {
+                    position: 'absolute',
+                    bottom: -6,
+                    right: -6,
+                    width: 22,
+                    height: 22,
+                    backgroundColor: theme.colors.surfaceContainerHighest,
+                    borderRadius: 11,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  },
+                  styles.paneShadow,
+                ]}
+              >
+                <Icon name='schedule' size={18} color={theme.colors.tertiary} />
+              </View>
+            )}
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                color: paidByThis ? theme.colors.primary : theme.colors.onSurface,
+                fontSize: 20,
+                fontWeight: paidByThis ? 700 : 400,
+              }}
             >
-              <Icon name='schedule' size={18} color={theme.colors.tertiary} />
-            </View>
-          )}
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text
-            style={{
-              color: paidByThis ? theme.colors.primary : theme.colors.onSurface,
-              fontSize: 20,
-              fontWeight: paidByThis ? 700 : 400,
-            }}
-          >
-            {user.displayName ?? user.name}
-          </Text>
-          {user.displayName && (
-            <Text style={{ color: theme.colors.outline, fontSize: 12 }}>{user.name}</Text>
-          )}
-          {(user.deleted || (!isNameUnique && user.email)) && (
-            <Text style={{ color: theme.colors.outline, fontSize: 12 }}>
-              {user.deleted ? t('deletedUser') : user.email}
+              {user.displayName ?? user.name}
             </Text>
-          )}
+            {user.displayName && (
+              <Text style={{ color: theme.colors.outline, fontSize: 12 }}>{user.name}</Text>
+            )}
+            {(user.deleted || (!isNameUnique && user.email)) && (
+              <Text style={{ color: theme.colors.outline, fontSize: 12 }}>
+                {user.deleted ? t('deletedUser') : user.email}
+              </Text>
+            )}
+          </View>
+          <PaidAmount user={user} splitInfo={splitInfo} groupInfo={groupInfo} />
         </View>
-        <PaidAmount user={user} splitInfo={splitInfo} groupInfo={groupInfo} />
-      </View>
 
-      {canCompleteSplit && (
-        <View style={{ alignItems: 'flex-end' }}>
-          <RoundIconButton
-            icon='check'
-            isLoading={isCompleting}
-            text={t('splitInfo.markCompleted')}
-            onPress={() => {
-              completeEntry(user.id)
-                .then(() => {
-                  snack.show({
-                    message: t('split.completed'),
-                    actionText: t('undo'),
-                    action: async () => {
-                      await uncompleteEntry(user.id)
-                    },
+        {canCompleteSplit && (
+          <View style={{ alignItems: 'flex-end' }}>
+            <RoundIconButton
+              icon='check'
+              isLoading={isCompleting}
+              text={t('splitInfo.markCompleted')}
+              onPress={() => {
+                completeEntry(user.id)
+                  .then(() => {
+                    snack.show({
+                      message: t('split.completed'),
+                      actionText: t('undo'),
+                      action: async () => {
+                        await uncompleteEntry(user.id)
+                      },
+                    })
                   })
-                })
-                .catch((error) => {
-                  if (isTranslatableError(error)) {
-                    alert(t(error.message, error.args))
-                  } else {
-                    alert(t('unknownError'))
-                  }
-                })
-            }}
-          />
-        </View>
-      )}
-    </View>
+                  .catch((error) => {
+                    if (isTranslatableError(error)) {
+                      alert(t(error.message, error.args))
+                    } else {
+                      alert(t('unknownError'))
+                    }
+                  })
+              }}
+            />
+          </View>
+        )}
+      </View>
+      {!last && <View style={{ height: 2, backgroundColor: 'transparent' }} />}
+    </>
   )
 }
 
@@ -585,20 +594,6 @@ export function SplitInfo({
     {} as Record<string, number>
   )
 
-  {
-    /* <Button
-  title={t('splitInfo.restoreVersion')}
-  style={{
-    marginBottom: 16,
-    marginLeft: insets.left + 12,
-    marginRight: insets.right + 12,
-  }}
-  leftIcon='undo'
-  onPress={() => restoreSplitVersion(item)}
-  isLoading={isRestoring}
-/> */
-  }
-
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -607,7 +602,7 @@ export function SplitInfo({
         onRefresh && <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
       }
     >
-      <View style={{ gap: 16 }}>
+      <View style={{ gap: 12 }}>
         <Pane
           icon='receipt'
           title={t('splitInfo.details')}
@@ -664,7 +659,7 @@ export function SplitInfo({
           icon='group'
           title={t('splitInfo.participants')}
           textLocation='start'
-          containerStyle={{ paddingBottom: 16, paddingTop: 8 }}
+          containerStyle={{ paddingBottom: 8, backgroundColor: 'transparent' }}
           style={{ overflow: 'hidden' }}
           collapsible
         >

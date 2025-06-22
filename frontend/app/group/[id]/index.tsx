@@ -12,7 +12,6 @@ import { MembersList } from '@components/groupScreen/MembersList'
 import { MembersOrderFilter } from '@components/groupScreen/MembersOrderFilter'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
-import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
@@ -117,10 +116,10 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
       applyBottomInset
       forceShowSplitsWithUser={onlyShowSplitsIfIncluded}
       headerComponent={
-        <View style={{ gap: 16 }}>
+        <View style={{ gap: 12 }}>
           <View
             style={{
-              gap: 16,
+              gap: 12,
               flexDirection: horizontalInfo ? 'row' : 'column',
               alignItems: horizontalInfo ? 'stretch' : undefined,
             }}
@@ -129,7 +128,7 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
               icon='group'
               title={t('tabs.group')}
               textLocation='start'
-              style={{ flex: 1, marginTop: horizontalInfo ? 0 : 8 }}
+              style={{ flex: 1 }}
               collapsible={hasSettingsAccess}
               collapsed={false}
               collapseIcon='settings'
@@ -154,8 +153,10 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
                 backgroundColor: theme.colors.surfaceContainer,
                 borderTopRightRadius: 16,
                 borderTopLeftRadius: 16,
+                borderBottomLeftRadius: 4,
+                borderBottomRightRadius: 4,
+                marginBottom: 2,
               },
-              styles.paneShadow,
             ]}
           >
             <PaneHeader
@@ -171,19 +172,6 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
             />
           </View>
         </View>
-      }
-      footerComponent={
-        <View
-          style={[
-            {
-              height: 16,
-              backgroundColor: theme.colors.surfaceContainer,
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            },
-            styles.paneShadow,
-          ]}
-        />
       }
     />
   )
@@ -214,7 +202,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           paddingHorizontal: 16,
           paddingBottom: 12 + insets.bottom,
           paddingTop: HEADER_HEIGHT + insets.top,
-          gap: 12,
+          gap: 8,
         }}
       >
         <View
@@ -325,7 +313,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
                 top: HEADER_HEIGHT + insets.top,
                 right: 16,
                 position: 'absolute',
-                backgroundColor: theme.colors.surfaceContainer,
+                // backgroundColor: theme.colors.surfaceContainer,
                 borderRadius: 16,
                 overflow: 'hidden',
               }}

@@ -1,6 +1,7 @@
 import { SplitRow } from './SplitRow'
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
+import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { Shimmer } from '@components/Shimmer'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
@@ -16,24 +17,31 @@ import { GroupUserInfo, SplitInfo } from 'shared'
 
 function Divider() {
   const theme = useTheme()
-  return <View style={{ width: '100%', height: 1, backgroundColor: theme.colors.outlineVariant }} />
+  return <View style={{ width: '100%', height: 2, backgroundColor: theme.colors.surface }} />
 }
 
 function SplitsShimmer({ count }: { count: number }) {
+  const theme = useTheme()
+
   return (
     <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
       {Array.from({ length: count }).map((_, index) => (
         <React.Fragment key={index}>
           <View
-            style={{
-              width: '100%',
-              height: 72,
-              gap: 8,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 16,
-            }}
+            style={[
+              {
+                width: '100%',
+                height: 72,
+                gap: 8,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 16,
+                borderRadius: 4,
+                backgroundColor: theme.colors.surfaceContainer,
+              },
+              index === count - 1 && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
+            ]}
           >
             <Shimmer
               offset={1 - index * 0.05}
@@ -73,7 +81,7 @@ export interface SplitsListProps {
   headerComponent?: React.ComponentType<any> | React.ReactElement
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   footerComponent?: React.ComponentType<any> | React.ReactElement
-  emptyComponent?: React.ReactElement
+  emptyMessage?: string
   showPullableHeader?: boolean
   hideFab?: boolean
   onRefresh?: () => void
@@ -92,7 +100,7 @@ export function SplitsList({
   footerComponent,
   showPullableHeader,
   onRefresh,
-  emptyComponent,
+  emptyMessage,
   applyBottomInset = false,
   hideFab = false,
   splits,
@@ -102,7 +110,6 @@ export function SplitsList({
   isRefetching,
   hasNextPage,
 }: SplitsListProps) {
-  const theme = useTheme()
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const displayClass = useDisplayClass()
@@ -131,28 +138,36 @@ export function SplitsList({
         contentContainerStyle={{
           maxWidth: displayClass < DisplayClass.Large ? 900 : undefined,
           width: '100%',
+          flexGrow: 1,
           alignSelf: 'center',
           paddingLeft: insets.left + (threeBarLayout ? 0 : 12),
           paddingRight: insets.right + (threeBarLayout ? 0 : 12),
           paddingBottom: 88 + (applyBottomInset ? insets.bottom : 0),
         }}
         ListEmptyComponent={
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: theme.colors.surfaceContainer,
-            }}
-          >
-            {(isLoading || !info) && <SplitsShimmer count={5} />}
-            {!isLoading && info && emptyComponent}
-          </View>
+          <ListEmptyComponent
+            isLoading={isLoading || !info}
+            emptyText={emptyMessage}
+            loadingPlaceholder={<SplitsShimmer count={5} />}
+          />
         }
         data={splits}
         onEndReachedThreshold={0.5}
         onEndReached={() => !isFetchingNextPage && hasNextPage && fetchNextPage()}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item: split }) => <SplitRow split={split} info={info} />}
+        renderItem={({ item: split, index }) => (
+          <SplitRow
+            split={split}
+            info={info}
+            style={[
+              { borderRadius: 4 },
+              index === splits.length - 1 && {
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+              },
+            ]}
+          />
+        )}
         ItemSeparatorComponent={Divider}
         ListHeaderComponent={headerComponent}
         ListFooterComponent={footerComponent}

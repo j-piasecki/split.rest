@@ -15,7 +15,7 @@ import { getSplitDisplayName } from '@utils/getSplitDisplayName'
 import { useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { StyleProp, View, ViewStyle } from 'react-native'
 import { CurrencyUtils } from 'shared'
 import { GroupUserInfo, SplitInfo, SplitType } from 'shared'
 
@@ -83,9 +83,10 @@ function StackedInfo({ split, info }: { split: SplitInfo; info: GroupUserInfo })
 export interface LoadedSplitRowProps {
   split: SplitInfo
   info: GroupUserInfo
+  style?: StyleProp<ViewStyle>
 }
 
-function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
+function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
   const theme = useTheme()
   const router = useRouter()
   const snack = useSnack()
@@ -113,15 +114,18 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
       ref={contextMenuRef}
       disabled={contextMenuDisabled}
       style={({ pressed, hovered }) => {
-        return {
-          userSelect: 'none',
-          backgroundColor:
-            pressed && permissions?.canSeeSplitDetails(split)
-              ? theme.colors.surfaceContainerHighest
-              : hovered
-                ? theme.colors.surfaceContainerHigh
-                : theme.colors.surfaceContainer,
-        }
+        return [
+          style,
+          {
+            userSelect: 'none',
+            backgroundColor:
+              pressed && permissions?.canSeeSplitDetails(split)
+                ? theme.colors.surfaceContainerHighest
+                : hovered
+                  ? theme.colors.surfaceContainerHigh
+                  : theme.colors.surfaceContainer,
+          },
+        ]
       }}
       onPress={() => {
         if (permissions?.canSeeSplitDetails(split)) {
@@ -185,7 +189,6 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
             width: '100%',
             alignSelf: 'center',
           },
-          displayClass <= DisplayClass.Medium && styles.paneShadow,
         ]}
       >
         <View style={{ marginRight: shouldUseStackedInfo ? 10 : 16 }}>
@@ -280,12 +283,13 @@ function LoadedSplitRow({ split, info }: LoadedSplitRowProps) {
 export interface SplitRowProps {
   split: SplitInfo
   info?: GroupUserInfo
+  style?: StyleProp<ViewStyle>
 }
 
-export function SplitRow({ split, info }: SplitRowProps) {
+export function SplitRow({ split, info, style }: SplitRowProps) {
   if (!info) {
     return null
   }
 
-  return <LoadedSplitRow split={split} info={info} />
+  return <LoadedSplitRow split={split} info={info} style={style} />
 }

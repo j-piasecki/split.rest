@@ -1,6 +1,5 @@
 import { Icon, IconName } from '@components/Icon'
 import { PaneHeader } from '@components/Pane'
-import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import React from 'react'
 import { Pressable } from 'react-native'
@@ -33,7 +32,6 @@ export function PaneButton({
               : theme.colors.surfaceContainer,
           borderRadius: 16,
         },
-        styles.paneShadow,
       ]}
       onPress={onPress}
     >
@@ -41,7 +39,6 @@ export function PaneButton({
         icon={icon}
         title={title}
         textLocation='start'
-        showSeparator={false}
         adjustsFontSizeToFit={adjustsFontSizeToFit}
         rightComponent={
           <>

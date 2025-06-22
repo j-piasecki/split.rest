@@ -92,11 +92,7 @@ function Roulette({ groupId, setQuery, user }: RouletteProps) {
           icon='group'
           title={t('splitInfo.participants')}
           textLocation='start'
-          containerStyle={{
-            gap: 16,
-            padding: 16,
-            paddingTop: 8,
-          }}
+          containerStyle={{ backgroundColor: 'transparent' }}
           onLayout={(e) => {
             paneLayout.current = e.nativeEvent.layout
           }}
@@ -174,7 +170,7 @@ function Result({ query, groupId, setQuery }: ResultProps) {
         }}
       >
         <Pane
-          containerStyle={{ padding: 16, paddingTop: 4 }}
+          containerStyle={{ paddingBottom: 8, backgroundColor: 'transparent' }}
           icon='listNumbered'
           title={t('roulette.result')}
           textLocation='start'
@@ -184,44 +180,57 @@ function Result({ query, groupId, setQuery }: ResultProps) {
             const balanceColor = getBalanceColor(balanceNum, theme)
 
             return (
-              <Animated.View
-                key={user.id}
-                layout={
-                  Platform.OS !== 'web'
-                    ? LinearTransition.springify()
-                        .damping(100)
-                        .stiffness(200)
-                        .delay(50 * index)
-                    : undefined
-                }
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  borderBottomWidth: index === result.length - 1 ? 0 : 1,
-                  borderColor: theme.colors.outlineVariant,
-                  paddingVertical: 16,
-                  gap: 8,
-                }}
-              >
-                <ProfilePicture userId={user.id} size={28} />
-                <View style={{ flexDirection: 'column' }}>
-                  <Text style={{ fontSize: 18, fontWeight: 800, color: theme.colors.onSurface }}>
-                    {user.displayName ?? user.name}
-                  </Text>
-
-                  {user.displayName && (
-                    <Text style={{ fontSize: 10, fontWeight: 600, color: theme.colors.outline }}>
-                      {user.name}
+              <React.Fragment key={user.id}>
+                <Animated.View
+                  layout={
+                    Platform.OS !== 'web'
+                      ? LinearTransition.springify()
+                          .damping(100)
+                          .stiffness(200)
+                          .delay(50 * index)
+                      : undefined
+                  }
+                  style={[
+                    {
+                      backgroundColor: theme.colors.surfaceContainer,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      borderRadius: 4,
+                      padding: 16,
+                      gap: 8,
+                    },
+                    index === result.length - 1 && {
+                      borderBottomLeftRadius: 16,
+                      borderBottomRightRadius: 16,
+                    },
+                  ]}
+                >
+                  <ProfilePicture userId={user.id} size={28} />
+                  <View style={{ flexDirection: 'column' }}>
+                    <Text style={{ fontSize: 18, fontWeight: 800, color: theme.colors.onSurface }}>
+                      {user.displayName ?? user.name}
                     </Text>
-                  )}
-                </View>
-                <View style={{ flex: 1 }} />
 
-                <ShimmerPlaceholder argument={user.change} shimmerStyle={{ width: 64, height: 24 }}>
-                  <Text style={{ fontSize: 18, color: balanceColor }}>{user.change}</Text>
-                </ShimmerPlaceholder>
-              </Animated.View>
+                    {user.displayName && (
+                      <Text style={{ fontSize: 10, fontWeight: 600, color: theme.colors.outline }}>
+                        {user.name}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={{ flex: 1 }} />
+
+                  <ShimmerPlaceholder
+                    argument={user.change}
+                    shimmerStyle={{ width: 64, height: 24 }}
+                  >
+                    <Text style={{ fontSize: 18, color: balanceColor }}>{user.change}</Text>
+                  </ShimmerPlaceholder>
+                </Animated.View>
+                {index !== result.length - 1 && (
+                  <View style={{ height: 2, backgroundColor: 'transparent', zIndex: -1 }} />
+                )}
+              </React.Fragment>
             )
           })}
         </Pane>

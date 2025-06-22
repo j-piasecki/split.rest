@@ -3,9 +3,10 @@ import { FormActionType, FormData } from './formData'
 import { Form } from '@components/Form'
 import { Pane } from '@components/Pane'
 import { getAllGroupMembers } from '@database/getAllGroupMembers'
+import { useTheme } from '@styling/theme'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LayoutRectangle, ScrollView } from 'react-native'
+import { LayoutRectangle, ScrollView, View } from 'react-native'
 import { GroupUserInfo, UserWithDisplayName } from 'shared'
 
 interface SplitEntriesPaneProps {
@@ -27,6 +28,7 @@ export function EntriesPane({
   showAddAllMembers = true,
   setMembers,
 }: SplitEntriesPaneProps) {
+  const theme = useTheme()
   const { t } = useTranslation()
   const layout = useRef<LayoutRectangle | null>(null)
 
@@ -39,10 +41,9 @@ export function EntriesPane({
         layout.current = event.nativeEvent.layout
       }}
       containerStyle={{
-        paddingHorizontal: 16,
-        paddingBottom: 16,
-        paddingTop: 8,
+        // paddingBottom: 16,
         overflow: 'visible',
+        backgroundColor: 'transparent',
       }}
       collapsible={showAddAllMembers}
       collapsed={false}
@@ -58,16 +59,32 @@ export function EntriesPane({
       <Form autofocus>
         {formState.entries.map((entry, index) => (
           <React.Fragment key={index}>
-            <SplitEntry
-              scrollRef={scrollRef}
-              groupId={groupInfo.id}
-              index={index}
-              formState={formState}
-              updateForm={updateForm}
-              parentLayout={layout}
-              focusIndex={index * 2}
-              showPayerSelector={showPayerSelector}
-            />
+            <View
+              style={[
+                {
+                  paddingHorizontal: 16,
+                  paddingBottom: formState.entries.length - 1 === index ? 8 : 4,
+                  backgroundColor: theme.colors.surfaceContainer,
+                  borderRadius: 4,
+                  marginBottom: 2,
+                },
+                index === formState.entries.length - 1 && {
+                  borderBottomLeftRadius: 16,
+                  borderBottomRightRadius: 16,
+                },
+              ]}
+            >
+              <SplitEntry
+                scrollRef={scrollRef}
+                groupId={groupInfo.id}
+                index={index}
+                formState={formState}
+                updateForm={updateForm}
+                parentLayout={layout}
+                focusIndex={index * 2}
+                showPayerSelector={showPayerSelector}
+              />
+            </View>
           </React.Fragment>
         ))}
       </Form>

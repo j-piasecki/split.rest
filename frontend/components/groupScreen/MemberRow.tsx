@@ -6,16 +6,14 @@ import { Text } from '@components/Text'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
-import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { StyleProp, View, ViewStyle } from 'react-native'
 import { CurrencyUtils } from 'shared'
 import { GroupUserInfo, Member } from 'shared'
 
@@ -23,6 +21,7 @@ export interface MemberRowProps {
   member: Member
   info: GroupUserInfo
   iconOnly: boolean
+  style?: StyleProp<ViewStyle>
 }
 
 function Badge({ icon }: { icon: IconName }) {
@@ -48,12 +47,11 @@ function Badge({ icon }: { icon: IconName }) {
   )
 }
 
-export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
+export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
   const router = useRouter()
   const contextMenuRef = useRef<ContextMenuRef>(null)
-  const displayClass = useDisplayClass()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info.id)
   const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(info.id, member.id)
@@ -87,14 +85,17 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
         },
       ]}
       style={({ pressed, hovered }) => {
-        return {
-          userSelect: 'none',
-          backgroundColor: pressed
-            ? theme.colors.surfaceContainerHighest
-            : hovered
-              ? theme.colors.surfaceContainerHigh
-              : theme.colors.surfaceContainer,
-        }
+        return [
+          {
+            userSelect: 'none',
+            backgroundColor: pressed
+              ? theme.colors.surfaceContainerHighest
+              : hovered
+                ? theme.colors.surfaceContainerHigh
+                : theme.colors.surfaceContainer,
+          },
+          style,
+        ]
       }}
       onPress={() => {
         router.navigate(`/group/${info.id}/member/${member.id}`)
@@ -105,13 +106,12 @@ export function MemberRow({ member, info, iconOnly }: MemberRowProps) {
         style={[
           {
             paddingVertical: 10,
-            paddingLeft: 10,
+            paddingLeft: iconOnly ? 14 : 10,
             paddingRight: hasContextActions ? 4 : 12,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
           },
-          displayClass <= DisplayClass.Medium && styles.paneShadow,
         ]}
       >
         <View

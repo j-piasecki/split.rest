@@ -2,8 +2,8 @@ import { InviteMemberFab } from './InviteMemberFab'
 import { MemberRow } from './MemberRow'
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { useFABScrollHandler } from '@components/FloatingActionButton'
+import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { Shimmer } from '@components/Shimmer'
-import { Text } from '@components/Text'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
@@ -17,24 +17,34 @@ import { GroupUserInfo } from 'shared'
 
 function Divider() {
   const theme = useTheme()
-  return <View style={{ width: '100%', height: 1, backgroundColor: theme.colors.outlineVariant }} />
+  return <View style={{ width: '100%', height: 2, backgroundColor: theme.colors.surface }} />
 }
 
 function MembersShimmer({ count, iconOnly }: { count: number; iconOnly?: boolean }) {
+  const theme = useTheme()
+
   return (
     <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
       {Array.from({ length: count }).map((_, index) => (
         <React.Fragment key={index}>
           <View
-            style={{
-              width: '100%',
-              height: 64,
-              gap: 8,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 10,
-            }}
+            style={[
+              {
+                width: '100%',
+                height: 64,
+                gap: 8,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 10,
+                backgroundColor: theme.colors.surfaceContainer,
+                borderRadius: 4,
+              },
+              index === count - 1 && {
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+              },
+            ]}
           >
             <Shimmer
               offset={1 - index * 0.05}
@@ -78,6 +88,7 @@ export interface MembersListProps {
   lowToHigh?: boolean
   iconOnly?: boolean
   applyBottomInset?: boolean
+  horizontalPadding?: number
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   headerComponent?: React.ComponentType<any> | React.ReactElement
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -90,13 +101,13 @@ export function MembersList({
   info,
   lowToHigh,
   iconOnly,
+  horizontalPadding = 0,
   headerComponent,
   footerComponent,
   applyBottomInset = false,
   showPullableHeader,
   onRefresh,
 }: MembersListProps) {
-  const theme = useTheme()
   const insets = useSafeAreaInsets()
   const threeBarLayout = useThreeBarLayout()
   const [fabRef, scrollHandler] = useFABScrollHandler()
@@ -124,34 +135,42 @@ export function MembersList({
           width: '100%',
           alignSelf: 'center',
           paddingBottom: 88 + (applyBottomInset ? insets.bottom : 0),
-          paddingHorizontal: iconOnly ? 4 : 12,
+          paddingHorizontal: horizontalPadding,
         }}
         ListEmptyComponent={
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: theme.colors.surfaceContainer,
-            }}
-          >
-            {(isLoading || !info) && (
-              <MembersShimmer count={Math.min(10, info?.memberCount ?? 10)} iconOnly={iconOnly} />
-            )}
-            {!isLoading && info && members.length === 0 && !iconOnly && (
-              <Text style={{ fontSize: 20, color: theme.colors.outline, paddingVertical: 32 }}>
-                {permissions?.canReadMembers()
+          <ListEmptyComponent
+            isLoading={isLoading || !info}
+            emptyText={
+              members.length === 0 && !iconOnly
+                ? permissions?.canReadMembers()
                   ? t('noMembers')
-                  : t('api.insufficientPermissions.group.readMembers')}
-              </Text>
-            )}
-          </View>
+                  : t('api.insufficientPermissions.group.readMembers')
+                : undefined
+            }
+            loadingPlaceholder={
+              <MembersShimmer count={Math.min(10, info?.memberCount ?? 10)} iconOnly={iconOnly} />
+            }
+          />
         }
         data={members}
         onEndReachedThreshold={0.5}
         onEndReached={() => !isFetchingNextPage && hasNextPage && fetchNextPage()}
         keyExtractor={(item) => item.id}
-        renderItem={({ item: member }) =>
-          info ? <MemberRow member={member} info={info} iconOnly={iconOnly ?? false} /> : null
+        renderItem={({ item: member, index }) =>
+          info ? (
+            <MemberRow
+              member={member}
+              info={info}
+              iconOnly={iconOnly ?? false}
+              style={[
+                { borderRadius: 4 },
+                index === members.length - 1 && {
+                  borderBottomLeftRadius: 16,
+                  borderBottomRightRadius: 16,
+                },
+              ]}
+            />
+          ) : null
         }
         ItemSeparatorComponent={iconOnly ? undefined : Divider}
         ListHeaderComponent={headerComponent}

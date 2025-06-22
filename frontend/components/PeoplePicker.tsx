@@ -162,6 +162,8 @@ export function PeoplePicker({
   parentLayout,
   scrollRef,
 }: PeoplePickerProps) {
+  const theme = useTheme()
+
   function cleanupEntries(entries: PersonEntry[]): PersonEntry[] {
     const newEntries = entries.filter(
       (entry) => entry.user !== undefined || entry.entry.trim() !== ''
@@ -185,20 +187,30 @@ export function PeoplePicker({
   }
 
   return (
-    <View style={{ gap: 8 }}>
+    <View style={{ gap: 2 }}>
       {entries.map((entry, index) => {
         return (
-          <PersonRow
-            key={index}
-            groupId={groupId}
-            entries={entries}
-            setEntries={setEntries}
-            selectable={selectable}
-            index={index}
-            entry={entry}
-            parentLayout={parentLayout}
-            scrollRef={scrollRef}
-          />
+          <View
+            style={{
+              backgroundColor: theme.colors.surfaceContainer,
+              paddingHorizontal: 16,
+              paddingTop: 4,
+              paddingBottom: entries.length - 1 === index ? 12 : 8,
+              borderRadius: 4,
+            }}
+          >
+            <PersonRow
+              key={index}
+              groupId={groupId}
+              entries={entries}
+              setEntries={setEntries}
+              selectable={selectable}
+              index={index}
+              entry={entry}
+              parentLayout={parentLayout}
+              scrollRef={scrollRef}
+            />
+          </View>
         )
       })}
     </View>

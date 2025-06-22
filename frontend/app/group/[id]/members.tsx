@@ -4,7 +4,6 @@ import { Text } from '@components/Text'
 import { MembersList } from '@components/groupScreen/MembersList'
 import { MembersOrderFilter } from '@components/groupScreen/MembersOrderFilter'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
-import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams } from 'expo-router'
@@ -31,16 +30,15 @@ function ListHeader({
           backgroundColor: theme.colors.surfaceContainer,
           borderTopLeftRadius: 16,
           borderTopRightRadius: 16,
-          borderBottomWidth: 1,
-          borderColor: theme.colors.outlineVariant,
+          borderBottomLeftRadius: 4,
+          borderBottomRightRadius: 4,
+          marginBottom: 2,
         },
-        styles.paneShadow,
       ]}
     >
       <PaneHeader
         icon='members'
         title={t('tabs.members')}
-        showSeparator={false}
         textLocation='start'
         rightComponent={
           // @ts-expect-error flex cannot really be null, but this way it can be overriden
@@ -86,22 +84,10 @@ export function GroupMembersScreen() {
         applyBottomInset
         info={groupInfo}
         lowToHigh={membersLowToHigh}
+        horizontalPadding={12}
         headerComponent={() => (
           <ListHeader onChange={setMembersLowToHigh} lowToHigh={membersLowToHigh} />
         )}
-        footerComponent={
-          <View
-            style={[
-              {
-                height: 16,
-                backgroundColor: theme.colors.surfaceContainer,
-                borderBottomLeftRadius: 16,
-                borderBottomRightRadius: 16,
-              },
-              styles.paneShadow,
-            ]}
-          />
-        }
       />
     </View>
   )
