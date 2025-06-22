@@ -132,7 +132,6 @@ export function Pane({
     <View
       onLayout={onLayout}
       style={[
-        // styles.paneShadow,
         collapsible && isCollapsed
           ? orientation === 'vertical'
             ? { width: 72 }
