@@ -3,14 +3,13 @@ import { Icon } from '@components/Icon'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
-import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { router } from 'expo-router'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { StyleProp, View, ViewStyle } from 'react-native'
 import { CurrencyUtils } from 'shared'
 import { GroupUserInfo } from 'shared'
 
@@ -18,9 +17,10 @@ export const GROUP_ROW_HEIGHT = 80
 
 export interface GroupRowProps {
   info: GroupUserInfo
+  style?: StyleProp<ViewStyle>
 }
 
-export function GroupRow({ info }: GroupRowProps) {
+export function GroupRow({ info, style }: GroupRowProps) {
   const theme = useTheme()
   const contextMenuRef = useRef<ContextMenuRef>(null)
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
@@ -52,7 +52,7 @@ export function GroupRow({ info }: GroupRowProps) {
               ? theme.colors.surfaceContainerHigh
               : theme.colors.surfaceContainer,
         },
-        styles.paneShadow,
+        style,
       ]}
     >
       <View

@@ -116,10 +116,10 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
       applyBottomInset
       forceShowSplitsWithUser={onlyShowSplitsIfIncluded}
       headerComponent={
-        <View style={{ gap: 16 }}>
+        <View style={{ gap: 12 }}>
           <View
             style={{
-              gap: 16,
+              gap: 12,
               flexDirection: horizontalInfo ? 'row' : 'column',
               alignItems: horizontalInfo ? 'stretch' : undefined,
             }}

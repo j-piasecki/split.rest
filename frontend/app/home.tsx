@@ -10,7 +10,6 @@ import { InvitationsButton } from '@components/homeScreen/InvitationsButton'
 import { useUserGroupInvites } from '@hooks/database/useUserGroupInvites'
 import { useUserGroups } from '@hooks/database/useUserGroups'
 import { useNotificationPermission } from '@hooks/useNotificationPermission'
-import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { invalidateGroupInvites, invalidateUserGroups } from '@utils/queryClient'
@@ -22,19 +21,19 @@ import { StyleProp, View, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function Divider() {
-  const theme = useTheme()
-  return <View style={{ width: '100%', height: 1, backgroundColor: theme.colors.outlineVariant }} />
+  return <View style={{ width: '100%', height: 2, backgroundColor: 'transparent' }} />
 }
 
 function GroupsShimmer({ count }: { count: number }) {
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
+  const theme = useTheme()
 
   return (
     <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
       {Array.from({ length: count }).map((_, index) => (
         <React.Fragment key={index}>
           <View
-            style={{
+            style={[{
               width: '100%',
               height: GROUP_ROW_HEIGHT,
               gap: 20,
@@ -42,7 +41,12 @@ function GroupsShimmer({ count }: { count: number }) {
               alignItems: 'center',
               justifyContent: 'space-between',
               paddingHorizontal: 16,
-            }}
+              backgroundColor: theme.colors.surfaceContainer,
+              borderRadius: 4,
+            }, index === count - 1 && {
+              borderBottomLeftRadius: 16,
+              borderBottomRightRadius: 16,
+            }]}
           >
             <Shimmer
               offset={1 - index * 0.05}
@@ -199,7 +203,13 @@ export default function Home() {
               isRefetchingHiddenGroups
             }
             onRefresh={refresh}
-            renderItem={({ item }) => <GroupRow info={item} />}
+            renderItem={({ item, index }) => <GroupRow info={item} style={[
+              { borderRadius: 4 },
+              index === visibleGroups.length - 1 && {
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+              },
+            ]} />}
             contentContainerStyle={{
               width: '100%',
               maxWidth: 768,
@@ -212,17 +222,18 @@ export default function Home() {
             scrollHandler={scrollHandler}
             ItemSeparatorComponent={Divider}
             ListHeaderComponent={
-              <View style={{ gap: 16 }}>
+              <View style={{ gap: 12 }}>
                 <InvitationsButton invites={invites} isLoadingInvites={isLoadingInvites} />
 
                 <View
                   style={[
                     {
                       backgroundColor: theme.colors.surfaceContainer,
-                      borderTopLeftRadius: 16,
-                      borderTopRightRadius: 16,
+                      borderRadius: 16,
+                      borderBottomLeftRadius: 4,
+                      borderBottomRightRadius: 4,
+                      marginBottom: 2,
                     },
-                    styles.paneShadow,
                   ]}
                 >
                   <PaneHeader
@@ -246,36 +257,31 @@ export default function Home() {
                 style={[
                   {
                     flex: 1,
+                  },
+                ]}
+              >
+                {visibleGroupsLoading && <GroupsShimmer count={5} />}
+                {!visibleGroupsLoading && (
+                  <View style={{
+                    flex: 1,
+                    width: '100%',
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: theme.colors.surfaceContainer,
-                  },
-                  styles.paneShadow,
-                ]}
-              >
-                {visibleGroupsLoading && <GroupsShimmer count={7} />}
-                {!visibleGroupsLoading && (
-                  <Text style={{ color: theme.colors.outline, fontSize: 20, paddingVertical: 32 }}>
+                    borderRadius: 4,
+                    borderBottomLeftRadius: 16,
+                    borderBottomRightRadius: 16,
+                  }}>
+                    <Text style={{ color: theme.colors.outline, fontSize: 20, paddingVertical: 32 }}>
                     {showHidden
                       ? t(hiddenGroupsError ? 'home.errorLoadingGroups' : 'home.noHiddenGroups')
                       : t(groupsError ? 'home.errorLoadingGroups' : 'home.noGroups')}
                   </Text>
+                  </View>
                 )}
               </View>
             }
-            ListFooterComponent={
-              <View
-                style={[
-                  {
-                    height: 16,
-                    backgroundColor: theme.colors.surfaceContainer,
-                    borderBottomLeftRadius: 16,
-                    borderBottomRightRadius: 16,
-                  },
-                  styles.paneShadow,
-                ]}
-              />
-            }
+
             onEndReached={() => {
               if (!showHidden && !isFetchingNextVisibleGroups && hasNextVisibleGroups) {
                 fetchNextVisibleGroups()
