@@ -144,7 +144,6 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
                 <GroupInfoCard info={info} />
               </View>
             </Pane>
-            <GroupActionButtons info={info} />
           </View>
           {(!permissions || permissions.canReadMembers()) && <MembersButton info={info} />}
           <View
