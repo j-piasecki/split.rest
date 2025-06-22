@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import { useFABScrollHandler } from '@components/FloatingActionButton'
+import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import ModalScreen from '@components/ModalScreen'
 import { Pane, PaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
@@ -278,10 +279,10 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
           </View>
         }
         ListEmptyComponent={
-          <View
-          >
-            {/* TODO: shimmer */}
-            {isLoading && <View style={{
+          <ListEmptyComponent
+            isLoading={isLoading}
+            emptyText={t('settings.invitations.noInvitations')}
+            loadingPlaceholder={<View style={{
               backgroundColor: theme.colors.surfaceContainer,
               borderRadius: 4,
               paddingHorizontal: 16,
@@ -291,29 +292,9 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
             }}>
               <ActivityIndicator color={theme.colors.primary} />
               </View>}
-            {!isLoading && (
-              <View style={{
-                backgroundColor: theme.colors.surfaceContainer,
-                borderRadius: 4,
-                paddingHorizontal: 16,
-                paddingVertical: 32,
-                borderBottomLeftRadius: 16,
-                borderBottomRightRadius: 16,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  color: theme.colors.outline,
-                  fontSize: 20,
-                  textAlign: 'center',
-                }}
-              >
-                {t('settings.invitations.noInvitations')}
-              </Text>
-              </View>
-            )}
-          </View>
+          />
+
+         
         }
         onScroll={scrollHandler}
         onScrollBeginDrag={scrollHandler}

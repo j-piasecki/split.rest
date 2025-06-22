@@ -1,10 +1,10 @@
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
+import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { PaneHeader } from '@components/Pane'
 import { SegmentedButton } from '@components/SegmentedButton'
 import { Shimmer } from '@components/Shimmer'
 import { useSnack } from '@components/SnackBar'
-import { Text } from '@components/Text'
 import { GROUP_ROW_HEIGHT, GroupRow } from '@components/homeScreen/GroupRow'
 import { InvitationsButton } from '@components/homeScreen/InvitationsButton'
 import { useUserGroupInvites } from '@hooks/database/useUserGroupInvites'
@@ -253,33 +253,13 @@ export default function Home() {
               </View>
             }
             ListEmptyComponent={
-              <View
-                style={[
-                  {
-                    flex: 1,
-                  },
-                ]}
-              >
-                {visibleGroupsLoading && <GroupsShimmer count={5} />}
-                {!visibleGroupsLoading && (
-                  <View style={{
-                    flex: 1,
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: theme.colors.surfaceContainer,
-                    borderRadius: 4,
-                    borderBottomLeftRadius: 16,
-                    borderBottomRightRadius: 16,
-                  }}>
-                    <Text style={{ color: theme.colors.outline, fontSize: 20, paddingVertical: 32 }}>
-                    {showHidden
-                      ? t(hiddenGroupsError ? 'home.errorLoadingGroups' : 'home.noHiddenGroups')
-                      : t(groupsError ? 'home.errorLoadingGroups' : 'home.noGroups')}
-                  </Text>
-                  </View>
-                )}
-              </View>
+              <ListEmptyComponent
+                isLoading={showHidden ? hiddenGroupsLoading : visibleGroupsLoading}
+                emptyText={showHidden
+                  ? t(hiddenGroupsError ? 'home.errorLoadingGroups' : 'home.noHiddenGroups')
+                  : t(groupsError ? 'home.errorLoadingGroups' : 'home.noGroups')}
+                loadingPlaceholder={<GroupsShimmer count={5} />}
+              />
             }
 
             onEndReached={() => {

@@ -1,4 +1,5 @@
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
+import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { PaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
@@ -242,31 +243,7 @@ export default function Invites() {
                 </View>
               </View>
             }
-            ListEmptyComponent={
-              <View
-                style={{
-                  flex: 1,
-                }}
-              >
-                {invitesLoading && <InvitesShimmer count={3} />}
-                {!invitesLoading && (
-                  <View style={{
-                    flex: 1,
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: theme.colors.surfaceContainer,
-                    borderRadius: 4,
-                    borderBottomLeftRadius: 16,
-                    borderBottomRightRadius: 16,
-                  }}>
-                  <Text style={{ color: theme.colors.outline, fontSize: 20, paddingVertical: 32 }}>
-                    {t(invitesError ? 'home.errorLoadingInvites' : 'home.noGroupInvites')}
-                  </Text>
-                  </View>
-                )}
-              </View>
-            }
+            ListEmptyComponent={<ListEmptyComponent isLoading={invitesLoading} emptyText={t(invitesError ? 'home.errorLoadingInvites' : 'home.noGroupInvites')} loadingPlaceholder={<InvitesShimmer count={3} />} />}
             onEndReached={() => {
               if (!isFetchingNextInvites && hasNextInvites) {
                 getchNextInvites()

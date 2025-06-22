@@ -1,6 +1,7 @@
 import { SplitRow } from './SplitRow'
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
+import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { Shimmer } from '@components/Shimmer'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
@@ -80,7 +81,7 @@ export interface SplitsListProps {
   headerComponent?: React.ComponentType<any> | React.ReactElement
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   footerComponent?: React.ComponentType<any> | React.ReactElement
-  emptyComponent?: React.ReactElement
+  emptyMessage?: string
   showPullableHeader?: boolean
   hideFab?: boolean
   onRefresh?: () => void
@@ -99,7 +100,7 @@ export function SplitsList({
   footerComponent,
   showPullableHeader,
   onRefresh,
-  emptyComponent,
+  emptyMessage,
   applyBottomInset = false,
   hideFab = false,
   splits,
@@ -109,7 +110,6 @@ export function SplitsList({
   isRefetching,
   hasNextPage,
 }: SplitsListProps) {
-  const theme = useTheme()
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const displayClass = useDisplayClass()
@@ -145,30 +145,11 @@ export function SplitsList({
           paddingBottom: 88 + (applyBottomInset ? insets.bottom : 0),
         }}
         ListEmptyComponent={
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            {(isLoading || !info) && <SplitsShimmer count={5} />}
-            {!isLoading && info && (
-              <View
-                style={{
-                  flex: 1,
-                  width: '100%',
-                  backgroundColor: theme.colors.surfaceContainer,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 4,
-                  borderBottomLeftRadius: 16,
-                  borderBottomRightRadius: 16,
-                }}
-              >
-                {emptyComponent}
-              </View>
-            )}
-          </View>
+          <ListEmptyComponent
+            isLoading={isLoading || !info}
+            emptyText={emptyMessage}
+            loadingPlaceholder={<SplitsShimmer count={5} />}
+          />
         }
         data={splits}
         onEndReachedThreshold={0.5}

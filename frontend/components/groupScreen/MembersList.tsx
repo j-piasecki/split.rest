@@ -2,8 +2,8 @@ import { InviteMemberFab } from './InviteMemberFab'
 import { MemberRow } from './MemberRow'
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { useFABScrollHandler } from '@components/FloatingActionButton'
+import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { Shimmer } from '@components/Shimmer'
-import { Text } from '@components/Text'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
@@ -105,7 +105,6 @@ export function MembersList({
   showPullableHeader,
   onRefresh,
 }: MembersListProps) {
-  const theme = useTheme()
   const insets = useSafeAreaInsets()
   const threeBarLayout = useThreeBarLayout()
   const [fabRef, scrollHandler] = useFABScrollHandler()
@@ -136,29 +135,14 @@ export function MembersList({
           paddingHorizontal: horizontalPadding,
         }}
         ListEmptyComponent={
-          <View
-          >
-            {(isLoading || !info) && (
-              <MembersShimmer count={Math.min(10, info?.memberCount ?? 10)} iconOnly={iconOnly} />
-            )}
-            {!isLoading && info && members.length === 0 && !iconOnly && (
-              <View style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: theme.colors.surfaceContainer,
-                borderRadius: 4,
-                borderBottomLeftRadius: 16,
-                borderBottomRightRadius: 16,
-              }}>
-                <Text style={{ fontSize: 20, color: theme.colors.outline, paddingVertical: 32 }}>
-                {permissions?.canReadMembers()
-                  ? t('noMembers')
-                  : t('api.insufficientPermissions.group.readMembers')}
-              </Text>
-              </View>
-            )}
-          </View>
+          <ListEmptyComponent
+            isLoading={isLoading || !info}
+            emptyText={members.length === 0 && !iconOnly ? (permissions?.canReadMembers()
+              ? t('noMembers')
+              : t('api.insufficientPermissions.group.readMembers')) : undefined}
+            loadingPlaceholder={<MembersShimmer count={Math.min(10, info?.memberCount ?? 10)} iconOnly={iconOnly} />}
+          />
+          
         }
         data={members}
         onEndReachedThreshold={0.5}

@@ -1,8 +1,6 @@
 import { SplitsList, SplitsListProps } from './SplitsList'
-import { Text } from '@components/Text'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useGroupSplits } from '@hooks/database/useGroupSplits'
-import { useTheme } from '@styling/theme'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { SplitPermissionType } from 'shared'
@@ -16,7 +14,6 @@ export interface GroupSplitsListProps
 }
 
 export function GroupSplitsList(props: GroupSplitsListProps) {
-  const theme = useTheme()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(props.info?.id)
 
@@ -37,17 +34,14 @@ export function GroupSplitsList(props: GroupSplitsListProps) {
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
       hasNextPage={hasNextPage}
-      emptyComponent={
-        <Text style={{ fontSize: 20, color: theme.colors.outline, paddingVertical: 32 }}>
-          {permissions?.canReadSplits() === SplitPermissionType.None
+      emptyMessage={
+          permissions?.canReadSplits() === SplitPermissionType.None
             ? t('api.insufficientPermissions.group.readSplits')
             : permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
               ? t('splitList.noAccessibleSplits')
               : props.forceShowSplitsWithUser
                 ? t('splitList.noSplitsWhereIncluded')
-                : t('splitList.noSplits')}
-        </Text>
-      }
+                : t('splitList.noSplits')      }
     />
   )
 }
