@@ -111,7 +111,7 @@ export default function Modal() {
             flexGrow: 1,
             paddingTop: insets.top + 16,
             paddingBottom: 16,
-            gap: 16,
+            gap: 12,
           }}
         >
           <Pane

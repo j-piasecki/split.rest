@@ -140,15 +140,19 @@ function UserRow({
     (appUser?.id === splitInfo.paidById || appUser?.id === user.id)
 
   return (
+    <>
     <View
-      style={{
+      style={[{
+        backgroundColor: theme.colors.surfaceContainer,
         paddingTop: 12,
         paddingBottom: canCompleteSplit ? 4 : 12,
         paddingHorizontal: 16,
-        borderBottomWidth: last ? 0 : 1,
-        borderColor: theme.colors.outlineVariant,
         gap: 4,
-      }}
+        borderRadius: 4,
+      }, last && {
+        borderBottomLeftRadius: 16,
+        borderBottomRightRadius: 16,
+      }]}
     >
       <View
         style={{
@@ -233,6 +237,8 @@ function UserRow({
         </View>
       )}
     </View>
+    {!last && <View style={{ height: 2, backgroundColor: 'transparent' }} />}
+    </>
   )
 }
 
@@ -585,20 +591,6 @@ export function SplitInfo({
     {} as Record<string, number>
   )
 
-  {
-    /* <Button
-  title={t('splitInfo.restoreVersion')}
-  style={{
-    marginBottom: 16,
-    marginLeft: insets.left + 12,
-    marginRight: insets.right + 12,
-  }}
-  leftIcon='undo'
-  onPress={() => restoreSplitVersion(item)}
-  isLoading={isRestoring}
-/> */
-  }
-
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -607,7 +599,7 @@ export function SplitInfo({
         onRefresh && <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
       }
     >
-      <View style={{ gap: 16 }}>
+      <View style={{ gap: 12 }}>
         <Pane
           icon='receipt'
           title={t('splitInfo.details')}
@@ -664,7 +656,7 @@ export function SplitInfo({
           icon='group'
           title={t('splitInfo.participants')}
           textLocation='start'
-          containerStyle={{ paddingBottom: 16, paddingTop: 8 }}
+          containerStyle={{ paddingBottom: 8, backgroundColor: 'transparent' }}
           style={{ overflow: 'hidden' }}
           collapsible
         >

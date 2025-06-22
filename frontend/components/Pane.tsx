@@ -197,7 +197,6 @@ export function Pane({
       <Pressable
         disabled={!isCollapsed || !collapsible}
         style={[
-          containerStyle,
           {
             backgroundColor: theme.colors.surfaceContainer,
             borderRadius: 16,
@@ -205,6 +204,7 @@ export function Pane({
             borderTopRightRadius: 4,
             overflow: 'hidden',
           },
+          containerStyle,
         ]}
         onPress={() => {
           setInnerCollapsed(false)

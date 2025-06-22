@@ -174,7 +174,7 @@ function Result({ query, groupId, setQuery }: ResultProps) {
         }}
       >
         <Pane
-          containerStyle={{ padding: 16, paddingTop: 4 }}
+          containerStyle={{ paddingBottom: 8, backgroundColor: 'transparent' }}
           icon='listNumbered'
           title={t('roulette.result')}
           textLocation='start'
@@ -184,8 +184,8 @@ function Result({ query, groupId, setQuery }: ResultProps) {
             const balanceColor = getBalanceColor(balanceNum, theme)
 
             return (
+              <React.Fragment key={user.id}>
               <Animated.View
-                key={user.id}
                 layout={
                   Platform.OS !== 'web'
                     ? LinearTransition.springify()
@@ -194,15 +194,18 @@ function Result({ query, groupId, setQuery }: ResultProps) {
                         .delay(50 * index)
                     : undefined
                 }
-                style={{
+                style={[{
+                  backgroundColor: theme.colors.surfaceContainer,
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  borderBottomWidth: index === result.length - 1 ? 0 : 1,
-                  borderColor: theme.colors.outlineVariant,
-                  paddingVertical: 16,
+                  borderRadius: 4,
+                  padding: 16,
                   gap: 8,
-                }}
+                }, index === result.length - 1 && {
+                  borderBottomLeftRadius: 16,
+                  borderBottomRightRadius: 16,
+                }]}
               >
                 <ProfilePicture userId={user.id} size={28} />
                 <View style={{ flexDirection: 'column' }}>
@@ -222,6 +225,8 @@ function Result({ query, groupId, setQuery }: ResultProps) {
                   <Text style={{ fontSize: 18, color: balanceColor }}>{user.change}</Text>
                 </ShimmerPlaceholder>
               </Animated.View>
+              {index !== result.length - 1 && <View style={{ height: 2, backgroundColor: 'transparent', zIndex: -1 }} />}
+              </React.Fragment>
             )
           })}
         </Pane>
