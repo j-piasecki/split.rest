@@ -17,7 +17,6 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useInviteUserToGroupMutation } from '@hooks/database/useInviteUserToGroup'
 import { useSetInviteWithdrawnMutation } from '@hooks/database/useInviteWithdrawnMutation'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
-import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { GroupPermissions } from '@utils/GroupPermissions'
 import { ApiError } from '@utils/makeApiRequest'
@@ -26,7 +25,7 @@ import * as Clipboard from 'expo-clipboard'
 import { useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, FlatList, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleProp, View, ViewStyle } from 'react-native'
 import { GroupInviteWithInvitee, GroupUserInfo } from 'shared'
 
 function JoinLinkManager({
@@ -102,12 +101,14 @@ function InviteRow({
   permissions,
   showSeparator,
   manageOnlyOwnInvites,
+  style,
 }: {
   invite: GroupInviteWithInvitee
   info: GroupUserInfo
   permissions: GroupPermissions
   showSeparator: boolean
   manageOnlyOwnInvites: boolean
+  style?: StyleProp<ViewStyle>
 }) {
   const theme = useTheme()
   const snack = useSnack()
@@ -132,11 +133,10 @@ function InviteRow({
           padding: 16,
           paddingBottom: 48,
           backgroundColor: theme.colors.surfaceContainer,
-          borderBottomWidth: showSeparator ? 1 : 0,
-          borderColor: theme.colors.outlineVariant,
           gap: 8,
+          marginBottom: showSeparator ? 2 : 0,
         },
-        styles.paneShadow,
+        style,
       ]}
     >
       <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
@@ -242,6 +242,10 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
             permissions={permissions}
             showSeparator={index !== invites.length - 1}
             manageOnlyOwnInvites={manageOnlyOwnInvites}
+            style={[{borderRadius: 4}, index === invites.length - 1 && {
+              borderBottomLeftRadius: 16,
+              borderBottomRightRadius: 16,
+            }]}
           />
         )}
         onRefresh={refresh}
@@ -250,7 +254,7 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
         onEndReached={() => !isFetchingNextPage && hasNextPage && fetchNextPage()}
         keyExtractor={(item) => item.invitee.id}
         ListHeaderComponent={
-          <View style={{ gap: 16 }}>
+          <View style={{ gap: 12 }}>
             {permissions?.canSeeJoinLink() && (
               <JoinLinkManager info={info} permissions={permissions} />
             )}
@@ -258,10 +262,11 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
               style={[
                 {
                   backgroundColor: theme.colors.surfaceContainer,
-                  borderTopRightRadius: 16,
-                  borderTopLeftRadius: 16,
+                  borderRadius: 16,
+                  borderBottomLeftRadius: 4,
+                  borderBottomRightRadius: 4,
+                  marginBottom: 2,
                 },
-                styles.paneShadow,
               ]}
             >
               <PaneHeader
@@ -272,35 +277,31 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
             </View>
           </View>
         }
-        ListFooterComponent={
-          <View
-            style={[
-              {
-                height: 16,
-                backgroundColor: theme.colors.surfaceContainer,
-                borderBottomLeftRadius: 16,
-                borderBottomRightRadius: 16,
-              },
-              styles.paneShadow,
-            ]}
-          />
-        }
         ListEmptyComponent={
           <View
-            style={[
-              {
-                backgroundColor: theme.colors.surfaceContainer,
-                paddingHorizontal: 16,
-                paddingVertical: 32,
-                alignItems: 'center',
-                justifyContent: 'center',
-              },
-              styles.paneShadow,
-            ]}
           >
             {/* TODO: shimmer */}
-            {isLoading && <ActivityIndicator color={theme.colors.primary} />}
+            {isLoading && <View style={{
+              backgroundColor: theme.colors.surfaceContainer,
+              borderRadius: 4,
+              paddingHorizontal: 16,
+              paddingVertical: 32,
+              borderBottomLeftRadius: 16,
+              borderBottomRightRadius: 16,
+            }}>
+              <ActivityIndicator color={theme.colors.primary} />
+              </View>}
             {!isLoading && (
+              <View style={{
+                backgroundColor: theme.colors.surfaceContainer,
+                borderRadius: 4,
+                paddingHorizontal: 16,
+                paddingVertical: 32,
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
               <Text
                 style={{
                   color: theme.colors.outline,
@@ -310,6 +311,7 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
               >
                 {t('settings.invitations.noInvitations')}
               </Text>
+              </View>
             )}
           </View>
         }
