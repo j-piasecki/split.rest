@@ -28,20 +28,23 @@ function MembersShimmer({ count, iconOnly }: { count: number; iconOnly?: boolean
       {Array.from({ length: count }).map((_, index) => (
         <React.Fragment key={index}>
           <View
-            style={[{
-              width: '100%',
-              height: 64,
-              gap: 8,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 10,
-              backgroundColor: theme.colors.surfaceContainer,
-              borderRadius: 4,
-            }, index === count - 1 && {
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            }]}
+            style={[
+              {
+                width: '100%',
+                height: 64,
+                gap: 8,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 10,
+                backgroundColor: theme.colors.surfaceContainer,
+                borderRadius: 4,
+              },
+              index === count - 1 && {
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+              },
+            ]}
           >
             <Shimmer
               offset={1 - index * 0.05}
@@ -137,25 +140,37 @@ export function MembersList({
         ListEmptyComponent={
           <ListEmptyComponent
             isLoading={isLoading || !info}
-            emptyText={members.length === 0 && !iconOnly ? (permissions?.canReadMembers()
-              ? t('noMembers')
-              : t('api.insufficientPermissions.group.readMembers')) : undefined}
-            loadingPlaceholder={<MembersShimmer count={Math.min(10, info?.memberCount ?? 10)} iconOnly={iconOnly} />}
+            emptyText={
+              members.length === 0 && !iconOnly
+                ? permissions?.canReadMembers()
+                  ? t('noMembers')
+                  : t('api.insufficientPermissions.group.readMembers')
+                : undefined
+            }
+            loadingPlaceholder={
+              <MembersShimmer count={Math.min(10, info?.memberCount ?? 10)} iconOnly={iconOnly} />
+            }
           />
-          
         }
         data={members}
         onEndReachedThreshold={0.5}
         onEndReached={() => !isFetchingNextPage && hasNextPage && fetchNextPage()}
         keyExtractor={(item) => item.id}
         renderItem={({ item: member, index }) =>
-          info ? <MemberRow member={member} info={info} iconOnly={iconOnly ?? false} style={[
-            { borderRadius: 4 },
-            index === members.length - 1 && {
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            },
-          ]} /> : null
+          info ? (
+            <MemberRow
+              member={member}
+              info={info}
+              iconOnly={iconOnly ?? false}
+              style={[
+                { borderRadius: 4 },
+                index === members.length - 1 && {
+                  borderBottomLeftRadius: 16,
+                  borderBottomRightRadius: 16,
+                },
+              ]}
+            />
+          ) : null
         }
         ItemSeparatorComponent={iconOnly ? undefined : Divider}
         ListHeaderComponent={headerComponent}

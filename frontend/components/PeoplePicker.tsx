@@ -190,24 +190,26 @@ export function PeoplePicker({
     <View style={{ gap: 2 }}>
       {entries.map((entry, index) => {
         return (
-          <View style={{
-            backgroundColor: theme.colors.surfaceContainer,
-            paddingHorizontal: 16,
-            paddingTop: 4,
-            paddingBottom: entries.length - 1 === index ? 12 : 8,
-            borderRadius: 4,
-          }}>
-          <PersonRow
-            key={index}
-            groupId={groupId}
-            entries={entries}
-            setEntries={setEntries}
-            selectable={selectable}
-            index={index}
-            entry={entry}
-            parentLayout={parentLayout}
-            scrollRef={scrollRef}
-          />
+          <View
+            style={{
+              backgroundColor: theme.colors.surfaceContainer,
+              paddingHorizontal: 16,
+              paddingTop: 4,
+              paddingBottom: entries.length - 1 === index ? 12 : 8,
+              borderRadius: 4,
+            }}
+          >
+            <PersonRow
+              key={index}
+              groupId={groupId}
+              entries={entries}
+              setEntries={setEntries}
+              selectable={selectable}
+              index={index}
+              entry={entry}
+              parentLayout={parentLayout}
+              scrollRef={scrollRef}
+            />
           </View>
         )
       })}

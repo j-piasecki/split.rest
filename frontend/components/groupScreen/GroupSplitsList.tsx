@@ -35,13 +35,14 @@ export function GroupSplitsList(props: GroupSplitsListProps) {
       fetchNextPage={fetchNextPage}
       hasNextPage={hasNextPage}
       emptyMessage={
-          permissions?.canReadSplits() === SplitPermissionType.None
-            ? t('api.insufficientPermissions.group.readSplits')
-            : permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
-              ? t('splitList.noAccessibleSplits')
-              : props.forceShowSplitsWithUser
-                ? t('splitList.noSplitsWhereIncluded')
-                : t('splitList.noSplits')      }
+        permissions?.canReadSplits() === SplitPermissionType.None
+          ? t('api.insufficientPermissions.group.readSplits')
+          : permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
+            ? t('splitList.noAccessibleSplits')
+            : props.forceShowSplitsWithUser
+              ? t('splitList.noSplitsWhereIncluded')
+              : t('splitList.noSplits')
+      }
     />
   )
 }

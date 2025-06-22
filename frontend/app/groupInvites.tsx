@@ -19,7 +19,13 @@ import { StyleProp, View, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupInviteWithGroupInfo } from 'shared'
 
-function Invite({ invite, style }: { invite: GroupInviteWithGroupInfo, style?: StyleProp<ViewStyle> }) {
+function Invite({
+  invite,
+  style,
+}: {
+  invite: GroupInviteWithGroupInfo
+  style?: StyleProp<ViewStyle>
+}) {
   const theme = useTheme()
   const { t } = useTranslation()
   const snack = useSnack()
@@ -30,14 +36,17 @@ function Invite({ invite, style }: { invite: GroupInviteWithGroupInfo, style?: S
 
   return (
     <View
-      style={[{
-        flex: 1,
-        paddingLeft: 16,
-        paddingRight: 8,
-        paddingTop: isSmallScreen ? 16 : 20,
-        paddingBottom: 4,
-        backgroundColor: theme.colors.surfaceContainer,
-      }, style]}
+      style={[
+        {
+          flex: 1,
+          paddingLeft: 16,
+          paddingRight: 8,
+          paddingTop: isSmallScreen ? 16 : 20,
+          paddingBottom: 4,
+          backgroundColor: theme.colors.surfaceContainer,
+        },
+        style,
+      ]}
     >
       <View
         style={{
@@ -126,10 +135,21 @@ function InvitesShimmer({ count }: { count: number }) {
         const offset = 1 - index * 0.05
         return (
           <React.Fragment key={index}>
-            <View style={[{ width: '100%', padding: 16, gap: 8, backgroundColor: theme.colors.surfaceContainer, borderRadius: 4 }, index === count - 1 && {
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            }]}>
+            <View
+              style={[
+                {
+                  width: '100%',
+                  padding: 16,
+                  gap: 8,
+                  backgroundColor: theme.colors.surfaceContainer,
+                  borderRadius: 4,
+                },
+                index === count - 1 && {
+                  borderBottomLeftRadius: 16,
+                  borderBottomRightRadius: 16,
+                },
+              ]}
+            >
               <Shimmer
                 offset={offset}
                 style={{
@@ -206,13 +226,18 @@ export default function Invites() {
             showBackButton
             refreshing={invitesLoading || isRefetchingInvites}
             onRefresh={refresh}
-            renderItem={({ item, index }) => <Invite invite={item} style={[
-              { borderRadius: 4 },
-              index === invites.length - 1 && {
-                borderBottomLeftRadius: 16,
-                borderBottomRightRadius: 16,
-              },
-            ]} />}
+            renderItem={({ item, index }) => (
+              <Invite
+                invite={item}
+                style={[
+                  { borderRadius: 4 },
+                  index === invites.length - 1 && {
+                    borderBottomLeftRadius: 16,
+                    borderBottomRightRadius: 16,
+                  },
+                ]}
+              />
+            )}
             contentContainerStyle={{
               width: '100%',
               maxWidth: 768,
@@ -243,7 +268,13 @@ export default function Invites() {
                 </View>
               </View>
             }
-            ListEmptyComponent={<ListEmptyComponent isLoading={invitesLoading} emptyText={t(invitesError ? 'home.errorLoadingInvites' : 'home.noGroupInvites')} loadingPlaceholder={<InvitesShimmer count={3} />} />}
+            ListEmptyComponent={
+              <ListEmptyComponent
+                isLoading={invitesLoading}
+                emptyText={t(invitesError ? 'home.errorLoadingInvites' : 'home.noGroupInvites')}
+                loadingPlaceholder={<InvitesShimmer count={3} />}
+              />
+            }
             onEndReached={() => {
               if (!isFetchingNextInvites && hasNextInvites) {
                 getchNextInvites()

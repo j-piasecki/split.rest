@@ -117,14 +117,14 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
         return [
           style,
           {
-          userSelect: 'none',
-          backgroundColor:
-            pressed && permissions?.canSeeSplitDetails(split)
-              ? theme.colors.surfaceContainerHighest
-              : hovered
-                ? theme.colors.surfaceContainerHigh
-                : theme.colors.surfaceContainer,
-          }
+            userSelect: 'none',
+            backgroundColor:
+              pressed && permissions?.canSeeSplitDetails(split)
+                ? theme.colors.surfaceContainerHighest
+                : hovered
+                  ? theme.colors.surfaceContainerHigh
+                  : theme.colors.surfaceContainer,
+          },
         ]
       }}
       onPress={() => {

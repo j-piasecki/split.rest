@@ -156,13 +156,17 @@ export function SplitsList({
         onEndReached={() => !isFetchingNextPage && hasNextPage && fetchNextPage()}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item: split, index }) => (
-            <SplitRow split={split} info={info} style={[
+          <SplitRow
+            split={split}
+            info={info}
+            style={[
               { borderRadius: 4 },
               index === splits.length - 1 && {
                 borderBottomLeftRadius: 16,
                 borderBottomRightRadius: 16,
               },
-            ]} />
+            ]}
+          />
         )}
         ItemSeparatorComponent={Divider}
         ListHeaderComponent={headerComponent}

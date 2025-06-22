@@ -85,14 +85,17 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
         },
       ]}
       style={({ pressed, hovered }) => {
-        return [{
-          userSelect: 'none',
-          backgroundColor: pressed
-            ? theme.colors.surfaceContainerHighest
-            : hovered
-              ? theme.colors.surfaceContainerHigh
-              : theme.colors.surfaceContainer,
-        }, style]
+        return [
+          {
+            userSelect: 'none',
+            backgroundColor: pressed
+              ? theme.colors.surfaceContainerHighest
+              : hovered
+                ? theme.colors.surfaceContainerHigh
+                : theme.colors.surfaceContainer,
+          },
+          style,
+        ]
       }}
       onPress={() => {
         router.navigate(`/group/${info.id}/member/${member.id}`)

@@ -243,10 +243,13 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
             permissions={permissions}
             showSeparator={index !== invites.length - 1}
             manageOnlyOwnInvites={manageOnlyOwnInvites}
-            style={[{borderRadius: 4}, index === invites.length - 1 && {
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            }]}
+            style={[
+              { borderRadius: 4 },
+              index === invites.length - 1 && {
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+              },
+            ]}
           />
         )}
         onRefresh={refresh}
@@ -282,19 +285,21 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
           <ListEmptyComponent
             isLoading={isLoading}
             emptyText={t('settings.invitations.noInvitations')}
-            loadingPlaceholder={<View style={{
-              backgroundColor: theme.colors.surfaceContainer,
-              borderRadius: 4,
-              paddingHorizontal: 16,
-              paddingVertical: 32,
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            }}>
-              <ActivityIndicator color={theme.colors.primary} />
-              </View>}
+            loadingPlaceholder={
+              <View
+                style={{
+                  backgroundColor: theme.colors.surfaceContainer,
+                  borderRadius: 4,
+                  paddingHorizontal: 16,
+                  paddingVertical: 32,
+                  borderBottomLeftRadius: 16,
+                  borderBottomRightRadius: 16,
+                }}
+              >
+                <ActivityIndicator color={theme.colors.primary} />
+              </View>
+            }
           />
-
-         
         }
         onScroll={scrollHandler}
         onScrollBeginDrag={scrollHandler}

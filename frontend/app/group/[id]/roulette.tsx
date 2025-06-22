@@ -181,47 +181,55 @@ function Result({ query, groupId, setQuery }: ResultProps) {
 
             return (
               <React.Fragment key={user.id}>
-              <Animated.View
-                layout={
-                  Platform.OS !== 'web'
-                    ? LinearTransition.springify()
-                        .damping(100)
-                        .stiffness(200)
-                        .delay(50 * index)
-                    : undefined
-                }
-                style={[{
-                  backgroundColor: theme.colors.surfaceContainer,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  borderRadius: 4,
-                  padding: 16,
-                  gap: 8,
-                }, index === result.length - 1 && {
-                  borderBottomLeftRadius: 16,
-                  borderBottomRightRadius: 16,
-                }]}
-              >
-                <ProfilePicture userId={user.id} size={28} />
-                <View style={{ flexDirection: 'column' }}>
-                  <Text style={{ fontSize: 18, fontWeight: 800, color: theme.colors.onSurface }}>
-                    {user.displayName ?? user.name}
-                  </Text>
-
-                  {user.displayName && (
-                    <Text style={{ fontSize: 10, fontWeight: 600, color: theme.colors.outline }}>
-                      {user.name}
+                <Animated.View
+                  layout={
+                    Platform.OS !== 'web'
+                      ? LinearTransition.springify()
+                          .damping(100)
+                          .stiffness(200)
+                          .delay(50 * index)
+                      : undefined
+                  }
+                  style={[
+                    {
+                      backgroundColor: theme.colors.surfaceContainer,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      borderRadius: 4,
+                      padding: 16,
+                      gap: 8,
+                    },
+                    index === result.length - 1 && {
+                      borderBottomLeftRadius: 16,
+                      borderBottomRightRadius: 16,
+                    },
+                  ]}
+                >
+                  <ProfilePicture userId={user.id} size={28} />
+                  <View style={{ flexDirection: 'column' }}>
+                    <Text style={{ fontSize: 18, fontWeight: 800, color: theme.colors.onSurface }}>
+                      {user.displayName ?? user.name}
                     </Text>
-                  )}
-                </View>
-                <View style={{ flex: 1 }} />
 
-                <ShimmerPlaceholder argument={user.change} shimmerStyle={{ width: 64, height: 24 }}>
-                  <Text style={{ fontSize: 18, color: balanceColor }}>{user.change}</Text>
-                </ShimmerPlaceholder>
-              </Animated.View>
-              {index !== result.length - 1 && <View style={{ height: 2, backgroundColor: 'transparent', zIndex: -1 }} />}
+                    {user.displayName && (
+                      <Text style={{ fontSize: 10, fontWeight: 600, color: theme.colors.outline }}>
+                        {user.name}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={{ flex: 1 }} />
+
+                  <ShimmerPlaceholder
+                    argument={user.change}
+                    shimmerStyle={{ width: 64, height: 24 }}
+                  >
+                    <Text style={{ fontSize: 18, color: balanceColor }}>{user.change}</Text>
+                  </ShimmerPlaceholder>
+                </Animated.View>
+                {index !== result.length - 1 && (
+                  <View style={{ height: 2, backgroundColor: 'transparent', zIndex: -1 }} />
+                )}
               </React.Fragment>
             )
           })}

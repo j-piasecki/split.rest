@@ -33,20 +33,23 @@ function GroupsShimmer({ count }: { count: number }) {
       {Array.from({ length: count }).map((_, index) => (
         <React.Fragment key={index}>
           <View
-            style={[{
-              width: '100%',
-              height: GROUP_ROW_HEIGHT,
-              gap: 20,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 16,
-              backgroundColor: theme.colors.surfaceContainer,
-              borderRadius: 4,
-            }, index === count - 1 && {
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            }]}
+            style={[
+              {
+                width: '100%',
+                height: GROUP_ROW_HEIGHT,
+                gap: 20,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 16,
+                backgroundColor: theme.colors.surfaceContainer,
+                borderRadius: 4,
+              },
+              index === count - 1 && {
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+              },
+            ]}
           >
             <Shimmer
               offset={1 - index * 0.05}
@@ -203,13 +206,18 @@ export default function Home() {
               isRefetchingHiddenGroups
             }
             onRefresh={refresh}
-            renderItem={({ item, index }) => <GroupRow info={item} style={[
-              { borderRadius: 4 },
-              index === visibleGroups.length - 1 && {
-                borderBottomLeftRadius: 16,
-                borderBottomRightRadius: 16,
-              },
-            ]} />}
+            renderItem={({ item, index }) => (
+              <GroupRow
+                info={item}
+                style={[
+                  { borderRadius: 4 },
+                  index === visibleGroups.length - 1 && {
+                    borderBottomLeftRadius: 16,
+                    borderBottomRightRadius: 16,
+                  },
+                ]}
+              />
+            )}
             contentContainerStyle={{
               width: '100%',
               maxWidth: 768,
@@ -255,13 +263,14 @@ export default function Home() {
             ListEmptyComponent={
               <ListEmptyComponent
                 isLoading={showHidden ? hiddenGroupsLoading : visibleGroupsLoading}
-                emptyText={showHidden
-                  ? t(hiddenGroupsError ? 'home.errorLoadingGroups' : 'home.noHiddenGroups')
-                  : t(groupsError ? 'home.errorLoadingGroups' : 'home.noGroups')}
+                emptyText={
+                  showHidden
+                    ? t(hiddenGroupsError ? 'home.errorLoadingGroups' : 'home.noHiddenGroups')
+                    : t(groupsError ? 'home.errorLoadingGroups' : 'home.noGroups')
+                }
                 loadingPlaceholder={<GroupsShimmer count={5} />}
               />
             }
-
             onEndReached={() => {
               if (!showHidden && !isFetchingNextVisibleGroups && hasNextVisibleGroups) {
                 fetchNextVisibleGroups()

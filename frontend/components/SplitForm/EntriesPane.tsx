@@ -59,16 +59,21 @@ export function EntriesPane({
       <Form autofocus>
         {formState.entries.map((entry, index) => (
           <React.Fragment key={index}>
-            <View style={[{
-              paddingHorizontal: 16,
-              paddingBottom: formState.entries.length - 1 === index ? 8 : 4,
-              backgroundColor: theme.colors.surfaceContainer,
-              borderRadius: 4,
-              marginBottom: 2,
-            }, index === formState.entries.length - 1 && {
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            }]}>
+            <View
+              style={[
+                {
+                  paddingHorizontal: 16,
+                  paddingBottom: formState.entries.length - 1 === index ? 8 : 4,
+                  backgroundColor: theme.colors.surfaceContainer,
+                  borderRadius: 4,
+                  marginBottom: 2,
+                },
+                index === formState.entries.length - 1 && {
+                  borderBottomLeftRadius: 16,
+                  borderBottomRightRadius: 16,
+                },
+              ]}
+            >
               <SplitEntry
                 scrollRef={scrollRef}
                 groupId={groupInfo.id}
