@@ -128,7 +128,7 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
               icon='group'
               title={t('tabs.group')}
               textLocation='start'
-              style={{ flex: 1, marginTop: horizontalInfo ? 0 : 8 }}
+              style={{ flex: 1 }}
               collapsible={hasSettingsAccess}
               collapsed={false}
               collapseIcon='settings'
