@@ -137,7 +137,7 @@ export function SplitEntry({
         }}
       />
 
-      <View style={{ width: 20, height: 20, opacity: showDeleteButton ? 1 : 0 }}>
+      <View style={{ width: 20, height: 20, opacity: showDeleteButton ? 1 : 0, transform: [{translateY: -4}] }}>
         <RoundIconButton
           disabled={!showDeleteButton}
           icon='close'
