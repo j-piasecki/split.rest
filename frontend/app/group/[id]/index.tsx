@@ -4,8 +4,7 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { SegmentedButton } from '@components/SegmentedButton'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
-import { GroupActionButtons } from '@components/groupScreen/GroupActionButtons'
-import { GroupInfoCard } from '@components/groupScreen/GroupInfoCard'
+import { GroupInfoPane } from '@components/groupScreen/GroupInfoCard'
 import { GroupSplitsList } from '@components/groupScreen/GroupSplitsList'
 import { MembersButton } from '@components/groupScreen/MembersButton'
 import { MembersList } from '@components/groupScreen/MembersList'
@@ -13,9 +12,8 @@ import { MembersOrderFilter } from '@components/groupScreen/MembersOrderFilter'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
-import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -92,15 +90,8 @@ function SplitsFilter({
   )
 }
 
-function useHasSettingsAccess(info: GroupUserInfo | undefined) {
-  const user = useAuth()
-  return info && (info.isAdmin || info.owner === user?.id)
-}
-
 function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
-  const router = useRouter()
-  const hasSettingsAccess = useHasSettingsAccess(info)
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
   const [onlyShowSplitsIfIncluded, setOnlyShowSplitsIfIncluded] = useState(false)
@@ -113,32 +104,7 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
       forceShowSplitsWithUser={onlyShowSplitsIfIncluded}
       headerComponent={
         <View style={{ gap: 12 }}>
-          <View
-            style={{
-              gap: 12,
-            }}
-          >
-            <Pane
-              icon='group'
-              title={t('tabs.group')}
-              textLocation='start'
-              style={{ flex: 1 }}
-              collapsible={hasSettingsAccess}
-              collapsed={false}
-              collapseIcon='settings'
-              onCollapseChange={() => router.navigate(`/group/${info?.id}/settings`)}
-            >
-              <View
-                style={{
-                  paddingHorizontal: 16,
-                  paddingTop: 8,
-                  paddingBottom: 24,
-                }}
-              >
-                <GroupInfoCard info={info} />
-              </View>
-            </Pane>
-          </View>
+          <GroupInfoPane info={info} />
           {(!permissions || permissions.canReadMembers()) && <MembersButton info={info} />}
           <View
             style={[
@@ -174,9 +140,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
   const theme = useTheme()
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
-  const router = useRouter()
   const displayClass = useDisplayClass()
-  const hasSettingsAccess = useHasSettingsAccess(groupInfo)
   const { data: permissions } = useGroupPermissions(groupInfo?.id)
   const [onlyShowSplitsIfIncluded, setOnlyShowSplitsIfIncluded] = useState(false)
   const [membersLowToHigh, setMembersLowToHigh] = useState<boolean | undefined>(true)
@@ -210,31 +174,12 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
         >
           <Header showBackButton />
         </View>
-        <Pane
-          icon='home'
-          title={t('tabs.group')}
+        <ScrollView
           style={[{ flex: 1, height: '100%' }, Platform.OS === 'web' && { minWidth: 420 }]}
-          containerStyle={{ flex: 1 }}
-          collapsible={hasSettingsAccess}
-          collapsed={false}
-          collapseIcon='settings'
-          onCollapseChange={() => {
-            router.navigate(`/group/${groupInfo?.id}/settings`)
-          }}
+          contentContainerStyle={{ flexGrow: 1 }}
         >
-          <ScrollView
-            style={{ flex: 1 }}
-            contentContainerStyle={{
-              paddingHorizontal: 16,
-              paddingTop: 16,
-              paddingBottom: 32,
-              gap: 16,
-            }}
-          >
-            <GroupInfoCard info={groupInfo} />
-            <GroupActionButtons info={groupInfo} />
-          </ScrollView>
-        </Pane>
+          <GroupInfoPane info={groupInfo} />
+        </ScrollView>
         <Pane
           icon='receipt'
           title={t('tabs.splits')}
