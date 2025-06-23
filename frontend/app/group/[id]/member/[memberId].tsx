@@ -42,7 +42,6 @@ export function MemberScreen() {
       <View
         style={{
           flex: 1,
-          backgroundColor: theme.colors.surface,
         }}
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
@@ -64,7 +63,7 @@ export function MemberScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           flex: 1,
@@ -76,14 +75,14 @@ export function MemberScreen() {
           gap: 24,
         }}
       >
-        <ShimmerPlaceholder
-          argument={memberInfo}
-          style={{ width: 96, height: 96 }}
-          shimmerStyle={{ borderRadius: 48 }}
-        >
-          {(memberInfo) => <ProfilePicture userId={memberInfo.id} size={96} />}
-        </ShimmerPlaceholder>
         <View style={{ alignItems: 'center', gap: 8, width: '100%' }}>
+          <ShimmerPlaceholder
+            argument={memberInfo}
+            style={{ width: 128, height: 128 }}
+            shimmerStyle={{ borderRadius: 64 }}
+          >
+            {(memberInfo) => <ProfilePicture userId={memberInfo.id} size={128} />}
+          </ShimmerPlaceholder>
           <ShimmerPlaceholder
             argument={memberInfo}
             style={{ width: '100%', alignItems: 'center' }}

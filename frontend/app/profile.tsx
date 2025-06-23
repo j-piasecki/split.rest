@@ -2,14 +2,13 @@ import { Button } from '@components/Button'
 import { ConfirmationModal } from '@components/ConfirmationModal'
 import { EditableText } from '@components/EditableText'
 import ModalScreen from '@components/ModalScreen'
-import { Picker } from '@components/Picker'
 import { ProfilePicture } from '@components/ProfilePicture'
+import { SegmentedButton } from '@components/SegmentedButton'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { useSetUserNameMutation } from '@hooks/database/useSetUserName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
-import { ThemeType } from '@type/theme'
 import { deleteUser, logout, reauthenticate, useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
@@ -93,14 +92,14 @@ function Form({ user }: { user: User }) {
         paddingLeft: insets.left + 12,
         paddingRight: insets.right + 12,
         paddingBottom: insets.bottom,
-        paddingTop: insets.top + 32,
+        paddingTop: insets.top + 16,
         gap: 16,
       }}
       keyboardShouldPersistTaps='handled'
     >
       <View style={{ gap: 24, alignItems: 'center', paddingHorizontal: 16 }}>
-        <ProfilePicture userId={user?.id} size={96} />
         <View style={{ alignItems: 'center', gap: 4, alignSelf: 'stretch' }}>
+          <ProfilePicture userId={user?.id} size={128} />
           <EditableText
             value={user?.name}
             placeholder={t('settings.username')}
@@ -112,22 +111,28 @@ function Form({ user }: { user: User }) {
             {user?.email}
           </Text>
         </View>
-        <Picker
-          hint={t('settings.theme.hint')}
+        <SegmentedButton
           style={{ alignSelf: 'stretch' }}
-          selectedItem={theme.userSelectedTheme ?? 'system'}
           items={[
-            { label: t('settings.theme.light'), value: 'light', icon: 'lightTheme' },
-            { label: t('settings.theme.dark'), value: 'dark', icon: 'darkTheme' },
-            { label: t('settings.theme.system'), value: 'system', icon: 'systemTheme' },
+            {
+              title: t('settings.theme.light'),
+              icon: 'lightTheme',
+              selected: theme.userSelectedTheme === 'light',
+              onPress: () => theme.setTheme('light'),
+            },
+            {
+              title: t('settings.theme.dark'),
+              icon: 'darkTheme',
+              selected: theme.userSelectedTheme === 'dark',
+              onPress: () => theme.setTheme('dark'),
+            },
+            {
+              title: t('settings.theme.system'),
+              icon: 'systemTheme',
+              selected: theme.userSelectedTheme === null,
+              onPress: () => theme.setTheme(null),
+            },
           ]}
-          onSelectionChange={(selected) => {
-            if (selected === 'system') {
-              theme.setTheme(null)
-            } else {
-              theme.setTheme(selected as ThemeType)
-            }
-          }}
         />
       </View>
       <View style={{ flexDirection: 'column', gap: 16, marginTop: 24 }}>

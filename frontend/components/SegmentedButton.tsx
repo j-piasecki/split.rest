@@ -88,7 +88,6 @@ export function SegmentedButton({ items, style }: SegmentedButtonProps) {
     <View
       style={[
         {
-          flex: 1,
           height: 40,
           flexDirection: 'row',
           borderRadius: 24,
