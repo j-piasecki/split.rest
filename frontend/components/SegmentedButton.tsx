@@ -3,6 +3,7 @@ import { Text } from './Text'
 import { useTheme } from '@styling/theme'
 import { useState } from 'react'
 import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import Animated, { useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated'
 
 export interface SegmentedButtonItem {
   title?: string
@@ -29,56 +30,86 @@ function Item({
   const [pressed, setPressed] = useState(false)
   const [hovered, setHovered] = useState(false)
 
+  const containerStyle = useAnimatedStyle(() => {
+    return {
+      flex: withSpring(pressed ? 1.25 : 1, { mass: 1, stiffness: 250, damping: 10 }),
+    }
+  })
+
+  const backgroundStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(selected ? 1 : pressed ? 0.5 : hovered ? 0.2 : 0, { duration: 200 }),
+    }
+  })
+
+  const contentStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { scale: withSpring(pressed ? 1.2 : 1, { mass: 1, stiffness: 250, damping: 15 }) },
+      ],
+    }
+  })
+
   return (
-    <Pressable
-      style={{
-        flex: 1,
-        paddingHorizontal: 8,
-        borderRightWidth: last ? 0 : 1,
-        borderColor: theme.colors.outline,
-        opacity: disabled ? 0.5 : 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 8,
-      }}
-      onPress={onPress}
-      disabled={disabled}
-      onPressIn={() => setPressed(true)}
-      onPressOut={() => setPressed(false)}
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-    >
-      <View
-        style={[
-          StyleSheet.absoluteFill,
-          {
-            backgroundColor: disabled ? theme.colors.transparent : theme.colors.secondaryContainer,
-            opacity: selected ? 1 : pressed ? 0.5 : hovered ? 0.2 : 0,
-          },
-        ]}
-      />
-      {icon && (
-        <Icon
-          name={icon}
-          size={18}
-          color={selected ? theme.colors.onSecondaryContainer : theme.colors.onSurface}
+    <Animated.View style={containerStyle}>
+      <Pressable
+        style={{
+          flex: 1,
+          paddingHorizontal: 8,
+          borderRightWidth: last ? 0 : 1,
+          borderColor: theme.colors.outline,
+          opacity: disabled ? 0.5 : 1,
+
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        onPress={onPress}
+        disabled={disabled}
+        onPressIn={() => setPressed(true)}
+        onPressOut={() => setPressed(false)}
+        onHoverIn={() => setHovered(true)}
+        onHoverOut={() => setHovered(false)}
+      >
+        <Animated.View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: disabled
+                ? theme.colors.transparent
+                : theme.colors.secondaryContainer,
+            },
+            backgroundStyle,
+          ]}
         />
-      )}
-      {title && (
-        <Text
-          style={{
-            flexShrink: 1,
-            fontSize: 14,
-            color: selected ? theme.colors.onSecondaryContainer : theme.colors.onSurface,
-          }}
-          numberOfLines={1}
-          adjustsFontSizeToFit
+        <Animated.View
+          style={[
+            contentStyle,
+            { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8 },
+          ]}
         >
-          {title}
-        </Text>
-      )}
-    </Pressable>
+          {icon && (
+            <Icon
+              name={icon}
+              size={18}
+              color={selected ? theme.colors.onSecondaryContainer : theme.colors.onSurface}
+            />
+          )}
+          {title && (
+            <Text
+              style={{
+                flexShrink: 1,
+                fontSize: 14,
+                color: selected ? theme.colors.onSecondaryContainer : theme.colors.onSurface,
+              }}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+            >
+              {title}
+            </Text>
+          )}
+        </Animated.View>
+      </Pressable>
+    </Animated.View>
   )
 }
 
@@ -94,6 +125,8 @@ export function SegmentedButton({ items, style }: SegmentedButtonProps) {
           borderWidth: 1,
           borderColor: theme.colors.outline,
           overflow: 'hidden',
+          // @ts-expect-error userSelect is not a valid prop for View
+          userSelect: 'none',
         },
         style,
       ]}
