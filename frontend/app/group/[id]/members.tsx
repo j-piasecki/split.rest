@@ -85,9 +85,7 @@ export function GroupMembersScreen() {
         info={groupInfo}
         lowToHigh={membersLowToHigh}
         horizontalPadding={12}
-        headerComponent={() => (
-          <ListHeader onChange={setMembersLowToHigh} lowToHigh={membersLowToHigh} />
-        )}
+        headerComponent={<ListHeader onChange={setMembersLowToHigh} lowToHigh={membersLowToHigh} />}
       />
     </View>
   )
