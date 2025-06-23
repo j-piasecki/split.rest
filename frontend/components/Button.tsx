@@ -57,7 +57,8 @@ export function Button({
 
   const innerAnimatedStyle = useAnimatedStyle(() => {
     return {
-      paddingVertical: withSpring(isPressed ? 16 : 12, buttonPaddingSpringConfig),
+      paddingTop: withSpring(isPressed ? 16 : 12, buttonPaddingSpringConfig),
+      paddingBottom: withSpring(isPressed ? 16 : 12, buttonPaddingSpringConfig),
     }
   })
 

@@ -149,7 +149,7 @@ export function SplitEntry({
           icon='close'
           size={20}
           onPress={() => updateForm({ type: 'remove', index })}
-          style={{  marginTop: 0, padding: 4 }}
+          style={{ marginTop: 0, padding: 4 }}
           tabIndex={-1}
         />
       </View>
