@@ -281,7 +281,7 @@ export function useSnackFABInset(fabVisible?: boolean) {
       return
     }
 
-    context?.setBottomInset(80)
+    context?.setBottomInset(84)
     return () => {
       context?.setBottomInset(0)
     }
@@ -293,7 +293,7 @@ export function useSnackFABInset(fabVisible?: boolean) {
       return
     }
 
-    context?.setBottomInset(80)
+    context?.setBottomInset(84)
     return () => {
       context?.setBottomInset(0)
     }

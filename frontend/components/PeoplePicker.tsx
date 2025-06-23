@@ -191,6 +191,7 @@ export function PeoplePicker({
       {entries.map((entry, index) => {
         return (
           <View
+            key={index}
             style={{
               backgroundColor: theme.colors.surfaceContainer,
               paddingHorizontal: 16,
@@ -200,7 +201,6 @@ export function PeoplePicker({
             }}
           >
             <PersonRow
-              key={index}
               groupId={groupId}
               entries={entries}
               setEntries={setEntries}

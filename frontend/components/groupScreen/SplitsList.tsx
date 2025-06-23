@@ -1,14 +1,17 @@
 import { BottomBar } from './BottomBar'
 import { SplitRow } from './SplitRow'
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
-import { useFABScrollHandler } from '@components/FloatingActionButton'
+import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
 import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { Shimmer } from '@components/Shimmer'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
 import { invalidateGroup } from '@utils/queryClient'
+import { beginNewSplit } from '@utils/splitCreationContext'
+import { useRouter } from 'expo-router'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupUserInfo, SplitInfo } from 'shared'
@@ -109,13 +112,14 @@ export function SplitsList({
   hasNextPage,
 }: SplitsListProps) {
   const insets = useSafeAreaInsets()
+  const router = useRouter()
   const displayClass = useDisplayClass()
   const threeBarLayout = useThreeBarLayout()
+  const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
 
   const isSmallScreen = displayClass <= DisplayClass.Medium
-  const fabVisible = !hideFab && isSmallScreen && permissions?.canCreateSplits()
-  const [fabRef, scrollHandler] = useFABScrollHandler(fabVisible)
+  const [fabRef, scrollHandler] = useFABScrollHandler(!hideFab)
 
   function refreshData() {
     if (info) {
@@ -170,16 +174,27 @@ export function SplitsList({
         scrollHandler={scrollHandler}
       />
 
-      {fabVisible && (
+      {!hideFab && (
         <View
           style={{
             position: 'absolute',
             bottom: 8 + (applyBottomInset ? insets.bottom : 0),
             right: 16,
-            left: 16,
+            left: isSmallScreen ? 16 : undefined,
           }}
         >
-          <BottomBar info={info} ref={fabRef} />
+          {isSmallScreen && <BottomBar info={info} ref={fabRef} />}
+          {!isSmallScreen && permissions?.canCreateSplits() && (
+            <FloatingActionButton
+              ref={fabRef}
+              icon='split'
+              title={t('groupInfo.addSplit')}
+              onPress={() => {
+                beginNewSplit()
+                router.navigate(`/group/${info?.id}/addSplit`)
+              }}
+            />
+          )}
         </View>
       )}
     </View>

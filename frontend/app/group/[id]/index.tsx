@@ -100,14 +100,10 @@ function useHasSettingsAccess(info: GroupUserInfo | undefined) {
 function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const router = useRouter()
-  const displayClass = useDisplayClass()
   const hasSettingsAccess = useHasSettingsAccess(info)
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
   const [onlyShowSplitsIfIncluded, setOnlyShowSplitsIfIncluded] = useState(false)
-
-  const horizontalInfo =
-    displayClass === DisplayClass.Expanded || displayClass === DisplayClass.Medium
 
   return (
     <GroupSplitsList
@@ -120,8 +116,6 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
           <View
             style={{
               gap: 12,
-              flexDirection: horizontalInfo ? 'row' : 'column',
-              alignItems: horizontalInfo ? 'stretch' : undefined,
             }}
           >
             <Pane

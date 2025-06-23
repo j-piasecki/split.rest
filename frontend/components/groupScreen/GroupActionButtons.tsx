@@ -1,8 +1,6 @@
 import { Button } from '@components/Button'
 import { ButtonShimmer } from '@components/ButtonShimmer'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
-import { beginNewSplit } from '@utils/splitCreationContext'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +9,6 @@ import { GroupUserInfo } from 'shared'
 
 export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }) {
   const router = useRouter()
-  const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
 
@@ -32,23 +29,6 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
           )
         }
       </ButtonShimmer>
-
-      {!isSmallScreen && (
-        <ButtonShimmer argument={permissions} offset={(shimmerOffset -= 0.05)}>
-          {(permissions) =>
-            permissions.canCreateSplits() && (
-              <Button
-                onPress={() => {
-                  beginNewSplit()
-                  router.navigate(`/group/${info!.id}/addSplit`)
-                }}
-                title={t('groupInfo.addSplit')}
-                leftIcon='split'
-              />
-            )
-          }
-        </ButtonShimmer>
-      )}
 
       <ButtonShimmer argument={permissions} offset={(shimmerOffset -= 0.05)}>
         {(permissions) =>

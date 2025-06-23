@@ -1,6 +1,7 @@
 import { FloatingActionButtonRef } from '@components/FloatingActionButton'
 import { Icon } from '@components/Icon'
 import { Text } from '@components/Text'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { buttonCornerSpringConfig, buttonPaddingSpringConfig } from '@styling/animationConfigs'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
@@ -29,8 +30,14 @@ export function BottomBar({ info, ref }: BottomBarProps) {
   const [roulettePressed, setRoulettePressed] = useState(false)
   const [splitPressed, setSplitPressed] = useState(false)
   const { t } = useTranslation()
+  const { data: permissions } = useGroupPermissions(info?.id)
 
-  const settleUpEnabled = Number(info?.balance) !== 0
+  const settleUpEnabled = Number(info?.balance) !== 0 && permissions?.canSettleUp()
+  const rouletteEnabled = permissions?.canAccessRoulette()
+  const splitEnabled = permissions?.canCreateSplits()
+
+  const hideSidebars = !settleUpEnabled && !rouletteEnabled && splitEnabled
+  const hideEverything = !settleUpEnabled && !rouletteEnabled && !splitEnabled
 
   useImperativeHandle(ref, () => ({
     expand: () => {
@@ -106,6 +113,10 @@ export function BottomBar({ info, ref }: BottomBarProps) {
     }
   })
 
+  if (hideEverything) {
+    return null
+  }
+
   return (
     <Pressable
       onPress={() => {
@@ -132,48 +143,50 @@ export function BottomBar({ info, ref }: BottomBarProps) {
           containerAnimatedStyle,
         ]}
       >
-        <Animated.View
-          style={[
-            {
-              backgroundColor: theme.colors.secondaryContainer,
-              transform: [{ translateX: 12 }],
-              overflow: 'hidden',
-            },
-            styles.bottomBarShadow,
-            sideBarAnimatedStyle,
-            settleUpAnimatedStyle,
-          ]}
-        >
-          <Animated.View style={[StyleSheet.absoluteFillObject, settleUpBackgroundAnimatedStyle]}>
-            <Pressable
-              disabled={!settleUpEnabled}
-              onPress={() => {
-                router.navigate(`/group/${info?.id}/settleUp`)
-              }}
-              onPressIn={() => setSettleUpPressed(true)}
-              onPressOut={() => setSettleUpPressed(false)}
-              style={{
-                ...StyleSheet.absoluteFillObject,
-                paddingRight: 24,
-                flexDirection: 'row-reverse',
-                alignItems: 'center',
-                gap: 8,
-                opacity: settleUpEnabled ? 1 : 0.4,
-              }}
-            >
-              <Icon name='balance' color={theme.colors.onSecondaryContainer} size={20} />
-              <Animated.View style={[textAnimatedStyle, { transformOrigin: 'right center' }]}>
-                <Text
-                  style={[
-                    { fontSize: 16, fontWeight: '700', color: theme.colors.onSecondaryContainer },
-                  ]}
-                >
-                  {t('groupInfo.settleUp.settleUp')}
-                </Text>
-              </Animated.View>
-            </Pressable>
+        {!hideSidebars && (
+          <Animated.View
+            style={[
+              {
+                backgroundColor: theme.colors.secondaryContainer,
+                transform: [{ translateX: 12 }],
+                overflow: 'hidden',
+              },
+              styles.bottomBarShadow,
+              sideBarAnimatedStyle,
+              settleUpAnimatedStyle,
+            ]}
+          >
+            <Animated.View style={[StyleSheet.absoluteFillObject, settleUpBackgroundAnimatedStyle]}>
+              <Pressable
+                disabled={!settleUpEnabled}
+                onPress={() => {
+                  router.navigate(`/group/${info?.id}/settleUp`)
+                }}
+                onPressIn={() => setSettleUpPressed(true)}
+                onPressOut={() => setSettleUpPressed(false)}
+                style={{
+                  ...StyleSheet.absoluteFillObject,
+                  paddingRight: 24,
+                  flexDirection: 'row-reverse',
+                  alignItems: 'center',
+                  gap: 8,
+                  opacity: settleUpEnabled ? 1 : 0.4,
+                }}
+              >
+                <Icon name='balance' color={theme.colors.onSecondaryContainer} size={20} />
+                <Animated.View style={[textAnimatedStyle, { transformOrigin: 'right center' }]}>
+                  <Text
+                    style={[
+                      { fontSize: 16, fontWeight: '700', color: theme.colors.onSecondaryContainer },
+                    ]}
+                  >
+                    {t('groupInfo.settleUp.settleUp')}
+                  </Text>
+                </Animated.View>
+              </Pressable>
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
+        )}
 
         <Animated.View
           style={[
@@ -188,6 +201,7 @@ export function BottomBar({ info, ref }: BottomBarProps) {
         >
           <Animated.View style={[StyleSheet.absoluteFillObject, splitBackgroundAnimatedStyle]}>
             <Pressable
+              disabled={!splitEnabled}
               onPress={() => {
                 router.navigate(`/group/${info?.id}/addSplit`)
               }}
@@ -197,6 +211,7 @@ export function BottomBar({ info, ref }: BottomBarProps) {
                 ...StyleSheet.absoluteFillObject,
                 justifyContent: 'center',
                 alignItems: 'center',
+                opacity: splitEnabled ? 1 : 0.4,
               }}
             >
               <Icon name='split' color={theme.colors.onPrimaryContainer} size={24} />
@@ -204,48 +219,50 @@ export function BottomBar({ info, ref }: BottomBarProps) {
           </Animated.View>
         </Animated.View>
 
-        <Animated.View
-          style={[
-            {
-              backgroundColor: theme.colors.secondaryContainer,
-              borderTopRightRadius: 16,
-              borderBottomRightRadius: 16,
-              transform: [{ translateX: -12 }],
-              overflow: 'hidden',
-            },
-            styles.bottomBarShadow,
-            sideBarAnimatedStyle,
-            rouletteAnimatedStyle,
-          ]}
-        >
-          <Animated.View style={[StyleSheet.absoluteFillObject, rouletteBackgroundAnimatedStyle]}>
-            <Pressable
-              onPress={() => {
-                router.navigate(`/group/${info?.id}/roulette`)
-              }}
-              onPressIn={() => setRoulettePressed(true)}
-              onPressOut={() => setRoulettePressed(false)}
-              style={{
-                ...StyleSheet.absoluteFillObject,
-                paddingLeft: 24,
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 8,
-              }}
-            >
-              <Icon name='payments' color={theme.colors.onSecondaryContainer} size={20} />
-              <Animated.View style={[textAnimatedStyle, { transformOrigin: 'left center' }]}>
-                <Text
-                  style={[
-                    { fontSize: 16, fontWeight: '700', color: theme.colors.onSecondaryContainer },
-                  ]}
-                >
-                  {t('groupInfo.roulette')}
-                </Text>
-              </Animated.View>
-            </Pressable>
+        {!hideSidebars && (
+          <Animated.View
+            style={[
+              {
+                backgroundColor: theme.colors.secondaryContainer,
+                transform: [{ translateX: -12 }],
+                overflow: 'hidden',
+              },
+              styles.bottomBarShadow,
+              sideBarAnimatedStyle,
+              rouletteAnimatedStyle,
+            ]}
+          >
+            <Animated.View style={[StyleSheet.absoluteFillObject, rouletteBackgroundAnimatedStyle]}>
+              <Pressable
+                onPress={() => {
+                  router.navigate(`/group/${info?.id}/roulette`)
+                }}
+                disabled={!rouletteEnabled}
+                onPressIn={() => setRoulettePressed(true)}
+                onPressOut={() => setRoulettePressed(false)}
+                style={{
+                  ...StyleSheet.absoluteFillObject,
+                  paddingLeft: 24,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 8,
+                  opacity: rouletteEnabled ? 1 : 0.4,
+                }}
+              >
+                <Icon name='payments' color={theme.colors.onSecondaryContainer} size={20} />
+                <Animated.View style={[textAnimatedStyle, { transformOrigin: 'left center' }]}>
+                  <Text
+                    style={[
+                      { fontSize: 16, fontWeight: '700', color: theme.colors.onSecondaryContainer },
+                    ]}
+                  >
+                    {t('groupInfo.roulette')}
+                  </Text>
+                </Animated.View>
+              </Pressable>
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
+        )}
       </Animated.View>
     </Pressable>
   )
