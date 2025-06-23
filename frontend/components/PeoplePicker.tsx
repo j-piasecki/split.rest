@@ -61,6 +61,8 @@ function PersonRow({
         flexDirection: 'row',
         alignItems: 'center',
         zIndex: entries.length - index,
+        paddingLeft: 16,
+        paddingRight: 2,
       }}
     >
       {selectable && (
@@ -124,10 +126,7 @@ function PersonRow({
       />
       <View
         style={{
-          width: 20,
-          height: 20,
-          marginHorizontal: 4,
-          marginBottom: 4,
+          transform: [{ translateY: 2 }],
           opacity: deleteVisible ? 1 : 0,
         }}
       >
@@ -138,7 +137,6 @@ function PersonRow({
           onPress={() => {
             setEntries(entries.filter((_, i) => i !== index))
           }}
-          style={{ position: 'absolute' }}
         />
       </View>
     </View>
@@ -194,7 +192,6 @@ export function PeoplePicker({
             key={index}
             style={{
               backgroundColor: theme.colors.surfaceContainer,
-              paddingHorizontal: 16,
               paddingTop: 4,
               paddingBottom: entries.length - 1 === index ? 12 : 8,
               borderRadius: 4,

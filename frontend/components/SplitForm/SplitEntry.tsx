@@ -62,6 +62,7 @@ export function SplitEntry({
         alignItems: 'center',
         position: 'relative',
         zIndex: formState.entries.length - index,
+        paddingLeft: 16,
       }}
     >
       {showPayerSelector && (
@@ -139,10 +140,8 @@ export function SplitEntry({
 
       <View
         style={{
-          width: 20,
-          height: 20,
           opacity: showDeleteButton ? 1 : 0,
-          transform: [{ translateY: -4 }],
+          transform: [{ translateY: 2 }],
         }}
       >
         <RoundIconButton
@@ -150,7 +149,7 @@ export function SplitEntry({
           icon='close'
           size={20}
           onPress={() => updateForm({ type: 'remove', index })}
-          style={{ position: 'absolute', marginTop: 0, padding: 4 }}
+          style={{  marginTop: 0, padding: 4 }}
           tabIndex={-1}
         />
       </View>
