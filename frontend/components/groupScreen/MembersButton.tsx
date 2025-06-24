@@ -60,7 +60,7 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
               numberOfLines={1}
               style={{
                 flexShrink: 1,
-                color: theme.colors.onSurface,
+                color: theme.colors.secondary,
                 fontSize: 20,
                 fontWeight: 600,
               }}
