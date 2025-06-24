@@ -17,6 +17,7 @@ export type IconName =
   | 'bug'
   | 'cached'
   | 'calendar'
+  | 'casino'
   | 'check'
   | 'chevronBack'
   | 'chevronForward'
@@ -90,6 +91,7 @@ const iconMap: Record<IconName, unknown> = {
   bug: require('@assets/icons/bug.svg'),
   cached: require('@assets/icons/cached.svg'),
   calendar: require('@assets/icons/calendar.svg'),
+  casino: require('@assets/icons/casino.svg'),
   check: require('@assets/icons/check.svg'),
   chevronBack: require('@assets/icons/chevron_back.svg'),
   chevronForward: require('@assets/icons/chevron_forward.svg'),

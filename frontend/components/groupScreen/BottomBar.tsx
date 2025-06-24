@@ -249,7 +249,7 @@ export function BottomBar({ info, ref }: BottomBarProps) {
                   opacity: rouletteEnabled ? 1 : 0.4,
                 }}
               >
-                <Icon name='payments' color={theme.colors.onSecondaryContainer} size={20} />
+                <Icon name='casino' color={theme.colors.onSecondaryContainer} size={20} />
                 <Animated.View style={[textAnimatedStyle, { transformOrigin: 'left center' }]}>
                   <Text
                     style={[
