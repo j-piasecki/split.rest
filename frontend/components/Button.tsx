@@ -94,6 +94,9 @@ export function Button({
               : state.hovered
                 ? `${theme.colors.surface}22`
                 : 'transparent',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
           }
         }}
       >
