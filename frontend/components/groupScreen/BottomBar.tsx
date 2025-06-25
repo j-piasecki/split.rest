@@ -6,9 +6,9 @@ import { buttonCornerSpringConfig, buttonPaddingSpringConfig } from '@styling/an
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useRouter } from 'expo-router'
-import { useImperativeHandle, useState } from 'react'
+import { useEffect, useImperativeHandle, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, StyleSheet } from 'react-native'
+import { Platform, Pressable, StyleSheet } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -25,7 +25,7 @@ export interface BottomBarProps {
 export function BottomBar({ info, ref }: BottomBarProps) {
   const theme = useTheme()
   const router = useRouter()
-  const isExpanded = useSharedValue(true)
+  const isExpanded = useSharedValue(Platform.OS === 'web')
   const [settleUpPressed, setSettleUpPressed] = useState(false)
   const [roulettePressed, setRoulettePressed] = useState(false)
   const [splitPressed, setSplitPressed] = useState(false)
@@ -38,6 +38,14 @@ export function BottomBar({ info, ref }: BottomBarProps) {
 
   const hideSidebars = !settleUpEnabled && !rouletteEnabled && splitEnabled
   const hideEverything = !settleUpEnabled && !rouletteEnabled && !splitEnabled
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') {
+      setTimeout(() => {
+        isExpanded.value = true
+      }, 200)
+    }
+  }, [isExpanded])
 
   useImperativeHandle(ref, () => ({
     expand: () => {
