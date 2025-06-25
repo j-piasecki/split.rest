@@ -50,7 +50,7 @@ function SplitsFilter({
       style={[{ maxWidth: 112, minWidth: 112 }, style]}
       items={[
         {
-          icon: 'group',
+          icon: 'list',
           selected: !onlyIfIncluded,
           onPress: () => {
             if (onlyIfIncluded) {

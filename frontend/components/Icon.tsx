@@ -39,6 +39,7 @@ export type IconName =
   | 'lightTheme'
   | 'link'
   | 'listNumbered'
+  | 'list'
   | 'lockOpen'
   | 'lock'
   | 'login'
@@ -113,6 +114,7 @@ const iconMap: Record<IconName, unknown> = {
   lightTheme: require('@assets/icons/light_theme.svg'),
   link: require('@assets/icons/link.svg'),
   listNumbered: require('@assets/icons/list_numbered.svg'),
+  list: require('@assets/icons/list.svg'),
   lockOpen: require('@assets/icons/lock_open.svg'),
   lock: require('@assets/icons/lock.svg'),
   login: require('@assets/icons/login.svg'),

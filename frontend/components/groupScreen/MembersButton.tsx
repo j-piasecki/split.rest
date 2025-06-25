@@ -29,8 +29,8 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
 
   useLayoutEffect(() => {
     if (containerRef.current && iconsRef.current) {
-    const containerSize = measure(containerRef.current!)
-    setContainerHeight(containerSize.height)
+      const containerSize = measure(containerRef.current!)
+      setContainerHeight(containerSize.height)
 
       const iconsSize = measure(iconsRef.current!)
       setIconsWidth(iconsSize.width)
@@ -39,70 +39,70 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
 
   return (
     <ShimmerPlaceholder argument={isLoading} style={{ flex: 1, minHeight: 134 }}>
-    <Pressable
-      onPress={() => router.navigate(`/group/${info?.id}/members`)}
-      style={({ pressed, hovered }) => ({
-        flex: 1,
-        backgroundColor: pressed
-          ? theme.colors.surfaceContainerHighest
-          : hovered
-            ? theme.colors.surfaceContainerHigh
-            : theme.colors.surfaceContainer,
-        borderRadius: 16,
-        padding: 12,
-      })}
-    >
-      <View ref={containerRef} style={{ flexDirection: 'row', gap: 8 }}>
-        <View style={{ gap: 12 }}>
-          <View style={[{ flexDirection: 'row', gap: 16, paddingHorizontal: 8 }]}>
-            <Icon name='members' size={24} color={theme.colors.secondary} />
-            <Text
-              numberOfLines={1}
+      <Pressable
+        onPress={() => router.navigate(`/group/${info?.id}/members`)}
+        style={({ pressed, hovered }) => ({
+          flex: 1,
+          backgroundColor: pressed
+            ? theme.colors.surfaceContainerHighest
+            : hovered
+              ? theme.colors.surfaceContainerHigh
+              : theme.colors.surfaceContainer,
+          borderRadius: 16,
+          padding: 12,
+        })}
+      >
+        <View ref={containerRef} style={{ flexDirection: 'row', gap: 8 }}>
+          <View style={{ gap: 12 }}>
+            <View style={[{ flexDirection: 'row', gap: 16, paddingHorizontal: 8 }]}>
+              <Icon name='members' size={24} color={theme.colors.secondary} />
+              <Text
+                numberOfLines={1}
+                style={{
+                  flexShrink: 1,
+                  color: theme.colors.secondary,
+                  fontSize: 20,
+                  fontWeight: 600,
+                }}
+              >
+                {t('tabs.members')}
+              </Text>
+            </View>
+
+            <View style={{ height: 72, justifyContent: 'center', paddingHorizontal: 12 }}>
+              <Button
+                leftIcon='addMember'
+                style={{ backgroundColor: theme.colors.primary }}
+                foregroundColor={theme.colors.onPrimary}
+                onPress={() => router.navigate(`/group/${info?.id}/inviteMember`)}
+              >
+                <View style={{ width: 0, height: 60, backgroundColor: 'red' }} />
+              </Button>
+            </View>
+          </View>
+
+          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <View
+              ref={iconsRef}
               style={{
-                flexShrink: 1,
-                color: theme.colors.secondary,
-                fontSize: 20,
-                fontWeight: 600,
+                flex: 1,
+                height: containerHeight,
+                justifyContent: 'center',
+                alignItems: 'center',
+                overflow: 'hidden',
               }}
             >
-              {t('tabs.members')}
-            </Text>
-          </View>
-
-          <View style={{ height: 72, justifyContent: 'center', paddingHorizontal: 12 }}>
-            <Button
-              leftIcon='addMember'
-              style={{ backgroundColor: theme.colors.primary }}
-              foregroundColor={theme.colors.onPrimary}
-              onPress={() => router.navigate(`/group/${info?.id}/inviteMember`)}
-            >
-              <View style={{ width: 0, height: 60, backgroundColor: 'red'}} />
-            </Button>
+              <MembersIcons
+                members={members}
+                width={iconsWidth}
+                height={containerHeight}
+                info={info}
+              />
+            </View>
+            <Icon size={24} name={'chevronForward'} color={theme.colors.secondary} />
           </View>
         </View>
-
-        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <View
-            ref={iconsRef}
-            style={{
-              flex: 1,
-              height: containerHeight,
-              justifyContent: 'center',
-              alignItems: 'center',
-              overflow: 'hidden',
-            }}
-          >
-            <MembersIcons
-              members={members}
-              width={iconsWidth}
-              height={containerHeight}
-              info={info}
-            />
-          </View>
-          <Icon size={24} name={'chevronForward'} color={theme.colors.secondary} />
-        </View>
-      </View>
-    </Pressable>
+      </Pressable>
     </ShimmerPlaceholder>
   )
 }
@@ -212,7 +212,13 @@ function MembersIcons({
     >
       {bubbles.map((bubble, index) => (
         <Animated.View
-          entering={Platform.OS !== 'web' ? ZoomIn.springify().duration(500).delay(index * 75 + 300) : undefined}
+          entering={
+            Platform.OS !== 'web'
+              ? ZoomIn.springify()
+                  .duration(500)
+                  .delay(index * 75 + 300)
+              : undefined
+          }
           key={index}
           style={{
             position: 'absolute',
