@@ -233,7 +233,7 @@ function MembersIcons({
           width: middleIconSize,
           height: middleIconSize,
           borderRadius: middleIconSize / 2,
-          backgroundColor: theme.colors.tertiaryContainer,
+          backgroundColor: theme.colors.primaryContainer,
           justifyContent: 'center',
           alignItems: 'center',
           paddingHorizontal: 4,
@@ -241,7 +241,7 @@ function MembersIcons({
       >
         <Text
           style={{
-            color: theme.colors.onTertiaryContainer,
+            color: theme.colors.onPrimaryContainer,
             fontSize: middleIconSize / 2,
             fontWeight: 700,
           }}
