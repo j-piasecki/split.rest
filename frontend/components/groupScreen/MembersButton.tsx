@@ -50,6 +50,7 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
               : theme.colors.surfaceContainer,
           borderRadius: 16,
           padding: 12,
+          overflow: 'hidden',
         })}
       >
         <View ref={containerRef} style={{ flexDirection: 'row', gap: 8 }}>
@@ -89,7 +90,6 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
                 height: containerHeight,
                 justifyContent: 'center',
                 alignItems: 'center',
-                overflow: 'hidden',
               }}
             >
               <MembersIcons
@@ -108,19 +108,31 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
 }
 
 function getVisibleArcFraction(width: number, height: number, radius: number): number {
-  const wFactor = Math.min(1, width / (2 * radius))
-  const hFactor = Math.min(1, height / (2 * radius))
+  const unitWidth = width / (2 * radius)
+  const unitHeight = height / (2 * radius)
 
-  // Angle ranges where cos(θ) is within bounds
-  const cosLimit = Math.acos(wFactor) // gives angle in radians
-  const sinLimit = Math.asin(hFactor)
+  // The circle fits entirely within the container
+  if (width >= 2 * radius && height >= 2 * radius) {
+    return 1
+  }
 
-  // Total valid angle ranges
-  // Symmetrical, so we multiply by 4 (each quadrant has same portion)
-  const angleRange = 4 * Math.max(cosLimit, sinLimit)
+  // The container is wider than the circle but not taller so we take
+  // the angle between the X-axis and the line from the center to
+  // the edge of the circle
+  if (width >= 2 * radius) {
+    const angle = Math.asin(unitHeight)
+    return (4 * angle) / (2 * Math.PI)
+  }
 
-  // Fraction of total circle
-  return angleRange / (2 * Math.PI)
+  // The container is taller than the circle but not wider so we take
+  // the angle between the Y-axis and the line from the center to
+  // the edge of the circle
+  if (height >= 2 * radius) {
+    const angle = Math.acos(unitWidth)
+    return 1 - (4 * angle) / (2 * Math.PI)
+  }
+
+  return 0
 }
 
 type Bubble = { size: number; x: number; y: number }
@@ -140,7 +152,8 @@ function useBubbles(
     const centerX = width / 2
     const centerY = height / 2
 
-    let currentRadius = (Math.min(width, height) - middleIconSize - ringSpacing * 2) / 4
+    let currentRadius =
+      ((Math.min(width, height) - middleIconSize - ringSpacing * 2) / 4) * (count < 3 ? 1.5 : 1)
     let currentRingRadius = currentRadius + ringSpacing + middleIconSize / 2
     let currentRingCircumference = 2 * Math.PI * currentRingRadius
     let placed = 0
@@ -152,10 +165,11 @@ function useBubbles(
         (currentRingCircumference * visibleArcFraction) / (currentRadius * 2.5)
       )
       const angleStep = (2 * Math.PI * visibleArcFraction) / Math.min(numberOfBubbles, leftToPlace)
+      const startAngle = (visibleArcFraction / 2) * Math.PI + (Math.PI * 3) / 5
 
       for (
-        let angle = Math.PI * visibleArcFraction;
-        angle < 2 * Math.PI + Math.PI * visibleArcFraction && placed < count;
+        let angle = startAngle;
+        angle < 2 * Math.PI + startAngle - 0.01 && placed < count;
         angle += angleStep
       ) {
         const x = centerX - currentRadius + currentRingRadius * Math.cos(angle)
@@ -174,8 +188,8 @@ function useBubbles(
         placed++
       }
 
+      currentRingRadius += currentRadius * 2
       currentRadius *= Math.max(0.5, Math.min(0.9, width / height - 0.75))
-      currentRingRadius += currentRadius * 2 + ringSpacing
       currentRingCircumference = 2 * Math.PI * currentRingRadius
     }
 
@@ -207,7 +221,6 @@ function MembersIcons({
         width: width,
         justifyContent: 'center',
         alignItems: 'center',
-        overflow: 'visible',
       }}
     >
       {bubbles.map((bubble, index) => (
