@@ -137,7 +137,7 @@ function TitleWithBalance({ info }: { info: GroupUserInfo | undefined }) {
         )}
       </ShimmerPlaceholder>
 
-      <View style={{ flexDirection: 'row', gap: 16, marginTop: 4 }}>
+      <View style={{ flexDirection: 'row', gap: 16, marginTop: 4, alignItems: 'center' }}>
         <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>
           {t('groupInfo.yourBalance')}
         </Text>
@@ -148,10 +148,12 @@ function TitleWithBalance({ info }: { info: GroupUserInfo | undefined }) {
         >
           {(info) => (
             <Text
+              adjustsFontSizeToFit
+              numberOfLines={1}
               style={{
                 flex: 1,
                 textAlign: 'right',
-                fontSize: 24,
+                fontSize: 30,
                 fontWeight: '700',
                 color: getBalanceColor(Number(info.balance), theme),
               }}
