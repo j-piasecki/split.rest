@@ -159,40 +159,31 @@ function useBubbles(
     let placedBubbles = 0
 
     while (bubbleRadius > 8 && placedBubbles < count) {
-      // depending on the configuration, either angle between the X-axis
-      // or the Y-axis and the line connecting the center with the
-      // intersection of ring and the container is used
-      const ringWiderThanContainer = ringRadius * 2 > width
       const leftToPlace = count - placedBubbles
-      const ringFractionInTheContainer = getVisibleArcFraction(width, height, ringRadius)
+      const ringFractionInsideContainer = getVisibleArcFraction(width, height, ringRadius)
       const numberOfBubbles = Math.floor(
-        (ringCircumference * ringFractionInTheContainer) / (bubbleRadius * 2.5)
+        (ringCircumference * ringFractionInsideContainer) / (bubbleRadius * 2.5)
       )
       const angleStep =
-        (2 * Math.PI * ringFractionInTheContainer) / Math.min(numberOfBubbles, leftToPlace)
-      const startAngle =
-        (-(ringFractionInTheContainer / 2) * Math.PI + (2 * bubbleRadius) / ringRadius) *
-        (ringWiderThanContainer ? -1 : 1)
+        (2 * Math.PI * ringFractionInsideContainer) / Math.min(numberOfBubbles, leftToPlace)
+      const startAngle = (ringFractionInsideContainer / 2) * Math.PI + (Math.PI * 3) / 5
 
       for (
         let angle = startAngle;
-        angle < 2 * Math.PI + startAngle - 0.01 && placedBubbles < count;
+        angle < 2 * Math.PI + startAngle - (bubbleRadius * 2) / ringRadius && placedBubbles < count;
         angle += angleStep
       ) {
         const x = centerX - bubbleRadius + ringRadius * Math.cos(angle)
         const y = centerY - bubbleRadius + ringRadius * Math.sin(angle)
 
+        const overflowsX =
+          x < -bubbleRadius * 0.2 || x + bubbleRadius * 2 > width + bubbleRadius * 0.2
+        const overflowsY =
+          y < -bubbleRadius * 0.2 || y + bubbleRadius * 2 > height + bubbleRadius * 0.2
+
         // if out of bounds of the container, skip
-        if (x < 0 || x + bubbleRadius * 2 > width || y < 0 || y + bubbleRadius * 2 > height) {
-          if (
-            (!ringWiderThanContainer && angle < Math.PI / 2) ||
-            (ringWiderThanContainer && angle < Math.PI)
-          ) {
-            angle = startAngle + Math.PI - angleStep
-            continue
-          } else {
-            break
-          }
+        if (overflowsX || overflowsY) {
+          continue
         }
 
         result.push({
@@ -200,7 +191,6 @@ function useBubbles(
           x,
           y,
         })
-
         placedBubbles++
       }
 
@@ -209,7 +199,7 @@ function useBubbles(
       ringCircumference = 2 * Math.PI * ringRadius
     }
 
-    // shuffle result for animation
+    // shuffle bubbles for animation
     result.sort(() => Math.random() - 0.5)
     return result
   }, [count, width, height, middleIconSize])
