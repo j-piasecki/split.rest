@@ -152,47 +152,65 @@ function useBubbles(
     const centerX = width / 2
     const centerY = height / 2
 
-    let currentRadius =
+    let bubbleRadius =
       ((Math.min(width, height) - middleIconSize - ringSpacing * 2) / 4) * (count < 3 ? 1.5 : 1)
-    let currentRingRadius = currentRadius + ringSpacing + middleIconSize / 2
-    let currentRingCircumference = 2 * Math.PI * currentRingRadius
-    let placed = 0
+    let ringRadius = bubbleRadius + ringSpacing + middleIconSize / 2
+    let ringCircumference = 2 * Math.PI * ringRadius
+    let placedBubbles = 0
 
-    while (currentRadius > 8 && placed < count) {
-      const leftToPlace = count - placed
-      const visibleArcFraction = getVisibleArcFraction(width, height, currentRingRadius)
+    while (bubbleRadius > 8 && placedBubbles < count) {
+      // depending on the configuration, either angle between the X-axis
+      // or the Y-axis and the line connecting the center with the
+      // intersection of ring and the container is used
+      const ringWiderThanContainer = ringRadius * 2 > width
+      const leftToPlace = count - placedBubbles
+      const ringFractionInTheContainer = getVisibleArcFraction(width, height, ringRadius)
       const numberOfBubbles = Math.floor(
-        (currentRingCircumference * visibleArcFraction) / (currentRadius * 2.5)
+        (ringCircumference * ringFractionInTheContainer) / (bubbleRadius * 2.5)
       )
-      const angleStep = (2 * Math.PI * visibleArcFraction) / Math.min(numberOfBubbles, leftToPlace)
-      const startAngle = (visibleArcFraction / 2) * Math.PI + (Math.PI * 3) / 5
+      const angleStep =
+        (2 * Math.PI * ringFractionInTheContainer) / Math.min(numberOfBubbles, leftToPlace)
+      const startAngle =
+        (-(ringFractionInTheContainer / 2) * Math.PI + (2 * bubbleRadius) / ringRadius) *
+        (ringWiderThanContainer ? -1 : 1)
 
       for (
         let angle = startAngle;
-        angle < 2 * Math.PI + startAngle - 0.01 && placed < count;
+        angle < 2 * Math.PI + startAngle - 0.01 && placedBubbles < count;
         angle += angleStep
       ) {
-        const x = centerX - currentRadius + currentRingRadius * Math.cos(angle)
-        const y = centerY - currentRadius + currentRingRadius * Math.sin(angle)
+        const x = centerX - bubbleRadius + ringRadius * Math.cos(angle)
+        const y = centerY - bubbleRadius + ringRadius * Math.sin(angle)
 
         // if out of bounds of the container, skip
-        if (x < 0 || x + currentRadius * 2 > width || y < 0 || y + currentRadius * 2 > height) {
-          continue
+        if (x < 0 || x + bubbleRadius * 2 > width || y < 0 || y + bubbleRadius * 2 > height) {
+          if (
+            (!ringWiderThanContainer && angle < Math.PI / 2) ||
+            (ringWiderThanContainer && angle < Math.PI)
+          ) {
+            angle = startAngle + Math.PI - angleStep
+            continue
+          } else {
+            break
+          }
         }
 
         result.push({
-          size: currentRadius * 2 + Math.random() * ringSpacing * 2 - ringSpacing,
+          size: bubbleRadius * 2 + Math.random() * ringSpacing * 2 - ringSpacing,
           x,
           y,
         })
-        placed++
+
+        placedBubbles++
       }
 
-      currentRingRadius += currentRadius * 2
-      currentRadius *= Math.max(0.5, Math.min(0.9, width / height - 0.75))
-      currentRingCircumference = 2 * Math.PI * currentRingRadius
+      ringRadius += bubbleRadius * 2
+      bubbleRadius *= Math.max(0.5, Math.min(0.9, width / height - 0.75))
+      ringCircumference = 2 * Math.PI * ringRadius
     }
 
+    // shuffle result for animation
+    result.sort(() => Math.random() - 0.5)
     return result
   }, [count, width, height, middleIconSize])
 }
