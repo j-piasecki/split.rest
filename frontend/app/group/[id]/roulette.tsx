@@ -92,7 +92,7 @@ function Roulette({ groupId, setQuery, user }: RouletteProps) {
           icon='group'
           title={t('splitInfo.participants')}
           textLocation='start'
-          containerStyle={{ backgroundColor: 'transparent' }}
+          containerStyle={{ backgroundColor: 'transparent', overflow: 'visible' }}
           onLayout={(e) => {
             paneLayout.current = e.nativeEvent.layout
           }}

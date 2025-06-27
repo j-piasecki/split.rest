@@ -120,7 +120,7 @@ function ParticipansPicker({ user }: { user: UserWithDisplayName }) {
           icon='group'
           title={t('splitInfo.participants')}
           textLocation='start'
-          containerStyle={{ backgroundColor: 'transparent' }}
+          containerStyle={{ backgroundColor: 'transparent', overflow: 'visible' }}
           onLayout={(e) => {
             paneLayout.current = e.nativeEvent.layout
           }}
