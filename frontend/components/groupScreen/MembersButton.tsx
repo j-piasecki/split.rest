@@ -1,5 +1,4 @@
-import { Button } from '@components/Button'
-import { Icon } from '@components/Icon'
+import { PaneButton } from '@components/PaneButton'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
@@ -7,277 +6,156 @@ import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
 import { useRouter } from 'expo-router'
-import React, { useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Platform, Pressable, View, useWindowDimensions } from 'react-native'
-import Animated, { ZoomIn } from 'react-native-reanimated'
-import { GroupUserInfo, Member } from 'shared'
+import { StyleSheet, View, useWindowDimensions } from 'react-native'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+} from 'react-native-reanimated'
+import { GroupUserInfo } from 'shared'
 
 export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const { t } = useTranslation()
   const router = useRouter()
   const { members, isLoading } = useGroupMembers(info?.id, true)
-  const containerRef = useRef<View>(null)
   const iconsRef = useRef<View>(null)
-  const [containerHeight, setContainerHeight] = useState(0)
-  const [iconsWidth, setIconsWidth] = useState(0)
+  const [iconsToShow, setIconsToShow] = useState(20)
   const { width } = useWindowDimensions()
 
-  const iconsToShow = Math.min(20, members.length)
+  const singleIconSize = 28
 
   useLayoutEffect(() => {
-    if (containerRef.current && iconsRef.current) {
-      const containerSize = measure(containerRef.current!)
-      setContainerHeight(containerSize.height)
+    const width = measure(iconsRef.current!).width
+    const fittingIcons = Math.floor(width / singleIconSize)
 
-      const iconsSize = measure(iconsRef.current!)
-      setIconsWidth(iconsSize.width)
+    if (fittingIcons >= members.length) {
+      setIconsToShow(members.length)
+    } else {
+      setIconsToShow(Math.max(Math.min(fittingIcons - 1, members.length), 0))
     }
-  }, [iconsToShow, width])
+  }, [width, members.length])
 
   return (
-    <ShimmerPlaceholder argument={isLoading} style={{ flex: 1, minHeight: 134 }}>
-      <Pressable
-        onPress={() => router.navigate(`/group/${info?.id}/members`)}
-        style={({ pressed, hovered }) => ({
-          flex: 1,
-          backgroundColor: pressed
-            ? theme.colors.surfaceContainerHighest
-            : hovered
-              ? theme.colors.surfaceContainerHigh
-              : theme.colors.surfaceContainer,
-          borderRadius: 16,
-          padding: 12,
-          overflow: 'hidden',
-        })}
-      >
-        <View ref={containerRef} style={{ flexDirection: 'row', gap: 8 }}>
-          <View style={{ gap: 12 }}>
-            <View style={[{ flexDirection: 'row', gap: 16, paddingHorizontal: 8 }]}>
-              <Icon name='members' size={24} color={theme.colors.secondary} />
-              <Text
-                numberOfLines={1}
-                style={{
-                  flexShrink: 1,
-                  color: theme.colors.secondary,
-                  fontSize: 20,
-                  fontWeight: 600,
-                }}
-              >
-                {t('tabs.members')}
-              </Text>
-            </View>
-
-            <View style={{ height: 72, justifyContent: 'center', paddingHorizontal: 12 }}>
-              <Button
-                leftIcon='addMember'
-                style={{ backgroundColor: theme.colors.primary }}
-                foregroundColor={theme.colors.onPrimary}
-                onPress={() => router.navigate(`/group/${info?.id}/inviteMember`)}
-              >
-                <View style={{ width: 0, height: 60, backgroundColor: 'red' }} />
-              </Button>
-            </View>
-          </View>
-
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <View
-              ref={iconsRef}
+    <PaneButton
+      icon='members'
+      title={t('tabs.members')}
+      adjustsFontSizeToFit={false}
+      onPress={() => {
+        router.navigate(`/group/${info?.id}/members`)
+      }}
+      rightComponent={
+        <View
+          style={{
+            flexGrow: 1,
+            flexShrink: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 24,
+          }}
+        >
+          <View
+            ref={iconsRef}
+            style={{
+              flex: 1,
+              height: 40,
+              overflow: 'hidden',
+            }}
+          >
+            <ShimmerPlaceholder
               style={{
                 flex: 1,
-                height: containerHeight,
-                justifyContent: 'center',
+                flexDirection: 'row-reverse',
                 alignItems: 'center',
+                justifyContent: 'flex-start',
               }}
+              shimmerStyle={{
+                width: iconsToShow > 0 ? '75%' : 0,
+                minWidth: iconsToShow > 0 ? singleIconSize : 0,
+                height: 28,
+                alignSelf: 'flex-end',
+              }}
+              argument={info === undefined || isLoading ? undefined : members}
             >
-              <MembersIcons
-                members={members}
-                width={iconsWidth}
-                height={containerHeight}
-                info={info}
-              />
-            </View>
-            <Icon size={24} name={'chevronForward'} color={theme.colors.secondary} />
+              {members.slice(0, iconsToShow).map((member, index) => {
+                return (
+                  <Bubble key={member.id} translateX={index * 8} delay={index * 50 + 225}>
+                    <ProfilePicture userId={member.id} size={singleIconSize} />
+                  </Bubble>
+                )
+              })}
+
+              {info?.memberCount && info.memberCount > iconsToShow && (
+                <Bubble translateX={iconsToShow * 8} delay={iconsToShow * 50 + 250}>
+                  <View
+                    style={[
+                      StyleSheet.absoluteFillObject,
+                      {
+                        backgroundColor: theme.colors.primary,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingHorizontal: 2,
+                      },
+                    ]}
+                  >
+                    <Text
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      ellipsizeMode='clip'
+                      style={{ fontSize: 15, color: theme.colors.onPrimary, fontWeight: '600' }}
+                    >
+                      +{info.memberCount - iconsToShow}
+                    </Text>
+                  </View>
+                </Bubble>
+              )}
+            </ShimmerPlaceholder>
           </View>
         </View>
-      </Pressable>
-    </ShimmerPlaceholder>
+      }
+    />
   )
 }
 
-function getVisibleArcFraction(width: number, height: number, radius: number): number {
-  const unitWidth = width / (2 * radius)
-  const unitHeight = height / (2 * radius)
-
-  // The circle fits entirely within the container
-  if (width >= 2 * radius && height >= 2 * radius) {
-    return 1
-  }
-
-  // The container is wider than the circle but not taller so we take
-  // the angle between the X-axis and the line from the center to
-  // the edge of the circle
-  if (width >= 2 * radius) {
-    const angle = Math.asin(unitHeight)
-    return (4 * angle) / (2 * Math.PI)
-  }
-
-  // The container is taller than the circle but not wider so we take
-  // the angle between the Y-axis and the line from the center to
-  // the edge of the circle
-  if (height >= 2 * radius) {
-    const angle = Math.acos(unitWidth)
-    return 1 - (4 * angle) / (2 * Math.PI)
-  }
-
-  return 0
-}
-
-type Bubble = { size: number; x: number; y: number }
-
-function useBubbles(
-  count: number,
-  width: number,
-  height: number,
-  middleIconSize: number
-): Bubble[] {
-  return useMemo(() => {
-    if (count <= 0) {
-      return []
-    }
-    const result: Bubble[] = []
-    const ringSpacing = 4
-    const centerX = width / 2
-    const centerY = height / 2
-
-    let bubbleRadius =
-      ((Math.min(width, height) - middleIconSize - ringSpacing * 2) / 4) * (count < 3 ? 1.5 : 1)
-    let ringRadius = bubbleRadius + ringSpacing + middleIconSize / 2
-    let ringCircumference = 2 * Math.PI * ringRadius
-    let placedBubbles = 0
-
-    while (bubbleRadius > 8 && placedBubbles < count) {
-      const leftToPlace = count - placedBubbles
-      const ringFractionInsideContainer = getVisibleArcFraction(width, height, ringRadius)
-      const numberOfBubbles = Math.floor(
-        (ringCircumference * ringFractionInsideContainer) / (bubbleRadius * 2.5)
-      )
-      const angleStep =
-        (2 * Math.PI * ringFractionInsideContainer) / Math.min(numberOfBubbles, leftToPlace)
-      const startAngle = (ringFractionInsideContainer / 2) * Math.PI + (Math.PI * 3) / 5
-
-      for (
-        let angle = startAngle;
-        angle < 2 * Math.PI + startAngle - (bubbleRadius * 2) / ringRadius && placedBubbles < count;
-        angle += angleStep
-      ) {
-        const x = centerX - bubbleRadius + ringRadius * Math.cos(angle)
-        const y = centerY - bubbleRadius + ringRadius * Math.sin(angle)
-
-        const overflowsX =
-          x < -bubbleRadius * 0.2 || x + bubbleRadius * 2 > width + bubbleRadius * 0.2
-        const overflowsY =
-          y < -bubbleRadius * 0.2 || y + bubbleRadius * 2 > height + bubbleRadius * 0.2
-
-        // if out of bounds of the container, skip
-        if (overflowsX || overflowsY) {
-          continue
-        }
-
-        result.push({
-          size: bubbleRadius * 2 + Math.random() * ringSpacing * 2 - ringSpacing,
-          x,
-          y,
-        })
-        placedBubbles++
-      }
-
-      ringRadius += bubbleRadius * 2
-      bubbleRadius *= Math.max(0.5, Math.min(0.9, width / height - 0.75))
-      ringCircumference = 2 * Math.PI * ringRadius
-    }
-
-    // shuffle bubbles for animation
-    result.sort(() => Math.random() - 0.5)
-    return result
-  }, [count, width, height, middleIconSize])
-}
-
-function MembersIcons({
-  members,
-  width,
-  height,
-  info,
+function Bubble({
+  children,
+  translateX,
+  delay,
 }: {
-  width: number
-  height: number
-  members: Member[]
-  info: GroupUserInfo | undefined
+  children: React.ReactNode
+  translateX: number
+  delay: number
 }) {
-  const middleIconSize = 40
+  const scale = useSharedValue(0)
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX }, { scale: scale.value }],
+    }
+  })
 
-  const theme = useTheme()
-  const bubbles = useBubbles(members.length, width, height, middleIconSize)
+  useEffect(() => {
+    scale.value = withDelay(delay, withSpring(1, { mass: 1, damping: 15, stiffness: 150 }))
+  }, [delay, scale])
 
   return (
-    <View
-      style={{
-        flex: 1,
-        height: height,
-        width: width,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      {bubbles.map((bubble, index) => (
-        <Animated.View
-          entering={
-            Platform.OS !== 'web'
-              ? ZoomIn.springify()
-                  .duration(500)
-                  .delay(index * 75 + 300)
-              : undefined
-          }
-          key={index}
-          style={{
-            position: 'absolute',
-            left: bubble.x,
-            top: bubble.y,
-            width: bubble.size,
-            height: bubble.size,
-            borderRadius: bubble.size / 2,
-          }}
-        >
-          <ProfilePicture key={index} size={bubble.size} userId={members[index].id} />
-        </Animated.View>
-      ))}
-
-      <Animated.View
-        entering={Platform.OS !== 'web' ? ZoomIn.springify().duration(600).delay(200) : undefined}
-        style={{
-          width: middleIconSize,
-          height: middleIconSize,
-          borderRadius: middleIconSize / 2,
-          backgroundColor: theme.colors.primaryContainer,
+    <Animated.View
+      style={[
+        animatedStyle,
+        {
+          width: 32,
+          height: 32,
+          borderRadius: 16,
+          overflow: 'hidden',
           justifyContent: 'center',
           alignItems: 'center',
-          paddingHorizontal: 4,
-        }}
-      >
-        <Text
-          style={{
-            color: theme.colors.onPrimaryContainer,
-            fontSize: middleIconSize / 2,
-            fontWeight: 700,
-          }}
-          adjustsFontSizeToFit
-          numberOfLines={1}
-        >
-          {info?.memberCount}
-        </Text>
-      </Animated.View>
-    </View>
+        },
+      ]}
+    >
+      {children}
+    </Animated.View>
   )
 }
