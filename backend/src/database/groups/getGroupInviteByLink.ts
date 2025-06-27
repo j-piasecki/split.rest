@@ -1,12 +1,12 @@
 import { NotFoundException } from '../../errors/NotFoundException'
 import { Pool } from 'pg'
-import { GroupInviteWithGroupInfo } from 'shared'
+import { GroupInviteWithGroupInfoAndMemberIds } from 'shared'
 import { GetGroupInviteByLinkArguments } from 'shared/src/endpointArguments'
 
 export async function getGroupInviteByLink(
   pool: Pool,
   args: GetGroupInviteByLinkArguments
-): Promise<GroupInviteWithGroupInfo> {
+): Promise<GroupInviteWithGroupInfoAndMemberIds> {
   const { rows } = await pool.query(
     `
       SELECT 
@@ -37,6 +37,21 @@ export async function getGroupInviteByLink(
     throw new NotFoundException('api.notFound.group')
   }
 
+  const { rows: groupMemberIds } = await pool.query<{ user_id: string }>(
+    `
+      SELECT
+        user_id
+      FROM
+        group_members
+      WHERE
+        group_id = $1
+      ORDER BY
+        user_id
+      LIMIT 20
+    `,
+    [rows[0].group_id]
+  )
+
   return {
     groupInfo: {
       id: rows[0].group_id,
@@ -55,6 +70,7 @@ export async function getGroupInviteByLink(
       photoUrl: null,
       deleted: rows[0].inviter_deleted,
     },
+    memberIds: groupMemberIds.map((row) => row.user_id),
     createdAt: rows[0].created_at,
     rejected: false,
     withdrawn: false,

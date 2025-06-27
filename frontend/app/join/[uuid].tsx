@@ -3,6 +3,7 @@ import { ButtonShimmer } from '@components/ButtonShimmer'
 import { ErrorText } from '@components/ErrorText'
 import Header from '@components/Header'
 import { Icon } from '@components/Icon'
+import { MemberBubbles } from '@components/MemberBubbles'
 import { Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
@@ -14,15 +15,16 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import i18n from '@utils/i18n'
+import { measure } from '@utils/measure'
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
-import React from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupInviteWithGroupInfo } from 'shared'
+import { GroupInviteWithGroupInfoAndMemberIds } from 'shared'
 
 interface InvitePaneProps {
-  invite?: GroupInviteWithGroupInfo
+  invite?: GroupInviteWithGroupInfoAndMemberIds
   uuid: string
 }
 
@@ -33,6 +35,14 @@ function InvitePane({ invite, uuid }: InvitePaneProps) {
   const { t } = useTranslation()
   const { mutateAsync: joinGroup, isPending: isJoiningGroup } = useJoinGroupByLink()
   const [error, setError] = useTranslatedError()
+  const bubblesContainerRef = useRef<View>(null)
+  const [bubblesContainerWidth, setBubblesContainerWidth] = useState(0)
+
+  useLayoutEffect(() => {
+    if (bubblesContainerRef.current) {
+      setBubblesContainerWidth(measure(bubblesContainerRef.current).width)
+    }
+  }, [bubblesContainerRef])
 
   const currencyKey = invite?.groupInfo.currency?.toLocaleLowerCase()
   const currencyText = i18n.exists(`currency.${currencyKey}`)
@@ -49,98 +59,98 @@ function InvitePane({ invite, uuid }: InvitePaneProps) {
         justifyContent: isSmallScreen ? 'space-between' : undefined,
       }}
     >
-      <Pane
-        icon='stackedEmail'
-        textLocation='start'
-        title={t('joinGroup.header')}
-        containerStyle={{ padding: 16, paddingTop: 8, gap: 8 }}
-      >
-        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, fontWeight: 600 }}>
-          {t('joinGroup.youveBeenInvitedToJoin')}
-        </Text>
-
-        <ShimmerPlaceholder argument={invite} shimmerStyle={{ height: 32 }}>
-          {(invite) => (
-            <Text
-              numberOfLines={3}
-              style={{
-                color: theme.colors.onSurface,
-                fontSize: 24,
-                fontWeight: 800,
-              }}
-            >
-              {invite.groupInfo.name}
-            </Text>
-          )}
-        </ShimmerPlaceholder>
-
-        <ShimmerPlaceholder
-          argument={invite}
-          shimmerStyle={{ height: 25, width: '70%' }}
-          offset={0.95}
+      <View>
+        <Pane
+          icon='stackedEmail'
+          textLocation='start'
+          title={t('joinGroup.header')}
+          containerStyle={{ padding: 16, paddingTop: 8, gap: 8 }}
         >
-          {(invite) => (
-            <View style={{ flexDirection: 'row' }}>
-              <Icon
-                name='members'
-                size={24}
-                color={theme.colors.outline}
-                style={{ marginRight: 12 }}
-              />
-              <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
-                {t('joinGroup.memberCount', { count: invite.groupInfo.memberCount })}
+          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, fontWeight: 600 }}>
+            {t('joinGroup.youveBeenInvitedToJoin')}
+          </Text>
+
+          <ShimmerPlaceholder argument={invite} shimmerStyle={{ height: 32 }}>
+            {(invite) => (
+              <Text
+                numberOfLines={3}
+                style={{
+                  color: theme.colors.onSurface,
+                  fontSize: 24,
+                  fontWeight: 800,
+                }}
+              >
+                {invite.groupInfo.name}
               </Text>
-            </View>
-          )}
-        </ShimmerPlaceholder>
+            )}
+          </ShimmerPlaceholder>
 
-        <ShimmerPlaceholder
-          argument={invite}
-          shimmerStyle={{ height: 25, width: '70%' }}
-          offset={0.9}
-        >
-          {(_invite) => (
-            <View style={{ flexDirection: 'row' }}>
-              <Icon
-                name='currency'
-                size={24}
-                color={theme.colors.outline}
-                style={{ marginRight: 12 }}
-              />
-              <Text style={{ color: theme.colors.onSurface, fontSize: 18, width: '70%' }}>
-                {t('joinGroup.currency', { currency: currencyText })}
-              </Text>
-            </View>
-          )}
-        </ShimmerPlaceholder>
-
-        <ShimmerPlaceholder
-          argument={invite}
-          shimmerStyle={{ height: 25, width: '70%' }}
-          offset={0.85}
-        >
-          {(invite) => (
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon
-                name='user'
-                size={24}
-                color={theme.colors.outline}
-                style={{ marginRight: 12 }}
-              />
-              <Text style={{ color: theme.colors.onSurface, fontSize: 18, marginRight: 8 }}>
-                <Trans
-                  i18nKey='joinGroup.invitedBy'
-                  values={{ name: invite.createdBy.name }}
-                  components={{
-                    Styled: <Text style={{ color: theme.colors.primary, fontWeight: 600 }} />,
-                  }}
+          <ShimmerPlaceholder
+            argument={invite}
+            shimmerStyle={{ height: 25, width: '70%' }}
+            offset={0.9}
+          >
+            {(_invite) => (
+              <View style={{ flexDirection: 'row' }}>
+                <Icon
+                  name='currency'
+                  size={24}
+                  color={theme.colors.outline}
+                  style={{ marginRight: 12 }}
                 />
-              </Text>
-              <ProfilePicture userId={invite.createdBy.id} size={24} />
-            </View>
-          )}
-        </ShimmerPlaceholder>
-      </Pane>
+                <Text style={{ color: theme.colors.onSurface, fontSize: 18, width: '70%' }}>
+                  {t('joinGroup.currency', { currency: currencyText })}
+                </Text>
+              </View>
+            )}
+          </ShimmerPlaceholder>
+
+          <ShimmerPlaceholder
+            argument={invite}
+            shimmerStyle={{ height: 25, width: '70%' }}
+            offset={0.85}
+          >
+            {(invite) => (
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Icon
+                  name='user'
+                  size={24}
+                  color={theme.colors.outline}
+                  style={{ marginRight: 12 }}
+                />
+                <Text style={{ color: theme.colors.onSurface, fontSize: 18, marginRight: 8 }}>
+                  <Trans
+                    i18nKey='joinGroup.invitedBy'
+                    values={{ name: invite.createdBy.name }}
+                    components={{
+                      Styled: <Text style={{ color: theme.colors.primary, fontWeight: 600 }} />,
+                    }}
+                  />
+                </Text>
+                <ProfilePicture userId={invite.createdBy.id} size={24} />
+              </View>
+            )}
+          </ShimmerPlaceholder>
+
+          <View ref={bubblesContainerRef} style={{ marginTop: 8, marginBottom: 8 }}>
+            <ShimmerPlaceholder
+              argument={invite}
+              shimmerStyle={{ width: bubblesContainerWidth, height: 140 }}
+            >
+              {(invite) => (
+                <MemberBubbles
+                  middleIconSize={52}
+                  memberIds={invite.memberIds}
+                  width={bubblesContainerWidth}
+                  height={140}
+                  info={invite.groupInfo}
+                />
+              )}
+            </ShimmerPlaceholder>
+          </View>
+        </Pane>
+      </View>
+
       <View style={{ flexDirection: 'column', paddingTop: 24, gap: 8 }}>
         <ErrorText>{error ?? ' '}</ErrorText>
         <ButtonShimmer argument={invite} offset={0.7}>

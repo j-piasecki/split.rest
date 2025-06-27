@@ -4,7 +4,7 @@ import { useTheme } from '@styling/theme'
 import { useMemo } from 'react'
 import { Platform, View } from 'react-native'
 import Animated, { ZoomIn } from 'react-native-reanimated'
-import { GroupUserInfo, Member } from 'shared'
+import { GroupInfo } from 'shared'
 
 function getVisibleArcFraction(width: number, height: number, radius: number): number {
   const unitWidth = width / (2 * radius)
@@ -46,6 +46,7 @@ function useBubbles(
     if (count <= 0) {
       return []
     }
+    let totalAttempts = 0
     const result: Bubble[] = []
     const ringSpacing = 4
     const centerX = width / 2
@@ -57,7 +58,7 @@ function useBubbles(
     let ringCircumference = 2 * Math.PI * ringRadius
     let placedBubbles = 0
 
-    while (bubbleRadius > 8 && placedBubbles < count) {
+    while (bubbleRadius > 8 && placedBubbles < count && totalAttempts < 100) {
       const leftToPlace = count - placedBubbles
       const ringFractionInsideContainer = getVisibleArcFraction(width, height, ringRadius)
       const numberOfBubbles = Math.floor(
@@ -72,6 +73,7 @@ function useBubbles(
         angle < 2 * Math.PI + startAngle - (bubbleRadius * 2) / ringRadius && placedBubbles < count;
         angle += angleStep
       ) {
+        totalAttempts++
         const x = centerX - bubbleRadius + ringRadius * Math.cos(angle)
         const y = centerY - bubbleRadius + ringRadius * Math.sin(angle)
 
@@ -105,25 +107,24 @@ function useBubbles(
 }
 
 export function MemberBubbles({
-  members,
+  memberIds,
   width,
   height,
   info,
+  middleIconSize = 40,
 }: {
   width: number
   height: number
-  members: Member[]
-  info: GroupUserInfo | undefined
+  memberIds: string[]
+  info: GroupInfo | undefined
+  middleIconSize?: number
 }) {
-  const middleIconSize = 40
-
   const theme = useTheme()
-  const bubbles = useBubbles(members.length, width, height, middleIconSize)
+  const bubbles = useBubbles(memberIds.length, width, height, middleIconSize)
 
   return (
     <View
       style={{
-        flex: 1,
         height: height,
         width: width,
         justifyContent: 'center',
@@ -149,7 +150,7 @@ export function MemberBubbles({
             borderRadius: bubble.size / 2,
           }}
         >
-          <ProfilePicture key={index} size={bubble.size} userId={members[index].id} />
+          <ProfilePicture key={index} size={bubble.size} userId={memberIds[index]} />
         </Animated.View>
       ))}
 
