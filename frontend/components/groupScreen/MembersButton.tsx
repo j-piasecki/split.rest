@@ -9,7 +9,7 @@ import { useRouter } from 'expo-router'
 import React, { useEffect } from 'react'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, View, useWindowDimensions } from 'react-native'
+import { Platform, StyleSheet, View, useWindowDimensions } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -83,14 +83,22 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
             >
               {members.slice(0, iconsToShow).map((member, index) => {
                 return (
-                  <Bubble key={member.id} translateX={index * 8} delay={index * 50 + 225}>
+                  <Bubble
+                    key={member.id}
+                    translateX={index * 8}
+                    delay={index * 50 + (Platform.OS !== 'web' ? 175 : 0)}
+                  >
                     <ProfilePicture userId={member.id} size={singleIconSize} />
                   </Bubble>
                 )
               })}
 
               {info?.memberCount && info.memberCount > iconsToShow && (
-                <Bubble translateX={iconsToShow * 8} delay={iconsToShow * 50 + 250} border={false}>
+                <Bubble
+                  translateX={iconsToShow * 8}
+                  delay={iconsToShow * 50 + (Platform.OS !== 'web' ? 250 : 75)}
+                  border={false}
+                >
                   <View
                     style={[
                       StyleSheet.absoluteFillObject,
@@ -106,7 +114,11 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
                       numberOfLines={1}
                       adjustsFontSizeToFit
                       ellipsizeMode='clip'
-                      style={{ fontSize: 15, color: theme.colors.onPrimary, fontWeight: '600' }}
+                      style={{
+                        fontSize: Platform.OS === 'web' ? 14 : 16,
+                        color: theme.colors.onPrimary,
+                        fontWeight: '600',
+                      }}
                     >
                       +{info.memberCount - iconsToShow}
                     </Text>
