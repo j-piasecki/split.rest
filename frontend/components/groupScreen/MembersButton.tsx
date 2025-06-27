@@ -90,7 +90,7 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
               })}
 
               {info?.memberCount && info.memberCount > iconsToShow && (
-                <Bubble translateX={iconsToShow * 8} delay={iconsToShow * 50 + 250}>
+                <Bubble translateX={iconsToShow * 8} delay={iconsToShow * 50 + 250} border={false}>
                   <View
                     style={[
                       StyleSheet.absoluteFillObject,
@@ -125,11 +125,14 @@ function Bubble({
   children,
   translateX,
   delay,
+  border = true,
 }: {
   children: React.ReactNode
   translateX: number
   delay: number
+  border?: boolean
 }) {
+  const theme = useTheme()
   const scale = useSharedValue(0)
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -152,6 +155,9 @@ function Bubble({
           overflow: 'hidden',
           justifyContent: 'center',
           alignItems: 'center',
+          borderWidth: border ? 2 : 0,
+          borderColor: theme.colors.surfaceContainer,
+          backgroundColor: theme.colors.surfaceContainer,
         },
       ]}
     >
