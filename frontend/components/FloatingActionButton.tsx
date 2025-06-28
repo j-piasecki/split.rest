@@ -36,15 +36,15 @@ export function useFABScrollHandler(fabVisible?: boolean) {
 
     if (
       bottom > e.nativeEvent.contentSize.height - 16 ||
-      change > 0 ||
+      change > 16 ||
       e.nativeEvent.contentOffset.y < 32
     ) {
       fab.current?.expand()
-    } else if (change < 0) {
+      previousOffset.current = e.nativeEvent.contentOffset.y
+    } else if (change < -16) {
       fab.current?.collapse()
+      previousOffset.current = e.nativeEvent.contentOffset.y
     }
-
-    previousOffset.current = e.nativeEvent.contentOffset.y
   }
 
   return [fab, handler] as const

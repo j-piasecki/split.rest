@@ -72,18 +72,18 @@ export function FlatListWithHeader<T>({
     } else {
       const diff = e.nativeEvent.contentOffset.y - lastScrollY.value
 
-      if (diff > 0) {
+      if (diff > 16) {
         headerVisible.value = false
+        lastScrollY.value = e.nativeEvent.contentOffset.y
       } else if (
-        diff < 0 &&
+        diff < -16 &&
         e.nativeEvent.contentSize.height >
           e.nativeEvent.layoutMeasurement.height + e.nativeEvent.contentOffset.y
       ) {
         headerVisible.value = true
+        lastScrollY.value = e.nativeEvent.contentOffset.y
       }
     }
-
-    lastScrollY.value = e.nativeEvent.contentOffset.y
   }
 
   return (
