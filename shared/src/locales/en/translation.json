@@ -148,7 +148,10 @@
       "callerCannotUncompleteEntry": "You cannot mark this entry as not completed",
       "query": {
         "titleTooLong": "Title is too long",
-        "tooManyParticipants": "Too many participants"
+        "tooManyParticipants": "Too many participants",
+        "userIdTooLong": "Provided user ID is too long",
+        "tooManyPaidBy": "Too many users set as payers",
+        "tooManyLastUpdateBy": "Too many users set as last updaters"
       }
     },
     "group": {
