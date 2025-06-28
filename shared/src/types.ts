@@ -100,7 +100,9 @@ export interface SplitQuery {
   afterTimestamp?: number
   lastUpdateBeforeTimestamp?: number
   lastUpdateAfterTimestamp?: number
+  // undefined is all, true is edited, false is not edited
   edited?: boolean
+  pending?: boolean
 }
 
 export interface SplitWithChanges extends SplitInfo {

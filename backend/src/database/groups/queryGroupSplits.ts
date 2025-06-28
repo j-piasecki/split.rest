@@ -140,11 +140,22 @@ export async function queryGroupSplits(
     paramIndex++
   }
 
-  // Edited filter (undefined is all, true is edited, false is not edited)
+  // Edited filter
   if (args.query?.edited === true) {
     whereClauses.push(`splits.version > 1`)
   } else if (args.query?.edited === false) {
     whereClauses.push(`splits.version = 1`)
+  }
+
+  // Pending filter
+  if (args.query?.pending !== undefined) {
+    const subquery = `(SELECT EXISTS (
+      SELECT 1 FROM split_participants 
+      WHERE split_participants.split_id = splits.id AND split_participants.pending = true
+    ))`
+    whereClauses.push(`${subquery} = $${paramIndex}`)
+    values.push(args.query.pending)
+    paramIndex++
   }
 
   // Final query
