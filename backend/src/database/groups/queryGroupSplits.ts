@@ -91,6 +91,49 @@ export async function queryGroupSplits(
     }
   }
 
+  // Timestamp filters
+  if (args.query?.beforeTimestamp) {
+    whereClauses.push(`splits.timestamp < $${paramIndex}`)
+    values.push(args.query.beforeTimestamp)
+    paramIndex++
+  }
+  if (args.query?.afterTimestamp) {
+    whereClauses.push(`splits.timestamp > $${paramIndex}`)
+    values.push(args.query.afterTimestamp)
+    paramIndex++
+  }
+  if (args.query?.lastUpdateBeforeTimestamp) {
+    whereClauses.push(`splits.updated_at < $${paramIndex}`)
+    values.push(args.query.lastUpdateBeforeTimestamp)
+    paramIndex++
+  }
+  if (args.query?.lastUpdateAfterTimestamp) {
+    whereClauses.push(`splits.updated_at > $${paramIndex}`)
+    values.push(args.query.lastUpdateAfterTimestamp)
+    paramIndex++
+  }
+
+  // Paid by filter
+  if (args.query?.paidBy) {
+    whereClauses.push(`splits.paid_by = $${paramIndex}`)
+    values.push(args.query.paidBy)
+    paramIndex++
+  }
+
+  // Last update by filter
+  if (args.query?.lastUpdateBy) {
+    whereClauses.push(`splits.created_by = $${paramIndex}`)
+    values.push(args.query.lastUpdateBy)
+    paramIndex++
+  }
+
+  // Edited filter (undefined is all, true is edited, false is not edited)
+  if (args.query?.edited === true) {
+    whereClauses.push(`splits.version > 1`)
+  } else if (args.query?.edited === false) {
+    whereClauses.push(`splits.version = 1`)
+  }
+
   // Final query
   const query = `
     SELECT

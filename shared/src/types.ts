@@ -94,6 +94,13 @@ export interface SplitQuery {
   participants?: { type: 'all'; ids: string[] } | { type: 'oneOf'; ids: string[] }
   orderBy?: 'title' | 'createdAt' | 'total'
   orderDirection?: 'asc' | 'desc'
+  paidBy?: string
+  lastUpdateBy?: string
+  beforeTimestamp?: number
+  afterTimestamp?: number
+  lastUpdateBeforeTimestamp?: number
+  lastUpdateAfterTimestamp?: number
+  edited?: boolean
 }
 
 export interface SplitWithChanges extends SplitInfo {
