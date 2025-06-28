@@ -57,6 +57,13 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'querySplits': {
+          if (!callerPermissions?.canQuerySplits()) {
+            return 'api.insufficientPermissions.group.querySplits'
+          }
+          continue
+        }
+
         case 'seeSplitDetails': {
           const args = unsafeArgs as PermissionArguments<['seeSplitDetails']>
           const canSeeDetails = callerPermissions?.canSeeSplitsDetails()

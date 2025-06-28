@@ -26,6 +26,7 @@ import {
   GetUserInvitesArguments,
   InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
+  QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
@@ -100,6 +101,10 @@ export function isGetGroupSplitsArguments(obj: any): obj is GetGroupSplitsArgume
 
 export function isGetUserGroupsArguments(obj: any): obj is GetUserGroupsArguments {
   return obj.hidden !== undefined
+}
+
+export function isQueryGroupSplitsArguments(obj: any): obj is QueryGroupSplitsArguments {
+  return obj.groupId !== undefined && obj.query !== undefined
 }
 
 export function isGetUserByEmailArguments(obj: any): obj is GetUserByEmailArguments {

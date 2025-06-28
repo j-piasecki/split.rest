@@ -31,6 +31,7 @@ import {
   GetUserInvitesArguments,
   InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
+  QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -128,6 +129,10 @@ export class AppService {
 
   async getGroupSplits(callerId: string, args: GetGroupSplitsArguments) {
     return await this.databaseService.getGroupSplits(callerId, args)
+  }
+
+  async queryGroupSplits(callerId: string, args: QueryGroupSplitsArguments) {
+    return await this.databaseService.queryGroupSplits(callerId, args)
   }
 
   async getUserGroups(callerId: string, args: GetUserGroupsArguments) {

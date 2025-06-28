@@ -18,6 +18,7 @@ import { getUserGroupInvites } from './database/groups/getUserGroupInvites'
 import { getUserGroups } from './database/groups/getUserGroups'
 import { inviteUser } from './database/groups/inviteUser'
 import { joinGroupByLink } from './database/groups/joinGroupByLink'
+import { queryGroupSplits } from './database/groups/queryGroupSplits'
 import { setGroupAccess } from './database/groups/setGroupAccess'
 import { setGroupAdmin } from './database/groups/setGroupAdmin'
 import { setGroupHidden } from './database/groups/setGroupHidden'
@@ -73,6 +74,7 @@ import {
   GetUserInvitesArguments,
   InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
+  QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
@@ -161,6 +163,11 @@ export class DatabaseService {
   @RequirePermissions(['readSplits'])
   async getGroupSplits(callerId: string, args: GetGroupSplitsArguments) {
     return await getGroupSplits(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['querySplits'])
+  async queryGroupSplits(callerId: string, args: QueryGroupSplitsArguments) {
+    return await queryGroupSplits(this.pool, callerId, args)
   }
 
   // Every user can see their own groups

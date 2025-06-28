@@ -1,6 +1,7 @@
 export const PermissionKeys = [
   'createSplit',
   'readSplits',
+  'querySplits',
   'seeSplitDetails',
   'updateSplit',
   'deleteSplit',
@@ -42,6 +43,7 @@ export const enum SplitPermissionsDTO {
   SettleUp = 1 << 12, // Access to settle up
   CompleteSplitEntry = 1 << 13, // Complete split entries
   UncompleteSplitEntry = 1 << 14, // Uncomplete split entries
+  Query = 1 << 15, // Query splits
 }
 
 export enum SplitPermissionType {
@@ -119,6 +121,10 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     }
 
     return SplitPermissionType.None
+  }
+
+  canQuerySplits(): boolean {
+    return Boolean(this.splits & SplitPermissionsDTO.Query)
   }
 
   canSeeSplitsDetails(): SplitPermissionType {
@@ -249,6 +255,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return {
       createSplit: this.canCreateSplits(),
       readSplits: splitPermissionTypeToString(this.canReadSplits()),
+      querySplits: this.canQuerySplits(),
       seeSplitsDetails: splitPermissionTypeToString(this.canSeeSplitsDetails()),
       updateSplits: splitPermissionTypeToString(this.canUpdateSplits()),
       deleteSplits: splitPermissionTypeToString(this.canDeleteSplits()),
