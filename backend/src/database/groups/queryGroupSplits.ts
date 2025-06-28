@@ -28,7 +28,9 @@ export async function queryGroupSplits(
         ? `ORDER BY splits.total ${orderDirection}, splits.id DESC`
         : args.query?.orderBy === 'balanceChange'
           ? `ORDER BY user_change ${orderDirection}, splits.id DESC`
-          : `ORDER BY splits.id ${orderDirection}`
+          : args.query?.orderBy === 'updatedAt'
+            ? `ORDER BY splits.updated_at ${orderDirection}, splits.id DESC`
+            : `ORDER BY splits.id ${orderDirection}`
 
   // Pagination handling
   if (args.startAfter) {
@@ -53,6 +55,13 @@ export async function queryGroupSplits(
         `(${subquery} ${comparator} $${paramIndex} OR (${subquery} = $${paramIndex} AND splits.id < $${paramIndex + 1}))`
       )
       values.push(args.startAfter.userChange, args.startAfter.id)
+      paramIndex += 2
+    } else if (args.query?.orderBy === 'updatedAt') {
+      const comparator = orderDirection === 'ASC' ? '>' : '<'
+      whereClauses.push(
+        `(splits.updated_at ${comparator} $${paramIndex} OR (splits.updated_at = $${paramIndex} AND splits.id < $${paramIndex + 1}))`
+      )
+      values.push(args.startAfter.updatedAt, args.startAfter.id)
       paramIndex += 2
     } else {
       const comparator = orderDirection === 'ASC' ? '>' : '<'
@@ -174,7 +183,7 @@ export async function queryGroupSplits(
     GROUP BY splits.id
     ${havingClause}
     ${orderClause}
-    LIMIT 2
+    LIMIT 20
   `
 
   const { rows } = await pool.query(query, values)
