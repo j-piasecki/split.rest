@@ -1,6 +1,7 @@
 import { SplitsList, SplitsListProps } from './SplitsList'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useGroupSplits } from '@hooks/database/useGroupSplits'
+import { useThreeBarLayout } from '@utils/dimensionUtils'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { SplitPermissionType } from 'shared'
@@ -14,6 +15,7 @@ export interface GroupSplitsListProps
 }
 
 export function GroupSplitsList(props: GroupSplitsListProps) {
+  const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(props.info?.id)
 
@@ -34,6 +36,7 @@ export function GroupSplitsList(props: GroupSplitsListProps) {
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
       hasNextPage={hasNextPage}
+      applyHorizontalPadding={!threeBarLayout}
       emptyMessage={
         permissions?.canReadSplits() === SplitPermissionType.None
           ? t('api.insufficientPermissions.group.readSplits')

@@ -210,7 +210,8 @@
     "balance": "Balance: <Styled>{{balance}}</Styled>",
     "admin": "Moderator of this group",
     "noAccess": "No access to this group",
-    "settleUpWithMember": "Settle up with this person"
+    "settleUpWithMember": "Settle up with this person",
+    "noSplits": "This person has no splits in this group"
   },
 
   "screenName": {

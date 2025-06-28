@@ -21,7 +21,8 @@ export interface FlatListWithHeaderProps<T>
     | 'onMomentumScrollBegin'
     | 'onMomentumScrollEnd'
   > {
-  refreshing?: boolean
+  isLoading?: boolean
+  isRefreshing?: boolean
   onRefresh?: () => void
   scrollHandler?: (e: NativeSyntheticEvent<NativeScrollEvent>) => void
   showBackButton?: boolean
@@ -29,7 +30,8 @@ export interface FlatListWithHeaderProps<T>
 }
 
 export function FlatListWithHeader<T>({
-  refreshing,
+  isLoading,
+  isRefreshing,
   onRefresh,
   contentContainerStyle,
   scrollHandler,
@@ -124,7 +126,7 @@ export function FlatListWithHeader<T>({
                   <Header
                     showBackButton={showBackButton}
                     offset={pullValue}
-                    isWaiting={refreshing}
+                    isWaiting={isLoading || isRefreshing}
                     onPull={onRefresh}
                   />
                 </Animated.View>
@@ -133,7 +135,7 @@ export function FlatListWithHeader<T>({
       }
       refreshControl={
         hideHeader ? (
-          <RefreshControl refreshing={refreshing ?? false} onRefresh={onRefresh} />
+          <RefreshControl refreshing={isRefreshing ?? false} onRefresh={onRefresh} />
         ) : undefined
       }
     />
