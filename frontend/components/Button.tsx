@@ -23,6 +23,7 @@ export interface ButtonProps {
   style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
   foregroundColor?: string
   children?: React.ReactNode
+  growsOnPress?: boolean
 }
 
 export function Button({
@@ -35,6 +36,7 @@ export function Button({
   disabled,
   style,
   foregroundColor: foregroundColorProp,
+  growsOnPress = true,
   children,
 }: ButtonProps) {
   const theme = useTheme()
@@ -51,14 +53,14 @@ export function Button({
 
   const outerAnimatedStyle = useAnimatedStyle(() => {
     return {
-      borderRadius: withSpring(isPressed ? 28 : 12, buttonCornerSpringConfig),
+      borderRadius: withSpring(isPressed ? (growsOnPress ? 28 : 22) : 12, buttonCornerSpringConfig),
     }
   })
 
   const innerAnimatedStyle = useAnimatedStyle(() => {
     return {
-      paddingTop: withSpring(isPressed ? 16 : 12, buttonPaddingSpringConfig),
-      paddingBottom: withSpring(isPressed ? 16 : 12, buttonPaddingSpringConfig),
+      paddingTop: withSpring(isPressed && growsOnPress ? 16 : 12, buttonPaddingSpringConfig),
+      paddingBottom: withSpring(isPressed && growsOnPress ? 16 : 12, buttonPaddingSpringConfig),
     }
   })
 

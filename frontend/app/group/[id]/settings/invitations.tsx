@@ -75,6 +75,7 @@ function JoinLinkManager({
                 />
                 <Button
                   leftIcon='copy'
+                  growsOnPress={false}
                   onPress={() => {
                     Clipboard.setStringAsync(linkText)
                   }}
