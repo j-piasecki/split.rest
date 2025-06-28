@@ -51,6 +51,13 @@ export function useGroupMembers(groupId: number | undefined, lowToHigh?: boolean
         balance: lastPage[lastPage.length - 1].balance,
       }
     },
+    retry(failureCount, error) {
+      if (error instanceof ApiError && (error.statusCode === 404 || error.statusCode === 403)) {
+        return false
+      }
+
+      return failureCount < 3
+    },
   })
 
   return {

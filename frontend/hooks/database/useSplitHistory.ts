@@ -1,5 +1,5 @@
 import { QueryFunctionContext, QueryKey, useInfiniteQuery } from '@tanstack/react-query'
-import { makeRequest } from '@utils/makeApiRequest'
+import { ApiError, makeRequest } from '@utils/makeApiRequest'
 import { useCallback } from 'react'
 import { GetSplitHistoryArguments, SplitWithUsers } from 'shared'
 
@@ -50,6 +50,13 @@ export function useSplitHistory(groupId?: number, splitId?: number) {
       }
 
       return lastPage[lastPage.length - 1].version
+    },
+    retry(failureCount, error) {
+      if (error instanceof ApiError && (error.statusCode === 404 || error.statusCode === 403)) {
+        return false
+      }
+
+      return failureCount < 3
     },
   })
 

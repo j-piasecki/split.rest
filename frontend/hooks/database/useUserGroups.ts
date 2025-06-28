@@ -1,5 +1,5 @@
 import { QueryFunctionContext, QueryKey, useInfiniteQuery } from '@tanstack/react-query'
-import { makeRequest } from '@utils/makeApiRequest'
+import { ApiError, makeRequest } from '@utils/makeApiRequest'
 import { useCallback } from 'react'
 import { GetUserGroupsArguments, GroupUserInfo } from 'shared'
 
@@ -27,6 +27,13 @@ export function useUserGroups(hidden: boolean) {
       }
 
       return lastPage[lastPage.length - 1].id
+    },
+    retry(failureCount, error) {
+      if (error instanceof ApiError && (error.statusCode === 404 || error.statusCode === 403)) {
+        return false
+      }
+
+      return failureCount < 3
     },
   })
 

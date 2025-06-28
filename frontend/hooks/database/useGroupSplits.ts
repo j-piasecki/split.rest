@@ -46,6 +46,13 @@ export function useGroupSplits(groupId?: number, onlyIfIncluded = false) {
 
       return lastPage[lastPage.length - 1].id
     },
+    retry(failureCount, error) {
+      if (error instanceof ApiError && (error.statusCode === 404 || error.statusCode === 403)) {
+        return false
+      }
+
+      return failureCount < 3
+    },
   })
 
   return {
