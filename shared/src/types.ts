@@ -92,10 +92,10 @@ export interface SplitQuery {
     | { type: 'contains'; filter: string; caseSensitive: boolean }
     | { type: 'regex'; filter: string; caseSensitive: boolean }
   participants?: { type: 'all'; ids: string[] } | { type: 'oneOf'; ids: string[] }
-  orderBy?: 'title' | 'createdAt' | 'total'
+  orderBy?: 'title' | 'createdAt' | 'total' | 'balanceChange' | 'updatedAt'
   orderDirection?: 'asc' | 'desc'
-  paidBy?: string
-  lastUpdateBy?: string
+  paidBy?: string[]
+  lastUpdateBy?: string[]
   beforeTimestamp?: number
   afterTimestamp?: number
   lastUpdateBeforeTimestamp?: number

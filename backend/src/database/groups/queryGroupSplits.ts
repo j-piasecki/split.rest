@@ -128,14 +128,14 @@ export async function queryGroupSplits(
 
   // Paid by filter
   if (args.query?.paidBy) {
-    whereClauses.push(`splits.paid_by = $${paramIndex}`)
+    whereClauses.push(`splits.paid_by = ANY($${paramIndex})`)
     values.push(args.query.paidBy)
     paramIndex++
   }
 
   // Last update by filter
   if (args.query?.lastUpdateBy) {
-    whereClauses.push(`splits.created_by = $${paramIndex}`)
+    whereClauses.push(`splits.created_by = ANY($${paramIndex})`)
     values.push(args.query.lastUpdateBy)
     paramIndex++
   }
