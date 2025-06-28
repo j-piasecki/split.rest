@@ -15,7 +15,7 @@ export async function queryGroupSplits(
   validateQuery(args.query)
 
   const whereClauses: string[] = [`group_id = $1`, `deleted = false`]
-  const values: any[] = [args.groupId, callerId]
+  const values: any[] = [args.groupId, callerId, args.query.targetUser ?? callerId]
   let paramIndex = values.length + 1
 
   // ORDER BY clause
@@ -50,7 +50,7 @@ export async function queryGroupSplits(
       paramIndex += 2
     } else if (args.query?.orderBy === 'balanceChange') {
       const comparator = orderDirection === 'ASC' ? '>' : '<'
-      const subquery = `COALESCE((SELECT change FROM split_participants WHERE split_participants.split_id = splits.id AND split_participants.user_id = $2), 0)`
+      const subquery = `COALESCE((SELECT change FROM split_participants WHERE split_participants.split_id = splits.id AND split_participants.user_id = $3 AND split_participants.pending = false), 0)`
       whereClauses.push(
         `(${subquery} ${comparator} $${paramIndex} OR (${subquery} = $${paramIndex} AND splits.id < $${paramIndex + 1}))`
       )
@@ -177,7 +177,7 @@ export async function queryGroupSplits(
       )) AS pending,
       COALESCE((
         SELECT change FROM split_participants 
-        WHERE split_participants.split_id = splits.id AND split_participants.user_id = $2
+        WHERE split_participants.split_id = splits.id AND split_participants.user_id = $3 and pending = FALSE
       ), 0) AS user_change,
       (SELECT EXISTS (
         (SELECT 1 WHERE splits.created_by = $2 OR splits.paid_by = $2)
@@ -187,7 +187,7 @@ export async function queryGroupSplits(
         (SELECT 1 FROM split_edits WHERE split_edits.id = splits.id AND (split_edits.created_by = $2 OR split_edits.paid_by = $2))
         UNION
         (SELECT 1 FROM split_participants_edits WHERE split_participants_edits.split_id = splits.id AND split_participants_edits.user_id = $2)
-      )) AS user_participating
+      )) AS caller_participating
     FROM splits
     INNER JOIN split_participants ON splits.id = split_participants.split_id
     WHERE ${whereClauses.join(' AND ')}
@@ -209,7 +209,7 @@ export async function queryGroupSplits(
     version: row.version,
     updatedAt: Number(row.updated_at),
     type: row.type,
-    isUserParticipating: row.user_participating,
+    isUserParticipating: row.caller_participating,
     pending: row.pending,
     userChange: row.user_change,
   }))

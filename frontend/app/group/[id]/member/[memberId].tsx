@@ -226,6 +226,7 @@ function MemberScreen() {
   const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =
     useGroupSplitsQuery(Number(groupId), {
       participants: { type: 'oneOf', ids: [String(memberId)] },
+      targetUser: String(memberId),
     })
 
   return permissions?.canQuerySplits() ? (

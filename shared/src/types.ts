@@ -94,6 +94,7 @@ export interface SplitQuery {
   participants?: { type: 'all'; ids: string[] } | { type: 'oneOf'; ids: string[] }
   orderBy?: 'title' | 'createdAt' | 'total' | 'balanceChange' | 'updatedAt'
   orderDirection?: 'asc' | 'desc'
+  targetUser?: string
   paidBy?: string[]
   lastUpdateBy?: string[]
   beforeTimestamp?: number
