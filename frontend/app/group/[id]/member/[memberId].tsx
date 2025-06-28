@@ -2,12 +2,15 @@ import { Button } from '@components/Button'
 import { EditableText } from '@components/EditableText'
 import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
+import { PaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
+import { SplitsList } from '@components/groupScreen/SplitsList'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
 import { useSetUserDisplayNameMutation } from '@hooks/database/useSetUserDisplayName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
@@ -19,7 +22,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { CurrencyUtils, isTranslatableError } from 'shared'
 
-export function MemberScreen() {
+export function MemberInfo() {
   const user = useAuth()
   const theme = useTheme()
   const insets = useModalScreenInsets()
@@ -70,7 +73,6 @@ export function MemberScreen() {
           paddingTop: insets.top + 16,
           paddingLeft: insets.left + 12,
           paddingRight: insets.right + 12,
-          paddingBottom: insets.bottom,
           alignItems: 'center',
           gap: 24,
         }}
@@ -215,6 +217,59 @@ export function MemberScreen() {
   )
 }
 
+function MemberScreen() {
+  const theme = useTheme()
+  const { t } = useTranslation()
+  const { id: groupId, memberId } = useLocalSearchParams()
+  const { data: groupInfo } = useGroupInfo(Number(groupId))
+  const { data: permissions } = useGroupPermissions(Number(groupId))
+  const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =
+    useGroupSplitsQuery(Number(groupId), {
+      participants: { type: 'oneOf', ids: [String(memberId)] },
+    })
+
+  return permissions?.canQuerySplits() ? (
+    <SplitsList
+      info={groupInfo}
+      splits={splits}
+      isLoading={isLoading}
+      isRefetching={isRefetching}
+      isFetchingNextPage={isFetchingNextPage}
+      fetchNextPage={fetchNextPage}
+      hasNextPage={hasNextPage}
+      hideFab
+      emptyMessage={t('memberInfo.noSplits')}
+      headerComponent={
+        <View>
+          <MemberInfo />
+          <View
+            style={[
+              {
+                marginTop: 24,
+                backgroundColor: theme.colors.surfaceContainer,
+                borderTopRightRadius: 16,
+                borderTopLeftRadius: 16,
+                borderBottomLeftRadius: 4,
+                borderBottomRightRadius: 4,
+                marginBottom: 2,
+              },
+            ]}
+          >
+            <PaneHeader
+              icon='receipt'
+              title={t('tabs.splits')}
+              textLocation='start'
+              adjustsFontSizeToFit
+            />
+          </View>
+        </View>
+      }
+    />
+  ) : (
+    <MemberInfo />
+  )
+}
+
 export default function MemberInfoScreenWrapper() {
   const user = useAuth()
   const theme = useTheme()
@@ -230,7 +285,7 @@ export default function MemberInfoScreenWrapper() {
       returnPath={`/group/${id}`}
       title={t('screenName.memberInfo')}
       maxWidth={500}
-      maxHeight={400}
+      maxHeight={600}
     >
       <MemberScreen />
     </ModalScreen>

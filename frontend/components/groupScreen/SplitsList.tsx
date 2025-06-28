@@ -6,7 +6,7 @@ import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { Shimmer } from '@components/Shimmer'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
-import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { invalidateGroup } from '@utils/queryClient'
 import { beginNewSplit } from '@utils/splitCreationContext'
 import { useRouter } from 'expo-router'
@@ -87,6 +87,7 @@ export interface SplitsListProps {
   hideFab?: boolean
   onRefresh?: () => void
   applyBottomInset?: boolean
+  applyHorizontalPadding?: boolean
   splits: SplitInfo[]
   isLoading: boolean
   isRefetching: boolean
@@ -103,6 +104,7 @@ export function SplitsList({
   onRefresh,
   emptyMessage,
   applyBottomInset = false,
+  applyHorizontalPadding = true,
   hideFab = false,
   splits,
   isLoading,
@@ -114,7 +116,6 @@ export function SplitsList({
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const displayClass = useDisplayClass()
-  const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
 
@@ -132,7 +133,8 @@ export function SplitsList({
     <View style={{ width: '100%', flex: 1 }}>
       <FlatListWithHeader
         showBackButton
-        refreshing={isLoading || isRefetching}
+        isLoading={isLoading}
+        isRefreshing={isRefetching}
         onRefresh={refreshData}
         hideHeader={!showPullableHeader}
         contentContainerStyle={{
@@ -140,8 +142,8 @@ export function SplitsList({
           width: '100%',
           flexGrow: 1,
           alignSelf: 'center',
-          paddingLeft: insets.left + (threeBarLayout ? 0 : 12),
-          paddingRight: insets.right + (threeBarLayout ? 0 : 12),
+          paddingLeft: insets.left + (applyHorizontalPadding ? 12 : 0),
+          paddingRight: insets.right + (applyHorizontalPadding ? 12 : 0),
           paddingBottom: 96 + (applyBottomInset ? insets.bottom : 0),
         }}
         ListEmptyComponent={

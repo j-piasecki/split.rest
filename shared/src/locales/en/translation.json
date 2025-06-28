@@ -99,6 +99,7 @@
       "group": {
         "createSplit": "You don't have permission to create splits in this group",
         "readSplits": "You don't have permission to read splits in this group",
+        "querySplits": "You don't have permission to query splits in this group",
         "seeSplitDetails": "You don't have permission to see details of split",
         "deleteSplit": "You don't have permission to delete this split",
         "editSplit": "You don't have permission to edit this split",
@@ -144,7 +145,11 @@
       "settleUpHashChanged": "The state of the group has changed, please try again",
       "invalidSplitType": "Invalid split type",
       "callerCannotCompleteEntry": "You cannot complete this entry",
-      "callerCannotUncompleteEntry": "You cannot mark this entry as not completed"
+      "callerCannotUncompleteEntry": "You cannot mark this entry as not completed",
+      "query": {
+        "titleTooLong": "Title is too long",
+        "tooManyParticipants": "Too many participants"
+      }
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
@@ -205,7 +210,8 @@
     "balance": "Balance: <Styled>{{balance}}</Styled>",
     "admin": "Moderator of this group",
     "noAccess": "No access to this group",
-    "settleUpWithMember": "Settle up with this person"
+    "settleUpWithMember": "Settle up with this person",
+    "noSplits": "This person has no splits in this group"
   },
 
   "screenName": {

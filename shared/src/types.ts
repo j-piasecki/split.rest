@@ -87,6 +87,24 @@ export interface SplitInfo {
   userChange?: string
 }
 
+export interface SplitQuery {
+  title?:
+    | { type: 'contains'; filter: string; caseSensitive: boolean }
+    | { type: 'regex'; filter: string; caseSensitive: boolean }
+  participants?: { type: 'all'; ids: string[] } | { type: 'oneOf'; ids: string[] }
+  orderBy?: 'title' | 'createdAt' | 'total' | 'balanceChange' | 'updatedAt'
+  orderDirection?: 'asc' | 'desc'
+  paidBy?: string[]
+  lastUpdateBy?: string[]
+  beforeTimestamp?: number
+  afterTimestamp?: number
+  lastUpdateBeforeTimestamp?: number
+  lastUpdateAfterTimestamp?: number
+  // undefined is all, true is edited, false is not edited
+  edited?: boolean
+  pending?: boolean
+}
+
 export interface SplitWithChanges extends SplitInfo {
   changes: BalanceChange[]
 }

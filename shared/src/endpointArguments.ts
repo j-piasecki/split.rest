@@ -1,4 +1,4 @@
-import { BalanceChange } from './types'
+import { BalanceChange, SplitInfo, SplitQuery } from './types'
 
 export interface CreateGroupArguments {
   name: string
@@ -68,6 +68,12 @@ export interface GetGroupSplitsArguments {
   groupId: number
   onlyIfIncluded?: boolean
   startAfterId?: number
+}
+
+export interface QueryGroupSplitsArguments {
+  groupId: number
+  startAfter?: SplitInfo
+  query: SplitQuery
 }
 
 export interface GetUserGroupsArguments {
