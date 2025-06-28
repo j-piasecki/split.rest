@@ -88,9 +88,11 @@ export interface SplitInfo {
 }
 
 export interface SplitQuery {
-  title?: { contains: string }
-  participants?: { all: string[] }
-  orderBy?: 'createdAt'
+  title?:
+    | { type: 'contains'; filter: string; caseSensitive: boolean }
+    | { type: 'regex'; filter: string; caseSensitive: boolean }
+  participants?: { type: 'all'; ids: string[] } | { type: 'oneOf'; ids: string[] }
+  orderBy?: 'title' | 'createdAt' | 'total'
   orderDirection?: 'asc' | 'desc'
 }
 

@@ -145,7 +145,11 @@
       "settleUpHashChanged": "The state of the group has changed, please try again",
       "invalidSplitType": "Invalid split type",
       "callerCannotCompleteEntry": "You cannot complete this entry",
-      "callerCannotUncompleteEntry": "You cannot mark this entry as not completed"
+      "callerCannotUncompleteEntry": "You cannot mark this entry as not completed",
+      "query": {
+        "titleTooLong": "Title is too long",
+        "tooManyParticipants": "Too many participants"
+      }
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
