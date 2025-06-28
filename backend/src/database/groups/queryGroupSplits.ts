@@ -19,36 +19,40 @@ export async function queryGroupSplits(
   let paramIndex = values.length + 1
 
   // ORDER BY clause
-  const orderByColumn =
-    args.query?.orderBy === 'title'
-      ? 'splits.name'
-      : args.query?.orderBy === 'total'
-        ? 'splits.total'
-        : 'splits.id'
   const orderDirection = args.query?.orderDirection?.toLowerCase() === 'asc' ? 'ASC' : 'DESC'
 
   const orderClause =
-    orderByColumn === 'splits.name'
+    args.query?.orderBy === 'title'
       ? `ORDER BY splits.name ${orderDirection}, splits.id DESC`
-      : orderByColumn === 'splits.total'
+      : args.query?.orderBy === 'total'
         ? `ORDER BY splits.total ${orderDirection}, splits.id DESC`
-        : `ORDER BY splits.id ${orderDirection}`
+        : args.query?.orderBy === 'balanceChange'
+          ? `ORDER BY user_change ${orderDirection}, splits.id DESC`
+          : `ORDER BY splits.id ${orderDirection}`
 
   // Pagination handling
   if (args.startAfter) {
-    if (orderByColumn === 'splits.name') {
+    if (args.query?.orderBy === 'title') {
       const comparator = orderDirection === 'ASC' ? '>' : '<'
       whereClauses.push(
         `(splits.name ${comparator} $${paramIndex} OR (splits.name = $${paramIndex} AND splits.id < $${paramIndex + 1}))`
       )
       values.push(args.startAfter.title, args.startAfter.id)
       paramIndex += 2
-    } else if (orderByColumn === 'splits.total') {
+    } else if (args.query?.orderBy === 'total') {
       const comparator = orderDirection === 'ASC' ? '>' : '<'
       whereClauses.push(
         `(splits.total ${comparator} $${paramIndex} OR (splits.total = $${paramIndex} AND splits.id < $${paramIndex + 1}))`
       )
       values.push(args.startAfter.total, args.startAfter.id)
+      paramIndex += 2
+    } else if (args.query?.orderBy === 'balanceChange') {
+      const comparator = orderDirection === 'ASC' ? '>' : '<'
+      const subquery = `COALESCE((SELECT change FROM split_participants WHERE split_participants.split_id = splits.id AND split_participants.user_id = $2), 0)`
+      whereClauses.push(
+        `(${subquery} ${comparator} $${paramIndex} OR (${subquery} = $${paramIndex} AND splits.id < $${paramIndex + 1}))`
+      )
+      values.push(args.startAfter.userChange, args.startAfter.id)
       paramIndex += 2
     } else {
       const comparator = orderDirection === 'ASC' ? '>' : '<'
@@ -151,9 +155,10 @@ export async function queryGroupSplits(
         SELECT 1 FROM split_participants 
         WHERE split_participants.split_id = splits.id AND pending = true
       )) AS pending,
-      (SELECT change FROM split_participants 
+      COALESCE((
+        SELECT change FROM split_participants 
         WHERE split_participants.split_id = splits.id AND split_participants.user_id = $2
-      ) AS user_change,
+      ), 0) AS user_change,
       (SELECT EXISTS (
         (SELECT 1 WHERE splits.created_by = $2 OR splits.paid_by = $2)
         UNION
@@ -169,7 +174,7 @@ export async function queryGroupSplits(
     GROUP BY splits.id
     ${havingClause}
     ${orderClause}
-    LIMIT 20
+    LIMIT 2
   `
 
   const { rows } = await pool.query(query, values)
