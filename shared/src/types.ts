@@ -87,6 +87,13 @@ export interface SplitInfo {
   userChange?: string
 }
 
+export interface SplitQuery {
+  title?: { contains: string }
+  participants?: { all: string[] }
+  orderBy?: 'createdAt'
+  orderDirection?: 'asc' | 'desc'
+}
+
 export interface SplitWithChanges extends SplitInfo {
   changes: BalanceChange[]
 }

@@ -31,6 +31,7 @@ import {
   GetUserInvitesArguments,
   InviteUserToGroupArguments,
   JoinGroupByLinkArguments,
+  QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
@@ -73,6 +74,7 @@ import {
   isGetUserInvitesArguments,
   isInviteUserToGroupArguments,
   isJoinGroupByLinkArguments,
+  isQueryGroupSplitsArguments,
   isRegisterOrUpdateNotificationTokenArguments,
   isRestoreSplitArguments,
   isSetGroupAccessArguments,
@@ -224,6 +226,19 @@ export class AppController {
     }
 
     return await this.appService.getUserGroups(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('queryGroupSplits')
+  async queryGroupSplits(
+    @Req() request: Request,
+    @Body() args: Partial<QueryGroupSplitsArguments>
+  ) {
+    if (!isQueryGroupSplitsArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.queryGroupSplits(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

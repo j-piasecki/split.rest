@@ -99,6 +99,7 @@
       "group": {
         "createSplit": "You don't have permission to create splits in this group",
         "readSplits": "You don't have permission to read splits in this group",
+        "querySplits": "You don't have permission to query splits in this group",
         "seeSplitDetails": "You don't have permission to see details of split",
         "deleteSplit": "You don't have permission to delete this split",
         "editSplit": "You don't have permission to edit this split",
