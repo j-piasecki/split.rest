@@ -246,7 +246,7 @@
 
   "filter": {
     "apply": "Apply filters",
-    "titleFilter": "Title filter"
+    "titleFilter": "Filter by split name"
   },
 
   "createGroup": {

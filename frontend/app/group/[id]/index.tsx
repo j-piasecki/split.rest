@@ -1,4 +1,5 @@
 import Header, { HEADER_HEIGHT } from '@components/Header'
+import { Icon } from '@components/Icon'
 import { Pane, PaneHeader } from '@components/Pane'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
@@ -19,7 +20,13 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LinearTransition,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupUserInfo } from 'shared'
 
@@ -29,6 +36,9 @@ function SplitQuery() {
   const { id } = useLocalSearchParams()
   const groupId = Number(id)
   const query = useSplitQueryConfig(groupId)
+  const [pressed, setPressed] = useState(false)
+
+  const queryApplied = query !== defaultQueryConfig
 
   const longPress = Gesture.LongPress()
     .runOnJS(true)
@@ -36,13 +46,64 @@ function SplitQuery() {
       resetSplitQueryConfig(groupId)
     })
 
+  const backgroundStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: withTiming(queryApplied ? theme.colors.primary : 'transparent', {
+        duration: 250,
+      }),
+    }
+  })
+
+  const innerBackgroundStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: withTiming(pressed ? `${theme.colors.onPrimary}40` : 'transparent', {
+        duration: 250,
+      }),
+    }
+  })
+
   return (
     <GestureDetector gesture={longPress}>
-      <RoundIconButton
-        icon='filter'
-        color={query === defaultQueryConfig ? undefined : theme.colors.primary}
-        onPress={() => router.navigate(`/group/${groupId}/filter`)}
-      />
+      <Animated.View
+        layout={Platform.OS !== 'web' ? LinearTransition : undefined}
+        style={[backgroundStyle, { borderRadius: 24, overflow: 'hidden' }]}
+      >
+        <Animated.View
+          layout={Platform.OS !== 'web' ? LinearTransition : undefined}
+          style={innerBackgroundStyle}
+        >
+          <Pressable
+            disabled={!queryApplied}
+            onPressIn={() => setPressed(true)}
+            onPressOut={() => setPressed(false)}
+            onPress={() => router.navigate(`/group/${groupId}/filter`)}
+            style={{
+              paddingHorizontal: queryApplied ? 4 : 0,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 4,
+            }}
+          >
+            {queryApplied && (
+              <Icon
+                name='check'
+                size={24}
+                color={theme.colors.onPrimary}
+                style={{ marginLeft: 8 }}
+              />
+            )}
+            <Animated.View layout={Platform.OS !== 'web' ? LinearTransition : undefined}>
+              <RoundIconButton
+                icon='filter'
+                disabled={queryApplied}
+                color={queryApplied ? theme.colors.onPrimary : undefined}
+                onPress={() => router.navigate(`/group/${groupId}/filter`)}
+              />
+            </Animated.View>
+          </Pressable>
+        </Animated.View>
+      </Animated.View>
     </GestureDetector>
   )
 }
