@@ -175,7 +175,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           <Header showBackButton />
         </View>
         <ScrollView
-          style={[{ flex: 1, height: '100%' }, Platform.OS === 'web' && { minWidth: 420 }]}
+          style={[{ flex: 2, height: '100%' }, Platform.OS === 'web' && { minWidth: 420 }]}
           contentContainerStyle={{ flexGrow: 1 }}
         >
           <GroupInfoPane info={groupInfo} />
@@ -183,7 +183,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
         <Pane
           icon='receipt'
           title={t('tabs.splits')}
-          style={{ flex: 2, height: '100%' }}
+          style={{ flex: 5, height: '100%' }}
           containerStyle={{ flex: 1 }}
           collapsible
           collapsed={false}
