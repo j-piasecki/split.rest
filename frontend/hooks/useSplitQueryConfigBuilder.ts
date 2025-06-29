@@ -16,9 +16,12 @@ export type SplitQueryActionType =
       regex: boolean
     }
   | {
-      type: 'setParticipants'
-      participants: UserWithDisplayName[]
-      participantsMode: 'all' | 'oneOf'
+      type: 'addParticipant'
+      participant: UserWithDisplayName
+    }
+  | {
+      type: 'removeParticipant'
+      id: string
     }
   | {
       type: 'setParticipantsMode'
@@ -78,9 +81,11 @@ function queryReducer(query: SplitQueryConfig, action: SplitQueryActionType): Sp
     case 'setRegex':
       newQuery.titleRegex = action.regex
       break
-    case 'setParticipants':
-      newQuery.participants = action.participants
-      newQuery.participantsMode = action.participantsMode
+    case 'addParticipant':
+      newQuery.participants = [...(newQuery.participants || []), action.participant]
+      break
+    case 'removeParticipant':
+      newQuery.participants = newQuery.participants?.filter((p) => p.id !== action.id)
       break
     case 'setParticipantsMode':
       newQuery.participantsMode = action.participantsMode

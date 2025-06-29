@@ -8,6 +8,7 @@ export type IconName =
   | 'addMember'
   | 'addModerator'
   | 'add'
+  | 'allOf'
   | 'appleLogo'
   | 'arrowBack'
   | 'arrowDown'
@@ -52,6 +53,7 @@ export type IconName =
   | 'merge'
   | 'money'
   | 'moreVertical'
+  | 'oneOf'
   | 'openRightPanel'
   | 'payments'
   | 'receipt'
@@ -87,6 +89,7 @@ const iconMap: Record<IconName, unknown> = {
   addMember: require('@assets/icons/add_member.svg'),
   addModerator: require('@assets/icons/add_moderator.svg'),
   add: require('@assets/icons/add.svg'),
+  allOf: require('@assets/icons/all_of.svg'),
   appleLogo: require('@assets/icons/apple_logo.svg'),
   arrowBack: require('@assets/icons/arrow_back.svg'),
   arrowDown: require('@assets/icons/arrow_down.svg'),
@@ -131,6 +134,7 @@ const iconMap: Record<IconName, unknown> = {
   merge: require('@assets/icons/merge.svg'),
   money: require('@assets/icons/money.svg'),
   moreVertical: require('@assets/icons/more_vertical.svg'),
+  oneOf: require('@assets/icons/one_of.svg'),
   openRightPanel: require('@assets/icons/open_right_panel.svg'),
   payments: require('@assets/icons/payments.svg'),
   receipt: require('@assets/icons/receipt.svg'),

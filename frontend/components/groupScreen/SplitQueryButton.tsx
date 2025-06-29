@@ -8,11 +8,7 @@ import React from 'react'
 import { useState } from 'react'
 import { Platform, Pressable } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import Animated, {
-  LinearTransition,
-  useAnimatedStyle,
-  withTiming,
-} from 'react-native-reanimated'
+import Animated, { LinearTransition, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 
 export function SplitQueryButton() {
   const theme = useTheme()

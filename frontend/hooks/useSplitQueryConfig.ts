@@ -30,7 +30,18 @@ export function useSplitQueryConfig(groupId: number) {
 export function setSplitQueryConfig(groupId: number, query: SplitQueryConfig) {
   let isSameAsDefault = true
   for (const key in query) {
-    if (query[key as keyof SplitQueryConfig] !== defaultQueryConfig[key as keyof SplitQueryConfig]) {
+    const value = query[key as keyof SplitQueryConfig]
+    if (Array.isArray(value)) {
+      if (value.length === 0) {
+        continue
+      }
+    }
+
+    if (key === 'participantsMode' && !query.participants?.length) {
+      continue
+    }
+
+    if (value !== defaultQueryConfig[key as keyof SplitQueryConfig]) {
       isSameAsDefault = false
       break
     }

@@ -1,8 +1,13 @@
 import { Button } from '@components/Button'
+import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
+import { Pane } from '@components/Pane'
+import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
+import { SegmentedButton } from '@components/SegmentedButton'
 import { Text } from '@components/Text'
 import { TextInput, TextInputRef } from '@components/TextInput'
+import { TextInputWithUserSuggestions } from '@components/TextInputWithUserSuggestions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import {
   getSplitQueryConfig,
@@ -16,12 +21,14 @@ import {
 } from '@hooks/useSplitQueryConfigBuilder'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
+import { measure } from '@utils/measure'
 import { SplitQueryConfig } from '@utils/splitQueryConfig'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useRef } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, ScrollView, View } from 'react-native'
-import { validateQuery } from 'shared'
+import { Platform, Pressable, ScrollView, View } from 'react-native'
+import Animated, { LinearTransition } from 'react-native-reanimated'
+import { UserWithDisplayName, validateQuery } from 'shared'
 
 interface QueryProps {
   query: SplitQueryConfig
@@ -74,10 +81,140 @@ function FilterTitle({ query, updateQuery }: QueryProps) {
   )
 }
 
+function ChipPeoplePicker({
+  groupId,
+  selected,
+  onRemove,
+  onAdd,
+}: {
+  groupId: number
+  selected: UserWithDisplayName[]
+  onRemove: (id: string) => void
+  onAdd: (user: UserWithDisplayName) => void
+}) {
+  const theme = useTheme()
+  const containerRef = useRef<View>(null)
+  const [currentValue, setCurrentValue] = useState('')
+  const [maxChipWidth, setMaxChipWidth] = useState(300)
+
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      const width = measure(containerRef.current).width
+      setMaxChipWidth((width - 8) / 2)
+    }
+  }, [])
+
+  return (
+    <Animated.View style={{ gap: 8 }} ref={containerRef}>
+      <Animated.View
+        layout={Platform.OS !== 'web' ? LinearTransition : undefined}
+        style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}
+      >
+        {selected.map((user) => (
+          <Animated.View
+            layout={Platform.OS !== 'web' ? LinearTransition : undefined}
+            key={user.id}
+          >
+            <Pressable
+              onPress={() => onRemove(user.id)}
+              style={({ pressed }) => ({
+                flexDirection: 'row',
+                gap: 8,
+                paddingHorizontal: 8,
+                height: 32,
+                alignItems: 'center',
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: theme.colors.outline,
+                backgroundColor: pressed ? theme.colors.outlineVariant : undefined,
+                maxWidth: maxChipWidth,
+              })}
+            >
+              <ProfilePicture userId={user.id} size={24} />
+              <Text
+                style={{ flexShrink: 1, fontSize: 18, color: theme.colors.onSurface }}
+                numberOfLines={1}
+                ellipsizeMode='tail'
+              >
+                {user.name}
+              </Text>
+              <Icon name='close' size={20} color={theme.colors.onSurface} />
+            </Pressable>
+          </Animated.View>
+        ))}
+
+        <TextInputWithUserSuggestions
+          groupId={groupId}
+          style={{ flex: 1, minWidth: maxChipWidth }}
+          filterSuggestions={(result) => {
+            return result.filter((user) => !selected.some((u) => u.id === user.id))
+          }}
+          onSuggestionSelect={(user) => {
+            onAdd(user)
+            setCurrentValue('')
+          }}
+          value={currentValue}
+          onChangeText={setCurrentValue}
+        />
+      </Animated.View>
+    </Animated.View>
+  )
+}
+
+function FilterParticipants({ query, updateQuery }: QueryProps) {
+  const { id: groupId } = useLocalSearchParams()
+  const { t } = useTranslation()
+  const [collapsed, setCollapsed] = useState(!query.participants?.length)
+
+  function setParticipantsMode(mode: 'all' | 'oneOf') {
+    updateQuery({ type: 'setParticipantsMode', participantsMode: mode })
+  }
+
+  return (
+    <Pane
+      icon='group'
+      title={t('filter.participants')}
+      textLocation='start'
+      collapsible
+      collapsed={collapsed}
+      onCollapseChange={setCollapsed}
+      containerStyle={{ overflow: 'visible' }}
+    >
+      {!collapsed && (
+        <View style={{ padding: 12, paddingTop: 4, gap: 12 }}>
+          <SegmentedButton
+            items={[
+              {
+                title: t('filter.participantsMode.all'),
+                icon: 'allOf',
+                onPress: () => setParticipantsMode('all'),
+                selected: query.participantsMode === 'all',
+              },
+              {
+                title: t('filter.participantsMode.oneOf'),
+                icon: 'oneOf',
+                onPress: () => setParticipantsMode('oneOf'),
+                selected: query.participantsMode !== 'all',
+              },
+            ]}
+          />
+          <ChipPeoplePicker
+            groupId={Number(groupId)}
+            selected={query.participants || []}
+            onRemove={(id) => updateQuery({ type: 'removeParticipant', id })}
+            onAdd={(user) => updateQuery({ type: 'addParticipant', participant: user })}
+          />
+        </View>
+      )}
+    </Pane>
+  )
+}
+
 function FilterForm({ query, updateQuery }: QueryProps) {
   return (
-    <View style={{ flexGrow: 1 }}>
+    <View style={{ flexGrow: 1, gap: 12 }}>
       <FilterTitle query={query} updateQuery={updateQuery} />
+      <FilterParticipants query={query} updateQuery={updateQuery} />
     </View>
   )
 }
