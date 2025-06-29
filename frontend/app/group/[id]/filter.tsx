@@ -101,7 +101,7 @@ function ChipPeoplePicker({
   useLayoutEffect(() => {
     if (containerRef.current) {
       const width = measure(containerRef.current).width
-      setMaxChipWidth((width - 8) / 2)
+      setMaxChipWidth(Math.floor((width - 8) / 2))
     }
   }, [])
 
@@ -504,6 +504,7 @@ function FilterSelector() {
           paddingLeft: insets.left + 12,
           paddingRight: insets.right + 12,
           paddingTop: insets.top + 16,
+          paddingBottom: 48,
         }}
         keyboardShouldPersistTaps='handled'
       >
