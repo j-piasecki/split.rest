@@ -179,11 +179,8 @@ export function buildQuery(query: SplitQueryConfig): SplitQuery {
     }
   }
 
-  if (participants) {
-    result.participants =
-      participantsMode !== undefined
-        ? { type: participantsMode, ids: participants.map((p) => p.id) }
-        : undefined
+  if (participants && participants.length > 0) {
+    result.participants = { type: participantsMode ?? 'oneOf', ids: participants.map((p) => p.id) }
   }
 
   if (paidBy) {

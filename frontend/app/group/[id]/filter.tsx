@@ -382,7 +382,7 @@ function FilterForm({ query, updateQuery }: QueryProps) {
           onRemove={(id) => updateQuery({ type: 'removePaidBy', id })}
         />
       </View>
-      <View style={{ zIndex: 17 }}>
+      <View style={{ zIndex: 16 }}>
         <FilterUserArray
           title={t('filter.lastUpdateBy')}
           icon='articlePerson'
@@ -391,7 +391,7 @@ function FilterForm({ query, updateQuery }: QueryProps) {
           onRemove={(id) => updateQuery({ type: 'removeLastUpdateBy', id })}
         />
       </View>
-      <View style={{ zIndex: 16 }}>
+      <View style={{ zIndex: 15 }}>
         <FilterTimestampRange
           title={t('filter.timestampRange')}
           icon='calendar'
@@ -405,7 +405,7 @@ function FilterForm({ query, updateQuery }: QueryProps) {
           }
         />
       </View>
-      <View style={{ zIndex: 15 }}>
+      <View style={{ zIndex: 14 }}>
         <FilterTimestampRange
           title={t('filter.updateRange')}
           icon='calendarEdit'
@@ -425,7 +425,7 @@ function FilterForm({ query, updateQuery }: QueryProps) {
           }
         />
       </View>
-      <View style={{ zIndex: 14 }}>
+      <View style={{ zIndex: 13 }}>
         <SegmentedButton
           items={[
             {
