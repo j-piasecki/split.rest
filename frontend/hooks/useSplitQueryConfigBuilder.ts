@@ -5,7 +5,7 @@ import { SplitQuery, UserWithDisplayName } from 'shared'
 export type SplitQueryActionType =
   | {
       type: 'setTitle'
-      title: string
+      title: string | undefined
     }
   | {
       type: 'setCaseSensitive'

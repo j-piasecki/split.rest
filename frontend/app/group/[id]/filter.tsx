@@ -51,7 +51,7 @@ function FilterTitle({ query, updateQuery }: QueryProps) {
         ref={textInputRef}
         placeholder={t('filter.titleFilter')}
         value={query.titleFilter}
-        onChangeText={(text) => updateQuery({ type: 'setTitle', title: text })}
+        onChangeText={(text) => updateQuery({ type: 'setTitle', title: text ? text : undefined })}
         style={{ flex: 1 }}
         inputStyle={{ fontSize: 16 }}
         showUnderline={false}

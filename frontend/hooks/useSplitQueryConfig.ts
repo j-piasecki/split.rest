@@ -28,8 +28,17 @@ export function useSplitQueryConfig(groupId: number) {
 }
 
 export function setSplitQueryConfig(groupId: number, query: SplitQueryConfig) {
-  queries.set(groupId, query)
-  queryListeners.get(groupId)?.forEach((listener) => listener(query))
+  let isSameAsDefault = true
+  for (const key in query) {
+    if (query[key as keyof SplitQueryConfig] !== defaultQueryConfig[key as keyof SplitQueryConfig]) {
+      isSameAsDefault = false
+      break
+    }
+  }
+
+  const queryToSet = isSameAsDefault ? defaultQueryConfig : query
+  queries.set(groupId, queryToSet)
+  queryListeners.get(groupId)?.forEach((listener) => listener(queryToSet))
 }
 
 export function resetSplitQueryConfig(groupId: number) {
