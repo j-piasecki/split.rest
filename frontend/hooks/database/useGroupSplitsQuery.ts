@@ -47,7 +47,10 @@ export function useGroupSplitsQuery(groupId?: number, query?: SplitQuery) {
       return lastPage[lastPage.length - 1]
     },
     retry(failureCount, error) {
-      if (error instanceof ApiError && error.statusCode === 403) {
+      if (
+        error instanceof ApiError &&
+        (error.statusCode === 403 || error.statusCode === 404 || error.statusCode === 500)
+      ) {
         return false
       }
 

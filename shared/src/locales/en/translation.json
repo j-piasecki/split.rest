@@ -229,6 +229,7 @@
     "memberInfo": "Member information",
     "addSplit":"Add split",
     "settleUp": "Settle up",
+    "filter": "Filter splits",
 
     "groupSettings": {
       "index": "Settings",
@@ -241,6 +242,34 @@
     "exactAmounts": "Exact amounts",
     "balanceChanges": "Balance changes",
     "splitParticipants": "Participants"
+  },
+
+  "filter": {
+    "apply": "Apply filters",
+    "titleFilter": "Filter by split name",
+    "participants": "Filter by participants",
+    "participantsMode": {
+      "all": "Every one of",
+      "oneOf": "At least one of"
+    },
+    "orderBy": {
+      "createdAt": "Creation time",
+      "updatedAt": "Last update time",
+      "total": "Total amount",
+      "balanceChange": "Balance change",
+      "timestamp": "Date"
+    },
+    "ascending": "Ascending",
+    "descending": "Descending",
+    "paidBy": "Filter by payer",
+    "lastUpdateBy": "Filter by last updater",
+    "timestampRange": "Date range",
+    "updateRange": "Last update date range",
+    "all": "All",
+    "edited": "Edited",
+    "notEdited": "Not edited",
+    "pending": "Pending",
+    "notPending": "Completed"
   },
 
   "createGroup": {
@@ -367,7 +396,7 @@
   "splitList": {
     "noSplits": "There are no splits in this group",
     "noAccessibleSplits": "There are no splits you can access in this group",
-    "noSplitsWhereIncluded": "There are no splits where you are included",
+    "noSplitsMatchingQuery": "There are no splits matching your query",
     "showingAllSplits": "Showing all splits",
     "showingSplitsWithYou": "Showing only splits including you"
   },

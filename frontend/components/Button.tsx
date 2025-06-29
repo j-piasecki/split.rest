@@ -21,6 +21,7 @@ export interface ButtonProps {
   destructive?: boolean
   disabled?: boolean
   style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
+  pressableStyle?: StyleProp<ViewStyle>
   foregroundColor?: string
   children?: React.ReactNode
   growsOnPress?: boolean
@@ -35,6 +36,7 @@ export function Button({
   destructive,
   disabled,
   style,
+  pressableStyle,
   foregroundColor: foregroundColorProp,
   growsOnPress = true,
   children,
@@ -72,6 +74,8 @@ export function Button({
           backgroundColor: destructive
             ? theme.colors.errorContainer
             : theme.colors.primaryContainer,
+          justifyContent: 'center',
+          alignItems: 'center',
         },
         typeof style === 'function'
           ? style({
@@ -89,17 +93,21 @@ export function Button({
         onHoverIn={() => setIsHovered(true)}
         onHoverOut={() => setIsHovered(false)}
         style={(state) => {
-          return {
-            opacity: disabled ? 0.5 : state.pressed ? 0.8 : state.hovered ? 0.9 : 1,
-            backgroundColor: state.pressed
-              ? `${theme.colors.surface}44`
-              : state.hovered
-                ? `${theme.colors.surface}22`
-                : 'transparent',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'row',
-          }
+          return [
+            {
+              opacity: disabled ? 0.5 : state.pressed ? 0.8 : state.hovered ? 0.9 : 1,
+              backgroundColor: state.pressed
+                ? `${theme.colors.surface}44`
+                : state.hovered
+                  ? `${theme.colors.surface}22`
+                  : 'transparent',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+              alignSelf: 'stretch',
+            },
+            pressableStyle,
+          ]
         }}
       >
         <Animated.View

@@ -8,16 +8,23 @@ export type IconName =
   | 'addMember'
   | 'addModerator'
   | 'add'
+  | 'allOf'
   | 'appleLogo'
   | 'arrowBack'
   | 'arrowDown'
+  | 'arrowDownAlt'
   | 'arrowUp'
+  | 'articlePerson'
+  | 'arrowUpAlt'
   | 'balance'
   | 'barChart'
   | 'bug'
   | 'cached'
+  | 'calendarEdit'
   | 'calendar'
   | 'casino'
+  | 'change'
+  | 'checkCircle'
   | 'check'
   | 'chevronBack'
   | 'chevronForward'
@@ -30,9 +37,12 @@ export type IconName =
   | 'deleteForever'
   | 'deleteLink'
   | 'editAlt'
+  | 'editOff'
   | 'edit'
   | 'equal'
+  | 'erase'
   | 'exactAmount'
+  | 'filter'
   | 'group'
   | 'home'
   | 'info'
@@ -44,15 +54,18 @@ export type IconName =
   | 'lock'
   | 'login'
   | 'logout'
+  | 'matchCase'
   | 'members'
   | 'menu'
   | 'merge'
   | 'money'
   | 'moreVertical'
+  | 'oneOf'
   | 'openRightPanel'
   | 'payments'
   | 'receipt'
   | 'removeModerator'
+  | 'regex'
   | 'save'
   | 'schedule'
   | 'sell'
@@ -65,6 +78,7 @@ export type IconName =
   | 'systemTheme'
   | 'tag'
   | 'timeline'
+  | 'title'
   | 'undo'
   | 'user'
   | 'visibilityOff'
@@ -83,16 +97,23 @@ const iconMap: Record<IconName, unknown> = {
   addMember: require('@assets/icons/add_member.svg'),
   addModerator: require('@assets/icons/add_moderator.svg'),
   add: require('@assets/icons/add.svg'),
+  allOf: require('@assets/icons/all_of.svg'),
   appleLogo: require('@assets/icons/apple_logo.svg'),
   arrowBack: require('@assets/icons/arrow_back.svg'),
   arrowDown: require('@assets/icons/arrow_down.svg'),
+  arrowDownAlt: require('@assets/icons/arrow_down_alt.svg'),
+  articlePerson: require('@assets/icons/article_person.svg'),
   arrowUp: require('@assets/icons/arrow_up.svg'),
+  arrowUpAlt: require('@assets/icons/arrow_up_alt.svg'),
   balance: require('@assets/icons/balance.svg'),
   barChart: require('@assets/icons/bar_chart.svg'),
   bug: require('@assets/icons/bug.svg'),
   cached: require('@assets/icons/cached.svg'),
+  calendarEdit: require('@assets/icons/calendar_edit.svg'),
   calendar: require('@assets/icons/calendar.svg'),
   casino: require('@assets/icons/casino.svg'),
+  change: require('@assets/icons/change.svg'),
+  checkCircle: require('@assets/icons/check_circle.svg'),
   check: require('@assets/icons/check.svg'),
   chevronBack: require('@assets/icons/chevron_back.svg'),
   chevronForward: require('@assets/icons/chevron_forward.svg'),
@@ -105,9 +126,12 @@ const iconMap: Record<IconName, unknown> = {
   deleteForever: require('@assets/icons/delete_forever.svg'),
   deleteLink: require('@assets/icons/delete_link.svg'),
   editAlt: require('@assets/icons/edit_alt.svg'),
+  editOff: require('@assets/icons/edit_off.svg'),
   edit: require('@assets/icons/edit.svg'),
   equal: require('@assets/icons/equal.svg'),
+  erase: require('@assets/icons/erase.svg'),
   exactAmount: require('@assets/icons/exact_amount.svg'),
+  filter: require('@assets/icons/filter.svg'),
   group: require('@assets/icons/group.svg'),
   home: require('@assets/icons/home.svg'),
   info: require('@assets/icons/info.svg'),
@@ -119,15 +143,18 @@ const iconMap: Record<IconName, unknown> = {
   lock: require('@assets/icons/lock.svg'),
   login: require('@assets/icons/login.svg'),
   logout: require('@assets/icons/logout.svg'),
+  matchCase: require('@assets/icons/match_case.svg'),
   members: require('@assets/icons/members.svg'),
   menu: require('@assets/icons/menu.svg'),
   merge: require('@assets/icons/merge.svg'),
   money: require('@assets/icons/money.svg'),
   moreVertical: require('@assets/icons/more_vertical.svg'),
+  oneOf: require('@assets/icons/one_of.svg'),
   openRightPanel: require('@assets/icons/open_right_panel.svg'),
   payments: require('@assets/icons/payments.svg'),
   receipt: require('@assets/icons/receipt.svg'),
   removeModerator: require('@assets/icons/remove_moderator.svg'),
+  regex: require('@assets/icons/regex.svg'),
   save: require('@assets/icons/save.svg'),
   schedule: require('@assets/icons/schedule.svg'),
   sell: require('@assets/icons/sell.svg'),
@@ -140,6 +167,7 @@ const iconMap: Record<IconName, unknown> = {
   systemTheme: require('@assets/icons/system_theme.svg'),
   tag: require('@assets/icons/tag.svg'),
   timeline: require('@assets/icons/timeline.svg'),
+  title: require('@assets/icons/title.svg'),
   undo: require('@assets/icons/undo.svg'),
   user: require('@assets/icons/user.svg'),
   visibilityOff: require('@assets/icons/visibility_off.svg'),

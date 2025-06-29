@@ -131,6 +131,10 @@ function Content() {
                     options={{ title: t('screenName.memberInfo'), ...modalOptions }}
                   />
                   <Stack.Screen
+                    name='group/[id]/filter'
+                    options={{ title: t('screenName.filter'), ...modalOptions }}
+                  />
+                  <Stack.Screen
                     name='createGroup'
                     options={{
                       title: t('screenName.createGroup'),

@@ -241,6 +241,7 @@ export class AppController {
     return await this.appService.queryGroupSplits(request.user.sub, args)
   }
 
+  // TODO: remove this (and related parts of the code) once deployed for a while
   @UseGuards(AuthGuard)
   @Get('getGroupSplits')
   async getGroupSplits(@Req() request: Request, @Query() args: Partial<GetGroupSplitsArguments>) {
