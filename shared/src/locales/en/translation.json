@@ -229,7 +229,7 @@
     "memberInfo": "Member information",
     "addSplit":"Add split",
     "settleUp": "Settle up",
-    "filter": "Filter",
+    "filter": "Filter splits",
 
     "groupSettings": {
       "index": "Settings",
@@ -251,7 +251,16 @@
     "participantsMode": {
       "all": "Every one of",
       "oneOf": "At least one of"
-    }
+    },
+    "orderBy": {
+      "createdAt": "Creation time",
+      "updatedAt": "Last update time",
+      "total": "Total amount",
+      "balanceChange": "Balance change",
+      "title": "Name"
+    },
+    "ascending": "Ascending",
+    "descending": "Descending"
   },
 
   "createGroup": {

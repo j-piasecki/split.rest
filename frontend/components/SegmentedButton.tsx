@@ -16,6 +16,7 @@ export interface SegmentedButtonItem {
 export interface SegmentedButtonProps {
   items: SegmentedButtonItem[]
   style?: StyleProp<ViewStyle>
+  alwaysShowTitle?: boolean
 }
 
 function Item({
@@ -25,14 +26,15 @@ function Item({
   disabled,
   onPress,
   last,
-}: SegmentedButtonItem & { last: boolean }) {
+  alwaysShowTitle,
+}: SegmentedButtonItem & { last: boolean; alwaysShowTitle: boolean }) {
   const theme = useTheme()
   const [pressed, setPressed] = useState(false)
   const [hovered, setHovered] = useState(false)
 
   const containerStyle = useAnimatedStyle(() => {
     return {
-      flex: withSpring(pressed ? 1.25 : 1, { mass: 1, stiffness: 250, damping: 10 }),
+      flexGrow: withSpring(pressed ? 1.25 : 1, { mass: 1, stiffness: 250, damping: 10 }),
     }
   })
 
@@ -45,7 +47,13 @@ function Item({
   const contentStyle = useAnimatedStyle(() => {
     return {
       transform: [
-        { scale: withSpring(pressed ? 1.2 : 1, { mass: 1, stiffness: 250, damping: 15 }) },
+        {
+          scale: withSpring(pressed ? (alwaysShowTitle ? 1.2 : 1.05) : 1, {
+            mass: 1,
+            stiffness: 250,
+            damping: 15,
+          }),
+        },
       ],
     }
   })
@@ -94,7 +102,7 @@ function Item({
               color={selected ? theme.colors.onSecondaryContainer : theme.colors.onSurface}
             />
           )}
-          {title && (
+          {title && (alwaysShowTitle || selected) && (
             <Text
               style={{
                 flexShrink: 1,
@@ -113,7 +121,7 @@ function Item({
   )
 }
 
-export function SegmentedButton({ items, style }: SegmentedButtonProps) {
+export function SegmentedButton({ items, style, alwaysShowTitle = true }: SegmentedButtonProps) {
   const theme = useTheme()
   return (
     <View
@@ -132,7 +140,14 @@ export function SegmentedButton({ items, style }: SegmentedButtonProps) {
       ]}
     >
       {items.map((item, index) => {
-        return <Item key={index} {...item} last={index === items.length - 1} />
+        return (
+          <Item
+            key={index}
+            {...item}
+            last={index === items.length - 1}
+            alwaysShowTitle={alwaysShowTitle}
+          />
+        )
       })}
     </View>
   )

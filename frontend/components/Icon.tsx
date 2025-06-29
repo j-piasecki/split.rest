@@ -12,13 +12,17 @@ export type IconName =
   | 'appleLogo'
   | 'arrowBack'
   | 'arrowDown'
+  | 'arrowDownAlt'
   | 'arrowUp'
+  | 'arrowUpAlt'
   | 'balance'
   | 'barChart'
   | 'bug'
   | 'cached'
+  | 'calendarEdit'
   | 'calendar'
   | 'casino'
+  | 'change'
   | 'check'
   | 'chevronBack'
   | 'chevronForward'
@@ -71,6 +75,7 @@ export type IconName =
   | 'systemTheme'
   | 'tag'
   | 'timeline'
+  | 'title'
   | 'undo'
   | 'user'
   | 'visibilityOff'
@@ -93,13 +98,17 @@ const iconMap: Record<IconName, unknown> = {
   appleLogo: require('@assets/icons/apple_logo.svg'),
   arrowBack: require('@assets/icons/arrow_back.svg'),
   arrowDown: require('@assets/icons/arrow_down.svg'),
+  arrowDownAlt: require('@assets/icons/arrow_down_alt.svg'),
   arrowUp: require('@assets/icons/arrow_up.svg'),
+  arrowUpAlt: require('@assets/icons/arrow_up_alt.svg'),
   balance: require('@assets/icons/balance.svg'),
   barChart: require('@assets/icons/bar_chart.svg'),
   bug: require('@assets/icons/bug.svg'),
   cached: require('@assets/icons/cached.svg'),
+  calendarEdit: require('@assets/icons/calendar_edit.svg'),
   calendar: require('@assets/icons/calendar.svg'),
   casino: require('@assets/icons/casino.svg'),
+  change: require('@assets/icons/change.svg'),
   check: require('@assets/icons/check.svg'),
   chevronBack: require('@assets/icons/chevron_back.svg'),
   chevronForward: require('@assets/icons/chevron_forward.svg'),
@@ -152,6 +161,7 @@ const iconMap: Record<IconName, unknown> = {
   systemTheme: require('@assets/icons/system_theme.svg'),
   tag: require('@assets/icons/tag.svg'),
   timeline: require('@assets/icons/timeline.svg'),
+  title: require('@assets/icons/title.svg'),
   undo: require('@assets/icons/undo.svg'),
   user: require('@assets/icons/user.svg'),
   visibilityOff: require('@assets/icons/visibility_off.svg'),

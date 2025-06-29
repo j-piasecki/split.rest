@@ -210,10 +210,72 @@ function FilterParticipants({ query, updateQuery }: QueryProps) {
   )
 }
 
+function FilterOrderBy({ query, updateQuery }: QueryProps) {
+  const { t } = useTranslation()
+
+  return (
+    <View style={{ gap: 8 }}>
+      <SegmentedButton
+        alwaysShowTitle={false}
+        items={[
+          {
+            title: t('filter.orderBy.createdAt'),
+            icon: 'calendar',
+            selected: query.orderBy === 'createdAt',
+            onPress: () => updateQuery({ type: 'setOrderBy', orderBy: 'createdAt' }),
+          },
+          {
+            title: t('filter.orderBy.updatedAt'),
+            icon: 'calendarEdit',
+            selected: query.orderBy === 'updatedAt',
+            onPress: () => updateQuery({ type: 'setOrderBy', orderBy: 'updatedAt' }),
+          },
+          {
+            title: t('filter.orderBy.total'),
+            icon: 'money',
+            selected: query.orderBy === 'total',
+            onPress: () => updateQuery({ type: 'setOrderBy', orderBy: 'total' }),
+          },
+          {
+            title: t('filter.orderBy.balanceChange'),
+            icon: 'change',
+            selected: query.orderBy === 'balanceChange',
+            onPress: () => updateQuery({ type: 'setOrderBy', orderBy: 'balanceChange' }),
+          },
+          {
+            title: t('filter.orderBy.title'),
+            icon: 'title',
+            selected: query.orderBy === 'title',
+            onPress: () => updateQuery({ type: 'setOrderBy', orderBy: 'title' }),
+          },
+        ]}
+      />
+
+      <SegmentedButton
+        items={[
+          {
+            title: t('filter.ascending'),
+            icon: 'arrowUpAlt',
+            selected: query.orderDirection === 'asc',
+            onPress: () => updateQuery({ type: 'setOrderDirection', orderDirection: 'asc' }),
+          },
+          {
+            title: t('filter.descending'),
+            icon: 'arrowDownAlt',
+            selected: query.orderDirection === 'desc',
+            onPress: () => updateQuery({ type: 'setOrderDirection', orderDirection: 'desc' }),
+          },
+        ]}
+      />
+    </View>
+  )
+}
+
 function FilterForm({ query, updateQuery }: QueryProps) {
   return (
     <View style={{ flexGrow: 1, gap: 12 }}>
       <FilterTitle query={query} updateQuery={updateQuery} />
+      <FilterOrderBy query={query} updateQuery={updateQuery} />
       <FilterParticipants query={query} updateQuery={updateQuery} />
     </View>
   )
