@@ -337,7 +337,7 @@ function FilterForm({ query, updateQuery }: QueryProps) {
       <View style={{ zIndex: 17 }}>
         <FilterUserArray
           title={t('filter.lastUpdateBy')}
-          icon='calendarEdit'
+          icon='articlePerson'
           people={query.lastUpdateBy}
           onAdd={(user) => updateQuery({ type: 'addLastUpdateBy', participant: user })}
           onRemove={(id) => updateQuery({ type: 'removeLastUpdateBy', id })}
