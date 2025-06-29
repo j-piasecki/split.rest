@@ -245,7 +245,8 @@
   },
 
   "filter": {
-    "apply": "Apply filters"
+    "apply": "Apply filters",
+    "titleFilter": "Title filter"
   },
 
   "createGroup": {

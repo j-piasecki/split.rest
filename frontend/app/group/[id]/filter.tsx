@@ -1,13 +1,83 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
+import { RoundIconButton } from '@components/RoundIconButton'
+import { TextInput, TextInputRef } from '@components/TextInput'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import {
+  SplitQueryActionType,
+  SplitQueryConfig,
+  defaultQuery,
+  useSplitQuery,
+} from '@hooks/useSplitQuery'
+import { useTheme } from '@styling/theme'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
+import { Pressable, ScrollView, View } from 'react-native'
+
+interface QueryProps {
+  query: SplitQueryConfig
+  updateQuery: (action: SplitQueryActionType) => void
+}
+
+function FilterTitle({ query, updateQuery }: QueryProps) {
+  const theme = useTheme()
+  const textInputRef = useRef<TextInputRef>(null)
+  const { t } = useTranslation()
+
+  return (
+    <Pressable
+      style={{
+        paddingTop: 8,
+        paddingBottom: 8,
+        paddingLeft: 8,
+        paddingRight: 4,
+        borderRadius: 16,
+        backgroundColor: theme.colors.surfaceContainer,
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}
+      onPress={() => textInputRef.current?.focus()}
+    >
+      <TextInput
+        ref={textInputRef}
+        placeholder={t('filter.titleFilter')}
+        value={query.titleFilter}
+        onChangeText={(text) => updateQuery({ type: 'setTitle', title: text })}
+        style={{ flex: 1 }}
+        inputStyle={{ fontSize: 16 }}
+        showUnderline={false}
+      />
+      <RoundIconButton
+        icon='matchCase'
+        color={query.titleCaseSensitive ? theme.colors.primary : undefined}
+        onPress={() =>
+          updateQuery({ type: 'setCaseSensitive', caseSensitive: !query.titleCaseSensitive })
+        }
+        style={{ marginTop: 4 }}
+      />
+      <RoundIconButton
+        icon='regex'
+        color={query.titleRegex ? theme.colors.primary : undefined}
+        onPress={() => updateQuery({ type: 'setRegex', regex: !query.titleRegex })}
+        style={{ marginTop: 4 }}
+      />
+    </Pressable>
+  )
+}
+
+function FilterForm({ query, updateQuery }: QueryProps) {
+  return (
+    <View style={{ flexGrow: 1 }}>
+      <FilterTitle query={query} updateQuery={updateQuery} />
+    </View>
+  )
+}
 
 function FilterSelector() {
   const router = useRouter()
   const insets = useModalScreenInsets()
+  const [query, updateQuery] = useSplitQuery(defaultQuery)
   const { id: groupId } = useLocalSearchParams()
   const { t } = useTranslation()
 
@@ -31,7 +101,9 @@ function FilterSelector() {
           paddingTop: insets.top + 16,
         }}
         keyboardShouldPersistTaps='handled'
-      ></ScrollView>
+      >
+        <FilterForm query={query} updateQuery={updateQuery} />
+      </ScrollView>
 
       <View
         style={{
@@ -49,12 +121,7 @@ function FilterSelector() {
           onPress={goBack}
         />
 
-        <Button
-          leftIcon='check'
-          title={t('filter.apply')}
-          style={{ flex: 1 }}
-          onPress={goBack}
-        />
+        <Button leftIcon='check' title={t('filter.apply')} style={{ flex: 1 }} onPress={goBack} />
       </View>
     </View>
   )

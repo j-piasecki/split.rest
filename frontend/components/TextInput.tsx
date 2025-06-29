@@ -18,6 +18,7 @@ export interface Props extends TextInputProps {
   resetError?: () => void
   inputStyle?: StyleProp<TextStyle>
   focusIndex?: number
+  showUnderline?: boolean
 }
 
 export interface TextInputRef {
@@ -39,6 +40,7 @@ export const TextInput = React.forwardRef<TextInputRef, Props>(function TextInpu
     inputStyle,
     onSubmitEditing,
     submitBehavior,
+    showUnderline = true,
     ...rest
   }: Props,
   ref
@@ -120,7 +122,11 @@ export const TextInput = React.forwardRef<TextInputRef, Props>(function TextInpu
 
   return (
     <Animated.View
-      style={[style as ViewStyle, { borderBottomWidth: 1, borderRadius: 2 }, wrapperStyle]}
+      style={[
+        style as ViewStyle,
+        { borderBottomWidth: showUnderline ? 1 : 0, borderRadius: 2 },
+        wrapperStyle,
+      ]}
     >
       <TextInputRN
         ref={inputRef}
