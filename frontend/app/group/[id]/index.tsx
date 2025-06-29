@@ -1,8 +1,6 @@
 import Header, { HEADER_HEIGHT } from '@components/Header'
 import { Pane, PaneHeader } from '@components/Pane'
 import { RoundIconButton } from '@components/RoundIconButton'
-import { SegmentedButton } from '@components/SegmentedButton'
-import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { GroupInfoPane } from '@components/groupScreen/GroupInfoPane'
 import { GroupSplitsList } from '@components/groupScreen/GroupSplitsList'
@@ -11,82 +9,41 @@ import { MembersList } from '@components/groupScreen/MembersList'
 import { MembersOrderFilter } from '@components/groupScreen/MembersOrderFilter'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { resetSplitQueryConfig, useSplitQueryConfig } from '@hooks/useSplitQueryConfig'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
-import { useLocalSearchParams } from 'expo-router'
+import { defaultQueryConfig } from '@utils/splitQueryConfig'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native'
+import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupUserInfo, SplitPermissionType } from 'shared'
+import { GroupUserInfo } from 'shared'
 
-let allSplitsSnackShown = false
-let splitsWithYouSnackShown = false
+function SplitQuery() {
+  const theme = useTheme()
+  const router = useRouter()
+  const { id } = useLocalSearchParams()
+  const groupId = Number(id)
+  const query = useSplitQueryConfig(groupId)
 
-function SplitsFilter({
-  style,
-  onChange,
-}: {
-  style?: StyleProp<ViewStyle>
-  onChange: (onlyIfIncluded: boolean) => void
-}) {
-  const snack = useSnack()
-  const { t } = useTranslation()
-  const [onlyIfIncluded, setOnlyIfIncluded] = useState(false)
+  const longPress = Gesture.LongPress()
+    .runOnJS(true)
+    .onStart(() => {
+      resetSplitQueryConfig(groupId)
+    })
 
   return (
-    <SegmentedButton
-      // this seems to work with flex
-      style={[{ maxWidth: 112, minWidth: 112 }, style]}
-      items={[
-        {
-          icon: 'list',
-          selected: !onlyIfIncluded,
-          onPress: () => {
-            if (onlyIfIncluded) {
-              if (!allSplitsSnackShown) {
-                // eslint-disable-next-line react-compiler/react-compiler
-                allSplitsSnackShown = true
-                snack.show({
-                  message: t('splitList.showingAllSplits'),
-                  duration: snack.duration.SHORT,
-                })
-              }
-              setOnlyIfIncluded(false)
-              onChange(false)
-            }
-          },
-        },
-        {
-          icon: 'user',
-          selected: onlyIfIncluded,
-          onPress: () => {
-            if (!onlyIfIncluded) {
-              if (!splitsWithYouSnackShown) {
-                // eslint-disable-next-line react-compiler/react-compiler
-                splitsWithYouSnackShown = true
-                snack.show({
-                  message: t('splitList.showingSplitsWithYou'),
-                  duration: snack.duration.SHORT,
-                })
-              }
-              setOnlyIfIncluded(true)
-              onChange(true)
-            }
-          },
-        },
-      ]}
-    />
+    <GestureDetector gesture={longPress}>
+      <RoundIconButton
+        icon='filter'
+        color={query === defaultQueryConfig ? undefined : theme.colors.primary}
+        onPress={() => router.navigate(`/group/${groupId}/filter`)}
+      />
+    </GestureDetector>
   )
 }
 
@@ -94,14 +51,12 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
-  const [onlyShowSplitsIfIncluded, setOnlyShowSplitsIfIncluded] = useState(false)
 
   return (
     <GroupSplitsList
       info={info}
       showPullableHeader
       applyBottomInset
-      forceShowSplitsWithUser={onlyShowSplitsIfIncluded}
       headerComponent={
         <View style={{ gap: 12 }}>
           <GroupInfoPane info={info} />
@@ -123,11 +78,7 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
               title={t('tabs.splits')}
               textLocation='start'
               adjustsFontSizeToFit
-              rightComponent={
-                permissions?.canReadSplits() === SplitPermissionType.All && (
-                  <SplitsFilter onChange={setOnlyShowSplitsIfIncluded} />
-                )
-              }
+              rightComponent={permissions?.canQuerySplits() && <SplitQuery />}
             />
           </View>
         </View>
@@ -142,7 +93,6 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
   const insets = useSafeAreaInsets()
   const displayClass = useDisplayClass()
   const { data: permissions } = useGroupPermissions(groupInfo?.id)
-  const [onlyShowSplitsIfIncluded, setOnlyShowSplitsIfIncluded] = useState(false)
   const [membersLowToHigh, setMembersLowToHigh] = useState<boolean | undefined>(true)
 
   const [membersExpanded, setMembersExpanded] = useState(false)
@@ -187,14 +137,9 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           containerStyle={{ flex: 1 }}
           collapsible
           collapsed={false}
-          rightComponent={
-            permissions?.canReadSplits() === SplitPermissionType.All && (
-              // @ts-expect-error flex cannot really be null, but this way it can be overriden
-              <SplitsFilter style={{ flex: null }} onChange={setOnlyShowSplitsIfIncluded} />
-            )
-          }
+          rightComponent={permissions?.canQuerySplits() && <SplitQuery />}
         >
-          <GroupSplitsList info={groupInfo} forceShowSplitsWithUser={onlyShowSplitsIfIncluded} />
+          <GroupSplitsList info={groupInfo} />
         </Pane>
         {(!permissions || permissions?.canReadMembers()) && (
           <Pane

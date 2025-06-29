@@ -373,7 +373,7 @@
   "splitList": {
     "noSplits": "There are no splits in this group",
     "noAccessibleSplits": "There are no splits you can access in this group",
-    "noSplitsWhereIncluded": "There are no splits where you are included",
+    "noSplitsMatchingQuery": "There are no splits matching your query",
     "showingAllSplits": "Showing all splits",
     "showingSplitsWithYou": "Showing only splits including you"
   },

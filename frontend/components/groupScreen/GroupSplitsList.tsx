@@ -1,31 +1,36 @@
 import { SplitsList, SplitsListProps } from './SplitsList'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
-import { useGroupSplits } from '@hooks/database/useGroupSplits'
+import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
+import { useSplitQueryConfig } from '@hooks/useSplitQueryConfig'
+import { buildQuery } from '@hooks/useSplitQueryConfigBuilder'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { defaultQueryConfig } from '@utils/splitQueryConfig'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { SplitPermissionType } from 'shared'
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface GroupSplitsListProps
   extends Omit<
     SplitsListProps,
     'splits' | 'isLoading' | 'isRefetching' | 'isFetchingNextPage' | 'fetchNextPage' | 'hasNextPage'
-  > {
-  forceShowSplitsWithUser?: boolean
-}
+  > {}
 
 export function GroupSplitsList(props: GroupSplitsListProps) {
+  if (!props.info?.id) {
+    return null
+  }
+
+  return <InnerGroupSplitsList {...props} />
+}
+
+function InnerGroupSplitsList(props: GroupSplitsListProps) {
   const threeBarLayout = useThreeBarLayout()
+  const query = useSplitQueryConfig(props.info!.id)
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(props.info?.id)
 
-  // TODO: changing forceShowSplitsWithUser causes the list to reload, shouldn't it show the current data wile loading the new one?
   const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =
-    useGroupSplits(
-      props.info?.id,
-      props.forceShowSplitsWithUser ||
-        permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
-    )
+    useGroupSplitsQuery(props.info!.id, buildQuery(query))
 
   return (
     <SplitsList
@@ -38,13 +43,11 @@ export function GroupSplitsList(props: GroupSplitsListProps) {
       hasNextPage={hasNextPage}
       applyHorizontalPadding={!threeBarLayout}
       emptyMessage={
-        permissions?.canReadSplits() === SplitPermissionType.None
-          ? t('api.insufficientPermissions.group.readSplits')
-          : permissions?.canReadSplits() === SplitPermissionType.OnlyIfIncluded
-            ? t('splitList.noAccessibleSplits')
-            : props.forceShowSplitsWithUser
-              ? t('splitList.noSplitsWhereIncluded')
-              : t('splitList.noSplits')
+        permissions?.canQuerySplits() === false
+          ? t('api.insufficientPermissions.group.querySplits')
+          : query !== defaultQueryConfig
+            ? t('splitList.noSplitsMatchingQuery')
+            : t('splitList.noSplits')
       }
     />
   )

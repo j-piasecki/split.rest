@@ -1,19 +1,27 @@
 import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { RoundIconButton } from '@components/RoundIconButton'
+import { Text } from '@components/Text'
 import { TextInput, TextInputRef } from '@components/TextInput'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import {
+  getSplitQueryConfig,
+  resetSplitQueryConfig,
+  setSplitQueryConfig,
+} from '@hooks/useSplitQueryConfig'
+import {
   SplitQueryActionType,
-  SplitQueryConfig,
-  defaultQuery,
-  useSplitQuery,
-} from '@hooks/useSplitQuery'
+  buildQuery,
+  useSplitQueryConfigBuilder,
+} from '@hooks/useSplitQueryConfigBuilder'
+import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
+import { SplitQueryConfig } from '@utils/splitQueryConfig'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, ScrollView, View } from 'react-native'
+import { validateQuery } from 'shared'
 
 interface QueryProps {
   query: SplitQueryConfig
@@ -75,11 +83,13 @@ function FilterForm({ query, updateQuery }: QueryProps) {
 }
 
 function FilterSelector() {
+  const theme = useTheme()
   const router = useRouter()
   const insets = useModalScreenInsets()
-  const [query, updateQuery] = useSplitQuery(defaultQuery)
   const { id: groupId } = useLocalSearchParams()
   const { t } = useTranslation()
+  const [query, updateQuery] = useSplitQueryConfigBuilder(getSplitQueryConfig(Number(groupId)))
+  const [error, setError] = useTranslatedError()
 
   function goBack() {
     if (router.canGoBack()) {
@@ -105,6 +115,20 @@ function FilterSelector() {
         <FilterForm query={query} updateQuery={updateQuery} />
       </ScrollView>
 
+      {error && (
+        <View style={{ paddingHorizontal: 12, paddingVertical: 8 }}>
+          <Text
+            style={{
+              color: theme.colors.error,
+              fontSize: 18,
+              textAlign: 'center',
+            }}
+          >
+            {error}
+          </Text>
+        </View>
+      )}
+
       <View
         style={{
           gap: 12,
@@ -118,10 +142,26 @@ function FilterSelector() {
           leftIcon='erase'
           pressableStyle={{ paddingHorizontal: 4 }}
           destructive
-          onPress={goBack}
+          onPress={() => {
+            goBack()
+            resetSplitQueryConfig(Number(groupId))
+          }}
         />
 
-        <Button leftIcon='check' title={t('filter.apply')} style={{ flex: 1 }} onPress={goBack} />
+        <Button
+          leftIcon='check'
+          title={t('filter.apply')}
+          style={{ flex: 1 }}
+          onPress={() => {
+            try {
+              validateQuery(buildQuery(query))
+              goBack()
+              setSplitQueryConfig(Number(groupId), query)
+            } catch (e) {
+              setError(e)
+            }
+          }}
+        />
       </View>
     </View>
   )

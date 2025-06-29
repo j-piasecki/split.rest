@@ -175,7 +175,7 @@ export const TextInput = React.forwardRef<TextInputRef, Props>(function TextInpu
           hintWrapperStyle,
         ]}
       >
-        <Animated.Text style={[{ fontFamily: resolveFontName() }, hintStyle]}>
+        <Animated.Text style={[{ fontFamily: resolveFontName() }, hintStyle, inputStyle]}>
           {placeholder}
         </Animated.Text>
       </Animated.View>

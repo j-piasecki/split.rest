@@ -1,31 +1,6 @@
+import { SplitQueryConfig } from '@utils/splitQueryConfig'
 import { useReducer } from 'react'
 import { SplitQuery, UserWithDisplayName } from 'shared'
-
-export interface SplitQueryConfig {
-  titleFilter?: string
-  titleCaseSensitive: boolean
-  titleRegex: boolean
-  participants?: UserWithDisplayName[]
-  participantsMode?: 'all' | 'oneOf'
-  orderBy: 'title' | 'createdAt' | 'total' | 'balanceChange' | 'updatedAt'
-  orderDirection: 'asc' | 'desc'
-  paidBy?: UserWithDisplayName[]
-  lastUpdateBy?: UserWithDisplayName[]
-  beforeTimestamp?: number
-  afterTimestamp?: number
-  lastUpdateBeforeTimestamp?: number
-  lastUpdateAfterTimestamp?: number
-  // undefined is all, true is edited, false is not edited
-  edited?: boolean
-  pending?: boolean
-}
-
-export const defaultQuery: SplitQueryConfig = {
-  titleCaseSensitive: false,
-  titleRegex: false,
-  orderBy: 'createdAt',
-  orderDirection: 'desc',
-}
 
 export type SplitQueryActionType =
   | {
@@ -145,7 +120,7 @@ function queryReducer(query: SplitQueryConfig, action: SplitQueryActionType): Sp
   return newQuery
 }
 
-export function useSplitQuery(initial: SplitQueryConfig) {
+export function useSplitQueryConfigBuilder(initial: SplitQueryConfig) {
   const [query, updateQuery] = useReducer<SplitQueryConfig, [SplitQueryActionType]>(
     queryReducer,
     initial
