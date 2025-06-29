@@ -38,8 +38,10 @@ export function CalendarPane({
       <Calendar
         initialDate={timestamp}
         onDateChange={(timestamp) => {
-          setTimestamp(timestamp)
-          onDateChange?.(timestamp)
+          if (timestamp) {
+            setTimestamp(timestamp)
+            onDateChange?.(timestamp)
+          }
         }}
       />
     </Pane>

@@ -10,9 +10,15 @@ import CalendarPicker from 'react-native-calendar-picker'
 export function Calendar({
   initialDate,
   onDateChange,
+  allowRangeSelection,
+  selectedStartDate,
+  selectedEndDate,
 }: {
   initialDate?: number
-  onDateChange?: (timestamp: number) => void
+  onDateChange?: (timestamp?: number, type?: 'START_DATE' | 'END_DATE') => void
+  allowRangeSelection?: boolean
+  selectedStartDate?: Date
+  selectedEndDate?: Date
 }) {
   const theme = useTheme()
   const containerRef = useRef<View>(null)
@@ -29,11 +35,13 @@ export function Calendar({
   useEffect(() => {
     const date = new Date(initialDate ?? Date.now())
     setTimeout(() => {
-      calendarRef.current?.handleOnPressDay({
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        day: date.getDate(),
-      })
+      if (initialDate) {
+        calendarRef.current?.handleOnPressDay({
+          year: date.getFullYear(),
+          month: date.getMonth(),
+          day: date.getDate(),
+        })
+      }
     }, 100)
   }, [initialDate])
 
@@ -42,9 +50,13 @@ export function Calendar({
       <View style={{ width: calendarWidth }}>
         <CalendarPicker
           ref={calendarRef}
-          onDateChange={(date) => {
-            onDateChange?.(date.getTime())
+          onDateChange={(date, type) => {
+            onDateChange?.(date?.getTime(), type)
           }}
+          allowRangeSelection={allowRangeSelection}
+          selectedStartDate={selectedStartDate}
+          selectedEndDate={selectedEndDate}
+          selectedRangeStyle={{ backgroundColor: theme.colors.primary }}
           // TODO: scrollable breaks first date selection
           // scrollable
           // scrollDecelarationRate={'fast'}

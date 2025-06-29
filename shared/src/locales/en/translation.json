@@ -263,6 +263,8 @@
     "descending": "Descending",
     "paidBy": "Filter by payer",
     "lastUpdateBy": "Filter by last updater",
+    "timestampRange": "Date range",
+    "updateRange": "Last update date range",
     "all": "All",
     "edited": "Edited",
     "notEdited": "Not edited",

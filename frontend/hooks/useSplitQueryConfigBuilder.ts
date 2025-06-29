@@ -53,19 +53,19 @@ export type SplitQueryActionType =
     }
   | {
       type: 'setBeforeTimestamp'
-      beforeTimestamp: number
+      beforeTimestamp: number | undefined
     }
   | {
       type: 'setAfterTimestamp'
-      afterTimestamp: number
+      afterTimestamp: number | undefined
     }
   | {
       type: 'setLastUpdateBeforeTimestamp'
-      lastUpdateBeforeTimestamp: number
+      lastUpdateBeforeTimestamp: number | undefined
     }
   | {
       type: 'setLastUpdateAfterTimestamp'
-      lastUpdateAfterTimestamp: number
+      lastUpdateAfterTimestamp: number | undefined
     }
   | {
       type: 'setEdited'

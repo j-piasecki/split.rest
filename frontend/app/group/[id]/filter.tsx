@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { Calendar } from '@components/Calendar'
 import { Icon, IconName } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
@@ -311,6 +312,53 @@ function FilterUserArray({
   )
 }
 
+function FilterTimestampRange({
+  title,
+  icon,
+  beforeTimestamp,
+  afterTimestamp,
+  onBeforeTimestampChange,
+  onAfterTimestampChange,
+}: {
+  title: string
+  icon: IconName
+  beforeTimestamp?: number
+  afterTimestamp?: number
+  onBeforeTimestampChange: (timestamp?: number) => void
+  onAfterTimestampChange: (timestamp?: number) => void
+}) {
+  const [collapsed, setCollapsed] = useState(!beforeTimestamp && !afterTimestamp)
+
+  return (
+    <Pane
+      icon={icon}
+      title={title}
+      textLocation='start'
+      collapsible
+      collapsed={collapsed}
+      onCollapseChange={setCollapsed}
+      containerStyle={{ overflow: 'visible' }}
+    >
+      {!collapsed && (
+        <View style={{ padding: 12, paddingTop: 8, gap: 12 }}>
+          <Calendar
+            allowRangeSelection
+            selectedStartDate={afterTimestamp ? new Date(afterTimestamp) : undefined}
+            selectedEndDate={beforeTimestamp ? new Date(beforeTimestamp) : undefined}
+            onDateChange={(timestamp, type) => {
+              if (type === 'START_DATE') {
+                onAfterTimestampChange(timestamp)
+              } else if (type === 'END_DATE') {
+                onBeforeTimestampChange(timestamp)
+              }
+            }}
+          />
+        </View>
+      )}
+    </Pane>
+  )
+}
+
 function FilterForm({ query, updateQuery }: QueryProps) {
   const { t } = useTranslation()
 
@@ -344,6 +392,40 @@ function FilterForm({ query, updateQuery }: QueryProps) {
         />
       </View>
       <View style={{ zIndex: 16 }}>
+        <FilterTimestampRange
+          title={t('filter.timestampRange')}
+          icon='calendar'
+          beforeTimestamp={query.beforeTimestamp}
+          afterTimestamp={query.afterTimestamp}
+          onBeforeTimestampChange={(timestamp) =>
+            updateQuery({ type: 'setBeforeTimestamp', beforeTimestamp: timestamp })
+          }
+          onAfterTimestampChange={(timestamp) =>
+            updateQuery({ type: 'setAfterTimestamp', afterTimestamp: timestamp })
+          }
+        />
+      </View>
+      <View style={{ zIndex: 15 }}>
+        <FilterTimestampRange
+          title={t('filter.updateRange')}
+          icon='calendarEdit'
+          beforeTimestamp={query.lastUpdateBeforeTimestamp}
+          afterTimestamp={query.lastUpdateAfterTimestamp}
+          onBeforeTimestampChange={(timestamp) =>
+            updateQuery({
+              type: 'setLastUpdateBeforeTimestamp',
+              lastUpdateBeforeTimestamp: timestamp,
+            })
+          }
+          onAfterTimestampChange={(timestamp) =>
+            updateQuery({
+              type: 'setLastUpdateAfterTimestamp',
+              lastUpdateAfterTimestamp: timestamp,
+            })
+          }
+        />
+      </View>
+      <View style={{ zIndex: 14 }}>
         <SegmentedButton
           items={[
             {
@@ -367,7 +449,7 @@ function FilterForm({ query, updateQuery }: QueryProps) {
           ]}
         />
       </View>
-      <View style={{ zIndex: 15 }}>
+      <View style={{ zIndex: 13 }}>
         <SegmentedButton
           items={[
             {
