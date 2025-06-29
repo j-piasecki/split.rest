@@ -257,7 +257,7 @@
       "updatedAt": "Last update time",
       "total": "Total amount",
       "balanceChange": "Balance change",
-      "title": "Name"
+      "timestamp": "Date"
     },
     "ascending": "Ascending",
     "descending": "Descending",

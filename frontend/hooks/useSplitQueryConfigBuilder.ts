@@ -29,7 +29,7 @@ export type SplitQueryActionType =
     }
   | {
       type: 'setOrderBy'
-      orderBy: 'title' | 'createdAt' | 'total' | 'balanceChange' | 'updatedAt'
+      orderBy: 'timestamp' | 'createdAt' | 'total' | 'balanceChange' | 'updatedAt'
     }
   | {
       type: 'setOrderDirection'

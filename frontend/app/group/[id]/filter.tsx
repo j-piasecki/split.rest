@@ -220,7 +220,7 @@ function FilterOrderBy({ query, updateQuery }: QueryProps) {
         items={[
           {
             title: t('filter.orderBy.createdAt'),
-            icon: 'calendar',
+            icon: 'schedule',
             selected: query.orderBy === 'createdAt',
             onPress: () => updateQuery({ type: 'setOrderBy', orderBy: 'createdAt' }),
           },
@@ -243,10 +243,10 @@ function FilterOrderBy({ query, updateQuery }: QueryProps) {
             onPress: () => updateQuery({ type: 'setOrderBy', orderBy: 'balanceChange' }),
           },
           {
-            title: t('filter.orderBy.title'),
-            icon: 'title',
-            selected: query.orderBy === 'title',
-            onPress: () => updateQuery({ type: 'setOrderBy', orderBy: 'title' }),
+            title: t('filter.orderBy.timestamp'),
+            icon: 'calendar',
+            selected: query.orderBy === 'timestamp',
+            onPress: () => updateQuery({ type: 'setOrderBy', orderBy: 'timestamp' }),
           },
         ]}
       />

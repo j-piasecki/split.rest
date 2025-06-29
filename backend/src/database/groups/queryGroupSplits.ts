@@ -22,8 +22,8 @@ export async function queryGroupSplits(
   const orderDirection = args.query?.orderDirection?.toLowerCase() === 'asc' ? 'ASC' : 'DESC'
 
   const orderClause =
-    args.query?.orderBy === 'title'
-      ? `ORDER BY splits.name ${orderDirection}, splits.id DESC`
+    args.query?.orderBy === 'timestamp'
+      ? `ORDER BY splits.timestamp ${orderDirection}, splits.id DESC`
       : args.query?.orderBy === 'total'
         ? `ORDER BY splits.total ${orderDirection}, splits.id DESC`
         : args.query?.orderBy === 'balanceChange'
@@ -34,10 +34,10 @@ export async function queryGroupSplits(
 
   // Pagination handling
   if (args.startAfter) {
-    if (args.query?.orderBy === 'title') {
+    if (args.query?.orderBy === 'timestamp') {
       const comparator = orderDirection === 'ASC' ? '>' : '<'
       whereClauses.push(
-        `(splits.name ${comparator} $${paramIndex} OR (splits.name = $${paramIndex} AND splits.id < $${paramIndex + 1}))`
+        `(splits.timestamp ${comparator} $${paramIndex} OR (splits.timestamp = $${paramIndex} AND splits.id < $${paramIndex + 1}))`
       )
       values.push(args.startAfter.title, args.startAfter.id)
       paramIndex += 2

@@ -6,7 +6,7 @@ export interface SplitQueryConfig {
   titleRegex: boolean
   participants?: UserWithDisplayName[]
   participantsMode?: 'all' | 'oneOf'
-  orderBy: 'title' | 'createdAt' | 'total' | 'balanceChange' | 'updatedAt'
+  orderBy: 'timestamp' | 'createdAt' | 'total' | 'balanceChange' | 'updatedAt'
   orderDirection: 'asc' | 'desc'
   paidBy?: UserWithDisplayName[]
   lastUpdateBy?: UserWithDisplayName[]
