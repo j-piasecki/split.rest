@@ -77,7 +77,7 @@ export function SplitQueryButton() {
               <RoundIconButton
                 icon='filter'
                 disabled={queryApplied}
-                color={queryApplied ? theme.colors.onPrimary : undefined}
+                color={queryApplied ? theme.colors.onPrimary : theme.colors.secondary}
                 onPress={() => router.navigate(`/group/${groupId}/filter`)}
               />
             </Animated.View>
