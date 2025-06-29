@@ -48,7 +48,7 @@ function Item({
     return {
       transform: [
         {
-          scale: withSpring(pressed ? (alwaysShowTitle ? 1.2 : 1.05) : 1, {
+          scale: withSpring(pressed ? (alwaysShowTitle ? 1.15 : 1.05) : 1, {
             mass: 1,
             stiffness: 250,
             damping: 15,

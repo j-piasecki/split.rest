@@ -23,6 +23,7 @@ export type IconName =
   | 'calendar'
   | 'casino'
   | 'change'
+  | 'checkCircle'
   | 'check'
   | 'chevronBack'
   | 'chevronForward'
@@ -35,6 +36,7 @@ export type IconName =
   | 'deleteForever'
   | 'deleteLink'
   | 'editAlt'
+  | 'editOff'
   | 'edit'
   | 'equal'
   | 'erase'
@@ -109,6 +111,7 @@ const iconMap: Record<IconName, unknown> = {
   calendar: require('@assets/icons/calendar.svg'),
   casino: require('@assets/icons/casino.svg'),
   change: require('@assets/icons/change.svg'),
+  checkCircle: require('@assets/icons/check_circle.svg'),
   check: require('@assets/icons/check.svg'),
   chevronBack: require('@assets/icons/chevron_back.svg'),
   chevronForward: require('@assets/icons/chevron_forward.svg'),
@@ -121,6 +124,7 @@ const iconMap: Record<IconName, unknown> = {
   deleteForever: require('@assets/icons/delete_forever.svg'),
   deleteLink: require('@assets/icons/delete_link.svg'),
   editAlt: require('@assets/icons/edit_alt.svg'),
+  editOff: require('@assets/icons/edit_off.svg'),
   edit: require('@assets/icons/edit.svg'),
   equal: require('@assets/icons/equal.svg'),
   erase: require('@assets/icons/erase.svg'),

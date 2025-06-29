@@ -262,7 +262,12 @@
     "ascending": "Ascending",
     "descending": "Descending",
     "paidBy": "Filter by payer",
-    "lastUpdateBy": "Filter by last updater"
+    "lastUpdateBy": "Filter by last updater",
+    "all": "All",
+    "edited": "Edited",
+    "notEdited": "Not edited",
+    "pending": "Pending",
+    "notPending": "Completed"
   },
 
   "createGroup": {

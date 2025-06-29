@@ -343,6 +343,54 @@ function FilterForm({ query, updateQuery }: QueryProps) {
           onRemove={(id) => updateQuery({ type: 'removeLastUpdateBy', id })}
         />
       </View>
+      <View style={{ zIndex: 16 }}>
+        <SegmentedButton
+          items={[
+            {
+              title: t('filter.all'),
+              icon: 'allOf',
+              selected: query.edited === undefined,
+              onPress: () => updateQuery({ type: 'setEdited', edited: undefined }),
+            },
+            {
+              title: t('filter.edited'),
+              icon: 'editAlt',
+              selected: query.edited === true,
+              onPress: () => updateQuery({ type: 'setEdited', edited: true }),
+            },
+            {
+              title: t('filter.notEdited'),
+              icon: 'editOff',
+              selected: query.edited === false,
+              onPress: () => updateQuery({ type: 'setEdited', edited: false }),
+            },
+          ]}
+        />
+      </View>
+      <View style={{ zIndex: 15 }}>
+        <SegmentedButton
+          items={[
+            {
+              title: t('filter.all'),
+              icon: 'allOf',
+              selected: query.pending === undefined,
+              onPress: () => updateQuery({ type: 'setPending', pending: undefined }),
+            },
+            {
+              title: t('filter.pending'),
+              icon: 'schedule',
+              selected: query.pending === true,
+              onPress: () => updateQuery({ type: 'setPending', pending: true }),
+            },
+            {
+              title: t('filter.notPending'),
+              icon: 'checkCircle',
+              selected: query.pending === false,
+              onPress: () => updateQuery({ type: 'setPending', pending: false }),
+            },
+          ]}
+        />
+      </View>
     </View>
   )
 }
