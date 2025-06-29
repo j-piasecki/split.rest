@@ -32,7 +32,9 @@ export type IconName =
   | 'editAlt'
   | 'edit'
   | 'equal'
+  | 'erase'
   | 'exactAmount'
+  | 'filter'
   | 'group'
   | 'home'
   | 'info'
@@ -44,6 +46,7 @@ export type IconName =
   | 'lock'
   | 'login'
   | 'logout'
+  | 'matchCase'
   | 'members'
   | 'menu'
   | 'merge'
@@ -53,6 +56,7 @@ export type IconName =
   | 'payments'
   | 'receipt'
   | 'removeModerator'
+  | 'regex'
   | 'save'
   | 'schedule'
   | 'sell'
@@ -107,7 +111,9 @@ const iconMap: Record<IconName, unknown> = {
   editAlt: require('@assets/icons/edit_alt.svg'),
   edit: require('@assets/icons/edit.svg'),
   equal: require('@assets/icons/equal.svg'),
+  erase: require('@assets/icons/erase.svg'),
   exactAmount: require('@assets/icons/exact_amount.svg'),
+  filter: require('@assets/icons/filter.svg'),
   group: require('@assets/icons/group.svg'),
   home: require('@assets/icons/home.svg'),
   info: require('@assets/icons/info.svg'),
@@ -119,6 +125,7 @@ const iconMap: Record<IconName, unknown> = {
   lock: require('@assets/icons/lock.svg'),
   login: require('@assets/icons/login.svg'),
   logout: require('@assets/icons/logout.svg'),
+  matchCase: require('@assets/icons/match_case.svg'),
   members: require('@assets/icons/members.svg'),
   menu: require('@assets/icons/menu.svg'),
   merge: require('@assets/icons/merge.svg'),
@@ -128,6 +135,7 @@ const iconMap: Record<IconName, unknown> = {
   payments: require('@assets/icons/payments.svg'),
   receipt: require('@assets/icons/receipt.svg'),
   removeModerator: require('@assets/icons/remove_moderator.svg'),
+  regex: require('@assets/icons/regex.svg'),
   save: require('@assets/icons/save.svg'),
   schedule: require('@assets/icons/schedule.svg'),
   sell: require('@assets/icons/sell.svg'),
