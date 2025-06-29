@@ -1,5 +1,5 @@
 import { Button } from '@components/Button'
-import { Icon } from '@components/Icon'
+import { Icon, IconName } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
@@ -271,12 +271,78 @@ function FilterOrderBy({ query, updateQuery }: QueryProps) {
   )
 }
 
+function FilterUserArray({
+  people,
+  onAdd,
+  onRemove,
+  title,
+  icon,
+}: {
+  title: string
+  icon: IconName
+  people: UserWithDisplayName[] | undefined
+  onAdd: (user: UserWithDisplayName) => void
+  onRemove: (id: string) => void
+}) {
+  const { id: groupId } = useLocalSearchParams()
+  const [collapsed, setCollapsed] = useState(!people?.length)
+
+  return (
+    <Pane
+      icon={icon}
+      title={title}
+      textLocation='start'
+      collapsible
+      collapsed={collapsed}
+      onCollapseChange={setCollapsed}
+      containerStyle={{ overflow: 'visible' }}
+    >
+      {!collapsed && (
+        <View style={{ padding: 12, paddingTop: 4, gap: 12 }}>
+          <ChipPeoplePicker
+            groupId={Number(groupId)}
+            selected={people || []}
+            onRemove={onRemove}
+            onAdd={onAdd}
+          />
+        </View>
+      )}
+    </Pane>
+  )
+}
+
 function FilterForm({ query, updateQuery }: QueryProps) {
+  const { t } = useTranslation()
+
   return (
     <View style={{ flexGrow: 1, gap: 12 }}>
-      <FilterTitle query={query} updateQuery={updateQuery} />
-      <FilterOrderBy query={query} updateQuery={updateQuery} />
-      <FilterParticipants query={query} updateQuery={updateQuery} />
+      <View style={{ zIndex: 20 }}>
+        <FilterTitle query={query} updateQuery={updateQuery} />
+      </View>
+      <View style={{ zIndex: 19 }}>
+        <FilterOrderBy query={query} updateQuery={updateQuery} />
+      </View>
+      <View style={{ zIndex: 18 }}>
+        <FilterParticipants query={query} updateQuery={updateQuery} />
+      </View>
+      <View style={{ zIndex: 17 }}>
+        <FilterUserArray
+          title={t('filter.paidBy')}
+          icon='payments'
+          people={query.paidBy}
+          onAdd={(user) => updateQuery({ type: 'addPaidBy', participant: user })}
+          onRemove={(id) => updateQuery({ type: 'removePaidBy', id })}
+        />
+      </View>
+      <View style={{ zIndex: 17 }}>
+        <FilterUserArray
+          title={t('filter.lastUpdateBy')}
+          icon='calendarEdit'
+          people={query.lastUpdateBy}
+          onAdd={(user) => updateQuery({ type: 'addLastUpdateBy', participant: user })}
+          onRemove={(id) => updateQuery({ type: 'removeLastUpdateBy', id })}
+        />
+      </View>
     </View>
   )
 }

@@ -36,12 +36,20 @@ export type SplitQueryActionType =
       orderDirection: 'asc' | 'desc'
     }
   | {
-      type: 'setPaidBy'
-      paidBy: UserWithDisplayName[]
+      type: 'addPaidBy'
+      participant: UserWithDisplayName
     }
   | {
-      type: 'setLastUpdateBy'
-      lastUpdateBy: UserWithDisplayName[]
+      type: 'removePaidBy'
+      id: string
+    }
+  | {
+      type: 'addLastUpdateBy'
+      participant: UserWithDisplayName
+    }
+  | {
+      type: 'removeLastUpdateBy'
+      id: string
     }
   | {
       type: 'setBeforeTimestamp'
@@ -96,11 +104,17 @@ function queryReducer(query: SplitQueryConfig, action: SplitQueryActionType): Sp
     case 'setOrderDirection':
       newQuery.orderDirection = action.orderDirection
       break
-    case 'setPaidBy':
-      newQuery.paidBy = action.paidBy
+    case 'addPaidBy':
+      newQuery.paidBy = [...(newQuery.paidBy || []), action.participant]
       break
-    case 'setLastUpdateBy':
-      newQuery.lastUpdateBy = action.lastUpdateBy
+    case 'removePaidBy':
+      newQuery.paidBy = newQuery.paidBy?.filter((p) => p.id !== action.id)
+      break
+    case 'addLastUpdateBy':
+      newQuery.lastUpdateBy = [...(newQuery.lastUpdateBy || []), action.participant]
+      break
+    case 'removeLastUpdateBy':
+      newQuery.lastUpdateBy = newQuery.lastUpdateBy?.filter((p) => p.id !== action.id)
       break
     case 'setBeforeTimestamp':
       newQuery.beforeTimestamp = action.beforeTimestamp

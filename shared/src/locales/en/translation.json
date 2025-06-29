@@ -260,7 +260,9 @@
       "title": "Name"
     },
     "ascending": "Ascending",
-    "descending": "Descending"
+    "descending": "Descending",
+    "paidBy": "Filter by payer",
+    "lastUpdateBy": "Filter by last updater"
   },
 
   "createGroup": {
