@@ -56,20 +56,20 @@ function FilterTitle({ query, updateQuery }: QueryProps) {
         inputStyle={{ fontSize: 16 }}
         showUnderline={false}
       />
-      <RoundIconButton
-        icon='matchCase'
-        color={query.titleCaseSensitive ? theme.colors.primary : undefined}
-        onPress={() =>
-          updateQuery({ type: 'setCaseSensitive', caseSensitive: !query.titleCaseSensitive })
-        }
-        style={{ marginTop: 4 }}
-      />
-      <RoundIconButton
-        icon='regex'
-        color={query.titleRegex ? theme.colors.primary : undefined}
-        onPress={() => updateQuery({ type: 'setRegex', regex: !query.titleRegex })}
-        style={{ marginTop: 4 }}
-      />
+      <View style={{ marginTop: 4, flexDirection: 'row' }}>
+        <RoundIconButton
+          icon='matchCase'
+          color={query.titleCaseSensitive ? theme.colors.primary : undefined}
+          onPress={() =>
+            updateQuery({ type: 'setCaseSensitive', caseSensitive: !query.titleCaseSensitive })
+          }
+        />
+        <RoundIconButton
+          icon='regex'
+          color={query.titleRegex ? theme.colors.primary : undefined}
+          onPress={() => updateQuery({ type: 'setRegex', regex: !query.titleRegex })}
+        />
+      </View>
     </Pressable>
   )
 }
