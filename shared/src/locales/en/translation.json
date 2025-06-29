@@ -229,6 +229,7 @@
     "memberInfo": "Member information",
     "addSplit":"Add split",
     "settleUp": "Settle up",
+    "filter": "Filter",
 
     "groupSettings": {
       "index": "Settings",
@@ -241,6 +242,10 @@
     "exactAmounts": "Exact amounts",
     "balanceChanges": "Balance changes",
     "splitParticipants": "Participants"
+  },
+
+  "filter": {
+    "apply": "Apply filters"
   },
 
   "createGroup": {
