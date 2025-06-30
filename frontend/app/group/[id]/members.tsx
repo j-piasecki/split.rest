@@ -26,7 +26,6 @@ function ListHeader({
     <View
       style={[
         {
-          marginTop: 8,
           backgroundColor: theme.colors.surfaceContainer,
           borderTopLeftRadius: 16,
           borderTopRightRadius: 16,
