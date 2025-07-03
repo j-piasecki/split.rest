@@ -1,5 +1,5 @@
 import Header from '@components/Header'
-import { PaneHeader } from '@components/Pane'
+import { FullPaneHeader } from '@components/Pane'
 import { Text } from '@components/Text'
 import { MembersList } from '@components/groupScreen/MembersList'
 import { MembersOrderFilter } from '@components/groupScreen/MembersOrderFilter'
@@ -12,40 +12,23 @@ import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 
 function ListHeader({
-  children,
   onChange,
   lowToHigh,
 }: {
-  children?: React.ReactNode
   onChange: (lowToHigh: boolean | undefined) => void
   lowToHigh: boolean | undefined
 }) {
-  const theme = useTheme()
   const { t } = useTranslation()
   return (
-    <View
-      style={[
-        {
-          backgroundColor: theme.colors.surfaceContainer,
-          borderTopLeftRadius: 16,
-          borderTopRightRadius: 16,
-          borderBottomLeftRadius: 4,
-          borderBottomRightRadius: 4,
-          marginBottom: 2,
-        },
-      ]}
-    >
-      <PaneHeader
-        icon='members'
-        title={t('tabs.members')}
-        textLocation='start'
-        rightComponent={
-          // @ts-expect-error flex cannot really be null, but this way it can be overriden
-          <MembersOrderFilter style={{ flex: null }} onChange={onChange} lowToHigh={lowToHigh} />
-        }
-      />
-      {children}
-    </View>
+    <FullPaneHeader
+      icon='members'
+      title={t('tabs.members')}
+      textLocation='start'
+      rightComponent={
+        // @ts-expect-error flex cannot really be null, but this way it can be overriden
+        <MembersOrderFilter style={{ flex: null }} onChange={onChange} lowToHigh={lowToHigh} />
+      }
+    />
   )
 }
 

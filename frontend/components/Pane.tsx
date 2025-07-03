@@ -78,6 +78,33 @@ export function PaneHeader({
   )
 }
 
+export function FullPaneHeader({
+  expanded = true,
+  style,
+  ...props
+}: PaneHeaderProps & { expanded?: boolean; style?: StyleProp<ViewStyle> }) {
+  const theme = useTheme()
+
+  return (
+    <View
+      style={[
+        {
+          backgroundColor: theme.colors.surfaceContainer,
+          borderRadius: 16,
+        },
+        expanded && {
+          borderBottomLeftRadius: 4,
+          borderBottomRightRadius: 4,
+          marginBottom: 2,
+        },
+        style,
+      ]}
+    >
+      <PaneHeader {...props} />
+    </View>
+  )
+}
+
 export interface PaneProps {
   children?: React.ReactNode
   icon?: IconName

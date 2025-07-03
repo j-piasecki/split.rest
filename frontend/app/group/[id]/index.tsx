@@ -1,5 +1,5 @@
 import Header, { HEADER_HEIGHT } from '@components/Header'
-import { Pane, PaneHeader } from '@components/Pane'
+import { FullPaneHeader, Pane } from '@components/Pane'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { GroupInfoPane } from '@components/groupScreen/GroupInfoPane'
@@ -22,7 +22,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupUserInfo } from 'shared'
 
 function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
-  const theme = useTheme()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
 
@@ -35,26 +34,13 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
         <View style={{ gap: 12 }}>
           <GroupInfoPane info={info} />
           {(!permissions || permissions.canReadMembers()) && <MembersButton info={info} />}
-          <View
-            style={[
-              {
-                backgroundColor: theme.colors.surfaceContainer,
-                borderTopRightRadius: 16,
-                borderTopLeftRadius: 16,
-                borderBottomLeftRadius: 4,
-                borderBottomRightRadius: 4,
-                marginBottom: 2,
-              },
-            ]}
-          >
-            <PaneHeader
-              icon='receipt'
-              title={t('tabs.splits')}
-              textLocation='start'
-              adjustsFontSizeToFit
-              rightComponent={permissions?.canQuerySplits() && <SplitQueryButton />}
-            />
-          </View>
+          <FullPaneHeader
+            icon='receipt'
+            title={t('tabs.splits')}
+            textLocation='start'
+            adjustsFontSizeToFit
+            rightComponent={permissions?.canQuerySplits() && <SplitQueryButton />}
+          />
         </View>
       }
     />
@@ -170,7 +156,6 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
                 top: HEADER_HEIGHT + insets.top,
                 right: 16,
                 position: 'absolute',
-                // backgroundColor: theme.colors.surfaceContainer,
                 borderRadius: 16,
                 overflow: 'hidden',
               }}

@@ -1,6 +1,6 @@
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { ListEmptyComponent } from '@components/ListEmptyComponent'
-import { PaneHeader } from '@components/Pane'
+import { FullPaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Shimmer } from '@components/Shimmer'
@@ -250,23 +250,11 @@ export default function Invites() {
             keyExtractor={(item) => `${item.groupInfo.id}-${item.rejected}`}
             ItemSeparatorComponent={Divider}
             ListHeaderComponent={
-              <View style={{ gap: 12 }}>
-                <View
-                  style={{
-                    backgroundColor: theme.colors.surfaceContainer,
-                    borderRadius: 16,
-                    borderBottomLeftRadius: 4,
-                    borderBottomRightRadius: 4,
-                    marginBottom: 2,
-                  }}
-                >
-                  <PaneHeader
-                    icon='stackedEmail'
-                    title={t('home.groupInvites')}
-                    textLocation='start'
-                  />
-                </View>
-              </View>
+              <FullPaneHeader
+                icon='stackedEmail'
+                title={t('home.groupInvites')}
+                textLocation='start'
+              />
             }
             ListEmptyComponent={
               <ListEmptyComponent

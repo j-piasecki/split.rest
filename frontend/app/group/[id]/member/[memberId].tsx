@@ -2,7 +2,7 @@ import { Button } from '@components/Button'
 import { EditableText } from '@components/EditableText'
 import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
-import { PaneHeader } from '@components/Pane'
+import { FullPaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
@@ -218,7 +218,6 @@ export function MemberInfo() {
 }
 
 function MemberScreen() {
-  const theme = useTheme()
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
   const { data: groupInfo } = useGroupInfo(Number(groupId))
@@ -241,28 +240,14 @@ function MemberScreen() {
       hideFab
       emptyMessage={t('memberInfo.noSplits')}
       headerComponent={
-        <View>
+        <View style={{ gap: 24 }}>
           <MemberInfo />
-          <View
-            style={[
-              {
-                marginTop: 24,
-                backgroundColor: theme.colors.surfaceContainer,
-                borderTopRightRadius: 16,
-                borderTopLeftRadius: 16,
-                borderBottomLeftRadius: 4,
-                borderBottomRightRadius: 4,
-                marginBottom: 2,
-              },
-            ]}
-          >
-            <PaneHeader
-              icon='receipt'
-              title={t('tabs.splits')}
-              textLocation='start'
-              adjustsFontSizeToFit
-            />
-          </View>
+          <FullPaneHeader
+            icon='receipt'
+            title={t('tabs.splits')}
+            textLocation='start'
+            adjustsFontSizeToFit
+          />
         </View>
       }
     />

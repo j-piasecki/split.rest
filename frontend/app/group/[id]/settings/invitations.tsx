@@ -2,7 +2,7 @@ import { Button } from '@components/Button'
 import { useFABScrollHandler } from '@components/FloatingActionButton'
 import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import ModalScreen from '@components/ModalScreen'
-import { Pane, PaneHeader } from '@components/Pane'
+import { FullPaneHeader, Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { useSnack } from '@components/SnackBar'
@@ -263,23 +263,11 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
             {permissions?.canSeeJoinLink() && (
               <JoinLinkManager info={info} permissions={permissions} />
             )}
-            <View
-              style={[
-                {
-                  backgroundColor: theme.colors.surfaceContainer,
-                  borderRadius: 16,
-                  borderBottomLeftRadius: 4,
-                  borderBottomRightRadius: 4,
-                  marginBottom: 2,
-                },
-              ]}
-            >
-              <PaneHeader
-                icon='stackedEmail'
-                title={t('settings.invitations.directInvitations')}
-                textLocation='start'
-              />
-            </View>
+            <FullPaneHeader
+              icon='stackedEmail'
+              title={t('settings.invitations.directInvitations')}
+              textLocation='start'
+            />
           </View>
         }
         ListEmptyComponent={

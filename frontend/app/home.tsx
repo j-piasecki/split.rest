@@ -1,7 +1,7 @@
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
 import { ListEmptyComponent } from '@components/ListEmptyComponent'
-import { PaneHeader } from '@components/Pane'
+import { FullPaneHeader } from '@components/Pane'
 import { SegmentedButton } from '@components/SegmentedButton'
 import { Shimmer } from '@components/Shimmer'
 import { useSnack } from '@components/SnackBar'
@@ -233,31 +233,19 @@ export default function Home() {
               <View style={{ gap: 12 }}>
                 <InvitationsButton invites={invites} isLoadingInvites={isLoadingInvites} />
 
-                <View
-                  style={[
-                    {
-                      backgroundColor: theme.colors.surfaceContainer,
-                      borderRadius: 16,
-                      borderBottomLeftRadius: 4,
-                      borderBottomRightRadius: 4,
-                      marginBottom: 2,
-                    },
-                  ]}
-                >
-                  <PaneHeader
-                    icon='group'
-                    title={t('home.groups')}
-                    textLocation='start'
-                    rightComponentVisible
-                    rightComponent={
-                      <VisibilityFilter
-                        onChange={(hidden) => {
-                          setShowHidden(hidden)
-                        }}
-                      />
-                    }
-                  />
-                </View>
+                <FullPaneHeader
+                  icon='group'
+                  title={t('home.groups')}
+                  textLocation='start'
+                  rightComponentVisible
+                  rightComponent={
+                    <VisibilityFilter
+                      onChange={(hidden) => {
+                        setShowHidden(hidden)
+                      }}
+                    />
+                  }
+                />
               </View>
             }
             ListEmptyComponent={

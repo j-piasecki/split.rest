@@ -1,6 +1,6 @@
 import { GroupActionButtons } from './GroupActionButtons'
 import { Icon } from '@components/Icon'
-import { PaneHeader } from '@components/Pane'
+import { FullPaneHeader } from '@components/Pane'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
@@ -30,42 +30,31 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
 
   return (
     <View style={[{ gap: 2 }, threeBarLayout && { height: '100%' }]}>
-      <View
-        style={[
-          {
-            backgroundColor: theme.colors.surfaceContainer,
-            borderTopRightRadius: 16,
-            borderTopLeftRadius: 16,
-            borderBottomLeftRadius: 4,
-            borderBottomRightRadius: 4,
-          },
-        ]}
-      >
-        <PaneHeader
-          icon='group'
-          title={t('tabs.group')}
-          textLocation='start'
-          adjustsFontSizeToFit
-          rightComponent={
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-              {hasSettingsAccess && (
-                <RoundIconButton
-                  icon='settings'
-                  color={theme.colors.secondary}
-                  onPress={() => router.navigate(`/group/${info?.id}/settings`)}
-                />
-              )}
-              {!threeBarLayout && (
-                <RoundIconButton
-                  icon={collapsed ? 'arrowDown' : 'arrowUp'}
-                  color={theme.colors.secondary}
-                  onPress={() => setCollapsed(!collapsed)}
-                />
-              )}
-            </View>
-          }
-        />
-      </View>
+      <FullPaneHeader
+        icon='group'
+        title={t('tabs.group')}
+        textLocation='start'
+        adjustsFontSizeToFit
+        style={{ marginBottom: 0 }}
+        rightComponent={
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            {hasSettingsAccess && (
+              <RoundIconButton
+                icon='settings'
+                color={theme.colors.secondary}
+                onPress={() => router.navigate(`/group/${info?.id}/settings`)}
+              />
+            )}
+            {!threeBarLayout && (
+              <RoundIconButton
+                icon={collapsed ? 'arrowDown' : 'arrowUp'}
+                color={theme.colors.secondary}
+                onPress={() => setCollapsed(!collapsed)}
+              />
+            )}
+          </View>
+        }
+      />
 
       <View
         style={[
