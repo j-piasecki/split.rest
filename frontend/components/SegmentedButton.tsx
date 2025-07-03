@@ -34,7 +34,12 @@ function Item({
 
   const containerStyle = useAnimatedStyle(() => {
     return {
-      flexGrow: withSpring(pressed ? 1.25 : 1, { mass: 1, stiffness: 250, damping: 10 }),
+      flexGrow: withSpring(pressed ? 1.25 : 1, {
+        mass: 1,
+        stiffness: 250,
+        damping: 12,
+        restDisplacementThreshold: 0.0001,
+      }),
     }
   })
 

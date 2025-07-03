@@ -269,7 +269,8 @@
     "edited": "Edited",
     "notEdited": "Not edited",
     "pending": "Pending",
-    "notPending": "Completed"
+    "notPending": "Completed",
+    "clearSelection": "Clear selection"
   },
 
   "createGroup": {

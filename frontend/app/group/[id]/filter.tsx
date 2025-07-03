@@ -328,6 +328,7 @@ function FilterTimestampRange({
   onAfterTimestampChange: (timestamp?: number) => void
 }) {
   const [collapsed, setCollapsed] = useState(!beforeTimestamp && !afterTimestamp)
+  const { t } = useTranslation()
 
   return (
     <Pane
@@ -340,7 +341,7 @@ function FilterTimestampRange({
       containerStyle={{ overflow: 'visible' }}
     >
       {!collapsed && (
-        <View style={{ padding: 12, paddingTop: 8, gap: 12 }}>
+        <View style={{ padding: 12, paddingTop: 8 }}>
           <Calendar
             allowRangeSelection
             selectedStartDate={afterTimestamp ? new Date(afterTimestamp) : undefined}
@@ -353,6 +354,17 @@ function FilterTimestampRange({
               }
             }}
           />
+
+          <View style={{ alignSelf: 'flex-end' }}>
+            <RoundIconButton
+              icon='erase'
+              onPress={() => {
+                onAfterTimestampChange(undefined)
+                onBeforeTimestampChange(undefined)
+              }}
+              text={t('filter.clearSelection')}
+            />
+          </View>
         </View>
       )}
     </Pane>
@@ -363,7 +375,7 @@ function FilterForm({ query, updateQuery }: QueryProps) {
   const { t } = useTranslation()
 
   return (
-    <View style={{ flexGrow: 1, gap: 12 }}>
+    <View style={{ flexGrow: 1, gap: 16 }}>
       <View style={{ zIndex: 20 }}>
         <FilterTitle query={query} updateQuery={updateQuery} />
       </View>
