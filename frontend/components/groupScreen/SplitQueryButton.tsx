@@ -17,13 +17,20 @@ export function SplitQueryButton() {
   const groupId = Number(id)
   const query = useSplitQueryConfig(groupId)
   const [pressed, setPressed] = useState(false)
+  const [transitionEnabled, setTransitionEnabled] = useState(true)
 
   const queryApplied = query !== defaultQueryConfig
 
   const longPress = Gesture.LongPress()
     .runOnJS(true)
+    .onBegin(() => {
+      setTransitionEnabled(true)
+    })
     .onStart(() => {
       resetSplitQueryConfig(groupId)
+    })
+    .onFinalize(() => {
+      setTransitionEnabled(false)
     })
 
   const backgroundStyle = useAnimatedStyle(() => {
@@ -45,11 +52,11 @@ export function SplitQueryButton() {
   return (
     <GestureDetector gesture={longPress}>
       <Animated.View
-        layout={Platform.OS !== 'web' ? LinearTransition : undefined}
+        layout={Platform.OS !== 'web' && transitionEnabled ? LinearTransition : undefined}
         style={[backgroundStyle, { borderRadius: 24, overflow: 'hidden' }]}
       >
         <Animated.View
-          layout={Platform.OS !== 'web' ? LinearTransition : undefined}
+          layout={Platform.OS !== 'web' && transitionEnabled ? LinearTransition : undefined}
           style={innerBackgroundStyle}
         >
           <Pressable
