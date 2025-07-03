@@ -74,8 +74,7 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
                 justifyContent: 'flex-start',
               }}
               shimmerStyle={{
-                width: iconsToShow > 0 ? '75%' : 0,
-                minWidth: iconsToShow > 0 ? singleIconSize : 0,
+                minWidth: singleIconSize,
                 height: 28,
                 alignSelf: 'flex-end',
               }}
