@@ -16,12 +16,16 @@ function removeListener(groupId: number, listener: (query: SplitQueryConfig) => 
   queryListeners.set(groupId, queryListeners.get(groupId)?.filter((l) => l !== listener) ?? [])
 }
 
-export function useSplitQueryConfig(groupId: number) {
-  const [query, setQuery] = useState<SplitQueryConfig | undefined>(queries.get(groupId))
+export function useSplitQueryConfig(groupId: number | undefined) {
+  const [query, setQuery] = useState<SplitQueryConfig | undefined>(
+    groupId ? queries.get(groupId) : undefined
+  )
 
   useEffect(() => {
-    addListener(groupId, setQuery)
-    return () => removeListener(groupId, setQuery)
+    if (groupId) {
+      addListener(groupId, setQuery)
+      return () => removeListener(groupId, setQuery)
+    }
   }, [groupId])
 
   return query ?? defaultQueryConfig

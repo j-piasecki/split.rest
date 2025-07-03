@@ -16,21 +16,17 @@ export interface GroupSplitsListProps
   > {}
 
 export function GroupSplitsList(props: GroupSplitsListProps) {
-  if (!props.info?.id) {
-    return null
-  }
-
   return <InnerGroupSplitsList {...props} />
 }
 
 function InnerGroupSplitsList(props: GroupSplitsListProps) {
   const threeBarLayout = useThreeBarLayout()
-  const query = useSplitQueryConfig(props.info!.id)
+  const query = useSplitQueryConfig(props.info?.id)
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(props.info?.id)
 
   const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =
-    useGroupSplitsQuery(props.info!.id, buildQuery(query))
+    useGroupSplitsQuery(props.info?.id, buildQuery(query))
 
   return (
     <SplitsList
