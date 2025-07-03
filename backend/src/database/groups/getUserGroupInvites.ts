@@ -54,5 +54,6 @@ export async function getUserGroupInvites(
     createdAt: Number(row.created_at),
     rejected: row.rejected,
     withdrawn: false,
+    alreadyAMember: false, // the invite should be deleted when joining the group
   }))
 }

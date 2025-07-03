@@ -230,8 +230,8 @@ export class DatabaseService {
   }
 
   // Every user can get group info by link if they have it
-  async getGroupInviteByLink(args: GetGroupInviteByLinkArguments) {
-    return await getGroupInviteByLink(this.pool, args)
+  async getGroupInviteByLink(callerId: string, args: GetGroupInviteByLinkArguments) {
+    return await getGroupInviteByLink(this.pool, callerId, args)
   }
 
   @RequirePermissions(['createJoinLink'])

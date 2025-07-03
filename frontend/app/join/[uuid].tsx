@@ -17,7 +17,7 @@ import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import i18n from '@utils/i18n'
 import { measure } from '@utils/measure'
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
-import React, { useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -43,6 +43,12 @@ function InvitePane({ invite, uuid }: InvitePaneProps) {
       setBubblesContainerWidth(measure(bubblesContainerRef.current).width)
     }
   }, [bubblesContainerRef])
+
+  useEffect(() => {
+    if (invite?.alreadyAMember) {
+      setError(t('joinGroup.alreadyAMember'))
+    }
+  }, [invite?.alreadyAMember, setError, t])
 
   const currencyKey = invite?.groupInfo.currency?.toLocaleLowerCase()
   const currencyText = i18n.exists(`currency.${currencyKey}`)
@@ -154,20 +160,31 @@ function InvitePane({ invite, uuid }: InvitePaneProps) {
       <View style={{ flexDirection: 'column', paddingTop: 24, gap: 8 }}>
         <ErrorText>{error ?? ' '}</ErrorText>
         <ButtonShimmer argument={invite} offset={0.7}>
-          {(invite) => (
-            <Button
-              title={t('joinGroup.join')}
-              isLoading={isJoiningGroup}
-              leftIcon='check'
-              onPress={() => {
-                joinGroup(uuid as string)
-                  .then(() => {
-                    router.replace(`/group/${invite.groupInfo.id}`)
-                  })
-                  .catch(setError)
-              }}
-            />
-          )}
+          {(invite) =>
+            invite.alreadyAMember ? (
+              <Button
+                title={t('joinGroup.openGroup')}
+                rightIcon='chevronForward'
+                onPress={() => {
+                  router.replace(`/group/${invite.groupInfo.id}`)
+                }}
+              />
+            ) : (
+              <Button
+                title={t('joinGroup.join')}
+                isLoading={isJoiningGroup}
+                leftIcon='check'
+                onPress={() => {
+                  setError(undefined)
+                  joinGroup(uuid as string)
+                    .then(() => {
+                      router.replace(`/group/${invite.groupInfo.id}`)
+                    })
+                    .catch(setError)
+                }}
+              />
+            )
+          }
         </ButtonShimmer>
       </View>
     </View>

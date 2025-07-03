@@ -5,6 +5,7 @@ import { GetGroupInviteByLinkArguments } from 'shared/src/endpointArguments'
 
 export async function getGroupInviteByLink(
   pool: Pool,
+  callerId: string,
   args: GetGroupInviteByLinkArguments
 ): Promise<GroupInviteWithGroupInfoAndMemberIds> {
   const { rows } = await pool.query(
@@ -52,6 +53,19 @@ export async function getGroupInviteByLink(
     [rows[0].group_id]
   )
 
+  const { rows: alreadyAMember } = await pool.query<{ user_id: string }>(
+    `
+      SELECT
+        user_id
+      FROM
+        group_members
+      WHERE
+        group_id = $1
+        AND user_id = $2
+    `,
+    [rows[0].group_id, callerId]
+  )
+
   return {
     groupInfo: {
       id: rows[0].group_id,
@@ -74,5 +88,6 @@ export async function getGroupInviteByLink(
     createdAt: rows[0].created_at,
     rejected: false,
     withdrawn: false,
+    alreadyAMember: alreadyAMember.length > 0,
   }
 }

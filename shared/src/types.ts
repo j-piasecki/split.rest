@@ -130,6 +130,7 @@ export interface GroupInvite {
   createdAt: number
   rejected: boolean
   withdrawn: boolean
+  alreadyAMember: boolean
 }
 
 export interface GroupInviteWithGroupInfo extends GroupInvite {

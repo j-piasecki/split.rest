@@ -178,8 +178,8 @@ export class AppService {
     return await this.databaseService.joinGroupByLink(callerId, args)
   }
 
-  async getGroupInviteByLink(args: GetGroupInviteByLinkArguments) {
-    return await this.databaseService.getGroupInviteByLink(args)
+  async getGroupInviteByLink(callerId: string, args: GetGroupInviteByLinkArguments) {
+    return await this.databaseService.getGroupInviteByLink(callerId, args)
   }
 
   async createGroupJoinLink(callerId: string, args: CreateGroupJoinLinkArguments) {

@@ -62,5 +62,6 @@ export async function getDirectGroupInvites(
     createdAt: Number(row.created_at),
     rejected: row.rejected,
     withdrawn: row.withdrawn,
+    alreadyAMember: false, // the invite should be deleted when joining the group
   }))
 }

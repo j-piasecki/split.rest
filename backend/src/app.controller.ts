@@ -363,7 +363,7 @@ export class AppController {
       throw new BadRequestException('api.invalidArguments')
     }
 
-    return await this.appService.getGroupInviteByLink(args)
+    return await this.appService.getGroupInviteByLink(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

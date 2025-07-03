@@ -305,7 +305,9 @@
     "currency": "Currency - {{currency}}",
     "join": "Join",
     "noGroupFoundForThisJoinLink": "No group found for this invitation link",
-    "invitedBy": "By <Styled>{{name}}</Styled>"
+    "invitedBy": "By <Styled>{{name}}</Styled>",
+    "alreadyAMember": "You are already a member of this group",
+    "openGroup": "Open group"
   },
 
   "groupSettings": {
