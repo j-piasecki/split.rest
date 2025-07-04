@@ -1,0 +1,38 @@
+name: Static Checks
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/static-checks.yml
+      - frontend/**/*.{ts,tsx,js,jsx}
+      - backend/**/*.{ts,tsx,js,jsx}
+      - shared/**/*.{ts,tsx,js,jsx}
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  check:
+    if: github.repository == 'j-piasecki/split.rest'
+
+    runs-on: ubuntu-latest
+    concurrency:
+      group: static-root-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install node dependencies
+        run: yarn --immutable
+
+      - name: Check
+        run: yarn check
