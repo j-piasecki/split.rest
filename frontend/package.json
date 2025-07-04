@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "check-types": "tsc --noEmit",
     "build:web": "expo export -p web",
-    "check": "yarn check-types ; yarn lint",
+    "check": "yarn check-types && yarn lint",
     "prebuild": "node ./scripts/prebuild.js"
   },
   "dependencies": {
