@@ -79,7 +79,8 @@ export interface QueryGroupSplitsArguments {
 }
 
 export interface GetUserGroupsArguments {
-  startAfter?: number
+  startAfterId?: number
+  startAfterUpdate?: number
   hidden: boolean
 }
 
