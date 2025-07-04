@@ -8,9 +8,10 @@ const formatters: Record<string, (amount: string) => string> = {
 }
 
 // TODO: no intl support in hermes :sadge:
+const supportedCurrencies = ['cad', 'eur', 'gbp', 'inr', 'pln', 'usd'] as const
 
 export class CurrencyUtils {
-  static supportedCurrencies: ['cad', 'eur', 'gbp', 'inr', 'pln', 'usd']
+  static supportedCurrencies = supportedCurrencies
 
   static format(
     amount: number | string,
