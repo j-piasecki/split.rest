@@ -34,5 +34,10 @@ jobs:
       - name: Install node dependencies
         run: yarn --immutable
 
+      - name: Create dummy notificationServiceAccountKey
+        run: |
+          mkdir -p backend/src/secrets
+          echo '{"type": "service_account"}' > backend/src/secrets/notificationServiceAccountKey.json
+
       - name: Check
         run: yarn check
