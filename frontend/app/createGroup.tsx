@@ -13,14 +13,13 @@ import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-
-const CURRENCIES = ['cad', 'eur', 'gbp', 'inr', 'pln', 'usd'] as const
+import { CurrencyUtils } from 'shared'
 
 function getDefaultCurrency() {
   const locale = getLocales()[0]
   const currency = locale.currencySymbol?.toLocaleLowerCase() ?? 'usd'
 
-  if (!CURRENCIES.some((item) => item === currency)) {
+  if (!CurrencyUtils.supportedCurrencies.some((item) => item === currency)) {
     return 'usd'
   }
 
@@ -36,7 +35,7 @@ function CreateGroupForm() {
   const [error, setError] = useTranslatedError()
   const { mutateAsync: createGroup, isPending } = useCreateGroup()
 
-  const currencyPickerItems = CURRENCIES.map((currency) => ({
+  const currencyPickerItems = CurrencyUtils.supportedCurrencies.map((currency) => ({
     value: currency,
     label: t(`currency.${currency}`),
   }))
