@@ -134,6 +134,8 @@ async function dispatchNotifications(
 export async function updateSplit(pool: Pool, callerId: string, args: UpdateSplitArguments) {
   const client = await pool.connect()
   try {
+    // TODO: validate currency
+
     await client.query('BEGIN')
 
     if (await isGroupDeleted(client, args.groupId)) {

@@ -12,6 +12,8 @@ export async function createSplitNoTransaction(
   callerId: string,
   args: CreateSplitArguments
 ): Promise<number> {
+  // TODO: validate currency
+
   const splitId = (
     await client.query(
       `

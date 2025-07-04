@@ -1,4 +1,5 @@
 import { addUserToGroup } from '../utils/addUserToGroup'
+import { validateCurrency } from '../utils/validateCurrency'
 import { Pool } from 'pg'
 import { CreateGroupArguments, GroupType, GroupUserInfo } from 'shared'
 
@@ -10,6 +11,8 @@ export async function createGroup(
   const client = await pool.connect()
 
   try {
+    validateCurrency(args.currency)
+
     await client.query('BEGIN')
 
     const { rows } = await client.query(
