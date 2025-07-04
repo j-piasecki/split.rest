@@ -24,12 +24,20 @@ export async function getUserGroups(
           group_members.is_admin, 
           group_members.has_access
         FROM groups JOIN group_members ON groups.id = group_members.group_id
-        WHERE group_members.user_id = $1 AND group_members.is_hidden = $2 AND groups.id < $3 AND groups.deleted = FALSE
+        WHERE group_members.user_id = $1
+          AND group_members.is_hidden = $2
+          AND groups.deleted = FALSE
+          AND (groups.last_update < $3 OR (groups.last_update = $3 AND groups.id < $4))
         ORDER BY
-          groups.id DESC
+          groups.last_update DESC, groups.id DESC
         LIMIT 20;
       `,
-      [callerId, args.hidden, args.startAfter ?? 2147483647]
+      [
+        callerId,
+        args.hidden,
+        args.startAfterUpdate ?? Number.MAX_SAFE_INTEGER,
+        args.startAfterId ?? 2147483647,
+      ]
     )
   ).rows
 
