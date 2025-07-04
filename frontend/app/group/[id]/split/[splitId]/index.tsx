@@ -52,6 +52,10 @@ export default function SplitInfoScreen() {
     }
 
     try {
+      if (!groupInfo) {
+        throw new Error(`Tried to restore split version while group info hasn't loaded yet`)
+      }
+
       await updateSplit({
         groupId: Number(id),
         splitId: split.id,
@@ -64,6 +68,7 @@ export default function SplitInfoScreen() {
           change: user.change,
           pending: user.pending,
         })),
+        currency: groupInfo.currency,
       })
 
       if ((scrollableRef.current as FlatList)?.scrollToIndex) {

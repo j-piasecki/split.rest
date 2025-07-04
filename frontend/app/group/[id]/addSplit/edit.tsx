@@ -36,6 +36,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         timestamp: timestamp,
         balances: balanceChange,
         type: split.type,
+        currency: groupInfo.currency,
       })
 
       snack.show({ message: t('split.created') })

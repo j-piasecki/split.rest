@@ -87,6 +87,7 @@
   "api": {
     "invalidArguments": "Invalid arguments",
     "mustBeLoggedIn": "You must be logged in to do that",
+    "unsupportedCurrency": "This currency is not supported",
     "auth": {
       "unknownProvider": "Unknown provider",
       "missingToken": "Missing token",
