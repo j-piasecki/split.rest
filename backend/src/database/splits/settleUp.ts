@@ -161,7 +161,8 @@ async function createAndSaveSettleUpSplit(
   callerId: string,
   balance: number,
   members: Member[],
-  groupId: number
+  groupId: number,
+  currency: string
 ): Promise<SplitInfo> {
   const entries = calculateSettleUpEntries(callerId, balance, members)
   const splitType = SplitType.SettleUp | (balance > 0 ? SplitType.Inversed : SplitType.Normal)
@@ -174,6 +175,7 @@ async function createAndSaveSettleUpSplit(
     timestamp: Date.now(),
     balances: entries,
     type: splitType,
+    currency: currency,
   })
 
   await dispatchNotifications(client, callerId, groupId, splitId, entries)
@@ -255,7 +257,18 @@ export async function settleUp(
       displayName: row.display_name,
     }))
 
-    const split = await createAndSaveSettleUpSplit(client, callerId, balance, members, args.groupId)
+    const currency = (
+      await client.query(`SELECT currency FROM groups WHERE id = $1`, [args.groupId])
+    ).rows[0].currency
+
+    const split = await createAndSaveSettleUpSplit(
+      client,
+      callerId,
+      balance,
+      members,
+      args.groupId,
+      currency
+    )
 
     await client.query('COMMIT')
 

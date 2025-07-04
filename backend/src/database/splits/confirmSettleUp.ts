@@ -72,7 +72,8 @@ async function createAndSaveSettleUpSplit(
   callerId: string,
   balance: number,
   entries: BalanceChange[],
-  groupId: number
+  groupId: number,
+  currency: string
 ): Promise<SplitInfo> {
   const splitType = SplitType.SettleUp | (balance > 0 ? SplitType.Inversed : SplitType.Normal)
 
@@ -84,6 +85,7 @@ async function createAndSaveSettleUpSplit(
     timestamp: Date.now(),
     balances: entries,
     type: splitType,
+    currency: currency,
   })
 
   await dispatchNotifications(client, callerId, groupId, splitId, entries)
@@ -148,7 +150,14 @@ export async function confirmSettleUp(
       throw new BadRequestException('api.split.settleUpHashChanged')
     }
 
-    const split = await createAndSaveSettleUpSplit(client, callerId, balance, entries, args.groupId)
+    const split = await createAndSaveSettleUpSplit(
+      client,
+      callerId,
+      balance,
+      entries,
+      args.groupId,
+      settleUpData.currency
+    )
 
     await client.query('COMMIT')
 

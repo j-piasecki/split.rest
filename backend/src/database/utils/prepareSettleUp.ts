@@ -58,9 +58,13 @@ export async function loadSettleUpData(client: pg.Client | pg.PoolClient, groupI
     pending: row.pending,
   }))
 
+  const currency = (await client.query(`SELECT currency FROM groups WHERE id = $1`, [groupId]))
+    .rows[0].currency
+
   return {
     members: members,
     pendingChanges: pendingChanges,
+    currency: currency,
   }
 }
 
