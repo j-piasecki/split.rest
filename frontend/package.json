@@ -9,8 +9,9 @@
     "web": "expo start --web",
     "format": "prettier --write --list-different .",
     "lint": "eslint .",
+    "check-types": "tsc --noEmit",
     "build:web": "expo export -p web",
-    "check": "tsc --noEmit ; yarn lint",
+    "check": "yarn check-types ; yarn lint",
     "prebuild": "node ./scripts/prebuild.js"
   },
   "dependencies": {

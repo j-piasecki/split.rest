@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc",
     "format": "prettier --list-different --write src/**/*.ts",
-    "check": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "check": "yarn check-types"
   },
   "devDependencies": {
     "prettier": "^3.3.3"

@@ -39,5 +39,8 @@ jobs:
           mkdir -p backend/src/secrets
           echo '{"type": "service_account"}' > backend/src/secrets/notificationServiceAccountKey.json
 
-      - name: Check
-        run: yarn check
+      - name: Check types
+        run: yarn check-types
+
+      - name: Lint
+        run: yarn lint
