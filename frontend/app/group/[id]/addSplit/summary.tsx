@@ -39,6 +39,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         pending: false,
       })),
       type: split.type,
+      currency: groupInfo.currency,
     })
       .then(() => {
         snack.show({ message: t('split.created') })

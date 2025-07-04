@@ -40,6 +40,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
         total: sumToSave,
         timestamp: timestamp,
         balances: balanceChange as BalanceChange[],
+        currency: groupInfo.currency,
       })
 
       snack.show({ message: t('split.updated') })

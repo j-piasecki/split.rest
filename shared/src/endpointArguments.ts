@@ -18,6 +18,7 @@ export interface CreateSplitArguments {
   timestamp: number
   balances: BalanceChange[]
   type: number
+  currency: string
 }
 
 export interface DeleteSplitArguments {
@@ -38,6 +39,7 @@ export interface UpdateSplitArguments {
   total: number
   timestamp: number
   balances: BalanceChange[]
+  currency: string
 }
 
 export interface SetGroupAccessArguments {
