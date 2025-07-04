@@ -13,7 +13,11 @@ export async function setGroupName(pool: Pool, callerId: string, args: SetGroupN
       throw new NotFoundException('api.notFound.group')
     }
 
-    await client.query('UPDATE groups SET name = $1 WHERE id = $2', [args.name, args.groupId])
+    await client.query('UPDATE groups SET name = $1, last_update = $2 WHERE id = $3', [
+      args.name,
+      Date.now(),
+      args.groupId,
+    ])
 
     await client.query('COMMIT')
   } catch (error) {

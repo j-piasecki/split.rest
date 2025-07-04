@@ -23,6 +23,7 @@ export async function createDatabase(pool: Pool) {
       member_count SMALLINT NOT NULL DEFAULT 1,
       deleted BOOLEAN NOT NULL DEFAULT FALSE,
       type SMALLINT NOT NULL,
+      last_update BIGINT NOT NULL,
 
       FOREIGN KEY (owner) REFERENCES users(id)
     )

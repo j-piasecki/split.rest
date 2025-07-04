@@ -18,6 +18,7 @@ export interface GroupInfo {
   total: string
   owner: string
   type: GroupType
+  lastUpdate: number
 }
 
 export interface GroupUserInfo extends GroupInfo {

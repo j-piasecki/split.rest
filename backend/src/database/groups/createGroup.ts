@@ -14,11 +14,11 @@ export async function createGroup(
 
     const { rows } = await client.query(
       `
-        INSERT INTO groups(name, created_at, currency, owner, type)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO groups(name, created_at, currency, owner, type, last_update)
+        VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING id
       `,
-      [args.name, Date.now(), args.currency, callerId, GroupType.Normal]
+      [args.name, Date.now(), args.currency, callerId, GroupType.Normal, Date.now()]
     )
 
     const groupId = rows[0].id
@@ -44,6 +44,7 @@ export async function createGroup(
       memberCount: 1,
       balance: '0',
       total: '0.00',
+      lastUpdate: Date.now(),
     }
   } catch (e) {
     await client.query('ROLLBACK')

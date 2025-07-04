@@ -23,6 +23,7 @@ export async function getGroupInfo(
           groups.total,
           groups.type,
           groups.member_count,
+          groups.last_update,
           group_members.balance, 
           group_members.is_hidden, 
           group_members.is_admin, 
@@ -50,5 +51,6 @@ export async function getGroupInfo(
     isAdmin: row.is_admin,
     hasAccess: row.has_access,
     memberCount: row.member_count,
+    lastUpdate: Number(row.last_update),
   }
 }

@@ -59,8 +59,9 @@ export async function createSplitNoTransaction(
     }
   }
 
-  await client.query('UPDATE groups SET total = total + $1 WHERE id = $2', [
+  await client.query('UPDATE groups SET total = total + $1, last_update = $2 WHERE id = $3', [
     args.total,
+    Date.now(),
     args.groupId,
   ])
 

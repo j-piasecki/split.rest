@@ -18,6 +18,7 @@ export async function getGroupInviteByLink(
         groups.deleted as group_deleted,
         groups.member_count as group_member_count,
         groups.type as group_type,
+        groups.last_update as group_last_update,
         group_join_links.created_at as created_at,
         users.id as inviter_id,
         users.name as inviter_name,
@@ -76,6 +77,7 @@ export async function getGroupInviteByLink(
       // don't gove access to total amount before joining
       total: '-1',
       type: rows[0].group_type,
+      lastUpdate: Number(rows[0].group_last_update),
     },
     createdBy: {
       id: rows[0].inviter_id,
