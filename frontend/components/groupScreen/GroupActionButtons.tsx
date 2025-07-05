@@ -24,7 +24,7 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
                 router.navigate(`/group/${info!.id}/roulette`)
               }}
               title={t('groupInfo.roulette')}
-              leftIcon='payments'
+              leftIcon='casino'
             />
           )
         }
