@@ -5,6 +5,7 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
+import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
@@ -27,6 +28,7 @@ const SplitTypeCard = ({
   onSelect: () => void
 }) => {
   const theme = useTheme()
+  const threeBarLayout = useThreeBarLayout()
   const [pressed, setPressed] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [expanded, setExpanded] = useState(true)
@@ -88,15 +90,25 @@ const SplitTypeCard = ({
         />
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1 }}>
-          <Icon name={icon} size={24} color={theme.colors.onSecondaryContainer} />
-          <Text style={{ fontSize: 20, fontWeight: 800, color: theme.colors.onSecondaryContainer }}>
+          <Icon
+            name={icon}
+            size={threeBarLayout ? 20 : 24}
+            color={theme.colors.onSecondaryContainer}
+          />
+          <Text
+            style={{
+              fontSize: threeBarLayout ? 18 : 20,
+              fontWeight: 800,
+              color: theme.colors.onSecondaryContainer,
+            }}
+          >
             {title}
           </Text>
 
           <View style={{ position: 'absolute', right: 0 }}>
             <RoundIconButton
               icon={expanded ? 'arrowUp' : 'arrowDown'}
-              size={24}
+              size={threeBarLayout ? 20 : 24}
               color={theme.colors.onSecondaryContainer}
               onPress={() => setExpanded(!expanded)}
             />
@@ -106,7 +118,7 @@ const SplitTypeCard = ({
           <Text
             style={{
               marginLeft: 32,
-              fontSize: 16,
+              fontSize: threeBarLayout ? 14 : 16,
               fontWeight: 600,
               color: theme.colors.onSurface,
             }}
@@ -121,6 +133,7 @@ const SplitTypeCard = ({
 
 export default function Modal() {
   const theme = useTheme()
+  const threeBarLayout = useThreeBarLayout()
   const router = useRouter()
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
@@ -150,8 +163,8 @@ export default function Modal() {
             style={{
               paddingHorizontal: 12,
               color: theme.colors.onSurface,
-              fontSize: 28,
-              fontWeight: 700,
+              fontSize: threeBarLayout ? 24 : 28,
+              fontWeight: 600,
               textAlign: 'center',
             }}
           >

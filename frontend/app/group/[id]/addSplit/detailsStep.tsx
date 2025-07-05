@@ -9,6 +9,7 @@ import { TextInput, TextInputRef } from '@components/TextInput'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
+import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -25,14 +26,15 @@ function SplitTitle({
   updateTitle: (title: string) => void
 }) {
   const theme = useTheme()
+  const threeBarLayout = useThreeBarLayout()
   const textInputRef = useRef<TextInputRef>(null)
   const { t } = useTranslation()
 
   return (
     <Pressable
       style={{
-        padding: 12,
-        paddingLeft: 24,
+        padding: threeBarLayout ? 8 : 12,
+        paddingLeft: threeBarLayout ? 16 : 24,
         borderRadius: 16,
         backgroundColor: theme.colors.surfaceContainer,
         flexDirection: 'row',
@@ -41,14 +43,14 @@ function SplitTitle({
       }}
       onPress={() => textInputRef.current?.focus()}
     >
-      <Icon name='receipt' size={24} color={theme.colors.secondary} />
+      <Icon name='receipt' size={threeBarLayout ? 20 : 24} color={theme.colors.secondary} />
       <TextInput
         ref={textInputRef}
         placeholder={t('form.title')}
         value={title}
         onChangeText={(text) => updateTitle(text)}
         style={{ flex: 1 }}
-        inputStyle={{ fontSize: 18 }}
+        inputStyle={{ fontSize: threeBarLayout ? 16 : 18 }}
         showUnderline={false}
       />
     </Pressable>
@@ -58,6 +60,7 @@ function SplitTitle({
 export default function Modal() {
   const router = useRouter()
   const insets = useModalScreenInsets()
+  const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
 
@@ -162,66 +165,66 @@ export default function Modal() {
               }}
             />
 
-          {/* TODO: this does look kinda out of place */}
-          {/* TODO: remember which option was picked last time */}
-          {splittingEqually && (
-            <TabView
-              openedTab={splittingByTotal ? 0 : 1}
-              onTabChange={(index) => setSplittingByTotal(index === 0)}
-              contentContainerStyle={{
-                padding: 12,
-              }}
-              tabs={[
-                {
-                  icon: 'sell',
-                  title: t('form.byTotal'),
-                  content: (
-                    <TextInput
-                      placeholder={t('form.totalPaid')}
-                      keyboardType='decimal-pad'
-                      value={total}
-                      onChangeText={(value) => {
-                        setTotal(value.replace(',', '.'))
-                        setError(null)
-                      }}
-                      inputStyle={{ fontSize: 16 }}
-                      style={{ marginBottom: 8 }}
-                      onBlur={() => {
-                        const amountNum = Number(total)
-                        if (!Number.isNaN(amountNum) && total.length > 0) {
-                          setTotal(CurrencyUtils.format(amountNum))
-                        }
-                      }}
-                    />
-                  ),
-                },
-                {
-                  icon: 'user',
-                  title: t('form.perPerson'),
-                  content: (
-                    <TextInput
-                      placeholder={t('form.amountPerPerson')}
-                      keyboardType='decimal-pad'
-                      value={amountPerUser}
-                      onChangeText={(value) => {
-                        setAmountPerUser(value.replace(',', '.'))
-                        setError(null)
-                      }}
-                      style={{ marginBottom: 8 }}
-                      inputStyle={{ fontSize: 16 }}
-                      onBlur={() => {
-                        const amountNum = Number(amountPerUser)
-                        if (!Number.isNaN(amountNum) && total.length > 0) {
-                          setAmountPerUser(CurrencyUtils.format(amountNum))
-                        }
-                      }}
-                    />
-                  ),
-                },
-              ]}
-            />
-          )}
-                    </Form>
+            {/* TODO: this does look kinda out of place */}
+            {/* TODO: remember which option was picked last time */}
+            {splittingEqually && (
+              <TabView
+                openedTab={splittingByTotal ? 0 : 1}
+                onTabChange={(index) => setSplittingByTotal(index === 0)}
+                contentContainerStyle={{
+                  padding: threeBarLayout ? 8 : 12,
+                }}
+                tabs={[
+                  {
+                    icon: 'sell',
+                    title: t('form.byTotal'),
+                    content: (
+                      <TextInput
+                        placeholder={t('form.totalPaid')}
+                        keyboardType='decimal-pad'
+                        value={total}
+                        onChangeText={(value) => {
+                          setTotal(value.replace(',', '.'))
+                          setError(null)
+                        }}
+                        inputStyle={{ fontSize: threeBarLayout ? 14 : 16 }}
+                        style={{ marginBottom: 8 }}
+                        onBlur={() => {
+                          const amountNum = Number(total)
+                          if (!Number.isNaN(amountNum) && total.length > 0) {
+                            setTotal(CurrencyUtils.format(amountNum))
+                          }
+                        }}
+                      />
+                    ),
+                  },
+                  {
+                    icon: 'user',
+                    title: t('form.perPerson'),
+                    content: (
+                      <TextInput
+                        placeholder={t('form.amountPerPerson')}
+                        keyboardType='decimal-pad'
+                        value={amountPerUser}
+                        onChangeText={(value) => {
+                          setAmountPerUser(value.replace(',', '.'))
+                          setError(null)
+                        }}
+                        style={{ marginBottom: 8 }}
+                        inputStyle={{ fontSize: threeBarLayout ? 14 : 16 }}
+                        onBlur={() => {
+                          const amountNum = Number(amountPerUser)
+                          if (!Number.isNaN(amountNum) && total.length > 0) {
+                            setAmountPerUser(CurrencyUtils.format(amountNum))
+                          }
+                        }}
+                      />
+                    ),
+                  },
+                ]}
+              />
+            )}
+          </Form>
 
           <CalendarPane
             initialDate={timestamp}

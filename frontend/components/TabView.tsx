@@ -1,6 +1,7 @@
 import { Icon, IconName } from './Icon'
 import { Text } from './Text'
 import { useTheme } from '@styling/theme'
+import { useThreeBarLayout } from '@utils/dimensionUtils'
 import React, { useEffect, useState } from 'react'
 import { Pressable, StyleProp, View, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
@@ -114,6 +115,7 @@ export interface TabViewProps {
 
 export function TabView(props: TabViewProps) {
   const theme = useTheme()
+  const threeBarLayout = useThreeBarLayout()
   const [selectedItem, setSelectedItem] = useState(props.openedTab)
 
   useEffect(() => {
@@ -137,7 +139,7 @@ export function TabView(props: TabViewProps) {
       <View
         style={{
           width: '100%',
-          height: 48,
+          height: threeBarLayout ? 40 : 48,
           flexDirection: 'row',
         }}
       >
