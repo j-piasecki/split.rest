@@ -104,10 +104,17 @@ export const TextInput = React.forwardRef<TextInputRef, Props>(function TextInpu
     }
   })
 
+  const textWrapperStyle = useAnimatedStyle(() => {
+    return {
+      paddingTop: withTiming(value ? 16 : 12, { duration: 200 }),
+      paddingBottom: withTiming(value ? 8 : 12, { duration: 200 }),
+    }
+  })
+
   const hintWrapperStyle = useAnimatedStyle(() => {
     return {
       left: withTiming(value ? 0 : 8, { duration: 200 }),
-      top: withTiming(value ? -2 : 16, { duration: 200 }),
+      top: withTiming(value ? -2 : 12, { duration: 200 }),
       transform: [{ scale: withTiming(value ? 0.7 : 1, { duration: 200 }) }],
     }
   })
@@ -128,43 +135,49 @@ export const TextInput = React.forwardRef<TextInputRef, Props>(function TextInpu
         wrapperStyle,
       ]}
     >
-      <TextInputRN
-        ref={inputRef}
-        cursorColor={theme.colors.primary}
-        selectionColor={theme.colors.primary}
+      <Animated.View
         style={[
+          textWrapperStyle,
           {
             paddingHorizontal: 8,
-            paddingBottom: 8,
-            paddingTop: 16,
-            color: theme.colors.onSurface,
-            fontWeight: '600',
-            fontSize: 14,
           },
-          fontStyle,
-          inputStyle,
         ]}
-        value={value}
-        onChangeText={(value) => {
-          resetError?.()
-          onChangeText?.(value)
-        }}
-        onFocus={(e) => {
-          isFocused.value = true
-          onFocus?.(e)
-        }}
-        onBlur={(e) => {
-          isFocused.value = false
-          onBlur?.(e)
-        }}
-        submitBehavior={(submitBehavior ?? form === null) ? undefined : 'submit'}
-        onSubmitEditing={(e) => {
-          onSubmitEditing?.(e)
-          form?.focusNext()
-        }}
-        numberOfLines={1}
-        {...rest}
-      />
+      >
+        <TextInputRN
+          ref={inputRef}
+          cursorColor={theme.colors.primary}
+          selectionColor={theme.colors.primary}
+          style={[
+            {
+              color: theme.colors.onSurface,
+              fontWeight: '600',
+              fontSize: 14,
+            },
+            fontStyle,
+            inputStyle,
+          ]}
+          value={value}
+          onChangeText={(value) => {
+            resetError?.()
+            onChangeText?.(value)
+          }}
+          onFocus={(e) => {
+            isFocused.value = true
+            onFocus?.(e)
+          }}
+          onBlur={(e) => {
+            isFocused.value = false
+            onBlur?.(e)
+          }}
+          submitBehavior={(submitBehavior ?? form === null) ? undefined : 'submit'}
+          onSubmitEditing={(e) => {
+            onSubmitEditing?.(e)
+            form?.focusNext()
+          }}
+          numberOfLines={1}
+          {...rest}
+        />
+      </Animated.View>
       <Animated.View
         style={[
           {
