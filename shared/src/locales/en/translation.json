@@ -288,8 +288,8 @@
 
   "splitTypeDescription": {
     "exactAmounts": "Select the participants, choose who paid, and enter how much each person owes.",
-    "equalAmounts": "Select the participants, choose who paid, and decide whether to split a total amount equally or prefill a specific value for each person. You can adjust the amounts manually at the end.",
-    "balanceChanges": "Select the participants and specify how their balances changed. This type allows multiple people to have negative balances simultaneously, as long as the total sums to zero — perfect for poker games!"
+    "equalAmounts": "Select participants, choose who paid, and split the total equally or assign custom amounts. You can adjust values manually afterward.",
+    "balanceChanges": "Select participants and update their balances. Multiple people can have negative balances as long as the total equals zero. Perfect for poker games!"
   },
 
   "roulette": {
