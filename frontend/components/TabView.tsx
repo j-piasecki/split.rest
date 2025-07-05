@@ -15,17 +15,19 @@ function TabButton({
   tab,
   selected,
   onPress,
+  last,
 }: {
   tab: Tab
   selected: boolean
   onPress: () => void
+  last: boolean
 }) {
   const theme = useTheme()
   const [pressed, setPressed] = useState(false)
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      flex: withSpring(pressed ? 1.25 : 1, {
+      flex: withSpring(pressed ? 1.2 : 1, {
         mass: 1,
         stiffness: 200,
         damping: 12,
@@ -55,15 +57,15 @@ function TabButton({
         style={({ pressed, hovered }) => {
           return {
             backgroundColor: pressed
-              ? theme.colors.surfaceContainerHighest
+              ? theme.colors.surfaceContainerHigh
               : hovered || selected
-                ? theme.colors.surfaceContainerHigh
+                ? theme.colors.surfaceContainer
                 : theme.colors.transparent,
             flex: 1,
-
             justifyContent: 'center',
             alignItems: 'center',
             borderBottomWidth: 1,
+            borderRightWidth: last ? 0 : 1,
             borderColor: theme.colors.outlineVariant,
           }
         }}
@@ -107,6 +109,7 @@ export interface TabViewProps {
   openedTab: number
   onTabChange?: (index: number) => void
   style?: StyleProp<ViewStyle>
+  contentContainerStyle?: StyleProp<ViewStyle>
 }
 
 export function TabView(props: TabViewProps) {
@@ -150,6 +153,7 @@ export function TabView(props: TabViewProps) {
                 setSelectedItem(index)
                 props.onTabChange?.(index)
               }}
+              last={index === props.tabs.length - 1}
             />
           )
         })}
@@ -157,12 +161,15 @@ export function TabView(props: TabViewProps) {
 
       <View
         key={item}
-        style={{
-          width: '100%',
-          flex: 1,
-          padding: 8,
-          backgroundColor: theme.colors.surfaceContainer,
-        }}
+        style={[
+          {
+            width: '100%',
+            flex: 1,
+            padding: 8,
+            backgroundColor: theme.colors.surfaceContainer,
+          },
+          props.contentContainerStyle,
+        ]}
       >
         {props.tabs[item].content}
       </View>
