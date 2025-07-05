@@ -73,7 +73,7 @@ export function SplitEntry({
           tabIndex={-1}
         >
           <Icon
-            name='currency'
+            name='payments'
             size={24}
             color={
               formState.paidByIndex === index ? theme.colors.secondary : theme.colors.outlineVariant

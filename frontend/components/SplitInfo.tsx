@@ -618,7 +618,7 @@ export function SplitInfo({
           {/* TODO: Update text for inverse splits? */}
           {paidBy && (
             <IconInfoText
-              icon='currency'
+              icon='payments'
               translationKey={
                 splitInfo.type & SplitType.SettleUp
                   ? splitInfo.type & SplitType.Inversed

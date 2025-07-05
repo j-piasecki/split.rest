@@ -73,7 +73,7 @@ function PersonRow({
           tabIndex={-1}
         >
           <Icon
-            name='currency'
+            name='payments'
             size={24}
             color={entry.selected ? theme.colors.secondary : theme.colors.outlineVariant}
           />
@@ -195,6 +195,8 @@ export function PeoplePicker({
               paddingTop: 4,
               paddingBottom: entries.length - 1 === index ? 12 : 8,
               borderRadius: 4,
+              borderBottomLeftRadius: entries.length - 1 === index ? 16 : 4,
+              borderBottomRightRadius: entries.length - 1 === index ? 16 : 4,
             }}
           >
             <PersonRow
