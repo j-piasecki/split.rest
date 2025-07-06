@@ -35,6 +35,9 @@ async function main() {
       }
     }
     await client.query('COMMIT')
+  } catch (e) {
+    console.error(e)
+    await client.query('ROLLBACK')
   } finally {
     client.release()
   }
