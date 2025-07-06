@@ -122,6 +122,7 @@ function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
             <SelectablePeoplePicker
               groupId={groupInfo.id}
               onEntriesChange={setEntries}
+              entries={entries}
               ref={selectablePeoplePickerRef}
             />
           ) : (
