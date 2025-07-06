@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { ConfirmationModal } from '@components/ConfirmationModal'
 import { useFABScrollHandler } from '@components/FloatingActionButton'
 import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import ModalScreen from '@components/ModalScreen'
@@ -24,7 +25,7 @@ import { ApiError } from '@utils/makeApiRequest'
 import { invalidateDirectGroupInvites } from '@utils/queryClient'
 import * as Clipboard from 'expo-clipboard'
 import { useLocalSearchParams } from 'expo-router'
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, StyleProp, View, ViewStyle } from 'react-native'
 import { GroupInviteWithInvitee, GroupUserInfo } from 'shared'
@@ -38,9 +39,10 @@ function JoinLinkManager({
 }) {
   const theme = useTheme()
   const { t } = useTranslation()
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const { data: link, isLoading: isLoadingLink } = useGroupJoinLink(info.id)
   const { mutateAsync: createJoinLink, isPending: isCreatingJoinLink } = useCreateGroupJoinLink()
-  const { mutateAsync: deleteJoinLink, isPending: isDeletingJoinLink } = useDeleteGroupJoinLink()
+  const { mutateAsync: deleteJoinLink } = useDeleteGroupJoinLink()
 
   const linkText = __DEV__
     ? `http://localhost:8081/join/${link?.uuid}`
@@ -85,12 +87,24 @@ function JoinLinkManager({
                 <Button
                   leftIcon='deleteLink'
                   title={t('groupSettings.joinLink.delete')}
-                  isLoading={isDeletingJoinLink}
-                  onPress={() => deleteJoinLink(info.id)}
+                  onPress={() => setShowDeleteModal(true)}
                 />
               )}
             </View>
           )}
+
+          <ConfirmationModal
+            visible={showDeleteModal}
+            title={'groupSettings.joinLink.delete'}
+            message={'groupSettings.joinLink.deleteDescription'}
+            confirmText={'groupSettings.joinLink.deleteConfirm'}
+            confirmIcon='delete'
+            destructive
+            onConfirm={() => deleteJoinLink(info.id)}
+            cancelText={'groupSettings.joinLink.deleteCancel'}
+            cancelIcon='close'
+            onClose={() => setShowDeleteModal(false)}
+          />
         </>
       )}
     </Pane>

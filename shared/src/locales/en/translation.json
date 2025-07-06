@@ -316,7 +316,10 @@
     "joinLink": {
       "create": "Create invitation link",
       "joinLink": "Invitation link",
-      "delete": "Delete link"
+      "delete": "Delete link",
+      "deleteDescription": "Are you sure you want to delete the invitation link?",
+      "deleteConfirm": "Yes",
+      "deleteCancel": "No"
     },
     "notAnAdmin": "You are not a moderator of this group",
     "deleteGroup": "Delete group",
