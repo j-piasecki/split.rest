@@ -231,6 +231,11 @@ export class AppController {
     if (args.startAfter !== undefined) {
       // @ts-expect-error TODO: remove this once deployed for a while
       args.startAfterId = args.startAfter
+
+      // @ts-expect-error TODO: remove this once deployed for a while
+      if (args.startAfter === '2147483647') {
+        args.startAfterUpdate = 0
+      }
     }
 
     return await this.appService.getUserGroups(request.user.sub, args)
