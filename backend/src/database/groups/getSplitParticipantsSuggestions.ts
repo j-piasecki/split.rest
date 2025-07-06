@@ -27,7 +27,9 @@ export async function getSplitParticipantsSuggestions(
             SELECT splits.id
             FROM splits
               INNER JOIN split_participants ON splits.id = split_participants.split_id
-            WHERE splits.group_id = $1 AND splits.deleted = FALSE AND user_id = $2 LIMIT 10
+            WHERE splits.group_id = $1 AND splits.deleted = FALSE AND user_id = $2
+            ORDER BY splits.timestamp DESC
+            LIMIT 10
           )
         GROUP BY users.id, group_members.display_name
         ORDER BY count DESC
