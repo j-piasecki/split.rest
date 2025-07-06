@@ -1,5 +1,6 @@
 import { Icon } from './Icon'
 import { ProfilePicture } from './ProfilePicture'
+import { Shimmer } from './Shimmer'
 import { Text } from './Text'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useTheme } from '@styling/theme'
@@ -21,6 +22,7 @@ export interface SelectablePeoplePickerRef {
 
 export interface SelectablePeoplePickerProps {
   groupId: number
+  shimmerCount?: number
   onEntriesChange: (entries: PersonEntry[]) => void
   entries: PersonEntry[]
   pickablePayer?: boolean
@@ -104,12 +106,40 @@ function ListPersonRow({ toggleSelect, entry, pickable, pick }: ListPersonRowPro
   )
 }
 
+function Placeholder({ shimmerCount = 5 }: { shimmerCount?: number }) {
+  const theme = useTheme()
+
+  return (
+    <View style={{ gap: 2 }}>
+      {new Array(shimmerCount).fill(0).map((_, index) => (
+        <View
+          key={index}
+          style={{
+            backgroundColor: theme.colors.surfaceContainer,
+            padding: 12,
+            borderRadius: 4,
+            borderBottomLeftRadius: shimmerCount - 1 === index ? 16 : 4,
+            borderBottomRightRadius: shimmerCount - 1 === index ? 16 : 4,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 12,
+          }}
+        >
+          <Shimmer style={{ width: 32, height: 32, borderRadius: 16 }} />
+          <Shimmer style={{ flex: 1, height: 24, borderRadius: 8, marginRight: 48 }} />
+        </View>
+      ))}
+    </View>
+  )
+}
+
 export function SelectablePeoplePicker({
   groupId,
   onEntriesChange,
   ref,
   entries,
   pickablePayer = false,
+  shimmerCount,
 }: SelectablePeoplePickerProps) {
   const theme = useTheme()
   const [localEntries, setLocalEntries] = useState<PersonEntry[]>([])
@@ -163,6 +193,10 @@ export function SelectablePeoplePicker({
     newEntries[index].picked = true
     setLocalEntries(newEntries)
     onEntriesChange(newEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked })))
+  }
+
+  if (localEntries.length === 0) {
+    return <Placeholder shimmerCount={shimmerCount} />
   }
 
   return (

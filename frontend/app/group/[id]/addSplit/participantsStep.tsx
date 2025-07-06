@@ -156,6 +156,7 @@ function ParticipantsPicker({
           {useSelectablePicker ? (
             <SelectablePeoplePicker
               groupId={groupInfo.id}
+              shimmerCount={groupInfo.memberCount}
               onEntriesChange={setEntries}
               ref={selectablePeoplePickerRef}
               entries={entries}

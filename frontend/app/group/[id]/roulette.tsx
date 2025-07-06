@@ -121,6 +121,7 @@ function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
           {useSelectablePicker ? (
             <SelectablePeoplePicker
               groupId={groupInfo.id}
+              shimmerCount={groupInfo.memberCount}
               onEntriesChange={setEntries}
               entries={entries}
               ref={selectablePeoplePickerRef}
