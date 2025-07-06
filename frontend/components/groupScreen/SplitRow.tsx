@@ -16,8 +16,8 @@ import { useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, View, ViewStyle } from 'react-native'
-import { CurrencyUtils } from 'shared'
-import { GroupUserInfo, SplitInfo, SplitType } from 'shared'
+import { CurrencyUtils, isBalanceChangeSplit, isInversedSplit, isSettleUpSplit } from 'shared'
+import { GroupUserInfo, SplitInfo } from 'shared'
 
 function LinearInfo({ split, info }: { split: SplitInfo; info: GroupUserInfo }) {
   const theme = useTheme()
@@ -98,9 +98,9 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
   const { data: permissions } = useGroupPermissions(info.id)
   const { mutateAsync: deleteSplit, isPending } = useDeleteSplit(info.id)
 
-  const isSettleUp = Boolean(split.type & SplitType.SettleUp)
-  const isInverse = Boolean(split.type & SplitType.Inversed)
-  const isBalanceChange = split.type === SplitType.BalanceChange
+  const isSettleUp = isSettleUpSplit(split.type)
+  const isInverse = isInversedSplit(split.type)
+  const isBalanceChange = isBalanceChangeSplit(split.type)
   const shouldUseStackedInfo = displayClass === DisplayClass.Small || (width < 660 && width > 0)
 
   const contextMenuDisabled =

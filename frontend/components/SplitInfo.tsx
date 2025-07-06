@@ -17,11 +17,16 @@ import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Pressable, RefreshControl, ScrollView, StyleProp, View, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
-import { CurrencyUtils, isTranslatableError } from 'shared'
+import {
+  CurrencyUtils,
+  isBalanceChangeSplit,
+  isInversedSplit,
+  isSettleUpSplit,
+  isTranslatableError,
+} from 'shared'
 import {
   GroupUserInfo,
   LanguageTranslationKey,
-  SplitType,
   SplitWithUsers,
   UserWithPendingBalanceChange,
 } from 'shared'
@@ -30,7 +35,7 @@ function getVisibleBalanceChange(user: UserWithPendingBalanceChange, splitInfo: 
   const paidByThis = splitInfo.paidById === user.id
   let paidInThisSplit = user.change
 
-  if (splitInfo.type & SplitType.Inversed) {
+  if (isInversedSplit(splitInfo.type)) {
     if (paidByThis) {
       const total = Number(splitInfo.total)
       const remainder = total + Number(paidInThisSplit)
@@ -65,9 +70,9 @@ function PaidAmount({
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { t } = useTranslation()
 
-  const isSettleUp = Boolean(splitInfo.type & SplitType.SettleUp)
-  const isInverse = Boolean(splitInfo.type & SplitType.Inversed)
-  const isBalanceChange = splitInfo.type === SplitType.BalanceChange
+  const isSettleUp = isSettleUpSplit(splitInfo.type)
+  const isInverse = isInversedSplit(splitInfo.type)
+  const isBalanceChange = isBalanceChangeSplit(splitInfo.type)
 
   const paidInThisSplit = getVisibleBalanceChange(user, splitInfo)
   const balanceChange = Number(user.change)
@@ -575,7 +580,7 @@ export function SplitInfo({
 
   const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)
 
-  const isSettleUp = Boolean(splitInfo.type & SplitType.SettleUp)
+  const isSettleUp = isSettleUpSplit(splitInfo.type)
   const usersToShow = splitInfo.users.filter((user) => {
     if (isSettleUp && user.id === splitInfo.paidById) {
       return false
@@ -620,8 +625,8 @@ export function SplitInfo({
             <IconInfoText
               icon='payments'
               translationKey={
-                splitInfo.type & SplitType.SettleUp
-                  ? splitInfo.type & SplitType.Inversed
+                isSettleUpSplit(splitInfo.type)
+                  ? isInversedSplit(splitInfo.type)
                     ? splitInfo.pending
                       ? 'splitInfo.hasSettledUpWillGetBack'
                       : 'splitInfo.hasSettledUpGetsBack'

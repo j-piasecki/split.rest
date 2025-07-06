@@ -4,9 +4,9 @@ on:
   pull_request:
     paths:
       - .github/workflows/static-checks.yml
-      - frontend/**/*.{ts,tsx,js,jsx}
-      - backend/**/*.{ts,tsx,js,jsx}
-      - shared/**/*.{ts,tsx,js,jsx}
+      - frontend/**
+      - backend/**
+      - shared/**
   push:
     branches:
       - main

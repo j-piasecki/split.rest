@@ -67,6 +67,22 @@ export enum SplitType {
   BalanceChange = 1 << 2,
 }
 
+export function isNormalSplit(type: SplitType) {
+  return type === SplitType.Normal
+}
+
+export function isInversedSplit(type: SplitType) {
+  return (type & SplitType.Inversed) !== 0
+}
+
+export function isSettleUpSplit(type: SplitType) {
+  return (type & SplitType.SettleUp) !== 0
+}
+
+export function isBalanceChangeSplit(type: SplitType) {
+  return type === SplitType.BalanceChange
+}
+
 export enum AndroidNotificationChannel {
   NewSplits = 'new-splits',
   SplitUpdates = 'split-updates',

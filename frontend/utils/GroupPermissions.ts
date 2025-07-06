@@ -1,5 +1,5 @@
 import { auth } from './firebase'
-import { GroupMemberPermissions, SplitInfo, SplitPermissionType, SplitType } from 'shared'
+import { GroupMemberPermissions, SplitInfo, SplitPermissionType, isSettleUpSplit } from 'shared'
 
 export class GroupPermissions extends GroupMemberPermissions {
   private checkSplitPermission(split: SplitInfo, type: SplitPermissionType) {
@@ -17,7 +17,7 @@ export class GroupPermissions extends GroupMemberPermissions {
   }
 
   canUpdateSplit(split: SplitInfo): boolean {
-    if (split.type & SplitType.SettleUp) {
+    if (isSettleUpSplit(split.type)) {
       // Settle up splits are not editable
       return false
     }

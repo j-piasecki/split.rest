@@ -5,7 +5,13 @@ import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { userExists } from '../utils/userExists'
 import { validateNormalSplitArgs } from '../utils/validateNormalSplitArgs'
 import { Pool, PoolClient } from 'pg'
-import { AndroidNotificationChannel, CreateSplitArguments, CurrencyUtils, SplitType } from 'shared'
+import {
+  AndroidNotificationChannel,
+  CreateSplitArguments,
+  CurrencyUtils,
+  SplitType,
+  isSettleUpSplit,
+} from 'shared'
 
 export async function createSplitNoTransaction(
   client: PoolClient,
@@ -62,7 +68,7 @@ export async function createSplitNoTransaction(
   }
 
   await client.query('UPDATE groups SET total = total + $1, last_update = $2 WHERE id = $3', [
-    args.total,
+    isSettleUpSplit(args.type) ? 0 : args.total,
     Date.now(),
     args.groupId,
   ])
