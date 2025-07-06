@@ -143,7 +143,7 @@ export function SelectablePeoplePicker({
       })
       setLocalEntries(newEntries)
       onEntriesChange(
-        localEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked }))
+        newEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked }))
       )
     },
   }))
@@ -155,9 +155,7 @@ export function SelectablePeoplePicker({
       newEntries[index].picked = false
     }
     setLocalEntries(newEntries)
-    onEntriesChange(
-      localEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked }))
-    )
+    onEntriesChange(newEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked })))
   }
 
   function pick(index: number) {

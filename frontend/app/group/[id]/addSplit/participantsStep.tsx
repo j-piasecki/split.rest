@@ -46,7 +46,7 @@ function getInitialEntries(user: UserWithDisplayName): PersonEntry[] {
   return [{ user: user, entry: user.email ?? '', selected: true }, { entry: '' }]
 }
 
-function ParticipansPicker({
+function ParticipantsPicker({
   user,
   groupInfo,
 }: {
@@ -120,8 +120,6 @@ function ParticipansPicker({
     )
     setWaiting(false)
   }
-
-  console.log('enteris', entries)
 
   return (
     <View
@@ -209,7 +207,7 @@ export default function Modal() {
       opaque={false}
       slideAnimation={false}
     >
-      {memberInfo && groupInfo && <ParticipansPicker user={memberInfo} groupInfo={groupInfo} />}
+      {memberInfo && groupInfo && <ParticipantsPicker user={memberInfo} groupInfo={groupInfo} />}
     </ModalScreen>
   )
 }
