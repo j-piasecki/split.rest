@@ -25,6 +25,7 @@ import {
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
+  GetSplitParticipantsSuggestionsArguments,
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
@@ -68,6 +69,7 @@ import {
   isGetGroupSplitsArguments,
   isGetSplitHistoryArguments,
   isGetSplitInfoArguments,
+  isGetSplitParticipantsSuggestionsArguments,
   isGetUserByEmailArguments,
   isGetUserByIdArguments,
   isGetUserGroupsArguments,
@@ -626,5 +628,22 @@ export class AppController {
     }
 
     return await this.appService.confirmSettleUp(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getSplitParticipantsSuggestions')
+  async getSplitParticipantsSuggestions(
+    @Req() request: Request,
+    @Query() query: Record<string, string>
+  ) {
+    const args: GetSplitParticipantsSuggestionsArguments = {
+      groupId: parseInt(query.groupId),
+    }
+
+    if (!isGetSplitParticipantsSuggestionsArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.getSplitParticipantsSuggestions(request.user.sub, args)
   }
 }

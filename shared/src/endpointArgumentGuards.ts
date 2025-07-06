@@ -20,6 +20,7 @@ import {
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
+  GetSplitParticipantsSuggestionsArguments,
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
@@ -237,4 +238,10 @@ export function isUnregisterNotificationTokenArguments(
 
 export function isCompleteSplitEntryArguments(obj: any): obj is CompleteSplitEntryArguments {
   return obj.groupId !== undefined && obj.splitId !== undefined && obj.userId !== undefined
+}
+
+export function isGetSplitParticipantsSuggestionsArguments(
+  obj: any
+): obj is GetSplitParticipantsSuggestionsArguments {
+  return obj.groupId !== undefined
 }

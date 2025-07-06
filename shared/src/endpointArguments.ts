@@ -218,3 +218,7 @@ export interface CompleteSplitEntryArguments {
   splitId: number
   userId: string
 }
+
+export interface GetSplitParticipantsSuggestionsArguments {
+  groupId: number
+}
