@@ -349,6 +349,7 @@
     "amountMustBeNumber": "Amount must be a number",
     "titleIsRequired": "Title is required",
     "titleIsTooLong": "Title is too long",
+    "thePayerMustBeSelected": "The payer must be selected",
     "thePayerDataMustBeFilledIn": "The payer data must be filled in",
     "entriesMustBeUnique": "All users must be unique",
     "amountsMustBePositive": "Amounts must be positive",
