@@ -11,6 +11,8 @@ import {
   LanguageTranslationKey,
   SplitType,
   UpdateSplitArguments,
+  isNormalSplit,
+  isSettleUpSplit,
 } from 'shared'
 import NotificationUtils from 'src/notifications/NotificationUtils'
 
@@ -164,11 +166,11 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
       )
     ).rows[0]
 
-    if (splitInfo.type === SplitType.Normal) {
+    if (isNormalSplit(splitInfo.type)) {
       validateNormalSplitArgs(args)
     }
 
-    if (splitInfo.type & SplitType.SettleUp) {
+    if (isSettleUpSplit(splitInfo.type)) {
       throw new ForbiddenException('api.split.cannotEditSettleUp')
     }
 

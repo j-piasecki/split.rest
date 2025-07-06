@@ -1,8 +1,8 @@
 import { t } from 'i18next'
-import { SplitInfo, SplitType } from 'shared'
+import { SplitInfo, isSettleUpSplit } from 'shared'
 
 export function getSplitDisplayName(split: SplitInfo) {
-  if (split.type & SplitType.SettleUp) {
+  if (isSettleUpSplit(split.type)) {
     return t('splitInfo.settleUpTitle')
   }
 

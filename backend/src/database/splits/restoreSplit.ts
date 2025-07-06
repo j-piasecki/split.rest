@@ -2,7 +2,7 @@ import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { splitExists } from '../utils/splitExists'
 import { Pool } from 'pg'
-import { RestoreSplitArguments, SplitType } from 'shared'
+import { RestoreSplitArguments, isSettleUpSplit } from 'shared'
 
 export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSplitArguments) {
   const client = await pool.connect()
@@ -39,7 +39,7 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
     }
 
     await client.query('UPDATE groups SET total = total + $1, last_update = $2 WHERE id = $3', [
-      (splitInfo.type & SplitType.SettleUp) !== 0 ? 0 : splitInfo.total,
+      isSettleUpSplit(splitInfo.type) ? 0 : splitInfo.total,
       Date.now(),
       args.groupId,
     ])
