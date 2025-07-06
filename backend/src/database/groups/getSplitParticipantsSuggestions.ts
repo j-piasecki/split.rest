@@ -42,7 +42,7 @@ export async function getSplitParticipantsSuggestions(
     name: row.name,
     email: row.email,
     photoUrl: null,
-    deleted: row.deleted,
+    deleted: false,
     displayName: row.display_name,
   }))
 }
