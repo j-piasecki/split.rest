@@ -6,7 +6,7 @@ import { useSplitParticipantsSuggestions } from '@hooks/database/useSplitPartici
 import { useTheme } from '@styling/theme'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet } from 'react-native'
+import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import Animated, {
   LinearTransition,
   useAnimatedStyle,
@@ -112,7 +112,7 @@ export function SuggestionsPane({ groupInfo, hiddenIds, onSelect }: SuggestionsP
   )
 
   useEffect(() => {
-    if (filteredSuggestions?.length === 0 && !isLoading) {
+    if (!filteredSuggestions?.length && !isLoading) {
       setCollapsed(true)
     }
   }, [filteredSuggestions, isLoading])
@@ -154,14 +154,16 @@ export function SuggestionsPane({ groupInfo, hiddenIds, onSelect }: SuggestionsP
               />
             </Animated.View>
           ))}
-          {filteredSuggestions?.length === 0 && isLoading && (
-            <ActivityIndicator
-              size='small'
-              color={theme.colors.onSurface}
-              style={{ padding: 12 }}
-            />
+          {!filteredSuggestions?.length && isLoading && (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 12 }}>
+              <ActivityIndicator
+                size='small'
+                color={theme.colors.onSurface}
+                style={{ padding: 12 }}
+              />
+            </View>
           )}
-          {filteredSuggestions?.length === 0 && !isLoading && (
+          {!filteredSuggestions?.length && !isLoading && (
             <Text
               style={{
                 fontSize: 18,
