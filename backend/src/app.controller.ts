@@ -233,7 +233,7 @@ export class AppController {
       args.startAfterId = args.startAfter
 
       // @ts-expect-error TODO: remove this once deployed for a while
-      if (args.startAfter === '2147483647') {
+      if (args.startAfter !== '2147483647') {
         args.startAfterUpdate = 0
       }
     }
