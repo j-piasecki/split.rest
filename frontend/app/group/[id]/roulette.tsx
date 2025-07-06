@@ -10,6 +10,7 @@ import {
   SelectablePeoplePickerRef,
 } from '@components/SelectablePeoplePicker'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
+import { SuggestionsPane } from '@components/SplitForm/SuggestionsPane'
 import { Text } from '@components/Text'
 import { getAllGroupMembers } from '@database/getAllGroupMembers'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
@@ -27,10 +28,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, LayoutRectangle, Platform, ScrollView, View } from 'react-native'
 import Animated, { LinearTransition } from 'react-native-reanimated'
-import { GroupInfo, TranslatableError, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, TranslatableError, UserWithDisplayName } from 'shared'
 
 interface RouletteProps {
-  groupInfo: GroupInfo
+  groupInfo: GroupUserInfo
   setQuery: (result: PersonEntry[]) => void
   user: UserWithDisplayName
 }
@@ -98,9 +99,24 @@ function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
           paddingBottom: 100,
           paddingLeft: insets.left + 12,
           paddingRight: insets.right + 12,
+          gap: 12,
         }}
         keyboardShouldPersistTaps='handled'
       >
+        {!useSelectablePicker && (
+          <SuggestionsPane
+            groupInfo={groupInfo}
+            hiddenIds={entries.map((entry) => entry.user?.id).filter((id) => id !== undefined)}
+            onSelect={(user) => {
+              setEntries([
+                ...entries.filter((entry) => entry.user || entry.entry),
+                { user, entry: user.email ?? '', selected: false },
+                { entry: '' },
+              ])
+            }}
+          />
+        )}
+
         <Pane
           icon='group'
           title={t('splitInfo.participants')}

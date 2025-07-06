@@ -381,7 +381,9 @@
     "back": "Go back",
     "nameOrEmail": "Name or e-mail",
     "buttonNext": "Next",
-    "unknownPayer": "Unknown"
+    "unknownPayer": "Unknown",
+    "suggestions": "Suggested participants",
+    "noSuggestions": "There are no more suggestions"
   },
 
   "member": {

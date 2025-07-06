@@ -25,6 +25,7 @@ import {
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
+  GetSplitParticipantsSuggestionsArguments,
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
@@ -273,5 +274,12 @@ export class AppService {
 
   async confirmSettleUp(callerId: string, args: ConfirmSettleUpArguments) {
     return await this.databaseService.confirmSettleUp(callerId, args)
+  }
+
+  async getSplitParticipantsSuggestions(
+    callerId: string,
+    args: GetSplitParticipantsSuggestionsArguments
+  ) {
+    return await this.databaseService.getSplitParticipantsSuggestions(callerId, args)
   }
 }

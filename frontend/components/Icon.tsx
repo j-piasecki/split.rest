@@ -16,6 +16,7 @@ export type IconName =
   | 'arrowUp'
   | 'articlePerson'
   | 'arrowUpAlt'
+  | 'automation'
   | 'balance'
   | 'barChart'
   | 'bug'
@@ -105,6 +106,7 @@ const iconMap: Record<IconName, unknown> = {
   articlePerson: require('@assets/icons/article_person.svg'),
   arrowUp: require('@assets/icons/arrow_up.svg'),
   arrowUpAlt: require('@assets/icons/arrow_up_alt.svg'),
+  automation: require('@assets/icons/automation.svg'),
   balance: require('@assets/icons/balance.svg'),
   barChart: require('@assets/icons/bar_chart.svg'),
   bug: require('@assets/icons/bug.svg'),

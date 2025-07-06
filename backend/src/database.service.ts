@@ -14,6 +14,7 @@ import { getGroupMembers } from './database/groups/getGroupMembers'
 import { getGroupMembersAutocompletions } from './database/groups/getGroupMembersAutocompletions'
 import { getGroupSplits } from './database/groups/getGroupSplits'
 import { getMemberInfo } from './database/groups/getMemberInfo'
+import { getSplitParticipantsSuggestions } from './database/groups/getSplitParticipantsSuggestions'
 import { getUserGroupInvites } from './database/groups/getUserGroupInvites'
 import { getUserGroups } from './database/groups/getUserGroups'
 import { inviteUser } from './database/groups/inviteUser'
@@ -68,6 +69,7 @@ import {
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
+  GetSplitParticipantsSuggestionsArguments,
   GetUserByEmailArguments,
   GetUserByIdArguments,
   GetUserGroupsArguments,
@@ -340,5 +342,13 @@ export class DatabaseService {
   @RequirePermissions(['settleUp'])
   async confirmSettleUp(callerId: string, args: ConfirmSettleUpArguments) {
     return await confirmSettleUp(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['readMembers'])
+  async getSplitParticipantsSuggestions(
+    callerId: string,
+    args: GetSplitParticipantsSuggestionsArguments
+  ) {
+    return await getSplitParticipantsSuggestions(this.pool, callerId, args)
   }
 }

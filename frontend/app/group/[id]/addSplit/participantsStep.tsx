@@ -8,6 +8,7 @@ import {
   SelectablePeoplePicker,
   SelectablePeoplePickerRef,
 } from '@components/SelectablePeoplePicker'
+import { SuggestionsPane } from '@components/SplitForm/SuggestionsPane'
 import { getAllGroupMembers } from '@database/getAllGroupMembers'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
@@ -20,7 +21,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutRectangle, ScrollView, View } from 'react-native'
-import { GroupInfo, TranslatableError, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, TranslatableError, UserWithDisplayName } from 'shared'
 
 function getInitialEntries(user: UserWithDisplayName): PersonEntry[] {
   const savedParticipants = getSplitCreationContext().participants
@@ -51,7 +52,7 @@ function ParticipantsPicker({
   groupInfo,
 }: {
   user: UserWithDisplayName
-  groupInfo: GroupInfo
+  groupInfo: GroupUserInfo
 }) {
   const router = useRouter()
   const insets = useModalScreenInsets()
@@ -137,9 +138,24 @@ function ParticipantsPicker({
           flexGrow: 1,
           paddingBottom: 100,
           paddingTop: insets.top + 16,
+          gap: 12,
         }}
         keyboardShouldPersistTaps='handled'
       >
+        {!useSelectablePicker && (
+          <SuggestionsPane
+            groupInfo={groupInfo}
+            hiddenIds={entries.map((entry) => entry.user?.id).filter((id) => id !== undefined)}
+            onSelect={(user) => {
+              setEntries([
+                ...entries.filter((entry) => entry.user || entry.entry),
+                { user, entry: user.email ?? '', selected: false },
+                { entry: '' },
+              ])
+            }}
+          />
+        )}
+
         <Pane
           icon='group'
           title={t('splitInfo.participants')}
