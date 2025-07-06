@@ -62,7 +62,8 @@ export function EntriesPane({
             <View
               style={[
                 {
-                  paddingBottom: formState.entries.length - 1 === index ? 8 : 4,
+                  zIndex: formState.entries.length - index,
+                  paddingBottom: formState.entries.length - 1 === index ? 8 : 0,
                   backgroundColor: theme.colors.surfaceContainer,
                   borderRadius: 4,
                   marginBottom: 2,

@@ -341,7 +341,7 @@
   },
 
   "splitValidation": {
-    "atLeastTwoEntries": "At least two entries are required",
+    "atLeastTwoEntries": "At least two people are required",
     "youNeedToFillBothFields": "You need to fill both fields in the row",
     "amountsMustBeNumbers": "Amounts must be numbers",
     "amountMustBeGreaterThanZero": "Amount must be greater than 0",
@@ -349,6 +349,7 @@
     "amountMustBeNumber": "Amount must be a number",
     "titleIsRequired": "Title is required",
     "titleIsTooLong": "Title is too long",
+    "thePayerMustBeSelected": "The payer must be selected",
     "thePayerDataMustBeFilledIn": "The payer data must be filled in",
     "entriesMustBeUnique": "All users must be unique",
     "amountsMustBePositive": "Amounts must be positive",

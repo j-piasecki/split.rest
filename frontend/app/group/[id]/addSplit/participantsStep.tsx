@@ -4,7 +4,12 @@ import { Form } from '@components/Form'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
+import {
+  SelectablePeoplePicker,
+  SelectablePeoplePickerRef,
+} from '@components/SelectablePeoplePicker'
 import { getAllGroupMembers } from '@database/getAllGroupMembers'
+import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
@@ -15,7 +20,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutRectangle, ScrollView, View } from 'react-native'
-import { TranslatableError, UserWithDisplayName } from 'shared'
+import { GroupInfo, TranslatableError, UserWithDisplayName } from 'shared'
 
 function getInitialEntries(user: UserWithDisplayName): PersonEntry[] {
   const savedParticipants = getSplitCreationContext().participants
@@ -41,18 +46,26 @@ function getInitialEntries(user: UserWithDisplayName): PersonEntry[] {
   return [{ user: user, entry: user.email ?? '', selected: true }, { entry: '' }]
 }
 
-function ParticipansPicker({ user }: { user: UserWithDisplayName }) {
+function ParticipantsPicker({
+  user,
+  groupInfo,
+}: {
+  user: UserWithDisplayName
+  groupInfo: GroupInfo
+}) {
   const router = useRouter()
   const insets = useModalScreenInsets()
   const scrollViewRef = useRef<ScrollView>(null)
   const paneLayout = useRef<LayoutRectangle | null>(null)
+  const selectablePeoplePickerRef = useRef<SelectablePeoplePickerRef>(null)
   const { t } = useTranslation()
-  const { id } = useLocalSearchParams()
-  const { data: permissions } = useGroupPermissions(Number(id), user.id)
+  const { data: permissions } = useGroupPermissions(groupInfo.id, user.id)
 
   const [waiting, setWaiting] = useState(false)
   const [entries, setEntries] = useState<PersonEntry[]>(getInitialEntries(user))
   const [error, setError] = useTranslatedError()
+
+  const useSelectablePicker = groupInfo.memberCount <= 16
 
   function submit() {
     const userEntries = entries
@@ -67,7 +80,13 @@ function ParticipansPicker({ user }: { user: UserWithDisplayName }) {
       return
     }
 
-    const payer = userEntries.find((entry) => entry.selected)?.user
+    const payerEntry = userEntries.find((entry) => entry.selected)
+    if (!payerEntry) {
+      setError(new TranslatableError('splitValidation.thePayerMustBeSelected'))
+      return
+    }
+
+    const payer = payerEntry?.user
     if (!payer) {
       setError(new TranslatableError('splitValidation.thePayerDataMustBeFilledIn'))
       return
@@ -77,16 +96,21 @@ function ParticipansPicker({ user }: { user: UserWithDisplayName }) {
 
     getSplitCreationContext().paidById = payer.id
 
-    router.navigate(`/group/${id}/addSplit/summary`)
+    router.navigate(`/group/${groupInfo.id}/addSplit/summary`)
   }
 
   async function addAllMembers() {
+    if (useSelectablePicker) {
+      selectablePeoplePickerRef.current?.selectAll()
+      return
+    }
+
     if (waiting) {
       return
     }
 
     setWaiting(true)
-    const members = await getAllGroupMembers(Number(id))
+    const members = await getAllGroupMembers(groupInfo.id)
     setEntries(
       members.map((member) => ({
         user: member,
@@ -129,19 +153,30 @@ function ParticipansPicker({ user }: { user: UserWithDisplayName }) {
           collapseIcon='addAllMembers'
           onCollapseChange={permissions?.canReadMembers() ? addAllMembers : undefined}
         >
-          <Form autofocus={getSplitCreationContext().participants === null} onSubmit={submit}>
-            <PeoplePicker
-              groupId={Number(id)}
+          {useSelectablePicker ? (
+            <SelectablePeoplePicker
+              groupId={groupInfo.id}
+              shimmerCount={groupInfo.memberCount}
+              onEntriesChange={setEntries}
+              ref={selectablePeoplePickerRef}
               entries={entries}
-              selectable
-              onEntriesChange={(entries) => {
-                setEntries(entries)
-                setError(null)
-              }}
-              parentLayout={paneLayout}
-              scrollRef={scrollViewRef}
+              pickablePayer={true}
             />
-          </Form>
+          ) : (
+            <Form autofocus={getSplitCreationContext().participants === null} onSubmit={submit}>
+              <PeoplePicker
+                groupId={groupInfo.id}
+                entries={entries}
+                selectable
+                onEntriesChange={(entries) => {
+                  setEntries(entries)
+                  setError(null)
+                }}
+                parentLayout={paneLayout}
+                scrollRef={scrollViewRef}
+              />
+            </Form>
+          )}
         </Pane>
       </ScrollView>
 
@@ -162,6 +197,7 @@ export default function Modal() {
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
   const user = useAuth()
+  const { data: groupInfo } = useGroupInfo(Number(id))
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
 
   return (
@@ -172,7 +208,7 @@ export default function Modal() {
       opaque={false}
       slideAnimation={false}
     >
-      {memberInfo && <ParticipansPicker user={memberInfo} />}
+      {memberInfo && groupInfo && <ParticipantsPicker user={memberInfo} groupInfo={groupInfo} />}
     </ModalScreen>
   )
 }

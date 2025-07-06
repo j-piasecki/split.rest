@@ -61,8 +61,8 @@ export function SplitEntry({
         flexDirection: 'row',
         alignItems: 'center',
         position: 'relative',
-        zIndex: formState.entries.length - index,
         paddingLeft: 16,
+        paddingVertical: 4,
       }}
     >
       {showPayerSelector && (

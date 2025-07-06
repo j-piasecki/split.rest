@@ -57,21 +57,19 @@ export function TextInputUserPicker({
             alignItems: 'center',
             marginHorizontal: 4,
             paddingVertical: 8,
-            marginTop: 4,
-            borderBottomWidth: 1,
-            borderBottomColor: theme.colors.outlineVariant,
           }}
         >
-          <ProfilePicture userId={user.id} size={isSmallScreen ? 20 : 24} />
+          <ProfilePicture userId={user.id} size={24} />
           <View
             style={{
               flex: 1,
               marginLeft: 6,
+              justifyContent: 'center',
             }}
           >
             <Text
               style={{
-                flex: 1,
+                width: '100%',
                 color: theme.colors.onSurface,
                 fontSize: isSmallScreen ? 16 : 18,
                 fontWeight: 600,
@@ -89,7 +87,7 @@ export function TextInputUserPicker({
             {user.displayName && (
               <Text
                 style={{
-                  flex: 1,
+                  width: '100%',
                   color: theme.colors.outline,
                   fontSize: 10,
                   fontWeight: 600,

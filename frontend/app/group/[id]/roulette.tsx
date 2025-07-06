@@ -5,9 +5,14 @@ import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { PeoplePicker, PersonEntry } from '@components/PeoplePicker'
 import { ProfilePicture } from '@components/ProfilePicture'
+import {
+  SelectablePeoplePicker,
+  SelectablePeoplePickerRef,
+} from '@components/SelectablePeoplePicker'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { getAllGroupMembers } from '@database/getAllGroupMembers'
+import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
@@ -22,20 +27,21 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, LayoutRectangle, Platform, ScrollView, View } from 'react-native'
 import Animated, { LinearTransition } from 'react-native-reanimated'
-import { TranslatableError, UserWithDisplayName } from 'shared'
+import { GroupInfo, TranslatableError, UserWithDisplayName } from 'shared'
 
 interface RouletteProps {
-  groupId: number
+  groupInfo: GroupInfo
   setQuery: (result: PersonEntry[]) => void
   user: UserWithDisplayName
 }
 
-function Roulette({ groupId, setQuery, user }: RouletteProps) {
+function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
   const insets = useModalScreenInsets()
   const scrollViewRef = useRef<ScrollView>(null)
   const paneLayout = useRef<LayoutRectangle | null>(null)
+  const selectablePeoplePickerRef = useRef<SelectablePeoplePickerRef>(null)
   const { t } = useTranslation()
-  const { data: permissions } = useGroupPermissions(groupId)
+  const { data: permissions } = useGroupPermissions(groupInfo.id)
   const [entries, setEntries] = useState<PersonEntry[]>([
     { user: user, entry: user.email ?? '' },
     { entry: '' },
@@ -43,13 +49,20 @@ function Roulette({ groupId, setQuery, user }: RouletteProps) {
   const [error, setError] = useTranslatedError()
   const [waiting, setWaiting] = useState(false)
 
+  const useSelectablePicker = groupInfo.memberCount <= 16
+
   async function addAllMembers() {
+    if (useSelectablePicker) {
+      selectablePeoplePickerRef.current?.selectAll()
+      return
+    }
+
     if (waiting) {
       return
     }
 
     setWaiting(true)
-    const allMembers = await getAllGroupMembers(groupId)
+    const allMembers = await getAllGroupMembers(groupInfo.id)
     const memberEntries = allMembers.map((member) => ({
       user: member,
       entry: member.email ?? '',
@@ -105,15 +118,25 @@ function Roulette({ groupId, setQuery, user }: RouletteProps) {
             }
           }}
         >
-          <Form autofocus onSubmit={submit}>
-            <PeoplePicker
-              groupId={groupId}
-              entries={entries}
+          {useSelectablePicker ? (
+            <SelectablePeoplePicker
+              groupId={groupInfo.id}
+              shimmerCount={groupInfo.memberCount}
               onEntriesChange={setEntries}
-              parentLayout={paneLayout}
-              scrollRef={scrollViewRef}
+              entries={entries}
+              ref={selectablePeoplePickerRef}
             />
-          </Form>
+          ) : (
+            <Form autofocus onSubmit={submit}>
+              <PeoplePicker
+                groupId={groupInfo.id}
+                entries={entries}
+                onEntriesChange={setEntries}
+                parentLayout={paneLayout}
+                scrollRef={scrollViewRef}
+              />
+            </Form>
+          )}
         </Pane>
       </ScrollView>
 
@@ -208,12 +231,12 @@ function Result({ query, groupId, setQuery }: ResultProps) {
                 >
                   <ProfilePicture userId={user.id} size={28} />
                   <View style={{ flexDirection: 'column' }}>
-                    <Text style={{ fontSize: 18, fontWeight: 800, color: theme.colors.onSurface }}>
+                    <Text style={{ fontSize: 18, fontWeight: 700, color: theme.colors.onSurface }}>
                       {user.displayName ?? user.name}
                     </Text>
 
                     {user.displayName && (
-                      <Text style={{ fontSize: 10, fontWeight: 600, color: theme.colors.outline }}>
+                      <Text style={{ fontSize: 12, fontWeight: 600, color: theme.colors.outline }}>
                         {user.name}
                       </Text>
                     )}
@@ -260,6 +283,7 @@ export default function Modal() {
   const { t } = useTranslation()
   const theme = useTheme()
   const user = useAuth()
+  const { data: groupInfo } = useGroupInfo(Number(id))
   const { data: permissions } = useGroupPermissions(Number(id))
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
   const [query, setQuery] = useState<PersonEntry[] | null>(null)
@@ -268,12 +292,12 @@ export default function Modal() {
 
   return (
     <ModalScreen returnPath={`/group/${id}`} title={t('screenName.roulette')} maxWidth={500}>
-      {!memberInfo && (
+      {(!memberInfo || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
           <ActivityIndicator color={theme.colors.onSurface} />
         </View>
       )}
-      {memberInfo && (
+      {memberInfo && groupInfo && (
         <>
           {!canAccessRoulette && (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
@@ -283,7 +307,7 @@ export default function Modal() {
             </View>
           )}
           {canAccessRoulette && query === null && (
-            <Roulette groupId={Number(id)} setQuery={setQuery} user={memberInfo} />
+            <Roulette groupInfo={groupInfo} setQuery={setQuery} user={memberInfo} />
           )}
           {canAccessRoulette && query !== null && (
             <Result groupId={Number(id)} query={query} setQuery={setQuery} />
