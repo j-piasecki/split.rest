@@ -5,7 +5,8 @@ import { useTheme } from '@styling/theme'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Pressable, StyleSheet, View } from 'react-native'
-import { LanguageTranslationKey } from 'shared'
+import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated'
+import { LanguageTranslationKey, TranslatableError } from 'shared'
 
 export interface ConfirmationModalProps {
   visible: boolean
@@ -34,7 +35,7 @@ export function ConfirmationModal({
 }: ConfirmationModalProps) {
   const theme = useTheme()
   const { t } = useTranslation()
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [isWaiting, setIsWaiting] = useState(false)
 
   return (
     <Modal
@@ -45,11 +46,19 @@ export function ConfirmationModal({
       onRequestClose={onClose}
     >
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Pressable
-          style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.7)' }]}
-          onPress={onClose}
-        />
-        <View
+        <Animated.View
+          style={StyleSheet.absoluteFill}
+          entering={FadeIn.duration(200)}
+          exiting={FadeOut.duration(200)}
+        >
+          <Pressable
+            style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.7)' }]}
+            onPress={onClose}
+          />
+        </Animated.View>
+        <Animated.View
+          entering={FadeInDown.duration(200)}
+          exiting={FadeOutDown.duration(200)}
           style={{
             backgroundColor: theme.colors.surface,
             padding: 24,
@@ -66,7 +75,13 @@ export function ConfirmationModal({
           )}
 
           <View
-            style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 16, marginTop: 16 }}
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              gap: 16,
+              marginTop: 16,
+            }}
           >
             {(cancelText || cancelIcon) && (
               <Button
@@ -80,25 +95,29 @@ export function ConfirmationModal({
             <Button
               title={t(confirmText)}
               leftIcon={confirmIcon}
-              isLoading={isDeleting}
+              isLoading={isWaiting}
               style={{ flexGrow: 1 }}
               destructive={destructive}
               onPress={async () => {
-                setIsDeleting(true)
+                setIsWaiting(true)
                 onConfirm?.()
                   .then(() => {
                     onClose?.()
                   })
-                  .catch(() => {
-                    alert(t('api.auth.tryAgain'))
+                  .catch((e) => {
+                    if (e instanceof TranslatableError) {
+                      alert(t(e.message))
+                    } else {
+                      alert(t('api.auth.tryAgain'))
+                    }
                   })
                   .finally(() => {
-                    setIsDeleting(false)
+                    setIsWaiting(false)
                   })
               }}
             />
           </View>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   )
