@@ -227,6 +227,12 @@ export class AppController {
       throw new BadRequestException('api.invalidArguments')
     }
 
+    // @ts-expect-error TODO: remove this once deployed for a while
+    if (args.startAfter !== undefined) {
+      // @ts-expect-error TODO: remove this once deployed for a while
+      args.startAfterId = args.startAfter
+    }
+
     return await this.appService.getUserGroups(request.user.sub, args)
   }
 
