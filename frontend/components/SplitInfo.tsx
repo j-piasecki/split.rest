@@ -27,7 +27,6 @@ import {
 import {
   GroupUserInfo,
   LanguageTranslationKey,
-  SplitType,
   SplitWithUsers,
   UserWithPendingBalanceChange,
 } from 'shared'
