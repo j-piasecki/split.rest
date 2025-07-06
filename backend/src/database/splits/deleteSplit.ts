@@ -2,7 +2,7 @@ import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { splitExists } from '../utils/splitExists'
 import { Pool } from 'pg'
-import { DeleteSplitArguments } from 'shared'
+import { DeleteSplitArguments, SplitType } from 'shared'
 
 export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSplitArguments) {
   const client = await pool.connect()
@@ -19,8 +19,8 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
     }
 
     const splitInfo = (
-      await client.query<{ paid_by: string; created_by: string; total: string }>(
-        'SELECT paid_by, created_by, total FROM splits WHERE group_id = $1 AND id = $2',
+      await client.query<{ paid_by: string; created_by: string; total: string; type: number }>(
+        'SELECT paid_by, created_by, total, type FROM splits WHERE group_id = $1 AND id = $2',
         [args.groupId, args.splitId]
       )
     ).rows[0]
@@ -40,7 +40,7 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
     }
 
     await client.query('UPDATE groups SET total = total - $1, last_update = $2 WHERE id = $3', [
-      splitInfo.total,
+      (splitInfo.type & SplitType.SettleUp) !== 0 ? 0 : splitInfo.total,
       Date.now(),
       args.groupId,
     ])
