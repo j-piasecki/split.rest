@@ -1,5 +1,6 @@
 import { DetailsPane } from './DetailsPane'
 import { EntriesPane } from './EntriesPane'
+import { SuggestionsPane } from './SuggestionsPane'
 import { FormData, SplitEntryData, useFormData } from './formData'
 import { Button } from '@components/Button'
 import { CalendarPane } from '@components/CalendarPane'
@@ -22,6 +23,7 @@ export interface SplitFormProps {
   error?: string | null
   showDetails?: boolean
   showCalendar?: boolean
+  showSuggestions?: boolean
   buttonIcon?: IconName
   buttonTitle?: LanguageTranslationKey
   buttonIconLocation?: 'left' | 'right'
@@ -43,6 +45,7 @@ export function SplitForm({
   cleanError,
   showDetails = true,
   showCalendar = true,
+  showSuggestions = true,
   buttonIcon = 'save',
   buttonTitle = 'form.save',
   buttonIconLocation = 'left',
@@ -129,6 +132,22 @@ export function SplitForm({
             }}
             showDateOnHeader
             startCollapsed
+          />
+        )}
+
+        {showSuggestions && (
+          <SuggestionsPane
+            groupInfo={groupInfo}
+            hiddenIds={formState.entries
+              .map((entry) => entry.user?.id)
+              .filter((id) => id !== undefined)}
+            onSelect={(user) => {
+              updateForm({
+                type: 'setEntries',
+                paidByIndex: formState.paidByIndex,
+                entries: [...formState.entries, { user, entry: user.email ?? '', amount: '' }],
+              })
+            }}
           />
         )}
 
