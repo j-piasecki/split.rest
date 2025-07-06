@@ -341,7 +341,7 @@
   },
 
   "splitValidation": {
-    "atLeastTwoEntries": "At least two entries are required",
+    "atLeastTwoEntries": "At least two people are required",
     "youNeedToFillBothFields": "You need to fill both fields in the row",
     "amountsMustBeNumbers": "Amounts must be numbers",
     "amountMustBeGreaterThanZero": "Amount must be greater than 0",
