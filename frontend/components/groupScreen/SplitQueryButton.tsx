@@ -17,7 +17,7 @@ export function SplitQueryButton() {
   const groupId = Number(id)
   const query = useSplitQueryConfig(groupId)
   const [pressed, setPressed] = useState(false)
-  const [transitionEnabled, setTransitionEnabled] = useState(true)
+  const [transitionEnabled, setTransitionEnabled] = useState(false)
 
   const queryApplied = query !== defaultQueryConfig
 
