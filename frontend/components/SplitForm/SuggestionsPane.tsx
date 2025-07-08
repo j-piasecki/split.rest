@@ -72,6 +72,7 @@ function Suggestion({
           minWidth: 96,
           maxWidth: 160,
           alignItems: 'center',
+          justifyContent: 'center',
           overflow: 'hidden',
           backgroundColor: theme.colors.surfaceContainer,
         }}
