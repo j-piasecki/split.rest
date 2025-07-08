@@ -112,7 +112,7 @@ export function SplitForm({
       <ScrollView
         ref={scrollRef}
         style={{ flex: 1 }}
-        contentContainerStyle={[{ paddingBottom: 100, gap: 12 }, style]}
+        contentContainerStyle={[{ paddingBottom: 128, gap: 12 }, style]}
         keyboardShouldPersistTaps='handled'
       >
         {showDetails && (

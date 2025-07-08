@@ -136,7 +136,7 @@ function ParticipantsPicker({
         style={{ flex: 1 }}
         contentContainerStyle={{
           flexGrow: 1,
-          paddingBottom: 100,
+          paddingBottom: 128,
           paddingTop: insets.top + 16,
           gap: 12,
         }}

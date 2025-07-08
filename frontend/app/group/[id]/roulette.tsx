@@ -96,7 +96,7 @@ function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
         ref={scrollViewRef}
         style={{ flex: 1 }}
         contentContainerStyle={{
-          paddingBottom: 100,
+          paddingBottom: 128,
           paddingLeft: insets.left + 12,
           paddingRight: insets.right + 12,
           gap: 12,

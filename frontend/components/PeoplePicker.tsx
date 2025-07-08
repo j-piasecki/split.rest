@@ -55,89 +55,99 @@ function PersonRow({
       onLayout={(event) => {
         layout.current = event.nativeEvent.layout
       }}
-      key={index}
       style={{
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        zIndex: entries.length - index,
-        paddingLeft: 16,
-        paddingRight: 2,
+        backgroundColor: theme.colors.surfaceContainer,
+        paddingTop: 4,
+        paddingBottom: entries.length - 1 === index ? 12 : 8,
+        borderRadius: 4,
+        borderBottomLeftRadius: entries.length - 1 === index ? 16 : 4,
+        borderBottomRightRadius: entries.length - 1 === index ? 16 : 4,
       }}
     >
-      {selectable && (
-        <Pressable
-          disabled={entry.selected || entry.user === undefined}
-          onPress={() => setEntries(entries.map((e, i) => ({ ...e, selected: i === index })))}
-          style={{ marginRight: 8 }}
-          tabIndex={-1}
-        >
-          <Icon
-            name='payments'
-            size={24}
-            color={entry.selected ? theme.colors.secondary : theme.colors.outlineVariant}
-          />
-        </Pressable>
-      )}
-
-      <TextInputUserPicker
-        groupId={groupId}
-        value={entry.user?.email ?? entry.entry}
-        user={entry.user}
-        selectTextOnFocus
-        focusIndex={index}
-        filterSuggestions={(suggestions) =>
-          suggestions.filter(
-            (suggestion) =>
-              suggestion.email === entry.entry ||
-              entries.find(
-                (e) => e.entry === suggestion.email || e.user?.email === suggestion.email
-              ) === undefined
-          )
-        }
-        onChangeText={(val) => {
-          const newEntries = [...entries]
-          newEntries[index] = { entry: val, selected: entry.selected, user: entry.user }
-
-          setEntries(newEntries)
-        }}
-        onSuggestionSelect={(user) => {
-          const newEntries = [...entries]
-          newEntries[index] = {
-            user: user,
-            selected: entry.selected,
-            entry: user.email ?? '',
-          }
-
-          setEntries(newEntries)
-        }}
-        onClearSelection={() => {
-          const newEntries = [...entries]
-          newEntries[index] = {
-            entry: entry.entry,
-            selected: entry.selected,
-            user: undefined,
-          }
-
-          setEntries(newEntries)
-        }}
-        containerStyle={{ flex: 1 }}
-        onFocus={scrollToThis}
-      />
       <View
         style={{
-          transform: [{ translateY: 2 }],
-          opacity: deleteVisible ? 1 : 0,
+          flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+          zIndex: entries.length - index,
+          paddingLeft: 16,
+          paddingRight: 2,
         }}
       >
-        <RoundIconButton
-          disabled={!deleteVisible}
-          icon='close'
-          size={20}
-          onPress={() => {
-            setEntries(entries.filter((_, i) => i !== index))
+        {selectable && (
+          <Pressable
+            disabled={entry.selected || entry.user === undefined}
+            onPress={() => setEntries(entries.map((e, i) => ({ ...e, selected: i === index })))}
+            style={{ marginRight: 8 }}
+            tabIndex={-1}
+          >
+            <Icon
+              name='payments'
+              size={24}
+              color={entry.selected ? theme.colors.secondary : theme.colors.outlineVariant}
+            />
+          </Pressable>
+        )}
+
+        <TextInputUserPicker
+          groupId={groupId}
+          value={entry.user?.email ?? entry.entry}
+          user={entry.user}
+          selectTextOnFocus
+          focusIndex={index}
+          filterSuggestions={(suggestions) =>
+            suggestions.filter(
+              (suggestion) =>
+                suggestion.email === entry.entry ||
+                entries.find(
+                  (e) => e.entry === suggestion.email || e.user?.email === suggestion.email
+                ) === undefined
+            )
+          }
+          onChangeText={(val) => {
+            const newEntries = [...entries]
+            newEntries[index] = { entry: val, selected: entry.selected, user: entry.user }
+
+            setEntries(newEntries)
           }}
+          onSuggestionSelect={(user) => {
+            const newEntries = [...entries]
+            newEntries[index] = {
+              user: user,
+              selected: entry.selected,
+              entry: user.email ?? '',
+            }
+
+            setEntries(newEntries)
+          }}
+          onClearSelection={() => {
+            const newEntries = [...entries]
+            newEntries[index] = {
+              entry: entry.entry,
+              selected: entry.selected,
+              user: undefined,
+            }
+
+            setEntries(newEntries)
+          }}
+          containerStyle={{ flex: 1 }}
+          onFocus={scrollToThis}
         />
+        <View
+          style={{
+            transform: [{ translateY: 2 }],
+            opacity: deleteVisible ? 1 : 0,
+          }}
+        >
+          <RoundIconButton
+            disabled={!deleteVisible}
+            icon='close'
+            size={20}
+            onPress={() => {
+              setEntries(entries.filter((_, i) => i !== index))
+            }}
+          />
+        </View>
       </View>
     </View>
   )
@@ -160,8 +170,6 @@ export function PeoplePicker({
   parentLayout,
   scrollRef,
 }: PeoplePickerProps) {
-  const theme = useTheme()
-
   function cleanupEntries(entries: PersonEntry[]): PersonEntry[] {
     const newEntries = entries.filter(
       (entry) => entry.user !== undefined || entry.entry.trim() !== ''
@@ -188,28 +196,17 @@ export function PeoplePicker({
     <View style={{ gap: 2 }}>
       {entries.map((entry, index) => {
         return (
-          <View
+          <PersonRow
             key={index}
-            style={{
-              backgroundColor: theme.colors.surfaceContainer,
-              paddingTop: 4,
-              paddingBottom: entries.length - 1 === index ? 12 : 8,
-              borderRadius: 4,
-              borderBottomLeftRadius: entries.length - 1 === index ? 16 : 4,
-              borderBottomRightRadius: entries.length - 1 === index ? 16 : 4,
-            }}
-          >
-            <PersonRow
-              groupId={groupId}
-              entries={entries}
-              setEntries={setEntries}
-              selectable={selectable}
-              index={index}
-              entry={entry}
-              parentLayout={parentLayout}
-              scrollRef={scrollRef}
-            />
-          </View>
+            groupId={groupId}
+            entries={entries}
+            setEntries={setEntries}
+            selectable={selectable}
+            index={index}
+            entry={entry}
+            parentLayout={parentLayout}
+            scrollRef={scrollRef}
+          />
         )
       })}
     </View>

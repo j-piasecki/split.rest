@@ -57,101 +57,119 @@ export function SplitEntry({
       onLayout={(event) => {
         layout.current = event.nativeEvent.layout
       }}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        position: 'relative',
-        paddingLeft: 16,
-        paddingVertical: 4,
-      }}
+      style={[
+        {
+          zIndex: formState.entries.length - index,
+          paddingBottom: formState.entries.length - 1 === index ? 8 : 0,
+          backgroundColor: theme.colors.surfaceContainer,
+          borderRadius: 4,
+          marginBottom: 2,
+        },
+        index === formState.entries.length - 1 && {
+          borderBottomLeftRadius: 16,
+          borderBottomRightRadius: 16,
+        },
+      ]}
     >
-      {showPayerSelector && (
-        <Pressable
-          disabled={formState.paidByIndex === index || entry.user === undefined}
-          onPress={() => updateForm({ type: 'setPaidBy', index })}
-          style={{ marginRight: 8 }}
-          tabIndex={-1}
-        >
-          <Icon
-            name='payments'
-            size={24}
-            color={
-              formState.paidByIndex === index ? theme.colors.secondary : theme.colors.outlineVariant
-            }
-          />
-        </Pressable>
-      )}
-
-      <TextInputUserPicker
-        groupId={groupId}
-        value={entry.user?.email ?? entry.entry}
-        selectTextOnFocus
-        focusIndex={focusIndex}
-        containerStyle={{ flex: 5 }}
-        user={entry.user}
-        onClearSelection={() => updateForm({ type: 'setUser', index, user: undefined })}
-        onSuggestionSelect={(user) => {
-          updateForm({ type: 'setUser', index, user })
-          amountInputRef.current?.focus()
-        }}
-        onChangeText={(val) => {
-          updateForm({ type: 'setEmail', index, email: val })
-        }}
-        onFocus={() => {
-          scrollToThis()
-          updateForm({ type: 'clearFocusOnMount', index })
-        }}
-        filterSuggestions={(users) =>
-          users.filter(
-            (u) =>
-              u.email === entry.entry ||
-              formState.entries.every((e) => e.user === undefined || e.user.email !== u.email)
-          )
-        }
-      />
-
-      <TextInput
-        placeholder={t('form.amount')}
-        value={entry.amount}
-        ref={amountInputRef}
-        selectTextOnFocus
-        focusIndex={focusIndex === undefined ? undefined : focusIndex + 1}
-        keyboardType={
-          // TODO: do a nice ui for negative numbers, ios doesn't have a numeric keyboard with a minus sign WTF?
-          getSplitCreationContext().splitMethod === SplitMethod.BalanceChanges
-            ? Platform.OS === 'android'
-              ? 'phone-pad'
-              : 'numbers-and-punctuation'
-            : 'decimal-pad'
-        }
-        onChangeText={(val) => {
-          val = val.replace(',', '.')
-          updateForm({ type: 'setAmount', index, amount: val })
-        }}
-        style={{ flex: 2, margin: 4, maxWidth: 72 }}
-        onFocus={scrollToThis}
-        onBlur={() => {
-          const amountNum = Number(entry.amount)
-          if (!Number.isNaN(amountNum) && entry.amount.length > 0) {
-            updateForm({ type: 'setAmount', index, amount: CurrencyUtils.format(amountNum) })
-          }
-        }}
-      />
-
       <View
         style={{
-          opacity: showDeleteButton ? 1 : 0,
-          transform: [{ translateY: 2 }],
+          flexDirection: 'row',
+          alignItems: 'center',
+          position: 'relative',
+          paddingLeft: 16,
+          paddingVertical: 4,
         }}
       >
-        <RoundIconButton
-          disabled={!showDeleteButton}
-          icon='close'
-          size={20}
-          onPress={() => updateForm({ type: 'remove', index })}
-          style={{ marginTop: 0, padding: 4 }}
-          tabIndex={-1}
+        {showPayerSelector && (
+          <Pressable
+            disabled={formState.paidByIndex === index || entry.user === undefined}
+            onPress={() => updateForm({ type: 'setPaidBy', index })}
+            style={{ marginRight: 8 }}
+            tabIndex={-1}
+          >
+            <Icon
+              name='payments'
+              size={24}
+              color={
+                formState.paidByIndex === index
+                  ? theme.colors.secondary
+                  : theme.colors.outlineVariant
+              }
+            />
+          </Pressable>
+        )}
+
+        <TextInputUserPicker
+          groupId={groupId}
+          value={entry.user?.email ?? entry.entry}
+          selectTextOnFocus
+          focusIndex={focusIndex}
+          containerStyle={{ flex: 5 }}
+          user={entry.user}
+          onClearSelection={() => updateForm({ type: 'setUser', index, user: undefined })}
+          onSuggestionSelect={(user) => {
+            updateForm({ type: 'setUser', index, user })
+            amountInputRef.current?.focus()
+          }}
+          onChangeText={(val) => {
+            updateForm({ type: 'setEmail', index, email: val })
+          }}
+          onFocus={() => {
+            scrollToThis()
+            updateForm({ type: 'clearFocusOnMount', index })
+          }}
+          filterSuggestions={(users) =>
+            users.filter(
+              (u) =>
+                u.email === entry.entry ||
+                formState.entries.every((e) => e.user === undefined || e.user.email !== u.email)
+            )
+          }
         />
+
+        <TextInput
+          placeholder={t('form.amount')}
+          value={entry.amount}
+          ref={amountInputRef}
+          selectTextOnFocus
+          focusIndex={focusIndex === undefined ? undefined : focusIndex + 1}
+          keyboardType={
+            // TODO: do a nice ui for negative numbers, ios doesn't have a numeric keyboard with a minus sign WTF?
+            getSplitCreationContext().splitMethod === SplitMethod.BalanceChanges
+              ? Platform.OS === 'android'
+                ? 'phone-pad'
+                : 'numbers-and-punctuation'
+              : 'decimal-pad'
+          }
+          onChangeText={(val) => {
+            val = val.replace(',', '.')
+            updateForm({ type: 'setAmount', index, amount: val })
+          }}
+          style={{ flex: 2, margin: 4, maxWidth: 72 }}
+          onFocus={scrollToThis}
+          onBlur={() => {
+            const amountNum = Number(entry.amount)
+            if (!Number.isNaN(amountNum) && entry.amount.length > 0) {
+              updateForm({ type: 'setAmount', index, amount: CurrencyUtils.format(amountNum) })
+            }
+          }}
+        />
+
+        <View
+          style={{
+            opacity: showDeleteButton ? 1 : 0,
+            transform: [{ translateY: 2 }],
+          }}
+        >
+          <RoundIconButton
+            disabled={!showDeleteButton}
+            icon='close'
+            size={20}
+            onPress={() => updateForm({ type: 'remove', index })}
+            style={{ marginTop: 0, padding: 4 }}
+            tabIndex={-1}
+          />
+        </View>
       </View>
     </View>
   )
