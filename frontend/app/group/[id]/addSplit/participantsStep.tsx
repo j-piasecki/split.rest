@@ -179,7 +179,7 @@ function ParticipantsPicker({
               pickablePayer={true}
             />
           ) : (
-            <Form autofocus={getSplitCreationContext().participants === null} onSubmit={submit}>
+            <Form onSubmit={submit}>
               <PeoplePicker
                 groupId={groupInfo.id}
                 entries={entries}

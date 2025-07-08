@@ -54,7 +54,7 @@ export function EntriesPane({
         }
       }}
     >
-      <Form autofocus>
+      <Form>
         {formState.entries.map((entry, index) => (
           <SplitEntry
             key={index}
