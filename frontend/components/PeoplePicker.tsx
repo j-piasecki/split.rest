@@ -39,7 +39,7 @@ function PersonRow({
   const deleteVisible = entry.user !== undefined || entry.entry.trim().length > 0
 
   function scrollToThis() {
-    if (layout.current && parentLayout?.current) {
+    if (layout.current && parentLayout?.current && index > 0) {
       const targetScroll = parentLayout.current.y + layout.current.y
       setTimeout(() => {
         scrollRef?.current?.scrollTo({

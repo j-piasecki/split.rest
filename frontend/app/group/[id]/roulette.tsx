@@ -143,7 +143,7 @@ function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
               ref={selectablePeoplePickerRef}
             />
           ) : (
-            <Form onSubmit={submit}>
+            <Form autofocus onSubmit={submit}>
               <PeoplePicker
                 groupId={groupInfo.id}
                 entries={entries}
