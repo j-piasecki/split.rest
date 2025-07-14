@@ -2,15 +2,7 @@ import { Pool } from 'pg'
 import { User } from 'shared'
 import { BadRequestException } from 'src/errors/BadRequestException'
 
-export interface CreateOrUpdateUserResult {
-  emailUpdated: boolean
-  photoUrlUpdated: boolean
-}
-
-export async function createOrUpdateUser(
-  pool: Pool,
-  user: User
-): Promise<CreateOrUpdateUserResult> {
+export async function createOrUpdateUser(pool: Pool, user: User): Promise<void> {
   if (!user.name || !user.email) {
     throw new BadRequestException('api.invalidArguments')
   }
@@ -22,26 +14,23 @@ export async function createOrUpdateUser(
       : (user.photoUrl ?? null)
 
   let previousEmail: string | null = null
-  let previousPhotoUrl: string | null = null
 
   try {
     const result = await pool.query(`SELECT email, photo_url FROM users WHERE id = $1`, [user.id])
     previousEmail = result.rows[0].email
-    previousPhotoUrl = result.rows[0].photo_url
   } catch {}
+
+  if (previousEmail === null && (user.email.length < 3 || !user.email.includes('@'))) {
+    throw new BadRequestException('api.invalidArguments')
+  }
 
   await pool.query(
     `
       INSERT INTO users(id, name, email, created_at, photo_url)
       VALUES ($1, $2, $3, $4, $5)
       ON CONFLICT (id) DO UPDATE
-      SET email = $3, photo_url = $5, deleted = FALSE
+      SET photo_url = $5, deleted = FALSE
     `,
     [user.id, name, user.email, Date.now(), photoUrl]
   )
-
-  return {
-    emailUpdated: previousEmail === null || previousEmail !== user.email,
-    photoUrlUpdated: previousPhotoUrl === null || previousPhotoUrl !== photoUrl,
-  }
 }

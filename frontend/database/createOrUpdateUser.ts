@@ -15,5 +15,5 @@ export async function createOrUpdateUser() {
     deleted: false,
   }
 
-  return await makeRequest('POST', 'createOrUpdateUser', user as unknown as Record<string, string>)
+  await makeRequest('POST', 'createOrUpdateUser', user as unknown as Record<string, string>)
 }
