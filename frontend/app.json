@@ -104,6 +104,14 @@
             "./assets/fonts/Nunito-Italic-VariableFont_wght.ttf"
           ]
         }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "split",
+          "organization": "jakub-piasecki"
+        }
       ]
     ]
   }

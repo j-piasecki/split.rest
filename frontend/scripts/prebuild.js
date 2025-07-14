@@ -62,6 +62,17 @@ function fixIconColor() {
   console.log('icon color fixed for Android')
 }
 
+function fixSentryScriptPath() {
+  const filePath = path.join(process.cwd(), 'ios', 'Split.xcodeproj', 'project.pbxproj')
+  const content = fs.readFileSync(filePath, 'utf8')
+  const newContent = content.replace(
+    'shellScript = "/bin/sh ../node_modules/@sentry/react-native/scripts/sentry-xcode-debug-files.sh";',
+    'shellScript = "/bin/sh ../../node_modules/@sentry/react-native/scripts/sentry-xcode-debug-files.sh";'
+  )
+  fs.writeFileSync(filePath, newContent)
+  console.log('sentry script path fixed for iOS')
+}
+
 // Run the `npx expo prebuild` command with passed arguments
 const expoPrebuild = spawn('npx', ['expo', 'prebuild', ...args], { stdio: 'inherit' })
 
@@ -76,4 +87,5 @@ expoPrebuild.on('close', (code) => {
   ensureBuildFromSource()
   ensureFullDebugSymbols()
   fixIconColor()
+  fixSentryScriptPath()
 })

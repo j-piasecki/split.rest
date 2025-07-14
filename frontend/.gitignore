@@ -1,2 +1,4 @@
 android/
 ios/
+.env.local
+.env.sentry-build-plugin
