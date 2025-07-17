@@ -1,3 +1,4 @@
+import { ActionableSplitsPane } from './ActionableSplitsPane'
 import { GroupActionButtons } from './GroupActionButtons'
 import { Icon } from '@components/Icon'
 import { FullPaneHeader } from '@components/Pane'
@@ -89,19 +90,22 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
       )}
 
       {threeBarLayout && (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: theme.colors.surfaceContainer,
-            paddingHorizontal: 16,
-            paddingVertical: 8,
-            paddingBottom: 16,
-            borderRadius: 4,
-            borderBottomLeftRadius: 16,
-            borderBottomRightRadius: 16,
-          }}
-        >
-          <GroupActionButtons info={info} />
+        <View style={{ flexGrow: 1, gap: 8 }}>
+          <View
+            style={{
+              flexGrow: 1,
+              backgroundColor: theme.colors.surfaceContainer,
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+              paddingBottom: 16,
+              borderRadius: 4,
+              borderBottomLeftRadius: 16,
+              borderBottomRightRadius: 16,
+            }}
+          >
+            <GroupActionButtons info={info} />
+          </View>
+          <ActionableSplitsPane info={info} />
         </View>
       )}
     </View>

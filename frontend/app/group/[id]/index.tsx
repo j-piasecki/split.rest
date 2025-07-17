@@ -2,6 +2,7 @@ import Header, { HEADER_HEIGHT } from '@components/Header'
 import { FullPaneHeader, Pane } from '@components/Pane'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
+import { ActionableSplitsPane } from '@components/groupScreen/ActionableSplitsPane'
 import { GroupInfoPane } from '@components/groupScreen/GroupInfoPane'
 import { GroupSplitsList } from '@components/groupScreen/GroupSplitsList'
 import { MembersButton } from '@components/groupScreen/MembersButton'
@@ -34,6 +35,7 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
         <View style={{ gap: 12 }}>
           <GroupInfoPane info={info} />
           {(!permissions || permissions.canReadMembers()) && <MembersButton info={info} />}
+          <ActionableSplitsPane info={info} />
           <FullPaneHeader
             icon='receipt'
             title={t('tabs.splits')}

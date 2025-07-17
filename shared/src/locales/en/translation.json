@@ -171,6 +171,12 @@
     }
   },
 
+  "actionableSplits": {
+    "title": "Actionable splits",
+    "youOwe": "You need to pay {{amount}}",
+    "youAreOwed": "You will get back {{amount}}"
+  },
+
   "tabs": {
     "group": "Group",
     "splits": "Splits",
