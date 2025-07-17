@@ -172,7 +172,7 @@
   },
 
   "actionableSplits": {
-    "title": "Actionable splits",
+    "title": "Outstanding splits",
     "youOwe": "You need to pay {{amount}}",
     "youAreOwed": "You are getting back {{amount}}"
   },
