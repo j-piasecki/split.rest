@@ -54,7 +54,7 @@ export class AppService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async createOrUpdateUser(user: User) {
-    const result = await this.databaseService.createOrUpdateUser(user)
+    await this.databaseService.createOrUpdateUser(user)
 
     if (user.photoUrl && !fs.existsSync(`public/${user.id}.png`)) {
       try {
@@ -63,8 +63,6 @@ export class AppService {
         console.error(`Failed to download profile picture for ${user.id}`, error)
       }
     }
-
-    return result
   }
 
   async createGroup(userId: string, args: CreateGroupArguments) {
