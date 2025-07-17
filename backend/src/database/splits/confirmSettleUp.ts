@@ -70,16 +70,16 @@ async function dispatchNotifications(
 async function createAndSaveSettleUpSplit(
   client: PoolClient,
   callerId: string,
-  balance: number,
+  total: number,
   entries: BalanceChange[],
   groupId: number,
   currency: string
 ): Promise<SplitInfo> {
-  const splitType = SplitType.SettleUp | (balance > 0 ? SplitType.Inversed : SplitType.Normal)
+  const splitType = SplitType.SettleUp | (total > 0 ? SplitType.Inversed : SplitType.Normal)
 
   const splitId = await createSplitNoTransaction(client, callerId, {
     groupId: groupId,
-    total: Math.abs(balance).toFixed(2),
+    total: Math.abs(total).toFixed(2),
     paidBy: callerId,
     title: 'Settle up',
     timestamp: Date.now(),
@@ -93,7 +93,7 @@ async function createAndSaveSettleUpSplit(
   return {
     id: splitId,
     version: 1,
-    total: Math.abs(balance).toFixed(2),
+    total: Math.abs(total).toFixed(2),
     paidById: callerId,
     createdById: callerId,
     title: 'Settle up',
@@ -150,10 +150,11 @@ export async function confirmSettleUp(
       throw new BadRequestException('api.split.settleUpHashChanged')
     }
 
+    const total = entries.reduce((acc, entry) => acc + Number(entry.change), 0)
     const split = await createAndSaveSettleUpSplit(
       client,
       callerId,
-      balance,
+      total,
       entries,
       args.groupId,
       settleUpData.currency

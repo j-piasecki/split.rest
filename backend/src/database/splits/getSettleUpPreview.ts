@@ -36,7 +36,6 @@ export async function getSettleUpPreview(
       throw new BadRequestException('api.split.cannotSettleUpNeutral')
     }
 
-    const splitType = SplitType.SettleUp | (balance > 0 ? SplitType.Inversed : SplitType.Normal)
     const settleUpData = await loadSettleUpData(client, args.groupId)
     const entries = prepareSettleUp(
       callerId,
@@ -51,11 +50,13 @@ export async function getSettleUpPreview(
     }
 
     const entriesHash = hash(entries, { algorithm: 'sha1', encoding: 'base64' })
+    const total = entries.reduce((acc, entry) => acc + Number(entry.change), 0)
+    const splitType = SplitType.SettleUp | (total > 0 ? SplitType.Inversed : SplitType.Normal)
 
     return {
       id: -1,
       version: 1,
-      total: Math.abs(balance).toFixed(2),
+      total: Math.abs(total).toFixed(2),
       paidById: callerId,
       createdById: callerId,
       title: 'Settle up',
