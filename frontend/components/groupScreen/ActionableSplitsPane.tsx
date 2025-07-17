@@ -8,7 +8,7 @@ import { useAuth } from '@utils/auth'
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, StyleSheet, View } from 'react-native'
+import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import { CurrencyUtils, GroupUserInfo, SplitInfo, isInversedSplit } from 'shared'
 
 function ActionableSplit({
@@ -105,7 +105,7 @@ function ActionableSplit({
   )
 }
 
-export function ActionableSplitsPane({ info }: { info: GroupUserInfo | undefined }) {
+export function ActionableSplitsPane({ info, style }: { info: GroupUserInfo | undefined, style?: StyleProp<ViewStyle> }) {
   const theme = useTheme()
   const user = useAuth()!
   const { t } = useTranslation()
@@ -130,7 +130,7 @@ export function ActionableSplitsPane({ info }: { info: GroupUserInfo | undefined
   }
 
   return (
-    <View>
+    <View style={style}>
       <FullPaneHeader
         icon='payments'
         title={t('actionableSplits.title')}

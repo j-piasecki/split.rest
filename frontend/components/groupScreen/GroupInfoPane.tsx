@@ -94,10 +94,10 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
           <View
             style={{
               flexGrow: 1,
+              flexShrink: 1,
               backgroundColor: theme.colors.surfaceContainer,
               paddingHorizontal: 16,
-              paddingVertical: 8,
-              paddingBottom: 16,
+              paddingVertical: 16,
               borderRadius: 4,
               borderBottomLeftRadius: 16,
               borderBottomRightRadius: 16,
@@ -105,7 +105,7 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
           >
             <GroupActionButtons info={info} />
           </View>
-          <ActionableSplitsPane info={info} />
+          <ActionableSplitsPane info={info} style={{flexGrow: 100}} />
         </View>
       )}
     </View>

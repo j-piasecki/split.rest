@@ -174,7 +174,7 @@
   "actionableSplits": {
     "title": "Actionable splits",
     "youOwe": "You need to pay {{amount}}",
-    "youAreOwed": "You will get back {{amount}}"
+    "youAreOwed": "You are getting back {{amount}}"
   },
 
   "tabs": {
