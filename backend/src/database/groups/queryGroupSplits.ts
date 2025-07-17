@@ -179,6 +179,10 @@ export async function queryGroupSplits(
         SELECT change FROM split_participants 
         WHERE split_participants.split_id = splits.id AND split_participants.user_id = $3 and pending = FALSE
       ), 0) AS user_change,
+      COALESCE((
+        SELECT change FROM split_participants 
+        WHERE split_participants.split_id = splits.id AND split_participants.user_id = $3 and pending = TRUE
+      ), 0) AS pending_change,
       (SELECT EXISTS (
         (SELECT 1 WHERE splits.created_by = $2 OR splits.paid_by = $2)
         UNION
@@ -212,5 +216,6 @@ export async function queryGroupSplits(
     isUserParticipating: row.caller_participating,
     pending: row.pending,
     userChange: row.user_change,
+    pendingChange: row.pending_change,
   }))
 }

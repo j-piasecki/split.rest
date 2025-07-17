@@ -102,6 +102,7 @@ export interface SplitInfo {
   isUserParticipating: boolean
   pending: boolean
   userChange?: string
+  pendingChange?: string
 }
 
 export interface SplitQuery {
