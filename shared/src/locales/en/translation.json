@@ -460,6 +460,7 @@
     "editAuthorText": "<Styled>{{editor}}</Styled> has edited this split",
     "createAuthorText": "By <Styled>{{editor}}</Styled>",
     "hasPaidText": "<Styled>{{payer}}</Styled> has paid <Styled>{{amount}}</Styled>",
+    "hasLentText": "<Styled>{{payer}}</Styled> has lent <Styled>{{amount}}</Styled>",
     "hasSettledUpGaveBack": "<Styled>{{payer}}</Styled> has settled up and given back <Styled>{{amount}}</Styled>",
     "hasSettledUpWillGiveBack": "<Styled>{{payer}}</Styled> has settled up and will give back <Styled>{{amount}}</Styled>",
     "hasSettledUpGetsBack": "<Styled>{{payer}}</Styled> has settled up and got back <Styled>{{amount}}</Styled>",

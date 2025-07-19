@@ -21,6 +21,7 @@ import {
   CurrencyUtils,
   isBalanceChangeSplit,
   isInversedSplit,
+  isLendSplit,
   isSettleUpSplit,
   isTranslatableError,
 } from 'shared'
@@ -633,7 +634,9 @@ export function SplitInfo({
                     : splitInfo.pending
                       ? 'splitInfo.hasSettledUpWillGiveBack'
                       : 'splitInfo.hasSettledUpGaveBack'
-                  : 'splitInfo.hasPaidText'
+                  : isLendSplit(splitInfo.type)
+                    ? 'splitInfo.hasLentText'
+                    : 'splitInfo.hasPaidText'
               }
               values={{
                 payer: paidBy.name,
