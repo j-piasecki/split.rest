@@ -154,6 +154,7 @@ export default function Modal() {
             paddingLeft: insets.left + 12,
             paddingRight: insets.right + 12,
             paddingTop: insets.top + 16,
+            paddingBottom: 16,
             gap: 16,
           }}
         >
@@ -194,6 +195,14 @@ export default function Modal() {
             selected={selectedSplitType === SplitMethod.ExactAmounts}
             onSelect={() => setSelectedSplitType(SplitMethod.ExactAmounts)}
           />
+
+          <SplitTypeCard
+            title={t('splitType.lend')}
+            description={t('splitTypeDescription.lend')}
+            icon='payment'
+            selected={selectedSplitType === SplitMethod.Lend}
+            onSelect={() => setSelectedSplitType(SplitMethod.Lend)}
+          />
         </ScrollView>
 
         <View style={{ paddingLeft: insets.left + 12, paddingRight: insets.right + 12 }}>
@@ -205,7 +214,9 @@ export default function Modal() {
               getSplitCreationContext().splitType =
                 selectedSplitType === SplitMethod.BalanceChanges
                   ? SplitType.BalanceChange
-                  : SplitType.Normal
+                  : selectedSplitType === SplitMethod.Lend
+                    ? SplitType.Lend
+                    : SplitType.Normal
               router.navigate(`/group/${id}/addSplit/detailsStep`)
             }}
           />
