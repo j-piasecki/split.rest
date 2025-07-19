@@ -106,7 +106,7 @@ function Form({ info }: { info: GroupUserInfo }) {
                 })
                 .catch((e) => {
                   if (isTranslatableError(e)) {
-                    snack.show({ message: t(e.message) })
+                    alert(t(e.message))
                   }
                 })
             }}

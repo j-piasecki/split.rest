@@ -81,6 +81,10 @@
       "payeeCompletedEntry": "{{userName}} has marked their entry in {{splitName}} as completed",
       "payerUncompletedEntry": "{{userName}} has marked your entry in {{splitName}} as not completed",
       "payeeUncompletedEntry": "{{userName}} has marked their entry in {{splitName}} as not completed"
+    },
+    "groupSettleUp": {
+      "youOwe": "{{userName}} has settled up {{groupName}}.",
+      "youAreOwed": "{{userName}} has settled up {{groupName}}. Remember to pay back others."
     }
   },
 
