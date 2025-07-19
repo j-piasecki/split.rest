@@ -45,6 +45,7 @@ import {
   SetUserDisplayNameArguments,
   SetUserNameArguments,
   SettleUpArguments,
+  SettleUpGroupArguments,
   SplitType,
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
@@ -90,6 +91,7 @@ import {
   isSetUserDisplayNameArguments,
   isSetUserNameArguments,
   isSettleUpArguments,
+  isSettleUpGroupArguments,
   isUnregisterNotificationTokenArguments,
   isUpdateSplitArguments,
   isUser,
@@ -668,5 +670,15 @@ export class AppController {
     }
 
     return await this.appService.setGroupLocked(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('settleUpGroup')
+  async settleUpGroup(@Req() request: Request, @Body() args: Partial<SettleUpGroupArguments>) {
+    if (!isSettleUpGroupArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.settleUpGroup(request.user.sub, args)
   }
 }

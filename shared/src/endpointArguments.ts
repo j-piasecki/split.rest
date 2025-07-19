@@ -227,3 +227,7 @@ export interface SetGroupLockedArguments {
   groupId: number
   locked: boolean
 }
+
+export interface SettleUpGroupArguments {
+  groupId: number
+}

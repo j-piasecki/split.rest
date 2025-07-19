@@ -10,6 +10,7 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSetGroupLockedMutation } from '@hooks/database/useSetGroupLocked'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
+import { useSettleUpGroup } from '@hooks/database/useSettleUpGroup'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
@@ -27,11 +28,13 @@ function Form({ info }: { info: GroupUserInfo }) {
   const [name, setName] = useState(info.name)
   const [isEditingName, setIsEditingName] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+  const [settleUpModalVisible, setSettleUpModalVisible] = useState(false)
   const { data: permissions } = useGroupPermissions(info.id)
   const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
   const { mutateAsync: setGroupLocked, isPending: isSettingLocked } = useSetGroupLockedMutation(
     info.id
   )
+  const { mutateAsync: settleUpGroup, isPending: isSettingSettledUp } = useSettleUpGroup(info.id)
   const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
 
   return (
@@ -92,6 +95,44 @@ function Form({ info }: { info: GroupUserInfo }) {
         )}
       </View>
       <View style={{ marginTop: 32, gap: 16 }}>
+        {permissions?.canSettleUpGroup() && (
+          <>
+            <ConfirmationModal
+              visible={settleUpModalVisible}
+              onClose={() => setSettleUpModalVisible(false)}
+              onConfirm={async () => {
+                await settleUpGroup()
+                  .then(() => {
+                    snack.show({ message: t('groupSettings.settleUpGroupSuccess') })
+                    if (router.canGoBack()) {
+                      router.back()
+                    } else {
+                      router.replace(`/group/${info.id}`)
+                    }
+                  })
+                  .catch((e) => {
+                    if (isTranslatableError(e)) {
+                      alert(t(e.message))
+                    }
+                  })
+              }}
+              title='groupSettings.settleUpGroupConfirmationText'
+              message='groupSettings.settleUpGroupConfirmationMessage'
+              cancelText='groupSettings.settleUpGroupCancel'
+              cancelIcon='close'
+              confirmText='groupSettings.settleUpGroupConfirm'
+              confirmIcon='check'
+            />
+            <Button
+              title={t('groupSettings.settleUpGroup')}
+              leftIcon='balance'
+              isLoading={isSettingSettledUp}
+              onPress={() => {
+                setSettleUpModalVisible(true)
+              }}
+            />
+          </>
+        )}
         {permissions?.canLockGroup() && (
           <Button
             title={info.locked ? t('groupSettings.unlockGroup') : t('groupSettings.lockGroup')}

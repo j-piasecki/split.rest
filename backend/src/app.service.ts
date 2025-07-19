@@ -44,6 +44,7 @@ import {
   SetUserDisplayNameArguments,
   SetUserNameArguments,
   SettleUpArguments,
+  SettleUpGroupArguments,
   SplitType,
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
@@ -288,5 +289,9 @@ export class AppService {
 
   async setGroupLocked(callerId: string, args: SetGroupLockedArguments) {
     return await this.databaseService.setGroupLocked(callerId, args)
+  }
+
+  async settleUpGroup(callerId: string, args: SettleUpGroupArguments) {
+    return await this.databaseService.settleUpGroup(callerId, args)
   }
 }

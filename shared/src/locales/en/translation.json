@@ -81,6 +81,10 @@
       "payeeCompletedEntry": "{{userName}} has marked their entry in {{splitName}} as completed",
       "payerUncompletedEntry": "{{userName}} has marked your entry in {{splitName}} as not completed",
       "payeeUncompletedEntry": "{{userName}} has marked their entry in {{splitName}} as not completed"
+    },
+    "groupSettleUp": {
+      "youOwe": "{{userName}} has settled up {{groupName}}.",
+      "youAreOwed": "{{userName}} has settled up {{groupName}}. Remember to pay back others."
     }
   },
 
@@ -125,7 +129,8 @@
           "create": "You don't have permission to create invitation links",
           "delete": "You don't have permission to delete invitation links"
         },
-        "lockGroup": "You don't have permission to lock or unlock the group"
+        "lockGroup": "You don't have permission to lock or unlock the group",
+        "settleUpGroup": "You don't have permission to settle up the group"
       }
     },
     "notFound": {
@@ -165,7 +170,8 @@
       "failedToCreateGroup": "Failed to create group",
       "userAlreadyInvited": "User is already invited to this group",
       "cannotReadAllMembers": "Failed to read all members of this group",
-      "locked": "This group is locked"
+      "locked": "This group is locked",
+      "settledUpButPending": "The group is already settled up, but some of the transactions haven't been confirmed yet"
     },
     "user": {
       "nameTooLong": "Name is too long",
@@ -341,7 +347,13 @@
     "deleteGroupCancel": "No",
     "deleteGroupSuccess": "Group {{name}} deleted",
     "lockGroup": "Lock group",
-    "unlockGroup": "Unlock group"
+    "unlockGroup": "Unlock group",
+    "settleUpGroup": "Settle up group",
+    "settleUpGroupSuccess": "Group settled up",
+    "settleUpGroupConfirmationText": "Are you sure you want to settle up the group?",
+    "settleUpGroupConfirmationMessage": "This will create multiple settle-up splits and notify all members.",
+    "settleUpGroupConfirm": "Yes",
+    "settleUpGroupCancel": "No"
   },
 
   "inviteMember": {

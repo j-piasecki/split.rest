@@ -1,72 +1,7 @@
+import { TargetedBalanceChange } from './types'
 import assert from 'assert'
-import pg from 'pg'
+import currency from 'currency.js'
 import { BalanceChange, Member } from 'shared'
-
-export interface TargetedBalanceChange extends BalanceChange {
-  targetId: string
-}
-
-export async function loadSettleUpData(client: pg.Client | pg.PoolClient, groupId: number) {
-  const members: Member[] = (
-    await client.query(
-      `
-        SELECT 
-          users.id,
-          users.name,
-          users.email, 
-          users.deleted,
-          group_members.balance,
-          group_members.has_access,
-          group_members.is_admin,
-          group_members.display_name
-        FROM group_members 
-        JOIN users ON group_members.user_id = users.id 
-        WHERE group_id = $1 
-        ORDER BY users.id 
-      `,
-      [groupId]
-    )
-  ).rows.map((row) => ({
-    id: row.id,
-    name: row.name,
-    email: row.email,
-    photoUrl: null,
-    deleted: row.deleted,
-    balance: row.balance,
-    hasAccess: row.has_access,
-    isAdmin: row.is_admin,
-    displayName: row.display_name,
-  }))
-
-  const pendingChanges: TargetedBalanceChange[] = (
-    await client.query(
-      `
-        SELECT 
-          user_id,
-          change,
-          pending,
-          splits.paid_by AS target_user_id
-        FROM split_participants INNER JOIN splits ON split_participants.split_id = splits.id
-        WHERE group_id = $1 AND pending = TRUE AND deleted = FALSE
-      `,
-      [groupId]
-    )
-  ).rows.map((row) => ({
-    id: row.user_id,
-    targetId: row.target_user_id,
-    change: row.change,
-    pending: row.pending,
-  }))
-
-  const currency = (await client.query(`SELECT currency FROM groups WHERE id = $1`, [groupId]))
-    .rows[0].currency
-
-  return {
-    members: members,
-    pendingChanges: pendingChanges,
-    currency: currency,
-  }
-}
 
 export function prepareSettleUp(
   payerId: string,
@@ -83,14 +18,14 @@ export function prepareSettleUp(
     const targetMember = allMembers.find((m) => m.id === change.targetId)
 
     if (member && targetMember) {
-      member.balance = (Number(member.balance) + Number(change.change)).toFixed(2)
-      targetMember.balance = (Number(targetMember.balance) - Number(change.change)).toFixed(2)
+      member.balance = currency(member.balance).add(change.change).toString()
+      targetMember.balance = currency(targetMember.balance).subtract(change.change).toString()
 
       if (member.id === payerId) {
-        balance = Number(member.balance)
+        balance = currency(member.balance).value
       }
       if (targetMember.id === payerId) {
-        balance = Number(targetMember.balance)
+        balance = currency(targetMember.balance).value
       }
     }
   })
@@ -103,7 +38,7 @@ export function prepareSettleUp(
     assert(member !== undefined)
 
     if (balance !== 0) {
-      entries.push({ id: member.id, change: balance.toFixed(2), pending: true })
+      entries.push({ id: member.id, change: currency(balance).toString(), pending: true })
     }
 
     return entries
@@ -113,7 +48,7 @@ export function prepareSettleUp(
   // grouped by whether they have access or not and sorted by balance descending.
   const members = allMembers
     .filter((member) => {
-      return Math.sign(Number(member.balance)) === -Math.sign(balance)
+      return Math.sign(currency(member.balance).value) === -Math.sign(balance)
     })
     .sort((a, b) => {
       // Keep deleted users at the end
@@ -130,8 +65,8 @@ export function prepareSettleUp(
         return 1
       }
 
-      const balanceA = Number(a.balance)
-      const balanceB = Number(b.balance)
+      const balanceA = currency(a.balance).value
+      const balanceB = currency(b.balance).value
 
       // If both users have access sort by absolute balance (sorts positive descending and negatives ascending)
       return Math.abs(balanceB) - Math.abs(balanceA)
@@ -140,21 +75,21 @@ export function prepareSettleUp(
   let workingBalance = balance
 
   for (const member of members) {
-    const memberBalance = Number(member.balance)
+    const memberBalance = currency(member.balance).value
     assert(Math.sign(memberBalance) === -Math.sign(balance))
 
     if (balance < 0) {
       if (workingBalance + memberBalance >= 0) {
         entries.push({
           id: member.id,
-          change: workingBalance.toFixed(2),
+          change: currency(workingBalance).toString(),
           pending: true,
         })
         workingBalance = 0
       } else {
         entries.push({
           id: member.id,
-          change: (-memberBalance).toFixed(2),
+          change: currency(-memberBalance).toString(),
           pending: true,
         })
         workingBalance += memberBalance
@@ -167,14 +102,14 @@ export function prepareSettleUp(
       if (workingBalance + memberBalance <= 0) {
         entries.push({
           id: member.id,
-          change: workingBalance.toFixed(2),
+          change: currency(workingBalance).toString(),
           pending: true,
         })
         workingBalance = 0
       } else {
         entries.push({
           id: member.id,
-          change: (-memberBalance).toFixed(2),
+          change: currency(-memberBalance).toString(),
           pending: true,
         })
         workingBalance += memberBalance

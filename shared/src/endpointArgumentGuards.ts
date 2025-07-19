@@ -40,6 +40,7 @@ import {
   SetUserDisplayNameArguments,
   SetUserNameArguments,
   SettleUpArguments,
+  SettleUpGroupArguments,
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
 } from './endpointArguments'
@@ -249,4 +250,8 @@ export function isGetSplitParticipantsSuggestionsArguments(
 
 export function isSetGroupLockedArguments(obj: any): obj is SetGroupLockedArguments {
   return obj.groupId !== undefined && obj.locked !== undefined
+}
+
+export function isSettleUpGroupArguments(obj: any): obj is SettleUpGroupArguments {
+  return obj.groupId !== undefined
 }

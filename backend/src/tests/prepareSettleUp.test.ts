@@ -1,4 +1,4 @@
-import { TargetedBalanceChange, prepareSettleUp } from '../database/utils/prepareSettleUp'
+import { TargetedBalanceChange, prepareSettleUp } from '../database/utils/settleUp'
 import { Member } from 'shared'
 
 function createMember(id: string, balance: string, hasAccess: boolean, deleted: boolean): Member {
@@ -32,8 +32,8 @@ describe('prepareSettleUp', () => {
     expect(entries).toEqual([
       {
         id: '1',
-        change: '10.00',
-        pending: true,
+        change: '0.00',
+        pending: false,
       },
       {
         id: '2',
@@ -49,8 +49,8 @@ describe('prepareSettleUp', () => {
     expect(entries).toEqual([
       {
         id: '5',
-        change: '25.00',
-        pending: true,
+        change: '0.00',
+        pending: false,
       },
       {
         id: '2',
@@ -71,8 +71,8 @@ describe('prepareSettleUp', () => {
     expect(entries).toEqual([
       {
         id: '3',
-        change: '-10.00',
-        pending: true,
+        change: '0.00',
+        pending: false,
       },
       {
         id: '6',
@@ -88,8 +88,8 @@ describe('prepareSettleUp', () => {
     expect(entries).toEqual([
       {
         id: '5',
-        change: '30.00',
-        pending: true,
+        change: '0.00',
+        pending: false,
       },
       {
         id: '2',
@@ -110,8 +110,8 @@ describe('prepareSettleUp', () => {
     expect(entries).toEqual([
       {
         id: '6',
-        change: '95.00',
-        pending: true,
+        change: '0.00',
+        pending: false,
       },
       {
         id: '2',
@@ -155,8 +155,8 @@ describe('prepareSettleUp', () => {
     expect(entries).toEqual([
       {
         id: '1',
-        change: '15.00',
-        pending: true,
+        change: '0.00',
+        pending: false,
       },
       {
         id: '3',
@@ -185,8 +185,8 @@ describe('prepareSettleUp', () => {
     expect(entries).toEqual([
       {
         id: '1',
-        change: '10.00',
-        pending: true,
+        change: '0.00',
+        pending: false,
       },
       {
         id: '3',
@@ -215,7 +215,7 @@ describe('prepareSettleUp', () => {
       {
         id: '1',
         change: '0.00',
-        pending: true,
+        pending: false,
       },
     ])
   })

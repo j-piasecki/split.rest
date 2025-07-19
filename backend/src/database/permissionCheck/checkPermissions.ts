@@ -288,6 +288,13 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'settleUpGroup': {
+          if (!callerPermissions?.canSettleUpGroup()) {
+            return 'api.insufficientPermissions.group.settleUpGroup'
+          }
+          continue
+        }
+
         default:
           console.log('Unknown permission required:', permission)
           return 'unknownError'

@@ -30,6 +30,7 @@ export const PermissionToFieldMap = {
   manageAllDirectInvites: ['groupId'] as const,
   changeDisplayName: ['groupId', 'userId'] as const,
   lockGroup: ['groupId'] as const,
+  settleUpGroup: ['groupId'] as const,
 }
 
 export type PermissionToFieldMap = {
