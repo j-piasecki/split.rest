@@ -18,8 +18,8 @@
   ],
   "resolutions": {
     "react-native-calendar-picker@^8.0.5": "patch:react-native-calendar-picker@npm%3A8.0.5#./.yarn/patches/react-native-calendar-picker-npm-8.0.5-bbacf272ff.patch",
-    "react-native@0.79.2": "patch:react-native@npm%3A0.79.2#./.yarn/patches/react-native-npm-0.79.2-9db13eddfe.patch",
-    "react-native@*": "patch:react-native@npm%3A0.79.2#./.yarn/patches/react-native-npm-0.79.2-9db13eddfe.patch"
+    "react-native@*": "patch:react-native@npm%3A0.79.5#./.yarn/patches/react-native-npm-0.79.5-375b5dc2bf.patch",
+    "react-native@0.79.5": "patch:react-native@npm%3A0.79.5#./.yarn/patches/react-native-npm-0.79.5-375b5dc2bf.patch"
   },
   "packageManager": "yarn@3.6.4",
   "expo": {
