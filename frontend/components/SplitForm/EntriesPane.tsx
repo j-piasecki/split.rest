@@ -1,5 +1,5 @@
 import { SplitEntry } from './SplitEntry'
-import { FormActionType, FormData } from './formData'
+import { FormActionType, FormData, SplitEntryData } from './formData'
 import { Form } from '@components/Form'
 import { Pane } from '@components/Pane'
 import { getAllGroupMembers } from '@database/getAllGroupMembers'
@@ -19,6 +19,10 @@ interface SplitEntriesPaneProps {
   showPayerEntry?: boolean
 }
 
+function isPaidByUser(formState: FormData, entry: SplitEntryData) {
+  return formState.entries[formState.paidByIndex]?.user?.id === entry.user?.id
+}
+
 export function EntriesPane({
   formState,
   updateForm,
@@ -32,10 +36,7 @@ export function EntriesPane({
   const { t } = useTranslation()
   const layout = useRef<LayoutRectangle | null>(null)
 
-  const entries = formState.entries.filter(
-    (entry) =>
-      showPayerEntry || entry.user?.id !== formState.entries[formState.paidByIndex]?.user?.id
-  )
+  const entries = formState.entries.filter((entry) => showPayerEntry || !isPaidByUser(formState, entry))
 
   return (
     <Pane
@@ -72,7 +73,7 @@ export function EntriesPane({
             last={index === entries.length - 1}
             formState={formState}
             entry={entry}
-            paidByThis={entry.user?.id === formState.entries[formState.paidByIndex]?.user?.id}
+            paidByThis={isPaidByUser(formState, entry)}
             updateForm={updateForm}
             parentLayout={layout}
             focusIndex={index * 2}

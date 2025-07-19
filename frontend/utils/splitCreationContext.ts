@@ -164,8 +164,6 @@ class SplitCreationContext {
       throw new TranslatableError('splitValidation.invalidType')
     }
 
-    console.log('create', this.splitType)
-
     return {
       id: -1,
       title: this.title,
