@@ -3,13 +3,15 @@ import currency from 'currency.js'
 import { Member } from 'shared'
 
 export function settleDebtsOptimal(users: Member[]): Transaction[] {
-  const balances: ReturnType<typeof currency>[] = []
-  const userIds: string[] = []
+  const zipped = users
+    .filter((u) => currency(u.balance).value !== 0)
+    .map((u) => [u.id, currency(u.balance)] as [string, currency])
 
-  for (const user of users) {
-    balances.push(currency(user.balance))
-    userIds.push(user.id)
-  }
+  // Sort balances for early convergence
+  zipped.sort((a, b) => a[1].value - b[1].value)
+
+  const userIds = zipped.map(([id]) => id)
+  const balances = zipped.map(([_, bal]) => bal)
 
   const n = balances.length
   const transactions: Transaction[] = []
@@ -26,13 +28,16 @@ export function settleDebtsOptimal(users: Member[]): Transaction[] {
       return 0
     }
 
-    const key = balances.join(',')
+    const key = balances.slice().join(',')
     if (memo.has(key)) return memo.get(key)!
 
     let minTx = Infinity
+    const seen = new Set<number>()
 
     for (let i = start + 1; i < n; i++) {
-      if (balances[start].intValue * balances[i].intValue < 0) {
+      if (balances[start].intValue * balances[i].intValue < 0 && !seen.has(balances[i].intValue)) {
+        seen.add(balances[i].intValue)
+
         const amount =
           Math.abs(balances[start].intValue) > Math.abs(balances[i].intValue)
             ? balances[i]
