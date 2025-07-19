@@ -472,7 +472,7 @@ function FilterForm({ query, updateQuery }: QueryProps) {
             },
             {
               title: t('filter.pending'),
-              icon: 'schedule',
+              icon: 'hourglass',
               selected: query.pending === true,
               onPress: () => updateQuery({ type: 'setPending', pending: true }),
             },

@@ -230,7 +230,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
               ]}
             >
               {split.pending ? (
-                <Icon name='schedule' size={16} color={theme.colors.tertiary} />
+                <Icon name='hourglass' size={16} color={theme.colors.tertiary} />
               ) : isInverse ? (
                 <Icon
                   name='merge'

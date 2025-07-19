@@ -46,6 +46,7 @@ export type IconName =
   | 'filter'
   | 'group'
   | 'home'
+  | 'hourglass'
   | 'info'
   | 'lightTheme'
   | 'link'
@@ -136,6 +137,7 @@ const iconMap: Record<IconName, unknown> = {
   filter: require('@assets/icons/filter.svg'),
   group: require('@assets/icons/group.svg'),
   home: require('@assets/icons/home.svg'),
+  hourglass: require('@assets/icons/hourglass.svg'),
   info: require('@assets/icons/info.svg'),
   lightTheme: require('@assets/icons/light_theme.svg'),
   link: require('@assets/icons/link.svg'),

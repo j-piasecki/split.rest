@@ -190,7 +190,7 @@ function UserRow({
                   styles.paneShadow,
                 ]}
               >
-                <Icon name='schedule' size={18} color={theme.colors.tertiary} />
+                <Icon name='hourglass' size={18} color={theme.colors.tertiary} />
               </View>
             )}
           </View>
