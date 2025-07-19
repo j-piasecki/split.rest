@@ -105,7 +105,7 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
           >
             <GroupActionButtons info={info} />
           </View>
-          <ActionableSplitsPane info={info} style={{flexGrow: 100}} />
+          <ActionableSplitsPane info={info} style={{ flexGrow: 100 }} />
         </View>
       )}
     </View>

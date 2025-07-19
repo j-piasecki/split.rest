@@ -55,7 +55,6 @@ function ActionableSplit({
 
   return (
     <View
-      key={split.id}
       style={[
         {
           backgroundColor: theme.colors.tertiaryContainer,
@@ -105,7 +104,13 @@ function ActionableSplit({
   )
 }
 
-export function ActionableSplitsPane({ info, style }: { info: GroupUserInfo | undefined, style?: StyleProp<ViewStyle> }) {
+export function ActionableSplitsPane({
+  info,
+  style,
+}: {
+  info: GroupUserInfo | undefined
+  style?: StyleProp<ViewStyle>
+}) {
   const theme = useTheme()
   const user = useAuth()!
   const { t } = useTranslation()
@@ -141,7 +146,12 @@ export function ActionableSplitsPane({ info, style }: { info: GroupUserInfo | un
       />
       <View style={{ gap: 2 }}>
         {actionableSplits.map((split, index) => (
-          <ActionableSplit split={split} info={info} last={index === actionableSplits.length - 1} />
+          <ActionableSplit
+            key={split.id}
+            split={split}
+            info={info}
+            last={index === actionableSplits.length - 1}
+          />
         ))}
       </View>
     </View>
