@@ -385,11 +385,14 @@ describe('settleDebtsOptimal', () => {
         createMember('2', '-8.00', true, false),
         createMember('3', '-5.00', true, false),
         createMember('4', '-4.00', true, false),
-        createMember('7', '-7.00', true, false),
-        createMember('8', '2.00', true, false),
-        createMember('9', '9.00', true, false),
-        createMember('10', '8.00', true, false),
-        createMember('11', '10.00', true, false),
+        createMember('5', '-7.00', true, false),
+        createMember('6', '-12.00', true, false),
+        createMember('7', '2.00', true, false),
+        createMember('8', '9.00', true, false),
+        createMember('9', '8.00', true, false),
+        createMember('10', '10.00', true, false),
+        createMember('11', '5.00', true, false),
+        createMember('12', '7.00', true, false),
       ]
 
       const startTime = Date.now()
@@ -401,10 +404,10 @@ describe('settleDebtsOptimal', () => {
 
       // Should still produce correct results
       const totalSettled = result.reduce((sum, t) => sum + parseFloat(t.amount), 0)
-      expect(totalSettled).toBe(29) // Total debt
+      expect(totalSettled).toBe(41) // Total debt
 
       expect(result.length).toBeGreaterThan(0)
-      expect(result.length).toBeLessThanOrEqual(6)
+      expect(result.length).toBeLessThanOrEqual(7)
     })
   })
 })
