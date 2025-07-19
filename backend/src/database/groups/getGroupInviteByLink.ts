@@ -19,6 +19,7 @@ export async function getGroupInviteByLink(
         groups.member_count as group_member_count,
         groups.type as group_type,
         groups.last_update as group_last_update,
+        groups.locked as group_locked,
         group_join_links.created_at as created_at,
         users.id as inviter_id,
         users.name as inviter_name,
@@ -78,6 +79,7 @@ export async function getGroupInviteByLink(
       total: '-1',
       type: rows[0].group_type,
       lastUpdate: Number(rows[0].group_last_update),
+      locked: rows[0].group_locked,
     },
     createdBy: {
       id: rows[0].inviter_id,
