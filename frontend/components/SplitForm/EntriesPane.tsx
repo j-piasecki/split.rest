@@ -16,6 +16,7 @@ interface SplitEntriesPaneProps {
   scrollRef?: React.RefObject<ScrollView | null>
   showAddAllMembers?: boolean
   setMembers?: (fetchMembers: () => Promise<UserWithDisplayName[]>) => void
+  showPayerEntry?: boolean
 }
 
 export function EntriesPane({
@@ -26,9 +27,15 @@ export function EntriesPane({
   showPayerSelector,
   showAddAllMembers = true,
   setMembers,
+  showPayerEntry = true,
 }: SplitEntriesPaneProps) {
   const { t } = useTranslation()
   const layout = useRef<LayoutRectangle | null>(null)
+
+  const entries = formState.entries.filter(
+    (entry) =>
+      showPayerEntry || entry.user?.id !== formState.entries[formState.paidByIndex]?.user?.id
+  )
 
   return (
     <Pane
@@ -55,13 +62,17 @@ export function EntriesPane({
       }}
     >
       <Form autofocus>
-        {formState.entries.map((entry, index) => (
+        {entries.map((entry, index) => (
           <SplitEntry
             key={index}
             scrollRef={scrollRef}
             groupId={groupInfo.id}
             index={index}
+            first={index === 0}
+            last={index === entries.length - 1}
             formState={formState}
+            entry={entry}
+            paidByThis={entry.user?.id === formState.entries[formState.paidByIndex]?.user?.id}
             updateForm={updateForm}
             parentLayout={layout}
             focusIndex={index * 2}

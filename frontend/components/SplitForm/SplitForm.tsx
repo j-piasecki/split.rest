@@ -31,6 +31,7 @@ export interface SplitFormProps {
   showPayerSelector?: boolean
   showPaidByHint?: boolean
   showAddAllMembers?: boolean
+  showPayerEntry?: boolean
 }
 
 export function SplitForm({
@@ -52,6 +53,7 @@ export function SplitForm({
   showPayerSelector = true,
   showPaidByHint = true,
   showAddAllMembers = true,
+  showPayerEntry = true,
   style,
 }: SplitFormProps) {
   const scrollRef = useRef<ScrollView>(null)
@@ -159,6 +161,7 @@ export function SplitForm({
           showPayerSelector={showPayerSelector}
           showAddAllMembers={showAddAllMembers}
           setMembers={setMembers}
+          showPayerEntry={showPayerEntry}
         />
       </ScrollView>
 
