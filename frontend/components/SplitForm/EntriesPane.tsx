@@ -36,7 +36,9 @@ export function EntriesPane({
   const { t } = useTranslation()
   const layout = useRef<LayoutRectangle | null>(null)
 
-  const entries = formState.entries.filter((entry) => showPayerEntry || !isPaidByUser(formState, entry))
+  const entries = formState.entries.filter(
+    (entry) => showPayerEntry || !isPaidByUser(formState, entry)
+  )
 
   return (
     <Pane
