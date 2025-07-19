@@ -1,5 +1,7 @@
 import { settleDebtsFast } from '../database/utils/settleUp/settleDebtsFast'
+import currency from 'currency.js'
 import { Member } from 'shared'
+import { Transaction } from 'src/database/utils/settleUp/types'
 
 function createMember(id: string, balance: string, hasAccess: boolean, deleted: boolean): Member {
   return {
@@ -13,6 +15,22 @@ function createMember(id: string, balance: string, hasAccess: boolean, deleted: 
     photoUrl: '',
     displayName: null,
   }
+}
+
+function verifyTransactions(members: Member[], transactions: Transaction[]) {
+  transactions.forEach((transaction) => {
+    members.find((m) => m.id === transaction.from)!.balance = currency(
+      Number(members.find((m) => m.id === transaction.from)!.balance) +
+        parseFloat(transaction.amount)
+    ).toString()
+    members.find((m) => m.id === transaction.to)!.balance = currency(
+      Number(members.find((m) => m.id === transaction.to)!.balance) - parseFloat(transaction.amount)
+    ).toString()
+  })
+
+  members.forEach((member) => {
+    expect(Number(member.balance)).toBe(0)
+  })
 }
 
 describe('settleDebtsFast', () => {
@@ -31,6 +49,8 @@ describe('settleDebtsFast', () => {
         to: '2',
         amount: '10.00',
       })
+
+      verifyTransactions(members, result)
     })
 
     test('should handle multiple debtors to one creditor', () => {
@@ -47,6 +67,8 @@ describe('settleDebtsFast', () => {
         { from: '1', to: '3', amount: '5.00' },
         { from: '2', to: '3', amount: '3.00' },
       ])
+
+      verifyTransactions(members, result)
     })
 
     test('should handle one debtor to multiple creditors', () => {
@@ -63,6 +85,8 @@ describe('settleDebtsFast', () => {
         { from: '1', to: '2', amount: '4.00' },
         { from: '1', to: '3', amount: '6.00' },
       ])
+
+      verifyTransactions(members, result)
     })
 
     test('should handle complex scenario with multiple debtors and creditors', () => {
@@ -89,6 +113,8 @@ describe('settleDebtsFast', () => {
       // Verify total amount matches debts
       const totalSettled = result.reduce((sum, t) => sum + parseFloat(t.amount), 0)
       expect(totalSettled).toBe(45) // Total debt amount
+
+      verifyTransactions(members, result)
     })
   })
 
@@ -134,6 +160,8 @@ describe('settleDebtsFast', () => {
         to: '3',
         amount: '10.00',
       })
+
+      verifyTransactions(members, result)
     })
 
     test('should handle single user', () => {
@@ -170,6 +198,8 @@ describe('settleDebtsFast', () => {
         { from: '1', to: '2', amount: '3.25' },
         { from: '1', to: '3', amount: '4.25' },
       ])
+
+      verifyTransactions(members, result)
     })
 
     test('should handle very small amounts', () => {
@@ -186,6 +216,8 @@ describe('settleDebtsFast', () => {
         to: '2',
         amount: '0.01',
       })
+
+      verifyTransactions(members, result)
     })
 
     test('should handle large amounts', () => {
@@ -202,6 +234,8 @@ describe('settleDebtsFast', () => {
         to: '2',
         amount: '1000.00',
       })
+
+      verifyTransactions(members, result)
     })
   })
 
@@ -232,6 +266,8 @@ describe('settleDebtsFast', () => {
         to: '4',
         amount: '1.00',
       })
+
+      verifyTransactions(members, result)
     })
 
     test('should handle uneven debt-to-credit ratios', () => {
@@ -250,6 +286,8 @@ describe('settleDebtsFast', () => {
       const totalDebts = 50
       const totalTransactions = result.reduce((sum, t) => sum + parseFloat(t.amount), 0)
       expect(totalTransactions).toBe(totalDebts)
+
+      verifyTransactions(members, result)
     })
   })
 
@@ -272,6 +310,8 @@ describe('settleDebtsFast', () => {
       expect(totalTransactions).toBe(totalDebts)
       expect(result.length).toBeGreaterThan(0)
       expect(result.length).toBeLessThanOrEqual(5) // Should be efficient
+
+      verifyTransactions(members, result)
     })
 
     test('should handle the provided fakeMembers scenario', () => {
@@ -300,6 +340,8 @@ describe('settleDebtsFast', () => {
       result.forEach((transaction) => {
         expect(parseFloat(transaction.amount)).toBeGreaterThan(0)
       })
+
+      verifyTransactions(fakeMembers, result)
     })
   })
 })

@@ -14,13 +14,16 @@ export function settleDebtsOptimal(users: Member[]): Transaction[] {
   const balances = zipped.map(([_, bal]) => bal)
 
   const n = balances.length
-  const transactions: Transaction[] = []
   const bestTransactions: Transaction[] = []
   const memo = new Map<string, number>()
 
-  function dfs(start: number): number {
-    while (start < n && balances[start].intValue === 0) start++
+  function solve(currentBalances: currency[], transactions: Transaction[]): number {
+    // Find first non-zero balance
+    let start = 0
+    while (start < n && currentBalances[start].intValue === 0) start++
+
     if (start === n) {
+      // All balances are zero - we found a complete solution
       if (bestTransactions.length === 0 || transactions.length < bestTransactions.length) {
         bestTransactions.length = 0
         bestTransactions.push(...transactions)
@@ -28,43 +31,54 @@ export function settleDebtsOptimal(users: Member[]): Transaction[] {
       return 0
     }
 
-    const key = balances.slice().join(',')
+    // Use memoization based on current state
+    const key = currentBalances.map((b) => b.value).join(',')
     if (memo.has(key)) return memo.get(key)!
 
-    let minTx = Infinity
-    const seen = new Set<number>()
+    let minTransactions = Infinity
 
+    // Find someone to settle with
     for (let i = start + 1; i < n; i++) {
-      if (balances[start].intValue * balances[i].intValue < 0 && !seen.has(balances[i].intValue)) {
-        seen.add(balances[i].intValue)
-
+      if (currentBalances[start].intValue * currentBalances[i].intValue < 0) {
+        // Found a valid pair - create transaction
         const amount =
-          Math.abs(balances[start].intValue) > Math.abs(balances[i].intValue)
-            ? balances[i]
-            : balances[start]
-        const from = balances[start].intValue < 0 ? start : i
-        const to = balances[start].intValue < 0 ? i : start
+          Math.abs(currentBalances[start].intValue) > Math.abs(currentBalances[i].intValue)
+            ? Math.abs(currentBalances[i].value)
+            : Math.abs(currentBalances[start].value)
 
-        balances[i] = balances[i].add(balances[start])
-        transactions.push({
+        const from = currentBalances[start].intValue < 0 ? start : i
+        const to = currentBalances[start].intValue < 0 ? i : start
+
+        // Create new balances array for recursion
+        const newBalances = currentBalances.map((b) => currency(b.value))
+
+        // Update balances
+        if (currentBalances[start].intValue < 0) {
+          // start owes money, i is owed money
+          newBalances[start] = newBalances[start].add(amount)
+          newBalances[i] = newBalances[i].subtract(amount)
+        } else {
+          // start is owed money, i owes money
+          newBalances[start] = newBalances[start].subtract(amount)
+          newBalances[i] = newBalances[i].add(amount)
+        }
+
+        const newTransaction = {
           from: userIds[from],
           to: userIds[to],
-          amount: Math.abs(amount.value).toFixed(2),
-        })
+          amount: amount.toFixed(2),
+        }
 
-        minTx = Math.min(minTx, 1 + dfs(start + 1))
-
-        transactions.pop()
-        balances[i] = balances[i].subtract(balances[start])
-
-        if (balances[i].add(balances[start]).intValue === 0) break
+        // Recurse with new state
+        const remainingTransactions = solve(newBalances, [...transactions, newTransaction])
+        minTransactions = Math.min(minTransactions, 1 + remainingTransactions)
       }
     }
 
-    memo.set(key, minTx)
-    return minTx
+    memo.set(key, minTransactions)
+    return minTransactions
   }
 
-  dfs(0)
+  solve(balances, [])
   return bestTransactions
 }

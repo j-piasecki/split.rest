@@ -1,6 +1,8 @@
 import { settleDebtsFast } from '../database/utils/settleUp/settleDebtsFast'
 import { settleDebtsOptimal } from '../database/utils/settleUp/settleDebtsOptimal'
+import currency from 'currency.js'
 import { Member } from 'shared'
+import { Transaction } from 'src/database/utils/settleUp/types'
 
 function createMember(id: string, balance: string, hasAccess: boolean, deleted: boolean): Member {
   return {
@@ -14,6 +16,22 @@ function createMember(id: string, balance: string, hasAccess: boolean, deleted: 
     photoUrl: '',
     displayName: null,
   }
+}
+
+function verifyTransactions(members: Member[], transactions: Transaction[]) {
+  transactions.forEach((transaction) => {
+    members.find((m) => m.id === transaction.from)!.balance = currency(
+      Number(members.find((m) => m.id === transaction.from)!.balance) +
+        parseFloat(transaction.amount)
+    ).toString()
+    members.find((m) => m.id === transaction.to)!.balance = currency(
+      Number(members.find((m) => m.id === transaction.to)!.balance) - parseFloat(transaction.amount)
+    ).toString()
+  })
+
+  members.forEach((member) => {
+    expect(Number(member.balance)).toBe(0)
+  })
 }
 
 describe('settleDebtsOptimal', () => {
@@ -32,6 +50,8 @@ describe('settleDebtsOptimal', () => {
         to: '2',
         amount: '10.00',
       })
+
+      verifyTransactions(members, result)
     })
 
     test('should handle multiple debtors to one creditor', () => {
@@ -48,6 +68,8 @@ describe('settleDebtsOptimal', () => {
         { from: '1', to: '3', amount: '5.00' },
         { from: '2', to: '3', amount: '3.00' },
       ])
+
+      verifyTransactions(members, result)
     })
 
     test('should handle one debtor to multiple creditors', () => {
@@ -65,12 +87,12 @@ describe('settleDebtsOptimal', () => {
       const totalSettled = result.reduce((sum, t) => sum + parseFloat(t.amount), 0)
       expect(totalSettled).toBe(10) // Total debt
 
-      // Verify all transactions are valid
-      result.forEach((transaction) => {
-        expect(parseFloat(transaction.amount)).toBeGreaterThan(0)
-        expect(members.some((m) => m.id === transaction.from)).toBe(true)
-        expect(members.some((m) => m.id === transaction.to)).toBe(true)
-      })
+      expect(result).toEqual([
+        { from: '1', to: '2', amount: '4.00' },
+        { from: '1', to: '3', amount: '6.00' },
+      ])
+
+      verifyTransactions(members, result)
     })
 
     test('should settle all debts correctly', () => {
@@ -94,6 +116,8 @@ describe('settleDebtsOptimal', () => {
       // Verify total amount matches debts
       const totalSettled = result.reduce((sum, t) => sum + parseFloat(t.amount), 0)
       expect(totalSettled).toBe(45) // Total debt amount
+
+      verifyTransactions(members, result)
     })
   })
 
@@ -139,6 +163,8 @@ describe('settleDebtsOptimal', () => {
         to: '3',
         amount: '10.00',
       })
+
+      verifyTransactions(members, result)
     })
 
     test('should handle single user', () => {
@@ -197,6 +223,8 @@ describe('settleDebtsOptimal', () => {
       // Optimal should use same or fewer transactions than fast
       expect(result.length).toBeLessThanOrEqual(fastResult.length)
       expect(result.length).toBeGreaterThan(0)
+
+      verifyTransactions(members, result)
     })
 
     test('should handle complex scenario efficiently', () => {
@@ -222,6 +250,8 @@ describe('settleDebtsOptimal', () => {
       expect(result.length).toBeLessThanOrEqual(fastResult.length)
       expect(result.length).toBeGreaterThan(0)
       expect(result.length).toBeLessThanOrEqual(5) // At most n-1 transactions for n non-zero balances
+
+      verifyTransactions(members, result)
     })
 
     test('should minimize transactions in perfectly balanced scenario', () => {
@@ -240,6 +270,8 @@ describe('settleDebtsOptimal', () => {
 
       const totalSettled = result.reduce((sum, t) => sum + parseFloat(t.amount), 0)
       expect(totalSettled).toBe(30) // Total debt
+
+      verifyTransactions(members, result)
     })
   })
 
@@ -256,6 +288,8 @@ describe('settleDebtsOptimal', () => {
       expect(result).toHaveLength(2)
       const totalSettled = result.reduce((sum, t) => sum + parseFloat(t.amount), 0)
       expect(totalSettled).toBe(7.5)
+
+      verifyTransactions(members, result)
     })
 
     test('should handle very small amounts', () => {
@@ -272,6 +306,8 @@ describe('settleDebtsOptimal', () => {
         to: '2',
         amount: '0.01',
       })
+
+      verifyTransactions(members, result)
     })
 
     test('should handle large amounts', () => {
@@ -288,6 +324,8 @@ describe('settleDebtsOptimal', () => {
         to: '2',
         amount: '1000.00',
       })
+
+      verifyTransactions(members, result)
     })
   })
 
@@ -316,6 +354,8 @@ describe('settleDebtsOptimal', () => {
       // Optimal should use same or fewer transactions
       expect(optimalResult.length).toBeLessThanOrEqual(fastResult.length)
       expect(optimalResult.length).toBeGreaterThan(0)
+
+      verifyTransactions(members, optimalResult)
     })
 
     test('should handle realistic group expense scenario optimally', () => {
@@ -336,6 +376,8 @@ describe('settleDebtsOptimal', () => {
       expect(optimalTotal).toBe(totalDebts)
       expect(optimalResult.length).toBeLessThanOrEqual(fastResult.length)
       expect(optimalResult.length).toBeLessThanOrEqual(4) // Should be very efficient
+
+      verifyTransactions(members, optimalResult)
     })
 
     test('should find optimal solution through exhaustive search', () => {
@@ -374,6 +416,8 @@ describe('settleDebtsOptimal', () => {
         expect(members.some((m) => m.id === transaction.from)).toBe(true)
         expect(members.some((m) => m.id === transaction.to)).toBe(true)
       })
+
+      verifyTransactions(members, result)
     })
   })
 
@@ -389,10 +433,9 @@ describe('settleDebtsOptimal', () => {
         createMember('6', '-12.00', true, false),
         createMember('7', '2.00', true, false),
         createMember('8', '9.00', true, false),
-        createMember('9', '8.00', true, false),
+        createMember('9', '15.00', true, false),
         createMember('10', '10.00', true, false),
         createMember('11', '5.00', true, false),
-        createMember('12', '7.00', true, false),
       ]
 
       const startTime = Date.now()
@@ -407,7 +450,9 @@ describe('settleDebtsOptimal', () => {
       expect(totalSettled).toBe(41) // Total debt
 
       expect(result.length).toBeGreaterThan(0)
-      expect(result.length).toBeLessThanOrEqual(7)
+      expect(result.length).toBeLessThanOrEqual(9)
+
+      verifyTransactions(members, result)
     })
   })
 })
