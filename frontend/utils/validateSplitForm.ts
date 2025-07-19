@@ -21,7 +21,8 @@ export function validateSplitTitle(title: string): void {
 export async function validateSplitForm(
   { title, paidByIndex, entries, timestamp }: FormData,
   singlePayer = true,
-  requirePositiveValues = true
+  requirePositiveValues = true,
+  allowZeroPayer = false
 ): Promise<ValidationResult> {
   if (entries.length < 2) {
     throw new TranslatableError('splitValidation.atLeastTwoEntries')
@@ -79,7 +80,9 @@ export async function validateSplitForm(
         : Number(entry.amount)
 
       if (Number(entry.amount) <= 0 && requirePositiveValues) {
-        throw new TranslatableError('splitValidation.amountsMustBePositive')
+        if (!allowZeroPayer || entry.user.id !== paidBy?.id) {
+          throw new TranslatableError('splitValidation.amountsMustBePositive')
+        }
       }
 
       return {

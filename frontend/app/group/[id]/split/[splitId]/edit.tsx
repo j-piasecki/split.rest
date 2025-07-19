@@ -30,7 +30,9 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
       const { payerId, sumToSave, balanceChange, timestamp } = await (splitInfo.type ===
       SplitType.BalanceChange
         ? validateSplitForm(form, false, false)
-        : validateSplitForm(form))
+        : splitInfo.type === SplitType.Lend
+          ? validateSplitForm(form, true, true, true)
+          : validateSplitForm(form))
 
       await updateSplit({
         splitId: splitInfo.id,
@@ -71,10 +73,13 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
         waiting={waiting}
         error={error}
         cleanError={() => setError(null)}
-        showPayerSelector={splitInfo.type !== SplitType.BalanceChange}
+        showPayerSelector={
+          splitInfo.type !== SplitType.BalanceChange && splitInfo.type !== SplitType.Lend
+        }
         showPaidByHint={splitInfo.type !== SplitType.BalanceChange}
         showAddAllMembers={false}
         showSuggestions={false}
+        showPayerEntry={splitInfo.type !== SplitType.Lend}
       />
     </View>
   )

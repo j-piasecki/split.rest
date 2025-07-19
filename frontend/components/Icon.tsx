@@ -64,6 +64,7 @@ export type IconName =
   | 'moreVertical'
   | 'oneOf'
   | 'openRightPanel'
+  | 'payment'
   | 'payments'
   | 'receipt'
   | 'removeModerator'
@@ -155,6 +156,7 @@ const iconMap: Record<IconName, unknown> = {
   moreVertical: require('@assets/icons/more_vertical.svg'),
   oneOf: require('@assets/icons/one_of.svg'),
   openRightPanel: require('@assets/icons/open_right_panel.svg'),
+  payment: require('@assets/icons/payment.svg'),
   payments: require('@assets/icons/payments.svg'),
   receipt: require('@assets/icons/receipt.svg'),
   removeModerator: require('@assets/icons/remove_moderator.svg'),

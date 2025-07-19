@@ -250,6 +250,7 @@
     "detailsStep": "Details",
     "exactAmounts": "Exact amounts",
     "balanceChanges": "Balance changes",
+    "lend": "Lend",
     "splitParticipants": "Participants"
   },
 
@@ -291,13 +292,15 @@
     "selectType": "How would you like to split?",
     "exactAmounts": "By exact amounts",
     "equalAmounts": "Equally",
-    "balanceChanges": "By balance changes"
+    "balanceChanges": "By balance changes",
+    "lend": "Lend"
   },
 
   "splitTypeDescription": {
     "exactAmounts": "Select the participants, choose who paid, and enter how much each person owes.",
-    "equalAmounts": "Select participants, choose who paid, and split the total equally or assign custom amounts. You can adjust values manually afterward.",
-    "balanceChanges": "Select participants and update their balances. Multiple people can have negative balances as long as the total equals zero. Perfect for poker games!"
+    "equalAmounts": "Select participants, choose who paid, and split the total equally or assign everyone the same amount. You can adjust values manually afterward.",
+    "balanceChanges": "Select participants and update their balances. Multiple people can have negative balances as long as the total equals zero. Perfect for poker games!",
+    "lend": "Lend money to other people. You can use this to transfer debts from outside of the group."
   },
 
   "roulette": {
@@ -457,6 +460,7 @@
     "editAuthorText": "<Styled>{{editor}}</Styled> has edited this split",
     "createAuthorText": "By <Styled>{{editor}}</Styled>",
     "hasPaidText": "<Styled>{{payer}}</Styled> has paid <Styled>{{amount}}</Styled>",
+    "hasLentText": "<Styled>{{payer}}</Styled> has lent <Styled>{{amount}}</Styled>",
     "hasSettledUpGaveBack": "<Styled>{{payer}}</Styled> has settled up and given back <Styled>{{amount}}</Styled>",
     "hasSettledUpWillGiveBack": "<Styled>{{payer}}</Styled> has settled up and will give back <Styled>{{amount}}</Styled>",
     "hasSettledUpGetsBack": "<Styled>{{payer}}</Styled> has settled up and got back <Styled>{{amount}}</Styled>",

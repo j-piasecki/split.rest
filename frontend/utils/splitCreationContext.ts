@@ -17,6 +17,7 @@ export enum SplitMethod {
   ExactAmounts = 'exactAmounts',
   Equal = 'equal',
   BalanceChanges = 'balanceChanges',
+  Lend = 'lend',
 }
 
 export interface SplitCreationContextArguments {
@@ -155,7 +156,11 @@ class SplitCreationContext {
 
     if (this.splitType === null) {
       throw new TranslatableError('splitValidation.typeRequired')
-    } else if (this.splitType !== SplitType.Normal && this.splitType !== SplitType.BalanceChange) {
+    } else if (
+      this.splitType !== SplitType.Normal &&
+      this.splitType !== SplitType.BalanceChange &&
+      this.splitType !== SplitType.Lend
+    ) {
       throw new TranslatableError('splitValidation.invalidType')
     }
 

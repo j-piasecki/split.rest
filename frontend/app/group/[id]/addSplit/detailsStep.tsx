@@ -127,6 +127,10 @@ export default function Modal() {
       case SplitMethod.BalanceChanges:
         router.navigate(`/group/${id}/addSplit/balanceChanges`)
         break
+
+      case SplitMethod.Lend:
+        router.navigate(`/group/${id}/addSplit/lend`)
+        break
     }
   }
 

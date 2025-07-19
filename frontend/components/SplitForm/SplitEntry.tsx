@@ -1,4 +1,4 @@
-import { FormActionType, FormData } from './formData'
+import { FormActionType, FormData, SplitEntryData } from './formData'
 import { Icon } from '@components/Icon'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { TextInput, TextInputRef } from '@components/TextInput'
@@ -14,34 +14,41 @@ export interface SplitEntryProps {
   scrollRef?: React.RefObject<ScrollView | null>
   groupId: number
   formState: FormData
+  entry: SplitEntryData
+  paidByThis: boolean
   updateForm: React.Dispatch<FormActionType>
   index: number
   showPayerSelector: boolean
   parentLayout?: React.RefObject<LayoutRectangle | null>
   focusIndex?: number
+  first: boolean
+  last: boolean
 }
 
 export function SplitEntry({
   scrollRef,
   groupId,
   formState,
+  entry,
+  paidByThis,
   updateForm,
   index,
   parentLayout,
   focusIndex,
   showPayerSelector,
+  first,
+  last,
 }: SplitEntryProps) {
   const theme = useTheme()
   const layout = useRef<LayoutRectangle | null>(null)
   const { t } = useTranslation()
   const amountInputRef = useRef<TextInputRef>(null)
 
-  const entry = formState.entries[index]
   const showDeleteButton =
     entry.user !== undefined || entry.entry.trim().length > 0 || entry.amount.trim().length > 0
 
   function scrollToThis() {
-    if (layout.current && parentLayout?.current && index > 0) {
+    if (layout.current && parentLayout?.current && !first) {
       const targetScroll = parentLayout.current.y + layout.current.y
       setTimeout(() => {
         scrollRef?.current?.scrollTo({
@@ -60,12 +67,12 @@ export function SplitEntry({
       style={[
         {
           zIndex: formState.entries.length - index,
-          paddingBottom: formState.entries.length - 1 === index ? 8 : 0,
+          paddingBottom: last ? 8 : 0,
           backgroundColor: theme.colors.surfaceContainer,
           borderRadius: 4,
           marginBottom: 2,
         },
-        index === formState.entries.length - 1 && {
+        last && {
           borderBottomLeftRadius: 16,
           borderBottomRightRadius: 16,
         },
@@ -82,7 +89,7 @@ export function SplitEntry({
       >
         {showPayerSelector && (
           <Pressable
-            disabled={formState.paidByIndex === index || entry.user === undefined}
+            disabled={paidByThis || entry.user === undefined}
             onPress={() => updateForm({ type: 'setPaidBy', index })}
             style={{ marginRight: 8 }}
             tabIndex={-1}
@@ -90,11 +97,7 @@ export function SplitEntry({
             <Icon
               name='payments'
               size={24}
-              color={
-                formState.paidByIndex === index
-                  ? theme.colors.secondary
-                  : theme.colors.outlineVariant
-              }
+              color={paidByThis ? theme.colors.secondary : theme.colors.outlineVariant}
             />
           </Pressable>
         )}

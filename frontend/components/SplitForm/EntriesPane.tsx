@@ -1,5 +1,5 @@
 import { SplitEntry } from './SplitEntry'
-import { FormActionType, FormData } from './formData'
+import { FormActionType, FormData, SplitEntryData } from './formData'
 import { Form } from '@components/Form'
 import { Pane } from '@components/Pane'
 import { getAllGroupMembers } from '@database/getAllGroupMembers'
@@ -16,6 +16,11 @@ interface SplitEntriesPaneProps {
   scrollRef?: React.RefObject<ScrollView | null>
   showAddAllMembers?: boolean
   setMembers?: (fetchMembers: () => Promise<UserWithDisplayName[]>) => void
+  showPayerEntry?: boolean
+}
+
+function isPaidByUser(formState: FormData, entry: SplitEntryData) {
+  return formState.entries[formState.paidByIndex]?.user?.id === entry.user?.id
 }
 
 export function EntriesPane({
@@ -26,9 +31,14 @@ export function EntriesPane({
   showPayerSelector,
   showAddAllMembers = true,
   setMembers,
+  showPayerEntry = true,
 }: SplitEntriesPaneProps) {
   const { t } = useTranslation()
   const layout = useRef<LayoutRectangle | null>(null)
+
+  const entries = formState.entries.filter(
+    (entry) => showPayerEntry || !isPaidByUser(formState, entry)
+  )
 
   return (
     <Pane
@@ -55,13 +65,17 @@ export function EntriesPane({
       }}
     >
       <Form autofocus>
-        {formState.entries.map((entry, index) => (
+        {entries.map((entry, index) => (
           <SplitEntry
             key={index}
             scrollRef={scrollRef}
             groupId={groupInfo.id}
             index={index}
+            first={index === 0}
+            last={index === entries.length - 1}
             formState={formState}
+            entry={entry}
+            paidByThis={isPaidByUser(formState, entry)}
             updateForm={updateForm}
             parentLayout={layout}
             focusIndex={index * 2}

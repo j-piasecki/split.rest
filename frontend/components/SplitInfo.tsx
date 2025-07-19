@@ -21,6 +21,7 @@ import {
   CurrencyUtils,
   isBalanceChangeSplit,
   isInversedSplit,
+  isLendSplit,
   isSettleUpSplit,
   isTranslatableError,
 } from 'shared'
@@ -623,7 +624,7 @@ export function SplitInfo({
           {/* TODO: Update text for inverse splits? */}
           {paidBy && (
             <IconInfoText
-              icon='payments'
+              icon={isLendSplit(splitInfo.type) ? 'payment' : 'payments'}
               translationKey={
                 isSettleUpSplit(splitInfo.type)
                   ? isInversedSplit(splitInfo.type)
@@ -633,7 +634,9 @@ export function SplitInfo({
                     : splitInfo.pending
                       ? 'splitInfo.hasSettledUpWillGiveBack'
                       : 'splitInfo.hasSettledUpGaveBack'
-                  : 'splitInfo.hasPaidText'
+                  : isLendSplit(splitInfo.type)
+                    ? 'splitInfo.hasLentText'
+                    : 'splitInfo.hasPaidText'
               }
               values={{
                 payer: paidBy.name,
