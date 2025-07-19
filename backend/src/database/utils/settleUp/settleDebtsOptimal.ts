@@ -40,6 +40,11 @@ export function settleDebtsOptimal(users: Member[]): Transaction[] {
     // Find someone to settle with
     for (let i = start + 1; i < n; i++) {
       if (currentBalances[start].intValue * currentBalances[i].intValue < 0) {
+        // Prune paths that exceed the best solution found so far
+        if (transactions.length >= bestTransactions.length && bestTransactions.length > 0) {
+          continue
+        }
+
         // Found a valid pair - create transaction
         const amount =
           Math.abs(currentBalances[start].intValue) > Math.abs(currentBalances[i].intValue)

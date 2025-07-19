@@ -101,7 +101,7 @@ function Form({ info }: { info: GroupUserInfo }) {
               visible={settleUpModalVisible}
               onClose={() => setSettleUpModalVisible(false)}
               onConfirm={async () => {
-                settleUpGroup()
+                await settleUpGroup()
                   .then(() => {
                     snack.show({ message: t('groupSettings.settleUpGroupSuccess') })
                     if (router.canGoBack()) {
