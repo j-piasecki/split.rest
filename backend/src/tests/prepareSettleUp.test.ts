@@ -1,4 +1,4 @@
-import { TargetedBalanceChange, prepareSettleUp } from '../database/utils/prepareSettleUp'
+import { TargetedBalanceChange, prepareSettleUp } from '../database/utils/settleUp'
 import { Member } from 'shared'
 
 function createMember(id: string, balance: string, hasAccess: boolean, deleted: boolean): Member {
