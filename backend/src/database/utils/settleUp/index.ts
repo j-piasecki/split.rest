@@ -1,2 +1,3 @@
-export type { TargetedBalanceChange } from './prepareSettleUp'
-export { loadSettleUpData, prepareSettleUp } from './prepareSettleUp'
+export { loadSettleUpData } from './loadSettleUpData'
+export { prepareSettleUp } from './prepareSettleUp'
+export type { TargetedBalanceChange } from './types'
