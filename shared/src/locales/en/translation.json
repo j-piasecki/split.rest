@@ -336,7 +336,9 @@
     "deleteGroupConfirmationText": "Are you sure you want to delete the group?",
     "deleteGroupConfirm": "Yes",
     "deleteGroupCancel": "No",
-    "deleteGroupSuccess": "Group {{name}} deleted"
+    "deleteGroupSuccess": "Group {{name}} deleted",
+    "lockGroup": "Lock group",
+    "unlockGroup": "Unlock group"
   },
 
   "inviteMember": {
