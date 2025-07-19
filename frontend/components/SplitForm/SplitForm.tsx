@@ -32,6 +32,7 @@ export interface SplitFormProps {
   showPaidByHint?: boolean
   showAddAllMembers?: boolean
   showPayerEntry?: boolean
+  filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
 }
 
 export function SplitForm({
@@ -55,6 +56,7 @@ export function SplitForm({
   showAddAllMembers = true,
   showPayerEntry = true,
   style,
+  filterSuggestions,
 }: SplitFormProps) {
   const scrollRef = useRef<ScrollView>(null)
   const [fetchingMembers, setFetchingMembers] = useState(false)
@@ -162,6 +164,7 @@ export function SplitForm({
           showAddAllMembers={showAddAllMembers}
           setMembers={setMembers}
           showPayerEntry={showPayerEntry}
+          filterSuggestions={filterSuggestions}
         />
       </ScrollView>
 

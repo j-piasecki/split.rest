@@ -17,6 +17,7 @@ interface SplitEntriesPaneProps {
   showAddAllMembers?: boolean
   setMembers?: (fetchMembers: () => Promise<UserWithDisplayName[]>) => void
   showPayerEntry?: boolean
+  filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
 }
 
 function isPaidByUser(formState: FormData, entry: SplitEntryData) {
@@ -32,6 +33,7 @@ export function EntriesPane({
   showAddAllMembers = true,
   setMembers,
   showPayerEntry = true,
+  filterSuggestions,
 }: SplitEntriesPaneProps) {
   const { t } = useTranslation()
   const layout = useRef<LayoutRectangle | null>(null)
@@ -80,6 +82,7 @@ export function EntriesPane({
             parentLayout={layout}
             focusIndex={index * 2}
             showPayerSelector={showPayerSelector}
+            filterSuggestions={filterSuggestions}
           />
         ))}
       </Form>

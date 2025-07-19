@@ -8,7 +8,7 @@ import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContex
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutRectangle, Platform, Pressable, ScrollView, View } from 'react-native'
-import { CurrencyUtils } from 'shared'
+import { CurrencyUtils, UserWithDisplayName } from 'shared'
 
 export interface SplitEntryProps {
   scrollRef?: React.RefObject<ScrollView | null>
@@ -23,6 +23,7 @@ export interface SplitEntryProps {
   focusIndex?: number
   first: boolean
   last: boolean
+  filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
 }
 
 export function SplitEntry({
@@ -38,6 +39,7 @@ export function SplitEntry({
   showPayerSelector,
   first,
   last,
+  filterSuggestions,
 }: SplitEntryProps) {
   const theme = useTheme()
   const layout = useRef<LayoutRectangle | null>(null)
@@ -121,13 +123,14 @@ export function SplitEntry({
             scrollToThis()
             updateForm({ type: 'clearFocusOnMount', index })
           }}
-          filterSuggestions={(users) =>
-            users.filter(
+          filterSuggestions={(users) => {
+            const filteredDefault = users.filter(
               (u) =>
                 u.email === entry.entry ||
                 formState.entries.every((e) => e.user === undefined || e.user.email !== u.email)
             )
-          }
+            return filterSuggestions?.(filteredDefault) ?? filteredDefault
+          }}
         />
 
         <TextInput

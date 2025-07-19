@@ -108,6 +108,9 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
         buttonIcon='chevronForward'
         buttonIconLocation='right'
         showAddAllMembers={permissions?.canReadMembers()}
+        filterSuggestions={(suggestions) =>
+          suggestions.filter((suggestion) => suggestion.id !== user.id)
+        }
       />
     </View>
   )
