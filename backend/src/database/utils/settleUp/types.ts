@@ -9,3 +9,11 @@ export interface Transaction {
   to: string
   amount: string
 }
+
+export interface GroupedSettlement {
+  targetId: string
+  payments: Array<{
+    from: string
+    amount: string
+  }>
+}
