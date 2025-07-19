@@ -39,6 +39,7 @@ import {
   SetGroupHiddenArguments,
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
+  SetGroupLockedArguments,
   SetGroupNameArguments,
   SetUserDisplayNameArguments,
   SetUserNameArguments,
@@ -279,5 +280,9 @@ export class AppService {
     args: GetSplitParticipantsSuggestionsArguments
   ) {
     return await this.databaseService.getSplitParticipantsSuggestions(callerId, args)
+  }
+
+  async setGroupLocked(callerId: string, args: SetGroupLockedArguments) {
+    return await this.databaseService.setGroupLocked(callerId, args)
   }
 }

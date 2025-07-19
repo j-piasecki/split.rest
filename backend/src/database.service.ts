@@ -23,6 +23,7 @@ import { queryGroupSplits } from './database/groups/queryGroupSplits'
 import { setGroupAccess } from './database/groups/setGroupAccess'
 import { setGroupAdmin } from './database/groups/setGroupAdmin'
 import { setGroupHidden } from './database/groups/setGroupHidden'
+import { setGroupLocked } from './database/groups/setGroupLocked'
 import { setGroupName } from './database/groups/setGroupName'
 import { setGroupInviteRejected } from './database/groups/setInviteRejected'
 import { setGroupInviteWithdrawn } from './database/groups/setInviteWithdrawn'
@@ -84,6 +85,7 @@ import {
   SetGroupHiddenArguments,
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
+  SetGroupLockedArguments,
   SetGroupNameArguments,
   SetUserDisplayNameArguments,
   SetUserNameArguments,
@@ -350,5 +352,10 @@ export class DatabaseService {
     args: GetSplitParticipantsSuggestionsArguments
   ) {
     return await getSplitParticipantsSuggestions(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['lockGroup'])
+  async setGroupLocked(callerId: string, args: SetGroupLockedArguments) {
+    return await setGroupLocked(this.pool, callerId, args)
   }
 }

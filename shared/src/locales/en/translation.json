@@ -124,7 +124,8 @@
           "see": "You don't have permission to view invitation links",
           "create": "You don't have permission to create invitation links",
           "delete": "You don't have permission to delete invitation links"
-        }
+        },
+        "lockGroup": "You don't have permission to lock or unlock the group"
       }
     },
     "notFound": {

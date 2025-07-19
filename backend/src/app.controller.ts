@@ -40,6 +40,7 @@ import {
   SetGroupHiddenArguments,
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
+  SetGroupLockedArguments,
   SetGroupNameArguments,
   SetUserDisplayNameArguments,
   SetUserNameArguments,
@@ -84,6 +85,7 @@ import {
   isSetGroupHiddenArguments,
   isSetGroupInviteRejectedArguments,
   isSetGroupInviteWithdrawnArguments,
+  isSetGroupLockedArguments,
   isSetGroupNameArguments,
   isSetUserDisplayNameArguments,
   isSetUserNameArguments,
@@ -656,5 +658,15 @@ export class AppController {
     }
 
     return await this.appService.getSplitParticipantsSuggestions(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('setGroupLocked')
+  async setGroupLocked(@Req() request: Request, @Body() args: Partial<SetGroupLockedArguments>) {
+    if (!isSetGroupLockedArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.setGroupLocked(request.user.sub, args)
   }
 }
