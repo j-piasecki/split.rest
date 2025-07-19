@@ -624,7 +624,7 @@ export function SplitInfo({
           {/* TODO: Update text for inverse splits? */}
           {paidBy && (
             <IconInfoText
-              icon='payments'
+              icon={isLendSplit(splitInfo.type) ? 'payment' : 'payments'}
               translationKey={
                 isSettleUpSplit(splitInfo.type)
                   ? isInversedSplit(splitInfo.type)

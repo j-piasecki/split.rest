@@ -20,6 +20,7 @@ import {
   CurrencyUtils,
   isBalanceChangeSplit,
   isInversedSplit,
+  isLendSplit,
   isSettleUpSplit,
   isTranslatableError,
 } from 'shared'
@@ -107,7 +108,10 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
   const isSettleUp = isSettleUpSplit(split.type)
   const isInverse = isInversedSplit(split.type)
   const isBalanceChange = isBalanceChangeSplit(split.type)
+  const isLend = isLendSplit(split.type)
   const shouldUseStackedInfo = displayClass === DisplayClass.Small || (width < 660 && width > 0)
+
+  const showBadge = isSettleUp || isLend
 
   const contextMenuDisabled =
     !permissions?.canSeeSplitDetails(split) &&
@@ -212,7 +216,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
             <ProfilePicture userId={split.paidById} size={32} />
           )}
 
-          {isSettleUp && (
+          {showBadge && (
             <View
               style={[
                 {
@@ -229,7 +233,9 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
                 styles.paneShadow,
               ]}
             >
-              {split.pending ? (
+              {isLend ? (
+                <Icon name='payment' size={16} color={theme.colors.tertiary} />
+              ) : split.pending ? (
                 <Icon name='hourglass' size={16} color={theme.colors.tertiary} />
               ) : isInverse ? (
                 <Icon
