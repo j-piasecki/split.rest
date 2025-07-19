@@ -1,7 +1,9 @@
 import { BadRequestException } from '../../errors/BadRequestException'
+import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
+import { isGroupLocked } from '../utils/isGroupLocked'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { loadSettleUpData, prepareSettleUp } from '../utils/prepareSettleUp'
 import { createSplitNoTransaction } from './createSplit'
@@ -121,6 +123,10 @@ export async function confirmSettleUp(
 
     if (!(await isUserMemberOfGroup(client, args.groupId, callerId))) {
       throw new NotFoundException('api.notFound.group')
+    }
+
+    if (await isGroupLocked(client, args.groupId)) {
+      throw new ForbiddenException('api.group.locked')
     }
 
     const balance = Number(

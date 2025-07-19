@@ -28,7 +28,7 @@ export function useSettleUpPreview(groupId?: number, withMembers?: string[]) {
       return info
     },
     retry: (failureCount, error) => {
-      if (error instanceof ApiError && error.statusCode === 400) {
+      if (error instanceof ApiError && (error.statusCode === 400 || error.statusCode === 403)) {
         return false
       }
 

@@ -163,7 +163,8 @@
       "joinLinkAlreadyExists": "A join link already exists for this group",
       "failedToCreateGroup": "Failed to create group",
       "userAlreadyInvited": "User is already invited to this group",
-      "cannotReadAllMembers": "Failed to read all members of this group"
+      "cannotReadAllMembers": "Failed to read all members of this group",
+      "locked": "This group is locked"
     },
     "user": {
       "nameTooLong": "Name is too long",

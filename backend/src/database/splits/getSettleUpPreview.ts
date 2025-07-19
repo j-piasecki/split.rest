@@ -1,6 +1,8 @@
 import { BadRequestException } from '../../errors/BadRequestException'
+import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
+import { isGroupLocked } from '../utils/isGroupLocked'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { loadSettleUpData, prepareSettleUp } from '../utils/prepareSettleUp'
 import hash from 'object-hash'
@@ -21,6 +23,10 @@ export async function getSettleUpPreview(
 
     if (!(await isUserMemberOfGroup(client, args.groupId, callerId))) {
       throw new NotFoundException('api.notFound.group')
+    }
+
+    if (await isGroupLocked(client, args.groupId)) {
+      throw new ForbiddenException('api.group.locked')
     }
 
     const balance = Number(

@@ -2,6 +2,7 @@ import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { NotificationToken, getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
+import { isGroupLocked } from '../utils/isGroupLocked'
 import { splitExists } from '../utils/splitExists'
 import { validateNormalSplitArgs } from '../utils/validateNormalSplitArgs'
 import { Pool, PoolClient } from 'pg'
@@ -146,6 +147,10 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
 
     if (!(await splitExists(client, args.groupId, args.splitId))) {
       throw new NotFoundException('api.notFound.split')
+    }
+
+    if (await isGroupLocked(client, args.groupId)) {
+      throw new ForbiddenException('api.group.locked')
     }
 
     const splitInfo = (

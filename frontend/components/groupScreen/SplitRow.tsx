@@ -16,7 +16,13 @@ import { useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, View, ViewStyle } from 'react-native'
-import { CurrencyUtils, isBalanceChangeSplit, isInversedSplit, isSettleUpSplit } from 'shared'
+import {
+  CurrencyUtils,
+  isBalanceChangeSplit,
+  isInversedSplit,
+  isSettleUpSplit,
+  isTranslatableError,
+} from 'shared'
 import { GroupUserInfo, SplitInfo } from 'shared'
 
 function LinearInfo({ split, info }: { split: SplitInfo; info: GroupUserInfo }) {
@@ -155,15 +161,23 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
           disabled: !permissions?.canDeleteSplit(split),
           destructive: true,
           onPress: () => {
-            deleteSplit(split.id).then(() => {
-              snack.show({
-                message: t('split.deletedToast', { title: getSplitDisplayName(split) }),
-                actionText: t('undo'),
-                action: async () => {
-                  await restoreSplit(split.id, info.id)
-                },
+            deleteSplit(split.id)
+              .then(() => {
+                snack.show({
+                  message: t('split.deletedToast', { title: getSplitDisplayName(split) }),
+                  actionText: t('undo'),
+                  action: async () => {
+                    await restoreSplit(split.id, info.id)
+                  },
+                })
               })
-            })
+              .catch((error) => {
+                if (isTranslatableError(error)) {
+                  snack.show({
+                    message: t(error.message),
+                  })
+                }
+              })
           },
         },
       ]}

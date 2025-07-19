@@ -1,7 +1,9 @@
+import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import NotificationUtils from '../../notifications/NotificationUtils'
 import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
+import { isGroupLocked } from '../utils/isGroupLocked'
 import { userExists } from '../utils/userExists'
 import { validateNormalSplitArgs } from '../utils/validateNormalSplitArgs'
 import { Pool, PoolClient } from 'pg'
@@ -136,6 +138,10 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
 
     if (await isGroupDeleted(client, args.groupId)) {
       throw new NotFoundException('api.notFound.group')
+    }
+
+    if (await isGroupLocked(client, args.groupId)) {
+      throw new ForbiddenException('api.group.locked')
     }
 
     args.balances.forEach((balance) => {
