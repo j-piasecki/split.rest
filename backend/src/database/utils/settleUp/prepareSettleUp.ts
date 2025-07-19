@@ -1,5 +1,6 @@
 import { TargetedBalanceChange } from './types'
 import assert from 'assert'
+import currency from 'currency.js'
 import { BalanceChange, Member } from 'shared'
 
 export function prepareSettleUp(
@@ -17,14 +18,14 @@ export function prepareSettleUp(
     const targetMember = allMembers.find((m) => m.id === change.targetId)
 
     if (member && targetMember) {
-      member.balance = (Number(member.balance) + Number(change.change)).toFixed(2)
-      targetMember.balance = (Number(targetMember.balance) - Number(change.change)).toFixed(2)
+      member.balance = currency(member.balance).add(change.change).toString()
+      targetMember.balance = currency(targetMember.balance).subtract(change.change).toString()
 
       if (member.id === payerId) {
-        balance = Number(member.balance)
+        balance = currency(member.balance).value
       }
       if (targetMember.id === payerId) {
-        balance = Number(targetMember.balance)
+        balance = currency(targetMember.balance).value
       }
     }
   })
@@ -37,7 +38,7 @@ export function prepareSettleUp(
     assert(member !== undefined)
 
     if (balance !== 0) {
-      entries.push({ id: member.id, change: balance.toFixed(2), pending: true })
+      entries.push({ id: member.id, change: currency(balance).toString(), pending: true })
     }
 
     return entries
@@ -47,7 +48,7 @@ export function prepareSettleUp(
   // grouped by whether they have access or not and sorted by balance descending.
   const members = allMembers
     .filter((member) => {
-      return Math.sign(Number(member.balance)) === -Math.sign(balance)
+      return Math.sign(currency(member.balance).value) === -Math.sign(balance)
     })
     .sort((a, b) => {
       // Keep deleted users at the end
@@ -64,8 +65,8 @@ export function prepareSettleUp(
         return 1
       }
 
-      const balanceA = Number(a.balance)
-      const balanceB = Number(b.balance)
+      const balanceA = currency(a.balance).value
+      const balanceB = currency(b.balance).value
 
       // If both users have access sort by absolute balance (sorts positive descending and negatives ascending)
       return Math.abs(balanceB) - Math.abs(balanceA)
@@ -74,21 +75,21 @@ export function prepareSettleUp(
   let workingBalance = balance
 
   for (const member of members) {
-    const memberBalance = Number(member.balance)
+    const memberBalance = currency(member.balance).value
     assert(Math.sign(memberBalance) === -Math.sign(balance))
 
     if (balance < 0) {
       if (workingBalance + memberBalance >= 0) {
         entries.push({
           id: member.id,
-          change: workingBalance.toFixed(2),
+          change: currency(workingBalance).toString(),
           pending: true,
         })
         workingBalance = 0
       } else {
         entries.push({
           id: member.id,
-          change: (-memberBalance).toFixed(2),
+          change: currency(-memberBalance).toString(),
           pending: true,
         })
         workingBalance += memberBalance
@@ -101,14 +102,14 @@ export function prepareSettleUp(
       if (workingBalance + memberBalance <= 0) {
         entries.push({
           id: member.id,
-          change: workingBalance.toFixed(2),
+          change: currency(workingBalance).toString(),
           pending: true,
         })
         workingBalance = 0
       } else {
         entries.push({
           id: member.id,
-          change: (-memberBalance).toFixed(2),
+          change: currency(-memberBalance).toString(),
           pending: true,
         })
         workingBalance += memberBalance
