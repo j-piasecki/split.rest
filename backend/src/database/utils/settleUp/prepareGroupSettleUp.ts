@@ -20,6 +20,11 @@ export function prepareGroupSettleUp(
 
   // Filter out already balanced members
   const members = allMembers.filter((m) => Number(m.balance) !== 0)
+
+  if (members.length === 0) {
+    return []
+  }
+
   const transactions = settleDebts(members)
 
   // Group transactions by target (recipient)

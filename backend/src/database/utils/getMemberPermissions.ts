@@ -40,7 +40,8 @@ const ownerPermissions: GroupMemberPermissionsDTO = {
     ManagePermissionsDTO.ManageAllDirectInvites |
     ManagePermissionsDTO.ChangeDisplayName |
     ManagePermissionsDTO.ChangeEveryoneDisplayName |
-    ManagePermissionsDTO.LockGroup,
+    ManagePermissionsDTO.LockGroup |
+    ManagePermissionsDTO.SettleUpGroup,
 } as const
 
 const adminPermissions: GroupMemberPermissionsDTO = {

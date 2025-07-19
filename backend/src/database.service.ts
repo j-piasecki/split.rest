@@ -28,6 +28,7 @@ import { setGroupName } from './database/groups/setGroupName'
 import { setGroupInviteRejected } from './database/groups/setInviteRejected'
 import { setGroupInviteWithdrawn } from './database/groups/setInviteWithdrawn'
 import { setUserDisplayName } from './database/groups/setUserDisplayName'
+import { settleUpGroup } from './database/groups/settleUpGroup'
 import { RequirePermissions } from './database/permissionCheck'
 import { completeSplitEntry } from './database/splits/completeSplitEntry'
 import { confirmSettleUp } from './database/splits/confirmSettleUp'
@@ -90,6 +91,7 @@ import {
   SetUserDisplayNameArguments,
   SetUserNameArguments,
   SettleUpArguments,
+  SettleUpGroupArguments,
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
   User,
@@ -357,5 +359,10 @@ export class DatabaseService {
   @RequirePermissions(['lockGroup'])
   async setGroupLocked(callerId: string, args: SetGroupLockedArguments) {
     return await setGroupLocked(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['settleUpGroup'])
+  async settleUpGroup(callerId: string, args: SettleUpGroupArguments) {
+    return await settleUpGroup(this.pool, callerId, args)
   }
 }

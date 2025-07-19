@@ -10,6 +10,7 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSetGroupLockedMutation } from '@hooks/database/useSetGroupLocked'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
+import { useSettleUpGroup } from '@hooks/database/useSettleUpGroup'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
@@ -32,6 +33,7 @@ function Form({ info }: { info: GroupUserInfo }) {
   const { mutateAsync: setGroupLocked, isPending: isSettingLocked } = useSetGroupLockedMutation(
     info.id
   )
+  const { mutateAsync: settleUpGroup, isPending: isSettingSettledUp } = useSettleUpGroup(info.id)
   const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
 
   return (
@@ -92,6 +94,24 @@ function Form({ info }: { info: GroupUserInfo }) {
         )}
       </View>
       <View style={{ marginTop: 32, gap: 16 }}>
+        {permissions?.canSettleUpGroup() && (
+          <Button
+            title={t('groupSettings.settleUpGroup')}
+            leftIcon='balance'
+            isLoading={isSettingSettledUp}
+            onPress={() => {
+              settleUpGroup()
+                .then(() => {
+                  snack.show({ message: t('groupSettings.settleUpGroupSuccess') })
+                })
+                .catch((e) => {
+                  if (isTranslatableError(e)) {
+                    snack.show({ message: t(e.message) })
+                  }
+                })
+            }}
+          />
+        )}
         {permissions?.canLockGroup() && (
           <Button
             title={info.locked ? t('groupSettings.unlockGroup') : t('groupSettings.lockGroup')}
