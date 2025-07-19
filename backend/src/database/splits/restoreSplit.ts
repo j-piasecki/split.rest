@@ -1,5 +1,7 @@
+import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
+import { isGroupLocked } from '../utils/isGroupLocked'
 import { splitExists } from '../utils/splitExists'
 import { Pool } from 'pg'
 import { RestoreSplitArguments, isSettleUpSplit } from 'shared'
@@ -15,6 +17,10 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
 
     if (!(await splitExists(client, args.groupId, args.splitId, true))) {
       throw new NotFoundException('api.notFound.split')
+    }
+
+    if (await isGroupLocked(client, args.groupId)) {
+      throw new ForbiddenException('api.group.locked')
     }
 
     const splitInfo = (

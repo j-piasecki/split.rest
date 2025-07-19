@@ -222,3 +222,8 @@ export interface CompleteSplitEntryArguments {
 export interface GetSplitParticipantsSuggestionsArguments {
   groupId: number
 }
+
+export interface SetGroupLockedArguments {
+  groupId: number
+  locked: boolean
+}

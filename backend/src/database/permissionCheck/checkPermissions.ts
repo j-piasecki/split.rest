@@ -281,6 +281,13 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           return 'api.insufficientPermissions.group.changeDisplayName'
         }
 
+        case 'lockGroup': {
+          if (!callerPermissions?.canLockGroup()) {
+            return 'api.insufficientPermissions.group.lockGroup'
+          }
+          continue
+        }
+
         default:
           console.log('Unknown permission required:', permission)
           return 'unknownError'

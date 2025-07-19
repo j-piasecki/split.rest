@@ -19,6 +19,7 @@ export interface GroupInfo {
   owner: string
   type: GroupType
   lastUpdate: number
+  locked: boolean
 }
 
 export interface GroupUserInfo extends GroupInfo {

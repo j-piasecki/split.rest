@@ -126,7 +126,7 @@ export default function SplitInfoScreen() {
             />
           </View>
 
-          {permissions?.canUpdateSplit(history[0]) && (
+          {permissions?.canUpdateSplit(history[0]) && !groupInfo?.locked && (
             <Button
               title={t('split.edit')}
               style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}

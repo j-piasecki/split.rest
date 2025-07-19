@@ -35,6 +35,7 @@ import {
   SetGroupHiddenArguments,
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
+  SetGroupLockedArguments,
   SetGroupNameArguments,
   SetUserDisplayNameArguments,
   SetUserNameArguments,
@@ -244,4 +245,8 @@ export function isGetSplitParticipantsSuggestionsArguments(
   obj: any
 ): obj is GetSplitParticipantsSuggestionsArguments {
   return obj.groupId !== undefined
+}
+
+export function isSetGroupLockedArguments(obj: any): obj is SetGroupLockedArguments {
+  return obj.groupId !== undefined && obj.locked !== undefined
 }

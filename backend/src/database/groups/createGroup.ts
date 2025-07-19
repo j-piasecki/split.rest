@@ -48,6 +48,7 @@ export async function createGroup(
       balance: '0',
       total: '0.00',
       lastUpdate: Date.now(),
+      locked: false,
     }
   } catch (e) {
     await client.query('ROLLBACK')

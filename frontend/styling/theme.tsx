@@ -72,7 +72,7 @@ const lightColors: Colors = {
 
   error: '#ba1a1a',
   onError: '#ffffff',
-  errorContainer: '#ffdad6',
+  errorContainer: '#ffb2ab',
   onErrorContainer: '#410002',
 
   surfaceDim: '#e6d6d9',

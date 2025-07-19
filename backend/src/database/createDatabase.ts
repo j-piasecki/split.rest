@@ -24,6 +24,7 @@ export async function createDatabase(pool: Pool) {
       deleted BOOLEAN NOT NULL DEFAULT FALSE,
       type SMALLINT NOT NULL,
       last_update BIGINT NOT NULL,
+      locked BOOLEAN NOT NULL DEFAULT FALSE,
 
       FOREIGN KEY (owner) REFERENCES users(id)
     )

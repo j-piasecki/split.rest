@@ -89,12 +89,16 @@ export function GroupRow({ info, style }: GroupRowProps) {
               <Icon name='members' size={20} color={theme.colors.outline} />
             </View>
 
-            {(!isSmallScreen || !info.hasAccess || info.isAdmin) && (
+            {(!isSmallScreen || !info.hasAccess || info.isAdmin || info.locked) && (
               <Icon
-                name={info.isAdmin ? 'shield' : 'lock'}
+                name={info.isAdmin && !info.locked ? 'shield' : 'lock'}
                 size={16}
                 color={
-                  info.hasAccess && !info.isAdmin ? theme.colors.transparent : theme.colors.outline
+                  info.locked
+                    ? theme.colors.error
+                    : info.hasAccess && !info.isAdmin
+                      ? theme.colors.transparent
+                      : theme.colors.outline
                 }
                 style={{ transform: [{ translateY: 2 }] }}
               />

@@ -31,6 +31,7 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
       info={info}
       showPullableHeader
       applyBottomInset
+      hideFab={info?.locked}
       headerComponent={
         <View style={{ gap: 12 }}>
           <GroupInfoPane info={info} />
@@ -105,7 +106,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           collapsed={false}
           rightComponent={permissions?.canQuerySplits() && <SplitQueryButton />}
         >
-          <GroupSplitsList info={groupInfo} />
+          <GroupSplitsList info={groupInfo} hideFab={groupInfo?.locked} />
         </Pane>
         {(!permissions || permissions?.canReadMembers()) && (
           <Pane

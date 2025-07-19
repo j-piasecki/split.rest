@@ -124,7 +124,8 @@
           "see": "You don't have permission to view invitation links",
           "create": "You don't have permission to create invitation links",
           "delete": "You don't have permission to delete invitation links"
-        }
+        },
+        "lockGroup": "You don't have permission to lock or unlock the group"
       }
     },
     "notFound": {
@@ -163,7 +164,8 @@
       "joinLinkAlreadyExists": "A join link already exists for this group",
       "failedToCreateGroup": "Failed to create group",
       "userAlreadyInvited": "User is already invited to this group",
-      "cannotReadAllMembers": "Failed to read all members of this group"
+      "cannotReadAllMembers": "Failed to read all members of this group",
+      "locked": "This group is locked"
     },
     "user": {
       "nameTooLong": "Name is too long",
@@ -334,7 +336,9 @@
     "deleteGroupConfirmationText": "Are you sure you want to delete the group?",
     "deleteGroupConfirm": "Yes",
     "deleteGroupCancel": "No",
-    "deleteGroupSuccess": "Group {{name}} deleted"
+    "deleteGroupSuccess": "Group {{name}} deleted",
+    "lockGroup": "Lock group",
+    "unlockGroup": "Unlock group"
   },
 
   "inviteMember": {
@@ -435,7 +439,9 @@
       "cancel": "Cancel",
       "settleUpSuccess": "Settled up",
       "openSettleUp": "Show"
-    }
+    },
+    "groupLocked": "This group is locked",
+    "groupLockedDescription": "You can't add new splits, edit or delete existing ones, or settle up. You can still complete existing settle-ups."
   },
 
   "splitInfo": {

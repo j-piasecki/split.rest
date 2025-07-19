@@ -8,6 +8,7 @@ import { useSnack } from '@components/SnackBar'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { useSetGroupLockedMutation } from '@hooks/database/useSetGroupLocked'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -15,7 +16,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { GroupUserInfo } from 'shared'
+import { GroupUserInfo, isTranslatableError } from 'shared'
 
 function Form({ info }: { info: GroupUserInfo }) {
   const router = useRouter()
@@ -28,6 +29,9 @@ function Form({ info }: { info: GroupUserInfo }) {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const { data: permissions } = useGroupPermissions(info.id)
   const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
+  const { mutateAsync: setGroupLocked, isPending: isSettingLocked } = useSetGroupLockedMutation(
+    info.id
+  )
   const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
 
   return (
@@ -87,35 +91,50 @@ function Form({ info }: { info: GroupUserInfo }) {
           />
         )}
       </View>
-      {permissions?.canDeleteGroup() && (
-        <>
-          <ConfirmationModal
-            visible={deleteModalVisible}
-            onClose={() => setDeleteModalVisible(false)}
-            onConfirm={async () => {
-              await deleteGroup(info.id)
-              router.replace(`/home`)
-              snack.show({ message: t('groupSettings.deleteGroupSuccess', { name: info.name }) })
-            }}
-            title='groupSettings.deleteGroupConfirmationText'
-            cancelText='groupSettings.deleteGroupCancel'
-            cancelIcon='close'
-            confirmText='groupSettings.deleteGroupConfirm'
-            confirmIcon='check'
-            destructive
-          />
+      <View style={{ marginTop: 32, gap: 16 }}>
+        {permissions?.canLockGroup() && (
           <Button
-            destructive
-            leftIcon='deleteForever'
-            title={t('groupSettings.deleteGroup')}
-            isLoading={isDeletingGroup}
-            style={{ marginTop: 32 }}
+            title={info.locked ? t('groupSettings.unlockGroup') : t('groupSettings.lockGroup')}
+            leftIcon={info.locked ? 'lockOpen' : 'lock'}
+            isLoading={isSettingLocked}
             onPress={() => {
-              setDeleteModalVisible(true)
+              setGroupLocked(!info.locked).catch((e) => {
+                if (isTranslatableError(e)) {
+                  snack.show({ message: t(e.message) })
+                }
+              })
             }}
           />
-        </>
-      )}
+        )}
+        {permissions?.canDeleteGroup() && (
+          <>
+            <ConfirmationModal
+              visible={deleteModalVisible}
+              onClose={() => setDeleteModalVisible(false)}
+              onConfirm={async () => {
+                await deleteGroup(info.id)
+                router.replace(`/home`)
+                snack.show({ message: t('groupSettings.deleteGroupSuccess', { name: info.name }) })
+              }}
+              title='groupSettings.deleteGroupConfirmationText'
+              cancelText='groupSettings.deleteGroupCancel'
+              cancelIcon='close'
+              confirmText='groupSettings.deleteGroupConfirm'
+              confirmIcon='check'
+              destructive
+            />
+            <Button
+              destructive
+              leftIcon='deleteForever'
+              title={t('groupSettings.deleteGroup')}
+              isLoading={isDeletingGroup}
+              onPress={() => {
+                setDeleteModalVisible(true)
+              }}
+            />
+          </>
+        )}
+      </View>
     </ScrollView>
   )
 }

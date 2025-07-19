@@ -19,6 +19,7 @@ export async function getUserGroups(
           groups.member_count,
           groups.type,
           groups.last_update,
+          groups.locked,
           group_members.balance, 
           group_members.is_hidden, 
           group_members.is_admin, 
@@ -54,5 +55,6 @@ export async function getUserGroups(
     total: row.total,
     type: row.type,
     lastUpdate: Number(row.last_update),
+    locked: row.locked,
   }))
 }
