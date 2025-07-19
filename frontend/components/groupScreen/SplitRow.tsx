@@ -150,7 +150,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
         {
           label: t('split.edit'),
           icon: 'edit',
-          disabled: !permissions?.canUpdateSplit(split),
+          disabled: !permissions?.canUpdateSplit(split) || info.locked,
           onPress: () => {
             router.navigate(`/group/${info?.id}/split/${split.id}/edit`)
           },
@@ -158,7 +158,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
         {
           label: t('split.delete'),
           icon: 'delete',
-          disabled: !permissions?.canDeleteSplit(split),
+          disabled: !permissions?.canDeleteSplit(split) || info.locked,
           destructive: true,
           onPress: () => {
             deleteSplit(split.id)

@@ -16,7 +16,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { GroupUserInfo } from 'shared'
+import { GroupUserInfo, isTranslatableError } from 'shared'
 
 function Form({ info }: { info: GroupUserInfo }) {
   const router = useRouter()
@@ -98,7 +98,11 @@ function Form({ info }: { info: GroupUserInfo }) {
             leftIcon={info.locked ? 'lockOpen' : 'lock'}
             isLoading={isSettingLocked}
             onPress={() => {
-              setGroupLocked(!info.locked)
+              setGroupLocked(!info.locked).catch((e) => {
+                if (isTranslatableError(e)) {
+                  snack.show({ message: t(e.message) })
+                }
+              })
             }}
           />
         )}

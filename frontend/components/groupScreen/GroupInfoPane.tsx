@@ -63,14 +63,48 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
             backgroundColor: theme.colors.surfaceContainer,
             paddingHorizontal: 16,
             paddingVertical: 8,
-            paddingBottom: collapsed ? 16 : undefined,
+            paddingBottom: collapsed && !info?.locked ? 16 : undefined,
             borderRadius: 4,
           },
-          collapsed && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
+          collapsed && !info?.locked && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
         ]}
       >
         <TitleWithBalance info={info} />
       </View>
+
+      {info?.locked && (
+        <View
+          style={[
+            {
+              backgroundColor: theme.colors.errorContainer,
+              paddingHorizontal: 16,
+              paddingVertical: 12,
+              borderRadius: 4,
+            },
+            !threeBarLayout &&
+              collapsed && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
+          ]}
+        >
+          <View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <Icon name='lock' size={24} color={theme.colors.onErrorContainer} />
+              <Text style={{ fontSize: 18, fontWeight: 700, color: theme.colors.onErrorContainer }}>
+                {t('groupInfo.groupLocked')}
+              </Text>
+            </View>
+            <Text
+              style={{
+                marginLeft: 32,
+                fontSize: 15,
+                fontWeight: 500,
+                color: theme.colors.onErrorContainer,
+              }}
+            >
+              {t('groupInfo.groupLockedDescription')}
+            </Text>
+          </View>
+        </View>
+      )}
 
       {!collapsed && (
         <View
@@ -82,7 +116,10 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
               borderRadius: 4,
               paddingBottom: threeBarLayout ? undefined : 16,
             },
-            !threeBarLayout && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
+            (!threeBarLayout || info?.locked) && {
+              borderBottomLeftRadius: 16,
+              borderBottomRightRadius: 16,
+            },
           ]}
         >
           <GroupDetails info={info} />
@@ -90,23 +127,26 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
       )}
 
       {threeBarLayout && (
-        <View style={{ flexGrow: 1, gap: 8 }}>
-          <View
-            style={{
-              flexGrow: 1,
-              flexShrink: 1,
-              backgroundColor: theme.colors.surfaceContainer,
-              paddingHorizontal: 16,
-              paddingVertical: 16,
-              borderRadius: 4,
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            }}
-          >
-            <GroupActionButtons info={info} />
-          </View>
-          <ActionableSplitsPane info={info} style={{ flexGrow: 100 }} />
-        </View>
+        <>
+          {info?.locked !== true && (
+            <View
+              style={{
+                flexGrow: 1,
+                flexShrink: 1,
+                backgroundColor: theme.colors.surfaceContainer,
+                paddingHorizontal: 16,
+                paddingVertical: 16,
+                borderRadius: 4,
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+              }}
+            >
+              <GroupActionButtons info={info} />
+            </View>
+          )}
+
+          <ActionableSplitsPane info={info} style={{ flexGrow: 100, marginTop: 8 }} />
+        </>
       )}
     </View>
   )
