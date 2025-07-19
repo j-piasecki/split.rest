@@ -349,7 +349,11 @@
     "lockGroup": "Lock group",
     "unlockGroup": "Unlock group",
     "settleUpGroup": "Settle up group",
-    "settleUpGroupSuccess": "Group settled up"
+    "settleUpGroupSuccess": "Group settled up",
+    "settleUpGroupConfirmationText": "Are you sure you want to settle up the group?",
+    "settleUpGroupConfirmationMessage": "This will create multiple settle-up splits and notify all members.",
+    "settleUpGroupConfirm": "Yes",
+    "settleUpGroupCancel": "No"
   },
 
   "inviteMember": {

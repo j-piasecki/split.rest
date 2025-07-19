@@ -28,6 +28,7 @@ function Form({ info }: { info: GroupUserInfo }) {
   const [name, setName] = useState(info.name)
   const [isEditingName, setIsEditingName] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+  const [settleUpModalVisible, setSettleUpModalVisible] = useState(false)
   const { data: permissions } = useGroupPermissions(info.id)
   const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
   const { mutateAsync: setGroupLocked, isPending: isSettingLocked } = useSetGroupLockedMutation(
@@ -95,22 +96,42 @@ function Form({ info }: { info: GroupUserInfo }) {
       </View>
       <View style={{ marginTop: 32, gap: 16 }}>
         {permissions?.canSettleUpGroup() && (
-          <Button
-            title={t('groupSettings.settleUpGroup')}
-            leftIcon='balance'
-            isLoading={isSettingSettledUp}
-            onPress={() => {
-              settleUpGroup()
-                .then(() => {
-                  snack.show({ message: t('groupSettings.settleUpGroupSuccess') })
-                })
-                .catch((e) => {
-                  if (isTranslatableError(e)) {
-                    alert(t(e.message))
-                  }
-                })
-            }}
-          />
+          <>
+            <ConfirmationModal
+              visible={settleUpModalVisible}
+              onClose={() => setSettleUpModalVisible(false)}
+              onConfirm={async () => {
+                settleUpGroup()
+                  .then(() => {
+                    snack.show({ message: t('groupSettings.settleUpGroupSuccess') })
+                    if (router.canGoBack()) {
+                      router.back()
+                    } else {
+                      router.replace(`/group/${info.id}`)
+                    }
+                  })
+                  .catch((e) => {
+                    if (isTranslatableError(e)) {
+                      alert(t(e.message))
+                    }
+                  })
+              }}
+              title='groupSettings.settleUpGroupConfirmationText'
+              message='groupSettings.settleUpGroupConfirmationMessage'
+              cancelText='groupSettings.settleUpGroupCancel'
+              cancelIcon='close'
+              confirmText='groupSettings.settleUpGroupConfirm'
+              confirmIcon='check'
+            />
+            <Button
+              title={t('groupSettings.settleUpGroup')}
+              leftIcon='balance'
+              isLoading={isSettingSettledUp}
+              onPress={() => {
+                setSettleUpModalVisible(true)
+              }}
+            />
+          </>
         )}
         {permissions?.canLockGroup() && (
           <Button
