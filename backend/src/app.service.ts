@@ -75,7 +75,11 @@ export class AppService {
   }
 
   async createSplit(callerId: string, args: CreateSplitArguments) {
-    if (args.type !== SplitType.Normal && args.type !== SplitType.BalanceChange) {
+    if (
+      args.type !== SplitType.Normal &&
+      args.type !== SplitType.BalanceChange &&
+      args.type !== SplitType.Lend
+    ) {
       throw new BadRequestException('api.split.invalidSplitType')
     }
 

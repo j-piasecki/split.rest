@@ -16,3 +16,14 @@ export function validateNormalSplitArgs(args: CreateSplitArguments | UpdateSplit
     throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
   }
 }
+
+export function validateLendSplitArgs(args: CreateSplitArguments | UpdateSplitArguments) {
+  validateNormalSplitArgs(args)
+
+  const payerGetsBack = args.balances.find(({ id }) => id === args.paidBy)?.change
+  const total = args.total
+
+  if (Math.abs(Number(payerGetsBack) - Number(total)) >= 0.01) {
+    throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
+  }
+}

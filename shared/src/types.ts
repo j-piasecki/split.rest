@@ -66,6 +66,8 @@ export enum SplitType {
   // There is no single payer or recipient, there may be multiple payers and recipients.
   // Sum of all changes should be 0.
   BalanceChange = 1 << 2,
+  // Same as the normal split, but allows the payer contribution to be zero.
+  Lend = 1 << 3,
 }
 
 export function isNormalSplit(type: SplitType) {
@@ -82,6 +84,10 @@ export function isSettleUpSplit(type: SplitType) {
 
 export function isBalanceChangeSplit(type: SplitType) {
   return type === SplitType.BalanceChange
+}
+
+export function isLendSplit(type: SplitType) {
+  return type === SplitType.Lend
 }
 
 export enum AndroidNotificationChannel {

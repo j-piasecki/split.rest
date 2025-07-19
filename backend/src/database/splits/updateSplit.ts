@@ -4,7 +4,7 @@ import { NotificationToken, getNotificationTokens } from '../utils/getNotificati
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isGroupLocked } from '../utils/isGroupLocked'
 import { splitExists } from '../utils/splitExists'
-import { validateNormalSplitArgs } from '../utils/validateNormalSplitArgs'
+import { validateLendSplitArgs, validateNormalSplitArgs } from '../utils/validateSplitArgs'
 import { Pool, PoolClient } from 'pg'
 import {
   AndroidNotificationChannel,
@@ -12,6 +12,7 @@ import {
   LanguageTranslationKey,
   SplitType,
   UpdateSplitArguments,
+  isLendSplit,
   isNormalSplit,
   isSettleUpSplit,
 } from 'shared'
@@ -173,6 +174,10 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
 
     if (isNormalSplit(splitInfo.type)) {
       validateNormalSplitArgs(args)
+    }
+
+    if (isLendSplit(splitInfo.type)) {
+      validateLendSplitArgs(args)
     }
 
     if (isSettleUpSplit(splitInfo.type)) {
