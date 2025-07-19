@@ -95,7 +95,7 @@ export async function settleUpGroup(pool: Pool, callerId: string, args: SettleUp
       throw new BadRequestException('api.group.settledUpButPending')
     }
 
-    entries.forEach(async (entry) => {
+    for (const entry of entries) {
       await createSplitNoTransaction(client, callerId, {
         groupId: args.groupId,
         title: 'Settle up',
@@ -118,7 +118,7 @@ export async function settleUpGroup(pool: Pool, callerId: string, args: SettleUp
         type: SplitType.SettleUp | SplitType.Inversed,
         currency: settleUpData.currency,
       })
-    })
+    }
 
     const creditors = new Set<string>()
     const debtors = new Set<string>()
