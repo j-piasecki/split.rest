@@ -59,7 +59,7 @@ function ActionableSplit({
         {
           backgroundColor: theme.colors.tertiaryContainer,
           borderRadius: 4,
-          overflow: 'hidden',
+          // overflow: 'hidden',
           // @ts-expect-error userSelect is not a valid style property on mobile
           userSelect: 'none',
         },
@@ -85,6 +85,7 @@ function ActionableSplit({
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
+          gap: 8,
         }}
         onPressIn={() => setPressed(true)}
         onPressOut={() => setPressed(false)}
@@ -94,9 +95,23 @@ function ActionableSplit({
           router.navigate(`/group/${info?.id}/split/${split.id}`)
         }}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+        <View
+          style={{
+            flexGrow: 1,
+            flexShrink: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 16,
+          }}
+        >
           <ProfilePicture size={32} userId={split.paidById} />
-          <Text style={{ color: textColor, fontSize: 18, fontWeight: 700 }}>{text}</Text>
+          <Text
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            style={{ flex: 1, color: textColor, fontSize: 18, fontWeight: 700 }}
+          >
+            {text}
+          </Text>
         </View>
         <Icon name='chevronForward' size={20} color={theme.colors.onTertiaryContainer} />
       </Pressable>
