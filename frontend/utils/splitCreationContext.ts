@@ -39,6 +39,7 @@ class SplitCreationContext {
     SplitMethod.ExactAmounts,
     SplitMethod.BalanceChanges,
     SplitMethod.Lend,
+    SplitMethod.Delayed,
   ]
   participants: UserWithValue[] | null = null
   paidById: string | null = null
