@@ -131,6 +131,63 @@ const SplitTypeCard = ({
   )
 }
 
+function ConcreteSplitTypeCard({
+  method,
+  selectedMethod,
+  onSelect,
+}: {
+  method: SplitMethod
+  selectedMethod: SplitMethod
+  onSelect: (method: SplitMethod) => void
+}) {
+  const { t } = useTranslation()
+
+  switch (method) {
+    case SplitMethod.Equal:
+      return (
+        <SplitTypeCard
+          title={t('splitType.equalAmounts')}
+          description={t('splitTypeDescription.equalAmounts')}
+          icon='equal'
+          selected={selectedMethod === SplitMethod.Equal}
+          onSelect={() => onSelect(SplitMethod.Equal)}
+        />
+      )
+    case SplitMethod.BalanceChanges:
+      return (
+        <SplitTypeCard
+          title={t('splitType.balanceChanges')}
+          description={t('splitTypeDescription.balanceChanges')}
+          icon='barChart'
+          selected={selectedMethod === SplitMethod.BalanceChanges}
+          onSelect={() => onSelect(SplitMethod.BalanceChanges)}
+        />
+      )
+    case SplitMethod.ExactAmounts:
+      return (
+        <SplitTypeCard
+          title={t('splitType.exactAmounts')}
+          description={t('splitTypeDescription.exactAmounts')}
+          icon='exactAmount'
+          selected={selectedMethod === SplitMethod.ExactAmounts}
+          onSelect={() => onSelect(SplitMethod.ExactAmounts)}
+        />
+      )
+    case SplitMethod.Lend:
+      return (
+        <SplitTypeCard
+          title={t('splitType.lend')}
+          description={t('splitTypeDescription.lend')}
+          icon='payment'
+          selected={selectedMethod === SplitMethod.Lend}
+          onSelect={() => onSelect(SplitMethod.Lend)}
+        />
+      )
+    default:
+      return null
+  }
+}
+
 export default function Modal() {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
@@ -172,37 +229,14 @@ export default function Modal() {
             {t('splitType.selectType')}
           </Text>
 
-          <SplitTypeCard
-            title={t('splitType.equalAmounts')}
-            description={t('splitTypeDescription.equalAmounts')}
-            icon='equal'
-            selected={selectedSplitType === SplitMethod.Equal}
-            onSelect={() => setSelectedSplitType(SplitMethod.Equal)}
-          />
-
-          <SplitTypeCard
-            title={t('splitType.balanceChanges')}
-            description={t('splitTypeDescription.balanceChanges')}
-            icon='barChart'
-            selected={selectedSplitType === SplitMethod.BalanceChanges}
-            onSelect={() => setSelectedSplitType(SplitMethod.BalanceChanges)}
-          />
-
-          <SplitTypeCard
-            title={t('splitType.exactAmounts')}
-            description={t('splitTypeDescription.exactAmounts')}
-            icon='exactAmount'
-            selected={selectedSplitType === SplitMethod.ExactAmounts}
-            onSelect={() => setSelectedSplitType(SplitMethod.ExactAmounts)}
-          />
-
-          <SplitTypeCard
-            title={t('splitType.lend')}
-            description={t('splitTypeDescription.lend')}
-            icon='payment'
-            selected={selectedSplitType === SplitMethod.Lend}
-            onSelect={() => setSelectedSplitType(SplitMethod.Lend)}
-          />
+          {getSplitCreationContext().allowedSplitMethods.map((method) => (
+            <ConcreteSplitTypeCard
+              key={method}
+              method={method}
+              selectedMethod={selectedSplitType}
+              onSelect={setSelectedSplitType}
+            />
+          ))}
         </ScrollView>
 
         <View style={{ paddingLeft: insets.left + 12, paddingRight: insets.right + 12 }}>

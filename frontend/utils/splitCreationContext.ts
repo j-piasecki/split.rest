@@ -21,6 +21,7 @@ export enum SplitMethod {
 }
 
 export interface SplitCreationContextArguments {
+  allowedSplitMethods?: SplitMethod[]
   participants?: UserWithValue[]
   paidById?: string
   splitMethod?: SplitMethod
@@ -32,6 +33,12 @@ export interface SplitCreationContextArguments {
 }
 
 class SplitCreationContext {
+  allowedSplitMethods: SplitMethod[] = [
+    SplitMethod.Equal,
+    SplitMethod.ExactAmounts,
+    SplitMethod.BalanceChanges,
+    SplitMethod.Lend,
+  ]
   participants: UserWithValue[] | null = null
   paidById: string | null = null
   splitMethod: SplitMethod | null = null
@@ -42,6 +49,7 @@ class SplitCreationContext {
   splitType: number | null = null
 
   constructor(args: SplitCreationContextArguments) {
+    this.allowedSplitMethods = args.allowedSplitMethods ?? this.allowedSplitMethods
     this.participants = args.participants ?? null
     this.paidById = args.paidById ?? null
     this.splitMethod = args.splitMethod ?? null

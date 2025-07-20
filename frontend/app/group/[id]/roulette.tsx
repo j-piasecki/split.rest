@@ -22,7 +22,7 @@ import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { getBalanceColor } from '@utils/getBalanceColor'
-import { beginNewSplit } from '@utils/splitCreationContext'
+import { SplitMethod, beginNewSplit } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -284,6 +284,11 @@ function Result({ query, groupId, setQuery }: ResultProps) {
             beginNewSplit({
               participants: result.map((user) => ({ user: user })),
               paidById: result[0].id,
+              allowedSplitMethods: [
+                SplitMethod.Equal,
+                SplitMethod.ExactAmounts,
+                SplitMethod.BalanceChanges,
+              ],
             })
             router.navigate(`/group/${groupId}/addSplit`)
           }}
