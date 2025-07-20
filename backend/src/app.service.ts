@@ -34,6 +34,7 @@ import {
   JoinGroupByLinkArguments,
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
+  ResolveAllDelayedSplitsAtOnceArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
@@ -298,5 +299,12 @@ export class AppService {
 
   async resolveDelayedSplit(callerId: string, args: UpdateSplitArguments) {
     return await this.databaseService.resolveDelayedSplit(callerId, args)
+  }
+
+  async resolveAllDelayedSplitsAtOnce(
+    callerId: string,
+    args: ResolveAllDelayedSplitsAtOnceArguments
+  ) {
+    return await this.databaseService.resolveAllDelayedSplitsAtOnce(callerId, args)
   }
 }

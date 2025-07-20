@@ -231,3 +231,13 @@ export interface SetGroupLockedArguments {
 export interface SettleUpGroupArguments {
   groupId: number
 }
+
+export interface DelayedSplitResolutionMethod {
+  type: 'equally'
+  members: string[]
+}
+
+export interface ResolveAllDelayedSplitsAtOnceArguments {
+  groupId: number
+  resolutionMethod: DelayedSplitResolutionMethod
+}

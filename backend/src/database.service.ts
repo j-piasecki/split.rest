@@ -37,6 +37,7 @@ import { deleteSplit } from './database/splits/deleteSplit'
 import { getSettleUpPreview } from './database/splits/getSettleUpPreview'
 import { getSplitHistory } from './database/splits/getSplitHistory'
 import { getSplitInfo } from './database/splits/getSplitInfo'
+import { resolveAllDelayedSplits } from './database/splits/resolveAllDelayedSplits'
 import { resolveDelayedSplit } from './database/splits/resolveDelayedSplit'
 import { restoreSplit } from './database/splits/restoreSplit'
 import { settleUp } from './database/splits/settleUp'
@@ -81,6 +82,7 @@ import {
   JoinGroupByLinkArguments,
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
+  ResolveAllDelayedSplitsAtOnceArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -370,5 +372,13 @@ export class DatabaseService {
   @RequirePermissions(['resolveDelayedSplits'])
   async resolveDelayedSplit(callerId: string, args: UpdateSplitArguments) {
     return await resolveDelayedSplit(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['resolveAllDelayedSplitsAtOnce'])
+  async resolveAllDelayedSplitsAtOnce(
+    callerId: string,
+    args: ResolveAllDelayedSplitsAtOnceArguments
+  ) {
+    return await resolveAllDelayedSplits(this.pool, callerId, args)
   }
 }
