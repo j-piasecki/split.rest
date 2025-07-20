@@ -5,7 +5,7 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { buttonCornerSpringConfig, buttonPaddingSpringConfig } from '@styling/animationConfigs'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
-import { beginNewSplit } from '@utils/splitCreationContext'
+import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useRouter } from 'expo-router'
 import { useEffect, useImperativeHandle, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -212,7 +212,7 @@ export function BottomBar({ info, ref }: BottomBarProps) {
             <Pressable
               disabled={!splitEnabled}
               onPress={() => {
-                beginNewSplit()
+                SplitCreationContext.create().begin()
                 router.navigate(`/group/${info?.id}/addSplit`)
               }}
               onPressIn={() => setSplitPressed(true)}

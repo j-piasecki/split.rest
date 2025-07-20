@@ -16,7 +16,7 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useAuth } from '@utils/auth'
-import { getSplitCreationContext } from '@utils/splitCreationContext'
+import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -24,20 +24,20 @@ import { LayoutRectangle, ScrollView, View } from 'react-native'
 import { GroupUserInfo, TranslatableError, UserWithDisplayName } from 'shared'
 
 function getInitialEntries(user: UserWithDisplayName): PersonEntry[] {
-  const savedParticipants = getSplitCreationContext().participants
+  const savedParticipants = SplitCreationContext.current.participants
 
   if (savedParticipants) {
     const result = savedParticipants.map(
       (participant, index): PersonEntry => ({
         user: participant.user,
-        selected: index === getSplitCreationContext().paidByIndex,
+        selected: index === SplitCreationContext.current.paidByIndex,
         entry: participant.user?.email ?? '',
       })
     )
 
     result.push({ entry: '', selected: false })
 
-    if (getSplitCreationContext().paidByIndex === undefined) {
+    if (SplitCreationContext.current.paidByIndex === undefined) {
       result[0].selected = true
     }
 
@@ -93,9 +93,8 @@ function ParticipantsPicker({
       return
     }
 
-    getSplitCreationContext().participants = userEntries.filter((entry) => entry.user)
-
-    getSplitCreationContext().paidById = payer.id
+    SplitCreationContext.current.setParticipants(userEntries.filter((entry) => entry.user))
+    SplitCreationContext.current.setPaidById(payer.id)
 
     router.navigate(`/group/${groupInfo.id}/addSplit/summary`)
   }
@@ -179,7 +178,7 @@ function ParticipantsPicker({
               pickablePayer={true}
             />
           ) : (
-            <Form autofocus={getSplitCreationContext().participants === null} onSubmit={submit}>
+            <Form autofocus={SplitCreationContext.current.participants === null} onSubmit={submit}>
               <PeoplePicker
                 groupId={groupInfo.id}
                 entries={entries}

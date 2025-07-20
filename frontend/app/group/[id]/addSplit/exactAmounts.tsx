@@ -7,7 +7,7 @@ import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { getSplitCreationContext } from '@utils/splitCreationContext'
+import { SplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
@@ -16,12 +16,10 @@ import { ActivityIndicator, View } from 'react-native'
 import { GroupUserInfo, TranslatableError, UserWithDisplayName } from 'shared'
 
 function initialEntriesFromContext(currentUser: UserWithDisplayName): SplitEntryData[] {
-  const splitContext = getSplitCreationContext()
-
   const initialEntries: SplitEntryData[] =
-    splitContext.participants === null
+    SplitCreationContext.current.participants === null
       ? [{ user: currentUser, entry: currentUser.email ?? '', amount: '' }]
-      : splitContext.participants.map(
+      : SplitCreationContext.current.participants.map(
           (participant): SplitEntryData => ({
             user: participant.user,
             entry: participant.user.email ?? '',
@@ -59,11 +57,10 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
           value: entry.amount,
         }))
 
-      getSplitCreationContext().participants = userEntries
-
-      getSplitCreationContext().paidById = paidBy.user.id
-      getSplitCreationContext().title = form.title
-      getSplitCreationContext().totalAmount = sumToSave.toFixed(2)
+      SplitCreationContext.current.setParticipants(userEntries)
+      SplitCreationContext.current.setPaidById(paidBy.user.id)
+      SplitCreationContext.current.setTitle(form.title)
+      SplitCreationContext.current.setTotalAmount(sumToSave.toFixed(2))
 
       router.navigate(`/group/${groupInfo.id}/addSplit/summary`)
     } catch (error) {
@@ -87,8 +84,8 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
           paddingRight: insets.right + 12,
         }}
         initialEntries={initialEntriesFromContext(user)}
-        initialPaidByIndex={getSplitCreationContext().paidByIndex}
-        initialTitle={getSplitCreationContext().title}
+        initialPaidByIndex={SplitCreationContext.current.paidByIndex}
+        initialTitle={SplitCreationContext.current.title}
         showDetails={false}
         showCalendar={false}
         groupInfo={groupInfo}

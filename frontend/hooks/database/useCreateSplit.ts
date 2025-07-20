@@ -4,7 +4,7 @@ import { makeRequest } from '@utils/makeApiRequest'
 import { addCachedSplit, invalidateSplitRelatedQueries } from '@utils/queryClient'
 import { CreateSplitArguments } from 'shared'
 
-async function createSplit(args: CreateSplitArguments) {
+export async function createSplit(args: CreateSplitArguments) {
   const splitId = await makeRequest<CreateSplitArguments, number>('POST', 'createSplit', args)
 
   await addCachedSplit(args.groupId, {

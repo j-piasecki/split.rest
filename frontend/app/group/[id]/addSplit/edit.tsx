@@ -2,11 +2,10 @@ import ModalScreen from '@components/ModalScreen'
 import { useSnack } from '@components/SnackBar'
 import { FormData } from '@components/SplitForm'
 import { SplitEditForm } from '@components/SplitForm/SplitEditForm'
-import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
-import { getSplitCreationContext } from '@utils/splitCreationContext'
+import { SplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
@@ -21,14 +20,13 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
   const [waiting, setWaiting] = useState(false)
   const [error, setError] = useTranslatedError()
   const { t } = useTranslation()
-  const { mutateAsync: createSplit } = useCreateSplit()
 
   async function save(form: FormData) {
     try {
       setWaiting(true)
       const { payerId, sumToSave, balanceChange, timestamp } = await validateSplitForm(form)
 
-      await createSplit({
+      await SplitCreationContext.current.saveSplit({
         groupId: groupInfo.id,
         paidBy: payerId,
         title: form.title,
@@ -77,7 +75,7 @@ export default function Modal() {
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
   const { data: groupInfo } = useGroupInfo(Number(id))
-  const [split] = useState<SplitWithUsers>(getSplitCreationContext().buildSplitPreview())
+  const [split] = useState<SplitWithUsers>(SplitCreationContext.current.buildSplitPreview())
 
   return (
     <ModalScreen

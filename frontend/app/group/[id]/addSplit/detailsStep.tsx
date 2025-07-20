@@ -11,7 +11,7 @@ import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useAuth } from '@utils/auth'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { navigateToSplitSpecificFlow } from '@utils/navigateToSplitSpecificFlow'
-import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
+import { SplitCreationContext, SplitMethod } from '@utils/splitCreationContext'
 import { validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
@@ -27,19 +27,21 @@ export default function Modal() {
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
 
-  const [title, setTitle] = useState(getSplitCreationContext().title ?? '')
-  const [timestamp, setTimestamp] = useState(getSplitCreationContext().timestamp ?? Date.now())
+  const [title, setTitle] = useState(SplitCreationContext.current.title ?? '')
+  const [timestamp, setTimestamp] = useState(SplitCreationContext.current.timestamp ?? Date.now())
   const [error, setError] = useTranslatedError()
 
   // Fields for equal splits
-  const [total, setTotal] = useState(getSplitCreationContext().totalAmount ?? '')
-  const [amountPerUser, setAmountPerUser] = useState(getSplitCreationContext().amountPerUser ?? '')
+  const [total, setTotal] = useState(SplitCreationContext.current.totalAmount ?? '')
+  const [amountPerUser, setAmountPerUser] = useState(
+    SplitCreationContext.current.amountPerUser ?? ''
+  )
   const [splittingByTotal, setSplittingByTotal] = useState(
-    getSplitCreationContext().amountPerUser === null
+    SplitCreationContext.current.amountPerUser === null
   )
 
-  const splittingEqually = getSplitCreationContext().splitMethod === SplitMethod.Equal
-  const splitDelayed = getSplitCreationContext().splitMethod === SplitMethod.Delayed
+  const splittingEqually = SplitCreationContext.current.splitMethod === SplitMethod.Equal
+  const splitDelayed = SplitCreationContext.current.splitMethod === SplitMethod.Delayed
 
   function submit() {
     try {
@@ -68,11 +70,11 @@ export default function Modal() {
       }
 
       if (splittingByTotal) {
-        getSplitCreationContext().totalAmount = total
-        getSplitCreationContext().amountPerUser = null
+        SplitCreationContext.current.setTotalAmount(total)
+        SplitCreationContext.current.setAmountPerUser(null)
       } else {
-        getSplitCreationContext().amountPerUser = amountPerUser
-        getSplitCreationContext().totalAmount = null
+        SplitCreationContext.current.setAmountPerUser(amountPerUser)
+        SplitCreationContext.current.setTotalAmount(null)
       }
     } else if (splitDelayed) {
       if (!user) {
@@ -90,9 +92,9 @@ export default function Modal() {
         return
       }
 
-      getSplitCreationContext().totalAmount = total
-      getSplitCreationContext().paidById = user?.id ?? null
-      getSplitCreationContext().participants = [
+      SplitCreationContext.current.setTotalAmount(total)
+      SplitCreationContext.current.setPaidById(user?.id ?? null)
+      SplitCreationContext.current.setParticipants([
         {
           user: {
             ...user,
@@ -100,11 +102,11 @@ export default function Modal() {
           },
           value: '0.00',
         },
-      ]
+      ])
     }
 
-    getSplitCreationContext().title = title
-    getSplitCreationContext().timestamp = timestamp
+    SplitCreationContext.current.setTitle(title)
+    SplitCreationContext.current.setTimestamp(timestamp)
     navigateToSplitSpecificFlow(Number(id), router)
   }
 

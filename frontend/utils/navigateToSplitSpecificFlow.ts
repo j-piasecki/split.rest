@@ -1,8 +1,8 @@
-import { Router } from "expo-router"
-import { getSplitCreationContext, SplitMethod } from "./splitCreationContext"
+import { SplitCreationContext, SplitMethod } from './splitCreationContext'
+import { Router } from 'expo-router'
 
 export function navigateToSplitSpecificFlow(groupId: number, router: Router) {
-  switch (getSplitCreationContext().splitMethod) {
+  switch (SplitCreationContext.current.splitMethod) {
     case SplitMethod.ExactAmounts:
       router.navigate(`/group/${groupId}/addSplit/exactAmounts`)
       break
