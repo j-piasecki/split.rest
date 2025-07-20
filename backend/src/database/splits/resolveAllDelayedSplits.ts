@@ -116,8 +116,6 @@ export async function resolveAllDelayedSplits(
       throw new NotFoundException('api.split.noDelayedSplits')
     }
 
-    console.log(splitsToFinalize.rows)
-
     // TODO: read currency from the original split once it's stored in the database
     const groupInfo = (
       await client.query<{ currency: string }>('SELECT currency FROM groups WHERE id = $1', [
