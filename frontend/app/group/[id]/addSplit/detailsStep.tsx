@@ -10,6 +10,7 @@ import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useAuth } from '@utils/auth'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { navigateToSplitSpecificFlow } from '@utils/navigateToSplitSpecificFlow'
 import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -104,28 +105,7 @@ export default function Modal() {
 
     getSplitCreationContext().title = title
     getSplitCreationContext().timestamp = timestamp
-
-    switch (getSplitCreationContext().splitMethod) {
-      case SplitMethod.ExactAmounts:
-        router.navigate(`/group/${id}/addSplit/exactAmounts`)
-        break
-
-      case SplitMethod.Equal:
-        router.navigate(`/group/${id}/addSplit/participantsStep`)
-        break
-
-      case SplitMethod.BalanceChanges:
-        router.navigate(`/group/${id}/addSplit/balanceChanges`)
-        break
-
-      case SplitMethod.Lend:
-        router.navigate(`/group/${id}/addSplit/lend`)
-        break
-
-      case SplitMethod.Delayed:
-        router.navigate(`/group/${id}/addSplit/summary`)
-        break
-    }
+    navigateToSplitSpecificFlow(Number(id), router)
   }
 
   return (
