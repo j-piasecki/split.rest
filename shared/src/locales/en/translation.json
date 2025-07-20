@@ -392,7 +392,8 @@
     "typeRequired": "Type is required",
     "invalidType": "Ivalid split type",
     "allEntriesMustSumToZero": "The sum of all entries must be equal to zero",
-    "youMustSelectUser": "You must select a member ({{entry}})"
+    "youMustSelectUser": "You must select a member ({{entry}})",
+    "resolveSplitNotFound": "Could not find split being finalized"
   },
 
   "groupValidation": {
@@ -431,7 +432,8 @@
     "deletedToast": "Deleted {{title}}",
     "created": "Split created",
     "updated": "Split updated",
-    "completed": "Entry completed"
+    "completed": "Entry completed",
+    "resolveDelayed": "Finalize split"
   },
 
   "splitList": {
@@ -490,7 +492,8 @@
     "willGiveBack": "Will give back",
     "markCompleted": "Mark as complete",
     "settleUpTitle": "Settle up split",
-    "loadMoreHistory": "Load more history"
+    "loadMoreHistory": "Load more history",
+    "splitIsDelayed": "This split will be finalized later"
   },
 
   "errorBoundary": {

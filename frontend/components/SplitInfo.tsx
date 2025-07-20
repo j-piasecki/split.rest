@@ -1,10 +1,11 @@
 import { RoundIconButton } from './RoundIconButton'
 import { useSnack } from './SnackBar'
 import { Icon, IconName } from '@components/Icon'
-import { Pane } from '@components/Pane'
+import { FullPaneHeader, Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { useCompleteSplitEntryMutation } from '@hooks/database/useCompleteSplitEntryMutation'
+import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useUncompleteSplitEntryMutation } from '@hooks/database/useUncompleteSplitEntryMutation'
 import { useUserById } from '@hooks/database/useUserById'
 import { styles } from '@styling/styles'
@@ -287,21 +288,26 @@ enum EditHistoryItemType {
 
 function EditHistoryItem({
   split,
+  groupInfo,
   isSelected,
   onSelect,
   onRestore,
   isRestoringVersion,
   type,
+  currentSplitType,
 }: {
   split: SplitWithUsers
+  groupInfo: GroupUserInfo
   isSelected: boolean
   onSelect: () => void
   onRestore: () => void
   isRestoringVersion?: boolean
   type: EditHistoryItemType
+  currentSplitType: SplitType
 }) {
   const theme = useTheme()
   const { data: createdBy } = useUserById(split.createdById)
+  const { data: permissions } = useGroupPermissions(groupInfo.id)
   const { t } = useTranslation()
 
   const indicatorStyle = useAnimatedStyle(() => ({
@@ -409,8 +415,10 @@ function EditHistoryItem({
             />
           )}
           {isSelected &&
+            (split.type !== SplitType.Delayed || currentSplitType === SplitType.Delayed) &&
             type !== EditHistoryItemType.Only &&
-            type !== EditHistoryItemType.First && (
+            type !== EditHistoryItemType.First &&
+            permissions?.canUpdateSplit(split) && (
               <View style={{ flexDirection: 'row', paddingLeft: 16 }}>
                 <RoundIconButton
                   icon='undo'
@@ -427,6 +435,7 @@ function EditHistoryItem({
 }
 
 function EditHistory({
+  groupInfo,
   splitHistory,
   hasMoreHistory,
   isLoadingHistory,
@@ -436,6 +445,7 @@ function EditHistory({
   selectedVersion,
   setSelectedVersion,
 }: {
+  groupInfo: GroupUserInfo
   splitHistory: SplitWithUsers[]
   hasMoreHistory?: boolean
   isLoadingHistory?: boolean
@@ -462,10 +472,12 @@ function EditHistory({
         <EditHistoryItem
           key={item.version}
           split={item}
+          groupInfo={groupInfo}
           isSelected={item.version === selectedVersion}
           onSelect={() => setSelectedVersion(item.version)}
           onRestore={() => onRestoreVersion?.(item.version)}
           isRestoringVersion={isRestoringVersion}
+          currentSplitType={splitHistory[0].type}
           type={
             splitHistory.length === 1
               ? EditHistoryItemType.Only
@@ -654,6 +666,7 @@ export function SplitInfo({
         </Pane>
 
         <EditHistory
+          groupInfo={groupInfo}
           splitHistory={splitHistory}
           hasMoreHistory={hasMoreHistory}
           isLoadingHistory={isLoadingHistory}
@@ -663,6 +676,17 @@ export function SplitInfo({
           selectedVersion={selectedVersion}
           setSelectedVersion={setSelectedVersion}
         />
+
+        {splitInfo.type === SplitType.Delayed && (
+          <FullPaneHeader
+            icon='schedule'
+            title={t('splitInfo.splitIsDelayed')}
+            textLocation='start'
+            style={{ overflow: 'hidden', backgroundColor: theme.colors.tertiaryContainer }}
+            color={theme.colors.onTertiaryContainer}
+            expanded={false}
+          />
+        )}
 
         {splitInfo.type !== SplitType.Delayed && (
           <Pane

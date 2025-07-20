@@ -9,10 +9,12 @@ import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
+import { SplitCreationContext, SplitMethod } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, ScrollView, View } from 'react-native'
+import { isDelayedSplit } from 'shared'
 
 export default function SplitInfoScreen() {
   const theme = useTheme()
@@ -61,7 +63,7 @@ export default function SplitInfoScreen() {
         splitId: split.id,
         paidBy: split.paidById,
         title: split.title,
-        total: Number(split.total),
+        total: split.total,
         timestamp: split.timestamp,
         balances: split.users.map((user) => ({
           id: user.id,
@@ -126,15 +128,44 @@ export default function SplitInfoScreen() {
             />
           </View>
 
-          {permissions?.canUpdateSplit(history[0]) && !groupInfo?.locked && (
-            <Button
-              title={t('split.edit')}
-              style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
-              disabled={isRestoring}
-              leftIcon='edit'
-              onPress={() => router.navigate(`/group/${groupInfo?.id}/split/${history[0].id}/edit`)}
-            />
-          )}
+          <View style={{ gap: 12 }}>
+            {isDelayedSplit(history[0].type) &&
+              permissions?.canResolveDelayedSplit(history[0]) &&
+              !groupInfo?.locked && (
+                <Button
+                  title={t('split.resolveDelayed')}
+                  style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
+                  disabled={isRestoring}
+                  leftIcon='split'
+                  onPress={() => {
+                    SplitCreationContext.create()
+                      .resolveDelayedSplit(Number(splitId))
+                      .setAllowedSplitMethods([SplitMethod.Equal, SplitMethod.ExactAmounts])
+                      .setParticipants(
+                        history[0].users.map((user) => ({ user: user, value: user.change }))
+                      )
+                      .setPaidById(history[0].paidById ?? null)
+                      .setTitle(history[0].title)
+                      .setTotalAmount(history[0].total)
+                      .setTimestamp(history[0].timestamp)
+                      .begin()
+                    router.navigate(`/group/${groupInfo?.id}/addSplit`)
+                  }}
+                />
+              )}
+
+            {permissions?.canUpdateSplit(history[0]) && !groupInfo?.locked && (
+              <Button
+                title={t('split.edit')}
+                style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
+                disabled={isRestoring}
+                leftIcon='edit'
+                onPress={() =>
+                  router.navigate(`/group/${groupInfo?.id}/split/${history[0].id}/edit`)
+                }
+              />
+            )}
+          </View>
         </View>
       )}
     </Modal>

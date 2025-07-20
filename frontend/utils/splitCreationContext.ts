@@ -1,5 +1,6 @@
 import { auth } from './firebase'
 import { createSplit } from '@hooks/database/useCreateSplit'
+import { resolveSplit } from '@hooks/database/useResolveSplit'
 import currency from 'currency.js'
 import {
   CreateSplitArguments,
@@ -159,7 +160,16 @@ export class SplitCreationContext {
     }
 
     if (this.flowMode === FlowMode.Resolve) {
-      throw 'NOT IMPLEMENTED'
+      const splitId = this._resolveSplitId
+
+      if (splitId === null) {
+        throw new TranslatableError('splitValidation.resolveSplitNotFound')
+      }
+
+      await resolveSplit({
+        ...args,
+        splitId,
+      })
     } else {
       await createSplit(args)
     }
