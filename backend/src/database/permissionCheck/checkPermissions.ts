@@ -157,6 +157,25 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'resolveDelayedSplits': {
+          const args = unsafeArgs as PermissionArguments<['resolveDelayedSplits']>
+          const canResolveDelayedSplits = callerPermissions?.canResolveDelayedSplits()
+          if (
+            canResolveDelayedSplits === undefined ||
+            canResolveDelayedSplits === SplitPermissionType.None
+          ) {
+            return 'api.insufficientPermissions.group.resolveDelayedSplits'
+          }
+
+          if (
+            canResolveDelayedSplits === SplitPermissionType.OnlyIfIncluded &&
+            !(await isUserMemberOfSplit(client, args.splitId, callerId))
+          ) {
+            return 'api.insufficientPermissions.group.resolveDelayedSplits'
+          }
+          continue
+        }
+
         case 'accessRoulette': {
           if (!callerPermissions?.canAccessRoulette()) {
             return 'api.insufficientPermissions.group.accessRoulette'

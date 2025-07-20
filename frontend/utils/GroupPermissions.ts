@@ -28,4 +28,8 @@ export class GroupPermissions extends GroupMemberPermissions {
   canSeeSplitDetails(split: SplitInfo): boolean {
     return this.checkSplitPermission(split, this.canSeeSplitsDetails())
   }
+
+  canResolveDelayedSplit(split: SplitInfo): boolean {
+    return this.checkSplitPermission(split, this.canResolveDelayedSplits())
+  }
 }
