@@ -68,6 +68,8 @@ export enum SplitType {
   BalanceChange = 1 << 2,
   // Same as the normal split, but allows the payer contribution to be zero.
   Lend = 1 << 3,
+  // Split is created with no participants. It can be resolved later.
+  Delayed = 1 << 4,
 }
 
 export function isNormalSplit(type: SplitType) {
@@ -88,6 +90,10 @@ export function isBalanceChangeSplit(type: SplitType) {
 
 export function isLendSplit(type: SplitType) {
   return type === SplitType.Lend
+}
+
+export function isDelayedSplit(type: SplitType) {
+  return type === SplitType.Delayed
 }
 
 export enum AndroidNotificationChannel {

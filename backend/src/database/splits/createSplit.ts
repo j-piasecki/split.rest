@@ -5,12 +5,17 @@ import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isGroupLocked } from '../utils/isGroupLocked'
 import { userExists } from '../utils/userExists'
-import { validateLendSplitArgs, validateNormalSplitArgs } from '../utils/validateSplitArgs'
+import {
+  validateDelayedSplitArgs,
+  validateLendSplitArgs,
+  validateNormalSplitArgs,
+} from '../utils/validateSplitArgs'
 import { Pool, PoolClient } from 'pg'
 import {
   AndroidNotificationChannel,
   CreateSplitArguments,
   CurrencyUtils,
+  isDelayedSplit,
   isLendSplit,
   isNormalSplit,
   isSettleUpSplit,
@@ -128,12 +133,17 @@ async function dispatchNotifications(
 }
 
 export async function createSplit(pool: Pool, callerId: string, args: CreateSplitArguments) {
+  console.log('createSplit', args)
   if (isNormalSplit(args.type)) {
     validateNormalSplitArgs(args)
   }
 
   if (isLendSplit(args.type)) {
     validateLendSplitArgs(args)
+  }
+
+  if (isDelayedSplit(args.type)) {
+    validateDelayedSplitArgs(args)
   }
 
   const client = await pool.connect()

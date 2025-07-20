@@ -79,7 +79,8 @@ export class AppService {
     if (
       args.type !== SplitType.Normal &&
       args.type !== SplitType.BalanceChange &&
-      args.type !== SplitType.Lend
+      args.type !== SplitType.Lend &&
+      args.type !== SplitType.Delayed
     ) {
       throw new BadRequestException('api.split.invalidSplitType')
     }

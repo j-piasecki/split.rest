@@ -183,6 +183,16 @@ function ConcreteSplitTypeCard({
           onSelect={() => onSelect(SplitMethod.Lend)}
         />
       )
+    case SplitMethod.Delayed:
+      return (
+        <SplitTypeCard
+          title={t('splitType.delayed')}
+          description={t('splitTypeDescription.delayed')}
+          icon='schedule'
+          selected={selectedMethod === SplitMethod.Delayed}
+          onSelect={() => onSelect(SplitMethod.Delayed)}
+        />
+      )
     default:
       return null
   }
@@ -250,7 +260,9 @@ export default function Modal() {
                   ? SplitType.BalanceChange
                   : selectedSplitType === SplitMethod.Lend
                     ? SplitType.Lend
-                    : SplitType.Normal
+                    : selectedSplitType === SplitMethod.Delayed
+                      ? SplitType.Delayed
+                      : SplitType.Normal
               router.navigate(`/group/${id}/addSplit/detailsStep`)
             }}
           />

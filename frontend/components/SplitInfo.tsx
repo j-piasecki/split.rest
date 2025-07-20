@@ -19,6 +19,7 @@ import { Pressable, RefreshControl, ScrollView, StyleProp, View, ViewStyle } fro
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import {
   CurrencyUtils,
+  SplitType,
   isBalanceChangeSplit,
   isInversedSplit,
   isLendSplit,
@@ -663,26 +664,28 @@ export function SplitInfo({
           setSelectedVersion={setSelectedVersion}
         />
 
-        <Pane
-          icon='group'
-          title={t('splitInfo.participants')}
-          textLocation='start'
-          containerStyle={{ paddingBottom: 8, backgroundColor: 'transparent' }}
-          style={{ overflow: 'hidden' }}
-          collapsible
-        >
-          {usersToShow.map((user, index) => (
-            <UserRow
-              key={user.id}
-              user={user}
-              groupInfo={groupInfo}
-              splitInfo={splitInfo}
-              isNameUnique={nameCounts[getNameKey(user)] === 1}
-              last={index === usersToShow.length - 1}
-              showCompleteButton={showCompleteButton}
-            />
-          ))}
-        </Pane>
+        {splitInfo.type !== SplitType.Delayed && (
+          <Pane
+            icon='group'
+            title={t('splitInfo.participants')}
+            textLocation='start'
+            containerStyle={{ paddingBottom: 8, backgroundColor: 'transparent' }}
+            style={{ overflow: 'hidden' }}
+            collapsible
+          >
+            {usersToShow.map((user, index) => (
+              <UserRow
+                key={user.id}
+                user={user}
+                groupInfo={groupInfo}
+                splitInfo={splitInfo}
+                isNameUnique={nameCounts[getNameKey(user)] === 1}
+                last={index === usersToShow.length - 1}
+                showCompleteButton={showCompleteButton}
+              />
+            ))}
+          </Pane>
+        )}
       </View>
     </ScrollView>
   )

@@ -18,6 +18,7 @@ export enum SplitMethod {
   Equal = 'equal',
   BalanceChanges = 'balanceChanges',
   Lend = 'lend',
+  Delayed = 'delayed',
 }
 
 export interface SplitCreationContextArguments {
@@ -113,6 +114,16 @@ class SplitCreationContext {
       })
     }
 
+    if (this.splitMethod === SplitMethod.Delayed) {
+      return users.map((user) => {
+        return {
+          ...user,
+          change: '0.00',
+          pending: false,
+        }
+      })
+    }
+
     return users.map((user, index) => {
       const amount = this.participants![index].value!
       const change =
@@ -167,7 +178,8 @@ class SplitCreationContext {
     } else if (
       this.splitType !== SplitType.Normal &&
       this.splitType !== SplitType.BalanceChange &&
-      this.splitType !== SplitType.Lend
+      this.splitType !== SplitType.Lend &&
+      this.splitType !== SplitType.Delayed
     ) {
       throw new TranslatableError('splitValidation.invalidType')
     }
