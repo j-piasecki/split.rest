@@ -36,7 +36,7 @@ export interface UpdateSplitArguments {
   splitId: number
   paidBy?: string
   title: string
-  total: number
+  total: string
   timestamp: number
   balances: BalanceChange[]
   currency: string

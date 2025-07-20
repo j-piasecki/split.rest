@@ -31,13 +31,14 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
       // TODO: common validation?
       if (splitInfo.type === SplitType.Delayed) {
         validateSplitTitle(form.title)
+        const total = form.total
 
-        if (Number.isNaN(Number(form.total))) {
+        if (total === undefined || Number.isNaN(Number(form.total))) {
           setError(t('splitValidation.amountMustBeNumber'))
           return
         }
 
-        if (Number(form.total) <= 0) {
+        if (Number(total) <= 0) {
           setError(t('splitValidation.amountMustBeGreaterThanZero'))
           return
         }
@@ -47,7 +48,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
           groupId: groupInfo.id,
           paidBy: splitInfo.paidById,
           title: form.title,
-          total: Number(form.total),
+          total: total,
           timestamp: form.timestamp,
           currency: groupInfo.currency,
           balances: [
@@ -71,7 +72,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
           groupId: groupInfo.id,
           paidBy: payerId,
           title: form.title,
-          total: sumToSave,
+          total: sumToSave.toFixed(2),
           timestamp: timestamp,
           balances: balanceChange as BalanceChange[],
           currency: groupInfo.currency,
