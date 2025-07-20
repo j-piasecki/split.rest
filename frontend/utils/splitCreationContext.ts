@@ -11,7 +11,7 @@ import {
   UserWithPendingBalanceChange,
 } from 'shared'
 
-interface UserWithValue {
+export interface UserWithValue {
   user: UserWithDisplayName
   value?: string
 }
