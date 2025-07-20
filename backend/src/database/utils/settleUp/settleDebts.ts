@@ -61,9 +61,7 @@ export function settleDebts(users: Member[]): Transaction[] {
   const { transactions: perfectMatches, remainingUsers } = extractPerfectMatches(users)
 
   const transactions =
-    remainingUsers.length > 10
-      ? settleDebtsFast(remainingUsers)
-      : settleDebtsOptimal(remainingUsers)
+    remainingUsers.length > 8 ? settleDebtsFast(remainingUsers) : settleDebtsOptimal(remainingUsers)
 
   return [...perfectMatches, ...transactions]
 }
