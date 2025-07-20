@@ -295,4 +295,8 @@ export class AppService {
   async settleUpGroup(callerId: string, args: SettleUpGroupArguments) {
     return await this.databaseService.settleUpGroup(callerId, args)
   }
+
+  async resolveDelayedSplit(callerId: string, args: UpdateSplitArguments) {
+    return await this.databaseService.resolveDelayedSplit(callerId, args)
+  }
 }

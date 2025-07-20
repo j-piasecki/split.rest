@@ -37,6 +37,7 @@ import { deleteSplit } from './database/splits/deleteSplit'
 import { getSettleUpPreview } from './database/splits/getSettleUpPreview'
 import { getSplitHistory } from './database/splits/getSplitHistory'
 import { getSplitInfo } from './database/splits/getSplitInfo'
+import { resolveDelayedSplit } from './database/splits/resolveDelayedSplit'
 import { restoreSplit } from './database/splits/restoreSplit'
 import { settleUp } from './database/splits/settleUp'
 import { uncompleteSplitEntry } from './database/splits/uncompleteSplitEntry'
@@ -364,5 +365,10 @@ export class DatabaseService {
   @RequirePermissions(['settleUpGroup'])
   async settleUpGroup(callerId: string, args: SettleUpGroupArguments) {
     return await settleUpGroup(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['resolveDelayedSplits'])
+  async resolveDelayedSplit(callerId: string, args: UpdateSplitArguments) {
+    return await resolveDelayedSplit(this.pool, callerId, args)
   }
 }

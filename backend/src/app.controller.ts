@@ -681,4 +681,14 @@ export class AppController {
 
     return await this.appService.settleUpGroup(request.user.sub, args)
   }
+
+  @UseGuards(AuthGuard)
+  @Post('resolveDelayedSplit')
+  async resolveDelayedSplit(@Req() request: Request, @Body() args: Partial<UpdateSplitArguments>) {
+    if (!isUpdateSplitArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.resolveDelayedSplit(request.user.sub, args)
+  }
 }
