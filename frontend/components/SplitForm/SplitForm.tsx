@@ -9,7 +9,14 @@ import { IconName } from '@components/Icon'
 import { LargeTextInput } from '@components/LargeTextInput'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import {
+  KeyboardTypeOptions,
+  ScrollView,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import { GroupUserInfo, LanguageTranslationKey, UserWithDisplayName } from 'shared'
 
 export interface SplitFormProps {
@@ -37,6 +44,7 @@ export interface SplitFormProps {
   showAddAllMembers?: boolean
   showPayerEntry?: boolean
   filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
+  balanceKeyboardType?: KeyboardTypeOptions
 }
 
 export function SplitForm({
@@ -64,6 +72,7 @@ export function SplitForm({
   showPayerEntry = true,
   style,
   filterSuggestions,
+  balanceKeyboardType,
 }: SplitFormProps) {
   const scrollRef = useRef<ScrollView>(null)
   const [fetchingMembers, setFetchingMembers] = useState(false)
@@ -185,6 +194,7 @@ export function SplitForm({
             setMembers={setMembers}
             showPayerEntry={showPayerEntry}
             filterSuggestions={filterSuggestions}
+            balanceKeyboardType={balanceKeyboardType}
           />
         )}
       </ScrollView>

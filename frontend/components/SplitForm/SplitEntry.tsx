@@ -4,10 +4,9 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { TextInput, TextInputRef } from '@components/TextInput'
 import { TextInputUserPicker } from '@components/TextInputUserPicker'
 import { useTheme } from '@styling/theme'
-import { SplitCreationContext, SplitMethod } from '@utils/splitCreationContext'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LayoutRectangle, Platform, Pressable, ScrollView, View } from 'react-native'
+import { KeyboardTypeOptions, LayoutRectangle, Pressable, ScrollView, View } from 'react-native'
 import { CurrencyUtils, UserWithDisplayName } from 'shared'
 
 export interface SplitEntryProps {
@@ -24,6 +23,7 @@ export interface SplitEntryProps {
   first: boolean
   last: boolean
   filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
+  balanceKeyboardType?: KeyboardTypeOptions
 }
 
 export function SplitEntry({
@@ -40,6 +40,7 @@ export function SplitEntry({
   first,
   last,
   filterSuggestions,
+  balanceKeyboardType = 'decimal-pad',
 }: SplitEntryProps) {
   const theme = useTheme()
   const layout = useRef<LayoutRectangle | null>(null)
@@ -139,14 +140,7 @@ export function SplitEntry({
           ref={amountInputRef}
           selectTextOnFocus
           focusIndex={focusIndex === undefined ? undefined : focusIndex + 1}
-          keyboardType={
-            // TODO: do a nice ui for negative numbers, ios doesn't have a numeric keyboard with a minus sign WTF?
-            SplitCreationContext.current.splitMethod === SplitMethod.BalanceChanges
-              ? Platform.OS === 'android'
-                ? 'phone-pad'
-                : 'numbers-and-punctuation'
-              : 'decimal-pad'
-          }
+          keyboardType={balanceKeyboardType}
           onChangeText={(val) => {
             val = val.replace(',', '.')
             updateForm({ type: 'setAmount', index, amount: val })

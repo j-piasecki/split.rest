@@ -12,7 +12,7 @@ import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, Platform, View } from 'react-native'
 import { GroupUserInfo, TranslatableError, UserWithDisplayName } from 'shared'
 
 function initialEntriesFromContext(currentUser: UserWithDisplayName): SplitEntryData[] {
@@ -99,6 +99,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
         buttonIconLocation='right'
         showPayerSelector={false}
         showAddAllMembers={permissions?.canReadMembers()}
+        balanceKeyboardType={Platform.OS === 'android' ? 'phone-pad' : 'numbers-and-punctuation'}
       />
     </View>
   )

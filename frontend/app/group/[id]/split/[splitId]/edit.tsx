@@ -12,7 +12,7 @@ import { validateSplitForm, validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, Platform, View } from 'react-native'
 import { BalanceChange, GroupUserInfo, SplitType, SplitWithUsers } from 'shared'
 
 function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: SplitWithUsers }) {
@@ -117,6 +117,13 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
         showEntries={splitInfo.type !== SplitType.Delayed}
         showTotalInput={splitInfo.type === SplitType.Delayed}
         initialTotal={splitInfo.total}
+        balanceKeyboardType={
+          splitInfo.type === SplitType.BalanceChange
+            ? Platform.OS === 'android'
+              ? 'phone-pad'
+              : 'numbers-and-punctuation'
+            : undefined
+        }
       />
     </View>
   )
