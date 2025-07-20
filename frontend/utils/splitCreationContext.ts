@@ -49,7 +49,8 @@ export class SplitCreationContext {
     SplitMethod.ExactAmounts,
     SplitMethod.BalanceChanges,
     SplitMethod.Lend,
-    SplitMethod.Delayed,
+    // TODO: re-enable once delayed splits are ready
+    // SplitMethod.Delayed,
   ]
 
   private _participants: UserWithValue[] | null = null
