@@ -110,6 +110,7 @@
         "editSplit": "You don't have permission to edit this split",
         "restoreSplit": "You don't have permission to restore this split",
         "resolveDelayedSplits": "You don't have permission to resolve delayed splits",
+        "resolveAllDelayedSplitsAtOnce": "You don't have permission to resolve all delayed splits at once",
         "accessRoulette": "You don't have permission to access the roulette",
         "settleUp": "You don't have permission to settle up",
         "completeSplitEntry": "You don't have permission to complete splits",

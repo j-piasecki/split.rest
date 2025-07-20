@@ -9,6 +9,7 @@ export const PermissionKeys = [
   'completeSplitEntry',
   'uncompleteSplitEntry',
   'resolveDelayedSplits',
+  'resolveAllDelayedSplitsAtOnce',
   'accessRoulette',
   'settleUp',
   'readMembers',
@@ -49,6 +50,7 @@ export const enum SplitPermissionsDTO {
   Query = 1 << 15, // Query splits
   ResolveDelayedSplits = 1 << 16, // Resolve delayed splits created by the user
   ResolveDelayedSplitsAll = 1 << 17, // Resolve all delayed splits
+  ResolveAllDelayedSplitsAtOnce = 1 << 18, // Resolve all delayed splits at once
 }
 
 export enum SplitPermissionType {
@@ -202,6 +204,10 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return SplitPermissionType.None
   }
 
+  canResolveAllDelayedSplitsAtOnce(): boolean {
+    return Boolean(this.splits & SplitPermissionsDTO.ResolveAllDelayedSplitsAtOnce)
+  }
+
   canAccessRoulette(): boolean {
     return Boolean(this.splits & SplitPermissionsDTO.AccessRoulette)
   }
@@ -290,6 +296,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
       completeSplitEntry: this.canCompleteSplitEntry(),
       uncompleteSplitEntry: this.canUncompleteSplitEntry(),
       resolveDelayedSplits: splitPermissionTypeToString(this.canResolveDelayedSplits()),
+      resolveAllDelayedSplitsAtOnce: this.canResolveAllDelayedSplitsAtOnce(),
       accessRoulette: this.canAccessRoulette(),
       settleUp: this.canSettleUp(),
       readMembers: this.canReadMembers(),

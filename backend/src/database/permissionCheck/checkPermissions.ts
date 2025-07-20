@@ -176,6 +176,13 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'resolveAllDelayedSplitsAtOnce': {
+          if (!callerPermissions?.canResolveAllDelayedSplitsAtOnce()) {
+            return 'api.insufficientPermissions.group.resolveAllDelayedSplitsAtOnce'
+          }
+          continue
+        }
+
         case 'accessRoulette': {
           if (!callerPermissions?.canAccessRoulette()) {
             return 'api.insufficientPermissions.group.accessRoulette'
