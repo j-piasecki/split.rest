@@ -8,7 +8,7 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { invalidateGroup } from '@utils/queryClient'
-import { beginNewSplit } from '@utils/splitCreationContext'
+import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -192,7 +192,7 @@ export function SplitsList({
               icon='split'
               title={t('groupInfo.addSplit')}
               onPress={() => {
-                beginNewSplit()
+                SplitCreationContext.create().begin()
                 router.navigate(`/group/${info?.id}/addSplit`)
               }}
             />

@@ -12,6 +12,7 @@ export interface FormData {
   timestamp: number
   paidByIndex: number
   entries: SplitEntryData[]
+  total?: string
 }
 
 export type FormActionType =

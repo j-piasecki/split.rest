@@ -34,6 +34,10 @@ export default function AddFlow() {
             name='invitations'
             options={{ title: t('screenName.groupSettings.invitations') }}
           />
+          <Stack.Screen
+            name='resolveDelayed'
+            options={{ title: t('screenName.groupSettings.resolveDelayed') }}
+          />
         </Stack>
       </ThemeProvider>
     </Animated.View>

@@ -36,7 +36,7 @@ export interface UpdateSplitArguments {
   splitId: number
   paidBy?: string
   title: string
-  total: number
+  total: string
   timestamp: number
   balances: BalanceChange[]
   currency: string
@@ -230,4 +230,14 @@ export interface SetGroupLockedArguments {
 
 export interface SettleUpGroupArguments {
   groupId: number
+}
+
+export interface DelayedSplitResolutionMethod {
+  type: 'equally'
+  members: string[]
+}
+
+export interface ResolveAllDelayedSplitsAtOnceArguments {
+  groupId: number
+  resolutionMethod: DelayedSplitResolutionMethod
 }

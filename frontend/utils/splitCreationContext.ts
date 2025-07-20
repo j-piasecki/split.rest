@@ -1,6 +1,9 @@
 import { auth } from './firebase'
+import { createSplit } from '@hooks/database/useCreateSplit'
+import { resolveSplit } from '@hooks/database/useResolveSplit'
 import currency from 'currency.js'
 import {
+  CreateSplitArguments,
   SplitType,
   SplitWithUsers,
   TranslatableError,
@@ -8,7 +11,7 @@ import {
   UserWithPendingBalanceChange,
 } from 'shared'
 
-interface UserWithValue {
+export interface UserWithValue {
   user: UserWithDisplayName
   value?: string
 }
@@ -18,10 +21,17 @@ export enum SplitMethod {
   Equal = 'equal',
   BalanceChanges = 'balanceChanges',
   Lend = 'lend',
+  Delayed = 'delayed',
+}
+
+export enum FlowMode {
+  Create = 'create',
+  Resolve = 'resolve',
 }
 
 export interface SplitCreationContextArguments {
   allowedSplitMethods?: SplitMethod[]
+  flowMode?: FlowMode
   participants?: UserWithValue[]
   paidById?: string
   splitMethod?: SplitMethod
@@ -30,72 +40,70 @@ export interface SplitCreationContextArguments {
   amountPerUser?: string
   timestamp?: number
   splitType?: number
+  resolveSplitId?: number
 }
 
-class SplitCreationContext {
-  allowedSplitMethods: SplitMethod[] = [
+export class SplitCreationContext {
+  private _allowedSplitMethods: SplitMethod[] = [
     SplitMethod.Equal,
     SplitMethod.ExactAmounts,
     SplitMethod.BalanceChanges,
     SplitMethod.Lend,
+    // TODO: re-enable once delayed splits are ready
+    // SplitMethod.Delayed,
   ]
-  participants: UserWithValue[] | null = null
-  paidById: string | null = null
-  splitMethod: SplitMethod | null = null
-  title: string | null = null
-  totalAmount: string | null = null
-  amountPerUser: string | null = null
-  timestamp: number | null = null
-  splitType: number | null = null
 
-  constructor(args: SplitCreationContextArguments) {
-    this.allowedSplitMethods = args.allowedSplitMethods ?? this.allowedSplitMethods
-    this.participants = args.participants ?? null
-    this.paidById = args.paidById ?? null
-    this.splitMethod = args.splitMethod ?? null
-    this.title = args.title ?? null
-    this.totalAmount = args.totalAmount ?? null
-    this.amountPerUser = args.amountPerUser ?? null
-    this.timestamp = args.timestamp ?? null
-  }
+  private _participants: UserWithValue[] | null = null
+  private _paidById: string | null = null
+  private _splitMethod: SplitMethod | null = null
+  private _title: string | null = null
+  private _totalAmount: string | null = null
+  private _amountPerUser: string | null = null
+  private _timestamp: number | null = null
+  private _splitType: number | null = null
+  private _resolveSplitId: number | null = null
+
+  private flowMode: FlowMode = FlowMode.Create
+  private started: boolean = false
+  private completed: boolean = false
 
   get paidByIndex(): number | undefined {
-    if (this.participants === null || this.paidById === null) {
+    if (this._participants === null || this._paidById === null) {
       return undefined
     }
 
-    const index = this.participants.findIndex((participant) => {
-      return participant.user.id === this.paidById
+    const index = this._participants.findIndex((participant) => {
+      return participant.user.id === this._paidById
     })
 
     return index === -1 ? undefined : index
   }
 
   private getParticipantsData(): UserWithPendingBalanceChange[] {
-    if (this.participants === null) {
+    if (this._participants === null) {
       return []
     }
 
-    const users = this.participants.map((participant) => {
+    const users = this._participants.map((participant) => {
       return participant.user
     })
 
-    if (this.splitMethod === SplitMethod.Equal) {
-      if (this.amountPerUser !== null) {
-        const amount = Number(this.amountPerUser).toFixed(2)
+    if (this._splitMethod === SplitMethod.Equal) {
+      if (this._amountPerUser !== null) {
+        const amount = Number(this._amountPerUser).toFixed(2)
 
-        this.participants.forEach((participant) => {
+        this._participants.forEach((participant) => {
           participant.value = amount
         })
-      } else if (this.totalAmount !== null) {
-        const distribution = currency(this.totalAmount, { precision: 2 }).distribute(
-          this.participants.length
+      } else if (this._totalAmount !== null) {
+        const distribution = currency(this._totalAmount, { precision: 2 }).distribute(
+          this._participants.length
         )
-        this.participants.forEach((participant, index) => {
+        this._participants.forEach((participant, index) => {
           participant.value = distribution[index].toString()
         })
 
-        if (this.participants.some((participant) => Number(participant.value) <= 0)) {
+        if (this._participants.some((participant) => Number(participant.value) <= 0)) {
           throw new TranslatableError('splitValidation.tooLittleToDivide')
         }
       } else {
@@ -103,20 +111,30 @@ class SplitCreationContext {
       }
     }
 
-    if (this.splitMethod === SplitMethod.BalanceChanges) {
+    if (this._splitMethod === SplitMethod.BalanceChanges) {
       return users.map((user, index) => {
         return {
           ...user,
-          change: Number(this.participants![index].value!).toFixed(2),
+          change: Number(this._participants![index].value!).toFixed(2),
+          pending: false,
+        }
+      })
+    }
+
+    if (this._splitMethod === SplitMethod.Delayed) {
+      return users.map((user) => {
+        return {
+          ...user,
+          change: '0.00',
           pending: false,
         }
       })
     }
 
     return users.map((user, index) => {
-      const amount = this.participants![index].value!
+      const amount = this._participants![index].value!
       const change =
-        user.id === this.paidById ? Number(this.totalAmount) - Number(amount) : -Number(amount)
+        user.id === this._paidById ? Number(this._totalAmount) - Number(amount) : -Number(amount)
 
       return {
         ...user,
@@ -128,29 +146,52 @@ class SplitCreationContext {
 
   private tryFillMissingData() {
     if (
-      this.participants &&
-      this.splitMethod === SplitMethod.Equal &&
-      !this.totalAmount &&
-      this.amountPerUser !== null
+      this._participants &&
+      this._splitMethod === SplitMethod.Equal &&
+      !this._totalAmount &&
+      this._amountPerUser !== null
     ) {
-      this.totalAmount = (Number(this.amountPerUser) * this.participants.length).toFixed(2)
+      this._totalAmount = (Number(this._amountPerUser) * this._participants.length).toFixed(2)
     }
+  }
+
+  async saveSplit(args: CreateSplitArguments) {
+    if (this.completed) {
+      throw new Error('Current split creation context is completed')
+    }
+
+    if (this.flowMode === FlowMode.Resolve) {
+      const splitId = this._resolveSplitId
+
+      if (splitId === null) {
+        throw new TranslatableError('splitValidation.resolveSplitNotFound')
+      }
+
+      await resolveSplit({
+        ...args,
+        splitId,
+      })
+    } else {
+      await createSplit(args)
+    }
+
+    this.completed = true
   }
 
   buildSplitPreview(): SplitWithUsers {
     this.tryFillMissingData()
     const users = this.getParticipantsData()
-    const paidById = this.paidById
+    const paidById = this._paidById
 
-    if (!paidById && this.splitType !== SplitType.BalanceChange) {
+    if (!paidById && this._splitType !== SplitType.BalanceChange) {
       throw new TranslatableError('splitValidation.payerNotFound')
     }
 
-    if (!this.title) {
+    if (!this._title) {
       throw new TranslatableError('splitValidation.titleIsRequired')
     }
 
-    if (!this.totalAmount) {
+    if (!this._totalAmount) {
       throw new TranslatableError('splitValidation.amountRequired')
     }
 
@@ -158,51 +199,152 @@ class SplitCreationContext {
       throw new TranslatableError('api.mustBeLoggedIn')
     }
 
-    if (!this.timestamp) {
+    if (!this._timestamp) {
       throw new TranslatableError('splitValidation.dateMustBeSelected')
     }
 
-    if (this.splitType === null) {
+    if (this._splitType === null) {
       throw new TranslatableError('splitValidation.typeRequired')
     } else if (
-      this.splitType !== SplitType.Normal &&
-      this.splitType !== SplitType.BalanceChange &&
-      this.splitType !== SplitType.Lend
+      this._splitType !== SplitType.Normal &&
+      this._splitType !== SplitType.BalanceChange &&
+      this._splitType !== SplitType.Lend &&
+      this._splitType !== SplitType.Delayed
     ) {
       throw new TranslatableError('splitValidation.invalidType')
     }
 
     return {
       id: -1,
-      title: this.title,
-      total: this.totalAmount,
-      timestamp: this.timestamp,
+      title: this._title,
+      total: this._totalAmount,
+      timestamp: this._timestamp,
       paidById: paidById ?? undefined,
       version: 1,
       createdById: auth.currentUser.uid,
       updatedAt: Date.now(),
       isUserParticipating: true,
-      type: this.splitType,
+      type: this._splitType,
       users: users,
       pending: false,
     }
   }
-}
 
-let currentContext: SplitCreationContext | null = null
+  shouldSkipDetailsStep(): boolean {
+    return this.flowMode === FlowMode.Resolve
+  }
 
-export function getSplitCreationContext() {
-  if (!currentContext) {
-    currentContext = new SplitCreationContext({})
+  get allowedSplitMethods(): SplitMethod[] {
+    return this._allowedSplitMethods
+  }
 
-    if (__DEV__) {
-      console.warn('No split creation context found, creating a new one')
+  get splitMethod(): SplitMethod {
+    if (this._splitMethod === null) {
+      throw new Error('Split method is not set')
+    }
+
+    return this._splitMethod
+  }
+
+  get participants(): UserWithValue[] | null {
+    return this._participants
+  }
+
+  get title(): string | null {
+    return this._title
+  }
+
+  get totalAmount(): string | null {
+    return this._totalAmount
+  }
+
+  get amountPerUser(): string | null {
+    return this._amountPerUser
+  }
+
+  get timestamp(): number | null {
+    return this._timestamp
+  }
+
+  setSplitMethod(splitMethod: SplitMethod) {
+    this._splitMethod = splitMethod
+
+    this._splitType =
+      splitMethod === SplitMethod.BalanceChanges
+        ? SplitType.BalanceChange
+        : splitMethod === SplitMethod.Lend
+          ? SplitType.Lend
+          : splitMethod === SplitMethod.Delayed
+            ? SplitType.Delayed
+            : SplitType.Normal
+
+    return this
+  }
+
+  setParticipants(participants: UserWithValue[]) {
+    this._participants = participants
+    return this
+  }
+
+  setPaidById(paidById: string | null) {
+    this._paidById = paidById
+    return this
+  }
+
+  setTitle(title: string) {
+    this._title = title
+    return this
+  }
+
+  setTotalAmount(totalAmount: string | null) {
+    this._totalAmount = totalAmount
+    return this
+  }
+
+  setAmountPerUser(amountPerUser: string | null) {
+    this._amountPerUser = amountPerUser
+    return this
+  }
+
+  setTimestamp(timestamp: number) {
+    this._timestamp = timestamp
+    return this
+  }
+
+  private static currentContext: SplitCreationContext | null = null
+  static get current(): SplitCreationContext {
+    if (!this.currentContext) {
+      throw new Error('No split creation context found')
+    }
+
+    return this.currentContext
+  }
+
+  static create() {
+    this.currentContext = new SplitCreationContext()
+    return this.currentContext
+  }
+
+  private assertNotStarted() {
+    if (this.started) {
+      throw new Error('Split creation context is already started')
     }
   }
 
-  return currentContext
-}
+  begin() {
+    this.started = true
+  }
 
-export function beginNewSplit(args?: SplitCreationContextArguments) {
-  currentContext = new SplitCreationContext(args ?? {})
+  setAllowedSplitMethods(methods: SplitMethod[]) {
+    this.assertNotStarted()
+    this._allowedSplitMethods = methods
+    return this
+  }
+
+  resolveDelayedSplit(splitId: number) {
+    this.assertNotStarted()
+    this.flowMode = FlowMode.Resolve
+    this._resolveSplitId = splitId
+    return this
+  }
 }

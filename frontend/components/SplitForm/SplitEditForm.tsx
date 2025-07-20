@@ -21,6 +21,14 @@ export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
         }
       }
 
+      if (splitInfo.type === SplitType.Delayed) {
+        return {
+          user: user,
+          entry: user.email ?? '',
+          amount: '0.00',
+        }
+      }
+
       if (user.id === splitInfo.paidById) {
         return {
           user: user,

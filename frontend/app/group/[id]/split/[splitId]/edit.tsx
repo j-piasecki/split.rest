@@ -8,11 +8,11 @@ import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
-import { validateSplitForm } from '@utils/validateSplitForm'
+import { validateSplitForm, validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, Platform, View } from 'react-native'
 import { BalanceChange, GroupUserInfo, SplitType, SplitWithUsers } from 'shared'
 
 function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: SplitWithUsers }) {
@@ -27,23 +27,57 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
   async function save(form: FormData) {
     try {
       setWaiting(true)
-      const { payerId, sumToSave, balanceChange, timestamp } = await (splitInfo.type ===
-      SplitType.BalanceChange
-        ? validateSplitForm(form, false, false)
-        : splitInfo.type === SplitType.Lend
-          ? validateSplitForm(form, true, true, true)
-          : validateSplitForm(form))
 
-      await updateSplit({
-        splitId: splitInfo.id,
-        groupId: groupInfo.id,
-        paidBy: payerId,
-        title: form.title,
-        total: sumToSave,
-        timestamp: timestamp,
-        balances: balanceChange as BalanceChange[],
-        currency: groupInfo.currency,
-      })
+      // TODO: common validation?
+      if (splitInfo.type === SplitType.Delayed) {
+        validateSplitTitle(form.title)
+        const total = form.total
+
+        if (total === undefined || Number.isNaN(Number(form.total))) {
+          setError(t('splitValidation.amountMustBeNumber'))
+          return
+        }
+
+        if (Number(total) <= 0) {
+          setError(t('splitValidation.amountMustBeGreaterThanZero'))
+          return
+        }
+
+        await updateSplit({
+          splitId: splitInfo.id,
+          groupId: groupInfo.id,
+          paidBy: splitInfo.paidById,
+          title: form.title,
+          total: total,
+          timestamp: form.timestamp,
+          currency: groupInfo.currency,
+          balances: [
+            {
+              id: splitInfo.paidById!,
+              change: '0.00',
+              pending: false,
+            },
+          ],
+        })
+      } else {
+        const { payerId, sumToSave, balanceChange, timestamp } = await (splitInfo.type ===
+        SplitType.BalanceChange
+          ? validateSplitForm(form, false, false)
+          : splitInfo.type === SplitType.Lend
+            ? validateSplitForm(form, true, true, true)
+            : validateSplitForm(form))
+
+        await updateSplit({
+          splitId: splitInfo.id,
+          groupId: groupInfo.id,
+          paidBy: payerId,
+          title: form.title,
+          total: sumToSave.toFixed(2),
+          timestamp: timestamp,
+          balances: balanceChange as BalanceChange[],
+          currency: groupInfo.currency,
+        })
+      }
 
       snack.show({ message: t('split.updated') })
       router.dismissTo(`/group/${groupInfo.id}`)
@@ -80,6 +114,16 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
         showAddAllMembers={false}
         showSuggestions={false}
         showPayerEntry={splitInfo.type !== SplitType.Lend}
+        showEntries={splitInfo.type !== SplitType.Delayed}
+        showTotalInput={splitInfo.type === SplitType.Delayed}
+        initialTotal={splitInfo.total}
+        balanceKeyboardType={
+          splitInfo.type === SplitType.BalanceChange
+            ? Platform.OS === 'android'
+              ? 'phone-pad'
+              : 'numbers-and-punctuation'
+            : undefined
+        }
       />
     </View>
   )

@@ -2,80 +2,46 @@ import { Button } from '@components/Button'
 import { CalendarPane } from '@components/CalendarPane'
 import { ErrorText } from '@components/ErrorText'
 import { Form } from '@components/Form'
-import { Icon } from '@components/Icon'
+import { LargeTextInput } from '@components/LargeTextInput'
 import ModalScreen from '@components/ModalScreen'
 import { TabView } from '@components/TabView'
-import { TextInput, TextInputRef } from '@components/TextInput'
+import { TextInput } from '@components/TextInput'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
-import { useTheme } from '@styling/theme'
+import { useAuth } from '@utils/auth'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
-import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
+import { navigateToSplitSpecificFlow } from '@utils/navigateToSplitSpecificFlow'
+import { SplitCreationContext, SplitMethod } from '@utils/splitCreationContext'
 import { validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { CurrencyUtils } from 'shared'
 
-function SplitTitle({
-  title,
-  updateTitle,
-}: {
-  title: string
-  updateTitle: (title: string) => void
-}) {
-  const theme = useTheme()
-  const threeBarLayout = useThreeBarLayout()
-  const textInputRef = useRef<TextInputRef>(null)
-  const { t } = useTranslation()
-
-  return (
-    <Pressable
-      style={{
-        padding: threeBarLayout ? 8 : 12,
-        paddingLeft: threeBarLayout ? 16 : 24,
-        borderRadius: 16,
-        backgroundColor: theme.colors.surfaceContainer,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-      }}
-      onPress={() => textInputRef.current?.focus()}
-    >
-      <Icon name='receipt' size={threeBarLayout ? 20 : 24} color={theme.colors.secondary} />
-      <TextInput
-        ref={textInputRef}
-        placeholder={t('form.title')}
-        value={title}
-        onChangeText={(text) => updateTitle(text)}
-        style={{ flex: 1 }}
-        inputStyle={{ fontSize: threeBarLayout ? 16 : 18 }}
-        showUnderline={false}
-      />
-    </Pressable>
-  )
-}
-
 export default function Modal() {
+  const user = useAuth()
   const router = useRouter()
   const insets = useModalScreenInsets()
   const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
 
-  const [title, setTitle] = useState(getSplitCreationContext().title ?? '')
-  const [timestamp, setTimestamp] = useState(getSplitCreationContext().timestamp ?? Date.now())
+  const [title, setTitle] = useState(SplitCreationContext.current.title ?? '')
+  const [timestamp, setTimestamp] = useState(SplitCreationContext.current.timestamp ?? Date.now())
   const [error, setError] = useTranslatedError()
 
   // Fields for equal splits
-  const [total, setTotal] = useState(getSplitCreationContext().totalAmount ?? '')
-  const [amountPerUser, setAmountPerUser] = useState(getSplitCreationContext().amountPerUser ?? '')
+  const [total, setTotal] = useState(SplitCreationContext.current.totalAmount ?? '')
+  const [amountPerUser, setAmountPerUser] = useState(
+    SplitCreationContext.current.amountPerUser ?? ''
+  )
   const [splittingByTotal, setSplittingByTotal] = useState(
-    getSplitCreationContext().amountPerUser === null
+    SplitCreationContext.current.amountPerUser === null
   )
 
-  const splittingEqually = getSplitCreationContext().splitMethod === SplitMethod.Equal
+  const splittingEqually = SplitCreationContext.current.splitMethod === SplitMethod.Equal
+  const splitDelayed = SplitCreationContext.current.splitMethod === SplitMethod.Delayed
 
   function submit() {
     try {
@@ -104,34 +70,44 @@ export default function Modal() {
       }
 
       if (splittingByTotal) {
-        getSplitCreationContext().totalAmount = total
-        getSplitCreationContext().amountPerUser = null
+        SplitCreationContext.current.setTotalAmount(total)
+        SplitCreationContext.current.setAmountPerUser(null)
       } else {
-        getSplitCreationContext().amountPerUser = amountPerUser
-        getSplitCreationContext().totalAmount = null
+        SplitCreationContext.current.setAmountPerUser(amountPerUser)
+        SplitCreationContext.current.setTotalAmount(null)
       }
+    } else if (splitDelayed) {
+      if (!user) {
+        setError(t('api.mustBeLoggedIn'))
+        return
+      }
+
+      if (Number.isNaN(Number(total))) {
+        setError(t('splitValidation.amountMustBeNumber'))
+        return
+      }
+
+      if (Number(total) <= 0) {
+        setError(t('splitValidation.amountMustBeGreaterThanZero'))
+        return
+      }
+
+      SplitCreationContext.current.setTotalAmount(total)
+      SplitCreationContext.current.setPaidById(user?.id ?? null)
+      SplitCreationContext.current.setParticipants([
+        {
+          user: {
+            ...user,
+            displayName: null,
+          },
+          value: '0.00',
+        },
+      ])
     }
 
-    getSplitCreationContext().title = title
-    getSplitCreationContext().timestamp = timestamp
-
-    switch (getSplitCreationContext().splitMethod) {
-      case SplitMethod.ExactAmounts:
-        router.navigate(`/group/${id}/addSplit/exactAmounts`)
-        break
-
-      case SplitMethod.Equal:
-        router.navigate(`/group/${id}/addSplit/participantsStep`)
-        break
-
-      case SplitMethod.BalanceChanges:
-        router.navigate(`/group/${id}/addSplit/balanceChanges`)
-        break
-
-      case SplitMethod.Lend:
-        router.navigate(`/group/${id}/addSplit/lend`)
-        break
-    }
+    SplitCreationContext.current.setTitle(title)
+    SplitCreationContext.current.setTimestamp(timestamp)
+    navigateToSplitSpecificFlow(Number(id), router)
   }
 
   return (
@@ -161,13 +137,28 @@ export default function Modal() {
           }}
         >
           <Form autofocus onSubmit={submit}>
-            <SplitTitle
-              title={title}
-              updateTitle={(value) => {
+            <LargeTextInput
+              placeholder={t('form.title')}
+              value={title}
+              onChangeText={(value) => {
                 setTitle(value)
                 setError(null)
               }}
+              icon='receipt'
             />
+
+            {splitDelayed && (
+              <LargeTextInput
+                placeholder={t('form.totalPaid')}
+                value={total}
+                onChangeText={(value) => {
+                  setTotal(value)
+                  setError(null)
+                }}
+                icon='sell'
+                keyboardType='decimal-pad'
+              />
+            )}
 
             {/* TODO: this does look kinda out of place */}
             {/* TODO: remember which option was picked last time */}

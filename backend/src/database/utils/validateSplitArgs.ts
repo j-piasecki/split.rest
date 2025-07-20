@@ -27,3 +27,21 @@ export function validateLendSplitArgs(args: CreateSplitArguments | UpdateSplitAr
     throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
   }
 }
+
+export function validateDelayedSplitArgs(args: CreateSplitArguments | UpdateSplitArguments) {
+  if (args.balances.length !== 1) {
+    throw new BadRequestException('api.split.delayedSplitMustHaveOneParticipant')
+  }
+
+  if (args.balances[0].change !== '0.00') {
+    throw new BadRequestException('api.split.delayedSplitMustHaveZeroChange')
+  }
+
+  if (args.balances[0].id !== args.paidBy) {
+    throw new BadRequestException('api.split.delayedSplitMustHavePayerAsParticipant')
+  }
+
+  if (!args.paidBy) {
+    throw new BadRequestException('api.split.payerNotInTransaction')
+  }
+}

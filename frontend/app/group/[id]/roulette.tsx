@@ -22,7 +22,7 @@ import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { getBalanceColor } from '@utils/getBalanceColor'
-import { SplitMethod, beginNewSplit } from '@utils/splitCreationContext'
+import { SplitCreationContext, SplitMethod } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -281,15 +281,16 @@ function Result({ query, groupId, setQuery }: ResultProps) {
           title={t('roulette.createSplit')}
           style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
           onPress={() => {
-            beginNewSplit({
-              participants: result.map((user) => ({ user: user })),
-              paidById: result[0].id,
-              allowedSplitMethods: [
+            SplitCreationContext.create()
+              .setAllowedSplitMethods([
                 SplitMethod.Equal,
                 SplitMethod.ExactAmounts,
                 SplitMethod.BalanceChanges,
-              ],
-            })
+              ])
+              .setParticipants(result.map((user) => ({ user: user })))
+              .setPaidById(result[0].id)
+              .begin()
+
             router.navigate(`/group/${groupId}/addSplit`)
           }}
           isLoading={!finished}

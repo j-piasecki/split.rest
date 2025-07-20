@@ -19,6 +19,7 @@ import { StyleProp, View, ViewStyle } from 'react-native'
 import {
   CurrencyUtils,
   isBalanceChangeSplit,
+  isDelayedSplit,
   isInversedSplit,
   isLendSplit,
   isSettleUpSplit,
@@ -109,9 +110,10 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
   const isInverse = isInversedSplit(split.type)
   const isBalanceChange = isBalanceChangeSplit(split.type)
   const isLend = isLendSplit(split.type)
+  const isDelayed = isDelayedSplit(split.type)
   const shouldUseStackedInfo = displayClass === DisplayClass.Small || (width < 660 && width > 0)
 
-  const showBadge = isSettleUp || isLend
+  const showBadge = isSettleUp || isLend || isDelayed
 
   const contextMenuDisabled =
     !permissions?.canSeeSplitDetails(split) &&
@@ -233,7 +235,9 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
                 styles.paneShadow,
               ]}
             >
-              {isLend ? (
+              {isDelayed ? (
+                <Icon name='schedule' size={16} color={theme.colors.tertiary} />
+              ) : isLend ? (
                 <Icon name='payment' size={16} color={theme.colors.tertiary} />
               ) : split.pending ? (
                 <Icon name='hourglass' size={16} color={theme.colors.tertiary} />

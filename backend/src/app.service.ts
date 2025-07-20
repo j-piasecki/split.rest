@@ -34,6 +34,7 @@ import {
   JoinGroupByLinkArguments,
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
+  ResolveAllDelayedSplitsAtOnceArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
@@ -80,6 +81,8 @@ export class AppService {
       args.type !== SplitType.Normal &&
       args.type !== SplitType.BalanceChange &&
       args.type !== SplitType.Lend
+      // TODO: re-enable once delayed splits are ready
+      // && args.type !== SplitType.Delayed
     ) {
       throw new BadRequestException('api.split.invalidSplitType')
     }
@@ -293,5 +296,16 @@ export class AppService {
 
   async settleUpGroup(callerId: string, args: SettleUpGroupArguments) {
     return await this.databaseService.settleUpGroup(callerId, args)
+  }
+
+  async resolveDelayedSplit(callerId: string, args: UpdateSplitArguments) {
+    return await this.databaseService.resolveDelayedSplit(callerId, args)
+  }
+
+  async resolveAllDelayedSplitsAtOnce(
+    callerId: string,
+    args: ResolveAllDelayedSplitsAtOnceArguments
+  ) {
+    return await this.databaseService.resolveAllDelayedSplitsAtOnce(callerId, args)
   }
 }

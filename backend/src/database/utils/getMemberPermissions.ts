@@ -24,6 +24,10 @@ const ownerPermissions: GroupMemberPermissionsDTO = {
     SplitPermissionsDTO.SettleUp |
     SplitPermissionsDTO.CompleteSplitEntry |
     SplitPermissionsDTO.UncompleteSplitEntry |
+    SplitPermissionsDTO.ResolveDelayedSplits |
+    SplitPermissionsDTO.ResolveDelayedSplitsAll |
+    // TODO: re-enable once delayed splits are ready
+    // SplitPermissionsDTO.ResolveAllDelayedSplitsAtOnce |
     SplitPermissionsDTO.Query,
   members: MembersPermissionsDTO.Read | MembersPermissionsDTO.Invite,
   manage:
@@ -61,6 +65,8 @@ const adminPermissions: GroupMemberPermissionsDTO = {
     SplitPermissionsDTO.SettleUp |
     SplitPermissionsDTO.CompleteSplitEntry |
     SplitPermissionsDTO.UncompleteSplitEntry |
+    SplitPermissionsDTO.ResolveDelayedSplits |
+    SplitPermissionsDTO.ResolveDelayedSplitsAll |
     SplitPermissionsDTO.Query,
   members: MembersPermissionsDTO.Read | MembersPermissionsDTO.Invite,
   manage:
@@ -91,6 +97,7 @@ const memberPermissions: GroupMemberPermissionsDTO = {
     SplitPermissionsDTO.SettleUp |
     SplitPermissionsDTO.CompleteSplitEntry |
     SplitPermissionsDTO.UncompleteSplitEntry |
+    SplitPermissionsDTO.ResolveDelayedSplits |
     SplitPermissionsDTO.Query,
   members: MembersPermissionsDTO.Read,
   manage: ManagePermissionsDTO.ChangeDisplayName,

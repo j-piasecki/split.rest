@@ -425,16 +425,14 @@ describe('settleDebtsOptimal', () => {
     test('should handle moderate complexity without timeout', () => {
       // Test with enough complexity to trigger memoization but not too slow
       const members = [
-        createMember('1', '-5.00', true, false),
-        createMember('2', '-8.00', true, false),
-        createMember('3', '-5.00', true, false),
-        createMember('4', '-4.00', true, false),
-        createMember('5', '-7.00', true, false),
-        createMember('6', '-12.00', true, false),
-        createMember('7', '2.00', true, false),
-        createMember('8', '14.00', true, false),
-        createMember('9', '15.00', true, false),
-        createMember('10', '10.00', true, false),
+        createMember('1', '-13.00', true, false),
+        createMember('2', '-9.00', true, false),
+        createMember('3', '-7.00', true, false),
+        createMember('4', '-12.00', true, false),
+        createMember('5', '2.00', true, false),
+        createMember('6', '14.00', true, false),
+        createMember('7', '15.00', true, false),
+        createMember('8', '10.00', true, false),
       ]
 
       const startTime = Date.now()

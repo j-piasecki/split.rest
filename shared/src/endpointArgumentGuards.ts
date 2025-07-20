@@ -29,6 +29,7 @@ import {
   JoinGroupByLinkArguments,
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
+  ResolveAllDelayedSplitsAtOnceArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -253,5 +254,11 @@ export function isSetGroupLockedArguments(obj: any): obj is SetGroupLockedArgume
 }
 
 export function isSettleUpGroupArguments(obj: any): obj is SettleUpGroupArguments {
+  return obj.groupId !== undefined
+}
+
+export function isResolveAllDelayedSplitsAtOnceArguments(
+  obj: any
+): obj is ResolveAllDelayedSplitsAtOnceArguments {
   return obj.groupId !== undefined
 }

@@ -3,13 +3,12 @@ import { ErrorText } from '@components/ErrorText'
 import ModalScreen from '@components/ModalScreen'
 import { useSnack } from '@components/SnackBar'
 import { SplitInfo } from '@components/SplitInfo'
-import { useCreateSplit } from '@hooks/database/useCreateSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
-import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
+import { SplitCreationContext, SplitMethod } from '@utils/splitCreationContext'
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import React from 'react'
@@ -21,31 +20,36 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
   const router = useRouter()
   const snack = useSnack()
   const insets = useModalScreenInsets()
+  const [isPending, setIsPending] = useState(false)
   const [error, setError] = useTranslatedError()
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(groupInfo.id)
-  const { mutateAsync: createSplit, isPending } = useCreateSplit()
 
-  function save() {
-    createSplit({
-      groupId: groupInfo.id,
-      paidBy: split.paidById,
-      title: split.title,
-      total: split.total,
-      timestamp: split.timestamp,
-      balances: split.users.map((user) => ({
-        id: user.id,
-        change: user.change,
-        pending: false,
-      })),
-      type: split.type,
-      currency: groupInfo.currency,
-    })
-      .then(() => {
-        snack.show({ message: t('split.created') })
-        router.dismissTo(`/group/${groupInfo.id}`)
+  async function save() {
+    setIsPending(true)
+    try {
+      await SplitCreationContext.current.saveSplit({
+        groupId: groupInfo.id,
+        paidBy: split.paidById,
+        title: split.title,
+        total: split.total,
+        timestamp: split.timestamp,
+        balances: split.users.map((user) => ({
+          id: user.id,
+          change: user.change,
+          pending: false,
+        })),
+        type: split.type,
+        currency: groupInfo.currency,
       })
-      .catch(setError)
+
+      snack.show({ message: t('split.created') })
+      router.dismissTo(`/group/${groupInfo.id}`)
+    } catch (error) {
+      setError(error)
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
@@ -68,7 +72,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         {permissions?.canCreateSplits() && (
           <>
             {/* Show the edit button only for equal splits not to show the same form twice */}
-            {getSplitCreationContext().splitMethod === SplitMethod.Equal && (
+            {SplitCreationContext.current.splitMethod === SplitMethod.Equal && (
               <Button
                 leftIcon='edit'
                 title={t('form.edit')}
@@ -101,7 +105,7 @@ export default function Modal() {
 
   useFocusEffect(() => {
     try {
-      setSplit(getSplitCreationContext().buildSplitPreview())
+      setSplit(SplitCreationContext.current.buildSplitPreview())
     } catch (e) {
       setError(e)
     }

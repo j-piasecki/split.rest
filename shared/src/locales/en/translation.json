@@ -109,6 +109,8 @@
         "deleteSplit": "You don't have permission to delete this split",
         "editSplit": "You don't have permission to edit this split",
         "restoreSplit": "You don't have permission to restore this split",
+        "resolveDelayedSplits": "You don't have permission to resolve delayed splits",
+        "resolveAllDelayedSplitsAtOnce": "You don't have permission to resolve all delayed splits at once",
         "accessRoulette": "You don't have permission to access the roulette",
         "settleUp": "You don't have permission to settle up",
         "completeSplitEntry": "You don't have permission to complete splits",
@@ -159,7 +161,13 @@
         "userIdTooLong": "Provided user ID is too long",
         "tooManyPaidBy": "Too many users set as payers",
         "tooManyLastUpdateBy": "Too many users set as last updaters"
-      }
+      },
+      "delayedSplitMustHaveOneParticipant": "Delayed split must have one participant",
+      "delayedSplitMustHaveZeroChange": "Delayed split cannot have a change",
+      "delayedSplitMustHavePayerAsParticipant": "Delayed split must have the payer as a participant",
+      "delayedSplitMustBeResolvedWithPayer": "Payer must be included when finalizing a delayed split",
+      "invalidResolutionMethod": "Invalid resolution method",
+      "noDelayedSplits": "There are no delayed splits to finalize"
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
@@ -248,7 +256,8 @@
 
     "groupSettings": {
       "index": "Settings",
-      "invitations": "Manage invitations"
+      "invitations": "Manage invitations",
+      "resolveDelayed": "Finalize delayed splits"
     },
   
     "splitType": "New split",
@@ -299,14 +308,16 @@
     "exactAmounts": "By exact amounts",
     "equalAmounts": "Equally",
     "balanceChanges": "By balance changes",
-    "lend": "Lend"
+    "lend": "Lend",
+    "delayed": "Delayed"
   },
 
   "splitTypeDescription": {
     "exactAmounts": "Select the participants, choose who paid, and enter how much each person owes.",
     "equalAmounts": "Select participants, choose who paid, and split the total equally or assign everyone the same amount. You can adjust values manually afterward.",
     "balanceChanges": "Select participants and update their balances. Multiple people can have negative balances as long as the total equals zero. Perfect for poker games!",
-    "lend": "Lend money to other people. You can use this to transfer debts from outside of the group."
+    "lend": "Lend money to other people. You can use this to transfer debts from outside of the group.",
+    "delayed": "Submit only the paid amount without setting participants. You can finalize the split later."
   },
 
   "roulette": {
@@ -353,7 +364,16 @@
     "settleUpGroupConfirmationText": "Are you sure you want to settle up the group?",
     "settleUpGroupConfirmationMessage": "This will create multiple settle-up splits and notify all members.",
     "settleUpGroupConfirm": "Yes",
-    "settleUpGroupCancel": "No"
+    "settleUpGroupCancel": "No",
+    "resolveAllDelayed": {
+      "resolveAllText": "Finalize all delayed splits",
+      "resolveButton": "Finalize",
+      "confirmationText": "Are you sure you want to finalize all delayed splits?",
+      "confirmationMessage": "This action is irreversible.",
+      "confirm": "Yes",
+      "cancel": "No",
+      "success": "All delayed splits have been finalized"
+    }
   },
 
   "inviteMember": {
@@ -386,7 +406,8 @@
     "typeRequired": "Type is required",
     "invalidType": "Ivalid split type",
     "allEntriesMustSumToZero": "The sum of all entries must be equal to zero",
-    "youMustSelectUser": "You must select a member ({{entry}})"
+    "youMustSelectUser": "You must select a member ({{entry}})",
+    "resolveSplitNotFound": "Could not find split being finalized"
   },
 
   "groupValidation": {
@@ -425,7 +446,8 @@
     "deletedToast": "Deleted {{title}}",
     "created": "Split created",
     "updated": "Split updated",
-    "completed": "Entry completed"
+    "completed": "Entry completed",
+    "resolveDelayed": "Finalize split"
   },
 
   "splitList": {
@@ -484,7 +506,8 @@
     "willGiveBack": "Will give back",
     "markCompleted": "Mark as complete",
     "settleUpTitle": "Settle up split",
-    "loadMoreHistory": "Load more history"
+    "loadMoreHistory": "Load more history",
+    "splitIsDelayed": "This split will be finalized later"
   },
 
   "errorBoundary": {

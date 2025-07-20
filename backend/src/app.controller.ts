@@ -34,6 +34,7 @@ import {
   JoinGroupByLinkArguments,
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
+  ResolveAllDelayedSplitsAtOnceArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -80,6 +81,7 @@ import {
   isJoinGroupByLinkArguments,
   isQueryGroupSplitsArguments,
   isRegisterOrUpdateNotificationTokenArguments,
+  isResolveAllDelayedSplitsAtOnceArguments,
   isRestoreSplitArguments,
   isSetGroupAccessArguments,
   isSetGroupAdminArguments,
@@ -680,5 +682,28 @@ export class AppController {
     }
 
     return await this.appService.settleUpGroup(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('resolveDelayedSplit')
+  async resolveDelayedSplit(@Req() request: Request, @Body() args: Partial<UpdateSplitArguments>) {
+    if (!isUpdateSplitArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.resolveDelayedSplit(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('resolveAllDelayedSplitsAtOnce')
+  async resolveAllDelayedSplitsAtOnce(
+    @Req() request: Request,
+    @Body() args: Partial<ResolveAllDelayedSplitsAtOnceArguments>
+  ) {
+    if (!isResolveAllDelayedSplitsAtOnceArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.resolveAllDelayedSplitsAtOnce(request.user.sub, args)
   }
 }

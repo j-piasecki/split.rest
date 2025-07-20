@@ -6,13 +6,13 @@ import { Text } from '@components/Text'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
-import { SplitMethod, getSplitCreationContext } from '@utils/splitCreationContext'
+import { navigateToSplitSpecificFlow } from '@utils/navigateToSplitSpecificFlow'
+import { SplitCreationContext, SplitMethod } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import Animated, { useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated'
-import { SplitType } from 'shared'
 
 const SplitTypeCard = ({
   title,
@@ -183,6 +183,16 @@ function ConcreteSplitTypeCard({
           onSelect={() => onSelect(SplitMethod.Lend)}
         />
       )
+    case SplitMethod.Delayed:
+      return (
+        <SplitTypeCard
+          title={t('splitType.delayed')}
+          description={t('splitTypeDescription.delayed')}
+          icon='schedule'
+          selected={selectedMethod === SplitMethod.Delayed}
+          onSelect={() => onSelect(SplitMethod.Delayed)}
+        />
+      )
     default:
       return null
   }
@@ -229,7 +239,7 @@ export default function Modal() {
             {t('splitType.selectType')}
           </Text>
 
-          {getSplitCreationContext().allowedSplitMethods.map((method) => (
+          {SplitCreationContext.current.allowedSplitMethods.map((method) => (
             <ConcreteSplitTypeCard
               key={method}
               method={method}
@@ -244,14 +254,13 @@ export default function Modal() {
             title={t('form.buttonNext')}
             rightIcon='chevronForward'
             onPress={() => {
-              getSplitCreationContext().splitMethod = selectedSplitType
-              getSplitCreationContext().splitType =
-                selectedSplitType === SplitMethod.BalanceChanges
-                  ? SplitType.BalanceChange
-                  : selectedSplitType === SplitMethod.Lend
-                    ? SplitType.Lend
-                    : SplitType.Normal
-              router.navigate(`/group/${id}/addSplit/detailsStep`)
+              SplitCreationContext.current.setSplitMethod(selectedSplitType)
+
+              if (SplitCreationContext.current.shouldSkipDetailsStep()) {
+                navigateToSplitSpecificFlow(Number(id), router)
+              } else {
+                router.navigate(`/group/${id}/addSplit/detailsStep`)
+              }
             }}
           />
         </View>
