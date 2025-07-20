@@ -133,7 +133,6 @@ async function dispatchNotifications(
 }
 
 export async function createSplit(pool: Pool, callerId: string, args: CreateSplitArguments) {
-  console.log('createSplit', args)
   if (isNormalSplit(args.type)) {
     validateNormalSplitArgs(args)
   }
