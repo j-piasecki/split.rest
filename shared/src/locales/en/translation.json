@@ -109,6 +109,7 @@
         "deleteSplit": "You don't have permission to delete this split",
         "editSplit": "You don't have permission to edit this split",
         "restoreSplit": "You don't have permission to restore this split",
+        "resolveDelayedSplits": "You don't have permission to resolve delayed splits",
         "accessRoulette": "You don't have permission to access the roulette",
         "settleUp": "You don't have permission to settle up",
         "completeSplitEntry": "You don't have permission to complete splits",
@@ -311,7 +312,7 @@
     "equalAmounts": "Select participants, choose who paid, and split the total equally or assign everyone the same amount. You can adjust values manually afterward.",
     "balanceChanges": "Select participants and update their balances. Multiple people can have negative balances as long as the total equals zero. Perfect for poker games!",
     "lend": "Lend money to other people. You can use this to transfer debts from outside of the group.",
-    "delayed": "Submit only the paid amount without setting participants. You can add resolve the split later."
+    "delayed": "Submit only the paid amount without setting participants. You can finalize the split later."
   },
 
   "roulette": {
