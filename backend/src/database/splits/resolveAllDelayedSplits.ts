@@ -107,17 +107,23 @@ export async function resolveAllDelayedSplits(
       throw new ForbiddenException('api.group.locked')
     }
 
+    const splitsToFinalize = await client.query<{ id: number }>(
+      'SELECT id FROM splits WHERE group_id = $1 AND type = $2 AND deleted = FALSE',
+      [args.groupId, SplitType.Delayed]
+    )
+
+    if (splitsToFinalize.rows.length === 0) {
+      throw new NotFoundException('api.split.noDelayedSplits')
+    }
+
+    console.log(splitsToFinalize.rows)
+
     // TODO: read currency from the original split once it's stored in the database
     const groupInfo = (
       await client.query<{ currency: string }>('SELECT currency FROM groups WHERE id = $1', [
         args.groupId,
       ])
     ).rows[0]
-
-    const splitsToFinalize = await client.query<{ id: number }>(
-      'SELECT id FROM splits WHERE group_id = $1 AND type = $2 AND deleted = FALSE',
-      [args.groupId, SplitType.Delayed]
-    )
 
     for (const split of splitsToFinalize.rows) {
       await resolveDelayedSplit(

@@ -58,6 +58,7 @@ export function ParticipantsPicker({
   buttonLeftIcon,
   buttonLoading,
   requiredPayer = true,
+  error,
 }: {
   user: UserWithDisplayName
   groupInfo: GroupUserInfo
@@ -70,6 +71,7 @@ export function ParticipantsPicker({
   savedParticipants?: UserWithValue[]
   paidByIndex?: number
   requiredPayer?: boolean
+  error?: string
 }) {
   const insets = useModalScreenInsets()
   const scrollViewRef = useRef<ScrollView>(null)
@@ -82,12 +84,12 @@ export function ParticipantsPicker({
   const [entries, setEntries] = useState<PersonEntry[]>(
     getInitialEntries(user, savedParticipants, paidByIndex, requiredPayer)
   )
-  const [error, setError] = useTranslatedError()
+  const [innerError, setInnerError] = useTranslatedError()
 
   const useSelectablePicker = groupInfo.memberCount <= 16
 
   function submit() {
-    setError(null)
+    setInnerError(null)
 
     const userEntries = entries
       .filter((entry) => entry.user !== undefined)
@@ -97,19 +99,19 @@ export function ParticipantsPicker({
       }))
 
     if (userEntries.length < 2) {
-      setError(new TranslatableError('splitValidation.atLeastTwoEntries'))
+      setInnerError(new TranslatableError('splitValidation.atLeastTwoEntries'))
       return
     }
 
     const payerEntry = userEntries.find((entry) => entry.selected)
     if (!payerEntry && requiredPayer) {
-      setError(new TranslatableError('splitValidation.thePayerMustBeSelected'))
+      setInnerError(new TranslatableError('splitValidation.thePayerMustBeSelected'))
       return
     }
 
     const payer = payerEntry?.user
     if (!payer && requiredPayer) {
-      setError(new TranslatableError('splitValidation.thePayerDataMustBeFilledIn'))
+      setInnerError(new TranslatableError('splitValidation.thePayerDataMustBeFilledIn'))
       return
     }
 
@@ -205,7 +207,7 @@ export function ParticipantsPicker({
                 selectable={requiredPayer}
                 onEntriesChange={(entries) => {
                   setEntries(entries)
-                  setError(null)
+                  setInnerError(null)
                 }}
                 parentLayout={paneLayout}
                 scrollRef={scrollViewRef}
@@ -216,7 +218,7 @@ export function ParticipantsPicker({
       </ScrollView>
 
       <View style={{ gap: 8 }}>
-        {error && <ErrorText>{error}</ErrorText>}
+        {(innerError || error) && <ErrorText>{error ?? innerError}</ErrorText>}
         <Button
           isLoading={buttonLoading ?? waiting}
           rightIcon={buttonRightIcon}

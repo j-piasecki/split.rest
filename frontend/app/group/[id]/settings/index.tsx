@@ -95,6 +95,15 @@ function Form({ info }: { info: GroupUserInfo }) {
         )}
       </View>
       <View style={{ marginTop: 32, gap: 16 }}>
+        {permissions?.canResolveAllDelayedSplitsAtOnce() && (
+          <Button
+            title={t('groupSettings.resolveAllDelayed.resolveAllText')}
+            leftIcon='schedule'
+            onPress={() => {
+              router.navigate(`/group/${info.id}/settings/resolveDelayed`)
+            }}
+          />
+        )}
         {permissions?.canSettleUpGroup() && (
           <>
             <ConfirmationModal
