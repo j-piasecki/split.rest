@@ -136,7 +136,7 @@ export default function SplitInfoScreen() {
                   title={t('split.resolveDelayed')}
                   style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
                   disabled={isRestoring}
-                  leftIcon='split'
+                  leftIcon='chronic'
                   onPress={() => {
                     SplitCreationContext.create()
                       .resolveDelayedSplit(Number(splitId))

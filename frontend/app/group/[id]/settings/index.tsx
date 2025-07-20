@@ -98,7 +98,7 @@ function Form({ info }: { info: GroupUserInfo }) {
         {permissions?.canResolveAllDelayedSplitsAtOnce() && (
           <Button
             title={t('groupSettings.resolveAllDelayed.resolveAllText')}
-            leftIcon='schedule'
+            leftIcon='chronic'
             onPress={() => {
               router.navigate(`/group/${info.id}/settings/resolveDelayed`)
             }}
