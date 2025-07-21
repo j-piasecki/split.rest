@@ -22,13 +22,13 @@ import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { getBalanceColor } from '@utils/getBalanceColor'
-import { SplitCreationContext, SplitMethod } from '@utils/splitCreationContext'
+import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, LayoutRectangle, Platform, ScrollView, View } from 'react-native'
 import Animated, { LinearTransition } from 'react-native-reanimated'
-import { GroupUserInfo, TranslatableError, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, SplitMethod, TranslatableError, UserWithDisplayName } from 'shared'
 
 interface RouletteProps {
   groupInfo: GroupUserInfo

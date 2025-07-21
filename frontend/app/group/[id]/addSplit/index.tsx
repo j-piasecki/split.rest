@@ -7,12 +7,13 @@ import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { navigateToSplitSpecificFlow } from '@utils/navigateToSplitSpecificFlow'
-import { SplitCreationContext, SplitMethod } from '@utils/splitCreationContext'
+import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import Animated, { useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated'
+import { SplitMethod } from 'shared'
 
 const SplitTypeCard = ({
   title,

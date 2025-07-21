@@ -11,13 +11,13 @@ import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useAuth } from '@utils/auth'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { navigateToSplitSpecificFlow } from '@utils/navigateToSplitSpecificFlow'
-import { SplitCreationContext, SplitMethod } from '@utils/splitCreationContext'
+import { SplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { CurrencyUtils } from 'shared'
+import { CurrencyUtils, SplitMethod } from 'shared'
 
 export default function Modal() {
   const user = useAuth()

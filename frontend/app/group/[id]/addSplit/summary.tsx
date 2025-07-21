@@ -8,13 +8,13 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
-import { SplitCreationContext, SplitMethod } from '@utils/splitCreationContext'
+import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupUserInfo, SplitWithUsers } from 'shared'
+import { GroupUserInfo, SplitMethod, SplitWithUsers } from 'shared'
 
 function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitWithUsers }) {
   const router = useRouter()

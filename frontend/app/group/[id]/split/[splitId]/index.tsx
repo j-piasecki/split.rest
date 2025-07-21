@@ -9,12 +9,12 @@ import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
-import { SplitCreationContext, SplitMethod } from '@utils/splitCreationContext'
+import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, ScrollView, View } from 'react-native'
-import { isDelayedSplit } from 'shared'
+import { SplitMethod, isDelayedSplit } from 'shared'
 
 export default function SplitInfoScreen() {
   const theme = useTheme()

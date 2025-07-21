@@ -1,5 +1,6 @@
-import { SplitCreationContext, SplitMethod } from './splitCreationContext'
+import { SplitCreationContext } from './splitCreationContext'
 import { Router } from 'expo-router'
+import { SplitMethod } from 'shared'
 
 export function navigateToSplitSpecificFlow(groupId: number, router: Router) {
   switch (SplitCreationContext.current.splitMethod) {

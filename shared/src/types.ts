@@ -55,6 +55,14 @@ export interface UserWithPendingBalanceChange extends UserWithBalanceChange {
   pending: boolean
 }
 
+export enum SplitMethod {
+  ExactAmounts = 'exactAmounts',
+  Equal = 'equal',
+  BalanceChanges = 'balanceChanges',
+  Lend = 'lend',
+  Delayed = 'delayed',
+}
+
 export enum SplitType {
   // Change of payer balance should be positive, others negative
   Normal = 0,

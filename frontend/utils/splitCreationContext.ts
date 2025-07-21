@@ -4,6 +4,7 @@ import { resolveSplit } from '@hooks/database/useResolveSplit'
 import currency from 'currency.js'
 import {
   CreateSplitArguments,
+  SplitMethod,
   SplitType,
   SplitWithUsers,
   TranslatableError,
@@ -14,14 +15,6 @@ import {
 export interface UserWithValue {
   user: UserWithDisplayName
   value?: string
-}
-
-export enum SplitMethod {
-  ExactAmounts = 'exactAmounts',
-  Equal = 'equal',
-  BalanceChanges = 'balanceChanges',
-  Lend = 'lend',
-  Delayed = 'delayed',
 }
 
 export enum FlowMode {
