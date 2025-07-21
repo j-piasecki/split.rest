@@ -5,6 +5,7 @@ import { Text } from '@components/Text'
 import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import currency from 'currency.js'
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -30,21 +31,22 @@ function ActionableSplit({
   const inverseSplit = isInversedSplit(split.type)
   const paidByThis = split.paidById === user.id
 
+  const userChange = currency(split.userChange ?? 0)
+  const pendingChange = paidByThis
+    ? inverseSplit
+      ? currency(split.total).add(userChange).toString()
+      : currency(split.total).subtract(userChange).toString()
+    : split.pendingChange
+  const displayedValue = CurrencyUtils.format(pendingChange!, info?.currency)
+
   const text = paidByThis
     ? inverseSplit
-      ? t('actionableSplits.youAreOwed', {
-          amount: CurrencyUtils.format(split.total, info?.currency),
-        })
-      : t('actionableSplits.youOwe', {
-          amount: CurrencyUtils.format(split.total, info?.currency),
-        })
+      ? t('actionableSplits.youAreOwed', { amount: displayedValue })
+      : t('actionableSplits.youOwe', { amount: displayedValue })
     : inverseSplit
-      ? t('actionableSplits.youOwe', {
-          amount: CurrencyUtils.format(split.pendingChange!, info?.currency),
-        })
-      : t('actionableSplits.youAreOwed', {
-          amount: CurrencyUtils.format(split.pendingChange!, info?.currency),
-        })
+      ? t('actionableSplits.youOwe', { amount: displayedValue })
+      : t('actionableSplits.youAreOwed', { amount: displayedValue })
+
   const textColor = paidByThis
     ? inverseSplit
       ? theme.colors.balancePositive
@@ -144,6 +146,8 @@ export function ActionableSplitsPane({
 
     return split.pendingChange !== undefined && Number(split.pendingChange) !== 0
   })
+
+  console.log('actionableSplits', actionableSplits)
 
   if (actionableSplits.length === 0) {
     return null
