@@ -36,15 +36,17 @@ export interface SplitCreationContextArguments {
   resolveSplitId?: number
 }
 
+export const AllSplitMethods = [
+  SplitMethod.Equal,
+  SplitMethod.ExactAmounts,
+  SplitMethod.BalanceChanges,
+  SplitMethod.Lend,
+  // TODO: re-enable once delayed splits are ready
+  // SplitMethod.Delayed,
+]
+
 export class SplitCreationContext {
-  private _allowedSplitMethods: SplitMethod[] = [
-    SplitMethod.Equal,
-    SplitMethod.ExactAmounts,
-    SplitMethod.BalanceChanges,
-    SplitMethod.Lend,
-    // TODO: re-enable once delayed splits are ready
-    // SplitMethod.Delayed,
-  ]
+  private _allowedSplitMethods: SplitMethod[] = [...AllSplitMethods]
 
   private _participants: UserWithValue[] | null = null
   private _paidById: string | null = null

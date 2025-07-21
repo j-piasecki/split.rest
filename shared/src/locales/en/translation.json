@@ -200,7 +200,8 @@
   },
 
   "group": {
-    "details": "Details"
+    "details": "Details",
+    "allowedSplitMethods": "Allowed split methods"
   },
 
   "settings": {
@@ -413,7 +414,8 @@
 
   "groupValidation": {
     "nameCannotBeEmpty": "Name cannot be empty",
-    "nameIsTooLong": "Name is too long"
+    "nameIsTooLong": "Name is too long",
+    "atLeastOneSplitMethodMustBeAllowed": "At least one split method must be allowed"
   },
 
   "form": {
