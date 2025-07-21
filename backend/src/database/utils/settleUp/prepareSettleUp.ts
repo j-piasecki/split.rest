@@ -48,7 +48,7 @@ export function prepareSettleUp(
   // grouped by whether they have access or not and sorted by balance descending.
   const members = allMembers
     .filter((member) => {
-      return Math.sign(currency(member.balance).value) === -Math.sign(balance)
+      return Math.sign(currency(member.balance).intValue) === -Math.sign(balance)
     })
     .sort((a, b) => {
       // Keep deleted users at the end
@@ -65,62 +65,62 @@ export function prepareSettleUp(
         return 1
       }
 
-      const balanceA = currency(a.balance).value
-      const balanceB = currency(b.balance).value
+      const balanceA = currency(a.balance).intValue
+      const balanceB = currency(b.balance).intValue
 
       // If both users have access sort by absolute balance (sorts positive descending and negatives ascending)
       return Math.abs(balanceB) - Math.abs(balanceA)
     })
 
-  let workingBalance = balance
+  let workingBalance = currency(balance)
 
   for (const member of members) {
-    const memberBalance = currency(member.balance).value
-    assert(Math.sign(memberBalance) === -Math.sign(balance))
+    const memberBalance = currency(member.balance)
+    assert(Math.sign(memberBalance.intValue) === -Math.sign(balance))
 
     if (balance < 0) {
-      if (workingBalance + memberBalance >= 0) {
+      if (workingBalance.add(memberBalance).intValue >= 0) {
         entries.push({
           id: member.id,
           change: currency(workingBalance).toString(),
           pending: true,
         })
-        workingBalance = 0
+        workingBalance = currency(0)
       } else {
         entries.push({
           id: member.id,
           change: currency(-memberBalance).toString(),
           pending: true,
         })
-        workingBalance += memberBalance
+        workingBalance = workingBalance.add(memberBalance)
       }
 
-      if (workingBalance >= 0) {
+      if (workingBalance.intValue >= 0) {
         break
       }
     } else if (balance > 0) {
-      if (workingBalance + memberBalance <= 0) {
+      if (workingBalance.add(memberBalance).intValue <= 0) {
         entries.push({
           id: member.id,
           change: currency(workingBalance).toString(),
           pending: true,
         })
-        workingBalance = 0
+        workingBalance = currency(0)
       } else {
         entries.push({
           id: member.id,
           change: currency(-memberBalance).toString(),
           pending: true,
         })
-        workingBalance += memberBalance
+        workingBalance = workingBalance.add(memberBalance)
       }
 
-      if (workingBalance <= 0) {
+      if (workingBalance.intValue <= 0) {
         break
       }
     }
   }
 
-  assert(workingBalance === 0)
+  assert(workingBalance.intValue === 0)
   return entries
 }
