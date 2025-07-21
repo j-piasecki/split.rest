@@ -137,6 +137,7 @@ export function SuggestionsPane({ groupInfo, hiddenIds, onSelect }: SuggestionsP
           horizontal
           style={{ flexGrow: 0 }}
           contentContainerStyle={{ flexGrow: 1, gap: 8, padding: 12 }}
+          keyboardShouldPersistTaps='handled'
         >
           {filteredSuggestions?.map((suggestion) => (
             <Animated.View
