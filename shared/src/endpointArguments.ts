@@ -1,4 +1,4 @@
-import { BalanceChange, SplitInfo, SplitQuery } from './types'
+import { BalanceChange, SplitInfo, SplitQuery, SplitType } from './types'
 
 export interface CreateGroupArguments {
   name: string
@@ -40,6 +40,10 @@ export interface UpdateSplitArguments {
   timestamp: number
   balances: BalanceChange[]
   currency: string
+}
+
+export interface ResolveDelayedSplitArguments extends UpdateSplitArguments {
+  type: SplitType
 }
 
 export interface SetGroupAccessArguments {

@@ -35,6 +35,7 @@ import {
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
   ResolveAllDelayedSplitsAtOnceArguments,
+  ResolveDelayedSplitArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -82,6 +83,7 @@ import {
   isQueryGroupSplitsArguments,
   isRegisterOrUpdateNotificationTokenArguments,
   isResolveAllDelayedSplitsAtOnceArguments,
+  isResolveDelayedSplitArguments,
   isRestoreSplitArguments,
   isSetGroupAccessArguments,
   isSetGroupAdminArguments,
@@ -686,8 +688,11 @@ export class AppController {
 
   @UseGuards(AuthGuard)
   @Post('resolveDelayedSplit')
-  async resolveDelayedSplit(@Req() request: Request, @Body() args: Partial<UpdateSplitArguments>) {
-    if (!isUpdateSplitArguments(args)) {
+  async resolveDelayedSplit(
+    @Req() request: Request,
+    @Body() args: Partial<ResolveDelayedSplitArguments>
+  ) {
+    if (!isResolveDelayedSplitArguments(args)) {
       throw new BadRequestException('api.invalidArguments')
     }
 

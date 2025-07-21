@@ -83,6 +83,7 @@ import {
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
   ResolveAllDelayedSplitsAtOnceArguments,
+  ResolveDelayedSplitArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -370,7 +371,7 @@ export class DatabaseService {
   }
 
   @RequirePermissions(['resolveDelayedSplits'])
-  async resolveDelayedSplit(callerId: string, args: UpdateSplitArguments) {
+  async resolveDelayedSplit(callerId: string, args: ResolveDelayedSplitArguments) {
     return await resolveDelayedSplit(this.pool, callerId, args)
   }
 

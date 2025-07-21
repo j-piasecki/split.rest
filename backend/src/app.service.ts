@@ -35,6 +35,7 @@ import {
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
   ResolveAllDelayedSplitsAtOnceArguments,
+  ResolveDelayedSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
@@ -298,7 +299,7 @@ export class AppService {
     return await this.databaseService.settleUpGroup(callerId, args)
   }
 
-  async resolveDelayedSplit(callerId: string, args: UpdateSplitArguments) {
+  async resolveDelayedSplit(callerId: string, args: ResolveDelayedSplitArguments) {
     return await this.databaseService.resolveDelayedSplit(callerId, args)
   }
 

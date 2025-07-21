@@ -1,3 +1,4 @@
+import { BadRequestException } from '../../errors/BadRequestException'
 import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import NotificationUtils from '../../notifications/NotificationUtils'
@@ -8,13 +9,19 @@ import { splitExists } from '../utils/splitExists'
 import { validateNormalSplitArgs } from '../utils/validateSplitArgs'
 import { updateSplitNoTransaction } from './updateSplit'
 import { Pool, PoolClient } from 'pg'
-import { AndroidNotificationChannel, CurrencyUtils, SplitType, UpdateSplitArguments } from 'shared'
+import {
+  AndroidNotificationChannel,
+  CurrencyUtils,
+  ResolveDelayedSplitArguments,
+  isBalanceChangeSplit,
+  isNormalSplit,
+} from 'shared'
 
 async function dispatchNotifications(
   client: PoolClient,
   callerId: string,
   splitId: number,
-  args: UpdateSplitArguments
+  args: ResolveDelayedSplitArguments
 ) {
   const groupInfo = (
     await client.query('SELECT name, currency FROM groups WHERE id = $1', [args.groupId])
@@ -61,11 +68,16 @@ async function dispatchNotifications(
 export async function resolveDelayedSplit(
   pool: Pool,
   callerId: string,
-  args: UpdateSplitArguments
+  args: ResolveDelayedSplitArguments
 ) {
+  if (!isNormalSplit(args.type) && !isBalanceChangeSplit(args.type)) {
+    throw new BadRequestException('api.split.invalidSplitType')
+  }
+
   // TODO: validate currency
-  // Assume that resolved delayed split is normal split
-  validateNormalSplitArgs(args)
+  if (!isBalanceChangeSplit(args.type)) {
+    validateNormalSplitArgs(args)
+  }
 
   const client = await pool.connect()
 
@@ -87,7 +99,7 @@ export async function resolveDelayedSplit(
     await updateSplitNoTransaction(client, callerId, args, false)
 
     await client.query('UPDATE splits SET type = $1 WHERE id = $2 AND group_id = $3', [
-      SplitType.Normal,
+      args.type,
       args.splitId,
       args.groupId,
     ])

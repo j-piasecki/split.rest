@@ -140,7 +140,11 @@ export default function SplitInfoScreen() {
                   onPress={() => {
                     SplitCreationContext.create()
                       .resolveDelayedSplit(Number(splitId))
-                      .setAllowedSplitMethods([SplitMethod.Equal, SplitMethod.ExactAmounts])
+                      .setAllowedSplitMethods([
+                        SplitMethod.Equal,
+                        SplitMethod.ExactAmounts,
+                        SplitMethod.BalanceChanges,
+                      ])
                       .setParticipants(
                         history[0].users.map((user) => ({ user: user, value: user.change }))
                       )

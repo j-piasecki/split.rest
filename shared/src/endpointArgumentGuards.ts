@@ -30,6 +30,7 @@ import {
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
   ResolveAllDelayedSplitsAtOnceArguments,
+  ResolveDelayedSplitArguments,
   RestoreSplitArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
@@ -81,6 +82,10 @@ export function isUpdateSplitArguments(obj: any): obj is UpdateSplitArguments {
     obj.balances !== undefined &&
     obj.timestamp !== undefined
   )
+}
+
+export function isResolveDelayedSplitArguments(obj: any): obj is ResolveDelayedSplitArguments {
+  return obj.type !== undefined && isUpdateSplitArguments(obj)
 }
 
 export function isSetGroupAccessArguments(obj: any): obj is SetGroupAccessArguments {
