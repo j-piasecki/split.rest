@@ -93,6 +93,16 @@ function Form({ info }: { info: GroupUserInfo }) {
             }}
           />
         )}
+
+        {permissions?.canManageAllowedSplitMethods() && (
+          <PaneButton
+            icon='split'
+            title={t('group.allowedSplitMethods')}
+            onPress={() => {
+              router.navigate(`/group/${info.id}/settings/allowedSplitMethods`)
+            }}
+          />
+        )}
       </View>
       <View style={{ marginTop: 32, gap: 16 }}>
         {permissions?.canResolveAllDelayedSplitsAtOnce() && (
@@ -199,7 +209,7 @@ export default function Settings() {
       returnPath={`/group/${id}`}
       title={t('screenName.groupSettings.index')}
       maxWidth={500}
-      maxHeight={600}
+      maxHeight={650}
       opaque={false}
     >
       {info && <Form info={info} />}
