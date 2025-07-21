@@ -1,4 +1,4 @@
-import { UserWithDisplayName } from 'shared'
+import { SplitType, UserWithDisplayName } from 'shared'
 
 export interface SplitQueryConfig {
   titleFilter?: string
@@ -17,6 +17,7 @@ export interface SplitQueryConfig {
   // undefined is all, true is edited, false is not edited
   edited?: boolean
   pending?: boolean
+  splitTypes?: SplitType[]
 }
 
 export const defaultQueryConfig: SplitQueryConfig = {
@@ -24,4 +25,12 @@ export const defaultQueryConfig: SplitQueryConfig = {
   titleRegex: false,
   orderBy: 'createdAt',
   orderDirection: 'desc',
+  splitTypes: [
+    SplitType.Normal,
+    SplitType.SettleUp,
+    SplitType.SettleUp | SplitType.Inversed,
+    SplitType.BalanceChange,
+    SplitType.Lend,
+    SplitType.Delayed,
+  ],
 }

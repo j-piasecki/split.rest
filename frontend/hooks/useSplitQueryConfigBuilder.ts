@@ -1,6 +1,6 @@
 import { SplitQueryConfig } from '@utils/splitQueryConfig'
 import { useReducer } from 'react'
-import { SplitQuery, UserWithDisplayName } from 'shared'
+import { SplitQuery, SplitType, UserWithDisplayName } from 'shared'
 
 export type SplitQueryActionType =
   | {
@@ -75,6 +75,10 @@ export type SplitQueryActionType =
       type: 'setPending'
       pending: boolean | undefined
     }
+  | {
+      type: 'toggleSplitType'
+      splitType: SplitType
+    }
 
 function queryReducer(query: SplitQueryConfig, action: SplitQueryActionType): SplitQueryConfig {
   const newQuery = { ...query }
@@ -134,6 +138,26 @@ function queryReducer(query: SplitQueryConfig, action: SplitQueryActionType): Sp
     case 'setPending':
       newQuery.pending = action.pending
       break
+    case 'toggleSplitType':
+      if (newQuery.splitTypes?.includes(action.splitType)) {
+        newQuery.splitTypes = newQuery.splitTypes?.filter((t) => t !== action.splitType)
+
+        if (action.splitType === SplitType.SettleUp) {
+          newQuery.splitTypes = newQuery.splitTypes?.filter(
+            (t) => t !== (SplitType.SettleUp | SplitType.Inversed)
+          )
+        }
+      } else {
+        newQuery.splitTypes = [...(newQuery.splitTypes || []), action.splitType]
+
+        if (action.splitType === SplitType.SettleUp) {
+          newQuery.splitTypes = [
+            ...(newQuery.splitTypes || []),
+            SplitType.SettleUp | SplitType.Inversed,
+          ]
+        }
+      }
+      break
   }
 
   return newQuery
@@ -164,6 +188,7 @@ export function buildQuery(query: SplitQueryConfig): SplitQuery {
     lastUpdateAfterTimestamp,
     edited,
     pending,
+    splitTypes,
   } = query
 
   const result: SplitQuery = {
@@ -213,6 +238,10 @@ export function buildQuery(query: SplitQueryConfig): SplitQuery {
 
   if (pending !== undefined) {
     result.pending = pending
+  }
+
+  if (splitTypes) {
+    result.splitTypes = splitTypes
   }
 
   return result

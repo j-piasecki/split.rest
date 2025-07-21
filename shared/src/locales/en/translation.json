@@ -295,7 +295,8 @@
     "notEdited": "Not edited",
     "pending": "Pending",
     "notPending": "Completed",
-    "clearSelection": "Clear selection"
+    "clearSelection": "Clear selection",
+    "splitTypes": "Filter by split type"
   },
 
   "createGroup": {

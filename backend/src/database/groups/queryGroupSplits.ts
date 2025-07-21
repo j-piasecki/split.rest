@@ -158,6 +158,13 @@ export async function queryGroupSplits(
     paramIndex++
   }
 
+  // Split types filter
+  if (args.query?.splitTypes) {
+    whereClauses.push(`splits.type = ANY($${paramIndex})`)
+    values.push(args.query.splitTypes)
+    paramIndex++
+  }
+
   // Final query
   const query = `
     SELECT

@@ -63,6 +63,7 @@ export enum SplitMethod {
   Delayed = 'delayed',
 }
 
+// Remember to update defaultQueryConfig in when adding new split types
 export enum SplitType {
   // Change of payer balance should be positive, others negative
   Normal = 0,
@@ -143,6 +144,7 @@ export interface SplitQuery {
   // undefined is all, true is edited, false is not edited
   edited?: boolean
   pending?: boolean
+  splitTypes?: SplitType[]
 }
 
 export interface SplitWithChanges extends SplitInfo {

@@ -13,10 +13,16 @@ export interface SegmentedButtonItem {
   onPress?: () => void
 }
 
+export enum SegmentedButtonShowTitle {
+  Always = 'always',
+  Selected = 'selected',
+  Never = 'never',
+}
+
 export interface SegmentedButtonProps {
   items: SegmentedButtonItem[]
   style?: StyleProp<ViewStyle>
-  alwaysShowTitle?: boolean
+  showTitle?: SegmentedButtonShowTitle
 }
 
 function Item({
@@ -26,8 +32,8 @@ function Item({
   disabled,
   onPress,
   last,
-  alwaysShowTitle,
-}: SegmentedButtonItem & { last: boolean; alwaysShowTitle: boolean }) {
+  showTitle,
+}: SegmentedButtonItem & { last: boolean; showTitle: SegmentedButtonShowTitle }) {
   const theme = useTheme()
   const [pressed, setPressed] = useState(false)
   const [hovered, setHovered] = useState(false)
@@ -53,11 +59,14 @@ function Item({
     return {
       transform: [
         {
-          scale: withSpring(pressed ? (alwaysShowTitle ? 1.15 : 1.05) : 1, {
-            mass: 1,
-            stiffness: 250,
-            damping: 15,
-          }),
+          scale: withSpring(
+            pressed ? (showTitle === SegmentedButtonShowTitle.Always ? 1.15 : 1.05) : 1,
+            {
+              mass: 1,
+              stiffness: 250,
+              damping: 15,
+            }
+          ),
         },
       ],
     }
@@ -107,26 +116,32 @@ function Item({
               color={selected ? theme.colors.onSecondaryContainer : theme.colors.onSurface}
             />
           )}
-          {title && (alwaysShowTitle || selected) && (
-            <Text
-              style={{
-                flexShrink: 1,
-                fontSize: 14,
-                color: selected ? theme.colors.onSecondaryContainer : theme.colors.onSurface,
-              }}
-              numberOfLines={1}
-              adjustsFontSizeToFit
-            >
-              {title}
-            </Text>
-          )}
+          {title &&
+            (showTitle === SegmentedButtonShowTitle.Always ||
+              (showTitle === SegmentedButtonShowTitle.Selected && selected)) && (
+              <Text
+                style={{
+                  flexShrink: 1,
+                  fontSize: 14,
+                  color: selected ? theme.colors.onSecondaryContainer : theme.colors.onSurface,
+                }}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+              >
+                {title}
+              </Text>
+            )}
         </Animated.View>
       </Pressable>
     </Animated.View>
   )
 }
 
-export function SegmentedButton({ items, style, alwaysShowTitle = true }: SegmentedButtonProps) {
+export function SegmentedButton({
+  items,
+  style,
+  showTitle = SegmentedButtonShowTitle.Always,
+}: SegmentedButtonProps) {
   const theme = useTheme()
   return (
     <View
@@ -146,12 +161,7 @@ export function SegmentedButton({ items, style, alwaysShowTitle = true }: Segmen
     >
       {items.map((item, index) => {
         return (
-          <Item
-            key={index}
-            {...item}
-            last={index === items.length - 1}
-            alwaysShowTitle={alwaysShowTitle}
-          />
+          <Item key={index} {...item} last={index === items.length - 1} showTitle={showTitle} />
         )
       })}
     </View>

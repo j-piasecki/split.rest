@@ -5,7 +5,7 @@ import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
-import { SegmentedButton } from '@components/SegmentedButton'
+import { SegmentedButton, SegmentedButtonShowTitle } from '@components/SegmentedButton'
 import { Text } from '@components/Text'
 import { TextInput, TextInputRef } from '@components/TextInput'
 import { TextInputWithUserSuggestions } from '@components/TextInputWithUserSuggestions'
@@ -23,13 +23,13 @@ import {
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
-import { SplitQueryConfig } from '@utils/splitQueryConfig'
+import { SplitQueryConfig, defaultQueryConfig } from '@utils/splitQueryConfig'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, Pressable, ScrollView, View } from 'react-native'
 import Animated, { LinearTransition } from 'react-native-reanimated'
-import { UserWithDisplayName, validateQuery } from 'shared'
+import { SplitType, UserWithDisplayName, validateQuery } from 'shared'
 
 interface QueryProps {
   query: SplitQueryConfig
@@ -217,7 +217,7 @@ function FilterOrderBy({ query, updateQuery }: QueryProps) {
   return (
     <View style={{ gap: 8 }}>
       <SegmentedButton
-        alwaysShowTitle={false}
+        showTitle={SegmentedButtonShowTitle.Selected}
         items={[
           {
             title: t('filter.orderBy.createdAt'),
@@ -371,6 +371,69 @@ function FilterTimestampRange({
   )
 }
 
+function FilterSplitTypes({ query, updateQuery }: QueryProps) {
+  const selectedTypes = new Set(query.splitTypes)
+  const defaultTypes = new Set(defaultQueryConfig.splitTypes)
+  const isDefault =
+    selectedTypes.size === defaultTypes.size &&
+    query.splitTypes?.every((type) => defaultTypes.has(type))
+
+  const [collapsed, setCollapsed] = useState(isDefault)
+  const { t } = useTranslation()
+
+  return (
+    <Pane
+      icon='split'
+      title={t('filter.splitTypes')}
+      textLocation='start'
+      containerStyle={{ overflow: 'visible' }}
+      collapsible
+      startCollapsed
+      collapsed={collapsed}
+      onCollapseChange={setCollapsed}
+    >
+      {!collapsed && (
+        <View style={{ paddingVertical: 12, paddingHorizontal: 8 }}>
+          <SegmentedButton
+            showTitle={SegmentedButtonShowTitle.Never}
+            items={[
+              {
+                icon: 'exactAmount',
+                selected: query.splitTypes?.includes(SplitType.Normal),
+                onPress: () =>
+                  updateQuery({ type: 'toggleSplitType', splitType: SplitType.Normal }),
+              },
+              {
+                icon: 'balance',
+                selected: query.splitTypes?.includes(SplitType.SettleUp),
+                onPress: () =>
+                  updateQuery({ type: 'toggleSplitType', splitType: SplitType.SettleUp }),
+              },
+              {
+                icon: 'barChart',
+                selected: query.splitTypes?.includes(SplitType.BalanceChange),
+                onPress: () =>
+                  updateQuery({ type: 'toggleSplitType', splitType: SplitType.BalanceChange }),
+              },
+              {
+                icon: 'payment',
+                selected: query.splitTypes?.includes(SplitType.Lend),
+                onPress: () => updateQuery({ type: 'toggleSplitType', splitType: SplitType.Lend }),
+              },
+              {
+                icon: 'schedule',
+                selected: query.splitTypes?.includes(SplitType.Delayed),
+                onPress: () =>
+                  updateQuery({ type: 'toggleSplitType', splitType: SplitType.Delayed }),
+              },
+            ]}
+          />
+        </View>
+      )}
+    </Pane>
+  )
+}
+
 function FilterForm({ query, updateQuery }: QueryProps) {
   const { t } = useTranslation()
 
@@ -438,6 +501,9 @@ function FilterForm({ query, updateQuery }: QueryProps) {
         />
       </View>
       <View style={{ zIndex: 13 }}>
+        <FilterSplitTypes query={query} updateQuery={updateQuery} />
+      </View>
+      <View style={{ zIndex: 12 }}>
         <SegmentedButton
           items={[
             {
@@ -461,7 +527,7 @@ function FilterForm({ query, updateQuery }: QueryProps) {
           ]}
         />
       </View>
-      <View style={{ zIndex: 13 }}>
+      <View style={{ zIndex: 11 }}>
         <SegmentedButton
           items={[
             {
