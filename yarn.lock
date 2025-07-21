@@ -14379,7 +14379,7 @@ __metadata:
 
 "react-native@patch:react-native@npm%3A0.79.5#./.yarn/patches/react-native-npm-0.79.5-375b5dc2bf.patch::locator=split%40workspace%3A.":
   version: 0.79.5
-  resolution: "react-native@patch:react-native@npm%3A0.79.5#./.yarn/patches/react-native-npm-0.79.5-375b5dc2bf.patch::version=0.79.5&hash=f1dc47&locator=split%40workspace%3A."
+  resolution: "react-native@patch:react-native@npm%3A0.79.5#./.yarn/patches/react-native-npm-0.79.5-375b5dc2bf.patch::version=0.79.5&hash=097d6c&locator=split%40workspace%3A."
   dependencies:
     "@jest/create-cache-key-function": ^29.7.0
     "@react-native/assets-registry": 0.79.5
@@ -14425,7 +14425,7 @@ __metadata:
       optional: true
   bin:
     react-native: cli.js
-  checksum: 2ea8857fae7c674716f0704bf07e9a801a6a1230cf6794adf72844306d8bae03a5e05cb37e36d40cf825f53ae91d0b4251b3764dbcfd781973ccc5b8af2eea93
+  checksum: 0f925f45f339cfdb6986192d210b369866c6c14dbd3270d331da3791d2bcb2ebecc1fcf0c15de1d824d8554fd7915e5558982747f8931e89a8faf4e8800c11c7
   languageName: node
   linkType: hard
 
