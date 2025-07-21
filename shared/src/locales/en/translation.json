@@ -132,7 +132,8 @@
           "delete": "You don't have permission to delete invitation links"
         },
         "lockGroup": "You don't have permission to lock or unlock the group",
-        "settleUpGroup": "You don't have permission to settle up the group"
+        "settleUpGroup": "You don't have permission to settle up the group",
+        "manageAllowedSplitMethods": "You don't have permission to manage allowed split methods"
       }
     },
     "notFound": {
@@ -258,7 +259,8 @@
     "groupSettings": {
       "index": "Settings",
       "invitations": "Manage invitations",
-      "resolveDelayed": "Finalize delayed splits"
+      "resolveDelayed": "Finalize delayed splits",
+      "splitMethods": "Allowed split methods"
     },
   
     "splitType": "New split",
