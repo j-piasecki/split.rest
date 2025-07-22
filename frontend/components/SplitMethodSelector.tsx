@@ -211,6 +211,7 @@ function ConcreteSplitTypeCard({
 }
 
 interface BaseSplitMethodSelectorProps {
+  displayedMethods: SplitMethod[]
   allowedMethods: SplitMethod[]
   startExpanded?: boolean
 }
@@ -247,7 +248,7 @@ export function SplitMethodSelector(props: SplitMethodSelectorProps) {
 
   return (
     <View style={{ gap: 16 }}>
-      {OrderedSplitMethods.filter((method) => props.allowedMethods.includes(method)).map(
+      {OrderedSplitMethods.filter((method) => props.displayedMethods.includes(method) && props.allowedMethods.includes(method)).map(
         (method) => (
           <ConcreteSplitTypeCard
             key={method}

@@ -44,7 +44,8 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
           <SplitMethodSelector
             multiple
             startExpanded={false}
-            allowedMethods={AllSplitMethods}
+            displayedMethods={AllSplitMethods}
+            allowedMethods={allowedSplitMethods}
             selectedMethods={allowedSplitMethods}
             onSelectionChange={setAllowedSplitMethods}
           />

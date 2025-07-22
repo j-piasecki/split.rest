@@ -2,6 +2,7 @@ import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { SplitMethodSelector } from '@components/SplitMethodSelector'
 import { Text } from '@components/Text'
+import { useGroupSettings } from '@hooks/database/useGroupSettings'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
@@ -20,6 +21,7 @@ export default function Modal() {
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
+  const { data: settings } = useGroupSettings(Number(id))
   const [selectedSplitType, setSelectedSplitType] = useState<SplitMethod>(SplitMethod.Equal)
 
   return (
@@ -55,7 +57,8 @@ export default function Modal() {
           </Text>
 
           <SplitMethodSelector
-            allowedMethods={SplitCreationContext.current.allowedSplitMethods}
+            displayedMethods={SplitCreationContext.current.allowedSplitMethods}
+            allowedMethods={settings?.allowedSplitMethods ?? []}
             multiple={false}
             selectedMethod={selectedSplitType}
             onSelect={setSelectedSplitType}

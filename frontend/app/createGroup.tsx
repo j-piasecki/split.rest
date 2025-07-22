@@ -125,6 +125,7 @@ function CreateGroupForm() {
               <SplitMethodSelector
                 multiple
                 startExpanded={false}
+                displayedMethods={AllSplitMethods}
                 allowedMethods={AllSplitMethods}
                 selectedMethods={allowedSplitMethods}
                 onSelectionChange={setAllowedSplitMethods}
