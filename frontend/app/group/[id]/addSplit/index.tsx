@@ -9,7 +9,7 @@ import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { navigateToSplitSpecificFlow } from '@utils/navigateToSplitSpecificFlow'
 import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { GroupSettings, SplitMethod } from 'shared'
@@ -29,6 +29,29 @@ function Selector({ settings }: { settings: GroupSettings }) {
   const [selectedSplitType, setSelectedSplitType] = useState<SplitMethod>(
     allowedSplitMethods[0] ?? settings.allowedSplitMethods[0]
   )
+
+  const confirmSelectedMethod = useCallback(
+    (replace?: boolean) => {
+      SplitCreationContext.current.setSplitMethod(selectedSplitType)
+
+      if (SplitCreationContext.current.shouldSkipDetailsStep()) {
+        navigateToSplitSpecificFlow(Number(id), router, replace)
+      } else {
+        if (replace) {
+          router.replace(`/group/${id}/addSplit/detailsStep`)
+        } else {
+          router.navigate(`/group/${id}/addSplit/detailsStep`)
+        }
+      }
+    },
+    [selectedSplitType, id, router]
+  )
+
+  useEffect(() => {
+    if (allowedSplitMethods.length === 1) {
+      confirmSelectedMethod(true)
+    }
+  }, [allowedSplitMethods.length, confirmSelectedMethod])
 
   return (
     <View style={{ flex: 1, paddingBottom: insets.bottom }}>
@@ -87,15 +110,7 @@ function Selector({ settings }: { settings: GroupSettings }) {
           <Button
             title={t('form.buttonNext')}
             rightIcon='chevronForward'
-            onPress={() => {
-              SplitCreationContext.current.setSplitMethod(selectedSplitType)
-
-              if (SplitCreationContext.current.shouldSkipDetailsStep()) {
-                navigateToSplitSpecificFlow(Number(id), router)
-              } else {
-                router.navigate(`/group/${id}/addSplit/detailsStep`)
-              }
-            }}
+            onPress={confirmSelectedMethod}
           />
         </View>
       )}
