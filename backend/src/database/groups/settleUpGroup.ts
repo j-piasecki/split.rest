@@ -4,7 +4,6 @@ import NotificationUtils from '../../notifications/NotificationUtils'
 import { createSplitNoTransaction } from '../splits/createSplit'
 import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
-import { isGroupLocked } from '../utils/isGroupLocked'
 import { loadSettleUpData } from '../utils/settleUp/loadSettleUpData'
 import { prepareGroupSettleUp } from '../utils/settleUp/prepareGroupSettleUp'
 import { Pool, PoolClient } from 'pg'
@@ -87,10 +86,6 @@ export async function settleUpGroup(pool: Pool, callerId: string, args: SettleUp
 
     if (await isGroupDeleted(client, args.groupId)) {
       throw new NotFoundException('api.notFound.group')
-    }
-
-    if (await isGroupLocked(client, args.groupId)) {
-      throw new BadRequestException('api.group.locked')
     }
 
     const settleUpData = await loadSettleUpData(client, args.groupId)
