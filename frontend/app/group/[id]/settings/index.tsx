@@ -8,16 +8,47 @@ import { useSnack } from '@components/SnackBar'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
 import { useSetGroupLockedMutation } from '@hooks/database/useSetGroupLocked'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useSettleUpGroup } from '@hooks/database/useSettleUpGroup'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import { GroupPermissions } from '@utils/GroupPermissions'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { GroupUserInfo, isTranslatableError } from 'shared'
+import { GroupUserInfo, SplitType, isTranslatableError } from 'shared'
+
+function ResolveDelayedSplitsButton({
+  info,
+  permissions,
+}: {
+  info: GroupUserInfo
+  permissions?: GroupPermissions
+}) {
+  const router = useRouter()
+  const { t } = useTranslation()
+  const { splits: delayedSplits } = useGroupSplitsQuery(info.id, {
+    splitTypes: [SplitType.Delayed],
+  })
+  const hasDelayedSplits = delayedSplits.length > 0
+
+  if (!permissions?.canResolveAllDelayedSplitsAtOnce() || !hasDelayedSplits) {
+    return null
+  }
+
+  return (
+    <Button
+      title={t('groupSettings.resolveAllDelayed.resolveAllText')}
+      leftIcon='chronic'
+      onPress={() => {
+        router.navigate(`/group/${info.id}/settings/resolveDelayed`)
+      }}
+    />
+  )
+}
 
 function Form({ info }: { info: GroupUserInfo }) {
   const router = useRouter()
@@ -105,15 +136,7 @@ function Form({ info }: { info: GroupUserInfo }) {
         )}
       </View>
       <View style={{ marginTop: 32, gap: 16 }}>
-        {permissions?.canResolveAllDelayedSplitsAtOnce() && (
-          <Button
-            title={t('groupSettings.resolveAllDelayed.resolveAllText')}
-            leftIcon='chronic'
-            onPress={() => {
-              router.navigate(`/group/${info.id}/settings/resolveDelayed`)
-            }}
-          />
-        )}
+        <ResolveDelayedSplitsButton info={info} permissions={permissions} />
         {permissions?.canSettleUpGroup() && (
           <>
             <ConfirmationModal
