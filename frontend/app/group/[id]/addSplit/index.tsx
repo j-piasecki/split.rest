@@ -24,6 +24,10 @@ export default function Modal() {
   const { data: settings } = useGroupSettings(Number(id))
   const [selectedSplitType, setSelectedSplitType] = useState<SplitMethod>(SplitMethod.Equal)
 
+  const allowedInGroup = settings?.allowedSplitMethods
+  const allowedInContext = SplitCreationContext.current.allowedSplitMethods
+  const canSplit = !!allowedInGroup?.some((method) => allowedInContext.includes(method))
+
   return (
     <ModalScreen
       returnPath={`/group/${id}`}
@@ -40,21 +44,38 @@ export default function Modal() {
             paddingTop: insets.top + 16,
             paddingBottom: 16,
             gap: 16,
+            justifyContent: canSplit ? 'flex-start' : 'center',
           }}
         >
-          <Text
-            adjustsFontSizeToFit
-            numberOfLines={1}
-            style={{
-              paddingHorizontal: 12,
-              color: theme.colors.onSurface,
-              fontSize: threeBarLayout ? 24 : 28,
-              fontWeight: 600,
-              textAlign: 'center',
-            }}
-          >
-            {t('splitType.selectType')}
-          </Text>
+          {canSplit && (
+            <Text
+              adjustsFontSizeToFit
+              numberOfLines={1}
+              style={{
+                paddingHorizontal: 12,
+                color: theme.colors.onSurface,
+                fontSize: threeBarLayout ? 24 : 28,
+                fontWeight: 600,
+                textAlign: 'center',
+              }}
+            >
+              {t('splitType.selectType')}
+            </Text>
+          )}
+
+          {!canSplit && (
+            <Text
+              style={{
+                paddingHorizontal: 12,
+                color: theme.colors.onSurface,
+                fontSize: threeBarLayout ? 24 : 28,
+                fontWeight: 600,
+                textAlign: 'center',
+              }}
+            >
+              {t('splitType.noAllowedMethods')}
+            </Text>
+          )}
 
           <SplitMethodSelector
             displayedMethods={SplitCreationContext.current.allowedSplitMethods}
@@ -65,21 +86,23 @@ export default function Modal() {
           />
         </ScrollView>
 
-        <View style={{ paddingLeft: insets.left + 12, paddingRight: insets.right + 12 }}>
-          <Button
-            title={t('form.buttonNext')}
-            rightIcon='chevronForward'
-            onPress={() => {
-              SplitCreationContext.current.setSplitMethod(selectedSplitType)
+        {canSplit && (
+          <View style={{ paddingLeft: insets.left + 12, paddingRight: insets.right + 12 }}>
+            <Button
+              title={t('form.buttonNext')}
+              rightIcon='chevronForward'
+              onPress={() => {
+                SplitCreationContext.current.setSplitMethod(selectedSplitType)
 
-              if (SplitCreationContext.current.shouldSkipDetailsStep()) {
-                navigateToSplitSpecificFlow(Number(id), router)
-              } else {
-                router.navigate(`/group/${id}/addSplit/detailsStep`)
-              }
-            }}
-          />
-        </View>
+                if (SplitCreationContext.current.shouldSkipDetailsStep()) {
+                  navigateToSplitSpecificFlow(Number(id), router)
+                } else {
+                  router.navigate(`/group/${id}/addSplit/detailsStep`)
+                }
+              }}
+            />
+          </View>
+        )}
       </View>
     </ModalScreen>
   )

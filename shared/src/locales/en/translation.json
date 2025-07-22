@@ -309,6 +309,7 @@
 
   "splitType": {
     "selectType": "How would you like to split?",
+    "noAllowedMethods": "There are no applicable split methods allowed in this group",
     "exactAmounts": "By exact amounts",
     "equalAmounts": "Equally",
     "balanceChanges": "By balance changes",

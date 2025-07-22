@@ -18,12 +18,23 @@ import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { GroupSettings, GroupUserInfo, SplitMethod } from 'shared'
 
-function Form({ info, permissions, settings }: { info: GroupUserInfo; permissions: GroupPermissions; settings: GroupSettings }) {
+function Form({
+  info,
+  permissions,
+  settings,
+}: {
+  info: GroupUserInfo
+  permissions: GroupPermissions
+  settings: GroupSettings
+}) {
   const insets = useModalScreenInsets()
   const [error, setError] = useTranslatedError()
-  const [allowedSplitMethods, setAllowedSplitMethods] = useState<SplitMethod[]>(settings.allowedSplitMethods)
+  const [allowedSplitMethods, setAllowedSplitMethods] = useState<SplitMethod[]>(
+    settings.allowedSplitMethods
+  )
   const { t } = useTranslation()
-  const { mutateAsync: setGroupAllowedSplitMethods, isPending } = useSetGroupAllowedSplitMethodsMutation(info.id)
+  const { mutateAsync: setGroupAllowedSplitMethods, isPending } =
+    useSetGroupAllowedSplitMethodsMutation(info.id)
 
   return (
     <View style={{ flex: 1, paddingBottom: insets.bottom }}>
@@ -102,7 +113,7 @@ export default function Settings() {
         <Form info={info} permissions={permissions} settings={settings} />
       )}
 
-      {!info || !permissions || !settings && (
+      {(!info || !permissions || !settings) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size='large' color={Colors.primary} />
         </View>
