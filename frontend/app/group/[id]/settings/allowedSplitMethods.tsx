@@ -12,7 +12,7 @@ import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { GroupPermissions } from '@utils/GroupPermissions'
 import { AllSplitMethods } from '@utils/splitCreationContext'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
@@ -27,6 +27,7 @@ function Form({
   permissions: GroupPermissions
   settings: GroupSettings
 }) {
+  const router = useRouter()
   const insets = useModalScreenInsets()
   const [error, setError] = useTranslatedError()
   const [allowedSplitMethods, setAllowedSplitMethods] = useState<SplitMethod[]>(
@@ -85,7 +86,15 @@ function Form({
             }
 
             setError(null)
-            setGroupAllowedSplitMethods(allowedSplitMethods).catch(setError)
+            setGroupAllowedSplitMethods(allowedSplitMethods)
+              .then(() => {
+                if (router.canGoBack()) {
+                  router.back()
+                } else {
+                  router.navigate(`/group/${info.id}/settings`)
+                }
+              })
+              .catch(setError)
           }}
         />
       </View>
