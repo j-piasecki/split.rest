@@ -161,4 +161,19 @@ export async function createDatabase(pool: Pool) {
       FOREIGN KEY (user_id) REFERENCES users(id)
     )
   `)
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS group_settings(
+      group_id INTEGER NOT NULL,
+      split_equally_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+      split_exact_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+      split_shares_enabled BOOLEAN NOT NULL DEFAULT FALSE,
+      split_balance_changes_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+      split_lend_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+      split_delayed_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+
+      PRIMARY KEY (group_id),
+      FOREIGN KEY (group_id) REFERENCES groups(id)
+    )
+  `)
 }
