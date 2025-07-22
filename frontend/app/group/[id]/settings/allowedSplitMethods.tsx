@@ -9,13 +9,13 @@ import { useGroupSettings } from '@hooks/database/useGroupSettings'
 import { useSetGroupAllowedSplitMethodsMutation } from '@hooks/database/useSetGroupAllowedSplitMethods'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
+import { useTheme } from '@styling/theme'
 import { GroupPermissions } from '@utils/GroupPermissions'
 import { AllSplitMethods } from '@utils/splitCreationContext'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
-import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { GroupSettings, GroupUserInfo, SplitMethod } from 'shared'
 
 function Form({
@@ -71,7 +71,7 @@ function Form({
           </View>
         )}
         <Button
-          title='Save'
+          title={t('form.save')}
           isLoading={isPending}
           onPress={() => {
             if (!permissions.canManageAllowedSplitMethods()) {
@@ -94,6 +94,7 @@ function Form({
 }
 
 export default function Settings() {
+  const theme = useTheme()
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()
   const { data: info } = useGroupInfo(Number(id))
@@ -115,7 +116,7 @@ export default function Settings() {
 
       {(!info || !permissions || !settings) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size='large' color={Colors.primary} />
+          <ActivityIndicator size='large' color={theme.colors.onSurface} />
         </View>
       )}
     </ModalScreen>
