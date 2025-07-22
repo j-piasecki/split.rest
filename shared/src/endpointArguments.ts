@@ -239,7 +239,10 @@ export interface SettleUpGroupArguments {
 
 export interface DelayedSplitResolutionMethod {
   type: 'equally'
-  members: string[]
+  members: Array<{
+    id: string
+    excludedSplits?: number[]
+  }>
 }
 
 export interface ResolveAllDelayedSplitsAtOnceArguments {

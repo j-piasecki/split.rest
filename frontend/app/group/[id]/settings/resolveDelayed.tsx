@@ -42,7 +42,9 @@ function Form({
             setError(null)
             await resolveDelayedSplits({
               type: 'equally',
-              members: selectedUsersRef.current.map((user) => user.id),
+              members: selectedUsersRef.current.map((user) => ({
+                id: user.id,
+              })),
             })
 
             snack.show({ message: t('groupSettings.resolveAllDelayed.success') })
