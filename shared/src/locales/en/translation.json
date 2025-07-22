@@ -153,7 +153,7 @@
       "settleUpFailed": "Failed to settle up",
       "settledUpButPending": "You are already settled up, but the transaction hasn't been confirmed yet by you or the other party",
       "settleUpHashChanged": "The state of the group has changed, please try again",
-      "invalidSplitType": "Invalid split type",
+      "invalidSplitType": "This split type is not allowed in this group",
       "callerCannotCompleteEntry": "You cannot complete this entry",
       "callerCannotUncompleteEntry": "You cannot mark this entry as not completed",
       "query": {

@@ -1,4 +1,5 @@
 import { DatabaseService } from './database.service'
+import { getAllowedSplitTypes } from './database/utils/getAllowedSplitTypes'
 import { BadRequestException } from './errors/BadRequestException'
 import { deleteProfilePicture, downloadProfilePicture } from './profilePicture'
 import { Injectable } from '@nestjs/common'
@@ -47,7 +48,6 @@ import {
   SetUserNameArguments,
   SettleUpArguments,
   SettleUpGroupArguments,
-  SplitType,
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
   User,
@@ -78,13 +78,9 @@ export class AppService {
   }
 
   async createSplit(callerId: string, args: CreateSplitArguments) {
-    if (
-      args.type !== SplitType.Normal &&
-      args.type !== SplitType.BalanceChange &&
-      args.type !== SplitType.Lend
-      // TODO: re-enable once delayed splits are ready
-      // && args.type !== SplitType.Delayed
-    ) {
+    const allowedTypes = await getAllowedSplitTypes(this.databaseService.pool, args.groupId)
+
+    if (allowedTypes === null || !allowedTypes.includes(args.type)) {
       throw new BadRequestException('api.split.invalidSplitType')
     }
 
