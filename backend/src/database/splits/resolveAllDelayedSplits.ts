@@ -43,15 +43,20 @@ async function resolveDelayedSplit(
     throw new NotFoundException('api.notFound.split')
   }
 
-  if (!resolutionMethod.members.includes(splitInfo.paid_by)) {
+  const payerEntry = resolutionMethod.members.find((member) => member.id === splitInfo.paid_by)
+  if (!payerEntry || (payerEntry.excludedSplits && payerEntry.excludedSplits.includes(splitId))) {
     throw new ForbiddenException('api.split.delayedSplitMustBeResolvedWithPayer')
   }
 
+  const membersForThisSplit = resolutionMethod.members.filter(
+    (member) => !member.excludedSplits || !member.excludedSplits.includes(splitId)
+  )
+
   if (resolutionMethod.type === 'equally') {
     const amountsPaid = currencyJs(splitInfo.total)
-      .distribute(resolutionMethod.members.length)
+      .distribute(membersForThisSplit.length)
       .map((amount, index) => {
-        if (resolutionMethod.members[index] === splitInfo.paid_by) {
+        if (membersForThisSplit[index].id === splitInfo.paid_by) {
           return currencyJs(splitInfo.total).subtract(amount)
         }
         return amount.multiply(-1)
@@ -69,8 +74,8 @@ async function resolveDelayedSplit(
         title: splitInfo.name,
         total: splitInfo.total,
         timestamp: splitInfo.timestamp,
-        balances: resolutionMethod.members.map((member, index) => ({
-          id: member,
+        balances: membersForThisSplit.map((member, index) => ({
+          id: member.id,
           change: amountsPaid[index].toString(),
           pending: false,
         })),
