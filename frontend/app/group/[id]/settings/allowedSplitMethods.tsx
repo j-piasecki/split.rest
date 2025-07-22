@@ -5,6 +5,8 @@ import { Pane } from '@components/Pane'
 import { SplitMethodSelector } from '@components/SplitMethodSelector'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { useGroupSettings } from '@hooks/database/useGroupSettings'
+import { useSetGroupAllowedSplitMethodsMutation } from '@hooks/database/useSetGroupAllowedSplitMethods'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { GroupPermissions } from '@utils/GroupPermissions'
@@ -12,16 +14,16 @@ import { AllSplitMethods } from '@utils/splitCreationContext'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
-import { GroupUserInfo, SplitMethod } from 'shared'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { Colors } from 'react-native/Libraries/NewAppScreen'
+import { GroupSettings, GroupUserInfo, SplitMethod } from 'shared'
 
-function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPermissions }) {
+function Form({ info, permissions, settings }: { info: GroupUserInfo; permissions: GroupPermissions; settings: GroupSettings }) {
   const insets = useModalScreenInsets()
   const [error, setError] = useTranslatedError()
-  const [allowedSplitMethods, setAllowedSplitMethods] = useState<SplitMethod[]>(AllSplitMethods)
+  const [allowedSplitMethods, setAllowedSplitMethods] = useState<SplitMethod[]>(settings.allowedSplitMethods)
   const { t } = useTranslation()
-
-  // TODO: fetch allowed split methods from the server
+  const { mutateAsync: setGroupAllowedSplitMethods, isPending } = useSetGroupAllowedSplitMethodsMutation(info.id)
 
   return (
     <View style={{ flex: 1, paddingBottom: insets.bottom }}>
@@ -45,7 +47,7 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
             multiple
             startExpanded={false}
             displayedMethods={AllSplitMethods}
-            allowedMethods={allowedSplitMethods}
+            allowedMethods={AllSplitMethods}
             selectedMethods={allowedSplitMethods}
             onSelectionChange={setAllowedSplitMethods}
           />
@@ -59,13 +61,20 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
         )}
         <Button
           title='Save'
+          isLoading={isPending}
           onPress={() => {
             if (!permissions.canManageAllowedSplitMethods()) {
               setError(t('api.insufficientPermissions.group.manageAllowedSplitMethods'))
               return
             }
 
-            alert(`Setting allowed split methods for group ${info.id}, ${allowedSplitMethods}`)
+            if (allowedSplitMethods.length === 0) {
+              setError(t('groupValidation.atLeastOneSplitMethodMustBeAllowed'))
+              return
+            }
+
+            setError(null)
+            setGroupAllowedSplitMethods(allowedSplitMethods).catch(setError)
           }}
         />
       </View>
@@ -78,6 +87,7 @@ export default function Settings() {
   const { t } = useTranslation()
   const { data: info } = useGroupInfo(Number(id))
   const { data: permissions } = useGroupPermissions(Number(id))
+  const { data: settings } = useGroupSettings(Number(id))
 
   return (
     <ModalScreen
@@ -88,7 +98,15 @@ export default function Settings() {
       opaque={false}
       slideAnimation={false}
     >
-      {info && permissions && <Form info={info} permissions={permissions} />}
+      {info && permissions && settings && (
+        <Form info={info} permissions={permissions} settings={settings} />
+      )}
+
+      {!info || !permissions || !settings && (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size='large' color={Colors.primary} />
+        </View>
+      )}
     </ModalScreen>
   )
 }
