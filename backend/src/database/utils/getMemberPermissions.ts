@@ -26,8 +26,7 @@ const ownerPermissions: GroupMemberPermissionsDTO = {
     SplitPermissionsDTO.UncompleteSplitEntry |
     SplitPermissionsDTO.ResolveDelayedSplits |
     SplitPermissionsDTO.ResolveDelayedSplitsAll |
-    // TODO: re-enable once delayed splits are ready
-    // SplitPermissionsDTO.ResolveAllDelayedSplitsAtOnce |
+    SplitPermissionsDTO.ResolveAllDelayedSplitsAtOnce |
     SplitPermissionsDTO.Query,
   members: MembersPermissionsDTO.Read | MembersPermissionsDTO.Invite,
   manage:

@@ -41,8 +41,7 @@ export const AllSplitMethods = [
   SplitMethod.ExactAmounts,
   SplitMethod.BalanceChanges,
   SplitMethod.Lend,
-  // TODO: re-enable once delayed splits are ready
-  // SplitMethod.Delayed,
+  SplitMethod.Delayed,
 ]
 
 export class SplitCreationContext {
