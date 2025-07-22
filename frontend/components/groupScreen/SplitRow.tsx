@@ -20,7 +20,6 @@ import {
   CurrencyUtils,
   isBalanceChangeSplit,
   isDelayedSplit,
-  isInversedSplit,
   isLendSplit,
   isSettleUpSplit,
   isTranslatableError,
@@ -107,7 +106,6 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
   const { mutateAsync: deleteSplit, isPending } = useDeleteSplit(info.id)
 
   const isSettleUp = isSettleUpSplit(split.type)
-  const isInverse = isInversedSplit(split.type)
   const isBalanceChange = isBalanceChangeSplit(split.type)
   const isLend = isLendSplit(split.type)
   const isDelayed = isDelayedSplit(split.type)
@@ -241,25 +239,9 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
                 <Icon name='payment' size={16} color={theme.colors.tertiary} />
               ) : split.pending ? (
                 <Icon name='hourglass' size={16} color={theme.colors.tertiary} />
-              ) : isInverse ? (
-                <Icon
-                  name='merge'
-                  size={16}
-                  color={theme.colors.tertiary}
-                  style={{
-                    transform: [{ rotateZ: '-90deg' }],
-                  }}
-                />
-              ) : (
-                <Icon
-                  name='split'
-                  size={16}
-                  color={theme.colors.tertiary}
-                  style={{
-                    transform: [{ rotateZ: '90deg' }],
-                  }}
-                />
-              )}
+              ) : isSettleUp ? (
+                <Icon name='balance' size={14} color={theme.colors.tertiary} />
+              ) : null}
             </View>
           )}
         </View>
