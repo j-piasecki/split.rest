@@ -12,7 +12,7 @@ import { getBalanceColor } from '@utils/getBalanceColor'
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { CurrencyUtils } from 'shared'
 import { GroupUserInfo } from 'shared'
 
@@ -116,10 +116,15 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
               borderRadius: 4,
               paddingBottom: threeBarLayout ? undefined : 16,
             },
-            (!threeBarLayout || info?.locked) && {
+            (!threeBarLayout || (info?.locked && Number(info.balance) === 0)) && {
               borderBottomLeftRadius: 16,
               borderBottomRightRadius: 16,
             },
+            Platform.OS === 'web' &&
+              info?.locked &&
+              Number(info.balance) === 0 && {
+                flexGrow: 1,
+              },
           ]}
         >
           <GroupDetails info={info} />
@@ -128,23 +133,7 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
 
       {threeBarLayout && (
         <>
-          {info?.locked !== true && (
-            <View
-              style={{
-                flexGrow: 1,
-                flexShrink: 1,
-                backgroundColor: theme.colors.surfaceContainer,
-                paddingHorizontal: 16,
-                paddingVertical: 16,
-                borderRadius: 4,
-                borderBottomLeftRadius: 16,
-                borderBottomRightRadius: 16,
-              }}
-            >
-              <GroupActionButtons info={info} />
-            </View>
-          )}
-
+          <GroupActionButtons info={info} />
           <ActionableSplitsPane info={info} style={{ flexGrow: 100, marginTop: 8 }} />
         </>
       )}

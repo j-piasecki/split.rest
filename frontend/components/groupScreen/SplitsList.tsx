@@ -85,6 +85,7 @@ export interface SplitsListProps {
   emptyMessage?: string
   showPullableHeader?: boolean
   hideFab?: boolean
+  hideBottomBar?: boolean
   onRefresh?: () => void
   applyBottomInset?: boolean
   applyHorizontalPadding?: boolean
@@ -106,6 +107,7 @@ export function SplitsList({
   applyBottomInset = false,
   applyHorizontalPadding = true,
   hideFab = false,
+  hideBottomBar = false,
   splits,
   isLoading,
   fetchNextPage,
@@ -120,7 +122,7 @@ export function SplitsList({
   const { data: permissions } = useGroupPermissions(info?.id)
 
   const isSmallScreen = displayClass <= DisplayClass.Medium
-  const [fabRef, scrollHandler] = useFABScrollHandler(!hideFab)
+  const [fabRef, scrollHandler] = useFABScrollHandler(!hideFab || !hideBottomBar)
 
   function refreshData() {
     if (info) {
@@ -176,29 +178,34 @@ export function SplitsList({
         scrollHandler={scrollHandler}
       />
 
-      {!hideFab && (
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 8 + (applyBottomInset ? insets.bottom : 0),
-            right: 16,
-            left: isSmallScreen ? 16 : undefined,
-          }}
-        >
-          {isSmallScreen && <BottomBar info={info} ref={fabRef} />}
-          {!isSmallScreen && permissions?.canCreateSplits() && (
-            <FloatingActionButton
-              ref={fabRef}
-              icon='split'
-              title={t('groupInfo.addSplit')}
-              onPress={() => {
-                SplitCreationContext.create().begin()
-                router.navigate(`/group/${info?.id}/addSplit`)
-              }}
-            />
-          )}
-        </View>
-      )}
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 8 + (applyBottomInset ? insets.bottom : 0),
+          right: 16,
+          left: isSmallScreen ? 16 : undefined,
+        }}
+      >
+        {isSmallScreen && !hideBottomBar && (
+          <BottomBar
+            info={info}
+            ref={fabRef}
+            disableSplit={info?.locked}
+            disableRoulette={info?.locked}
+          />
+        )}
+        {!isSmallScreen && !hideFab && permissions?.canCreateSplits() && (
+          <FloatingActionButton
+            ref={fabRef}
+            icon='split'
+            title={t('groupInfo.addSplit')}
+            onPress={() => {
+              SplitCreationContext.create().begin()
+              router.navigate(`/group/${info?.id}/addSplit`)
+            }}
+          />
+        )}
+      </View>
     </View>
   )
 }

@@ -238,6 +238,7 @@ function MemberScreen() {
       fetchNextPage={fetchNextPage}
       hasNextPage={hasNextPage}
       hideFab
+      hideBottomBar
       emptyMessage={t('memberInfo.noSplits')}
       headerComponent={
         <View style={{ gap: 24 }}>

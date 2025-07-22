@@ -484,7 +484,7 @@
       "openSettleUp": "Show"
     },
     "groupLocked": "This group is locked",
-    "groupLockedDescription": "You can't add new splits, edit or delete existing ones, or settle up. You can still complete existing settle-ups."
+    "groupLockedDescription": "You can't add new splits, edit or delete existing ones. You can still settle up and complete existing settle-ups."
   },
 
   "splitInfo": {
