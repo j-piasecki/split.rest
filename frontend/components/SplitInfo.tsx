@@ -651,7 +651,7 @@ export function SplitInfo({
                     : 'splitInfo.hasPaidText'
               }
               values={{
-                payer: paidBy.name,
+                payer: paidBy.displayName ?? paidBy.name,
                 amount: CurrencyUtils.format(splitInfo.total, groupInfo.currency),
               }}
               userIdPhoto={paidBy.id}
