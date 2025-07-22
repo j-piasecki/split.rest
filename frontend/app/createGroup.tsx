@@ -62,8 +62,7 @@ function CreateGroupForm() {
       return
     }
 
-    // TODO: pass allowed split methods
-    createGroup({ name, currency })
+    createGroup({ name, currency, allowedSplitMethods })
       .then((group) => {
         router.replace(`/group/${group.id}`)
       })
