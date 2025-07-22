@@ -11,22 +11,103 @@ import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
-import { SplitMethod } from 'shared'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { GroupSettings, SplitMethod } from 'shared'
 
-export default function Modal() {
+function Selector({ settings }: { settings: GroupSettings }) {
+  const allowedInGroup = settings.allowedSplitMethods
+  const allowedInContext = SplitCreationContext.current.allowedSplitMethods
+  const allowedSplitMethods = allowedInGroup.filter((method) => allowedInContext.includes(method))
+  const canSplit = allowedSplitMethods.length > 0
+
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
   const router = useRouter()
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
-  const { data: settings } = useGroupSettings(Number(id))
-  const [selectedSplitType, setSelectedSplitType] = useState<SplitMethod>(SplitMethod.Equal)
+  const [selectedSplitType, setSelectedSplitType] = useState<SplitMethod>(
+    allowedSplitMethods[0] ?? settings.allowedSplitMethods[0]
+  )
 
-  const allowedInGroup = settings?.allowedSplitMethods
-  const allowedInContext = SplitCreationContext.current.allowedSplitMethods
-  const canSplit = !!allowedInGroup?.some((method) => allowedInContext.includes(method))
+  return (
+    <View style={{ flex: 1, paddingBottom: insets.bottom }}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingLeft: insets.left + 12,
+          paddingRight: insets.right + 12,
+          paddingTop: insets.top + 16,
+          paddingBottom: 16,
+          gap: 16,
+          justifyContent: canSplit ? 'flex-start' : 'center',
+        }}
+      >
+        {canSplit && (
+          <Text
+            adjustsFontSizeToFit
+            numberOfLines={1}
+            style={{
+              paddingHorizontal: 12,
+              color: theme.colors.onSurface,
+              fontSize: threeBarLayout ? 24 : 28,
+              fontWeight: 600,
+              textAlign: 'center',
+            }}
+          >
+            {t('splitType.selectType')}
+          </Text>
+        )}
+
+        {!canSplit && (
+          <Text
+            style={{
+              paddingHorizontal: 12,
+              color: theme.colors.onSurface,
+              fontSize: threeBarLayout ? 24 : 28,
+              fontWeight: 600,
+              textAlign: 'center',
+            }}
+          >
+            {t('splitType.noAllowedMethods')}
+          </Text>
+        )}
+
+        <SplitMethodSelector
+          displayedMethods={SplitCreationContext.current.allowedSplitMethods}
+          allowedMethods={settings?.allowedSplitMethods ?? []}
+          multiple={false}
+          selectedMethod={selectedSplitType}
+          onSelect={setSelectedSplitType}
+        />
+      </ScrollView>
+
+      {canSplit && (
+        <View style={{ paddingLeft: insets.left + 12, paddingRight: insets.right + 12 }}>
+          <Button
+            title={t('form.buttonNext')}
+            rightIcon='chevronForward'
+            onPress={() => {
+              SplitCreationContext.current.setSplitMethod(selectedSplitType)
+
+              if (SplitCreationContext.current.shouldSkipDetailsStep()) {
+                navigateToSplitSpecificFlow(Number(id), router)
+              } else {
+                router.navigate(`/group/${id}/addSplit/detailsStep`)
+              }
+            }}
+          />
+        </View>
+      )}
+    </View>
+  )
+}
+
+export default function Modal() {
+  const theme = useTheme()
+  const { t } = useTranslation()
+  const { id } = useLocalSearchParams()
+  const { data: settings } = useGroupSettings(Number(id))
 
   return (
     <ModalScreen
@@ -35,75 +116,12 @@ export default function Modal() {
       maxWidth={500}
       opaque={false}
     >
-      <View style={{ flex: 1, paddingBottom: insets.bottom }}>
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingLeft: insets.left + 12,
-            paddingRight: insets.right + 12,
-            paddingTop: insets.top + 16,
-            paddingBottom: 16,
-            gap: 16,
-            justifyContent: canSplit ? 'flex-start' : 'center',
-          }}
-        >
-          {canSplit && (
-            <Text
-              adjustsFontSizeToFit
-              numberOfLines={1}
-              style={{
-                paddingHorizontal: 12,
-                color: theme.colors.onSurface,
-                fontSize: threeBarLayout ? 24 : 28,
-                fontWeight: 600,
-                textAlign: 'center',
-              }}
-            >
-              {t('splitType.selectType')}
-            </Text>
-          )}
-
-          {!canSplit && (
-            <Text
-              style={{
-                paddingHorizontal: 12,
-                color: theme.colors.onSurface,
-                fontSize: threeBarLayout ? 24 : 28,
-                fontWeight: 600,
-                textAlign: 'center',
-              }}
-            >
-              {t('splitType.noAllowedMethods')}
-            </Text>
-          )}
-
-          <SplitMethodSelector
-            displayedMethods={SplitCreationContext.current.allowedSplitMethods}
-            allowedMethods={settings?.allowedSplitMethods ?? []}
-            multiple={false}
-            selectedMethod={selectedSplitType}
-            onSelect={setSelectedSplitType}
-          />
-        </ScrollView>
-
-        {canSplit && (
-          <View style={{ paddingLeft: insets.left + 12, paddingRight: insets.right + 12 }}>
-            <Button
-              title={t('form.buttonNext')}
-              rightIcon='chevronForward'
-              onPress={() => {
-                SplitCreationContext.current.setSplitMethod(selectedSplitType)
-
-                if (SplitCreationContext.current.shouldSkipDetailsStep()) {
-                  navigateToSplitSpecificFlow(Number(id), router)
-                } else {
-                  router.navigate(`/group/${id}/addSplit/detailsStep`)
-                }
-              }}
-            />
-          </View>
-        )}
-      </View>
+      {!settings && (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size='large' color={theme.colors.primary} />
+        </View>
+      )}
+      {settings && <Selector settings={settings} />}
     </ModalScreen>
   )
 }
