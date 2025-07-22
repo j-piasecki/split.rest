@@ -12,6 +12,7 @@ import { getGroupJoinLink } from './database/groups/getGroupJoinLink'
 import { getGroupMemberPermissions } from './database/groups/getGroupMemberPermissions'
 import { getGroupMembers } from './database/groups/getGroupMembers'
 import { getGroupMembersAutocompletions } from './database/groups/getGroupMembersAutocompletions'
+import { getGroupSettings } from './database/groups/getGroupSettings'
 import { getGroupSplits } from './database/groups/getGroupSplits'
 import { getMemberInfo } from './database/groups/getMemberInfo'
 import { getSplitParticipantsSuggestions } from './database/groups/getSplitParticipantsSuggestions'
@@ -22,6 +23,7 @@ import { joinGroupByLink } from './database/groups/joinGroupByLink'
 import { queryGroupSplits } from './database/groups/queryGroupSplits'
 import { setGroupAccess } from './database/groups/setGroupAccess'
 import { setGroupAdmin } from './database/groups/setGroupAdmin'
+import { setGroupAllowedSplitMethods } from './database/groups/setGroupAllowedSplitMethods'
 import { setGroupHidden } from './database/groups/setGroupHidden'
 import { setGroupLocked } from './database/groups/setGroupLocked'
 import { setGroupName } from './database/groups/setGroupName'
@@ -70,6 +72,7 @@ import {
   GetGroupMemberInfoArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -85,6 +88,7 @@ import {
   ResolveAllDelayedSplitsAtOnceArguments,
   ResolveDelayedSplitArguments,
   RestoreSplitArguments,
+  SetAllowedSplitMethodsArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
@@ -381,5 +385,15 @@ export class DatabaseService {
     args: ResolveAllDelayedSplitsAtOnceArguments
   ) {
     return await resolveAllDelayedSplits(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['beGroupMember'])
+  async getGroupSettings(callerId: string, args: GetGroupSettingsArguments) {
+    return await getGroupSettings(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['manageAllowedSplitMethods'])
+  async setGroupAllowedSplitMethods(callerId: string, args: SetAllowedSplitMethodsArguments) {
+    return await setGroupAllowedSplitMethods(this.pool, callerId, args)
   }
 }

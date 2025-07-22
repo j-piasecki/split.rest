@@ -23,6 +23,7 @@ import {
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -37,6 +38,7 @@ import {
   RegisterOrUpdateNotificationTokenArguments,
   ResolveAllDelayedSplitsAtOnceArguments,
   ResolveDelayedSplitArguments,
+  SetAllowedSplitMethodsArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
@@ -304,5 +306,13 @@ export class AppService {
     args: ResolveAllDelayedSplitsAtOnceArguments
   ) {
     return await this.databaseService.resolveAllDelayedSplitsAtOnce(callerId, args)
+  }
+
+  async getGroupSettings(callerId: string, args: GetGroupSettingsArguments) {
+    return await this.databaseService.getGroupSettings(callerId, args)
+  }
+
+  async setGroupAllowedSplitMethods(callerId: string, args: SetAllowedSplitMethodsArguments) {
+    return await this.databaseService.setGroupAllowedSplitMethods(callerId, args)
   }
 }

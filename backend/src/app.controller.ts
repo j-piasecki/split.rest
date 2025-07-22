@@ -22,6 +22,7 @@ import {
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -37,6 +38,7 @@ import {
   ResolveAllDelayedSplitsAtOnceArguments,
   ResolveDelayedSplitArguments,
   RestoreSplitArguments,
+  SetAllowedSplitMethodsArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
@@ -70,6 +72,7 @@ import {
   isGetGroupMemberPermissionsArguments,
   isGetGroupMembersArguments,
   isGetGroupMembersAutocompletionsArguments,
+  isGetGroupSettingsArguments,
   isGetGroupSplitsArguments,
   isGetSplitHistoryArguments,
   isGetSplitInfoArguments,
@@ -85,6 +88,7 @@ import {
   isResolveAllDelayedSplitsAtOnceArguments,
   isResolveDelayedSplitArguments,
   isRestoreSplitArguments,
+  isSetAllowedSplitMethodsArguments,
   isSetGroupAccessArguments,
   isSetGroupAdminArguments,
   isSetGroupHiddenArguments,
@@ -710,5 +714,31 @@ export class AppController {
     }
 
     return await this.appService.resolveAllDelayedSplitsAtOnce(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getGroupSettings')
+  async getGroupSettings(
+    @Req() request: Request,
+    @Query() args: Partial<GetGroupSettingsArguments>
+  ) {
+    if (!isGetGroupSettingsArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.getGroupSettings(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('setGroupAllowedSplitMethods')
+  async setGroupAllowedSplitMethods(
+    @Req() request: Request,
+    @Body() args: Partial<SetAllowedSplitMethodsArguments>
+  ) {
+    if (!isSetAllowedSplitMethodsArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.setGroupAllowedSplitMethods(request.user.sub, args)
   }
 }

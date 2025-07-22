@@ -22,6 +22,10 @@ export interface GroupInfo {
   locked: boolean
 }
 
+export interface GroupSettings {
+  allowedSplitMethods: SplitMethod[]
+}
+
 export interface GroupUserInfo extends GroupInfo {
   isAdmin: boolean
   hasAccess: boolean
