@@ -4,16 +4,18 @@ import { Form } from '@components/Form'
 import ModalScreen from '@components/ModalScreen'
 import { Pane } from '@components/Pane'
 import { Picker } from '@components/Picker'
+import { SplitMethodSelector } from '@components/SplitMethodSelector'
 import { TextInput } from '@components/TextInput'
 import { useCreateGroup } from '@hooks/database/useCreateGroup'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
+import { AllSplitMethods } from '@utils/splitCreationContext'
 import { getLocales } from 'expo-localization'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { CurrencyUtils } from 'shared'
+import { CurrencyUtils, SplitMethod } from 'shared'
 
 function getDefaultCurrency() {
   const locale = getLocales()[0]
@@ -32,6 +34,8 @@ function CreateGroupForm() {
   const { t } = useTranslation()
   const [name, setName] = useState('')
   const [currency, setCurrency] = useState(getDefaultCurrency())
+  const [allowedSplitMethods, setAllowedSplitMethods] = useState<SplitMethod[]>(AllSplitMethods)
+  const [collapsed, setCollapsed] = useState(true)
   const [error, setError] = useTranslatedError()
   const { mutateAsync: createGroup, isPending } = useCreateGroup()
 
@@ -53,7 +57,12 @@ function CreateGroupForm() {
       return
     }
 
-    createGroup({ name, currency })
+    if (allowedSplitMethods.length === 0) {
+      setError(t('groupValidation.atLeastOneSplitMethodMustBeAllowed'))
+      return
+    }
+
+    createGroup({ name, currency, allowedSplitMethods })
       .then((group) => {
         router.replace(`/group/${group.id}`)
       })
@@ -63,51 +72,78 @@ function CreateGroupForm() {
   }
 
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      keyboardShouldPersistTaps='handled'
-      contentContainerStyle={{
-        flexGrow: 1,
-        gap: 16,
-        justifyContent: 'space-between',
-        paddingLeft: insets.left + 12,
-        paddingRight: insets.right + 12,
-        paddingBottom: insets.bottom,
-        paddingTop: insets.top + 16,
-      }}
-    >
-      <Pane
-        icon='group'
-        title={t('group.details')}
-        textLocation='start'
-        containerStyle={{ paddingHorizontal: 16, paddingBottom: 24, paddingTop: 8, gap: 16 }}
+    <View style={{ flex: 1, paddingBottom: insets.bottom }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        keyboardShouldPersistTaps='handled'
+        contentContainerStyle={{
+          flexGrow: 1,
+          gap: 16,
+          paddingLeft: insets.left + 12,
+          paddingRight: insets.right + 12,
+          paddingBottom: 16,
+          paddingTop: insets.top + 16,
+        }}
       >
-        <Form autofocus onSubmit={handlePress}>
-          <TextInput
-            placeholder={t('createGroup.name')}
-            value={name}
-            onChangeText={(text) => {
-              setName(text)
-              setError(null)
-            }}
-            style={{
-              width: '100%',
-            }}
-          />
-          <Picker
-            hint={t('createGroup.currency')}
-            items={currencyPickerItems}
-            selectedItem={currency}
-            onSelectionChange={setCurrency}
-          />
-        </Form>
-      </Pane>
+        <Pane
+          icon='group'
+          title={t('group.details')}
+          textLocation='start'
+          containerStyle={{ paddingHorizontal: 16, paddingBottom: 24, paddingTop: 8, gap: 16 }}
+        >
+          <Form autofocus onSubmit={handlePress}>
+            <TextInput
+              placeholder={t('createGroup.name')}
+              value={name}
+              onChangeText={(text) => {
+                setName(text)
+                setError(null)
+              }}
+              style={{
+                width: '100%',
+              }}
+            />
+            <Picker
+              hint={t('createGroup.currency')}
+              items={currencyPickerItems}
+              selectedItem={currency}
+              onSelectionChange={setCurrency}
+            />
+          </Form>
+        </Pane>
 
-      <View style={{ gap: 16 }}>
-        {error && <ErrorText>{error}</ErrorText>}
+        <Pane
+          icon='split'
+          title={t('group.allowedSplitMethods')}
+          textLocation='start'
+          collapsible
+          collapsed={collapsed}
+          onCollapseChange={setCollapsed}
+        >
+          {!collapsed && (
+            <View style={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 12, gap: 16 }}>
+              <SplitMethodSelector
+                multiple
+                startExpanded={false}
+                displayedMethods={AllSplitMethods}
+                allowedMethods={AllSplitMethods}
+                selectedMethods={allowedSplitMethods}
+                onSelectionChange={setAllowedSplitMethods}
+              />
+            </View>
+          )}
+        </Pane>
+      </ScrollView>
+
+      <View style={{ paddingLeft: insets.left + 12, paddingRight: insets.right + 12, gap: 8 }}>
+        {error && (
+          <View style={{ marginTop: 8 }}>
+            <ErrorText>{error}</ErrorText>
+          </View>
+        )}
         <Button title='Create' leftIcon='check' onPress={handlePress} isLoading={isPending} />
       </View>
-    </ScrollView>
+    </View>
   )
 }
 
@@ -118,8 +154,8 @@ export default function Modal() {
     <ModalScreen
       returnPath='/home'
       title={t('screenName.createGroup')}
-      maxWidth={450}
-      maxHeight={500}
+      maxWidth={500}
+      maxHeight={600}
     >
       <CreateGroupForm />
     </ModalScreen>

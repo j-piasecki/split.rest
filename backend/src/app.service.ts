@@ -1,4 +1,5 @@
 import { DatabaseService } from './database.service'
+import { getAllowedSplitTypes } from './database/utils/getAllowedSplitTypes'
 import { BadRequestException } from './errors/BadRequestException'
 import { deleteProfilePicture, downloadProfilePicture } from './profilePicture'
 import { Injectable } from '@nestjs/common'
@@ -22,6 +23,7 @@ import {
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -36,6 +38,7 @@ import {
   RegisterOrUpdateNotificationTokenArguments,
   ResolveAllDelayedSplitsAtOnceArguments,
   ResolveDelayedSplitArguments,
+  SetAllowedSplitMethodsArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
@@ -47,7 +50,6 @@ import {
   SetUserNameArguments,
   SettleUpArguments,
   SettleUpGroupArguments,
-  SplitType,
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
   User,
@@ -78,13 +80,9 @@ export class AppService {
   }
 
   async createSplit(callerId: string, args: CreateSplitArguments) {
-    if (
-      args.type !== SplitType.Normal &&
-      args.type !== SplitType.BalanceChange &&
-      args.type !== SplitType.Lend
-      // TODO: re-enable once delayed splits are ready
-      // && args.type !== SplitType.Delayed
-    ) {
+    const allowedTypes = await getAllowedSplitTypes(this.databaseService.pool, args.groupId)
+
+    if (allowedTypes === null || !allowedTypes.includes(args.type)) {
       throw new BadRequestException('api.split.invalidSplitType')
     }
 
@@ -308,5 +306,13 @@ export class AppService {
     args: ResolveAllDelayedSplitsAtOnceArguments
   ) {
     return await this.databaseService.resolveAllDelayedSplitsAtOnce(callerId, args)
+  }
+
+  async getGroupSettings(callerId: string, args: GetGroupSettingsArguments) {
+    return await this.databaseService.getGroupSettings(callerId, args)
+  }
+
+  async setGroupAllowedSplitMethods(callerId: string, args: SetAllowedSplitMethodsArguments) {
+    return await this.databaseService.setGroupAllowedSplitMethods(callerId, args)
   }
 }

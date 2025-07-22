@@ -38,6 +38,10 @@ export default function AddFlow() {
             name='resolveDelayed'
             options={{ title: t('screenName.groupSettings.resolveDelayed') }}
           />
+          <Stack.Screen
+            name='splitMethods'
+            options={{ title: t('screenName.groupSettings.splitMethods') }}
+          />
         </Stack>
       </ThemeProvider>
     </Animated.View>

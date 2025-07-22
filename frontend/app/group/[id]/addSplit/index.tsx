@@ -2,6 +2,7 @@ import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { SplitMethodSelector } from '@components/SplitMethodSelector'
 import { Text } from '@components/Text'
+import { useGroupSettings } from '@hooks/database/useGroupSettings'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
@@ -20,7 +21,12 @@ export default function Modal() {
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
+  const { data: settings } = useGroupSettings(Number(id))
   const [selectedSplitType, setSelectedSplitType] = useState<SplitMethod>(SplitMethod.Equal)
+
+  const allowedInGroup = settings?.allowedSplitMethods
+  const allowedInContext = SplitCreationContext.current.allowedSplitMethods
+  const canSplit = !!allowedInGroup?.some((method) => allowedInContext.includes(method))
 
   return (
     <ModalScreen
@@ -38,45 +44,65 @@ export default function Modal() {
             paddingTop: insets.top + 16,
             paddingBottom: 16,
             gap: 16,
+            justifyContent: canSplit ? 'flex-start' : 'center',
           }}
         >
-          <Text
-            adjustsFontSizeToFit
-            numberOfLines={1}
-            style={{
-              paddingHorizontal: 12,
-              color: theme.colors.onSurface,
-              fontSize: threeBarLayout ? 24 : 28,
-              fontWeight: 600,
-              textAlign: 'center',
-            }}
-          >
-            {t('splitType.selectType')}
-          </Text>
+          {canSplit && (
+            <Text
+              adjustsFontSizeToFit
+              numberOfLines={1}
+              style={{
+                paddingHorizontal: 12,
+                color: theme.colors.onSurface,
+                fontSize: threeBarLayout ? 24 : 28,
+                fontWeight: 600,
+                textAlign: 'center',
+              }}
+            >
+              {t('splitType.selectType')}
+            </Text>
+          )}
+
+          {!canSplit && (
+            <Text
+              style={{
+                paddingHorizontal: 12,
+                color: theme.colors.onSurface,
+                fontSize: threeBarLayout ? 24 : 28,
+                fontWeight: 600,
+                textAlign: 'center',
+              }}
+            >
+              {t('splitType.noAllowedMethods')}
+            </Text>
+          )}
 
           <SplitMethodSelector
-            allowedMethods={SplitCreationContext.current.allowedSplitMethods}
+            displayedMethods={SplitCreationContext.current.allowedSplitMethods}
+            allowedMethods={settings?.allowedSplitMethods ?? []}
             multiple={false}
             selectedMethod={selectedSplitType}
             onSelect={setSelectedSplitType}
           />
         </ScrollView>
 
-        <View style={{ paddingLeft: insets.left + 12, paddingRight: insets.right + 12 }}>
-          <Button
-            title={t('form.buttonNext')}
-            rightIcon='chevronForward'
-            onPress={() => {
-              SplitCreationContext.current.setSplitMethod(selectedSplitType)
+        {canSplit && (
+          <View style={{ paddingLeft: insets.left + 12, paddingRight: insets.right + 12 }}>
+            <Button
+              title={t('form.buttonNext')}
+              rightIcon='chevronForward'
+              onPress={() => {
+                SplitCreationContext.current.setSplitMethod(selectedSplitType)
 
-              if (SplitCreationContext.current.shouldSkipDetailsStep()) {
-                navigateToSplitSpecificFlow(Number(id), router)
-              } else {
-                router.navigate(`/group/${id}/addSplit/detailsStep`)
-              }
-            }}
-          />
-        </View>
+                if (SplitCreationContext.current.shouldSkipDetailsStep()) {
+                  navigateToSplitSpecificFlow(Number(id), router)
+                } else {
+                  router.navigate(`/group/${id}/addSplit/detailsStep`)
+                }
+              }}
+            />
+          </View>
+        )}
       </View>
     </ModalScreen>
   )

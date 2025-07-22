@@ -2,6 +2,7 @@ import { BadRequestException } from '../../errors/BadRequestException'
 import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import NotificationUtils from '../../notifications/NotificationUtils'
+import { getAllowedSplitTypes } from '../utils/getAllowedSplitTypes'
 import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isGroupLocked } from '../utils/isGroupLocked'
@@ -70,7 +71,12 @@ export async function resolveDelayedSplit(
   callerId: string,
   args: ResolveDelayedSplitArguments
 ) {
-  if (!isNormalSplit(args.type) && !isBalanceChangeSplit(args.type)) {
+  const allowedTypes = await getAllowedSplitTypes(pool, args.groupId)
+  if (
+    (!isNormalSplit(args.type) && !isBalanceChangeSplit(args.type)) ||
+    allowedTypes === null ||
+    !allowedTypes.includes(args.type)
+  ) {
     throw new BadRequestException('api.split.invalidSplitType')
   }
 

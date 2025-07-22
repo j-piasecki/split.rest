@@ -321,6 +321,13 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'manageAllowedSplitMethods': {
+          if (!callerPermissions?.canManageAllowedSplitMethods()) {
+            return 'api.insufficientPermissions.group.manageAllowedSplitMethods'
+          }
+          continue
+        }
+
         default:
           console.log('Unknown permission required:', permission)
           return 'unknownError'

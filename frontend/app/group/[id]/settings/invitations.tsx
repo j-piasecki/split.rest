@@ -326,7 +326,7 @@ export default function Settings() {
       returnPath={`/group/${id}`}
       title={t('screenName.groupSettings.invitations')}
       maxWidth={500}
-      maxHeight={600}
+      maxHeight={650}
       opaque={false}
       slideAnimation={false}
     >

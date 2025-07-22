@@ -45,7 +45,8 @@ const ownerPermissions: GroupMemberPermissionsDTO = {
     ManagePermissionsDTO.ChangeDisplayName |
     ManagePermissionsDTO.ChangeEveryoneDisplayName |
     ManagePermissionsDTO.LockGroup |
-    ManagePermissionsDTO.SettleUpGroup,
+    ManagePermissionsDTO.SettleUpGroup |
+    ManagePermissionsDTO.ManageAllowedSplitMethods,
 } as const
 
 const adminPermissions: GroupMemberPermissionsDTO = {

@@ -17,6 +17,7 @@ import {
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -32,6 +33,7 @@ import {
   ResolveAllDelayedSplitsAtOnceArguments,
   ResolveDelayedSplitArguments,
   RestoreSplitArguments,
+  SetAllowedSplitMethodsArguments,
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
@@ -266,4 +268,14 @@ export function isResolveAllDelayedSplitsAtOnceArguments(
   obj: any
 ): obj is ResolveAllDelayedSplitsAtOnceArguments {
   return obj.groupId !== undefined
+}
+
+export function isGetGroupSettingsArguments(obj: any): obj is GetGroupSettingsArguments {
+  return obj.groupId !== undefined
+}
+
+export function isSetAllowedSplitMethodsArguments(
+  obj: any
+): obj is SetAllowedSplitMethodsArguments {
+  return obj.groupId !== undefined && obj.allowedSplitMethods !== undefined
 }

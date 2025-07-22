@@ -132,7 +132,8 @@
           "delete": "You don't have permission to delete invitation links"
         },
         "lockGroup": "You don't have permission to lock or unlock the group",
-        "settleUpGroup": "You don't have permission to settle up the group"
+        "settleUpGroup": "You don't have permission to settle up the group",
+        "manageAllowedSplitMethods": "You don't have permission to manage allowed split methods"
       }
     },
     "notFound": {
@@ -152,7 +153,7 @@
       "settleUpFailed": "Failed to settle up",
       "settledUpButPending": "You are already settled up, but the transaction hasn't been confirmed yet by you or the other party",
       "settleUpHashChanged": "The state of the group has changed, please try again",
-      "invalidSplitType": "Invalid split type",
+      "invalidSplitType": "This split type is not allowed in this group",
       "callerCannotCompleteEntry": "You cannot complete this entry",
       "callerCannotUncompleteEntry": "You cannot mark this entry as not completed",
       "query": {
@@ -200,7 +201,8 @@
   },
 
   "group": {
-    "details": "Details"
+    "details": "Details",
+    "allowedSplitMethods": "Allowed split methods"
   },
 
   "settings": {
@@ -257,7 +259,8 @@
     "groupSettings": {
       "index": "Settings",
       "invitations": "Manage invitations",
-      "resolveDelayed": "Finalize delayed splits"
+      "resolveDelayed": "Finalize delayed splits",
+      "splitMethods": "Allowed split methods"
     },
   
     "splitType": "New split",
@@ -306,6 +309,7 @@
 
   "splitType": {
     "selectType": "How would you like to split?",
+    "noAllowedMethods": "There are no applicable split methods allowed in this group",
     "exactAmounts": "By exact amounts",
     "equalAmounts": "Equally",
     "balanceChanges": "By balance changes",
@@ -413,7 +417,8 @@
 
   "groupValidation": {
     "nameCannotBeEmpty": "Name cannot be empty",
-    "nameIsTooLong": "Name is too long"
+    "nameIsTooLong": "Name is too long",
+    "atLeastOneSplitMethodMustBeAllowed": "At least one split method must be allowed"
   },
 
   "form": {

@@ -28,6 +28,7 @@ export const PermissionKeys = [
   'changeDisplayName',
   'lockGroup',
   'settleUpGroup',
+  'manageAllowedSplitMethods',
 ] as const
 
 export const enum SplitPermissionsDTO {
@@ -93,6 +94,7 @@ export const enum ManagePermissionsDTO {
   ChangeEveryoneDisplayName = 1 << 12, // Change the display name of everyone in the group
   LockGroup = 1 << 13, // Lock or unlock the group
   SettleUpGroup = 1 << 14, // Settle up the group
+  ManageAllowedSplitMethods = 1 << 15, // Manage allowed split methods of the group
 }
 
 export interface GroupMemberPermissionsDTO {
@@ -284,6 +286,10 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return Boolean(this.manage & ManagePermissionsDTO.SettleUpGroup)
   }
 
+  canManageAllowedSplitMethods(): boolean {
+    return Boolean(this.manage & ManagePermissionsDTO.ManageAllowedSplitMethods)
+  }
+
   toObject() {
     return {
       createSplit: this.canCreateSplits(),
@@ -316,6 +322,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
       changeEveryoneDisplayName: this.canChangeEveryoneDisplayName(),
       lockGroup: this.canLockGroup(),
       settleUpGroup: this.canSettleUpGroup(),
+      manageAllowedSplitMethods: this.canManageAllowedSplitMethods(),
     }
   }
 }

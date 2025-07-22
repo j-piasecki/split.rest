@@ -4,6 +4,7 @@ import { SplitInfo } from '@components/SplitInfo'
 import { Text } from '@components/Text'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { useGroupSettings } from '@hooks/database/useGroupSettings'
 import { useSplitHistory } from '@hooks/database/useSplitHistory'
 import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
@@ -16,6 +17,12 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, ScrollView, View } from 'react-native'
 import { SplitMethod, isDelayedSplit } from 'shared'
 
+const DelayedSplitResolutionAllowedSplitMethods = [
+  SplitMethod.Equal,
+  SplitMethod.ExactAmounts,
+  SplitMethod.BalanceChanges,
+]
+
 export default function SplitInfoScreen() {
   const theme = useTheme()
   const router = useRouter()
@@ -24,6 +31,7 @@ export default function SplitInfoScreen() {
   const { t } = useTranslation()
   const { data: groupInfo } = useGroupInfo(Number(id))
   const { data: permissions } = useGroupPermissions(groupInfo?.id)
+  const { data: settings } = useGroupSettings(Number(id))
   const { mutateAsync: updateSplit, isPending: isRestoring } = useUpdateSplit()
   const {
     history,
@@ -37,6 +45,10 @@ export default function SplitInfoScreen() {
   const containerRef = useRef<View>(null)
   const scrollableRef = useRef<FlatList | ScrollView | null>(null)
   const [maxWidth, setMaxWidth] = useState(500)
+
+  const canResolveDelayedSplit = settings?.allowedSplitMethods.some((method) =>
+    DelayedSplitResolutionAllowedSplitMethods.includes(method)
+  )
 
   useLayoutEffect(() => {
     if (containerRef.current) {
@@ -131,7 +143,8 @@ export default function SplitInfoScreen() {
           <View style={{ gap: 12 }}>
             {isDelayedSplit(history[0].type) &&
               permissions?.canResolveDelayedSplit(history[0]) &&
-              !groupInfo?.locked && (
+              !groupInfo?.locked &&
+              canResolveDelayedSplit && (
                 <Button
                   title={t('split.resolveDelayed')}
                   style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
@@ -140,11 +153,7 @@ export default function SplitInfoScreen() {
                   onPress={() => {
                     SplitCreationContext.create()
                       .resolveDelayedSplit(Number(splitId))
-                      .setAllowedSplitMethods([
-                        SplitMethod.Equal,
-                        SplitMethod.ExactAmounts,
-                        SplitMethod.BalanceChanges,
-                      ])
+                      .setAllowedSplitMethods(DelayedSplitResolutionAllowedSplitMethods)
                       .setParticipants(
                         history[0].users.map((user) => ({ user: user, value: user.change }))
                       )

@@ -1,8 +1,9 @@
-import { BalanceChange, SplitInfo, SplitQuery, SplitType } from './types'
+import { BalanceChange, SplitInfo, SplitMethod, SplitQuery, SplitType } from './types'
 
 export interface CreateGroupArguments {
   name: string
   currency: string
+  allowedSplitMethods?: SplitMethod[]
 }
 
 export interface InviteUserToGroupArguments {
@@ -244,4 +245,13 @@ export interface DelayedSplitResolutionMethod {
 export interface ResolveAllDelayedSplitsAtOnceArguments {
   groupId: number
   resolutionMethod: DelayedSplitResolutionMethod
+}
+
+export interface GetGroupSettingsArguments {
+  groupId: number
+}
+
+export interface SetAllowedSplitMethodsArguments {
+  groupId: number
+  allowedSplitMethods: SplitMethod[]
 }

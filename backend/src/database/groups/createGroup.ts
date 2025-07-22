@@ -1,7 +1,16 @@
+import { BadRequestException } from '../../errors/BadRequestException'
 import { addUserToGroup } from '../utils/addUserToGroup'
 import { validateCurrency } from '../utils/validateCurrency'
 import { Pool } from 'pg'
-import { CreateGroupArguments, GroupType, GroupUserInfo } from 'shared'
+import { CreateGroupArguments, GroupType, GroupUserInfo, SplitMethod } from 'shared'
+
+const DefaultAllowedSplitMethods: SplitMethod[] = [
+  SplitMethod.Equal,
+  SplitMethod.ExactAmounts,
+  SplitMethod.BalanceChanges,
+  SplitMethod.Lend,
+  SplitMethod.Delayed,
+]
 
 export async function createGroup(
   pool: Pool,
@@ -9,6 +18,11 @@ export async function createGroup(
   args: CreateGroupArguments
 ): Promise<GroupUserInfo> {
   const client = await pool.connect()
+  const allowedSplitMethods = args.allowedSplitMethods ?? DefaultAllowedSplitMethods
+
+  if (allowedSplitMethods.length === 0) {
+    throw new BadRequestException('groupValidation.atLeastOneSplitMethodMustBeAllowed')
+  }
 
   try {
     validateCurrency(args.currency)
@@ -25,6 +39,22 @@ export async function createGroup(
     )
 
     const groupId = rows[0].id
+
+    await client.query(
+      `
+        INSERT INTO group_settings(group_id, split_equally_enabled, split_exact_enabled, split_shares_enabled, split_balance_changes_enabled, split_lend_enabled, split_delayed_enabled)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `,
+      [
+        groupId,
+        allowedSplitMethods.includes(SplitMethod.Equal),
+        allowedSplitMethods.includes(SplitMethod.ExactAmounts),
+        false,
+        allowedSplitMethods.includes(SplitMethod.BalanceChanges),
+        allowedSplitMethods.includes(SplitMethod.Lend),
+        allowedSplitMethods.includes(SplitMethod.Delayed),
+      ]
+    )
 
     await addUserToGroup(client, {
       groupId,
