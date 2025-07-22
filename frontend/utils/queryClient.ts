@@ -24,6 +24,7 @@ export async function invalidateGroup(groupId: number) {
   await queryClient.invalidateQueries({ queryKey: ['groupInfo', groupId] })
   await queryClient.invalidateQueries({ queryKey: ['groupPermissions', groupId] })
   await queryClient.invalidateQueries({ queryKey: ['groupJoinLink', groupId] })
+  await queryClient.invalidateQueries({ queryKey: ['splitHistory', groupId] })
   await invalidateUserGroups()
   await invalidateGroupJoinLink(groupId)
   await invalidateDirectGroupInvites(groupId)
