@@ -40,11 +40,11 @@ export default function SplitInfoScreen() {
     fetchNextPage,
     hasNextPage,
     refetch,
-    isRefetching,
   } = useSplitHistory(Number(id), Number(splitId))
   const containerRef = useRef<View>(null)
   const scrollableRef = useRef<FlatList | ScrollView | null>(null)
   const [maxWidth, setMaxWidth] = useState(500)
+  const [showRefreshIndicator, setShowRefreshIndicator] = useState(false)
 
   const canResolveDelayedSplit = settings?.allowedSplitMethods.some((method) =>
     DelayedSplitResolutionAllowedSplitMethods.includes(method)
@@ -128,8 +128,13 @@ export default function SplitInfoScreen() {
                 paddingLeft: insets.left + 12,
                 paddingRight: insets.right + 12,
               }}
-              isRefreshing={isRefetching}
-              onRefresh={refetch}
+              isRefreshing={showRefreshIndicator}
+              onRefresh={() => {
+                setShowRefreshIndicator(true)
+                refetch().then(() => {
+                  setShowRefreshIndicator(false)
+                })
+              }}
               hasMoreHistory={hasNextPage && history[history.length - 1].version !== 1}
               onLoadMoreHistory={fetchNextPage}
               isLoadingHistory={isLoadingHistory || isFetchingNextPage}
