@@ -147,8 +147,6 @@ export function ActionableSplitsPane({
     return split.pendingChange !== undefined && Number(split.pendingChange) !== 0
   })
 
-  console.log('actionableSplits', actionableSplits)
-
   if (actionableSplits.length === 0) {
     return null
   }

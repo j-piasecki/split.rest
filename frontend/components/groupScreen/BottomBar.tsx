@@ -21,9 +21,18 @@ import { GroupUserInfo } from 'shared'
 export interface BottomBarProps {
   info: GroupUserInfo | undefined
   ref: React.RefObject<FloatingActionButtonRef | null>
+  disableSettleUp?: boolean
+  disableRoulette?: boolean
+  disableSplit?: boolean
 }
 
-export function BottomBar({ info, ref }: BottomBarProps) {
+export function BottomBar({
+  info,
+  ref,
+  disableSettleUp,
+  disableRoulette,
+  disableSplit,
+}: BottomBarProps) {
   const theme = useTheme()
   const router = useRouter()
   const isExpanded = useSharedValue(Platform.OS === 'web')
@@ -33,12 +42,14 @@ export function BottomBar({ info, ref }: BottomBarProps) {
   const { t } = useTranslation()
   const { data: permissions } = useGroupPermissions(info?.id)
 
-  const settleUpEnabled = Number(info?.balance) !== 0 && permissions?.canSettleUp()
-  const rouletteEnabled = permissions?.canAccessRoulette()
-  const splitEnabled = permissions?.canCreateSplits()
+  const settleUpEnabled =
+    Number(info?.balance) !== 0 && permissions?.canSettleUp() && !disableSettleUp
+  const rouletteEnabled = permissions?.canAccessRoulette() && !disableRoulette
+  const splitEnabled = permissions?.canCreateSplits() && !disableSplit
 
   const hideSidebars = !settleUpEnabled && !rouletteEnabled && splitEnabled
   const hideEverything = !settleUpEnabled && !rouletteEnabled && !splitEnabled
+  const onlySettleUp = settleUpEnabled && !rouletteEnabled && !splitEnabled
 
   useEffect(() => {
     if (Platform.OS !== 'web') {
@@ -53,7 +64,9 @@ export function BottomBar({ info, ref }: BottomBarProps) {
       isExpanded.value = true
     },
     collapse: () => {
-      isExpanded.value = false
+      if (!onlySettleUp) {
+        isExpanded.value = false
+      }
     },
   }))
 
@@ -98,6 +111,14 @@ export function BottomBar({ info, ref }: BottomBarProps) {
     return {
       borderTopLeftRadius: withSpring(settleUpPressed ? 28 : 16, buttonCornerSpringConfig),
       borderBottomLeftRadius: withSpring(settleUpPressed ? 28 : 16, buttonCornerSpringConfig),
+      borderTopRightRadius: withSpring(
+        onlySettleUp ? (settleUpPressed ? 28 : 16) : 0,
+        buttonCornerSpringConfig
+      ),
+      borderBottomRightRadius: withSpring(
+        onlySettleUp ? (settleUpPressed ? 28 : 16) : 0,
+        buttonCornerSpringConfig
+      ),
       height: withSpring(settleUpPressed ? 64 : 56, buttonPaddingSpringConfig),
     }
   })
@@ -157,7 +178,7 @@ export function BottomBar({ info, ref }: BottomBarProps) {
             style={[
               {
                 backgroundColor: theme.colors.secondaryContainer,
-                transform: [{ translateX: 12 }],
+                transform: [{ translateX: onlySettleUp ? 0 : 12 }],
                 overflow: 'hidden',
               },
               styles.bottomBarShadow,
@@ -197,39 +218,41 @@ export function BottomBar({ info, ref }: BottomBarProps) {
           </Animated.View>
         )}
 
-        <Animated.View
-          style={[
-            {
-              backgroundColor: theme.colors.primaryContainer,
-              zIndex: 1000,
-              overflow: 'hidden',
-            },
-            styles.bottomBarShadow,
-            splitAnimatedStyle,
-          ]}
-        >
-          <Animated.View style={[StyleSheet.absoluteFillObject, splitBackgroundAnimatedStyle]}>
-            <Pressable
-              disabled={!splitEnabled}
-              onPress={() => {
-                SplitCreationContext.create().begin()
-                router.navigate(`/group/${info?.id}/addSplit`)
-              }}
-              onPressIn={() => setSplitPressed(true)}
-              onPressOut={() => setSplitPressed(false)}
-              style={{
-                ...StyleSheet.absoluteFillObject,
-                justifyContent: 'center',
-                alignItems: 'center',
-                opacity: splitEnabled ? 1 : 0.4,
-              }}
-            >
-              <Icon name='split' color={theme.colors.onPrimaryContainer} size={24} />
-            </Pressable>
+        {!onlySettleUp && (
+          <Animated.View
+            style={[
+              {
+                backgroundColor: theme.colors.primaryContainer,
+                zIndex: 1000,
+                overflow: 'hidden',
+              },
+              styles.bottomBarShadow,
+              splitAnimatedStyle,
+            ]}
+          >
+            <Animated.View style={[StyleSheet.absoluteFillObject, splitBackgroundAnimatedStyle]}>
+              <Pressable
+                disabled={!splitEnabled}
+                onPress={() => {
+                  SplitCreationContext.create().begin()
+                  router.navigate(`/group/${info?.id}/addSplit`)
+                }}
+                onPressIn={() => setSplitPressed(true)}
+                onPressOut={() => setSplitPressed(false)}
+                style={{
+                  ...StyleSheet.absoluteFillObject,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  opacity: splitEnabled ? 1 : 0.4,
+                }}
+              >
+                <Icon name='split' color={theme.colors.onPrimaryContainer} size={24} />
+              </Pressable>
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
+        )}
 
-        {!hideSidebars && (
+        {!hideSidebars && !onlySettleUp && (
           <Animated.View
             style={[
               {
