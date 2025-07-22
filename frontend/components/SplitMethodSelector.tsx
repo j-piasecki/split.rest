@@ -234,6 +234,10 @@ export type SplitMethodSelectorProps =
 
 export function SplitMethodSelector(props: SplitMethodSelectorProps) {
   const selectedMethods = props.multiple ? props.selectedMethods : [props.selectedMethod]
+  const methodsToDisplay = OrderedSplitMethods.filter(
+    (method) => props.displayedMethods.includes(method) && props.allowedMethods.includes(method)
+  )
+  const startExpanded = props.startExpanded ?? methodsToDisplay.length <= 4
 
   function onSelect(method: SplitMethod) {
     if (props.multiple) {
@@ -248,15 +252,13 @@ export function SplitMethodSelector(props: SplitMethodSelectorProps) {
 
   return (
     <View style={{ gap: 16 }}>
-      {OrderedSplitMethods.filter(
-        (method) => props.displayedMethods.includes(method) && props.allowedMethods.includes(method)
-      ).map((method) => (
+      {methodsToDisplay.map((method) => (
         <ConcreteSplitTypeCard
           key={method}
           method={method}
           selectedMethods={selectedMethods}
           onSelect={onSelect}
-          startExpanded={props.startExpanded}
+          startExpanded={startExpanded}
         />
       ))}
     </View>
