@@ -67,6 +67,7 @@ export type IconName =
   | 'openRightPanel'
   | 'payment'
   | 'payments'
+  | 'pieChart'
   | 'receipt'
   | 'removeModerator'
   | 'regex'
@@ -160,6 +161,7 @@ const iconMap: Record<IconName, unknown> = {
   openRightPanel: require('@assets/icons/open_right_panel.svg'),
   payment: require('@assets/icons/payment.svg'),
   payments: require('@assets/icons/payments.svg'),
+  pieChart: require('@assets/icons/pie_chart.svg'),
   receipt: require('@assets/icons/receipt.svg'),
   removeModerator: require('@assets/icons/remove_moderator.svg'),
   regex: require('@assets/icons/regex.svg'),
