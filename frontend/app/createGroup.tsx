@@ -15,7 +15,7 @@ import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { CurrencyUtils, SplitMethod } from 'shared'
+import { CurrencyUtils, SplitMethod, validateAllowedSplitMethods } from 'shared'
 
 function getDefaultCurrency() {
   const locale = getLocales()[0]
@@ -57,8 +57,9 @@ function CreateGroupForm() {
       return
     }
 
-    if (allowedSplitMethods.length === 0) {
-      setError(t('groupValidation.atLeastOneSplitMethodMustBeAllowed'))
+    const error = validateAllowedSplitMethods(allowedSplitMethods)
+    if (error) {
+      setError(t(error))
       return
     }
 

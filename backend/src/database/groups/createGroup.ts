@@ -2,7 +2,13 @@ import { BadRequestException } from '../../errors/BadRequestException'
 import { addUserToGroup } from '../utils/addUserToGroup'
 import { validateCurrency } from '../utils/validateCurrency'
 import { Pool } from 'pg'
-import { CreateGroupArguments, GroupType, GroupUserInfo, SplitMethod } from 'shared'
+import {
+  CreateGroupArguments,
+  GroupType,
+  GroupUserInfo,
+  SplitMethod,
+  validateAllowedSplitMethods,
+} from 'shared'
 
 const DefaultAllowedSplitMethods: SplitMethod[] = [
   SplitMethod.Equal,
@@ -20,8 +26,9 @@ export async function createGroup(
   const client = await pool.connect()
   const allowedSplitMethods = args.allowedSplitMethods ?? DefaultAllowedSplitMethods
 
-  if (allowedSplitMethods.length === 0) {
-    throw new BadRequestException('groupValidation.atLeastOneSplitMethodMustBeAllowed')
+  const error = validateAllowedSplitMethods(allowedSplitMethods)
+  if (error) {
+    throw new BadRequestException(error)
   }
 
   try {

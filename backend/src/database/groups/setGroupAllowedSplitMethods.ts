@@ -1,7 +1,8 @@
+import { BadRequestException } from '../../errors/BadRequestException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
-import { SetAllowedSplitMethodsArguments, SplitMethod } from 'shared'
+import { SetAllowedSplitMethodsArguments, SplitMethod, validateAllowedSplitMethods } from 'shared'
 
 export async function setGroupAllowedSplitMethods(
   pool: Pool,
@@ -15,6 +16,11 @@ export async function setGroupAllowedSplitMethods(
 
     if (await isGroupDeleted(client, args.groupId)) {
       throw new NotFoundException('api.notFound.group')
+    }
+
+    const error = validateAllowedSplitMethods(args.allowedSplitMethods)
+    if (error) {
+      throw new BadRequestException(error)
     }
 
     await client.query(
