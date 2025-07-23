@@ -71,6 +71,7 @@ function Form({ info }: { info: GroupUserInfo }) {
   return (
     <ScrollView
       style={{ flex: 1 }}
+      keyboardShouldPersistTaps='handled'
       contentContainerStyle={{
         gap: 16,
         flexGrow: 1,
