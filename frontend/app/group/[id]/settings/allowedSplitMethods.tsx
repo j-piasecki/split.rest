@@ -16,7 +16,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
-import { GroupSettings, GroupUserInfo, SplitMethod } from 'shared'
+import { GroupSettings, GroupUserInfo, SplitMethod, validateAllowedSplitMethods } from 'shared'
 
 function Form({
   info,
@@ -80,8 +80,9 @@ function Form({
               return
             }
 
-            if (allowedSplitMethods.length === 0) {
-              setError(t('groupValidation.atLeastOneSplitMethodMustBeAllowed'))
+            const error = validateAllowedSplitMethods(allowedSplitMethods)
+            if (error) {
+              setError(t(error))
               return
             }
 

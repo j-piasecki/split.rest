@@ -418,7 +418,8 @@
   "groupValidation": {
     "nameCannotBeEmpty": "Name cannot be empty",
     "nameIsTooLong": "Name is too long",
-    "atLeastOneSplitMethodMustBeAllowed": "At least one split method must be allowed"
+    "atLeastOneSplitMethodMustBeAllowed": "At least one split method must be allowed",
+    "atLeastOneNormalSplitMethodMustBeAllowed": "At least one of Equally or By exact amounts must be allowed"
   },
 
   "form": {
