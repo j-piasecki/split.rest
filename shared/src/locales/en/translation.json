@@ -381,7 +381,8 @@
       "confirm": "Yes",
       "cancel": "No",
       "success": "All delayed splits have been finalized"
-    }
+    },
+    "wrapItUp": "Wrap it up"
   },
 
   "inviteMember": {

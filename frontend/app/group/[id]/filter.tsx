@@ -605,7 +605,7 @@ function FilterSelector() {
 
       <View
         style={{
-          gap: 12,
+          gap: 8,
           flexDirection: 'row',
           alignItems: 'center',
           paddingLeft: insets.left + 12,
