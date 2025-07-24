@@ -154,7 +154,9 @@ export function SplitEntry({
           onBlur={() => {
             const amountNum = Number(entry.amount)
             if (!Number.isNaN(amountNum) && entry.amount.length > 0) {
-              const formattedAmount = integersOnly ? Math.floor(amountNum).toString() : CurrencyUtils.format(amountNum)
+              const formattedAmount = integersOnly
+                ? Math.floor(amountNum).toString()
+                : CurrencyUtils.format(amountNum)
               updateForm({ type: 'setAmount', index, amount: formattedAmount })
             }
           }}
