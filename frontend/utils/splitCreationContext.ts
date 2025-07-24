@@ -39,6 +39,7 @@ export interface SplitCreationContextArguments {
 export const AllSplitMethods = [
   SplitMethod.Equal,
   SplitMethod.ExactAmounts,
+  SplitMethod.Shares,
   SplitMethod.BalanceChanges,
   SplitMethod.Lend,
   SplitMethod.Delayed,
@@ -112,6 +113,58 @@ export class SplitCreationContext {
           change: Number(this._participants![index].value!).toFixed(2),
           pending: false,
         }
+      })
+    }
+
+    if (this._splitMethod === SplitMethod.Shares) {
+      if (this._totalAmount === null) {
+        throw new TranslatableError('splitValidation.amountRequired')
+      }
+
+      const totalAmount = currency(this._totalAmount, { precision: 2 })
+      const totalShares = this._participants.reduce((acc, participant) => {
+        return acc + Math.floor(Number(participant.value))
+      }, 0)
+
+      if (totalShares === 0) {
+        throw new TranslatableError('splitValidation.tooLittleToDivide')
+      }
+
+      // Calculate exact amounts for each participant
+      const exactAmounts = this._participants.map((participant) => {
+        const shares = Math.floor(Number(participant.value))
+        return totalAmount.multiply(shares).divide(totalShares)
+      })
+
+      // Round amounts and calculate remainder
+      const roundedAmounts = exactAmounts.map((amount) => currency(amount.value, { precision: 2 }))
+      const totalRounded = roundedAmounts.reduce((sum, amount) => sum.add(amount), currency(0))
+      const remainder = totalAmount.subtract(totalRounded)
+
+      // Distribute the remainder (due to rounding) to participants with the largest fractional parts
+      if (remainder.intValue !== 0) {
+        const fractionalParts = exactAmounts.map((exact, index) => ({
+          index,
+          fractional: exact.subtract(roundedAmounts[index]).value,
+        }))
+
+        // Sort by fractional part (descending) to give remainder to those with largest fractions
+        fractionalParts.sort((a, b) => Math.abs(b.fractional) - Math.abs(a.fractional))
+
+        // Distribute the remainder one cent at a time
+        let remainingCents = Math.abs(remainder.intValue)
+        const centAdjustment = remainder.intValue > 0 ? currency(0.01) : currency(-0.01)
+
+        for (let i = 0; i < fractionalParts.length && remainingCents > 0; i++) {
+          const participantIndex = fractionalParts[i].index
+          roundedAmounts[participantIndex] = roundedAmounts[participantIndex].add(centAdjustment)
+          remainingCents--
+        }
+      }
+
+      // Assign the calculated amounts back to participants
+      this._participants.forEach((participant, index) => {
+        participant.value = roundedAmounts[index].toString()
       })
     }
 

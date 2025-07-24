@@ -43,6 +43,10 @@ export async function getGroupSettings(
     allowedSplitMethods.push(SplitMethod.ExactAmounts)
   }
 
+  if (row.split_shares_enabled) {
+    allowedSplitMethods.push(SplitMethod.Shares)
+  }
+
   if (row.split_balance_changes_enabled) {
     allowedSplitMethods.push(SplitMethod.BalanceChanges)
   }

@@ -11,6 +11,8 @@ interface LargeTextInputProps {
   onChangeText: (text: string) => void
   keyboardType?: KeyboardTypeOptions
   icon?: IconName
+  onFocus?: () => void
+  onBlur?: () => void
 }
 
 export function LargeTextInput({
@@ -19,6 +21,8 @@ export function LargeTextInput({
   onChangeText,
   keyboardType,
   icon,
+  onFocus,
+  onBlur,
 }: LargeTextInputProps) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
@@ -47,6 +51,8 @@ export function LargeTextInput({
         inputStyle={{ fontSize: threeBarLayout ? 16 : 18 }}
         showUnderline={false}
         keyboardType={keyboardType}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
     </Pressable>
   )

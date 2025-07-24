@@ -40,8 +40,9 @@ export default function Modal() {
     SplitCreationContext.current.amountPerUser === null
   )
 
-  const splittingEqually = SplitCreationContext.current.splitMethod === SplitMethod.Equal
+  const splitEqually = SplitCreationContext.current.splitMethod === SplitMethod.Equal
   const splitDelayed = SplitCreationContext.current.splitMethod === SplitMethod.Delayed
+  const splitByShares = SplitCreationContext.current.splitMethod === SplitMethod.Shares
 
   function submit() {
     try {
@@ -51,7 +52,7 @@ export default function Modal() {
       return
     }
 
-    if (splittingEqually) {
+    if (splitEqually) {
       const toValidate = splittingByTotal ? total : amountPerUser
 
       if (toValidate === '') {
@@ -103,6 +104,18 @@ export default function Modal() {
           value: '0.00',
         },
       ])
+    } else if (splitByShares) {
+      if (Number.isNaN(Number(total))) {
+        setError(t('splitValidation.amountMustBeNumber'))
+        return
+      }
+
+      if (Number(total) <= 0) {
+        setError(t('splitValidation.amountMustBeGreaterThanZero'))
+        return
+      }
+
+      SplitCreationContext.current.setTotalAmount(total)
     }
 
     SplitCreationContext.current.setTitle(title)
@@ -147,7 +160,7 @@ export default function Modal() {
               icon='receipt'
             />
 
-            {splitDelayed && (
+            {(splitDelayed || splitByShares) && (
               <LargeTextInput
                 placeholder={t('form.totalPaid')}
                 value={total}
@@ -157,12 +170,18 @@ export default function Modal() {
                 }}
                 icon='sell'
                 keyboardType='decimal-pad'
+                onBlur={() => {
+                  const amountNum = Number(total)
+                  if (!Number.isNaN(amountNum) && total.length > 0) {
+                    setTotal(CurrencyUtils.format(amountNum))
+                  }
+                }}
               />
             )}
 
             {/* TODO: this does look kinda out of place */}
             {/* TODO: remember which option was picked last time */}
-            {splittingEqually && (
+            {splitEqually && (
               <TabView
                 openedTab={splittingByTotal ? 0 : 1}
                 onTabChange={(index) => setSplittingByTotal(index === 0)}

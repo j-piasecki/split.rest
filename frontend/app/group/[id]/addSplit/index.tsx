@@ -110,7 +110,9 @@ function Selector({ settings }: { settings: GroupSettings }) {
           <Button
             title={t('form.buttonNext')}
             rightIcon='chevronForward'
-            onPress={confirmSelectedMethod}
+            onPress={() => {
+              confirmSelectedMethod(false)
+            }}
           />
         </View>
       )}

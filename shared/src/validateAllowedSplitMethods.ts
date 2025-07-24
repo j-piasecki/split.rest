@@ -10,7 +10,8 @@ export function validateAllowedSplitMethods(
 
   if (
     !allowedSplitMethods.includes(SplitMethod.Equal) &&
-    !allowedSplitMethods.includes(SplitMethod.ExactAmounts)
+    !allowedSplitMethods.includes(SplitMethod.ExactAmounts) &&
+    !allowedSplitMethods.includes(SplitMethod.Shares)
   ) {
     return 'groupValidation.atLeastOneNormalSplitMethodMustBeAllowed'
   }

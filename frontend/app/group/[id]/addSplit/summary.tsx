@@ -72,7 +72,8 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         {permissions?.canCreateSplits() && (
           <>
             {/* Show the edit button only for equal splits not to show the same form twice */}
-            {SplitCreationContext.current.splitMethod === SplitMethod.Equal && (
+            {(SplitCreationContext.current.splitMethod === SplitMethod.Equal ||
+              SplitCreationContext.current.splitMethod === SplitMethod.Shares) && (
               <Button
                 leftIcon='edit'
                 title={t('form.edit')}

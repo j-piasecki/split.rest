@@ -267,6 +267,7 @@
     "splitSummary": "Summary",
     "detailsStep": "Details",
     "exactAmounts": "Exact amounts",
+    "shares": "Shares",
     "balanceChanges": "Balance changes",
     "lend": "Lend",
     "splitParticipants": "Participants"
@@ -312,6 +313,7 @@
     "noAllowedMethods": "There are no applicable split methods allowed in this group",
     "exactAmounts": "By exact amounts",
     "equalAmounts": "Equally",
+    "shares": "By shares",
     "balanceChanges": "By balance changes",
     "lend": "Lend",
     "delayed": "Delayed"
@@ -320,6 +322,7 @@
   "splitTypeDescription": {
     "exactAmounts": "Select the participants, choose who paid, and enter how much each person owes.",
     "equalAmounts": "Select participants, choose who paid, and split the total equally or assign everyone the same amount. You can adjust values manually afterward.",
+    "shares": "Select participants, choose who paid, and split the total by shares. You can adjust values manually afterward.",
     "balanceChanges": "Select participants and update their balances. Multiple people can have negative balances as long as the total equals zero. Perfect for poker games!",
     "lend": "Lend money to other people. You can use this to transfer debts from outside of the group.",
     "delayed": "Submit only the paid amount without setting participants. You can finalize the split later."
@@ -412,19 +415,22 @@
     "invalidType": "Ivalid split type",
     "allEntriesMustSumToZero": "The sum of all entries must be equal to zero",
     "youMustSelectUser": "You must select a member ({{entry}})",
-    "resolveSplitNotFound": "Could not find split being finalized"
+    "resolveSplitNotFound": "Could not find split being finalized",
+    "shareMustBeInteger": "Share must be an integer",
+    "numberOfSharesMustBeAtLeastParticipants": "There must be at least as many shares as participants"
   },
 
   "groupValidation": {
     "nameCannotBeEmpty": "Name cannot be empty",
     "nameIsTooLong": "Name is too long",
     "atLeastOneSplitMethodMustBeAllowed": "At least one split method must be allowed",
-    "atLeastOneNormalSplitMethodMustBeAllowed": "At least one of Equally or By exact amounts must be allowed"
+    "atLeastOneNormalSplitMethodMustBeAllowed": "At least one of Equally, By exact amounts, or By shares must be allowed"
   },
 
   "form": {
     "title": "Title",
     "amount": "Amount",
+    "shares": "Shares",
     "save": "Save",
     "edit": "Edit",
     "totalPaid": "Total amount paid",

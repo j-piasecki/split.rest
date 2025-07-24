@@ -20,6 +20,7 @@ import { SplitMethod, isDelayedSplit } from 'shared'
 const DelayedSplitResolutionAllowedSplitMethods = [
   SplitMethod.Equal,
   SplitMethod.ExactAmounts,
+  SplitMethod.Shares,
   SplitMethod.BalanceChanges,
 ]
 
