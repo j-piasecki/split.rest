@@ -2,7 +2,6 @@ import { BadRequestException } from '../../errors/BadRequestException'
 import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
-import { isGroupLocked } from '../utils/isGroupLocked'
 import { updateSplitNoTransaction } from './updateSplit'
 import { assert } from 'console'
 import currencyJs from 'currency.js'
@@ -106,10 +105,6 @@ export async function resolveAllDelayedSplits(
 
     if (await isGroupDeleted(client, args.groupId)) {
       throw new NotFoundException('api.notFound.group')
-    }
-
-    if (await isGroupLocked(client, args.groupId)) {
-      throw new ForbiddenException('api.group.locked')
     }
 
     const splitsToFinalize = await client.query<{ id: number }>(
