@@ -13,6 +13,10 @@ export function navigateToSplitSpecificFlow(groupId: number, router: Router, rep
       path = `/group/${groupId}/addSplit/participantsStep`
       break
 
+    case SplitMethod.Shares:
+      path = `/group/${groupId}/addSplit/shares`
+      break
+
     case SplitMethod.BalanceChanges:
       path = `/group/${groupId}/addSplit/balanceChanges`
       break

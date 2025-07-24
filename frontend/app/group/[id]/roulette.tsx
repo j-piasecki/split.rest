@@ -40,6 +40,7 @@ import {
 const RouletteAllowedSplitMethods = [
   SplitMethod.Equal,
   SplitMethod.ExactAmounts,
+  SplitMethod.Shares,
   SplitMethod.BalanceChanges,
 ]
 

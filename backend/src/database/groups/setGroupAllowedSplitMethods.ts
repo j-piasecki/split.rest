@@ -37,7 +37,7 @@ export async function setGroupAllowedSplitMethods(
       [
         args.allowedSplitMethods.includes(SplitMethod.Equal),
         args.allowedSplitMethods.includes(SplitMethod.ExactAmounts),
-        false,
+        args.allowedSplitMethods.includes(SplitMethod.Shares),
         args.allowedSplitMethods.includes(SplitMethod.BalanceChanges),
         args.allowedSplitMethods.includes(SplitMethod.Lend),
         args.allowedSplitMethods.includes(SplitMethod.Delayed),

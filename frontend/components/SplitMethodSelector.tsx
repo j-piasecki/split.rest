@@ -12,6 +12,7 @@ import { SplitMethod } from 'shared'
 const OrderedSplitMethods = [
   SplitMethod.Equal,
   SplitMethod.ExactAmounts,
+  SplitMethod.Shares,
   SplitMethod.BalanceChanges,
   SplitMethod.Lend,
   SplitMethod.Delayed,
@@ -180,6 +181,17 @@ function ConcreteSplitTypeCard({
           icon='exactAmount'
           selected={selectedMethods.includes(SplitMethod.ExactAmounts)}
           onSelect={() => onSelect(SplitMethod.ExactAmounts)}
+          startExpanded={startExpanded}
+        />
+      )
+    case SplitMethod.Shares:
+      return (
+        <SplitTypeCard
+          title={t('splitType.shares')}
+          description={t('splitTypeDescription.shares')}
+          icon='pieChart'
+          selected={selectedMethods.includes(SplitMethod.Shares)}
+          onSelect={() => onSelect(SplitMethod.Shares)}
           startExpanded={startExpanded}
         />
       )

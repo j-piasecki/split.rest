@@ -13,6 +13,7 @@ import {
 const DefaultAllowedSplitMethods: SplitMethod[] = [
   SplitMethod.Equal,
   SplitMethod.ExactAmounts,
+  SplitMethod.Shares,
   SplitMethod.BalanceChanges,
   SplitMethod.Lend,
   SplitMethod.Delayed,
@@ -56,7 +57,7 @@ export async function createGroup(
         groupId,
         allowedSplitMethods.includes(SplitMethod.Equal),
         allowedSplitMethods.includes(SplitMethod.ExactAmounts),
-        false,
+        allowedSplitMethods.includes(SplitMethod.Shares),
         allowedSplitMethods.includes(SplitMethod.BalanceChanges),
         allowedSplitMethods.includes(SplitMethod.Lend),
         allowedSplitMethods.includes(SplitMethod.Delayed),

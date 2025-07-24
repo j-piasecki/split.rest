@@ -65,6 +65,7 @@ export enum SplitMethod {
   BalanceChanges = 'balanceChanges',
   Lend = 'lend',
   Delayed = 'delayed',
+  Shares = 'shares',
 }
 
 // Remember to update defaultQueryConfig in when adding new split types

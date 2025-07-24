@@ -39,6 +39,7 @@ export interface SplitCreationContextArguments {
 export const AllSplitMethods = [
   SplitMethod.Equal,
   SplitMethod.ExactAmounts,
+  SplitMethod.Shares,
   SplitMethod.BalanceChanges,
   SplitMethod.Lend,
   SplitMethod.Delayed,
@@ -112,6 +113,31 @@ export class SplitCreationContext {
           change: Number(this._participants![index].value!).toFixed(2),
           pending: false,
         }
+      })
+    }
+
+    if (this._splitMethod === SplitMethod.Shares) {
+      if (this._totalAmount === null) {
+        throw new TranslatableError('splitValidation.amountRequired')
+      }
+
+      const numberOfShares = this._participants.reduce((acc, participant) => {
+        return acc + Math.floor(Number(participant.value))
+      }, 0)
+
+      const distribution = currency(this._totalAmount, { precision: 2 }).distribute(numberOfShares)
+      let distributionIndex = 0
+
+      this._participants.forEach((participant) => {
+        let shares = Math.floor(Number(participant.value))
+        let total = currency(0)
+        while (shares > 0) {
+          total = total.add(distribution[distributionIndex])
+          shares -= 1
+          distributionIndex++
+        }
+
+        participant.value = total.toString()
       })
     }
 
