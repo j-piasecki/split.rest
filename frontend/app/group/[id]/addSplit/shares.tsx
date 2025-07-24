@@ -42,7 +42,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
   async function save(form: FormData) {
     try {
       setWaiting(true)
-      const { sumToSave } = await validateSplitForm(form)
+      await validateSplitForm(form)
       const paidBy = form.entries[form.paidByIndex]
 
       if (paidBy.user === undefined) {
@@ -118,6 +118,9 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
         buttonIcon='chevronForward'
         buttonIconLocation='right'
         showAddAllMembers={permissions?.canReadMembers()}
+        balanceKeyboardType='number-pad'
+        integersOnly
+        amountPlaceholder='form.shares'
       />
     </View>
   )

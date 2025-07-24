@@ -170,6 +170,12 @@ export default function Modal() {
                 }}
                 icon='sell'
                 keyboardType='decimal-pad'
+                onBlur={() => {
+                  const amountNum = Number(total)
+                  if (!Number.isNaN(amountNum) && total.length > 0) {
+                    setTotal(CurrencyUtils.format(amountNum))
+                  }
+                }}
               />
             )}
 

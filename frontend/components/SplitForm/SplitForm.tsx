@@ -45,6 +45,8 @@ export interface SplitFormProps {
   showPayerEntry?: boolean
   filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
   balanceKeyboardType?: KeyboardTypeOptions
+  amountPlaceholder?: LanguageTranslationKey
+  integersOnly?: boolean
 }
 
 export function SplitForm({
@@ -73,6 +75,8 @@ export function SplitForm({
   style,
   filterSuggestions,
   balanceKeyboardType,
+  amountPlaceholder,
+  integersOnly,
 }: SplitFormProps) {
   const scrollRef = useRef<ScrollView>(null)
   const [fetchingMembers, setFetchingMembers] = useState(false)
@@ -195,6 +199,8 @@ export function SplitForm({
             showPayerEntry={showPayerEntry}
             filterSuggestions={filterSuggestions}
             balanceKeyboardType={balanceKeyboardType}
+            amountPlaceholder={amountPlaceholder}
+            integersOnly={integersOnly}
           />
         )}
       </ScrollView>

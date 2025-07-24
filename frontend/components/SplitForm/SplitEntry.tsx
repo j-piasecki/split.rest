@@ -7,7 +7,7 @@ import { useTheme } from '@styling/theme'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardTypeOptions, LayoutRectangle, Pressable, ScrollView, View } from 'react-native'
-import { CurrencyUtils, UserWithDisplayName } from 'shared'
+import { CurrencyUtils, LanguageTranslationKey, UserWithDisplayName } from 'shared'
 
 export interface SplitEntryProps {
   scrollRef?: React.RefObject<ScrollView | null>
@@ -24,6 +24,8 @@ export interface SplitEntryProps {
   last: boolean
   filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
   balanceKeyboardType?: KeyboardTypeOptions
+  amountPlaceholder?: LanguageTranslationKey
+  integersOnly?: boolean
 }
 
 export function SplitEntry({
@@ -41,6 +43,8 @@ export function SplitEntry({
   last,
   filterSuggestions,
   balanceKeyboardType = 'decimal-pad',
+  amountPlaceholder = 'form.amount',
+  integersOnly = false,
 }: SplitEntryProps) {
   const theme = useTheme()
   const layout = useRef<LayoutRectangle | null>(null)
@@ -135,7 +139,7 @@ export function SplitEntry({
         />
 
         <TextInput
-          placeholder={t('form.amount')}
+          placeholder={t(amountPlaceholder)}
           value={entry.amount}
           ref={amountInputRef}
           selectTextOnFocus
@@ -150,7 +154,8 @@ export function SplitEntry({
           onBlur={() => {
             const amountNum = Number(entry.amount)
             if (!Number.isNaN(amountNum) && entry.amount.length > 0) {
-              updateForm({ type: 'setAmount', index, amount: CurrencyUtils.format(amountNum) })
+              const formattedAmount = integersOnly ? Math.floor(amountNum).toString() : CurrencyUtils.format(amountNum)
+              updateForm({ type: 'setAmount', index, amount: formattedAmount })
             }
           }}
         />

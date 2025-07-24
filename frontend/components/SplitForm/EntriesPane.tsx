@@ -6,7 +6,7 @@ import { getAllGroupMembers } from '@database/getAllGroupMembers'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardTypeOptions, LayoutRectangle, ScrollView } from 'react-native'
-import { GroupUserInfo, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, LanguageTranslationKey, UserWithDisplayName } from 'shared'
 
 interface SplitEntriesPaneProps {
   formState: FormData
@@ -19,6 +19,8 @@ interface SplitEntriesPaneProps {
   showPayerEntry?: boolean
   filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
   balanceKeyboardType?: KeyboardTypeOptions
+  amountPlaceholder?: LanguageTranslationKey
+  integersOnly?: boolean
 }
 
 function isPaidByUser(formState: FormData, entry: SplitEntryData) {
@@ -36,6 +38,8 @@ export function EntriesPane({
   showPayerEntry = true,
   filterSuggestions,
   balanceKeyboardType,
+  amountPlaceholder,
+  integersOnly,
 }: SplitEntriesPaneProps) {
   const { t } = useTranslation()
   const layout = useRef<LayoutRectangle | null>(null)
@@ -86,6 +90,8 @@ export function EntriesPane({
             showPayerSelector={showPayerSelector}
             filterSuggestions={filterSuggestions}
             balanceKeyboardType={balanceKeyboardType}
+            amountPlaceholder={amountPlaceholder}
+            integersOnly={integersOnly}
           />
         ))}
       </Form>

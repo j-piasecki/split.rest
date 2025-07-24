@@ -430,6 +430,7 @@
   "form": {
     "title": "Title",
     "amount": "Amount",
+    "shares": "Shares",
     "save": "Save",
     "edit": "Edit",
     "totalPaid": "Total amount paid",
