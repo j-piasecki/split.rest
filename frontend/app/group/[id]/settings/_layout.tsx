@@ -39,7 +39,7 @@ export default function AddFlow() {
             options={{ title: t('screenName.groupSettings.resolveDelayed') }}
           />
           <Stack.Screen
-            name='splitMethods'
+            name='allowedSplitMethods'
             options={{ title: t('screenName.groupSettings.splitMethods') }}
           />
         </Stack>
