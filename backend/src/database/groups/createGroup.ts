@@ -87,6 +87,7 @@ export async function createGroup(
       total: '0.00',
       lastUpdate: Date.now(),
       locked: false,
+      allowedSplitMethods,
     }
   } catch (e) {
     await client.query('ROLLBACK')

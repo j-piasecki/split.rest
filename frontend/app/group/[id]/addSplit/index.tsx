@@ -2,7 +2,7 @@ import { Button } from '@components/Button'
 import ModalScreen from '@components/ModalScreen'
 import { SplitMethodSelector } from '@components/SplitMethodSelector'
 import { Text } from '@components/Text'
-import { useGroupSettings } from '@hooks/database/useGroupSettings'
+import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
@@ -12,10 +12,10 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
-import { GroupSettings, SplitMethod } from 'shared'
+import { GroupUserInfo, SplitMethod } from 'shared'
 
-function Selector({ settings }: { settings: GroupSettings }) {
-  const allowedInGroup = settings.allowedSplitMethods
+function Selector({ groupInfo }: { groupInfo: GroupUserInfo }) {
+  const allowedInGroup = groupInfo.allowedSplitMethods
   const allowedInContext = SplitCreationContext.current.allowedSplitMethods
   const allowedSplitMethods = allowedInGroup.filter((method) => allowedInContext.includes(method))
   const canSplit = allowedSplitMethods.length > 0
@@ -25,9 +25,8 @@ function Selector({ settings }: { settings: GroupSettings }) {
   const router = useRouter()
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
-  const { id } = useLocalSearchParams()
   const [selectedSplitType, setSelectedSplitType] = useState<SplitMethod>(
-    allowedSplitMethods[0] ?? settings.allowedSplitMethods[0]
+    allowedSplitMethods[0] ?? groupInfo.allowedSplitMethods[0]
   )
 
   const confirmSelectedMethod = useCallback(
@@ -35,16 +34,16 @@ function Selector({ settings }: { settings: GroupSettings }) {
       SplitCreationContext.current.setSplitMethod(selectedSplitType)
 
       if (SplitCreationContext.current.shouldSkipDetailsStep()) {
-        navigateToSplitSpecificFlow(Number(id), router, replace)
+        navigateToSplitSpecificFlow(groupInfo.id, router, replace)
       } else {
         if (replace) {
-          router.replace(`/group/${id}/addSplit/detailsStep`)
+          router.replace(`/group/${groupInfo.id}/addSplit/detailsStep`)
         } else {
-          router.navigate(`/group/${id}/addSplit/detailsStep`)
+          router.navigate(`/group/${groupInfo.id}/addSplit/detailsStep`)
         }
       }
     },
-    [selectedSplitType, id, router]
+    [selectedSplitType, groupInfo.id, router]
   )
 
   useEffect(() => {
@@ -98,7 +97,7 @@ function Selector({ settings }: { settings: GroupSettings }) {
 
         <SplitMethodSelector
           displayedMethods={SplitCreationContext.current.allowedSplitMethods}
-          allowedMethods={settings?.allowedSplitMethods ?? []}
+          allowedMethods={groupInfo.allowedSplitMethods}
           multiple={false}
           selectedMethod={selectedSplitType}
           onSelect={setSelectedSplitType}
@@ -124,7 +123,7 @@ export default function Modal() {
   const theme = useTheme()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
-  const { data: settings } = useGroupSettings(Number(id))
+  const { data: groupInfo } = useGroupInfo(Number(id))
 
   return (
     <ModalScreen
@@ -133,12 +132,12 @@ export default function Modal() {
       maxWidth={500}
       opaque={false}
     >
-      {!settings && (
+      {!groupInfo && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size='large' color={theme.colors.primary} />
         </View>
       )}
-      {settings && <Selector settings={settings} />}
+      {groupInfo && <Selector groupInfo={groupInfo} />}
     </ModalScreen>
   )
 }

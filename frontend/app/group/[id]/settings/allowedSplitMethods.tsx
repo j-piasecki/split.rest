@@ -5,7 +5,6 @@ import { Pane } from '@components/Pane'
 import { SplitMethodSelector } from '@components/SplitMethodSelector'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
-import { useGroupSettings } from '@hooks/database/useGroupSettings'
 import { useSetGroupAllowedSplitMethodsMutation } from '@hooks/database/useSetGroupAllowedSplitMethods'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
@@ -16,22 +15,22 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
-import { GroupSettings, GroupUserInfo, SplitMethod, validateAllowedSplitMethods } from 'shared'
+import { GroupUserInfo, SplitMethod, validateAllowedSplitMethods } from 'shared'
 
 function Form({
   info,
   permissions,
-  settings,
+  groupInfo,
 }: {
   info: GroupUserInfo
   permissions: GroupPermissions
-  settings: GroupSettings
+  groupInfo: GroupUserInfo
 }) {
   const router = useRouter()
   const insets = useModalScreenInsets()
   const [error, setError] = useTranslatedError()
   const [allowedSplitMethods, setAllowedSplitMethods] = useState<SplitMethod[]>(
-    settings.allowedSplitMethods
+    groupInfo.allowedSplitMethods
   )
   const { t } = useTranslation()
   const { mutateAsync: setGroupAllowedSplitMethods, isPending } =
@@ -109,7 +108,7 @@ export default function Settings() {
   const { t } = useTranslation()
   const { data: info } = useGroupInfo(Number(id))
   const { data: permissions } = useGroupPermissions(Number(id))
-  const { data: settings } = useGroupSettings(Number(id))
+  const { data: groupInfo } = useGroupInfo(Number(id))
 
   return (
     <ModalScreen
@@ -120,11 +119,11 @@ export default function Settings() {
       opaque={false}
       slideAnimation={false}
     >
-      {info && permissions && settings && (
-        <Form info={info} permissions={permissions} settings={settings} />
+      {info && permissions && groupInfo && (
+        <Form info={info} permissions={permissions} groupInfo={groupInfo} />
       )}
 
-      {(!info || !permissions || !settings) && (
+      {(!info || !permissions || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size='large' color={theme.colors.onSurface} />
         </View>

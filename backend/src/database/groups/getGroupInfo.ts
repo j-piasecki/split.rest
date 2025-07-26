@@ -1,7 +1,7 @@
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
-import { GetGroupInfoArguments, GroupUserInfo } from 'shared'
+import { GetGroupInfoArguments, GroupUserInfo, SplitMethod } from 'shared'
 
 export async function getGroupInfo(
   pool: Pool,
@@ -28,8 +28,16 @@ export async function getGroupInfo(
           group_members.balance, 
           group_members.is_hidden, 
           group_members.is_admin, 
-          group_members.has_access
-        FROM groups JOIN group_members ON groups.id = group_members.group_id
+          group_members.has_access,
+          group_settings.split_equally_enabled,
+          group_settings.split_exact_enabled,
+          group_settings.split_shares_enabled,
+          group_settings.split_balance_changes_enabled,
+          group_settings.split_lend_enabled,
+          group_settings.split_delayed_enabled
+        FROM groups
+          JOIN group_members ON groups.id = group_members.group_id
+          JOIN group_settings ON groups.id = group_settings.group_id
         WHERE groups.id = $1 AND group_members.user_id = $2
       `,
       [args.groupId, callerId]
@@ -38,6 +46,32 @@ export async function getGroupInfo(
 
   if (!row) {
     return null
+  }
+
+  const allowedSplitMethods: SplitMethod[] = []
+
+  if (row.split_equally_enabled) {
+    allowedSplitMethods.push(SplitMethod.Equal)
+  }
+
+  if (row.split_exact_enabled) {
+    allowedSplitMethods.push(SplitMethod.ExactAmounts)
+  }
+
+  if (row.split_shares_enabled) {
+    allowedSplitMethods.push(SplitMethod.Shares)
+  }
+
+  if (row.split_balance_changes_enabled) {
+    allowedSplitMethods.push(SplitMethod.BalanceChanges)
+  }
+
+  if (row.split_lend_enabled) {
+    allowedSplitMethods.push(SplitMethod.Lend)
+  }
+
+  if (row.split_delayed_enabled) {
+    allowedSplitMethods.push(SplitMethod.Delayed)
   }
 
   return {
@@ -54,5 +88,6 @@ export async function getGroupInfo(
     memberCount: row.member_count,
     lastUpdate: Number(row.last_update),
     locked: row.locked,
+    allowedSplitMethods,
   }
 }

@@ -16,7 +16,6 @@ import { getAllGroupMembers } from '@database/getAllGroupMembers'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
-import { useGroupSettings } from '@hooks/database/useGroupSettings'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useRouletteQuery } from '@hooks/useRouletteQuery'
 import { useTranslatedError } from '@hooks/useTranslatedError'
@@ -30,7 +29,6 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, LayoutRectangle, Platform, ScrollView, View } from 'react-native'
 import Animated, { LinearTransition } from 'react-native-reanimated'
 import {
-  GroupSettings,
   GroupUserInfo,
   SplitMethod,
   TranslatableError,
@@ -185,20 +183,19 @@ function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
 
 interface ResultProps {
   query: PersonEntry[]
-  groupId: number
-  settings: GroupSettings
+  groupInfo: GroupUserInfo
   setQuery: (result: PersonEntry[] | null) => void
 }
 
-function Result({ query, groupId, settings, setQuery }: ResultProps) {
+function Result({ query, groupInfo, setQuery }: ResultProps) {
   const theme = useTheme()
   const router = useRouter()
   const insets = useModalScreenInsets()
-  const { data: permissions } = useGroupPermissions(groupId)
+  const { data: permissions } = useGroupPermissions(groupInfo.id)
   const { t } = useTranslation()
-  const { error, result, finished } = useRouletteQuery(groupId, query)
+  const { error, result, finished } = useRouletteQuery(groupInfo.id, query)
 
-  const canSplit = settings.allowedSplitMethods.some((method) =>
+  const canSplit = groupInfo.allowedSplitMethods.some((method) =>
     RouletteAllowedSplitMethods.includes(method)
   )
 
@@ -306,7 +303,7 @@ function Result({ query, groupId, settings, setQuery }: ResultProps) {
               .setPaidById(result[0].id)
               .begin()
 
-            router.navigate(`/group/${groupId}/addSplit`)
+            router.navigate(`/group/${groupInfo.id}/addSplit`)
           }}
           isLoading={!finished}
         />
@@ -323,19 +320,18 @@ export default function Modal() {
   const { data: groupInfo } = useGroupInfo(Number(id))
   const { data: permissions } = useGroupPermissions(Number(id))
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
-  const { data: settings } = useGroupSettings(Number(id))
   const [query, setQuery] = useState<PersonEntry[] | null>(null)
 
   const canAccessRoulette = permissions?.canAccessRoulette() ?? false
 
   return (
     <ModalScreen returnPath={`/group/${id}`} title={t('screenName.roulette')} maxWidth={500}>
-      {(!memberInfo || !groupInfo || !settings) && (
+      {(!memberInfo || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
           <ActivityIndicator color={theme.colors.onSurface} />
         </View>
       )}
-      {memberInfo && groupInfo && settings && (
+      {memberInfo && groupInfo && (
         <>
           {!canAccessRoulette && (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
@@ -348,7 +344,7 @@ export default function Modal() {
             <Roulette groupInfo={groupInfo} setQuery={setQuery} user={memberInfo} />
           )}
           {canAccessRoulette && query !== null && (
-            <Result groupId={Number(id)} settings={settings} query={query} setQuery={setQuery} />
+            <Result groupInfo={groupInfo} query={query} setQuery={setQuery} />
           )}
         </>
       )}

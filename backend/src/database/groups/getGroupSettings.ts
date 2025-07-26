@@ -1,13 +1,16 @@
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
-import { GetGroupSettingsArguments, GroupSettings, SplitMethod } from 'shared'
+import { GetGroupSettingsArguments, SplitMethod } from 'shared'
 
+// TODO: Remove this function and related endpoints/types/helpers
 export async function getGroupSettings(
   pool: Pool,
   callerId: string,
   args: GetGroupSettingsArguments
-): Promise<GroupSettings> {
+): Promise<{
+  allowedSplitMethods: SplitMethod[]
+}> {
   if (await isGroupDeleted(pool, args.groupId)) {
     throw new NotFoundException('api.notFound.group')
   }

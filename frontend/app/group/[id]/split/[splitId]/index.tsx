@@ -4,7 +4,6 @@ import { SplitInfo } from '@components/SplitInfo'
 import { Text } from '@components/Text'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
-import { useGroupSettings } from '@hooks/database/useGroupSettings'
 import { useSplitHistory } from '@hooks/database/useSplitHistory'
 import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
@@ -32,7 +31,6 @@ export default function SplitInfoScreen() {
   const { t } = useTranslation()
   const { data: groupInfo } = useGroupInfo(Number(id))
   const { data: permissions } = useGroupPermissions(groupInfo?.id)
-  const { data: settings } = useGroupSettings(Number(id))
   const { mutateAsync: updateSplit, isPending: isRestoring } = useUpdateSplit()
   const {
     history,
@@ -47,7 +45,7 @@ export default function SplitInfoScreen() {
   const [maxWidth, setMaxWidth] = useState(500)
   const [showRefreshIndicator, setShowRefreshIndicator] = useState(false)
 
-  const canResolveDelayedSplit = settings?.allowedSplitMethods.some((method) =>
+  const canResolveDelayedSplit = groupInfo?.allowedSplitMethods.some((method) =>
     DelayedSplitResolutionAllowedSplitMethods.includes(method)
   )
 
