@@ -94,17 +94,17 @@ function WrapItUpButton({
   }
 
   // Determine if the main "Wrap it up" button should be enabled
-  const hasAnyActionToPerform =
-    (permissions?.canLockGroup() && !info.locked) ||
-    (permissions?.canResolveAllDelayedSplitsAtOnce() && hasDelayedSplits) ||
-    (permissions?.canSettleUpGroup() && canSettleUp)
+  const canWrapUp =
+    (permissions?.canLockGroup()) &&
+    (permissions?.canResolveAllDelayedSplitsAtOnce() || !hasDelayedSplits) &&
+    (permissions?.canSettleUpGroup() || !canSettleUp)
 
   return (
     <>
       <ButtonWithSecondaryActions
         title={t('groupSettings.wrapItUp')}
         leftIcon='doneAll'
-        disabled={!hasAnyActionToPerform}
+        disabled={!canWrapUp}
         onPress={() => {
           setWrapItUpModalVisible(true)
         }}
