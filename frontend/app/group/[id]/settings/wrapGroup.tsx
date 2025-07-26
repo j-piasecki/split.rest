@@ -134,7 +134,7 @@ function StepComponent({
   const contentColor =
     status.step === WrapStep.Error
       ? theme.colors.error
-      : isCurrentStep
+      : isCurrentStep && status.step !== WrapStep.Completed
         ? theme.colors.primary
         : theme.colors.onSurface
 
@@ -234,7 +234,11 @@ export function WrapGroupContent({ groupInfo }: { groupInfo: GroupUserInfo }) {
   const [state, updateState] = useWrapGroup()
   const currentStep = state.steps[state.steps.length - 1]
 
-  const groupBeganLocked = useMemo(() => groupInfo.locked, [])
+  const groupBeganLocked = useMemo(() => {
+    return groupInfo.locked
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const { mutateAsync: setGroupLocked } = useSetGroupLockedMutation(groupId)
   const { mutateAsync: settleUpGroup } = useSettleUpGroup(groupId)
@@ -281,6 +285,8 @@ export function WrapGroupContent({ groupInfo }: { groupInfo: GroupUserInfo }) {
         step: WrapStep.SettlingUp,
         description: isTranslatableError(error) ? t(error.message, error.args) : t('unknownError'),
       })
+
+      await unlockGroupIfNeeded()
       return false
     }
   }
@@ -381,13 +387,7 @@ export function WrapGroupContent({ groupInfo }: { groupInfo: GroupUserInfo }) {
     }
   }
 
-  async function delayedSplitsNotResolved() {
-    updateState({
-      type: 'ERROR_STEP',
-      step: WrapStep.DelayedSplitsChoice,
-      description: t('groupSettings.wrapGroup.delayedSplitsNotResolved'),
-    })
-
+  async function unlockGroupIfNeeded() {
     if (!groupBeganLocked) {
       updateState({
         type: 'START_STEP',
@@ -404,6 +404,13 @@ export function WrapGroupContent({ groupInfo }: { groupInfo: GroupUserInfo }) {
           step: WrapStep.UnlockingGroup,
           description: t('groupSettings.wrapGroup.groupUnlocked'),
         })
+
+        updateState({
+          type: 'START_STEP',
+          step: WrapStep.Completed,
+          title: t('groupSettings.wrapGroup.completed'),
+        })
+        updateState({ type: 'COMPLETE_STEP', step: WrapStep.Completed })
       } catch (error) {
         updateState({
           type: 'ERROR_STEP',
@@ -416,8 +423,20 @@ export function WrapGroupContent({ groupInfo }: { groupInfo: GroupUserInfo }) {
     }
   }
 
+  async function delayedSplitsNotResolved() {
+    updateState({
+      type: 'ERROR_STEP',
+      step: WrapStep.DelayedSplitsChoice,
+      description: t('groupSettings.wrapGroup.delayedSplitsNotResolved'),
+    })
+
+    await unlockGroupIfNeeded()
+  }
+
   useEffect(() => {
     beginFlow()
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const navigation = useNavigation()
@@ -433,6 +452,8 @@ export function WrapGroupContent({ groupInfo }: { groupInfo: GroupUserInfo }) {
     })
 
     return unsubscribe
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep])
 
   return (
@@ -495,6 +516,7 @@ export function WrapGroupContent({ groupInfo }: { groupInfo: GroupUserInfo }) {
 }
 
 export default function WrapGroup() {
+  const theme = useTheme()
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()
   const { data: groupInfo } = useGroupInfo(Number(id))
@@ -508,6 +530,11 @@ export default function WrapGroup() {
       opaque={false}
     >
       {groupInfo && <WrapGroupContent groupInfo={groupInfo} />}
+      {!groupInfo && (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size='small' color={theme.colors.primary} />
+        </View>
+      )}
     </ModalScreen>
   )
 }

@@ -95,7 +95,7 @@ function WrapItUpButton({
 
   // Determine if the main "Wrap it up" button should be enabled
   const canWrapUp =
-    (permissions?.canLockGroup()) &&
+    permissions?.canLockGroup() &&
     (permissions?.canResolveAllDelayedSplitsAtOnce() || !hasDelayedSplits) &&
     (permissions?.canSettleUpGroup() || !canSettleUp)
 
