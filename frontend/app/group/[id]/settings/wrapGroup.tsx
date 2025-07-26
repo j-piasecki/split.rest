@@ -392,7 +392,7 @@ export function WrapGroupContent({ groupInfo }: { groupInfo: GroupUserInfo }) {
       updateState({
         type: 'START_STEP',
         step: WrapStep.UnlockingGroup,
-        description: 'Unlocking group',
+        description: t('groupSettings.wrapGroup.unlockingGroup'),
         title: t('groupSettings.wrapGroup.unlockingGroup'),
         loading: true,
       })
@@ -402,7 +402,7 @@ export function WrapGroupContent({ groupInfo }: { groupInfo: GroupUserInfo }) {
         updateState({
           type: 'COMPLETE_STEP',
           step: WrapStep.UnlockingGroup,
-          description: 'Group unlocked',
+          description: t('groupSettings.wrapGroup.groupUnlocked'),
         })
       } catch (error) {
         updateState({
