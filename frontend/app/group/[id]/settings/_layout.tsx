@@ -42,6 +42,10 @@ export default function AddFlow() {
             name='allowedSplitMethods'
             options={{ title: t('screenName.groupSettings.splitMethods') }}
           />
+          <Stack.Screen
+            name='wrapGroup'
+            options={{ title: t('screenName.groupSettings.wrapItUp') }}
+          />
         </Stack>
       </ThemeProvider>
     </Animated.View>
