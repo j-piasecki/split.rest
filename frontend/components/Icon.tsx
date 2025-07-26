@@ -38,6 +38,7 @@ export type IconName =
   | 'delete'
   | 'deleteForever'
   | 'deleteLink'
+  | 'doneAll'
   | 'editAlt'
   | 'editOff'
   | 'edit'
@@ -132,6 +133,7 @@ const iconMap: Record<IconName, unknown> = {
   delete: require('@assets/icons/delete.svg'),
   deleteForever: require('@assets/icons/delete_forever.svg'),
   deleteLink: require('@assets/icons/delete_link.svg'),
+  doneAll: require('@assets/icons/done_all.svg'),
   editAlt: require('@assets/icons/edit_alt.svg'),
   editOff: require('@assets/icons/edit_off.svg'),
   edit: require('@assets/icons/edit.svg'),

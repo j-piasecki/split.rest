@@ -260,7 +260,8 @@
       "index": "Settings",
       "invitations": "Manage invitations",
       "resolveDelayed": "Finalize delayed splits",
-      "splitMethods": "Allowed split methods"
+      "splitMethods": "Allowed split methods",
+      "wrapItUp": "Wrap it up"
     },
   
     "splitType": "New split",
@@ -370,7 +371,7 @@
     "settleUpGroup": "Settle up group",
     "settleUpGroupSuccess": "Group settled up",
     "settleUpGroupConfirmationText": "Are you sure you want to settle up the group?",
-    "settleUpGroupConfirmationMessage": "This will create multiple settle-up splits and notify all members.",
+    "settleUpGroupConfirmationMessage": "This action will create multiple settle-up splits and notify all members.",
     "settleUpGroupConfirm": "Yes",
     "settleUpGroupCancel": "No",
     "resolveAllDelayed": {
@@ -382,7 +383,28 @@
       "cancel": "No",
       "success": "All delayed splits have been finalized"
     },
-    "wrapItUp": "Wrap it up"
+    "wrapItUp": "Wrap it up",
+    "wrapItUpConfirmationText": "Are you sure you want to wrap up the group?",
+    "wrapItUpConfirmationMessage": "This action will lock the group, finalize all delayed splits, and create multiple settle-up splits. All members will be notified.",
+    "wrapItUpConfirm": "Yes",
+    "wrapItUpCancel": "No",
+    "wrapGroup": {
+      "lockingGroup": "Locking group",
+      "groupLocked": "Group locked - no new splits can be added",
+      "checkingDelayedSplits": "Looking for delayed splits",
+      "delayedSplitsFound": "There are delayed splits in the group",
+      "noDelayedSplitsFound": "There are no delayed splits in the group",
+      "settlingUp": "Settling up",
+      "settledUp": "The group is now settled up",
+      "unlockingGroup": "Unlocking group",
+      "groupUnlocked": "Group unlocked - new splits can be added",
+      "resolveDelayedSplitsChoice": "Do you want to finalize delayed splits?",
+      "resolveDelayedSplits": "Finalize",
+      "delayedSplitsNotResolved": "Delayed splits were not finalized",
+      "completed": "Completed",
+      "completedDescription": "Group wrapped up!",
+      "goBack": "Go back"
+    }
   },
 
   "inviteMember": {

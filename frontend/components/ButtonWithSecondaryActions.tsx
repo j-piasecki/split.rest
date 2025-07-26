@@ -332,7 +332,7 @@ export function ButtonWithSecondaryActions({
           <Button
             leftIcon='moreVertical'
             onPress={openMenu}
-            disabled={disabled || isActionLoading}
+            disabled={isActionLoading}
             pressableStyle={{ paddingHorizontal: 4 }}
             style={{
               backgroundColor: isMenuOpen ? theme.colors.primary : theme.colors.primaryContainer,

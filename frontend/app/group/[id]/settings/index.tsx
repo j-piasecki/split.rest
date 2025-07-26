@@ -1,5 +1,8 @@
-import { ButtonWithSecondaryActions, ButtonSecondaryAction } from '@components/ButtonWithSecondaryActions'
 import { Button } from '@components/Button'
+import {
+  ButtonSecondaryAction,
+  ButtonWithSecondaryActions,
+} from '@components/ButtonWithSecondaryActions'
 import { ConfirmationModal } from '@components/ConfirmationModal'
 import { EditableText, EditableTextRef } from '@components/EditableText'
 import ModalScreen from '@components/ModalScreen'
@@ -34,6 +37,7 @@ function WrapItUpButton({
   const router = useRouter()
   const snack = useSnack()
   const [settleUpModalVisible, setSettleUpModalVisible] = useState(false)
+  const [wrapItUpModalVisible, setWrapItUpModalVisible] = useState(false)
   const { mutateAsync: settleUpGroup } = useSettleUpGroup(info.id)
   const { mutateAsync: setGroupLocked } = useSetGroupLockedMutation(info.id)
 
@@ -89,16 +93,38 @@ function WrapItUpButton({
     })
   }
 
+  // Determine if the main "Wrap it up" button should be enabled
+  const hasAnyActionToPerform =
+    (permissions?.canLockGroup() && !info.locked) ||
+    (permissions?.canResolveAllDelayedSplitsAtOnce() && hasDelayedSplits) ||
+    (permissions?.canSettleUpGroup() && canSettleUp)
+
   return (
     <>
       <ButtonWithSecondaryActions
         title={t('groupSettings.wrapItUp')}
-        leftIcon='check'
+        leftIcon='doneAll'
+        disabled={!hasAnyActionToPerform}
         onPress={() => {
-          alert('Not implemented')
+          setWrapItUpModalVisible(true)
         }}
         secondaryActions={secondaryActions}
         animationDirection='above'
+      />
+
+      <ConfirmationModal
+        visible={wrapItUpModalVisible}
+        onClose={() => setWrapItUpModalVisible(false)}
+        onConfirm={async () => {
+          setWrapItUpModalVisible(false)
+          router.navigate(`/group/${info.id}/settings/wrapGroup`)
+        }}
+        title='groupSettings.wrapItUpConfirmationText'
+        message='groupSettings.wrapItUpConfirmationMessage'
+        cancelText='groupSettings.wrapItUpCancel'
+        cancelIcon='close'
+        confirmText='groupSettings.wrapItUpConfirm'
+        confirmIcon='check'
       />
 
       <ConfirmationModal
