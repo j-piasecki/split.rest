@@ -31,6 +31,7 @@ function Form({
   const [error, setError] = useTranslatedError()
   const { t } = useTranslation()
   const { mutateAsync: resolveDelayedSplits, isPending } = useResolveAllDelayedSplits(info.id)
+  const { showToast } = useLocalSearchParams()
 
   return (
     <View style={{ flex: 1 }}>
@@ -47,7 +48,10 @@ function Form({
               })),
             })
 
-            snack.show({ message: t('groupSettings.resolveAllDelayed.success') })
+            if (showToast !== 'false') {
+              snack.show({ message: t('groupSettings.resolveAllDelayed.success') })
+            }
+
             if (router.canGoBack()) {
               router.back()
             } else {

@@ -1,4 +1,8 @@
 import { Button } from '@components/Button'
+import {
+  ButtonSecondaryAction,
+  ButtonWithSecondaryActions,
+} from '@components/ButtonWithSecondaryActions'
 import { ConfirmationModal } from '@components/ConfirmationModal'
 import { EditableText, EditableTextRef } from '@components/EditableText'
 import ModalScreen from '@components/ModalScreen'
@@ -7,6 +11,7 @@ import { PaneButton } from '@components/PaneButton'
 import { useSnack } from '@components/SnackBar'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
+import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
 import { useSetGroupLockedMutation } from '@hooks/database/useSetGroupLocked'
@@ -21,32 +26,134 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 import { GroupUserInfo, SplitType, isTranslatableError } from 'shared'
 
-function ResolveDelayedSplitsButton({
+function WrapItUpButton({
   info,
   permissions,
 }: {
   info: GroupUserInfo
   permissions?: GroupPermissions
 }) {
-  const router = useRouter()
   const { t } = useTranslation()
+  const router = useRouter()
+  const snack = useSnack()
+  const [settleUpModalVisible, setSettleUpModalVisible] = useState(false)
+  const [wrapItUpModalVisible, setWrapItUpModalVisible] = useState(false)
+  const { mutateAsync: settleUpGroup } = useSettleUpGroup(info.id)
+  const { mutateAsync: setGroupLocked } = useSetGroupLockedMutation(info.id)
+
   const { splits: delayedSplits } = useGroupSplitsQuery(info.id, {
     splitTypes: [SplitType.Delayed],
   })
   const hasDelayedSplits = delayedSplits.length > 0
 
-  if (!permissions?.canResolveAllDelayedSplitsAtOnce() || !hasDelayedSplits) {
-    return null
+  const { members } = useGroupMembers(info.id, true)
+  const canSettleUp = members.length > 0 && Number(members[0].balance) !== 0
+
+  const secondaryActions: ButtonSecondaryAction[] = []
+
+  // Add resolve delayed splits action if applicable
+  if (permissions?.canResolveAllDelayedSplitsAtOnce() && hasDelayedSplits) {
+    secondaryActions.push({
+      label: t('groupSettings.resolveAllDelayed.resolveAllText'),
+      icon: 'chronic',
+      onPress: () => {
+        router.navigate(`/group/${info.id}/settings/resolveDelayed`)
+      },
+    })
   }
 
+  // Add settle up action if applicable
+  if (permissions?.canSettleUpGroup() && canSettleUp) {
+    secondaryActions.push({
+      label: t('groupSettings.settleUpGroup'),
+      icon: 'balance',
+      onPress: () => {
+        // Delay until the menu modal is closed
+        setTimeout(() => {
+          setSettleUpModalVisible(true)
+        }, 350)
+      },
+    })
+  }
+
+  // Add lock/unlock action if applicable
+  if (permissions?.canLockGroup()) {
+    secondaryActions.push({
+      label: info.locked ? t('groupSettings.unlockGroup') : t('groupSettings.lockGroup'),
+      icon: info.locked ? 'lockOpen' : 'lock',
+      onPress: async () => {
+        try {
+          await setGroupLocked(!info.locked)
+        } catch (e) {
+          if (isTranslatableError(e)) {
+            snack.show({ message: t(e.message) })
+          }
+        }
+      },
+    })
+  }
+
+  // Determine if the main "Wrap it up" button should be enabled
+  const hasAnyActionToPerform =
+    (permissions?.canLockGroup() && !info.locked) ||
+    (permissions?.canResolveAllDelayedSplitsAtOnce() && hasDelayedSplits) ||
+    (permissions?.canSettleUpGroup() && canSettleUp)
+
   return (
-    <Button
-      title={t('groupSettings.resolveAllDelayed.resolveAllText')}
-      leftIcon='chronic'
-      onPress={() => {
-        router.navigate(`/group/${info.id}/settings/resolveDelayed`)
-      }}
-    />
+    <>
+      <ButtonWithSecondaryActions
+        title={t('groupSettings.wrapItUp')}
+        leftIcon='doneAll'
+        disabled={!hasAnyActionToPerform}
+        onPress={() => {
+          setWrapItUpModalVisible(true)
+        }}
+        secondaryActions={secondaryActions}
+        animationDirection='above'
+      />
+
+      <ConfirmationModal
+        visible={wrapItUpModalVisible}
+        onClose={() => setWrapItUpModalVisible(false)}
+        onConfirm={async () => {
+          setWrapItUpModalVisible(false)
+          router.navigate(`/group/${info.id}/settings/wrapGroup`)
+        }}
+        title='groupSettings.wrapItUpConfirmationText'
+        message='groupSettings.wrapItUpConfirmationMessage'
+        cancelText='groupSettings.wrapItUpCancel'
+        cancelIcon='close'
+        confirmText='groupSettings.wrapItUpConfirm'
+        confirmIcon='check'
+      />
+
+      <ConfirmationModal
+        visible={settleUpModalVisible}
+        onClose={() => setSettleUpModalVisible(false)}
+        onConfirm={async () => {
+          await settleUpGroup()
+            .then(() => {
+              snack.show({ message: t('groupSettings.settleUpGroupSuccess') })
+              if (router.canGoBack()) {
+                router.back()
+              } else {
+                router.replace(`/group/${info.id}`)
+              }
+            })
+            .catch((e) => {
+              if (isTranslatableError(e)) {
+                alert(t(e.message))
+              }
+            })
+        }}
+        title='groupSettings.settleUpGroupConfirmationText'
+        message='groupSettings.settleUpGroupConfirmationMessage'
+        cancelText='groupSettings.settleUpGroupCancel'
+        cancelIcon='close'
+        confirmText='groupSettings.settleUpGroupConfirm'
+        confirmIcon='check'
+      />
+    </>
   )
 }
 
@@ -59,13 +166,10 @@ function Form({ info }: { info: GroupUserInfo }) {
   const [name, setName] = useState(info.name)
   const [isEditingName, setIsEditingName] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
-  const [settleUpModalVisible, setSettleUpModalVisible] = useState(false)
+
   const { data: permissions } = useGroupPermissions(info.id)
   const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
-  const { mutateAsync: setGroupLocked, isPending: isSettingLocked } = useSetGroupLockedMutation(
-    info.id
-  )
-  const { mutateAsync: settleUpGroup, isPending: isSettingSettledUp } = useSettleUpGroup(info.id)
+
   const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
 
   return (
@@ -137,59 +241,7 @@ function Form({ info }: { info: GroupUserInfo }) {
         )}
       </View>
       <View style={{ marginTop: 32, gap: 16 }}>
-        <ResolveDelayedSplitsButton info={info} permissions={permissions} />
-        {permissions?.canSettleUpGroup() && (
-          <>
-            <ConfirmationModal
-              visible={settleUpModalVisible}
-              onClose={() => setSettleUpModalVisible(false)}
-              onConfirm={async () => {
-                await settleUpGroup()
-                  .then(() => {
-                    snack.show({ message: t('groupSettings.settleUpGroupSuccess') })
-                    if (router.canGoBack()) {
-                      router.back()
-                    } else {
-                      router.replace(`/group/${info.id}`)
-                    }
-                  })
-                  .catch((e) => {
-                    if (isTranslatableError(e)) {
-                      alert(t(e.message))
-                    }
-                  })
-              }}
-              title='groupSettings.settleUpGroupConfirmationText'
-              message='groupSettings.settleUpGroupConfirmationMessage'
-              cancelText='groupSettings.settleUpGroupCancel'
-              cancelIcon='close'
-              confirmText='groupSettings.settleUpGroupConfirm'
-              confirmIcon='check'
-            />
-            <Button
-              title={t('groupSettings.settleUpGroup')}
-              leftIcon='balance'
-              isLoading={isSettingSettledUp}
-              onPress={() => {
-                setSettleUpModalVisible(true)
-              }}
-            />
-          </>
-        )}
-        {permissions?.canLockGroup() && (
-          <Button
-            title={info.locked ? t('groupSettings.unlockGroup') : t('groupSettings.lockGroup')}
-            leftIcon={info.locked ? 'lockOpen' : 'lock'}
-            isLoading={isSettingLocked}
-            onPress={() => {
-              setGroupLocked(!info.locked).catch((e) => {
-                if (isTranslatableError(e)) {
-                  snack.show({ message: t(e.message) })
-                }
-              })
-            }}
-          />
-        )}
+        <WrapItUpButton info={info} permissions={permissions} />
         {permissions?.canDeleteGroup() && (
           <>
             <ConfirmationModal
