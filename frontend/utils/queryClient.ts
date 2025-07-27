@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
-import { GroupUserInfo, Member, SplitInfo } from 'shared'
+import { GroupUserInfo, Member, SplitInfo, SplitQuery } from 'shared'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,6 +28,16 @@ export async function invalidateGroup(groupId: number) {
   await invalidateUserGroups()
   await invalidateGroupJoinLink(groupId)
   await invalidateDirectGroupInvites(groupId)
+}
+
+export async function invalidateGroupSplitQuery(groupId: number, query?: SplitQuery) {
+  if (query) {
+    await queryClient.invalidateQueries({
+      queryKey: ['groupSplits', groupId, 'query', JSON.stringify(query)],
+    })
+  } else {
+    await queryClient.invalidateQueries({ queryKey: ['groupSplits', groupId, 'query'] })
+  }
 }
 
 export async function invalidateDirectGroupInvites(groupId: number) {

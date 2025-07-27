@@ -8,12 +8,15 @@ import { useSetGroupLockedMutation } from '@hooks/database/useSetGroupLocked'
 import { useSettleUpGroup } from '@hooks/database/useSettleUpGroup'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
+import { invalidateGroupSplitQuery } from '@utils/queryClient'
 import { sleep } from '@utils/sleep'
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
 import React, { useEffect, useMemo, useReducer, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { GroupUserInfo, SplitType, isTranslatableError } from 'shared'
+
+const DelayedSplitsQuery = { splitTypes: [SplitType.Delayed] }
 
 enum WrapStep {
   LockingGroup = 'LockingGroup',
@@ -247,9 +250,7 @@ export function WrapGroupContent({ groupInfo }: { groupInfo: GroupUserInfo }) {
     splits: delayedSplits,
     isLoading: isLoadingDelayedSplits,
     isRefetching: isRefetchingDelayedSplits,
-  } = useGroupSplitsQuery(groupId, {
-    splitTypes: [SplitType.Delayed],
-  })
+  } = useGroupSplitsQuery(groupId, DelayedSplitsQuery)
   const hasDelayedSplits = delayedSplits.length > 0
 
   const hasDelayedSplitsRef = useRef(hasDelayedSplits)
@@ -321,6 +322,7 @@ export function WrapGroupContent({ groupInfo }: { groupInfo: GroupUserInfo }) {
       title: t('groupSettings.wrapGroup.checkingDelayedSplits'),
       loading: true,
     })
+    await invalidateGroupSplitQuery(groupId, DelayedSplitsQuery)
     do {
       await sleep(500)
     } while (isLoadingDelayedSplitsRef.current || isRefetchingDelayedSplitsRef.current)
