@@ -19,12 +19,18 @@ interface SplitEntriesPaneProps {
   showPayerEntry?: boolean
   filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
   balanceKeyboardType?: KeyboardTypeOptions
-  amountPlaceholder?: LanguageTranslationKey
+  amountPlaceholder: LanguageTranslationKey
   integersOnly?: boolean
 }
 
 function isPaidByUser(formState: FormData, entry: SplitEntryData) {
-  return formState.entries[formState.paidByIndex]?.user?.id === entry.user?.id
+  const paidByEntry = formState.entries[formState.paidByIndex]
+
+  if (paidByEntry === undefined) {
+    return false
+  }
+
+  return paidByEntry.user?.id === entry.user?.id
 }
 
 export function EntriesPane({
@@ -44,9 +50,9 @@ export function EntriesPane({
   const { t } = useTranslation()
   const layout = useRef<LayoutRectangle | null>(null)
 
-  const entries = formState.entries.filter(
-    (entry) => showPayerEntry || !isPaidByUser(formState, entry)
-  )
+  // const entries = formState.entries.filter(
+  //   (entry) => showPayerEntry || !isPaidByUser(formState, entry)
+  // )
 
   return (
     <Pane
@@ -73,27 +79,33 @@ export function EntriesPane({
       }}
     >
       <Form autofocus>
-        {entries.map((entry, index) => (
-          <SplitEntry
-            key={index}
-            scrollRef={scrollRef}
-            groupId={groupInfo.id}
-            index={index}
-            first={index === 0}
-            last={index === entries.length - 1}
-            formState={formState}
-            entry={entry}
-            paidByThis={isPaidByUser(formState, entry)}
-            updateForm={updateForm}
-            parentLayout={layout}
-            focusIndex={index * 2}
-            showPayerSelector={showPayerSelector}
-            filterSuggestions={filterSuggestions}
-            balanceKeyboardType={balanceKeyboardType}
-            amountPlaceholder={amountPlaceholder}
-            integersOnly={integersOnly}
-          />
-        ))}
+        {formState.entries.map((entry, index) => {
+          if (!showPayerEntry && isPaidByUser(formState, entry)) {
+            return null
+          }
+
+          return (
+            <SplitEntry
+              key={index}
+              scrollRef={scrollRef}
+              groupId={groupInfo.id}
+              index={index}
+              first={index === 0}
+              last={index === formState.entries.length - 1}
+              formState={formState}
+              entry={entry}
+              paidByThis={isPaidByUser(formState, entry)}
+              updateForm={updateForm}
+              parentLayout={layout}
+              focusIndex={index * 2}
+              showPayerSelector={showPayerSelector}
+              filterSuggestions={filterSuggestions}
+              balanceKeyboardType={balanceKeyboardType}
+              amountPlaceholder={amountPlaceholder}
+              integersOnly={integersOnly}
+            />
+          )
+        })}
       </Form>
     </Pane>
   )

@@ -454,6 +454,7 @@
     "title": "Title",
     "amount": "Amount",
     "shares": "Shares",
+    "change": "Change",
     "save": "Save",
     "edit": "Edit",
     "totalPaid": "Total amount paid",

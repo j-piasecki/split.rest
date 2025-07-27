@@ -7,20 +7,15 @@ import { CalendarPane } from '@components/CalendarPane'
 import { ErrorText } from '@components/ErrorText'
 import { IconName } from '@components/Icon'
 import { LargeTextInput } from '@components/LargeTextInput'
+import { useAuth } from '@utils/auth'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  KeyboardTypeOptions,
-  ScrollView,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native'
-import { GroupUserInfo, LanguageTranslationKey, UserWithDisplayName } from 'shared'
+import { Platform, ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { GroupUserInfo, LanguageTranslationKey, SplitMethod, UserWithDisplayName } from 'shared'
 
 export interface SplitFormProps {
   groupInfo: GroupUserInfo
+  splitMethod: SplitMethod
   initialTitle?: string | null
   initialEntries: SplitEntryData[]
   initialPaidByIndex?: number
@@ -32,25 +27,17 @@ export interface SplitFormProps {
   error?: string | null
   showDetails?: boolean
   showCalendar?: boolean
-  showEntries?: boolean
   showSuggestions?: boolean
-  showTotalInput?: boolean
   buttonIcon?: IconName
   buttonTitle?: LanguageTranslationKey
   buttonIconLocation?: 'left' | 'right'
   style?: StyleProp<ViewStyle>
-  showPayerSelector?: boolean
-  showPaidByHint?: boolean
   showAddAllMembers?: boolean
-  showPayerEntry?: boolean
-  filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
-  balanceKeyboardType?: KeyboardTypeOptions
-  amountPlaceholder?: LanguageTranslationKey
-  integersOnly?: boolean
 }
 
 export function SplitForm({
   groupInfo,
+  splitMethod,
   initialTitle,
   initialEntries,
   initialPaidByIndex,
@@ -62,23 +49,16 @@ export function SplitForm({
   cleanError,
   showDetails = true,
   showCalendar = true,
-  showEntries = true,
   showSuggestions = true,
-  showTotalInput = false,
   buttonIcon = 'save',
   buttonTitle = 'form.save',
   buttonIconLocation = 'left',
-  showPayerSelector = true,
-  showPaidByHint = true,
   showAddAllMembers = true,
-  showPayerEntry = true,
   style,
-  filterSuggestions,
-  balanceKeyboardType,
-  amountPlaceholder,
-  integersOnly,
 }: SplitFormProps) {
+  const user = useAuth()
   const scrollRef = useRef<ScrollView>(null)
+  const { t } = useTranslation()
   const [fetchingMembers, setFetchingMembers] = useState(false)
   const [total, setTotal] = useState(initialTotal ?? '')
   const [formState, updateForm] = useFormData(
@@ -90,7 +70,35 @@ export function SplitForm({
     },
     cleanError
   )
-  const { t } = useTranslation()
+
+  const showPayerSelector =
+    splitMethod !== SplitMethod.BalanceChanges && splitMethod !== SplitMethod.Lend
+  const showPaidByHint = splitMethod !== SplitMethod.BalanceChanges
+  const showPayerEntry = splitMethod !== SplitMethod.Lend
+  const showEntries = splitMethod !== SplitMethod.Delayed
+  const showTotalInput = splitMethod === SplitMethod.Delayed
+  const balanceKeyboardType =
+    splitMethod === SplitMethod.BalanceChanges
+      ? Platform.OS === 'android'
+        ? 'phone-pad'
+        : 'numbers-and-punctuation'
+      : splitMethod === SplitMethod.Shares
+        ? 'number-pad'
+        : undefined
+  const integersOnly = splitMethod === SplitMethod.Shares
+  const amountPlaceholder =
+    splitMethod === SplitMethod.Shares
+      ? 'form.shares'
+      : splitMethod === SplitMethod.BalanceChanges
+        ? 'form.change'
+        : 'form.amount'
+  const filterSuggestions = (suggestions: UserWithDisplayName[]) => {
+    if (splitMethod === SplitMethod.Lend) {
+      return suggestions.filter((suggestion) => suggestion.id !== user?.id)
+    }
+
+    return suggestions
+  }
 
   const flattenedStyles = StyleSheet.flatten(style) ?? {}
 

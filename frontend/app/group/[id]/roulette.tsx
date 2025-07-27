@@ -28,12 +28,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, LayoutRectangle, Platform, ScrollView, View } from 'react-native'
 import Animated, { LinearTransition } from 'react-native-reanimated'
-import {
-  GroupUserInfo,
-  SplitMethod,
-  TranslatableError,
-  UserWithDisplayName,
-} from 'shared'
+import { GroupUserInfo, SplitMethod, TranslatableError, UserWithDisplayName } from 'shared'
 
 const RouletteAllowedSplitMethods = [
   SplitMethod.Equal,

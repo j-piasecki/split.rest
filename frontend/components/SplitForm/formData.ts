@@ -59,7 +59,7 @@ export type FormActionType =
 
 function entriesReducer(state: FormData, action: FormActionType): FormData {
   const newState = { ...state }
-  const paidBy = newState.entries[newState.paidByIndex]
+  const paidBy: SplitEntryData | undefined = newState.entries[newState.paidByIndex]
 
   switch (action.type) {
     case 'setTitle':
@@ -129,7 +129,9 @@ function entriesReducer(state: FormData, action: FormActionType): FormData {
   }
 
   if (state.entries.length !== newState.entries.length) {
-    const newPaidByIndex = newState.entries.findIndex((entry) => entry.user?.id === paidBy.user?.id)
+    const newPaidByIndex = newState.entries.findIndex(
+      (entry) => entry.user?.id === paidBy?.user?.id
+    )
     newState.paidByIndex = newPaidByIndex === -1 ? 0 : newPaidByIndex
   }
 

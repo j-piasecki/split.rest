@@ -24,7 +24,7 @@ export interface SplitEntryProps {
   last: boolean
   filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
   balanceKeyboardType?: KeyboardTypeOptions
-  amountPlaceholder?: LanguageTranslationKey
+  amountPlaceholder: LanguageTranslationKey
   integersOnly?: boolean
 }
 
@@ -42,8 +42,8 @@ export function SplitEntry({
   first,
   last,
   filterSuggestions,
+  amountPlaceholder,
   balanceKeyboardType = 'decimal-pad',
-  amountPlaceholder = 'form.amount',
   integersOnly = false,
 }: SplitEntryProps) {
   const theme = useTheme()

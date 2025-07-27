@@ -12,8 +12,8 @@ import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Platform, View } from 'react-native'
-import { GroupUserInfo, TranslatableError, UserWithDisplayName } from 'shared'
+import { ActivityIndicator, View } from 'react-native'
+import { GroupUserInfo, SplitMethod, TranslatableError, UserWithDisplayName } from 'shared'
 
 function initialEntriesFromContext(currentUser: UserWithDisplayName): SplitEntryData[] {
   const initialEntries: SplitEntryData[] =
@@ -79,6 +79,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
       }}
     >
       <SplitForm
+        splitMethod={SplitMethod.BalanceChanges}
         style={{
           paddingTop: insets.top + 16,
           paddingLeft: insets.left + 12,
@@ -97,9 +98,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
         buttonTitle='form.buttonNext'
         buttonIcon='chevronForward'
         buttonIconLocation='right'
-        showPayerSelector={false}
         showAddAllMembers={permissions?.canReadMembers()}
-        balanceKeyboardType={Platform.OS === 'android' ? 'phone-pad' : 'numbers-and-punctuation'}
       />
     </View>
   )

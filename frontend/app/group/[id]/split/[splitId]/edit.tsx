@@ -12,8 +12,21 @@ import { validateSplitForm, validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Platform, View } from 'react-native'
-import { BalanceChange, GroupUserInfo, SplitType, SplitWithUsers } from 'shared'
+import { ActivityIndicator, View } from 'react-native'
+import { BalanceChange, GroupUserInfo, SplitMethod, SplitType, SplitWithUsers } from 'shared'
+
+function splitTypeToSplitMethod(splitType: SplitType): SplitMethod {
+  switch (splitType) {
+    case SplitType.Delayed:
+      return SplitMethod.Delayed
+    case SplitType.BalanceChange:
+      return SplitMethod.BalanceChanges
+    case SplitType.Lend:
+      return SplitMethod.Lend
+  }
+
+  return SplitMethod.ExactAmounts
+}
 
 function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: SplitWithUsers }) {
   const router = useRouter()
@@ -101,29 +114,16 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
           paddingLeft: insets.left + 12,
           paddingRight: insets.right + 12,
         }}
+        splitMethod={splitTypeToSplitMethod(splitInfo.type)}
         splitInfo={splitInfo}
         groupInfo={groupInfo}
         onSubmit={save}
         waiting={waiting}
         error={error}
         cleanError={() => setError(null)}
-        showPayerSelector={
-          splitInfo.type !== SplitType.BalanceChange && splitInfo.type !== SplitType.Lend
-        }
-        showPaidByHint={splitInfo.type !== SplitType.BalanceChange}
         showAddAllMembers={false}
         showSuggestions={false}
-        showPayerEntry={splitInfo.type !== SplitType.Lend}
-        showEntries={splitInfo.type !== SplitType.Delayed}
-        showTotalInput={splitInfo.type === SplitType.Delayed}
         initialTotal={splitInfo.total}
-        balanceKeyboardType={
-          splitInfo.type === SplitType.BalanceChange
-            ? Platform.OS === 'android'
-              ? 'phone-pad'
-              : 'numbers-and-punctuation'
-            : undefined
-        }
       />
     </View>
   )

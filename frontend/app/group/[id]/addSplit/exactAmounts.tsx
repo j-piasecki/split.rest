@@ -13,7 +13,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupUserInfo, TranslatableError, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, SplitMethod, TranslatableError, UserWithDisplayName } from 'shared'
 
 function initialEntriesFromContext(currentUser: UserWithDisplayName): SplitEntryData[] {
   const initialEntries: SplitEntryData[] =
@@ -78,6 +78,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
       }}
     >
       <SplitForm
+        splitMethod={SplitMethod.ExactAmounts}
         style={{
           paddingTop: insets.top + 16,
           paddingLeft: insets.left + 12,

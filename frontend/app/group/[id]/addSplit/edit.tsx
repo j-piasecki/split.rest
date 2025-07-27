@@ -11,7 +11,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { GroupUserInfo, SplitWithUsers } from 'shared'
+import { GroupUserInfo, SplitMethod, SplitWithUsers } from 'shared'
 
 function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitWithUsers }) {
   const router = useRouter()
@@ -56,6 +56,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
       }}
     >
       <SplitEditForm
+        splitMethod={SplitMethod.ExactAmounts}
         style={{
           paddingTop: insets.top + 16,
         }}
@@ -64,6 +65,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         onSubmit={save}
         error={error}
         showSuggestions={false}
+        showAddAllMembers={false}
         cleanError={() => setError(null)}
         waiting={waiting}
       />

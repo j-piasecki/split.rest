@@ -12,10 +12,10 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupUserInfo, TranslatableError, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, SplitMethod, TranslatableError, UserWithDisplayName } from 'shared'
 
-function initialEntriesFromContext(): SplitEntryData[] {
-  const initialEntries: SplitEntryData[] =
+function initialEntriesFromContext(user: UserWithDisplayName): SplitEntryData[] {
+  let initialEntries: SplitEntryData[] =
     SplitCreationContext.current.participants === null
       ? []
       : SplitCreationContext.current.participants.map(
@@ -27,6 +27,8 @@ function initialEntriesFromContext(): SplitEntryData[] {
         )
 
   initialEntries.push({ entry: '', amount: '' })
+  initialEntries = initialEntries.filter((entry) => entry.user?.id !== user.id)
+  initialEntries.unshift({ entry: user.email ?? '', amount: '0.00', user: user })
 
   return initialEntries
 }
@@ -43,8 +45,8 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
 
       const formWithPayer = {
         ...form,
-        paidByIndex: form.entries.length,
-        entries: [...form.entries, { entry: user.email ?? '', user: user, amount: '0' }],
+        paidByIndex: 0,
+        entries: [...form.entries],
       }
 
       const { sumToSave } = await validateSplitForm(formWithPayer, false, true, true)
@@ -83,17 +85,17 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
       }}
     >
       <SplitForm
+        splitMethod={SplitMethod.Lend}
         style={{
           paddingTop: insets.top + 16,
           paddingLeft: insets.left + 12,
           paddingRight: insets.right + 12,
         }}
-        initialEntries={initialEntriesFromContext()}
-        initialPaidByIndex={SplitCreationContext.current.paidByIndex}
+        initialEntries={initialEntriesFromContext(user)}
+        initialPaidByIndex={0}
         initialTitle={SplitCreationContext.current.title}
         showDetails={false}
         showCalendar={false}
-        showPayerSelector={false}
         groupInfo={groupInfo}
         onSubmit={save}
         waiting={waiting}
@@ -103,9 +105,6 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
         buttonIcon='chevronForward'
         buttonIconLocation='right'
         showAddAllMembers={false}
-        filterSuggestions={(suggestions) =>
-          suggestions.filter((suggestion) => suggestion.id !== user.id)
-        }
       />
     </View>
   )

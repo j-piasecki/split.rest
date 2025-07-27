@@ -13,7 +13,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupUserInfo, TranslatableError, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, SplitMethod, TranslatableError, UserWithDisplayName } from 'shared'
 
 function initialEntriesFromContext(currentUser: UserWithDisplayName): SplitEntryData[] {
   const initialEntries: SplitEntryData[] =
@@ -99,6 +99,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
       }}
     >
       <SplitForm
+        splitMethod={SplitMethod.Shares}
         style={{
           paddingTop: insets.top + 16,
           paddingLeft: insets.left + 12,
@@ -118,9 +119,6 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
         buttonIcon='chevronForward'
         buttonIconLocation='right'
         showAddAllMembers={permissions?.canReadMembers()}
-        balanceKeyboardType='number-pad'
-        integersOnly
-        amountPlaceholder='form.shares'
       />
     </View>
   )
