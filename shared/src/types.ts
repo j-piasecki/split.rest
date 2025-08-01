@@ -176,6 +176,14 @@ export interface GroupInvite {
   alreadyAMember: boolean
 }
 
+export interface GroupMonthlyStats {
+  stats: Array<{
+    startTimestamp: number
+    totalValue: string
+    transactionCount: number
+  }>
+}
+
 export interface GroupInviteWithGroupInfo extends GroupInvite {
   groupInfo: GroupInfo
 }

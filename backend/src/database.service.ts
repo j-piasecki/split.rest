@@ -12,6 +12,7 @@ import { getGroupJoinLink } from './database/groups/getGroupJoinLink'
 import { getGroupMemberPermissions } from './database/groups/getGroupMemberPermissions'
 import { getGroupMembers } from './database/groups/getGroupMembers'
 import { getGroupMembersAutocompletions } from './database/groups/getGroupMembersAutocompletions'
+import { getGroupMonthlyStats } from './database/groups/getGroupMonthlyStats'
 import { getGroupSettings } from './database/groups/getGroupSettings'
 import { getGroupSplits } from './database/groups/getGroupSplits'
 import { getMemberInfo } from './database/groups/getMemberInfo'
@@ -72,6 +73,7 @@ import {
   GetGroupMemberInfoArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupMonthlyStatsArguments,
   GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
@@ -395,5 +397,10 @@ export class DatabaseService {
   @RequirePermissions(['manageAllowedSplitMethods'])
   async setGroupAllowedSplitMethods(callerId: string, args: SetAllowedSplitMethodsArguments) {
     return await setGroupAllowedSplitMethods(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['beGroupMember'])
+  async getGroupMonthlyStats(callerId: string, args: GetGroupMonthlyStatsArguments) {
+    return await getGroupMonthlyStats(this.pool, callerId, args)
   }
 }
