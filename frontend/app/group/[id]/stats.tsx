@@ -1,6 +1,7 @@
 import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
+import { Text } from '@components/Text'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMonthlyStats } from '@hooks/database/useGroupMonthlyStats'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
@@ -10,7 +11,6 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 import { CurrencyUtils, GroupMonthlyStats, GroupUserInfo } from 'shared'
-import { Text } from '@components/Text'
 
 function GroupDetails({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
@@ -94,8 +94,7 @@ function GroupDetails({ info }: { info: GroupUserInfo | undefined }) {
   )
 }
 
-
-function Stats({ info, monthlyStats }: { info: GroupUserInfo, monthlyStats: GroupMonthlyStats }) {
+function Stats({ info, monthlyStats }: { info: GroupUserInfo; monthlyStats: GroupMonthlyStats }) {
   const theme = useTheme()
   const insets = useModalScreenInsets()
 
@@ -114,11 +113,11 @@ function Stats({ info, monthlyStats }: { info: GroupUserInfo, monthlyStats: Grou
       }}
     >
       <View style={{ gap: 16 }}>
-        <GroupDetails info={info} />     
+        <GroupDetails info={info} />
 
-        <Text style={{color: theme.colors.onSurface, fontSize: 18}}>
-          {JSON.stringify(monthlyStats)}  
-        </Text>   
+        <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
+          {JSON.stringify(monthlyStats)}
+        </Text>
       </View>
     </ScrollView>
   )

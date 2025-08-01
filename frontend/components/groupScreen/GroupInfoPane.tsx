@@ -65,7 +65,8 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
             paddingBottom: !info?.locked ? 16 : undefined,
             borderRadius: 4,
           },
-          !threeBarLayout && !info?.locked && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
+          !threeBarLayout &&
+            !info?.locked && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
         ]}
       >
         <TitleWithBalance info={info} />
@@ -80,8 +81,7 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
               paddingVertical: 12,
               borderRadius: 4,
             },
-            !threeBarLayout &&
-              { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
+            !threeBarLayout && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
           ]}
         >
           <View>
