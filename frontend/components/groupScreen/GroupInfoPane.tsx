@@ -10,9 +10,9 @@ import { useAuth } from '@utils/auth'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { useRouter } from 'expo-router'
-import React, { useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Platform, View } from 'react-native'
+import { View } from 'react-native'
 import { CurrencyUtils } from 'shared'
 import { GroupUserInfo } from 'shared'
 
@@ -26,7 +26,6 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
   const router = useRouter()
   const hasSettingsAccess = useHasSettingsAccess(info)
   const threeBarLayout = useThreeBarLayout()
-  const [collapsed, setCollapsed] = useState(!threeBarLayout)
   const { t } = useTranslation()
 
   return (
@@ -46,13 +45,13 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
                 onPress={() => router.navigate(`/group/${info?.id}/settings`)}
               />
             )}
-            {!threeBarLayout && (
-              <RoundIconButton
-                icon={collapsed ? 'arrowDown' : 'arrowUp'}
-                color={theme.colors.secondary}
-                onPress={() => setCollapsed(!collapsed)}
-              />
-            )}
+            <RoundIconButton
+              icon={'barChartAlt'}
+              color={theme.colors.secondary}
+              onPress={() => {
+                router.navigate(`/group/${info?.id}/stats`)
+              }}
+            />
           </View>
         }
       />
@@ -63,10 +62,10 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
             backgroundColor: theme.colors.surfaceContainer,
             paddingHorizontal: 16,
             paddingVertical: 8,
-            paddingBottom: collapsed && !info?.locked ? 16 : undefined,
+            paddingBottom: !info?.locked ? 16 : undefined,
             borderRadius: 4,
           },
-          collapsed && !info?.locked && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
+          !threeBarLayout && !info?.locked && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
         ]}
       >
         <TitleWithBalance info={info} />
@@ -82,7 +81,7 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
               borderRadius: 4,
             },
             !threeBarLayout &&
-              collapsed && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
+              { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
           ]}
         >
           <View>
@@ -103,31 +102,6 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
               {t('groupInfo.groupLockedDescription')}
             </Text>
           </View>
-        </View>
-      )}
-
-      {!collapsed && (
-        <View
-          style={[
-            {
-              backgroundColor: theme.colors.surfaceContainer,
-              paddingHorizontal: 16,
-              paddingVertical: 8,
-              borderRadius: 4,
-              paddingBottom: threeBarLayout ? undefined : 16,
-            },
-            (!threeBarLayout || (info?.locked && Number(info.balance) === 0)) && {
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            },
-            Platform.OS === 'web' &&
-              info?.locked &&
-              Number(info.balance) === 0 && {
-                flexGrow: 1,
-              },
-          ]}
-        >
-          <GroupDetails info={info} />
         </View>
       )}
 
@@ -184,88 +158,6 @@ function TitleWithBalance({ info }: { info: GroupUserInfo | undefined }) {
             </Text>
           )}
         </ShimmerPlaceholder>
-      </View>
-    </>
-  )
-}
-
-function GroupDetails({ info }: { info: GroupUserInfo | undefined }) {
-  const theme = useTheme()
-  const { t } = useTranslation()
-
-  return (
-    <>
-      <View
-        style={{
-          justifyContent: 'center',
-          gap: 12,
-        }}
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <View style={{ width: 24, alignItems: 'center' }}>
-            <Icon name='members' size={20} color={theme.colors.secondary} />
-          </View>
-          <ShimmerPlaceholder
-            argument={info}
-            style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}
-            shimmerStyle={{ height: 24 }}
-          >
-            {(info) => (
-              <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
-                {t('groupInfo.numberOfMembers', { count: info.memberCount })}
-              </Text>
-            )}
-          </ShimmerPlaceholder>
-        </View>
-
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <View style={{ width: 24, alignItems: 'center' }}>
-            <Icon name='money' size={20} color={theme.colors.secondary} />
-          </View>
-          <ShimmerPlaceholder
-            argument={info}
-            style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}
-            shimmerStyle={{ height: 24 }}
-          >
-            {(info) => (
-              <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
-                {t('groupInfo.totalTransactionsValue', {
-                  value: CurrencyUtils.format(info.total, info.currency),
-                })}
-              </Text>
-            )}
-          </ShimmerPlaceholder>
-        </View>
-
-        {info && (
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            {!info.hasAccess ? (
-              <>
-                <View style={{ width: 24, alignItems: 'center' }}>
-                  <Icon name={'lock'} size={20} color={theme.colors.error} />
-                </View>
-                <Text
-                  style={{
-                    color: theme.colors.error,
-                    fontSize: 18,
-                    flex: 1,
-                  }}
-                >
-                  {t('groupInfo.noAccessToGroup')}
-                </Text>
-              </>
-            ) : info.isAdmin ? (
-              <>
-                <View style={{ width: 24, alignItems: 'center' }}>
-                  <Icon name='shield' size={20} color={theme.colors.secondary} />
-                </View>
-                <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
-                  {t('groupInfo.youAreAdmin')}
-                </Text>
-              </>
-            ) : null}
-          </View>
-        )}
       </View>
     </>
   )

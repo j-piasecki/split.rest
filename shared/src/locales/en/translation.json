@@ -255,6 +255,7 @@
     "addSplit":"Add split",
     "settleUp": "Settle up",
     "filter": "Filter splits",
+    "groupStats": "Group statistics",
 
     "groupSettings": {
       "index": "Settings",
