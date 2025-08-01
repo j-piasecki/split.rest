@@ -6300,6 +6300,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^8.0.0
     "@typescript-eslint/parser": ^8.0.0
     currency.js: ^2.0.4
+    dayjs: ^1.11.13
     eslint: ^8.0.0
     eslint-config-prettier: ^9.0.0
     eslint-plugin-prettier: ^5.0.0
@@ -7345,6 +7346,13 @@ __metadata:
   version: 4.1.0
   resolution: "date-fns@npm:4.1.0"
   checksum: fb681b242cccabed45494468f64282a7d375ea970e0adbcc5dcc92dcb7aba49b2081c2c9739d41bf71ce89ed68dd73bebfe06ca35129490704775d091895710b
+  languageName: node
+  linkType: hard
+
+"dayjs@npm:^1.11.13":
+  version: 1.11.13
+  resolution: "dayjs@npm:1.11.13"
+  checksum: f388db88a6aa93956c1f6121644e783391c7b738b73dbc54485578736565c8931bdfba4bb94e9b1535c6e509c97d5deb918bbe1ae6b34358d994de735055cca9
   languageName: node
   linkType: hard
 
@@ -9466,6 +9474,7 @@ __metadata:
     babel-plugin-react-compiler: ^19.0.0-beta-b2e8e9c-20241220
     currency.js: ^2.0.4
     date-fns: ^4.1.0
+    dayjs: ^1.11.13
     eslint: ^8.57.0
     eslint-config-expo: ~9.2.0
     eslint-import-resolver-typescript: ^4.4.2
