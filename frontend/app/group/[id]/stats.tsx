@@ -1,5 +1,6 @@
 import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
+import { Pane } from '@components/Pane'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
@@ -17,7 +18,15 @@ function GroupDetails({ info }: { info: GroupUserInfo | undefined }) {
   const { t } = useTranslation()
 
   return (
-    <>
+    <Pane
+      title={t('groupStats.infoHeader')}
+      textLocation='start'
+      icon='group'
+      containerStyle={{
+        padding: 16,
+        paddingTop: 12,
+      }}
+    >
       <View
         style={{
           justifyContent: 'center',
@@ -90,7 +99,7 @@ function GroupDetails({ info }: { info: GroupUserInfo | undefined }) {
           </View>
         )}
       </View>
-    </>
+    </Pane>
   )
 }
 

@@ -408,6 +408,10 @@
     }
   },
 
+  "groupStats": {
+    "infoHeader": "General information"
+  },
+
   "inviteMember": {
     "findByEmail": "Find by e-mail",
     "emailIsTooLong": "E-mail is too long",
