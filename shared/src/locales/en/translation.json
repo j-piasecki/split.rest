@@ -409,7 +409,8 @@
   },
 
   "groupStats": {
-    "infoHeader": "General information"
+    "infoHeader": "General information",
+    "statisticsHeader": "Statistics"
   },
 
   "inviteMember": {
@@ -584,6 +585,20 @@
       "october": "October",
       "november": "November",
       "december": "December"
+    },
+    "monthShort": {
+      "january": "Jan",
+      "february": "Feb",
+      "march": "Mar",
+      "april": "Apr",
+      "may": "May",
+      "june": "Jun",
+      "july": "Jul",
+      "august": "Aug",
+      "september": "Sep",
+      "october": "Oct",
+      "november": "Nov",
+      "december": "Dec"
     }
   },
 
