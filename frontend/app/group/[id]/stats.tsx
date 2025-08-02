@@ -11,7 +11,7 @@ import dayjs from 'dayjs'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Platform, ScrollView, View } from 'react-native'
+import { Platform, RefreshControl, ScrollView, View } from 'react-native'
 import { CurrencyUtils, GroupUserInfo } from 'shared'
 
 const Months = [
@@ -41,6 +41,11 @@ interface MonthStats {
 }
 
 interface GroupStatistics {
+  state: {
+    isLoading: boolean
+    isRefetching: boolean
+    refetch: () => void
+  }
   monthlyStatistics: MonthStats[]
   thisYearTotal: number
   thisYearAverage: number
@@ -49,7 +54,7 @@ interface GroupStatistics {
 }
 
 function useGroupStatistics(id: number): GroupStatistics | null {
-  const { data: monthlyStats } = useGroupMonthlyStats(id)
+  const { data: monthlyStats, isLoading, isRefetching, refetch } = useGroupMonthlyStats(id)
 
   const stats: MonthStats[] = useMemo(() => {
     if (!monthlyStats) {
@@ -109,6 +114,11 @@ function useGroupStatistics(id: number): GroupStatistics | null {
     lastYearMonthsWithStats.length > 0 ? lastYearTotal / lastYearMonthsWithStats.length : 0
 
   return {
+    state: {
+      isLoading,
+      isRefetching,
+      refetch,
+    },
     monthlyStatistics: stats,
     thisYearTotal,
     thisYearAverage,
@@ -701,6 +711,12 @@ function Stats({ info, statistics }: { info: GroupUserInfo; statistics: GroupSta
     <ScrollView
       style={{ flex: 1 }}
       keyboardShouldPersistTaps='handled'
+      refreshControl={
+        <RefreshControl
+          refreshing={statistics.state.isRefetching}
+          onRefresh={statistics.state.refetch}
+        />
+      }
       contentContainerStyle={{
         gap: 16,
         flexGrow: 1,
