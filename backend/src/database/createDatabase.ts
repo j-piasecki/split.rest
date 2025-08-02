@@ -176,4 +176,16 @@ export async function createDatabase(pool: Pool) {
       FOREIGN KEY (group_id) REFERENCES groups(id)
     )
   `)
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS group_monthly_stats(
+      group_id INTEGER NOT NULL,
+      start_timestamp BIGINT NOT NULL,
+      total_value DECIMAL(10, 2) NOT NULL DEFAULT 0,
+      transaction_count INTEGER NOT NULL DEFAULT 0,
+
+      PRIMARY KEY(group_id, start_timestamp),
+      FOREIGN KEY (group_id) REFERENCES groups(id)
+    )
+  `)
 }

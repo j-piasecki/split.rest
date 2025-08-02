@@ -258,3 +258,7 @@ export interface SetAllowedSplitMethodsArguments {
   groupId: number
   allowedSplitMethods: SplitMethod[]
 }
+
+export interface GetGroupMonthlyStatsArguments {
+  groupId: number
+}

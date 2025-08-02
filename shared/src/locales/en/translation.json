@@ -255,6 +255,7 @@
     "addSplit":"Add split",
     "settleUp": "Settle up",
     "filter": "Filter splits",
+    "groupStats": "Group statistics",
 
     "groupSettings": {
       "index": "Settings",
@@ -407,6 +408,19 @@
     }
   },
 
+  "groupStats": {
+    "infoHeader": "General information",
+    "statisticsHeader": "Statistics",
+    "numberOfMembers": "{{count}} members",
+    "totalTransactionsValue": "Value of all transactions: {{value}}",
+    "thisYearTotal": "This year: {{value}}",
+    "lastYearTotal": "Last year: {{value}}",
+    "thisYearAverage": "Monthly average this year: {{value}}",
+    "lastYearAverage": "Monthly average last year: {{value}}",
+    "expensesThisYear": "Expenses: {{value}}",
+    "expensesLastYear": "Expenses in {{year}}: {{value}}"
+  },
+
   "inviteMember": {
     "findByEmail": "Find by e-mail",
     "emailIsTooLong": "E-mail is too long",
@@ -498,11 +512,9 @@
   "groupInfo": {
     "couldNotLoad": "Couldn't load group info",
     "yourBalance": "Your balance:",
-    "numberOfMembers": "{{count}} members", 
     "accessToGroup": "You have access to this group",
     "noAccessToGroup": "You don't have access to this group",
     "youAreAdmin": "You are a moderator of this group",
-    "totalTransactionsValue": "Value of all transactions: {{value}}",
     "inviteMember": "Invite member",
     "roulette": "Roulette",
     "addSplit": "Add split",
@@ -579,6 +591,20 @@
       "october": "October",
       "november": "November",
       "december": "December"
+    },
+    "monthShort": {
+      "january": "Jan",
+      "february": "Feb",
+      "march": "Mar",
+      "april": "Apr",
+      "may": "May",
+      "june": "Jun",
+      "july": "Jul",
+      "august": "Aug",
+      "september": "Sep",
+      "october": "Oct",
+      "november": "Nov",
+      "december": "Dec"
     }
   },
 

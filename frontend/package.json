@@ -31,6 +31,7 @@
     "babel-plugin-react-compiler": "^19.0.0-beta-b2e8e9c-20241220",
     "currency.js": "^2.0.4",
     "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
     "eslint-plugin-react-compiler": "^19.0.0-beta-b2e8e9c-20241220",
     "expo": "^53.0.20",
     "expo-apple-authentication": "~7.2.4",

@@ -3,6 +3,7 @@ import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isGroupLocked } from '../utils/isGroupLocked'
 import { splitExists } from '../utils/splitExists'
+import { unsafeUpdateMonthlyStats } from '../utils/unsafeUpdateMonthlyStats'
 import { Pool } from 'pg'
 import { DeleteSplitArguments, isSettleUpSplit } from 'shared'
 
@@ -25,8 +26,14 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
     }
 
     const splitInfo = (
-      await client.query<{ paid_by: string; created_by: string; total: string; type: number }>(
-        'SELECT paid_by, created_by, total, type FROM splits WHERE group_id = $1 AND id = $2',
+      await client.query<{
+        paid_by: string
+        created_by: string
+        total: string
+        type: number
+        timestamp: string
+      }>(
+        'SELECT paid_by, created_by, total, type, timestamp FROM splits WHERE group_id = $1 AND id = $2',
         [args.groupId, args.splitId]
       )
     ).rows[0]
@@ -50,6 +57,12 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
       Date.now(),
       args.groupId,
     ])
+
+    await unsafeUpdateMonthlyStats(client, args.groupId, {
+      type: 'deleteSplit',
+      total: splitInfo.total,
+      timestamp: Number(splitInfo.timestamp),
+    })
 
     await client.query(
       'UPDATE splits SET deleted = TRUE, deleted_by = $1, deleted_at = $2 WHERE group_id = $3 AND id = $4',

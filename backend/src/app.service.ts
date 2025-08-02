@@ -23,6 +23,7 @@ import {
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupMonthlyStatsArguments,
   GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
@@ -314,5 +315,9 @@ export class AppService {
 
   async setGroupAllowedSplitMethods(callerId: string, args: SetAllowedSplitMethodsArguments) {
     return await this.databaseService.setGroupAllowedSplitMethods(callerId, args)
+  }
+
+  async getGroupMonthlyStats(callerId: string, args: GetGroupMonthlyStatsArguments) {
+    return await this.databaseService.getGroupMonthlyStats(callerId, args)
   }
 }

@@ -4,6 +4,7 @@ import NotificationUtils from '../../notifications/NotificationUtils'
 import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isGroupLocked } from '../utils/isGroupLocked'
+import { unsafeUpdateMonthlyStats } from '../utils/unsafeUpdateMonthlyStats'
 import { userExists } from '../utils/userExists'
 import {
   validateDelayedSplitArgs,
@@ -80,6 +81,14 @@ export async function createSplitNoTransaction(
     Date.now(),
     args.groupId,
   ])
+
+  if (!isSettleUpSplit(args.type)) {
+    await unsafeUpdateMonthlyStats(client, args.groupId, {
+      type: 'createSplit',
+      total: args.total,
+      timestamp: args.timestamp,
+    })
+  }
 
   return splitId
 }

@@ -22,6 +22,7 @@ import {
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupMonthlyStatsArguments,
   GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
@@ -72,6 +73,7 @@ import {
   isGetGroupMemberPermissionsArguments,
   isGetGroupMembersArguments,
   isGetGroupMembersAutocompletionsArguments,
+  isGetGroupMonthlyStatsArguments,
   isGetGroupSettingsArguments,
   isGetGroupSplitsArguments,
   isGetSplitHistoryArguments,
@@ -740,5 +742,18 @@ export class AppController {
     }
 
     return await this.appService.setGroupAllowedSplitMethods(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getGroupMonthlyStats')
+  async getGroupMonthlyStats(
+    @Req() request: Request,
+    @Query() args: Partial<GetGroupMonthlyStatsArguments>
+  ) {
+    if (!isGetGroupMonthlyStatsArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.getGroupMonthlyStats(request.user.sub, args)
   }
 }

@@ -17,6 +17,7 @@ import {
   GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
+  GetGroupMonthlyStatsArguments,
   GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
@@ -278,4 +279,8 @@ export function isSetAllowedSplitMethodsArguments(
   obj: any
 ): obj is SetAllowedSplitMethodsArguments {
   return obj.groupId !== undefined && obj.allowedSplitMethods !== undefined
+}
+
+export function isGetGroupMonthlyStatsArguments(obj: any): obj is GetGroupMonthlyStatsArguments {
+  return obj.groupId !== undefined
 }
