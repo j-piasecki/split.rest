@@ -1,11 +1,11 @@
-import firebaseAnalytics from '@react-native-firebase/analytics'
-import firebaseAuth from '@react-native-firebase/auth'
-import firebaseCrashlytics from '@react-native-firebase/crashlytics'
+import { getAnalytics } from '@react-native-firebase/analytics'
+import { getAuth } from '@react-native-firebase/auth'
+import { getCrashlytics } from '@react-native-firebase/crashlytics'
 
-export const authObj = firebaseAuth
-export const auth = firebaseAuth()
-export const crashlytics = firebaseCrashlytics()
-const analytics = firebaseAnalytics()
+export const authObj = getAuth()
+export const auth = getAuth()
+export const crashlytics = getCrashlytics()
+const analytics = getAnalytics()
 
 export function logScreenView(screenName: string, screenClass: string) {
   analytics.logScreenView({

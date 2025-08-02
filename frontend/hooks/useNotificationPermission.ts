@@ -1,5 +1,5 @@
 import { registerOrUpdateNotificationToken } from '@database/registerOrUpdateNotificationToken'
-import messaging from '@react-native-firebase/messaging'
+import { AuthorizationStatus, getMessaging } from '@react-native-firebase/messaging'
 import { auth } from '@utils/firebase'
 import * as Notifications from 'expo-notifications'
 import { useEffect } from 'react'
@@ -9,23 +9,25 @@ import { AndroidNotificationChannel } from 'shared'
 
 async function requestPermissionAndGetToken(): Promise<string | null> {
   if (Platform.OS === 'ios') {
-    const authStatus = await messaging().requestPermission()
+    const messaging = getMessaging()
+    const authStatus = await messaging.requestPermission()
     const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL
+      authStatus === AuthorizationStatus.AUTHORIZED ||
+      authStatus === AuthorizationStatus.PROVISIONAL
 
     if (enabled) {
-      await messaging().registerDeviceForRemoteMessages()
-      return await messaging().getToken()
+      await messaging.registerDeviceForRemoteMessages()
+      return await messaging.getToken()
     }
   } else if (Platform.OS === 'android') {
+    const messaging = getMessaging()
     const status = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
     )
 
     if (status === 'granted') {
-      await messaging().registerDeviceForRemoteMessages()
-      return await messaging().getToken()
+      await messaging.registerDeviceForRemoteMessages()
+      return await messaging.getToken()
     }
   }
 

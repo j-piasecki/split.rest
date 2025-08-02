@@ -1,4 +1,4 @@
-import { auth, authObj } from './firebase'
+import { auth } from './firebase'
 import { queryClient } from './queryClient'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
@@ -7,7 +7,7 @@ import { unregisterNotificationToken } from '@database/unregisterNotificationTok
 import { useUserById } from '@hooks/database/useUserById'
 import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication'
 import { FirebaseAuthTypes, firebase } from '@react-native-firebase/auth'
-import messaging from '@react-native-firebase/messaging'
+import { getMessaging } from '@react-native-firebase/messaging'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { router, usePathname, useRouter } from 'expo-router'
 import { t } from 'i18next'
@@ -47,10 +47,10 @@ async function tryToCreateUser(createUserRetries = 5) {
 }
 
 async function unregisterNotifications() {
-  const token = await messaging().getToken()
+  const token = await getMessaging().getToken()
   await unregisterNotificationToken(token)
-  await messaging().deleteToken()
-  await messaging().unregisterDeviceForRemoteMessages()
+  await getMessaging().deleteToken()
+  await getMessaging().unregisterDeviceForRemoteMessages()
 }
 
 export function useAuth(redirectToIndex = true) {
@@ -181,7 +181,7 @@ async function getGoogleCredential() {
   }
 
   // Create a Google credential with the token
-  const googleCredential = authObj.GoogleAuthProvider.credential(idToken)
+  const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken)
 
   return googleCredential
 }
