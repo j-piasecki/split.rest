@@ -47,10 +47,10 @@ interface GroupStatistics {
     refetch: () => void
   }
   monthlyStatistics: MonthStats[]
-  thisYearTotal: number
-  thisYearAverage: number
-  lastYearTotal: number
-  lastYearAverage: number
+  this12MonthPeriodTotal: number
+  this12MonthPeriodAverage: number
+  last12MonthPeriodTotal: number
+  last12MonthPeriodAverage: number
 }
 
 function useGroupStatistics(id: number): GroupStatistics | null {
@@ -96,22 +96,35 @@ function useGroupStatistics(id: number): GroupStatistics | null {
     return null
   }
 
-  const thisYearTotal = monthlyStats.stats
-    .filter((stat) => dayjs(stat.startTimestamp).year() === dayjs().year())
+  const this12MonthPeriodTotal = monthlyStats.stats
+    .filter((stat) => {
+      const month = dayjs(stat.startTimestamp).month()
+      const year = dayjs(stat.startTimestamp).year()
+      const currentYear = month > dayjs().month() ? year - 1 : year
+      return year === currentYear
+    })
     .reduce((acc, stat) => acc + Number(stat.totalValue), 0)
   const monthsWithStats = monthlyStats.stats.filter(
     (stat) => dayjs(stat.startTimestamp).year() === dayjs().year()
   )
-  const thisYearAverage = monthsWithStats.length > 0 ? thisYearTotal / monthsWithStats.length : 0
+  const this12MonthPeriodAverage =
+    monthsWithStats.length > 0 ? this12MonthPeriodTotal / monthsWithStats.length : 0
 
-  const lastYearTotal = monthlyStats.stats
-    .filter((stat) => dayjs(stat.startTimestamp).year() === dayjs().year() - 1)
+  const last12MonthPeriodTotal = monthlyStats.stats
+    .filter((stat) => {
+      const month = dayjs(stat.startTimestamp).month()
+      const year = dayjs(stat.startTimestamp).year()
+      const lastYear = month > dayjs().month() ? year - 2 : year - 1
+      return year === lastYear
+    })
     .reduce((acc, stat) => acc + Number(stat.totalValue), 0)
-  const lastYearMonthsWithStats = monthlyStats.stats.filter(
+  const last12MonthPeriodMonthsWithStats = monthlyStats.stats.filter(
     (stat) => dayjs(stat.startTimestamp).year() === dayjs().year() - 1
   )
-  const lastYearAverage =
-    lastYearMonthsWithStats.length > 0 ? lastYearTotal / lastYearMonthsWithStats.length : 0
+  const last12MonthPeriodAverage =
+    last12MonthPeriodMonthsWithStats.length > 0
+      ? last12MonthPeriodTotal / last12MonthPeriodMonthsWithStats.length
+      : 0
 
   return {
     state: {
@@ -120,10 +133,10 @@ function useGroupStatistics(id: number): GroupStatistics | null {
       refetch,
     },
     monthlyStatistics: stats,
-    thisYearTotal,
-    thisYearAverage,
-    lastYearTotal,
-    lastYearAverage,
+    this12MonthPeriodTotal,
+    this12MonthPeriodAverage,
+    last12MonthPeriodTotal,
+    last12MonthPeriodAverage,
   }
 }
 
@@ -160,22 +173,22 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
           <View style={{ width: 24, alignItems: 'center', marginTop: 2 }}>
             <Icon name='money' size={20} color={theme.colors.secondary} />
           </View>
-          <View style={{ gap: 4 }}>
-            <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
+          <View style={{ gap: 4, flex: 1 }}>
+            <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
               {t('groupStats.totalTransactionsValue', {
                 value: CurrencyUtils.format(info.total, info.currency),
               })}
             </Text>
 
-            <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
-              {t('groupStats.lastYearTotal', {
-                value: CurrencyUtils.format(statistics.lastYearTotal, info.currency),
+            <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
+              {t('groupStats.this12MonthPeriodTotal', {
+                value: CurrencyUtils.format(statistics.this12MonthPeriodTotal, info.currency),
               })}
             </Text>
 
-            <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
-              {t('groupStats.thisYearTotal', {
-                value: CurrencyUtils.format(statistics.thisYearTotal, info.currency),
+            <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
+              {t('groupStats.last12MonthPeriodTotal', {
+                value: CurrencyUtils.format(statistics.last12MonthPeriodTotal, info.currency),
               })}
             </Text>
           </View>
@@ -185,16 +198,16 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
           <View style={{ width: 24, alignItems: 'center', marginTop: 2 }}>
             <Icon name='average' size={20} color={theme.colors.secondary} />
           </View>
-          <View style={{ gap: 4 }}>
-            <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
-              {t('groupStats.lastYearAverage', {
-                value: CurrencyUtils.format(statistics.lastYearAverage, info.currency),
+          <View style={{ gap: 4, flex: 1 }}>
+            <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
+              {t('groupStats.this12MonthPeriodAverage', {
+                value: CurrencyUtils.format(statistics.this12MonthPeriodAverage, info.currency),
               })}
             </Text>
 
-            <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
-              {t('groupStats.thisYearAverage', {
-                value: CurrencyUtils.format(statistics.thisYearAverage, info.currency),
+            <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
+              {t('groupStats.last12MonthPeriodAverage', {
+                value: CurrencyUtils.format(statistics.last12MonthPeriodAverage, info.currency),
               })}
             </Text>
           </View>
@@ -288,20 +301,22 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
             position: 'absolute',
             left: 0,
             right: 0,
-            bottom: (statistics.thisYearAverage / maxValue) * maxBarHeight,
+            bottom: (statistics.this12MonthPeriodAverage / maxValue) * maxBarHeight,
           }}
         />
-        <View
-          style={{
-            borderColor: previousColor,
-            borderStyle: 'dashed',
-            borderWidth: 1,
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: (statistics.lastYearAverage / maxValue) * maxBarHeight,
-          }}
-        />
+        {statistics.last12MonthPeriodAverage > 0 && (
+          <View
+            style={{
+              borderColor: previousColor,
+              borderStyle: 'dashed',
+              borderWidth: 1,
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: (statistics.last12MonthPeriodAverage / maxValue) * maxBarHeight,
+            }}
+          />
+        )}
 
         <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
         <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
