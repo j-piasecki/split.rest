@@ -18,7 +18,6 @@ import {
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMonthlyStatsArguments,
-  GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -268,10 +267,6 @@ export function isSettleUpGroupArguments(obj: any): obj is SettleUpGroupArgument
 export function isResolveAllDelayedSplitsAtOnceArguments(
   obj: any
 ): obj is ResolveAllDelayedSplitsAtOnceArguments {
-  return obj.groupId !== undefined
-}
-
-export function isGetGroupSettingsArguments(obj: any): obj is GetGroupSettingsArguments {
   return obj.groupId !== undefined
 }
 

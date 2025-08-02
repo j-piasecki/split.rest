@@ -24,7 +24,6 @@ import {
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMonthlyStatsArguments,
-  GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -307,10 +306,6 @@ export class AppService {
     args: ResolveAllDelayedSplitsAtOnceArguments
   ) {
     return await this.databaseService.resolveAllDelayedSplitsAtOnce(callerId, args)
-  }
-
-  async getGroupSettings(callerId: string, args: GetGroupSettingsArguments) {
-    return await this.databaseService.getGroupSettings(callerId, args)
   }
 
   async setGroupAllowedSplitMethods(callerId: string, args: SetAllowedSplitMethodsArguments) {

@@ -23,7 +23,6 @@ import {
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMonthlyStatsArguments,
-  GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -74,7 +73,6 @@ import {
   isGetGroupMembersArguments,
   isGetGroupMembersAutocompletionsArguments,
   isGetGroupMonthlyStatsArguments,
-  isGetGroupSettingsArguments,
   isGetGroupSplitsArguments,
   isGetSplitHistoryArguments,
   isGetSplitInfoArguments,
@@ -716,19 +714,6 @@ export class AppController {
     }
 
     return await this.appService.resolveAllDelayedSplitsAtOnce(request.user.sub, args)
-  }
-
-  @UseGuards(AuthGuard)
-  @Get('getGroupSettings')
-  async getGroupSettings(
-    @Req() request: Request,
-    @Query() args: Partial<GetGroupSettingsArguments>
-  ) {
-    if (!isGetGroupSettingsArguments(args)) {
-      throw new BadRequestException('api.invalidArguments')
-    }
-
-    return await this.appService.getGroupSettings(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

@@ -13,7 +13,6 @@ import { getGroupMemberPermissions } from './database/groups/getGroupMemberPermi
 import { getGroupMembers } from './database/groups/getGroupMembers'
 import { getGroupMembersAutocompletions } from './database/groups/getGroupMembersAutocompletions'
 import { getGroupMonthlyStats } from './database/groups/getGroupMonthlyStats'
-import { getGroupSettings } from './database/groups/getGroupSettings'
 import { getGroupSplits } from './database/groups/getGroupSplits'
 import { getMemberInfo } from './database/groups/getMemberInfo'
 import { getSplitParticipantsSuggestions } from './database/groups/getSplitParticipantsSuggestions'
@@ -74,7 +73,6 @@ import {
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMonthlyStatsArguments,
-  GetGroupSettingsArguments,
   GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
@@ -387,11 +385,6 @@ export class DatabaseService {
     args: ResolveAllDelayedSplitsAtOnceArguments
   ) {
     return await resolveAllDelayedSplits(this.pool, callerId, args)
-  }
-
-  @RequirePermissions(['beGroupMember'])
-  async getGroupSettings(callerId: string, args: GetGroupSettingsArguments) {
-    return await getGroupSettings(this.pool, callerId, args)
   }
 
   @RequirePermissions(['manageAllowedSplitMethods'])

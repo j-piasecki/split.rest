@@ -250,10 +250,6 @@ export interface ResolveAllDelayedSplitsAtOnceArguments {
   resolutionMethod: DelayedSplitResolutionMethod
 }
 
-export interface GetGroupSettingsArguments {
-  groupId: number
-}
-
 export interface SetAllowedSplitMethodsArguments {
   groupId: number
   allowedSplitMethods: SplitMethod[]
