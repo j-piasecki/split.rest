@@ -413,8 +413,23 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
         })}
       </ScrollView>
 
-      <View style={{ position: 'absolute', top: 12, left: 12, right: 12 }}>
-        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 14, fontWeight: 600 }}>
+      <View
+        style={{ position: 'absolute', top: 12 + graphContainerTopPadding, left: 12, right: 12 }}
+      >
+        <Text
+          style={{
+            position: 'absolute',
+            left: 0,
+            bottom: 1,
+            color: theme.colors.onSurfaceVariant,
+            fontSize: 14,
+            fontWeight: 600,
+            paddingHorizontal: 4,
+            paddingVertical: 2,
+            borderRadius: 4,
+            backgroundColor: `${theme.colors.surfaceContainer}B0`,
+          }}
+        >
           {CurrencyUtils.format(maxValue, info.currency)}
         </Text>
       </View>
@@ -437,11 +452,14 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
             style={{
               position: 'absolute',
               left: 0,
-              right: 0,
-              bottom: 2,
+              bottom: 1,
               color: theme.colors.onSurfaceVariant,
               fontSize: 14,
               fontWeight: 600,
+              paddingHorizontal: 4,
+              paddingVertical: 2,
+              borderRadius: 4,
+              backgroundColor: `${theme.colors.surfaceContainer}B0`,
             }}
           >
             {CurrencyUtils.format((maxValue * 4) / 5, info.currency)}
@@ -452,11 +470,14 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
             style={{
               position: 'absolute',
               left: 0,
-              right: 0,
-              bottom: 2,
+              bottom: 1,
               color: theme.colors.onSurfaceVariant,
               fontSize: 14,
               fontWeight: 600,
+              paddingHorizontal: 4,
+              paddingVertical: 2,
+              borderRadius: 4,
+              backgroundColor: `${theme.colors.surfaceContainer}B0`,
             }}
           >
             {CurrencyUtils.format((maxValue * 3) / 5, info.currency)}
@@ -467,11 +488,14 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
             style={{
               position: 'absolute',
               left: 0,
-              right: 0,
-              bottom: 2,
+              bottom: 1,
               color: theme.colors.onSurfaceVariant,
               fontSize: 14,
               fontWeight: 600,
+              paddingHorizontal: 4,
+              paddingVertical: 2,
+              borderRadius: 4,
+              backgroundColor: `${theme.colors.surfaceContainer}B0`,
             }}
           >
             {CurrencyUtils.format((maxValue * 2) / 5, info.currency)}
@@ -482,11 +506,14 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
             style={{
               position: 'absolute',
               left: 0,
-              right: 0,
-              bottom: 2,
+              bottom: 1,
               color: theme.colors.onSurfaceVariant,
               fontSize: 14,
               fontWeight: 600,
+              paddingHorizontal: 4,
+              paddingVertical: 2,
+              borderRadius: 4,
+              backgroundColor: `${theme.colors.surfaceContainer}B0`,
             }}
           >
             {CurrencyUtils.format((maxValue * 1) / 5, info.currency)}
@@ -497,11 +524,14 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
             style={{
               position: 'absolute',
               left: 0,
-              right: 0,
-              bottom: 2,
+              bottom: 1,
               color: theme.colors.onSurfaceVariant,
               fontSize: 14,
               fontWeight: 600,
+              paddingHorizontal: 4,
+              paddingVertical: 2,
+              borderRadius: 4,
+              backgroundColor: `${theme.colors.surfaceContainer}B0`,
             }}
           >
             {CurrencyUtils.format(0, info.currency)}
