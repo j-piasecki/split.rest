@@ -24,11 +24,17 @@ import { useAuth } from '@utils/auth'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, LayoutRectangle, Platform, ScrollView, View } from 'react-native'
 import Animated, { LinearTransition } from 'react-native-reanimated'
-import { GroupUserInfo, SplitMethod, TranslatableError, UserWithDisplayName } from 'shared'
+import {
+  CurrencyUtils,
+  GroupUserInfo,
+  SplitMethod,
+  TranslatableError,
+  UserWithDisplayName,
+} from 'shared'
 
 const RouletteAllowedSplitMethods = [
   SplitMethod.Equal,
@@ -79,7 +85,7 @@ function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
     setWaiting(false)
   }
 
-  async function submit() {
+  const submit = useCallback(async () => {
     setError(null)
     const filledUsers = entries.filter((entry) => entry.user !== undefined)
 
@@ -89,7 +95,13 @@ function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
     }
 
     setQuery(filledUsers)
-  }
+  }, [entries, setError, setQuery])
+
+  useEffect(() => {
+    if (entries.length <= 3) {
+      submit()
+    }
+  }, [entries, submit])
 
   return (
     <View
@@ -274,7 +286,9 @@ function Result({ query, groupInfo, setQuery }: ResultProps) {
                     argument={user.change}
                     shimmerStyle={{ width: 64, height: 24 }}
                   >
-                    <Text style={{ fontSize: 18, color: balanceColor }}>{user.change}</Text>
+                    <Text style={{ fontSize: 18, color: balanceColor }}>
+                      {CurrencyUtils.format(balanceNum, groupInfo.currency, true)}
+                    </Text>
                   </ShimmerPlaceholder>
                 </Animated.View>
                 {index !== result.length - 1 && (

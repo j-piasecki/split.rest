@@ -152,10 +152,14 @@ export function SelectablePeoplePicker({
         user: member,
         selected:
           localEntries.some((e) => e.user?.id === member.id && e.selected) ||
-          entries.some((e) => e.user?.id === member.id),
+          entries.some((e) => e.user?.id === member.id) ||
+          members.length <= 3,
         picked: entries.some((e) => e.user?.id === member.id && e.selected),
       }))
       setLocalEntries(newEntries)
+      onEntriesChange(
+        newEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked }))
+      )
     }
 
     if (hasNextPage && !isFetchingNextPage) {
