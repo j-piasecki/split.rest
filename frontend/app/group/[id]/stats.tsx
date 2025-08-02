@@ -266,6 +266,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
     0
   )
 
+  const hasPreviousData = statistics.last12MonthPeriodAverage > 0
   const previousColor =
     theme.theme === 'light' ? theme.colors.primaryContainer : theme.colors.primary
   const currentColor =
@@ -310,7 +311,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
             bottom: (statistics.this12MonthPeriodAverage / maxValue) * maxBarHeight,
           }}
         />
-        {statistics.last12MonthPeriodAverage > 0 && (
+        {hasPreviousData && (
           <View
             style={{
               borderColor: previousColor,
@@ -386,27 +387,31 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
             <View key={stat.monthName} style={{ flex: 1 }}>
               <View style={{ flex: 1, alignSelf: 'stretch', gap: 4 }}>
                 <View style={{ flex: 1 }}>
+                  {hasPreviousData && (
+                    <View
+                      style={{
+                        borderTopLeftRadius: 6,
+                        borderTopRightRadius: 6,
+                        position: 'absolute',
+                        left: '5%',
+                        right: '35%',
+                        bottom: 0,
+                        height: `${(previous12MonthPeriod.totalValue / maxValue) * 100}%`,
+                        backgroundColor: previousColor,
+                        zIndex:
+                          previous12MonthPeriod.totalValue > current12MonthPeriod.totalValue
+                            ? 0
+                            : 1,
+                      }}
+                    />
+                  )}
                   <View
                     style={{
-                      borderTopLeftRadius: 4,
-                      borderTopRightRadius: 4,
+                      borderTopLeftRadius: 6,
+                      borderTopRightRadius: 6,
                       position: 'absolute',
-                      left: 0,
-                      right: '35%',
-                      bottom: 0,
-                      height: `${(previous12MonthPeriod.totalValue / maxValue) * 100}%`,
-                      backgroundColor: previousColor,
-                      zIndex:
-                        previous12MonthPeriod.totalValue > current12MonthPeriod.totalValue ? 0 : 1,
-                    }}
-                  />
-                  <View
-                    style={{
-                      borderTopLeftRadius: 4,
-                      borderTopRightRadius: 4,
-                      position: 'absolute',
-                      left: '35%',
-                      right: 0,
+                      left: hasPreviousData ? '35%' : '17.5%',
+                      right: hasPreviousData ? '5%' : '17.5%',
                       bottom: 0,
                       height: `${(current12MonthPeriod.totalValue / maxValue) * 100}%`,
                       backgroundColor: currentColor,
@@ -560,7 +565,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
         </View>
       </View>
 
-      {statistics.last12MonthPeriodAverage > 0 && (
+      {hasPreviousData && (
         <View
           style={{
             flexDirection: 'row',
