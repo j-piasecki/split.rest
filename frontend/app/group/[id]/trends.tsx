@@ -12,7 +12,7 @@ import dayjs from 'dayjs'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Platform, RefreshControl, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Platform, RefreshControl, ScrollView, View } from 'react-native'
 import { CurrencyUtils, GroupUserInfo } from 'shared'
 
 const Months = [
@@ -857,6 +857,7 @@ function Stats({ info, statistics }: { info: GroupUserInfo; statistics: GroupSta
 }
 
 export default function Settings() {
+  const theme = useTheme()
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()
   const { data: info } = useGroupInfo(Number(id))
@@ -870,6 +871,11 @@ export default function Settings() {
       maxHeight={850}
     >
       {info && statistics && <Stats info={info} statistics={statistics} />}
+      {(!info || !statistics) && (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size='large' color={theme.colors.primary} />
+        </View>
+      )}
     </ModalScreen>
   )
 }
