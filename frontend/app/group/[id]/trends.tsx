@@ -300,6 +300,11 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
           justifyContent: 'space-evenly',
         }}
       >
+        <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
+        <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
+        <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
+        <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
+
         <View
           style={{
             borderColor: currentColor,
@@ -308,7 +313,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
             position: 'absolute',
             left: 0,
             right: 0,
-            bottom: (statistics.this12MonthPeriodAverage / maxValue) * maxBarHeight,
+            bottom: (statistics.this12MonthPeriodAverage / maxValue) * maxBarHeight - 2,
           }}
         />
         {hasPreviousData && (
@@ -320,15 +325,10 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
               position: 'absolute',
               left: 0,
               right: 0,
-              bottom: (statistics.last12MonthPeriodAverage / maxValue) * maxBarHeight,
+              bottom: (statistics.last12MonthPeriodAverage / maxValue) * maxBarHeight - 2,
             }}
           />
         )}
-
-        <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
-        <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
-        <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
-        <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
       </View>
 
       <ScrollView
@@ -467,9 +467,6 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
           left: 12,
           right: 12,
           height: maxBarHeight,
-          borderColor: theme.colors.outlineVariant,
-          borderTopWidth: 1,
-          borderBottomWidth: 1,
           justifyContent: 'space-evenly',
         }}
       >
