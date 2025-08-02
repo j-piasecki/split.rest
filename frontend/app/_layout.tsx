@@ -170,7 +170,7 @@ function Content() {
                     options={{ title: t('screenName.groupSettings.index'), ...modalOptions }}
                   />
                   <Stack.Screen
-                    name='group/[id]/stats'
+                    name='group/[id]/trends'
                     options={{ title: t('screenName.groupStats'), ...modalOptions }}
                   />
                   <Stack.Screen

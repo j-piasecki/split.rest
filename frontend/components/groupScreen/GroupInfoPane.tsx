@@ -49,7 +49,7 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
               icon={'barChartAlt'}
               color={theme.colors.secondary}
               onPress={() => {
-                router.navigate(`/group/${info?.id}/stats`)
+                router.navigate(`/group/${info?.id}/trends`)
               }}
             />
           </View>
