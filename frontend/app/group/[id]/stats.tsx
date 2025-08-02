@@ -6,6 +6,7 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMonthlyStats } from '@hooks/database/useGroupMonthlyStats'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { measure } from '@utils/measure'
 import dayjs from 'dayjs'
 import { useLocalSearchParams } from 'expo-router'
@@ -613,6 +614,7 @@ function MonthSummary({
 }) {
   const theme = useTheme()
   const { t } = useTranslation()
+  const isSmallScreen = useDisplayClass() <= DisplayClass.Small
 
   const currentYear = monthNumber > dayjs().month() ? dayjs().year() - 1 : dayjs().year()
   const current12MonthPeriod = stat.years.get(currentYear) ?? { totalValue: 0, transactionCount: 0 }
@@ -679,56 +681,100 @@ function MonthSummary({
         <Text style={{ color: theme.colors.secondary, fontSize: 22, fontWeight: 700 }}>
           {t(`calendar.month.${stat.monthName}`)}
         </Text>
-
-        <View style={{ flex: 1 }} />
-
-        {changeMonthOverMonth !== 0 && (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Icon
-              name={changeMonthOverMonth > 0 ? 'arrowUp' : 'arrowDown'}
-              size={22}
-              color={changeMoMColor}
-            />
-            <Text style={{ color: changeMoMColor, fontSize: 20, fontWeight: 700 }}>
-              {CurrencyUtils.format(changeMonthOverMonth, info.currency, false)}
-            </Text>
-          </View>
-        )}
       </View>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'flex-end',
-          gap: 12,
-          justifyContent: 'space-between',
-        }}
-      >
-        <View style={{ gap: 4 }}>
+      <View style={{ gap: 12 }}>
+        <View
+          style={
+            !isSmallScreen && {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }
+          }
+        >
           <Text style={{ color: theme.colors.onSurface, fontSize: 20, fontWeight: 700 }}>
             {t('groupStats.expensesThisYear', {
               value: CurrencyUtils.format(current12MonthPeriod.totalValue, info.currency),
             })}
           </Text>
+
+          {(changeMonthOverMonth !== 0 || !isSmallScreen) && (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text
+                style={{
+                  color: theme.colors.onSurface,
+                  fontSize: 17,
+                  fontWeight: 700,
+                  marginRight: 4,
+                }}
+              >
+                {t('groupStats.changeMonthOverMonth')}
+              </Text>
+              <Icon
+                name={
+                  changeMonthOverMonth > 0
+                    ? 'arrowUp'
+                    : changeMonthOverMonth < 0
+                      ? 'arrowDown'
+                      : 'equal'
+                }
+                size={18}
+                color={changeMoMColor}
+              />
+              <Text style={{ color: changeMoMColor, fontSize: 17, fontWeight: 700 }}>
+                {CurrencyUtils.format(changeMonthOverMonth, info.currency, false)}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        <View
+          style={
+            !isSmallScreen && {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }
+          }
+        >
           <Text style={{ color: theme.colors.outline, fontSize: 16, fontWeight: 700 }}>
             {t('groupStats.expensesInYear', {
               year: currentYear - 1,
               value: CurrencyUtils.format(previous12MonthPeriod.totalValue, info.currency),
             })}
           </Text>
+
+          {(changeYearOverYear !== 0 || !isSmallScreen) && (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text
+                style={{
+                  color: theme.colors.outline,
+                  fontSize: 16,
+                  fontWeight: 700,
+                  marginRight: 4,
+                }}
+              >
+                {t('groupStats.changeYearOverYear')}
+              </Text>
+              <Icon
+                name={
+                  changeYearOverYear > 0
+                    ? 'arrowUp'
+                    : changeYearOverYear < 0
+                      ? 'arrowDown'
+                      : 'equal'
+                }
+                size={18}
+                color={changeYoYColor}
+                style={{ opacity: 0.8 }}
+              />
+              <Text style={{ color: changeYoYColor, fontSize: 16, fontWeight: 700, opacity: 0.8 }}>
+                {CurrencyUtils.format(changeYearOverYear, info.currency, false)}
+              </Text>
+            </View>
+          )}
         </View>
-        {changeYearOverYear !== 0 && (
-          <View style={{ flexDirection: 'row', alignItems: 'center', opacity: 0.8 }}>
-            <Icon
-              name={changeYearOverYear > 0 ? 'arrowUp' : 'arrowDown'}
-              size={18}
-              color={changeYoYColor}
-            />
-            <Text style={{ color: changeYoYColor, fontSize: 14, fontWeight: 600 }}>
-              {CurrencyUtils.format(changeYearOverYear, info.currency, false)}
-            </Text>
-          </View>
-        )}
       </View>
     </View>
   )
