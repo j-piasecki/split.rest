@@ -333,7 +333,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
           const width = nativeEvent.layout.width
 
           // if the container is wide enough, we can show entire chart on one screen
-          if (width > 500) {
+          if (width > 600) {
             setContainerWidth(width / 2)
           } else {
             setContainerWidth(width)
