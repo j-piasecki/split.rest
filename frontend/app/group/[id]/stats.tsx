@@ -572,15 +572,6 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <View
-              style={{ width: 16, height: 16, backgroundColor: previousColor, borderRadius: 6 }}
-            />
-            <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
-              {t('groupStats.prior12Months')}
-            </Text>
-          </View>
-
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-            <View
               style={{
                 width: 16,
                 height: 16,
@@ -590,6 +581,15 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
             />
             <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
               {t('groupStats.last12Months')}
+            </Text>
+          </View>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <View
+              style={{ width: 16, height: 16, backgroundColor: previousColor, borderRadius: 6 }}
+            />
+            <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
+              {t('groupStats.prior12Months')}
             </Text>
           </View>
         </View>
@@ -818,8 +818,8 @@ export default function Settings() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.groupStats')}
-      maxWidth={650}
-      maxHeight={800}
+      maxWidth={700}
+      maxHeight={850}
     >
       {info && statistics && <Stats info={info} statistics={statistics} />}
     </ModalScreen>
