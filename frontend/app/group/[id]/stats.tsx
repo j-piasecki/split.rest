@@ -100,7 +100,7 @@ function useGroupStatistics(id: number): GroupStatistics | null {
     .filter((stat) => {
       const month = dayjs(stat.startTimestamp).month()
       const year = dayjs(stat.startTimestamp).year()
-      const currentYear = month > dayjs().month() ? year - 1 : year
+      const currentYear = month > dayjs().month() ? dayjs().year() - 1 : dayjs().year()
       return year === currentYear
     })
     .reduce((acc, stat) => acc + Number(stat.totalValue), 0)
@@ -114,7 +114,7 @@ function useGroupStatistics(id: number): GroupStatistics | null {
     .filter((stat) => {
       const month = dayjs(stat.startTimestamp).month()
       const year = dayjs(stat.startTimestamp).year()
-      const lastYear = month > dayjs().month() ? year - 2 : year - 1
+      const lastYear = month > dayjs().month() ? dayjs().year() - 2 : dayjs().year() - 1
       return year === lastYear
     })
     .reduce((acc, stat) => acc + Number(stat.totalValue), 0)
