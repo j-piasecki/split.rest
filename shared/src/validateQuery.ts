@@ -1,4 +1,4 @@
-import { TranslatableError } from '.'
+import { TranslatableError } from './errors'
 import { SplitQuery } from './types'
 
 const MAX_TITLE_LENGTH = 512
