@@ -22,7 +22,7 @@ export async function getGroupMonthlyStats(
         FROM group_monthly_stats
         WHERE group_id = $1
         ORDER BY start_timestamp DESC
-        LIMIT 24
+        LIMIT 25
       `,
       [args.groupId]
     )

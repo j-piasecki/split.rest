@@ -121,14 +121,10 @@ function GroupDetails({ info }: { info: GroupUserInfo | undefined }) {
 
 interface MonthStats {
   monthName: (typeof Months)[number]
-  currentYear: {
+  years: Map<number, {
     totalValue: number
     transactionCount: number
-  }
-  previousYear: {
-    totalValue: number
-    transactionCount: number
-  }
+  }>
 }
 
 function BarChart({ stats }: { stats: MonthStats[] }) {
@@ -137,7 +133,7 @@ function BarChart({ stats }: { stats: MonthStats[] }) {
   const [width, setWidth] = useState(0)
 
   const maxValue = Math.max(
-    ...stats.map((stat) => Math.max(stat.currentYear.totalValue, stat.previousYear.totalValue))
+    ...stats.map((stat) => Math.max(...Array.from(stat.years.values()).map((year) => year.totalValue)))
   )
 
   const previousColor =
@@ -157,7 +153,7 @@ function BarChart({ stats }: { stats: MonthStats[] }) {
       <ScrollView
         ref={(ref) => {
           if (dayjs().month() > 5) {
-            // ref?.scrollTo({ x: width, y: 0, animated: false })
+            ref?.scrollTo({ x: width, y: 0, animated: false })
           }
         }}
         onLayout={({ nativeEvent }) => {
@@ -175,7 +171,11 @@ function BarChart({ stats }: { stats: MonthStats[] }) {
         bounces={false}
         horizontal
       >
-        {stats.map((stat) => (
+        {stats.map((stat) => {
+          const currentYear = stat.years.get(dayjs().year()) ?? { totalValue: 0, transactionCount: 0 }
+          const previousYear = stat.years.get(dayjs().year() - 1) ?? { totalValue: 0, transactionCount: 0 }
+
+          return (
           <View key={stat.monthName} style={{ flex: 1 }}>
             <View style={{ flex: 1, alignSelf: 'stretch', gap: 4 }}>
               <View style={{ flex: 1 }}>
@@ -187,9 +187,9 @@ function BarChart({ stats }: { stats: MonthStats[] }) {
                     left: 0,
                     right: '35%',
                     bottom: 0,
-                    height: `${(stat.previousYear.totalValue / maxValue) * 100}%`,
+                    height: `${(previousYear.totalValue / maxValue) * 100}%`,
                     backgroundColor: previousColor,
-                    zIndex: stat.previousYear.totalValue > stat.currentYear.totalValue ? 0 : 1,
+                    zIndex: previousYear.totalValue > currentYear.totalValue ? 0 : 1,
                   }}
                 />
                 <View
@@ -200,9 +200,9 @@ function BarChart({ stats }: { stats: MonthStats[] }) {
                     left: '35%',
                     right: 0,
                     bottom: 0,
-                    height: `${(stat.currentYear.totalValue / maxValue) * 100}%`,
+                    height: `${(currentYear.totalValue / maxValue) * 100}%`,
                     backgroundColor: currentColor,
-                    zIndex: stat.currentYear.totalValue > stat.previousYear.totalValue ? 0 : 1,
+                    zIndex: currentYear.totalValue > previousYear.totalValue ? 0 : 1,
                   }}
                 />
               </View>
@@ -220,7 +220,7 @@ function BarChart({ stats }: { stats: MonthStats[] }) {
               </Text>
             </View>
           </View>
-        ))}
+        )})}
       </ScrollView>
 
       <View
@@ -247,9 +247,12 @@ function BarChart({ stats }: { stats: MonthStats[] }) {
   )
 }
 
-function MonthSummary({ stat, index }: { stat: MonthStats; index: number }) {
+function MonthSummary({ stat, previousStat, index }: { stat: MonthStats; previousStat?: MonthStats; index: number }) {
   const theme = useTheme()
   const { t } = useTranslation()
+
+  const currentYear = stat.years.get(dayjs().year()) ?? { totalValue: 0, transactionCount: 0 }
+  const previousYear = stat.years.get(dayjs().year() - 1) ?? { totalValue: 0, transactionCount: 0 }
 
   return (
     <View
@@ -267,13 +270,13 @@ function MonthSummary({ stat, index }: { stat: MonthStats; index: number }) {
           style={{
             width: 28,
             height: 28,
-            backgroundColor: theme.colors.primary,
+            backgroundColor: theme.theme === 'light' ? theme.colors.secondary : theme.colors.secondaryContainer,
             borderRadius: 14,
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          <Text style={{ color: theme.colors.onPrimary, fontSize: 16, fontWeight: 700 }}>
+          <Text style={{ color: theme.theme === 'light' ? theme.colors.onSecondary : theme.colors.onSecondaryContainer, fontSize: 16, fontWeight: 700 }}>
             {index + 1}
           </Text>
         </View>
@@ -283,11 +286,21 @@ function MonthSummary({ stat, index }: { stat: MonthStats; index: number }) {
       </View>
 
       <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
-        Total: {CurrencyUtils.format(stat.previousYear.totalValue, 'USD')} -> {CurrencyUtils.format(stat.currentYear.totalValue, 'USD')}
+        Total: {CurrencyUtils.format(previousYear.totalValue, 'USD')} -> {CurrencyUtils.format(currentYear.totalValue, 'USD')}
       </Text>
       <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
-        Transactions: {stat.previousYear.transactionCount} -> {stat.currentYear.transactionCount}
+        Transactions: {previousYear.transactionCount} -> {currentYear.transactionCount}
       </Text>
+      {previousStat && (
+        <>
+        <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
+          Change to previous month this year: {CurrencyUtils.format(currentYear.totalValue - (previousStat.years.get(dayjs().year())?.totalValue ?? 0), 'USD')}
+        </Text>
+        <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
+          Change to previous month last year: {CurrencyUtils.format(previousYear.totalValue - (previousStat.years.get(dayjs().year() - 1)?.totalValue ?? 0), 'USD')}
+        </Text>
+        </>
+      )}
     </View>
   )
 }
@@ -296,7 +309,7 @@ function Summary({ stats }: { stats: MonthStats[] }) {
   return (
     <View style={{ gap: 2 }}>
       {stats.map((stat, index) => (
-        <MonthSummary key={stat.monthName} stat={stat} index={index} />
+        <MonthSummary key={stat.monthName} stat={stat} previousStat={index > 0 ? stats[index - 1] : stats[11]} index={index} />
       ))}
     </View>
   )
@@ -315,19 +328,13 @@ function Statistics({ monthlyStats }: { monthlyStats: GroupMonthlyStats }) {
 
     return Months.map((month, index) => {
       const monthStats = stats.filter((stat) => stat.month === index)
-      const currentYearStats = monthStats.filter((stat) => stat.year === dayjs().year())[0]
-      const previousYearStats = monthStats.filter((stat) => stat.year === dayjs().year() - 1)[0]
 
       return {
         monthName: month,
-        currentYear: {
-          totalValue: currentYearStats?.totalValue ?? 0,
-          transactionCount: currentYearStats?.transactionCount ?? 0,
-        },
-        previousYear: {
-          totalValue: previousYearStats?.totalValue ?? 0,
-          transactionCount: previousYearStats?.transactionCount ?? 0,
-        },
+        years: new Map(monthStats.map((stat) => [stat.year, {
+          totalValue: stat.totalValue,
+          transactionCount: stat.transactionCount,
+        }])),
       }
     })
   }, [monthlyStats])
