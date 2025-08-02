@@ -564,14 +564,16 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
           flexWrap: 'wrap',
         }}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          <View
-            style={{ width: 16, height: 16, backgroundColor: previousColor, borderRadius: 6 }}
-          />
-          <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
-            {t('groupStats.last24Months')}
-          </Text>
-        </View>
+        {statistics.last12MonthPeriodAverage > 0 && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <View
+              style={{ width: 16, height: 16, backgroundColor: previousColor, borderRadius: 6 }}
+            />
+            <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
+              {t('groupStats.last24Months')}
+            </Text>
+          </View>
+        )}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
           <View
             style={{
