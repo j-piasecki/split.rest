@@ -631,8 +631,6 @@ function MonthSummary({
         }}
       >
         <View style={{ gap: 4 }}>
-          {/* <View style={{flexDirection: 'row'}}><RoundIconButton icon='chevronForward' size={20} color={theme.colors.onSurface} onPress={() => {}} text={`Expenses: ${CurrencyUtils.format(currentYear.totalValue, info.currency)}`} textLocation='start' textStyle={{color: theme.colors.onSurface, fontSize: 18, fontWeight: 700}} style={{paddingHorizontal: 16}} /></View>
-          <RoundIconButton icon='chevronForward' size={16} color={theme.colors.outline} onPress={() => {}} text={`Expenses in ${dayjs().year() - 1}: ${CurrencyUtils.format(previousYear.totalValue, info.currency)}`} textLocation='start' textStyle={{color: theme.colors.outline, fontSize: 16, fontWeight: 700}} /> */}
           <Text style={{ color: theme.colors.onSurface, fontSize: 20, fontWeight: 700 }}>
             {t('groupStats.expensesThisYear', {
               value: CurrencyUtils.format(currentYear.totalValue, info.currency),
@@ -663,9 +661,11 @@ function MonthSummary({
 }
 
 function Summary({ info, stats }: { info: GroupUserInfo; stats: MonthStats[] }) {
+  const reversedStats = useMemo(() => stats.toReversed(), [stats])
+
   return (
     <View style={{ gap: 2 }}>
-      {stats.toReversed().map((stat, index) => {
+      {reversedStats.map((stat, index) => {
         const monthNumber = Months.indexOf(stat.monthName)
         const previousStat = stats.find(
           (stat) => stat.monthName === (monthNumber === 0 ? Months[11] : Months[monthNumber - 1])

@@ -45,16 +45,6 @@ async function main() {
           )
         }
       }
-
-      // if (process.argv.some((arg) => arg === '--commit')) {
-      //   await client.query(
-      //     `
-      //     INSERT INTO group_settings (group_id, split_equally_enabled, split_exact_enabled, split_shares_enabled, split_balance_changes_enabled, split_lend_enabled, split_delayed_enabled)
-      //     VALUES ($1, TRUE, TRUE, FALSE, TRUE, TRUE, FALSE)
-      //     `,
-      //     [row.id]
-      //   )
-      // }
     }
     await client.query('COMMIT')
   } catch (e) {
