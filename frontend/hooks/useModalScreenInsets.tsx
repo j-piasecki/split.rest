@@ -8,7 +8,7 @@ export function useModalScreenInsets() {
 
   return {
     top: 0,
-    bottom: insets.bottom + (Platform.OS !== 'ios' && isSmallScreen ? 16 : 0),
+    bottom: isSmallScreen ? insets.bottom + (Platform.OS !== 'ios' ? 16 : 0) : 0,
     left: isSmallScreen ? insets.left : 0,
     right: isSmallScreen ? insets.right : 0,
   }
