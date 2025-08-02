@@ -410,7 +410,15 @@
 
   "groupStats": {
     "infoHeader": "General information",
-    "statisticsHeader": "Statistics"
+    "statisticsHeader": "Statistics",
+    "numberOfMembers": "{{count}} members",
+    "totalTransactionsValue": "Value of all transactions: {{value}}",
+    "thisYearTotal": "This year: {{value}}",
+    "lastYearTotal": "Last year: {{value}}",
+    "thisYearAverage": "Monthly average this year: {{value}}",
+    "lastYearAverage": "Monthly average last year: {{value}}",
+    "expensesThisYear": "Expenses: {{value}}",
+    "expensesLastYear": "Expenses in {{year}}: {{value}}"
   },
 
   "inviteMember": {
@@ -504,11 +512,9 @@
   "groupInfo": {
     "couldNotLoad": "Couldn't load group info",
     "yourBalance": "Your balance:",
-    "numberOfMembers": "{{count}} members", 
     "accessToGroup": "You have access to this group",
     "noAccessToGroup": "You don't have access to this group",
     "youAreAdmin": "You are a moderator of this group",
-    "totalTransactionsValue": "Value of all transactions: {{value}}",
     "inviteMember": "Invite member",
     "roulette": "Roulette",
     "addSplit": "Add split",
