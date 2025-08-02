@@ -151,7 +151,7 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
           <View style={{ width: 24, alignItems: 'center' }}>
             <Icon name='members' size={20} color={theme.colors.secondary} />
           </View>
-          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
+          <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
             {t('groupStats.numberOfMembers', { count: info.memberCount })}
           </Text>
         </View>
@@ -161,19 +161,19 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
             <Icon name='money' size={20} color={theme.colors.secondary} />
           </View>
           <View style={{ gap: 4 }}>
-            <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
+            <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
               {t('groupStats.totalTransactionsValue', {
                 value: CurrencyUtils.format(info.total, info.currency),
               })}
             </Text>
 
-            <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
+            <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
               {t('groupStats.lastYearTotal', {
                 value: CurrencyUtils.format(statistics.lastYearTotal, info.currency),
               })}
             </Text>
 
-            <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
+            <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
               {t('groupStats.thisYearTotal', {
                 value: CurrencyUtils.format(statistics.thisYearTotal, info.currency),
               })}
@@ -186,13 +186,13 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
             <Icon name='average' size={20} color={theme.colors.secondary} />
           </View>
           <View style={{ gap: 4 }}>
-            <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
+            <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
               {t('groupStats.lastYearAverage', {
                 value: CurrencyUtils.format(statistics.lastYearAverage, info.currency),
               })}
             </Text>
 
-            <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
+            <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
               {t('groupStats.thisYearAverage', {
                 value: CurrencyUtils.format(statistics.thisYearAverage, info.currency),
               })}
@@ -222,7 +222,7 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
                 <View style={{ width: 24, alignItems: 'center' }}>
                   <Icon name='shield' size={20} color={theme.colors.secondary} />
                 </View>
-                <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 18, flex: 1 }}>
+                <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
                   {t('groupInfo.youAreAdmin')}
                 </Text>
               </>
@@ -266,11 +266,6 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
         gap: 12,
       }}
     >
-      <View style={{ position: 'absolute', top: 12, left: 12, right: 12 }}>
-        <Text style={{ color: theme.colors.outline, fontSize: 14, fontWeight: 600 }}>
-          {CurrencyUtils.format(maxValue, info.currency)}
-        </Text>
-      </View>
       <View
         pointerEvents='none'
         style={{
@@ -354,11 +349,14 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
         horizontal
       >
         {stats.map((stat) => {
-          const currentYear = stat.years.get(dayjs().year()) ?? {
+          const monthNumber = Months.indexOf(stat.monthName)
+          const currentYear = monthNumber > dayjs().month() ? dayjs().year() - 1 : dayjs().year()
+
+          const current12MonthPeriod = stat.years.get(currentYear) ?? {
             totalValue: 0,
             transactionCount: 0,
           }
-          const previousYear = stat.years.get(dayjs().year() - 1) ?? {
+          const previous12MonthPeriod = stat.years.get(currentYear - 1) ?? {
             totalValue: 0,
             transactionCount: 0,
           }
@@ -375,9 +373,10 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
                       left: 0,
                       right: '35%',
                       bottom: 0,
-                      height: `${(previousYear.totalValue / maxValue) * 100}%`,
+                      height: `${(previous12MonthPeriod.totalValue / maxValue) * 100}%`,
                       backgroundColor: previousColor,
-                      zIndex: previousYear.totalValue > currentYear.totalValue ? 0 : 1,
+                      zIndex:
+                        previous12MonthPeriod.totalValue > current12MonthPeriod.totalValue ? 0 : 1,
                     }}
                   />
                   <View
@@ -388,9 +387,10 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
                       left: '35%',
                       right: 0,
                       bottom: 0,
-                      height: `${(currentYear.totalValue / maxValue) * 100}%`,
+                      height: `${(current12MonthPeriod.totalValue / maxValue) * 100}%`,
                       backgroundColor: currentColor,
-                      zIndex: currentYear.totalValue > previousYear.totalValue ? 0 : 1,
+                      zIndex:
+                        current12MonthPeriod.totalValue > previous12MonthPeriod.totalValue ? 0 : 1,
                     }}
                   />
                 </View>
@@ -413,6 +413,11 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
         })}
       </ScrollView>
 
+      <View style={{ position: 'absolute', top: 12, left: 12, right: 12 }}>
+        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 14, fontWeight: 600 }}>
+          {CurrencyUtils.format(maxValue, info.currency)}
+        </Text>
+      </View>
       <View
         pointerEvents='none'
         style={{
@@ -434,7 +439,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
               left: 0,
               right: 0,
               bottom: 2,
-              color: theme.colors.outline,
+              color: theme.colors.onSurfaceVariant,
               fontSize: 14,
               fontWeight: 600,
             }}
@@ -449,7 +454,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
               left: 0,
               right: 0,
               bottom: 2,
-              color: theme.colors.outline,
+              color: theme.colors.onSurfaceVariant,
               fontSize: 14,
               fontWeight: 600,
             }}
@@ -464,7 +469,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
               left: 0,
               right: 0,
               bottom: 2,
-              color: theme.colors.outline,
+              color: theme.colors.onSurfaceVariant,
               fontSize: 14,
               fontWeight: 600,
             }}
@@ -479,7 +484,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
               left: 0,
               right: 0,
               bottom: 2,
-              color: theme.colors.outline,
+              color: theme.colors.onSurfaceVariant,
               fontSize: 14,
               fontWeight: 600,
             }}
@@ -494,7 +499,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
               left: 0,
               right: 0,
               bottom: 2,
-              color: theme.colors.outline,
+              color: theme.colors.onSurfaceVariant,
               fontSize: 14,
               fontWeight: 600,
             }}
@@ -505,24 +510,36 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
       </View>
 
       <View
-        style={{ flexDirection: 'row', alignItems: 'center', gap: 4, justifyContent: 'center' }}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          columnGap: 24,
+          rowGap: 4,
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+        }}
       >
-        <View style={{ width: 16, height: 16, backgroundColor: previousColor, borderRadius: 6 }} />
-        <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
-          {dayjs().year() - 1}
-        </Text>
-        <View
-          style={{
-            marginLeft: 24,
-            width: 16,
-            height: 16,
-            backgroundColor: currentColor,
-            borderRadius: 6,
-          }}
-        />
-        <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
-          {dayjs().year()}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <View
+            style={{ width: 16, height: 16, backgroundColor: previousColor, borderRadius: 6 }}
+          />
+          <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
+            {t('groupStats.last24Months')}
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <View
+            style={{
+              width: 16,
+              height: 16,
+              backgroundColor: currentColor,
+              borderRadius: 6,
+            }}
+          />
+          <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
+            {t('groupStats.last12Months')}
+          </Text>
+        </View>
       </View>
     </View>
   )
@@ -544,14 +561,18 @@ function MonthSummary({
   const theme = useTheme()
   const { t } = useTranslation()
 
-  const currentYear = stat.years.get(dayjs().year()) ?? { totalValue: 0, transactionCount: 0 }
-  const previousYear = stat.years.get(dayjs().year() - 1) ?? { totalValue: 0, transactionCount: 0 }
+  const currentYear = monthNumber > dayjs().month() ? dayjs().year() - 1 : dayjs().year()
+  const current12MonthPeriod = stat.years.get(currentYear) ?? { totalValue: 0, transactionCount: 0 }
+  const previous12MonthPeriod = stat.years.get(currentYear - 1) ?? {
+    totalValue: 0,
+    transactionCount: 0,
+  }
 
   const changeMonthOverMonth =
-    currentYear.totalValue -
-    (previousStat.years.get(stat.monthName === 'january' ? dayjs().year() - 1 : dayjs().year())
+    current12MonthPeriod.totalValue -
+    (previousStat.years.get(stat.monthName === 'january' ? currentYear - 1 : currentYear)
       ?.totalValue ?? 0)
-  const changeYearOverYear = currentYear.totalValue - previousYear.totalValue
+  const changeYearOverYear = current12MonthPeriod.totalValue - previous12MonthPeriod.totalValue
 
   const changeYoYColor =
     changeYearOverYear > 0
@@ -633,13 +654,13 @@ function MonthSummary({
         <View style={{ gap: 4 }}>
           <Text style={{ color: theme.colors.onSurface, fontSize: 20, fontWeight: 700 }}>
             {t('groupStats.expensesThisYear', {
-              value: CurrencyUtils.format(currentYear.totalValue, info.currency),
+              value: CurrencyUtils.format(current12MonthPeriod.totalValue, info.currency),
             })}
           </Text>
           <Text style={{ color: theme.colors.outline, fontSize: 16, fontWeight: 700 }}>
-            {t('groupStats.expensesLastYear', {
-              year: dayjs().year() - 1,
-              value: CurrencyUtils.format(previousYear.totalValue, info.currency),
+            {t('groupStats.expensesInYear', {
+              year: currentYear - 1,
+              value: CurrencyUtils.format(previous12MonthPeriod.totalValue, info.currency),
             })}
           </Text>
         </View>

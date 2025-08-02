@@ -418,7 +418,9 @@
     "thisYearAverage": "Monthly average this year: {{value}}",
     "lastYearAverage": "Monthly average last year: {{value}}",
     "expensesThisYear": "Expenses: {{value}}",
-    "expensesLastYear": "Expenses in {{year}}: {{value}}"
+    "expensesInYear": "Expenses in {{year}}: {{value}}",
+    "last24Months": "Last 24 months",
+    "last12Months": "Last 12 months"
   },
 
   "inviteMember": {
