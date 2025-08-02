@@ -28,10 +28,6 @@ export async function getGroupMonthlyStats(
     )
   ).rows
 
-  if (rows.length === 0) {
-    return null
-  }
-
   return {
     stats: rows.map((row) => ({
       startTimestamp: Number(row.start_timestamp),
