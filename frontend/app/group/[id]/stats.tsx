@@ -150,8 +150,8 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
       textLocation='start'
       icon='group'
       containerStyle={{
-        padding: 16,
-        paddingTop: 12,
+        padding: 12,
+        paddingBottom: 16,
       }}
     >
       <View
@@ -186,11 +186,13 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
               })}
             </Text>
 
-            <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
-              {t('groupStats.last12MonthPeriodTotal', {
-                value: CurrencyUtils.format(statistics.last12MonthPeriodTotal, info.currency),
-              })}
-            </Text>
+            {statistics.last12MonthPeriodTotal > 0 && (
+              <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
+                {t('groupStats.last12MonthPeriodTotal', {
+                  value: CurrencyUtils.format(statistics.last12MonthPeriodTotal, info.currency),
+                })}
+              </Text>
+            )}
           </View>
         </View>
 
@@ -205,11 +207,13 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
               })}
             </Text>
 
-            <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
-              {t('groupStats.last12MonthPeriodAverage', {
-                value: CurrencyUtils.format(statistics.last12MonthPeriodAverage, info.currency),
-              })}
-            </Text>
+            {statistics.last12MonthPeriodAverage > 0 && (
+              <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
+                {t('groupStats.last12MonthPeriodAverage', {
+                  value: CurrencyUtils.format(statistics.last12MonthPeriodAverage, info.currency),
+                })}
+              </Text>
+            )}
           </View>
         </View>
 
@@ -257,7 +261,8 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
   const maxValue = Math.max(
     ...stats.map((stat) =>
       Math.max(...Array.from(stat.years.values()).map((year) => year.totalValue))
-    )
+    ),
+    0
   )
 
   const previousColor =
@@ -570,7 +575,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
               style={{ width: 16, height: 16, backgroundColor: previousColor, borderRadius: 6 }}
             />
             <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
-              {t('groupStats.last24Months')}
+              {t('groupStats.prior12Months')}
             </Text>
           </View>
 
@@ -772,7 +777,6 @@ function Statistics({ info, statistics }: { info: GroupUserInfo; statistics: Gro
   )
 }
 
-// todo: pull to refresh
 function Stats({ info, statistics }: { info: GroupUserInfo; statistics: GroupStatistics }) {
   const insets = useModalScreenInsets()
 
