@@ -554,17 +554,17 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
         </View>
       </View>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          columnGap: 24,
-          rowGap: 4,
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-        }}
-      >
-        {statistics.last12MonthPeriodAverage > 0 && (
+      {statistics.last12MonthPeriodAverage > 0 && (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            columnGap: 24,
+            rowGap: 4,
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+          }}
+        >
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <View
               style={{ width: 16, height: 16, backgroundColor: previousColor, borderRadius: 6 }}
@@ -573,21 +573,22 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
               {t('groupStats.last24Months')}
             </Text>
           </View>
-        )}
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          <View
-            style={{
-              width: 16,
-              height: 16,
-              backgroundColor: currentColor,
-              borderRadius: 6,
-            }}
-          />
-          <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
-            {t('groupStats.last12Months')}
-          </Text>
+
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <View
+              style={{
+                width: 16,
+                height: 16,
+                backgroundColor: currentColor,
+                borderRadius: 6,
+              }}
+            />
+            <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
+              {t('groupStats.last12Months')}
+            </Text>
+          </View>
         </View>
-      </View>
+      )}
     </View>
   )
 }
