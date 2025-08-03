@@ -36,8 +36,8 @@ function ActionableSplit({
     ? inverseSplit
       ? currency(split.total).add(userChange).toString()
       : currency(split.total).subtract(userChange).toString()
-    : split.pendingChange
-  const displayedValue = CurrencyUtils.format(pendingChange!, info?.currency)
+    : currency(split.pendingChange ?? 0).toString()
+  const displayedValue = CurrencyUtils.format(pendingChange!, info?.currency, false)
 
   const text = paidByThis
     ? inverseSplit
