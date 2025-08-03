@@ -252,6 +252,36 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
   )
 }
 
+function Bar({
+  value,
+  maxValue,
+  color,
+  zIndex,
+  location,
+}: {
+  value: number
+  maxValue: number
+  color: string
+  zIndex: number
+  location: 'left' | 'right' | 'center'
+}) {
+  return (
+    <View
+      style={{
+        borderTopLeftRadius: 6,
+        borderTopRightRadius: 6,
+        position: 'absolute',
+        left: location === 'left' ? '5%' : location === 'center' ? '17.5%' : '35%',
+        right: location === 'right' ? '5%' : location === 'center' ? '17.5%' : '35%',
+        bottom: 0,
+        height: `${(value / maxValue) * 100}%`,
+        backgroundColor: color,
+        zIndex,
+      }}
+    />
+  )
+}
+
 function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: GroupStatistics }) {
   const theme = useTheme()
   const { t } = useTranslation()
@@ -388,36 +418,24 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
               <View style={{ flex: 1, alignSelf: 'stretch', gap: 4 }}>
                 <View style={{ flex: 1 }}>
                   {hasPreviousData && (
-                    <View
-                      style={{
-                        borderTopLeftRadius: 6,
-                        borderTopRightRadius: 6,
-                        position: 'absolute',
-                        left: '5%',
-                        right: '35%',
-                        bottom: 0,
-                        height: `${(previous12MonthPeriod.totalValue / maxValue) * 100}%`,
-                        backgroundColor: previousColor,
-                        zIndex:
-                          previous12MonthPeriod.totalValue > current12MonthPeriod.totalValue
-                            ? 0
-                            : 1,
-                      }}
+                    <Bar
+                      value={previous12MonthPeriod.totalValue}
+                      maxValue={maxValue}
+                      color={previousColor}
+                      zIndex={
+                        previous12MonthPeriod.totalValue > current12MonthPeriod.totalValue ? 0 : 1
+                      }
+                      location='left'
                     />
                   )}
-                  <View
-                    style={{
-                      borderTopLeftRadius: 6,
-                      borderTopRightRadius: 6,
-                      position: 'absolute',
-                      left: hasPreviousData ? '35%' : '17.5%',
-                      right: hasPreviousData ? '5%' : '17.5%',
-                      bottom: 0,
-                      height: `${(current12MonthPeriod.totalValue / maxValue) * 100}%`,
-                      backgroundColor: currentColor,
-                      zIndex:
-                        current12MonthPeriod.totalValue > previous12MonthPeriod.totalValue ? 0 : 1,
-                    }}
+                  <Bar
+                    value={current12MonthPeriod.totalValue}
+                    maxValue={maxValue}
+                    color={currentColor}
+                    zIndex={
+                      current12MonthPeriod.totalValue > previous12MonthPeriod.totalValue ? 0 : 1
+                    }
+                    location={hasPreviousData ? 'right' : 'center'}
                   />
                 </View>
                 <Text
