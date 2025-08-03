@@ -46,6 +46,10 @@ export default function AddFlow() {
             name='wrapGroup'
             options={{ title: t('screenName.groupSettings.wrapItUp') }}
           />
+          <Stack.Screen
+            name='joinQrCode'
+            options={{ title: t('screenName.groupSettings.joinQrCode') }}
+          />
         </Stack>
       </ThemeProvider>
     </Animated.View>
