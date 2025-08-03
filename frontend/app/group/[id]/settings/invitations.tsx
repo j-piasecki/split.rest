@@ -21,10 +21,11 @@ import { useSetInviteWithdrawnMutation } from '@hooks/database/useInviteWithdraw
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { GroupPermissions } from '@utils/GroupPermissions'
+import { getJoinLinkURL } from '@utils/getJoinLinkURL'
 import { ApiError } from '@utils/makeApiRequest'
 import { invalidateDirectGroupInvites } from '@utils/queryClient'
 import * as Clipboard from 'expo-clipboard'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, StyleProp, View, ViewStyle } from 'react-native'
@@ -38,15 +39,14 @@ function JoinLinkManager({
   permissions: GroupPermissions
 }) {
   const theme = useTheme()
+  const router = useRouter()
   const { t } = useTranslation()
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const { data: link, isLoading: isLoadingLink } = useGroupJoinLink(info.id)
   const { mutateAsync: createJoinLink, isPending: isCreatingJoinLink } = useCreateGroupJoinLink()
   const { mutateAsync: deleteJoinLink } = useDeleteGroupJoinLink()
 
-  const linkText = __DEV__
-    ? `http://localhost:8081/join/${link?.uuid}`
-    : `https://split.rest/join/${link?.uuid}`
+  const linkText = getJoinLinkURL(link)
 
   return (
     <Pane
@@ -76,6 +76,13 @@ function JoinLinkManager({
                   selectTextOnFocus
                 />
                 <Button
+                  leftIcon='qrCode'
+                  growsOnPress={false}
+                  onPress={() => {
+                    router.navigate(`/group/${info.id}/settings/joinQrCode`)
+                  }}
+                />
+                <Button
                   leftIcon='copy'
                   growsOnPress={false}
                   onPress={() => {
@@ -85,6 +92,7 @@ function JoinLinkManager({
               </View>
               {permissions.canDeleteJoinLink() && (
                 <Button
+                  destructive
                   leftIcon='deleteLink'
                   title={t('groupSettings.joinLink.delete')}
                   onPress={() => setShowDeleteModal(true)}

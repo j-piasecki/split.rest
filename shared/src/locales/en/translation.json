@@ -262,7 +262,8 @@
       "invitations": "Manage invitations",
       "resolveDelayed": "Finalize delayed splits",
       "splitMethods": "Allowed split methods",
-      "wrapItUp": "Wrap it up"
+      "wrapItUp": "Wrap it up",
+      "joinQrCode": "QR code"
     },
   
     "splitType": "New split",
@@ -357,7 +358,8 @@
       "delete": "Delete link",
       "deleteDescription": "Are you sure you want to delete the invitation link?",
       "deleteConfirm": "Yes",
-      "deleteCancel": "No"
+      "deleteCancel": "No",
+      "anyoneCanJoinWithQR": "Anyone can join the group using this code"
     },
     "notAnAdmin": "You are not a moderator of this group",
     "deleteGroup": "Delete group",
