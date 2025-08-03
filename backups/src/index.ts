@@ -22,7 +22,7 @@ exec(`pg_dump -U postgres -h localhost -d split -f ${backupPath}`, (err) => {
   const bucket = getStorage().bucket()
 
   bucket
-    .upload(backupPath, { destination: backupName })
+    .upload(backupPath, { destination: backupPath })
     .then(() => {
       console.log('Upload complete')
     })
