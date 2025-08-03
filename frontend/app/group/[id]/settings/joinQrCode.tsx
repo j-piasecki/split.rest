@@ -69,7 +69,7 @@ function QRCodeWrapper({
         >
           <Text
             style={{
-              color: theme.colors.onTertiaryContainer,
+              color: theme.colors.outline,
               fontSize: 18,
               fontWeight: 600,
               textAlign: 'center',
