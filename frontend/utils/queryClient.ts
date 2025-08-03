@@ -79,10 +79,6 @@ export async function invalidateGroupInvites(visibleOnly?: boolean) {
   }
 }
 
-export async function invalidateGroupSettings(groupId: number) {
-  await queryClient.invalidateQueries({ queryKey: ['groupSettings', groupId] })
-}
-
 export async function invalidateGroupJoinLink(groupId: number) {
   await queryClient.invalidateQueries({ queryKey: ['groupJoinLink', groupId] })
 }

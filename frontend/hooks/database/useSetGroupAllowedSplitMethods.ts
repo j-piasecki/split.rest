@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { invalidateGroupSettings } from '@utils/queryClient'
+import { invalidateGroupInfo } from '@utils/queryClient'
 import { SetAllowedSplitMethodsArguments, SplitMethod } from 'shared'
 
 async function setGroupAllowedSplitMethods(groupId: number, allowedSplitMethods: SplitMethod[]) {
@@ -8,7 +8,7 @@ async function setGroupAllowedSplitMethods(groupId: number, allowedSplitMethods:
 
   await makeRequest('POST', 'setGroupAllowedSplitMethods', args)
 
-  await invalidateGroupSettings(groupId)
+  await invalidateGroupInfo(groupId)
 }
 
 export function useSetGroupAllowedSplitMethodsMutation(groupId: number) {
