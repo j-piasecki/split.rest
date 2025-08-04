@@ -324,7 +324,7 @@ function Bar({
       onHoverIn={addBadgeIfNotAdded}
       onHoverOut={removeBadgeIfAdded}
       onPressOut={removeBadgeIfAdded}
-      hitSlop={{ top: height < 20 ? 20 : 0 }}
+      hitSlop={{ top: height < 20 ? 16 : 0 }}
       style={{
         borderTopLeftRadius: 6,
         borderTopRightRadius: 6,
@@ -472,10 +472,10 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
             flexDirection: 'row',
             gap: 8,
             height: graphContainerHeight,
-            width: containerWidth * 2 + (Platform.OS !== 'web' ? (3 * containerWidth) / 6 : 0),
+            width: containerWidth * 2 + (Platform.OS !== 'web' ? (2 * containerWidth) / 6 : 0),
             paddingTop: graphContainerTopPadding,
             paddingLeft: (2 * containerWidth) / 6,
-            paddingRight: containerWidth / 6,
+            paddingRight: 0,
           }}
           snapToInterval={containerWidth / 6}
           decelerationRate={'fast'}
@@ -674,9 +674,9 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
               exiting={FadeOut.duration(200)}
               style={{
                 position: 'absolute',
-                left: badge.anchor.x - (overlayLayout?.x ?? 0) - 48,
+                left: badge.anchor.x - (overlayLayout?.x ?? 0) - 40,
                 top: badge.anchor.y - (overlayLayout?.y ?? 0) - 36,
-                width: 96,
+                width: 80,
                 height: 28,
                 backgroundColor: badge.backgroundColor,
                 padding: 4,
@@ -690,7 +690,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
                   position: 'absolute',
                   width: 8,
                   height: 8,
-                  left: 44,
+                  left: 36,
                   bottom: -4,
                   backgroundColor: badge.backgroundColor,
                   transform: [{ rotate: '45deg' }],
@@ -699,7 +699,11 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
               <Text
                 numberOfLines={1}
                 adjustsFontSizeToFit
-                style={{ color: badge.foregroundColor, fontSize: 16, fontWeight: 700 }}
+                style={{
+                  color: badge.foregroundColor,
+                  fontSize: Platform.OS === 'web' ? 13 : 16,
+                  fontWeight: 700,
+                }}
               >
                 {badge.text}
               </Text>
@@ -734,7 +738,12 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
 
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
               <View
-                style={{ width: 16, height: 16, backgroundColor: previousBackgroundColor, borderRadius: 6 }}
+                style={{
+                  width: 16,
+                  height: 16,
+                  backgroundColor: previousBackgroundColor,
+                  borderRadius: 6,
+                }}
               />
               <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
                 {t('groupStats.prior12Months')}
