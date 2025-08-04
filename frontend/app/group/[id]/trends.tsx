@@ -10,9 +10,18 @@ import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { measure } from '@utils/measure'
 import dayjs from 'dayjs'
 import { useLocalSearchParams } from 'expo-router'
-import React, { useMemo, useState } from 'react'
+import React, { useContext, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Platform, RefreshControl, ScrollView, View } from 'react-native'
+import {
+  ActivityIndicator,
+  LayoutRectangle,
+  Platform,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  View,
+} from 'react-native'
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { CurrencyUtils, GroupUserInfo } from 'shared'
 
 const Months = [
@@ -53,6 +62,20 @@ interface GroupStatistics {
   last12MonthPeriodTotal: number
   last12MonthPeriodAverage: number
 }
+
+interface BarBadge {
+  anchor: {
+    x: number
+    y: number
+  }
+  text: string
+  foregroundColor: string
+  backgroundColor: string
+}
+
+const BarChartContext = React.createContext<{
+  addBadge: (badge: BarBadge) => () => void
+} | null>(null)
 
 function useGroupStatistics(id: number): GroupStatistics | null {
   const { data: monthlyStats, isLoading, isRefetching, refetch } = useGroupMonthlyStats(id)
@@ -255,18 +278,53 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
 function Bar({
   value,
   maxValue,
-  color,
+  backgroundColor,
+  foregroundColor,
   zIndex,
   location,
+  info,
 }: {
   value: number
   maxValue: number
-  color: string
+  backgroundColor: string
+  foregroundColor: string
   zIndex: number
   location: 'left' | 'right' | 'center'
+  info: GroupUserInfo
 }) {
+  const barRef = useRef<View>(null)
+  const removeBadge = useRef<null | (() => void)>(null)
+  const { addBadge } = useContext(BarChartContext)!
+
+  const height = (value / maxValue) * 100
+
+  function addBadgeIfNotAdded() {
+    if (barRef.current && !removeBadge.current) {
+      const layout = measure(barRef.current!)
+      removeBadge.current = addBadge({
+        anchor: { x: layout.x + layout.width / 2, y: layout.y },
+        text: CurrencyUtils.format(value, info.currency),
+        foregroundColor,
+        backgroundColor,
+      })
+    }
+  }
+
+  function removeBadgeIfAdded() {
+    if (removeBadge.current) {
+      removeBadge.current()
+      removeBadge.current = null
+    }
+  }
+
   return (
-    <View
+    <Pressable
+      ref={barRef}
+      onPressIn={addBadgeIfNotAdded}
+      onHoverIn={addBadgeIfNotAdded}
+      onHoverOut={removeBadgeIfAdded}
+      onPressOut={removeBadgeIfAdded}
+      hitSlop={{ top: height < 20 ? 20 : 0 }}
       style={{
         borderTopLeftRadius: 6,
         borderTopRightRadius: 6,
@@ -274,8 +332,8 @@ function Bar({
         left: location === 'left' ? '5%' : location === 'center' ? '17.5%' : '35%',
         right: location === 'right' ? '5%' : location === 'center' ? '17.5%' : '35%',
         bottom: 0,
-        height: `${(value / maxValue) * 100}%`,
-        backgroundColor: color,
+        height: `${height}%`,
+        backgroundColor: backgroundColor,
         zIndex,
       }}
     />
@@ -284,8 +342,11 @@ function Bar({
 
 function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: GroupStatistics }) {
   const theme = useTheme()
+  const overlayRef = useRef<View>(null)
+  const [overlayLayout, setOverlayLayout] = useState<LayoutRectangle | null>(null)
   const { t } = useTranslation()
   const [containerWidth, setContainerWidth] = useState(0)
+  const [badges, setBadges] = useState<BarBadge[]>([])
 
   const stats = statistics.monthlyStatistics
 
@@ -297,325 +358,392 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
   )
 
   const hasPreviousData = statistics.last12MonthPeriodAverage > 0
-  const previousColor =
+  const previousBackgroundColor =
     theme.theme === 'light' ? theme.colors.primaryContainer : theme.colors.primary
-  const currentColor =
+  const currentBackgroundColor =
     theme.theme === 'light' ? theme.colors.primary : theme.colors.primaryContainer
+
+  const previousForegroundColor =
+    theme.theme === 'light' ? theme.colors.onPrimaryContainer : theme.colors.onPrimary
+  const currentForegroundColor =
+    theme.theme === 'light' ? theme.colors.onPrimary : theme.colors.onPrimaryContainer
 
   const textHeight = 22
   const graphContainerHeight = 200
   const graphContainerTopPadding = 20
   const maxBarHeight = graphContainerHeight - graphContainerTopPadding - textHeight - 4
 
+  useLayoutEffect(() => {
+    if (overlayRef.current) {
+      setOverlayLayout(measure(overlayRef.current))
+    }
+  }, [badges])
+
   return (
-    <View
-      style={{
-        backgroundColor: theme.colors.surfaceContainer,
-        padding: 12,
-        borderRadius: 4,
-        gap: 12,
+    <BarChartContext.Provider
+      value={{
+        addBadge: (badge) => {
+          setBadges((prev) => [...prev, badge])
+          return () => {
+            setBadges((prev) => prev.filter((b) => b !== badge))
+          }
+        },
       }}
     >
       <View
-        pointerEvents='none'
         style={{
-          position: 'absolute',
-          top: 12 + graphContainerTopPadding,
-          left: 12,
-          right: 12,
-          height: maxBarHeight,
-          borderColor: theme.colors.outlineVariant,
-          borderTopWidth: 1,
-          borderBottomWidth: 1,
-          justifyContent: 'space-evenly',
+          backgroundColor: theme.colors.surfaceContainer,
+          padding: 12,
+          borderRadius: 4,
+          gap: 12,
         }}
       >
-        <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
-        <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
-        <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
-        <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
-
         <View
+          pointerEvents='none'
           style={{
-            borderColor: currentColor,
-            borderStyle: 'dashed',
-            borderWidth: 1,
             position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: (statistics.this12MonthPeriodAverage / maxValue) * maxBarHeight - 2,
+            top: 12 + graphContainerTopPadding,
+            left: 12,
+            right: 12,
+            height: maxBarHeight,
+            borderColor: theme.colors.outlineVariant,
+            borderTopWidth: 1,
+            borderBottomWidth: 1,
+            justifyContent: 'space-evenly',
           }}
-        />
-        {hasPreviousData && (
+        >
+          <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
+          <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
+          <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
+          <View style={{ backgroundColor: theme.colors.outlineVariant, height: 1 }} />
+
           <View
             style={{
-              borderColor: previousColor,
+              borderColor: currentBackgroundColor,
               borderStyle: 'dashed',
               borderWidth: 1,
               position: 'absolute',
               left: 0,
               right: 0,
-              bottom: (statistics.last12MonthPeriodAverage / maxValue) * maxBarHeight - 2,
+              bottom: (statistics.this12MonthPeriodAverage / maxValue) * maxBarHeight - 2,
             }}
           />
-        )}
-      </View>
-
-      <ScrollView
-        ref={(ref) => {
-          if (Platform.OS === 'web') {
-            if (ref) {
-              setTimeout(() => {
-                // @ts-expect-error - getBoundingClientRect will work on web anyway
-                const size = measure(ref)
-                // @ts-expect-error - scrollLeft doesn't exist on mobile
-                ref.scrollLeft = size.width * 2
-              }, 50)
-            }
-          } else {
-            ref?.scrollTo({ x: containerWidth * 2, y: 0, animated: false })
-          }
-        }}
-        onLayout={({ nativeEvent }) => {
-          const width = nativeEvent.layout.width
-
-          // if the container is wide enough, we can show entire chart on one screen
-          if (width > 600) {
-            setContainerWidth(width / 2)
-          } else {
-            setContainerWidth(width)
-          }
-        }}
-        contentContainerStyle={{
-          flexDirection: 'row',
-          gap: 8,
-          height: graphContainerHeight,
-          width: containerWidth * 2 + (Platform.OS !== 'web' ? (2 * containerWidth) / 6 : 0),
-          paddingTop: graphContainerTopPadding,
-          paddingLeft: (2 * containerWidth) / 6,
-        }}
-        snapToInterval={containerWidth / 6}
-        decelerationRate={'fast'}
-        showsHorizontalScrollIndicator={false}
-        bounces={false}
-        horizontal
-      >
-        {stats.map((stat) => {
-          const monthNumber = Months.indexOf(stat.monthName)
-          const currentYear = monthNumber > dayjs().month() ? dayjs().year() - 1 : dayjs().year()
-
-          const current12MonthPeriod = stat.years.get(currentYear) ?? {
-            totalValue: 0,
-            transactionCount: 0,
-          }
-          const previous12MonthPeriod = stat.years.get(currentYear - 1) ?? {
-            totalValue: 0,
-            transactionCount: 0,
-          }
-
-          return (
-            <View key={stat.monthName} style={{ flex: 1 }}>
-              <View style={{ flex: 1, alignSelf: 'stretch', gap: 4 }}>
-                <View style={{ flex: 1 }}>
-                  {hasPreviousData && (
-                    <Bar
-                      value={previous12MonthPeriod.totalValue}
-                      maxValue={maxValue}
-                      color={previousColor}
-                      zIndex={
-                        previous12MonthPeriod.totalValue > current12MonthPeriod.totalValue ? 0 : 1
-                      }
-                      location='left'
-                    />
-                  )}
-                  <Bar
-                    value={current12MonthPeriod.totalValue}
-                    maxValue={maxValue}
-                    color={currentColor}
-                    zIndex={
-                      current12MonthPeriod.totalValue > previous12MonthPeriod.totalValue ? 0 : 1
-                    }
-                    location={hasPreviousData ? 'right' : 'center'}
-                  />
-                </View>
-                <Text
-                  style={{
-                    height: textHeight,
-                    color: theme.colors.onSurface,
-                    fontSize: 16,
-                    fontWeight: 600,
-                    textAlign: 'center',
-                  }}
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                >
-                  {t(`calendar.monthShort.${stat.monthName}`)}
-                </Text>
-              </View>
-            </View>
-          )
-        })}
-      </ScrollView>
-
-      <View
-        style={{ position: 'absolute', top: 12 + graphContainerTopPadding, left: 12, right: 12 }}
-      >
-        <Text
-          style={{
-            position: 'absolute',
-            left: 0,
-            bottom: 1,
-            color: theme.colors.onSurfaceVariant,
-            fontSize: 14,
-            fontWeight: 600,
-            paddingHorizontal: 4,
-            paddingVertical: 2,
-            borderRadius: 4,
-            backgroundColor: `${theme.colors.surfaceContainer}B0`,
-          }}
-        >
-          {CurrencyUtils.format(maxValue, info.currency)}
-        </Text>
-      </View>
-      <View
-        pointerEvents='none'
-        style={{
-          position: 'absolute',
-          top: 12 + graphContainerTopPadding,
-          left: 12,
-          right: 12,
-          height: maxBarHeight,
-          justifyContent: 'space-evenly',
-        }}
-      >
-        <View style={{ height: 1 }}>
-          <Text
-            style={{
-              position: 'absolute',
-              left: 0,
-              bottom: 1,
-              color: theme.colors.onSurfaceVariant,
-              fontSize: 14,
-              fontWeight: 600,
-              paddingHorizontal: 4,
-              paddingVertical: 2,
-              borderRadius: 4,
-              backgroundColor: `${theme.colors.surfaceContainer}B0`,
-            }}
-          >
-            {CurrencyUtils.format((maxValue * 4) / 5, info.currency)}
-          </Text>
-        </View>
-        <View style={{ height: 1 }}>
-          <Text
-            style={{
-              position: 'absolute',
-              left: 0,
-              bottom: 1,
-              color: theme.colors.onSurfaceVariant,
-              fontSize: 14,
-              fontWeight: 600,
-              paddingHorizontal: 4,
-              paddingVertical: 2,
-              borderRadius: 4,
-              backgroundColor: `${theme.colors.surfaceContainer}B0`,
-            }}
-          >
-            {CurrencyUtils.format((maxValue * 3) / 5, info.currency)}
-          </Text>
-        </View>
-        <View style={{ height: 1 }}>
-          <Text
-            style={{
-              position: 'absolute',
-              left: 0,
-              bottom: 1,
-              color: theme.colors.onSurfaceVariant,
-              fontSize: 14,
-              fontWeight: 600,
-              paddingHorizontal: 4,
-              paddingVertical: 2,
-              borderRadius: 4,
-              backgroundColor: `${theme.colors.surfaceContainer}B0`,
-            }}
-          >
-            {CurrencyUtils.format((maxValue * 2) / 5, info.currency)}
-          </Text>
-        </View>
-        <View style={{ height: 1 }}>
-          <Text
-            style={{
-              position: 'absolute',
-              left: 0,
-              bottom: 1,
-              color: theme.colors.onSurfaceVariant,
-              fontSize: 14,
-              fontWeight: 600,
-              paddingHorizontal: 4,
-              paddingVertical: 2,
-              borderRadius: 4,
-              backgroundColor: `${theme.colors.surfaceContainer}B0`,
-            }}
-          >
-            {CurrencyUtils.format((maxValue * 1) / 5, info.currency)}
-          </Text>
-        </View>
-        <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
-          <Text
-            style={{
-              position: 'absolute',
-              left: 0,
-              bottom: 1,
-              color: theme.colors.onSurfaceVariant,
-              fontSize: 14,
-              fontWeight: 600,
-              paddingHorizontal: 4,
-              paddingVertical: 2,
-              borderRadius: 4,
-              backgroundColor: `${theme.colors.surfaceContainer}B0`,
-            }}
-          >
-            {CurrencyUtils.format(0, info.currency)}
-          </Text>
-        </View>
-      </View>
-
-      {hasPreviousData && (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            columnGap: 24,
-            rowGap: 4,
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          {hasPreviousData && (
             <View
               style={{
-                width: 16,
-                height: 16,
-                backgroundColor: currentColor,
-                borderRadius: 6,
+                borderColor: previousBackgroundColor,
+                borderStyle: 'dashed',
+                borderWidth: 1,
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                bottom: (statistics.last12MonthPeriodAverage / maxValue) * maxBarHeight - 2,
               }}
             />
-            <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
-              {t('groupStats.last12Months')}
+          )}
+        </View>
+
+        <ScrollView
+          ref={(ref) => {
+            if (Platform.OS === 'web') {
+              if (ref) {
+                setTimeout(() => {
+                  // @ts-expect-error - getBoundingClientRect will work on web anyway
+                  const size = measure(ref)
+                  // @ts-expect-error - scrollLeft doesn't exist on mobile
+                  ref.scrollLeft = size.width * 2
+                }, 50)
+              }
+            } else {
+              ref?.scrollTo({ x: containerWidth * 2, y: 0, animated: false })
+            }
+          }}
+          onLayout={({ nativeEvent }) => {
+            const width = nativeEvent.layout.width
+
+            // if the container is wide enough, we can show entire chart on one screen
+            if (width > 600) {
+              setContainerWidth(width / 2)
+            } else {
+              setContainerWidth(width)
+            }
+          }}
+          contentContainerStyle={{
+            flexDirection: 'row',
+            gap: 8,
+            height: graphContainerHeight,
+            width: containerWidth * 2 + (Platform.OS !== 'web' ? (3 * containerWidth) / 6 : 0),
+            paddingTop: graphContainerTopPadding,
+            paddingLeft: (2 * containerWidth) / 6,
+            paddingRight: containerWidth / 6,
+          }}
+          snapToInterval={containerWidth / 6}
+          decelerationRate={'fast'}
+          showsHorizontalScrollIndicator={false}
+          bounces={false}
+          horizontal
+        >
+          {stats.map((stat) => {
+            const monthNumber = Months.indexOf(stat.monthName)
+            const currentYear = monthNumber > dayjs().month() ? dayjs().year() - 1 : dayjs().year()
+
+            const current12MonthPeriod = stat.years.get(currentYear) ?? {
+              totalValue: 0,
+              transactionCount: 0,
+            }
+            const previous12MonthPeriod = stat.years.get(currentYear - 1) ?? {
+              totalValue: 0,
+              transactionCount: 0,
+            }
+
+            return (
+              <View key={stat.monthName} style={{ flex: 1 }}>
+                <View style={{ flex: 1, alignSelf: 'stretch', gap: 4 }}>
+                  <View style={{ flex: 1 }}>
+                    {hasPreviousData && previous12MonthPeriod.totalValue > 0 && (
+                      <Bar
+                        value={previous12MonthPeriod.totalValue}
+                        maxValue={maxValue}
+                        backgroundColor={previousBackgroundColor}
+                        foregroundColor={previousForegroundColor}
+                        zIndex={
+                          previous12MonthPeriod.totalValue > current12MonthPeriod.totalValue ? 0 : 1
+                        }
+                        location='left'
+                        info={info}
+                      />
+                    )}
+                    <Bar
+                      value={current12MonthPeriod.totalValue}
+                      maxValue={maxValue}
+                      backgroundColor={currentBackgroundColor}
+                      foregroundColor={currentForegroundColor}
+                      zIndex={
+                        current12MonthPeriod.totalValue > previous12MonthPeriod.totalValue ? 0 : 1
+                      }
+                      location={hasPreviousData ? 'right' : 'center'}
+                      info={info}
+                    />
+                  </View>
+                  <Text
+                    style={{
+                      height: textHeight,
+                      color: theme.colors.onSurface,
+                      fontSize: 16,
+                      fontWeight: 600,
+                      textAlign: 'center',
+                    }}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                  >
+                    {t(`calendar.monthShort.${stat.monthName}`)}
+                  </Text>
+                </View>
+              </View>
+            )
+          })}
+        </ScrollView>
+
+        <View
+          style={{ position: 'absolute', top: 12 + graphContainerTopPadding, left: 12, right: 12 }}
+        >
+          <Text
+            style={{
+              position: 'absolute',
+              left: 0,
+              bottom: 1,
+              color: theme.colors.onSurfaceVariant,
+              fontSize: 14,
+              fontWeight: 600,
+              paddingHorizontal: 4,
+              paddingVertical: 2,
+              borderRadius: 4,
+              backgroundColor: `${theme.colors.surfaceContainer}B0`,
+            }}
+          >
+            {CurrencyUtils.format(maxValue, info.currency)}
+          </Text>
+        </View>
+        <View
+          ref={overlayRef}
+          pointerEvents='none'
+          style={{
+            position: 'absolute',
+            top: 12 + graphContainerTopPadding,
+            left: 12,
+            right: 12,
+            height: maxBarHeight,
+            justifyContent: 'space-evenly',
+          }}
+        >
+          <View style={{ height: 1 }}>
+            <Text
+              style={{
+                position: 'absolute',
+                left: 0,
+                bottom: 1,
+                color: theme.colors.onSurfaceVariant,
+                fontSize: 14,
+                fontWeight: 600,
+                paddingHorizontal: 4,
+                paddingVertical: 2,
+                borderRadius: 4,
+                backgroundColor: `${theme.colors.surfaceContainer}B0`,
+              }}
+            >
+              {CurrencyUtils.format((maxValue * 4) / 5, info.currency)}
+            </Text>
+          </View>
+          <View style={{ height: 1 }}>
+            <Text
+              style={{
+                position: 'absolute',
+                left: 0,
+                bottom: 1,
+                color: theme.colors.onSurfaceVariant,
+                fontSize: 14,
+                fontWeight: 600,
+                paddingHorizontal: 4,
+                paddingVertical: 2,
+                borderRadius: 4,
+                backgroundColor: `${theme.colors.surfaceContainer}B0`,
+              }}
+            >
+              {CurrencyUtils.format((maxValue * 3) / 5, info.currency)}
+            </Text>
+          </View>
+          <View style={{ height: 1 }}>
+            <Text
+              style={{
+                position: 'absolute',
+                left: 0,
+                bottom: 1,
+                color: theme.colors.onSurfaceVariant,
+                fontSize: 14,
+                fontWeight: 600,
+                paddingHorizontal: 4,
+                paddingVertical: 2,
+                borderRadius: 4,
+                backgroundColor: `${theme.colors.surfaceContainer}B0`,
+              }}
+            >
+              {CurrencyUtils.format((maxValue * 2) / 5, info.currency)}
+            </Text>
+          </View>
+          <View style={{ height: 1 }}>
+            <Text
+              style={{
+                position: 'absolute',
+                left: 0,
+                bottom: 1,
+                color: theme.colors.onSurfaceVariant,
+                fontSize: 14,
+                fontWeight: 600,
+                paddingHorizontal: 4,
+                paddingVertical: 2,
+                borderRadius: 4,
+                backgroundColor: `${theme.colors.surfaceContainer}B0`,
+              }}
+            >
+              {CurrencyUtils.format((maxValue * 1) / 5, info.currency)}
+            </Text>
+          </View>
+          <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+            <Text
+              style={{
+                position: 'absolute',
+                left: 0,
+                bottom: 1,
+                color: theme.colors.onSurfaceVariant,
+                fontSize: 14,
+                fontWeight: 600,
+                paddingHorizontal: 4,
+                paddingVertical: 2,
+                borderRadius: 4,
+                backgroundColor: `${theme.colors.surfaceContainer}B0`,
+              }}
+            >
+              {CurrencyUtils.format(0, info.currency)}
             </Text>
           </View>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-            <View
-              style={{ width: 16, height: 16, backgroundColor: previousColor, borderRadius: 6 }}
-            />
-            <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
-              {t('groupStats.prior12Months')}
-            </Text>
-          </View>
+          {badges.map((badge) => (
+            <Animated.View
+              key={badge.text}
+              entering={FadeIn.duration(100)}
+              exiting={FadeOut.duration(200)}
+              style={{
+                position: 'absolute',
+                left: badge.anchor.x - (overlayLayout?.x ?? 0) - 48,
+                top: badge.anchor.y - (overlayLayout?.y ?? 0) - 36,
+                width: 96,
+                height: 28,
+                backgroundColor: badge.backgroundColor,
+                padding: 4,
+                borderRadius: 8,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <View
+                style={{
+                  position: 'absolute',
+                  width: 8,
+                  height: 8,
+                  left: 44,
+                  bottom: -4,
+                  backgroundColor: badge.backgroundColor,
+                  transform: [{ rotate: '45deg' }],
+                }}
+              />
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                style={{ color: badge.foregroundColor, fontSize: 16, fontWeight: 700 }}
+              >
+                {badge.text}
+              </Text>
+            </Animated.View>
+          ))}
         </View>
-      )}
-    </View>
+
+        {hasPreviousData && (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              columnGap: 24,
+              rowGap: 4,
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <View
+                style={{
+                  width: 16,
+                  height: 16,
+                  backgroundColor: currentBackgroundColor,
+                  borderRadius: 6,
+                }}
+              />
+              <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
+                {t('groupStats.last12Months')}
+              </Text>
+            </View>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <View
+                style={{ width: 16, height: 16, backgroundColor: previousBackgroundColor, borderRadius: 6 }}
+              />
+              <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 600 }}>
+                {t('groupStats.prior12Months')}
+              </Text>
+            </View>
+          </View>
+        )}
+      </View>
+    </BarChartContext.Provider>
   )
 }
 
