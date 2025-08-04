@@ -146,11 +146,15 @@ export function useMaterialYouColors(): {
 
   // TODO: refreshing doesn't work in some cases
   useEffect(() => {
-    AppState.addEventListener('change', (state) => {
+    const subscription = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
         materialYou._refresh()
       }
     })
+
+    return () => {
+      subscription.remove()
+    }
   }, [materialYou])
 
   return paletteToColors(materialYou.palette)
