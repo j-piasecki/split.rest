@@ -1,14 +1,13 @@
+import { isMaterialYouSupported, useMaterialYouColors } from './useMaterialYouColors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Colors, Theme, ThemeType } from '@type/theme'
-import React, { useEffect } from 'react'
+import { Colors, CustomColors, MaterialColors, Theme, ThemeType } from '@type/theme'
+import React, { useEffect, useMemo } from 'react'
 import { Appearance, Platform, useColorScheme } from 'react-native'
 import { SystemBars } from 'react-native-edge-to-edge'
 
 const ThemeContext = React.createContext<Theme | null>(null)
 
-const darkColors: Colors = {
-  transparent: 'transparent',
-
+const darkMaterialColors: MaterialColors = {
   primary: '#fcc0d2',
   onPrimary: '#650033',
   primaryContainer: '#8e004a',
@@ -46,15 +45,21 @@ const darkColors: Colors = {
   inverseSurface: '#efdfe1',
   inversePrimary: '#ad4065',
   inverseOnSurface: '#372e30',
+}
 
+const darkCustomColors: CustomColors = {
+  transparent: 'transparent',
   balancePositive: '#1dd150',
   balanceNegative: '#eb4646',
   balanceNeutral: '#9e8c90',
 }
 
-const lightColors: Colors = {
-  transparent: 'transparent',
+const darkColors: Colors = {
+  ...darkMaterialColors,
+  ...darkCustomColors,
+}
 
+const lightMaterialColors: MaterialColors = {
   primary: '#a8074f',
   onPrimary: '#ffffff',
   primaryContainer: '#fcb8c9',
@@ -92,19 +97,41 @@ const lightColors: Colors = {
   inverseSurface: '#372e30',
   inversePrimary: '#ffb1c8',
   inverseOnSurface: '#fdedef',
+}
 
+const lightCustomColors: CustomColors = {
+  transparent: 'transparent',
   balancePositive: '#00C853',
   balanceNegative: '#D32F2F',
   balanceNeutral: '#9e8c90',
 }
 
+const lightColors: Colors = {
+  ...lightMaterialColors,
+  ...lightCustomColors,
+}
+
 const THEME_KEY = 'application_theme'
+const MATERIAL_YOU_KEY = 'should_use_material_you'
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = React.useState(false)
   const [theme, setTheme] = React.useState<ThemeType>('dark')
   const [userTheme, setUserTheme] = React.useState<ThemeType | null>('dark')
+  const [shouldUseMaterialYou, setShouldUseMaterialYou] = React.useState(false)
+  const materialYouColors = useMaterialYouColors()
   const systemTheme = useColorScheme()
+
+  const colorsToUse = useMemo(() => {
+    if (materialYouColors && shouldUseMaterialYou) {
+      const customColors = theme === 'dark' ? darkCustomColors : lightCustomColors
+      return {
+        ...materialYouColors[theme],
+        ...customColors,
+      }
+    }
+    return theme === 'dark' ? darkColors : lightColors
+  }, [materialYouColors, theme, shouldUseMaterialYou])
 
   useEffect(() => {
     if (Platform.OS !== 'web') {
@@ -128,6 +155,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       })
   }, [systemTheme])
 
+  useEffect(() => {
+    AsyncStorage.getItem(MATERIAL_YOU_KEY).then((value) => {
+      setShouldUseMaterialYou(value === 'true')
+    })
+  }, [])
+
   return (
     <ThemeContext.Provider
       value={{
@@ -142,9 +175,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
             AsyncStorage.removeItem(THEME_KEY)
           }
         },
+        shouldUseMaterialYou,
+        isMaterialYouSupported: isMaterialYouSupported,
+        setShouldUseMaterialYou: (shouldUseMaterialYou: boolean) => {
+          setShouldUseMaterialYou(shouldUseMaterialYou)
+          AsyncStorage.setItem(MATERIAL_YOU_KEY, shouldUseMaterialYou.toString())
+        },
         ready,
         userSelectedTheme: userTheme,
-        colors: theme === 'dark' ? darkColors : lightColors,
+        colors: colorsToUse,
       }}
     >
       <SystemBars style={theme === 'dark' ? 'light' : 'dark'} />

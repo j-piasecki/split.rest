@@ -1,8 +1,6 @@
 export type ThemeType = 'dark' | 'light'
 
-export interface Colors {
-  transparent: string
-
+export interface MaterialColors {
   primary: string
   onPrimary: string
   primaryContainer: string
@@ -40,11 +38,17 @@ export interface Colors {
   inverseSurface: string
   inversePrimary: string
   inverseOnSurface: string
+}
+
+export interface CustomColors {
+  transparent: string
 
   balancePositive: string
   balanceNegative: string
   balanceNeutral: string
 }
+
+export interface Colors extends MaterialColors, CustomColors {}
 
 export interface Theme {
   // theme used by the app (light/dark)
@@ -52,6 +56,9 @@ export interface Theme {
   // theme selected by the user (light/dark/null (system))
   userSelectedTheme: ThemeType | null
   setTheme: (theme: ThemeType | null) => void
+  shouldUseMaterialYou: boolean
+  isMaterialYouSupported: () => boolean
+  setShouldUseMaterialYou: (shouldUseMaterialYou: boolean) => void
   colors: Colors
   ready: boolean
 }
