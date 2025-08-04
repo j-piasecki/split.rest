@@ -134,6 +134,24 @@ function Form({ user }: { user: User }) {
             },
           ]}
         />
+        {theme.isMaterialYouSupported() && (
+          <SegmentedButton
+            items={[
+              {
+                title: t('settings.theme.defaultColors'),
+                icon: 'colors',
+                selected: !theme.shouldUseMaterialYou,
+                onPress: () => theme.setShouldUseMaterialYou(false),
+              },
+              {
+                title: t('settings.theme.materialYouColors'),
+                icon: 'palette',
+                selected: theme.shouldUseMaterialYou,
+                onPress: () => theme.setShouldUseMaterialYou(true),
+              },
+            ]}
+          />
+        )}
       </View>
       <View style={{ flexDirection: 'column', gap: 16, marginTop: 24 }}>
         {/* Don't show delete button on web on small screen; it uses redirect to sign in which requires
