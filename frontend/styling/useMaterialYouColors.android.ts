@@ -144,6 +144,7 @@ export function useMaterialYouColors(): {
 } | null {
   const materialYou = useMaterialYou({})
 
+  // TODO: refreshing doesn't work in some cases
   useEffect(() => {
     AppState.addEventListener('change', (state) => {
       if (state === 'active') {
