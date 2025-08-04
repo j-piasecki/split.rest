@@ -75,6 +75,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@assembless/react-native-material-you@npm:^1.0.0-beta.4":
+  version: 1.0.0-beta.4
+  resolution: "@assembless/react-native-material-you@npm:1.0.0-beta.4"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: f92f859e3fea2699fb8c83bb5c14e81c622a1dcb406dcd7b18c11388673b19324d06d6896798582991108756cd4f0d5506c1a4ad4927ec9b944e2680e2b89ba6
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:7.10.4, @babel/code-frame@npm:~7.10.4":
   version: 7.10.4
   resolution: "@babel/code-frame@npm:7.10.4"
@@ -9558,6 +9568,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "frontend@workspace:frontend"
   dependencies:
+    "@assembless/react-native-material-you": ^1.0.0-beta.4
     "@babel/core": ^7.25.2
     "@expo/metro-runtime": ~5.0.4
     "@expo/vector-icons": ^14.1.0
