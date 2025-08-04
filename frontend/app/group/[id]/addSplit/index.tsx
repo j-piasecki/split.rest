@@ -72,7 +72,7 @@ function Selector({ groupInfo }: { groupInfo: GroupUserInfo }) {
             style={{
               paddingHorizontal: 12,
               color: theme.colors.onSurface,
-              fontSize: threeBarLayout ? 24 : 28,
+              fontSize: threeBarLayout ? 24 : 26,
               fontWeight: 600,
               textAlign: 'center',
             }}

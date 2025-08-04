@@ -34,6 +34,7 @@ export type IconName =
   | 'chronic'
   | 'closeRightPanel'
   | 'close'
+  | 'colors'
   | 'copy'
   | 'currency'
   | 'darkTheme'
@@ -68,6 +69,7 @@ export type IconName =
   | 'moreVertical'
   | 'oneOf'
   | 'openRightPanel'
+  | 'palette'
   | 'payment'
   | 'payments'
   | 'pieChart'
@@ -132,6 +134,7 @@ const iconMap: Record<IconName, unknown> = {
   chronic: require('@assets/icons/chronic.svg'),
   closeRightPanel: require('@assets/icons/close_right_panel.svg'),
   close: require('@assets/icons/close.svg'),
+  colors: require('@assets/icons/colors.svg'),
   copy: require('@assets/icons/copy.svg'),
   currency: require('@assets/icons/currency.svg'),
   darkTheme: require('@assets/icons/dark_theme.svg'),
@@ -166,6 +169,7 @@ const iconMap: Record<IconName, unknown> = {
   moreVertical: require('@assets/icons/more_vertical.svg'),
   oneOf: require('@assets/icons/one_of.svg'),
   openRightPanel: require('@assets/icons/open_right_panel.svg'),
+  palette: require('@assets/icons/palette.svg'),
   payment: require('@assets/icons/payment.svg'),
   payments: require('@assets/icons/payments.svg'),
   pieChart: require('@assets/icons/pie_chart.svg'),

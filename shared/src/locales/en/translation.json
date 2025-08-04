@@ -211,7 +211,9 @@
       "hint": "Choose your theme",
       "light": "Light",
       "dark": "Dark",
-      "system": "System"
+      "system": "System",
+      "defaultColors": "Default colors",
+      "materialYouColors": "Dynamic colors"
     },
     "deleteAccount": {
       "cancel": "Cancel",
