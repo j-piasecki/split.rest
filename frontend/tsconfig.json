@@ -12,7 +12,8 @@
       "@styling/*": ["styling/*"],
       "@type/*": ["type/*"],
       "@utils/*": ["utils/*"],
-      "@database/*": ["database/*"]
+      "@database/*": ["database/*"],
+      "@modules/*": ["modules/*"]
     }
   },
   "exclude": ["node_modules", "dist"]
