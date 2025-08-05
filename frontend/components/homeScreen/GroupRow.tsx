@@ -83,11 +83,9 @@ export function GroupRow({ info, style }: GroupRowProps) {
           <Text style={{ fontSize: 18, fontWeight: 600, color: balanceColor }}>
             {CurrencyUtils.format(info.balance, info.currency, true, true)}
           </Text>
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <View style={{ flexDirection: 'row', gap: 4 }}>
-              <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.memberCount}</Text>
-              <Icon name='members' size={20} color={theme.colors.outline} />
-            </View>
+          <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
+            <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.memberCount}</Text>
+            <Icon name='members' size={20} color={theme.colors.outline} />
 
             {(!isSmallScreen || !info.hasAccess || info.isAdmin || info.locked) && (
               <Icon
@@ -100,7 +98,7 @@ export function GroupRow({ info, style }: GroupRowProps) {
                       ? theme.colors.transparent
                       : theme.colors.outline
                 }
-                style={{ transform: [{ translateY: 2 }] }}
+                style={{ marginLeft: 4 }}
               />
             )}
           </View>
