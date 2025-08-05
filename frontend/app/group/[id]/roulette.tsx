@@ -98,10 +98,10 @@ function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
   }, [entries, setError, setQuery])
 
   useEffect(() => {
-    if (entries.length <= 3) {
+    if (entries.length > 1 && entries.length <= 3 && groupInfo.memberCount === entries.length) {
       submit()
     }
-  }, [entries, submit])
+  }, [entries, groupInfo.memberCount, submit])
 
   return (
     <View
