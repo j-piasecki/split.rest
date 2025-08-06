@@ -350,12 +350,25 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
 
   const stats = statistics.monthlyStatistics
 
-  const maxValue = Math.max(
+  const roundUpToNiceNumber = (value: number): number => {
+    if (value <= 10) {
+      return 10
+    }
+
+    const magnitude = Math.pow(10, Math.floor(Math.log10(value)))
+    const stepSize = magnitude * 0.1
+
+    return Math.ceil(value / stepSize) * stepSize
+  }
+
+  const rawMaxValue = Math.max(
     ...stats.map((stat) =>
       Math.max(...Array.from(stat.years.values()).map((year) => year.totalValue))
     ),
     0
   )
+  
+  const maxValue = roundUpToNiceNumber(rawMaxValue)
 
   const hasPreviousData = statistics.last12MonthPeriodAverage > 0
   const previousBackgroundColor =
