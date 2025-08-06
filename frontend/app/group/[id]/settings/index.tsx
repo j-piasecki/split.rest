@@ -19,6 +19,7 @@ import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useSettleUpGroup } from '@hooks/database/useSettleUpGroup'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { GroupPermissions } from '@utils/GroupPermissions'
+import { HapticFeedback } from '@utils/hapticFeedback'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
@@ -134,6 +135,7 @@ function WrapItUpButton({
           await settleUpGroup()
             .then(() => {
               snack.show({ message: t('groupSettings.settleUpGroupSuccess') })
+              HapticFeedback.confirm()
               if (router.canGoBack()) {
                 router.back()
               } else {
@@ -144,6 +146,7 @@ function WrapItUpButton({
               if (isTranslatableError(e)) {
                 alert(t(e.message))
               }
+              HapticFeedback.reject()
             })
         }}
         title='groupSettings.settleUpGroupConfirmationText'

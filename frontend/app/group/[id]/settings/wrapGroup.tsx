@@ -8,6 +8,7 @@ import { useSetGroupLockedMutation } from '@hooks/database/useSetGroupLocked'
 import { useSettleUpGroup } from '@hooks/database/useSettleUpGroup'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
+import { HapticFeedback } from '@utils/hapticFeedback'
 import { invalidateGroupSplitQuery } from '@utils/queryClient'
 import { sleep } from '@utils/sleep'
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
@@ -54,6 +55,9 @@ function wrapReducer(state: WrapState, action: WrapAction): WrapState {
       if (!action.title) {
         throw new Error('Title is required when starting a step')
       }
+
+      // TODO: this should probably be done outside of the reducer
+      HapticFeedback.tick()
 
       return {
         ...state,

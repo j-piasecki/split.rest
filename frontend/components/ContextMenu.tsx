@@ -240,7 +240,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
     if (!props.disabled) {
       measureAnchor(e)
       setVisible(true)
-      HapticFeedback.impactMedium()
+      HapticFeedback.longPress()
     }
   }
 

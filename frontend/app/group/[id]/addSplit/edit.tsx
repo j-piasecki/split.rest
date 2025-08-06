@@ -5,6 +5,7 @@ import { SplitEditForm } from '@components/SplitForm/SplitEditForm'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
+import { HapticFeedback } from '@utils/hapticFeedback'
 import { SplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitForm } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -37,10 +38,12 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         currency: groupInfo.currency,
       })
 
+      HapticFeedback.confirm()
       snack.show({ message: t('split.created') })
       router.dismissTo(`/group/${groupInfo.id}`)
     } catch (error) {
       setError(error)
+      HapticFeedback.reject()
     } finally {
       setWaiting(false)
     }

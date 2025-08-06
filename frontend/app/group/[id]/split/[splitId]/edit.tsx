@@ -8,6 +8,7 @@ import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
+import { HapticFeedback } from '@utils/hapticFeedback'
 import { validateSplitForm, validateSplitTitle } from '@utils/validateSplitForm'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
@@ -92,10 +93,12 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
         })
       }
 
+      HapticFeedback.confirm()
       snack.show({ message: t('split.updated') })
       router.dismissTo(`/group/${groupInfo.id}`)
     } catch (error) {
       setError(error)
+      HapticFeedback.reject()
     } finally {
       setWaiting(false)
     }

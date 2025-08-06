@@ -37,7 +37,7 @@ export interface HeaderProps {
 const icon = require('@assets/icon.svg')
 
 function feedback() {
-  HapticFeedback.impactLight()
+  HapticFeedback.pullDownActive()
 }
 
 export default function Header({ offset, isWaiting, onPull, showBackButton }: HeaderProps) {

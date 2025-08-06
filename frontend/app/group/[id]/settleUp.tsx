@@ -7,6 +7,7 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useSettleUpPreview } from '@hooks/database/useSettleUpPreview'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
+import { HapticFeedback } from '@utils/hapticFeedback'
 import { invalidateGroup } from '@utils/queryClient'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useCallback, useEffect } from 'react'
@@ -53,6 +54,7 @@ function SettleUpPreview(props: SettleUpPreviewProps) {
         onPress={async () => {
           await confirmSettleUp(props.preview.entriesHash)
             .catch((error) => {
+              HapticFeedback.reject()
               if (isTranslatableError(error)) {
                 alert(t(error.message, error.args))
                 invalidateGroup(props.groupInfo.id)
@@ -61,6 +63,7 @@ function SettleUpPreview(props: SettleUpPreviewProps) {
               }
             })
             .then((split) => {
+              HapticFeedback.confirm()
               snack.show({
                 message: t('groupInfo.settleUp.settleUpSuccess'),
                 actionText: t('groupInfo.settleUp.openSettleUp'),

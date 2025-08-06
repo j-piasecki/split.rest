@@ -8,6 +8,7 @@ import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
+import { HapticFeedback } from '@utils/hapticFeedback'
 import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
@@ -43,10 +44,12 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         currency: groupInfo.currency,
       })
 
+      HapticFeedback.confirm()
       snack.show({ message: t('split.created') })
       router.dismissTo(`/group/${groupInfo.id}`)
     } catch (error) {
       setError(error)
+      HapticFeedback.reject()
     } finally {
       setIsPending(false)
     }
