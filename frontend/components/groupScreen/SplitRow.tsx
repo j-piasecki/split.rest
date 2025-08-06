@@ -257,8 +257,8 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
             <Text
               style={{
                 position: 'absolute',
-                bottom: -12,
-                fontSize: 10,
+                bottom: -8,
+                fontSize: 8,
                 color: theme.colors.outline,
               }}
             >
