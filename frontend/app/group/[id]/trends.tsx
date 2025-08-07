@@ -367,7 +367,7 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
     ),
     0
   )
-  
+
   const maxValue = roundUpToNiceNumber(rawMaxValue)
 
   const hasPreviousData = statistics.last12MonthPeriodAverage > 0
@@ -851,6 +851,35 @@ function MonthSummary({
         <Text style={{ color: theme.colors.secondary, fontSize: 22, fontWeight: 700 }}>
           {t(`calendar.month.${stat.monthName}`)}
         </Text>
+
+        <View style={{ flex: 1 }} />
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 4,
+            backgroundColor: theme.colors.surfaceContainerHighest,
+            paddingVertical: 4,
+            paddingLeft: 8,
+            paddingRight: 12,
+            borderRadius: 16,
+          }}
+        >
+          <Icon name='split' size={18} color={theme.colors.secondary} />
+          <Text style={{ color: theme.colors.secondary, fontSize: 16, fontWeight: 800 }}>
+            {previous12MonthPeriod.transactionCount}
+          </Text>
+          <Icon
+            name='arrowBack'
+            size={16}
+            color={theme.colors.secondary}
+            style={{ transform: [{ rotate: '180deg' }] }}
+          />
+          <Text style={{ color: theme.colors.secondary, fontSize: 16, fontWeight: 800 }}>
+            {current12MonthPeriod.transactionCount}
+          </Text>
+        </View>
       </View>
 
       <View style={{ gap: 12 }}>
