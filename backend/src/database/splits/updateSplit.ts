@@ -1,3 +1,4 @@
+import { BadRequestException } from '../../errors/BadRequestException'
 import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { NotificationToken, getNotificationTokens } from '../utils/getNotificationTokens'
@@ -314,6 +315,15 @@ export async function updateSplitNoTransaction(
 }
 
 export async function updateSplit(pool: Pool, callerId: string, args: UpdateSplitArguments) {
+  const changeSum = args.balances.reduce((sum, { change }) => sum + Number(change), 0)
+  if (Math.abs(changeSum) >= 0.005) {
+    throw new BadRequestException('api.split.sumOfChangesMustBeZero')
+  }
+
+  if (Number(args.total) < 0.01) {
+    throw new BadRequestException('api.split.totalValueMustBePositive')
+  }
+
   const client = await pool.connect()
   try {
     await client.query('BEGIN')

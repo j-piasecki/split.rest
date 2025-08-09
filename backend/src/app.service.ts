@@ -1,6 +1,4 @@
 import { DatabaseService } from './database.service'
-import { getAllowedSplitTypes } from './database/utils/getAllowedSplitTypes'
-import { BadRequestException } from './errors/BadRequestException'
 import { deleteProfilePicture, downloadProfilePicture } from './profilePicture'
 import { Injectable } from '@nestjs/common'
 import * as fs from 'fs'
@@ -80,21 +78,6 @@ export class AppService {
   }
 
   async createSplit(callerId: string, args: CreateSplitArguments) {
-    const allowedTypes = await getAllowedSplitTypes(this.databaseService.pool, args.groupId)
-
-    if (allowedTypes === null || !allowedTypes.includes(args.type)) {
-      throw new BadRequestException('api.split.invalidSplitType')
-    }
-
-    const changeSum = args.balances.reduce((sum, { change }) => sum + Number(change), 0)
-    if (Math.abs(changeSum) >= 0.005) {
-      throw new BadRequestException('api.split.sumOfChangesMustBeZero')
-    }
-
-    if (Number(args.total) < 0.01) {
-      throw new BadRequestException('api.split.totalValueMustBePositive')
-    }
-
     return await this.databaseService.createSplit(callerId, args)
   }
 
@@ -107,14 +90,6 @@ export class AppService {
   }
 
   async updateSplit(callerId: string, args: UpdateSplitArguments) {
-    const changeSum = args.balances.reduce((sum, { change }) => sum + Number(change), 0)
-    if (Math.abs(changeSum) >= 0.005) {
-      throw new BadRequestException('api.split.sumOfChangesMustBeZero')
-    }
-    if (Number(args.total) < 0.01) {
-      throw new BadRequestException('api.split.totalValueMustBePositive')
-    }
-
     return await this.databaseService.updateSplit(callerId, args)
   }
 

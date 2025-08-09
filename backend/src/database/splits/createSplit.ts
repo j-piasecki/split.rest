@@ -1,6 +1,8 @@
+import { BadRequestException } from '../../errors/BadRequestException'
 import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import NotificationUtils from '../../notifications/NotificationUtils'
+import { getAllowedSplitTypes } from '../utils/getAllowedSplitTypes'
 import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isGroupLocked } from '../utils/isGroupLocked'
@@ -142,6 +144,21 @@ async function dispatchNotifications(
 }
 
 export async function createSplit(pool: Pool, callerId: string, args: CreateSplitArguments) {
+  const allowedTypes = await getAllowedSplitTypes(this.databaseService.pool, args.groupId)
+
+  if (allowedTypes === null || !allowedTypes.includes(args.type)) {
+    throw new BadRequestException('api.split.invalidSplitType')
+  }
+
+  const changeSum = args.balances.reduce((sum, { change }) => sum + Number(change), 0)
+  if (Math.abs(changeSum) >= 0.005) {
+    throw new BadRequestException('api.split.sumOfChangesMustBeZero')
+  }
+
+  if (Number(args.total) < 0.01) {
+    throw new BadRequestException('api.split.totalValueMustBePositive')
+  }
+
   if (isNormalSplit(args.type)) {
     validateNormalSplitArgs(args)
   }
