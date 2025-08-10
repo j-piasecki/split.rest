@@ -24,13 +24,18 @@ export async function createOrUpdateUser(pool: Pool, user: User): Promise<void> 
     throw new BadRequestException('api.invalidArguments')
   }
 
-  await pool.query(
-    `
-      INSERT INTO users(id, name, email, created_at, photo_url)
-      VALUES ($1, $2, $3, $4, $5)
-      ON CONFLICT (id) DO UPDATE
-      SET photo_url = $5, deleted = FALSE
-    `,
-    [user.id, name, user.email, Date.now(), photoUrl]
-  )
+  try {
+    await pool.query(
+      `
+        INSERT INTO users(id, name, email, created_at, photo_url)
+        VALUES ($1, $2, $3, $4, $5)
+        ON CONFLICT (id) DO UPDATE
+        SET photo_url = $5, deleted = FALSE
+      `,
+      [user.id, name, user.email, Date.now(), photoUrl]
+    )
+  } catch (error) {
+    console.error(`Failed to create or update user ${user.id} (${user.name}, ${user.email})`, error)
+    throw error
+  }
 }
