@@ -1,6 +1,5 @@
 import { Button } from '@components/Button'
 import { ButtonShimmer } from '@components/ButtonShimmer'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { useRouter } from 'expo-router'
 import React from 'react'
@@ -12,7 +11,6 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
   const theme = useTheme()
   const router = useRouter()
   const { t } = useTranslation()
-  const { data: permissions } = useGroupPermissions(info?.id)
 
   let shimmerOffset = 0
 
@@ -35,9 +33,9 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
         gap: 12,
       }}
     >
-      <ButtonShimmer argument={permissions}>
-        {(permissions) =>
-          permissions.canAccessRoulette() &&
+      <ButtonShimmer argument={info}>
+        {(info) =>
+          info.permissions.canAccessRoulette?.() &&
           !info?.locked && (
             <Button
               onPress={() => {
@@ -50,10 +48,10 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
         }
       </ButtonShimmer>
 
-      <ButtonShimmer argument={permissions} offset={(shimmerOffset -= 0.05)}>
-        {(permissions) =>
+      <ButtonShimmer argument={info} offset={(shimmerOffset -= 0.05)}>
+        {(info) =>
           Number(info?.balance) !== 0 &&
-          permissions.canSettleUp() && (
+          info.permissions.canSettleUp?.() && (
             <Button
               onPress={() => {
                 router.navigate(`/group/${info!.id}/settleUp`)

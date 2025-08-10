@@ -15,7 +15,6 @@ import { Text } from '@components/Text'
 import { getAllGroupMembers } from '@database/getAllGroupMembers'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useRouletteQuery } from '@hooks/useRouletteQuery'
 import { useTranslatedError } from '@hooks/useTranslatedError'
@@ -55,7 +54,6 @@ function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
   const paneLayout = useRef<LayoutRectangle | null>(null)
   const selectablePeoplePickerRef = useRef<SelectablePeoplePickerRef>(null)
   const { t } = useTranslation()
-  const { data: permissions } = useGroupPermissions(groupInfo.id)
   const [entries, setEntries] = useState<PersonEntry[]>([
     { user: user, entry: user.email ?? '' },
     { entry: '' },
@@ -144,11 +142,11 @@ function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
           onLayout={(e) => {
             paneLayout.current = e.nativeEvent.layout
           }}
-          collapsible={permissions?.canReadMembers()}
+          collapsible={groupInfo.permissions.canReadMembers()}
           collapsed={false}
           collapseIcon='addAllMembers'
           onCollapseChange={() => {
-            if (permissions?.canReadMembers()) {
+            if (groupInfo.permissions.canReadMembers()) {
               addAllMembers()
             }
           }}
@@ -198,7 +196,6 @@ function Result({ query, groupInfo, setQuery }: ResultProps) {
   const theme = useTheme()
   const router = useRouter()
   const insets = useModalScreenInsets()
-  const { data: permissions } = useGroupPermissions(groupInfo.id)
   const { t } = useTranslation()
   const { error, result, finished } = useRouletteQuery(groupInfo.id, query)
 
@@ -300,7 +297,7 @@ function Result({ query, groupInfo, setQuery }: ResultProps) {
         </Pane>
       </ScrollView>
 
-      {permissions?.canCreateSplits() && canSplit && (
+      {groupInfo.permissions.canCreateSplits() && canSplit && (
         <Button
           leftIcon='split'
           title={t('roulette.createSplit')}
@@ -327,11 +324,10 @@ export default function Modal() {
   const theme = useTheme()
   const user = useAuth()
   const { data: groupInfo } = useGroupInfo(Number(id))
-  const { data: permissions } = useGroupPermissions(Number(id))
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
   const [query, setQuery] = useState<PersonEntry[] | null>(null)
 
-  const canAccessRoulette = permissions?.canAccessRoulette() ?? false
+  const canAccessRoulette = groupInfo?.permissions?.canAccessRoulette?.() ?? false
 
   return (
     <ModalScreen returnPath={`/group/${id}`} title={t('screenName.roulette')} maxWidth={500}>

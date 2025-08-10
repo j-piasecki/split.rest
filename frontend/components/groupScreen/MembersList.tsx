@@ -5,7 +5,6 @@ import { useFABScrollHandler } from '@components/FloatingActionButton'
 import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { Shimmer } from '@components/Shimmer'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { queryClient } from '@utils/queryClient'
@@ -112,7 +111,6 @@ export function MembersList({
   const threeBarLayout = useThreeBarLayout()
   const [fabRef, scrollHandler] = useFABScrollHandler()
   const { t } = useTranslation()
-  const { data: permissions } = useGroupPermissions(info?.id)
   const { members, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =
     useGroupMembers(info?.id, lowToHigh)
 
@@ -142,7 +140,7 @@ export function MembersList({
             isLoading={isLoading || !info}
             emptyText={
               members.length === 0 && !iconOnly
-                ? permissions?.canReadMembers()
+                ? info?.permissions?.canReadMembers?.()
                   ? t('noMembers')
                   : t('api.insufficientPermissions.group.readMembers')
                 : undefined

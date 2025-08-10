@@ -15,12 +15,10 @@ import { useDeleteGroupJoinLink } from '@hooks/database/useDeleteGroupJoinLink'
 import { useDirectGroupInvites } from '@hooks/database/useDirectGroupInvites'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupJoinLink } from '@hooks/database/useGroupJoinLink'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useInviteUserToGroupMutation } from '@hooks/database/useInviteUserToGroup'
 import { useSetInviteWithdrawnMutation } from '@hooks/database/useInviteWithdrawnMutation'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
-import { GroupPermissions } from '@utils/GroupPermissions'
 import { getJoinLinkURL } from '@utils/getJoinLinkURL'
 import { ApiError } from '@utils/makeApiRequest'
 import { invalidateDirectGroupInvites } from '@utils/queryClient'
@@ -29,14 +27,12 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, StyleProp, View, ViewStyle } from 'react-native'
-import { GroupInviteWithInvitee, GroupUserInfo } from 'shared'
+import { GroupInviteWithInvitee, GroupMemberPermissions, GroupUserInfo } from 'shared'
 
 function JoinLinkManager({
   info,
-  permissions,
 }: {
   info: GroupUserInfo
-  permissions: GroupPermissions
 }) {
   const theme = useTheme()
   const router = useRouter()
@@ -58,7 +54,7 @@ function JoinLinkManager({
       {isLoadingLink && <ActivityIndicator color={theme.colors.primary} />}
       {!isLoadingLink && (
         <>
-          {!link && permissions.canCreateJoinLink() && (
+          {!link && info.permissions.canCreateJoinLink() && (
             <Button
               leftIcon='addLink'
               isLoading={isCreatingJoinLink}
@@ -90,7 +86,7 @@ function JoinLinkManager({
                   }}
                 />
               </View>
-              {permissions.canDeleteJoinLink() && (
+              {info.permissions.canDeleteJoinLink() && (
                 <Button
                   destructive
                   leftIcon='deleteLink'
@@ -129,7 +125,7 @@ function InviteRow({
 }: {
   invite: GroupInviteWithInvitee
   info: GroupUserInfo
-  permissions: GroupPermissions
+  permissions: GroupMemberPermissions
   showSeparator: boolean
   manageOnlyOwnInvites: boolean
   style?: StyleProp<ViewStyle>
@@ -232,14 +228,14 @@ function InviteRow({
   )
 }
 
-function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPermissions }) {
+function Form({ info }: { info: GroupUserInfo }) {
   const theme = useTheme()
   const insets = useModalScreenInsets()
   const [fabRef, scrollHandler] = useFABScrollHandler()
   const { t } = useTranslation()
 
   const manageOnlyOwnInvites =
-    !permissions.canManageAllDirectInvites() && permissions.canManageDirectInvites()
+    !info.permissions.canManageAllDirectInvites() && info.permissions.canManageDirectInvites()
   const { invites, hasNextPage, isFetchingNextPage, fetchNextPage, isRefetching, isLoading } =
     useDirectGroupInvites(info.id, manageOnlyOwnInvites)
 
@@ -263,7 +259,7 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
           <InviteRow
             invite={item}
             info={info}
-            permissions={permissions}
+            permissions={info.permissions}
             showSeparator={index !== invites.length - 1}
             manageOnlyOwnInvites={manageOnlyOwnInvites}
             style={[
@@ -282,8 +278,8 @@ function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPe
         keyExtractor={(item) => item.invitee.id}
         ListHeaderComponent={
           <View style={{ gap: 12 }}>
-            {permissions?.canSeeJoinLink() && (
-              <JoinLinkManager info={info} permissions={permissions} />
+            {info.permissions.canSeeJoinLink() && (
+              <JoinLinkManager info={info} />
             )}
             <FullPaneHeader
               icon='stackedEmail'
@@ -327,7 +323,6 @@ export default function Settings() {
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()
   const { data: info } = useGroupInfo(Number(id))
-  const { data: permissions } = useGroupPermissions(Number(id))
 
   return (
     <ModalScreen
@@ -338,7 +333,7 @@ export default function Settings() {
       opaque={false}
       slideAnimation={false}
     >
-      {info && permissions && <Form info={info} permissions={permissions} />}
+      {info && <Form info={info} />}
     </ModalScreen>
   )
 }

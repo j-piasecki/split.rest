@@ -1,3 +1,5 @@
+import { isSettleUpSplit, SplitInfo } from "./types"
+
 export const PermissionKeys = [
   'createSplit',
   'readSplits',
@@ -116,6 +118,37 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     this.splits = splits
     this.members = members
     this.manage = manage
+  }
+
+  private checkSplitPermission(userId: string | undefined, split: SplitInfo, type: SplitPermissionType) {
+    return (
+      type === SplitPermissionType.All ||
+      (type === SplitPermissionType.OnlyIfIncluded &&
+        (split.isUserParticipating ||
+          split.createdById === userId ||
+          split.paidById === userId))
+    )
+  }
+
+  canDeleteSplit(userId: string | undefined, split: SplitInfo): boolean {
+    return this.checkSplitPermission(userId, split, this.canDeleteSplits())
+  }
+
+  canUpdateSplit(userId: string | undefined, split: SplitInfo): boolean {
+    if (isSettleUpSplit(split.type)) {
+      // Settle up splits are not editable
+      return false
+    }
+
+    return this.checkSplitPermission(userId, split, this.canUpdateSplits())
+  }
+
+  canSeeSplitDetails(userId: string | undefined, split: SplitInfo): boolean {
+    return this.checkSplitPermission(userId, split, this.canSeeSplitsDetails())
+  }
+
+  canResolveDelayedSplit(userId: string | undefined, split: SplitInfo): boolean {
+    return this.checkSplitPermission(userId, split, this.canResolveDelayedSplits())
   }
 
   canCreateSplits(): boolean {

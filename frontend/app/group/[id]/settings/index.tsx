@@ -12,27 +12,25 @@ import { useSnack } from '@components/SnackBar'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
 import { useSetGroupLockedMutation } from '@hooks/database/useSetGroupLocked'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useSettleUpGroup } from '@hooks/database/useSettleUpGroup'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
-import { GroupPermissions } from '@utils/GroupPermissions'
 import { HapticFeedback } from '@utils/hapticFeedback'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { GroupUserInfo, SplitType, isTranslatableError } from 'shared'
+import { GroupMemberPermissions, GroupUserInfo, SplitType, isTranslatableError } from 'shared'
 
 function WrapItUpButton({
   info,
   permissions,
 }: {
   info: GroupUserInfo
-  permissions?: GroupPermissions
+  permissions?: GroupMemberPermissions
 }) {
   const { t } = useTranslation()
   const router = useRouter()
@@ -170,7 +168,6 @@ function Form({ info }: { info: GroupUserInfo }) {
   const [isEditingName, setIsEditingName] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
 
-  const { data: permissions } = useGroupPermissions(info.id)
   const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
 
   const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
@@ -196,7 +193,7 @@ function Form({ info }: { info: GroupUserInfo }) {
           textLocation='start'
           collapsed={false}
           containerStyle={{ padding: 16 }}
-          collapsible={permissions?.canRenameGroup()}
+          collapsible={info.permissions.canRenameGroup()}
           collapseIcon={isEditingName ? 'close' : 'editAlt'}
           wholeHeaderInteractive={false}
           onCollapseChange={() => {
@@ -213,7 +210,7 @@ function Form({ info }: { info: GroupUserInfo }) {
             value={name}
             iconHidden
             placeholder={t('groupSettings.groupName')}
-            disabled={!permissions?.canRenameGroup()}
+            disabled={!info.permissions.canRenameGroup()}
             onSubmit={(newName) => {
               setGroupName(newName).then(() => {
                 setName(newName)
@@ -223,7 +220,7 @@ function Form({ info }: { info: GroupUserInfo }) {
           />
         </Pane>
 
-        {(permissions?.canSeeJoinLink() || permissions?.canManageDirectInvites()) && (
+        {(info.permissions.canSeeJoinLink() || info.permissions.canManageDirectInvites()) && (
           <PaneButton
             icon='addMember'
             title={t('settings.invitations.manageInvitations')}
@@ -233,7 +230,7 @@ function Form({ info }: { info: GroupUserInfo }) {
           />
         )}
 
-        {permissions?.canManageAllowedSplitMethods() && (
+        {info.permissions.canManageAllowedSplitMethods() && (
           <PaneButton
             icon='split'
             title={t('group.allowedSplitMethods')}
@@ -244,8 +241,8 @@ function Form({ info }: { info: GroupUserInfo }) {
         )}
       </View>
       <View style={{ marginTop: 32, gap: 16 }}>
-        <WrapItUpButton info={info} permissions={permissions} />
-        {permissions?.canDeleteGroup() && (
+        <WrapItUpButton info={info} />
+        {info.permissions.canDeleteGroup() && (
           <>
             <ConfirmationModal
               visible={deleteModalVisible}

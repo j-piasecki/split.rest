@@ -2,7 +2,6 @@ import ModalScreen from '@components/ModalScreen'
 import { FormData, SplitEntryData, SplitForm } from '@components/SplitForm'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
@@ -35,7 +34,6 @@ function initialEntriesFromContext(currentUser: UserWithDisplayName): SplitEntry
 function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDisplayName }) {
   const router = useRouter()
   const insets = useModalScreenInsets()
-  const { data: permissions } = useGroupPermissions(groupInfo.id)
   const [error, setError] = useTranslatedError()
   const [waiting, setWaiting] = useState(false)
 
@@ -118,7 +116,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDis
         buttonTitle='form.buttonNext'
         buttonIcon='chevronForward'
         buttonIconLocation='right'
-        showAddAllMembers={permissions?.canReadMembers()}
+        showAddAllMembers={groupInfo.permissions.canReadMembers()}
       />
     </View>
   )

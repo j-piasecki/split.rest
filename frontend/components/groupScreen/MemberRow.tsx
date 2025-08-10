@@ -5,7 +5,6 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { getBalanceColor } from '@utils/getBalanceColor'
@@ -53,11 +52,10 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
   const router = useRouter()
   const contextMenuRef = useRef<ContextMenuRef>(null)
   const { t } = useTranslation()
-  const { data: permissions } = useGroupPermissions(info.id)
   const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(info.id, member.id)
   const { mutate: setGroupAdminMutation } = useSetGroupAdminMutation(info.id, member.id)
 
-  const hasContextActions = permissions?.canManageAccess() || permissions?.canManageAdmins()
+  const hasContextActions = info.permissions.canManageAccess() || info.permissions.canManageAdmins()
   const contextMenuDisabled =
     member.deleted || member.id === user?.id || iconOnly || !hasContextActions
 
@@ -69,7 +67,7 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
         {
           label: member.hasAccess ? t('member.revokeAccess') : t('member.giveAccess'),
           icon: member.hasAccess ? 'lock' : 'lockOpen',
-          disabled: !permissions?.canManageAccess(),
+          disabled: !info.permissions.canManageAccess(),
           onPress: () => {
             setGroupAccessMutation(!member.hasAccess)
           },
@@ -78,7 +76,7 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
         {
           label: member.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin'),
           icon: member.isAdmin ? 'removeModerator' : 'addModerator',
-          disabled: !permissions?.canManageAdmins() || !member.hasAccess,
+          disabled: !info.permissions.canManageAdmins() || !member.hasAccess,
           onPress: () => {
             setGroupAdminMutation(!member.isAdmin)
           },

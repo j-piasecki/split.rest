@@ -4,10 +4,8 @@ import { ParticipantsPicker } from '@components/ParticipantsPicker'
 import { useSnack } from '@components/SnackBar'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useResolveAllDelayedSplits } from '@hooks/database/useResolveAllSplits'
 import { useTranslatedError } from '@hooks/useTranslatedError'
-import { GroupPermissions } from '@utils/GroupPermissions'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
@@ -17,11 +15,9 @@ import { GroupUserInfo, Member, UserWithDisplayName } from 'shared'
 
 function Form({
   info,
-  permissions,
   memberInfo,
 }: {
   info: GroupUserInfo
-  permissions: GroupPermissions
   memberInfo: Member
 }) {
   const router = useRouter()
@@ -77,7 +73,7 @@ function Form({
         requiredPayer={false}
         error={error ?? undefined}
         onSubmit={(users) => {
-          if (!permissions.canResolveAllDelayedSplitsAtOnce()) {
+          if (!info.permissions.canResolveAllDelayedSplitsAtOnce()) {
             alert(t('api.insufficientPermissions.group.resolveAllDelayedSplitsAtOnce'))
             return
           }
@@ -95,7 +91,6 @@ export default function Settings() {
   const { t } = useTranslation()
   const user = useAuth()
   const { data: info } = useGroupInfo(Number(id))
-  const { data: permissions } = useGroupPermissions(Number(id))
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
 
   return (
@@ -107,8 +102,8 @@ export default function Settings() {
       opaque={false}
       slideAnimation={false}
     >
-      {info && permissions && memberInfo && (
-        <Form info={info} permissions={permissions} memberInfo={memberInfo} />
+      {info && memberInfo && (
+        <Form info={info} memberInfo={memberInfo} />
       )}
     </ModalScreen>
   )

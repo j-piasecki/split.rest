@@ -7,7 +7,7 @@ import {
   SplitPermissionsDTO,
 } from 'shared'
 
-const ownerPermissions: GroupMemberPermissionsDTO = {
+export const ownerPermissions: GroupMemberPermissionsDTO = {
   splits:
     SplitPermissionsDTO.Create |
     SplitPermissionsDTO.Read |

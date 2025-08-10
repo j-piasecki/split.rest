@@ -10,7 +10,6 @@ import {
 } from '@components/SelectablePeoplePicker'
 import { SuggestionsPane } from '@components/SplitForm/SuggestionsPane'
 import { getAllGroupMembers } from '@database/getAllGroupMembers'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { UserWithValue } from '@utils/splitCreationContext'
@@ -78,7 +77,6 @@ export function ParticipantsPicker({
   const paneLayout = useRef<LayoutRectangle | null>(null)
   const selectablePeoplePickerRef = useRef<SelectablePeoplePickerRef>(null)
   const { t } = useTranslation()
-  const { data: permissions } = useGroupPermissions(groupInfo.id, user.id)
 
   const [waiting, setWaiting] = useState(false)
   const [entries, setEntries] = useState<PersonEntry[]>(
@@ -185,10 +183,10 @@ export function ParticipantsPicker({
           onLayout={(e) => {
             paneLayout.current = e.nativeEvent.layout
           }}
-          collapsible={permissions?.canReadMembers()}
+          collapsible={groupInfo.permissions.canReadMembers()}
           collapsed={false}
           collapseIcon='addAllMembers'
-          onCollapseChange={permissions?.canReadMembers() ? addAllMembers : undefined}
+          onCollapseChange={groupInfo.permissions.canReadMembers() ? addAllMembers : undefined}
         >
           {useSelectablePicker ? (
             <SelectablePeoplePicker

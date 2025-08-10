@@ -9,7 +9,6 @@ import { Text } from '@components/Text'
 import { SplitsList } from '@components/groupScreen/SplitsList'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
 import { useSetUserDisplayNameMutation } from '@hooks/database/useSetUserDisplayName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
@@ -30,17 +29,16 @@ export function MemberInfo() {
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
   const { data: groupInfo } = useGroupInfo(Number(groupId))
-  const { data: userPermissions } = useGroupPermissions(Number(groupId))
   const { data: memberInfo, error } = useGroupMemberInfo(Number(groupId), String(memberId))
 
   const { mutateAsync: setDisplayName, isPending: isChangingDisplayName } =
     useSetUserDisplayNameMutation(Number(groupId), String(memberId))
 
   const canEditDisplayName =
-    userPermissions?.canChangeEveryoneDisplayName() ||
-    (userPermissions?.canChangeDisplayName() && user?.id === memberId)
+    groupInfo?.permissions?.canChangeEveryoneDisplayName?.() ||
+    (groupInfo?.permissions?.canChangeDisplayName?.() && user?.id === memberId)
 
-  if (error || userPermissions?.canReadMembers() === false) {
+  if (error || groupInfo?.permissions?.canReadMembers?.() === false) {
     return (
       <View
         style={{
@@ -48,7 +46,7 @@ export function MemberInfo() {
         }}
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
-          {userPermissions?.canReadMembers() ? (
+          {groupInfo?.permissions?.canReadMembers?.() ? (
             <>
               <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
               <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
@@ -198,7 +196,7 @@ export function MemberInfo() {
             </View>
           )}
 
-          {userPermissions?.canSettleUp() &&
+          {groupInfo?.permissions?.canSettleUp?.() &&
             memberId !== user?.id &&
             Number(groupInfo?.balance) !== 0 && (
               <View style={{ width: '100%' }}>
@@ -221,14 +219,13 @@ function MemberScreen() {
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
   const { data: groupInfo } = useGroupInfo(Number(groupId))
-  const { data: permissions } = useGroupPermissions(Number(groupId))
   const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =
     useGroupSplitsQuery(Number(groupId), {
       participants: { type: 'oneOf', ids: [String(memberId)] },
       targetUser: String(memberId),
     })
 
-  return permissions?.canQuerySplits() ? (
+  return groupInfo?.permissions?.canQuerySplits?.() ? (
     <SplitsList
       info={groupInfo}
       splits={splits}

@@ -1,13 +1,12 @@
 import { FloatingActionButton, FloatingActionButtonRef } from '@components/FloatingActionButton'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useRouter } from 'expo-router'
 import { t } from 'i18next'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupInfo } from 'shared'
+import { GroupUserInfo } from 'shared'
 
 export interface InviteMemberFabProps {
-  info?: GroupInfo
+  info?: GroupUserInfo
   iconOnly?: boolean
   applyBottomInset?: boolean
   threeBarLayout?: boolean
@@ -23,10 +22,9 @@ export function InviteMemberFab({
 }: InviteMemberFabProps) {
   const insets = useSafeAreaInsets()
   const router = useRouter()
-  const { data: permissions } = useGroupPermissions(info?.id)
 
   return (
-    permissions?.canInviteMembers() && (
+    info?.permissions?.canInviteMembers?.() && (
       <View
         style={{
           position: 'absolute',

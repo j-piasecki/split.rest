@@ -3,7 +3,7 @@ import { TextInputRef } from './TextInput'
 import { TextInputWithSuggestions, TextInputWithSuggestionsProps } from './TextInputWithSuggestions'
 import { Text } from '@components/Text'
 import { getGroupMemberAutocompletions } from '@database/getGroupMembersAutocompletions'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTheme } from '@styling/theme'
 import { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -70,19 +70,19 @@ export function TextInputWithUserSuggestions({
   ...rest
 }: TextInputWithUserSuggestionsProps) {
   const ref = useRef<TextInputRef>(null)
-  const { data: permissions } = useGroupPermissions(groupId)
   const { t } = useTranslation()
+  const { data: groupInfo } = useGroupInfo(groupId)
 
   const getSuggestions = useCallback(
     async (val: string) => {
       const suggestions =
-        permissions?.canReadMembers() || /.*@.+/.test(val)
+        groupInfo?.permissions?.canReadMembers?.() || /.*@.+/.test(val)
           ? await getGroupMemberAutocompletions(groupId, val)
           : []
 
       return filterSuggestions ? filterSuggestions(suggestions) : suggestions
     },
-    [groupId, permissions, filterSuggestions]
+    [groupId, groupInfo?.permissions, filterSuggestions]
   )
 
   return (

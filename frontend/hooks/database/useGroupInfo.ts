@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { ApiError, makeRequest } from '@utils/makeApiRequest'
-import { GetGroupInfoArguments, GroupUserInfo, TranslatableError } from 'shared'
+import { GetGroupInfoArguments, GroupMemberPermissions, GroupUserInfo, TranslatableError } from 'shared'
 
 export function useGroupInfo(id: number) {
   return useQuery({
@@ -16,6 +16,8 @@ export function useGroupInfo(id: number) {
       if (info === null) {
         throw new TranslatableError('api.notFound.group')
       }
+
+      info.permissions = new GroupMemberPermissions(info.permissions.splits, info.permissions.members, info.permissions.manage)
 
       return info
     },

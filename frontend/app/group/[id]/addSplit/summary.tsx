@@ -4,7 +4,6 @@ import ModalScreen from '@components/ModalScreen'
 import { useSnack } from '@components/SnackBar'
 import { SplitInfo } from '@components/SplitInfo'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
@@ -24,7 +23,6 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
   const [isPending, setIsPending] = useState(false)
   const [error, setError] = useTranslatedError()
   const { t } = useTranslation()
-  const { data: permissions } = useGroupPermissions(groupInfo.id)
 
   async function save() {
     setIsPending(true)
@@ -72,7 +70,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
 
       <View style={{ gap: 16 }}>
         {error && <ErrorText>{error}</ErrorText>}
-        {permissions?.canCreateSplits() && (
+        {groupInfo.permissions.canCreateSplits() && (
           <>
             {/* Show the edit button only for equal splits not to show the same form twice */}
             {(SplitCreationContext.current.splitMethod === SplitMethod.Equal ||
@@ -89,7 +87,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
             <Button leftIcon='save' title={t('form.save')} isLoading={isPending} onPress={save} />
           </>
         )}
-        {!permissions?.canCreateSplits() && (
+        {!groupInfo.permissions.canCreateSplits() && (
           <ErrorText translationKey='api.insufficientPermissions.group.createSplit' />
         )}
       </View>

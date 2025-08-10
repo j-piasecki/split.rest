@@ -6,9 +6,9 @@ import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { restoreSplit } from '@database/restoreSplit'
 import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
+import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { getSplitDisplayName } from '@utils/getSplitDisplayName'
@@ -94,6 +94,7 @@ export interface LoadedSplitRowProps {
 }
 
 function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
+  const user = useAuth()
   const theme = useTheme()
   const router = useRouter()
   const snack = useSnack()
@@ -102,7 +103,6 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
   const threeBarLayout = useThreeBarLayout()
   const contextMenuRef = useRef<ContextMenuRef>(null)
   const [width, setWidth] = useState(-1)
-  const { data: permissions } = useGroupPermissions(info.id)
   const { mutateAsync: deleteSplit, isPending } = useDeleteSplit(info.id)
 
   const isSettleUp = isSettleUpSplit(split.type)
@@ -114,9 +114,9 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
   const showBadge = isSettleUp || isLend || isDelayed
 
   const contextMenuDisabled =
-    !permissions?.canSeeSplitDetails(split) &&
-    !permissions?.canUpdateSplit(split) &&
-    !permissions?.canDeleteSplit(split)
+    !info.permissions.canSeeSplitDetails?.(user?.id, split) &&
+    !info.permissions.canUpdateSplit?.(user?.id, split) &&
+    !info.permissions.canDeleteSplit?.(user?.id, split)
 
   return (
     <ContextMenu
@@ -129,7 +129,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
           {
             userSelect: 'none',
             backgroundColor:
-              pressed && permissions?.canSeeSplitDetails(split)
+              pressed && info.permissions.canSeeSplitDetails?.(user?.id, split)
                 ? theme.colors.surfaceContainerHighest
                 : hovered
                   ? theme.colors.surfaceContainerHigh
@@ -138,7 +138,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
         ]
       }}
       onPress={() => {
-        if (permissions?.canSeeSplitDetails(split)) {
+        if (info.permissions.canSeeSplitDetails?.(user?.id, split)) {
           router.navigate(`/group/${info?.id}/split/${split.id}`)
         }
       }}
@@ -146,7 +146,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
         {
           label: t('split.showDetails'),
           icon: 'visibility',
-          disabled: !permissions?.canSeeSplitDetails(split),
+          disabled: !info.permissions.canSeeSplitDetails?.(user?.id, split),
           onPress: () => {
             router.navigate(`/group/${info?.id}/split/${split.id}`)
           },
@@ -154,7 +154,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
         {
           label: t('split.edit'),
           icon: 'edit',
-          disabled: !permissions?.canUpdateSplit(split) || info.locked,
+          disabled: !info.permissions.canUpdateSplit?.(user?.id, split) || info.locked,
           onPress: () => {
             router.navigate(`/group/${info?.id}/split/${split.id}/edit`)
           },
@@ -162,7 +162,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
         {
           label: t('split.delete'),
           icon: 'delete',
-          disabled: !permissions?.canDeleteSplit(split) || info.locked,
+          disabled: !info.permissions.canDeleteSplit?.(user?.id, split) || info.locked,
           destructive: true,
           onPress: () => {
             deleteSplit(split.id)
