@@ -1,8 +1,8 @@
 import { BadRequestException } from '../../errors/BadRequestException'
+import crypto from 'crypto'
 import { Pool } from 'pg'
 import { CreateGroupJoinLinkArguments } from 'shared/src/endpointArguments'
 import { GroupJoinLink } from 'shared/src/types'
-import { v4 as uuidv4 } from 'uuid'
 
 export async function createGroupJoinLink(
   pool: Pool,
@@ -22,7 +22,7 @@ export async function createGroupJoinLink(
       throw new BadRequestException('api.group.joinLinkAlreadyExists')
     }
 
-    const uuid = uuidv4()
+    const uuid = crypto.randomUUID()
     const createdAt = Date.now()
 
     await client.query(
