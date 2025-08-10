@@ -75,7 +75,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
         runOnJS(feedback)()
       }
 
-      if (!value && previous && !isRotating.value) {
+      if (!value && previous && !isWaitingSV.value) {
         spin()
 
         if (onPull) {
