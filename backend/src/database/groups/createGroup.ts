@@ -1,9 +1,11 @@
 import { BadRequestException } from '../../errors/BadRequestException'
 import { addUserToGroup } from '../utils/addUserToGroup'
+import { ownerPermissions } from '../utils/getMemberPermissions'
 import { validateCurrency } from '../utils/validateCurrency'
 import { Pool } from 'pg'
 import {
   CreateGroupArguments,
+  GroupMemberPermissions,
   GroupType,
   GroupUserInfo,
   SplitMethod,
@@ -88,6 +90,11 @@ export async function createGroup(
       lastUpdate: Date.now(),
       locked: false,
       allowedSplitMethods,
+      permissions: new GroupMemberPermissions(
+        ownerPermissions.splits,
+        ownerPermissions.members,
+        ownerPermissions.manage
+      ),
     }
   } catch (e) {
     await client.query('ROLLBACK')

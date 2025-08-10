@@ -1,3 +1,5 @@
+import { GroupMemberPermissions } from "./permissions"
+
 export interface User {
   id: string
   name: string
@@ -28,6 +30,7 @@ export interface GroupUserInfo extends GroupInfo {
   hidden: boolean
   balance: string
   allowedSplitMethods: SplitMethod[]
+  permissions: GroupMemberPermissions
 }
 
 export interface Member extends User {

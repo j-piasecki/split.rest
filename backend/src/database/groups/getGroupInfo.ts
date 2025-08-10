@@ -1,4 +1,5 @@
 import { NotFoundException } from '../../errors/NotFoundException'
+import { getMemberPermissions } from '../utils/getMemberPermissions'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
 import { GetGroupInfoArguments, GroupUserInfo, SplitMethod } from 'shared'
@@ -48,6 +49,11 @@ export async function getGroupInfo(
     return null
   }
 
+  const permissions = await getMemberPermissions(pool, args.groupId, callerId)
+  if (permissions === null) {
+    return null
+  }
+
   const allowedSplitMethods: SplitMethod[] = []
 
   if (row.split_equally_enabled) {
@@ -89,5 +95,6 @@ export async function getGroupInfo(
     lastUpdate: Number(row.last_update),
     locked: row.locked,
     allowedSplitMethods,
+    permissions,
   }
 }
