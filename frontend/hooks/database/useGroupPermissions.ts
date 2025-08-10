@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { GroupPermissions } from '@utils/GroupPermissions'
 import { ApiError, makeRequest } from '@utils/makeApiRequest'
 import {
   GetGroupMemberPermissionsArguments,
+  GroupMemberPermissions,
   GroupMemberPermissionsDTO,
   TranslatableError,
 } from 'shared'
@@ -10,7 +10,7 @@ import {
 export function useGroupPermissions(groupId?: number, userId?: string) {
   return useQuery({
     queryKey: ['groupPermissions', groupId, userId],
-    queryFn: async (): Promise<GroupPermissions> => {
+    queryFn: async (): Promise<GroupMemberPermissions> => {
       if (!groupId) {
         throw new TranslatableError('api.notFound.group')
       }
@@ -26,7 +26,7 @@ export function useGroupPermissions(groupId?: number, userId?: string) {
         throw new TranslatableError('api.notFound.group')
       }
 
-      return new GroupPermissions(info.splits, info.members, info.manage)
+      return new GroupMemberPermissions(info.splits, info.members, info.manage)
     },
     retry: (failureCount, error) => {
       if (error instanceof ApiError && error.statusCode === 404) {

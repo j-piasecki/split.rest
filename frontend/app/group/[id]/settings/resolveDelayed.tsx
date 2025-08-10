@@ -7,13 +7,12 @@ import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useResolveAllDelayedSplits } from '@hooks/database/useResolveAllSplits'
 import { useTranslatedError } from '@hooks/useTranslatedError'
-import { GroupPermissions } from '@utils/GroupPermissions'
 import { useAuth } from '@utils/auth'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { GroupUserInfo, Member, UserWithDisplayName } from 'shared'
+import { GroupMemberPermissions, GroupUserInfo, Member, UserWithDisplayName } from 'shared'
 
 function Form({
   info,
@@ -21,7 +20,7 @@ function Form({
   memberInfo,
 }: {
   info: GroupUserInfo
-  permissions: GroupPermissions
+  permissions: GroupMemberPermissions
   memberInfo: Member
 }) {
   const router = useRouter()

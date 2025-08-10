@@ -8,6 +8,7 @@ import { useSplitHistory } from '@hooks/database/useSplitHistory'
 import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
+import { useAuth } from '@utils/auth'
 import { measure } from '@utils/measure'
 import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -24,6 +25,7 @@ const DelayedSplitResolutionAllowedSplitMethods = [
 ]
 
 export default function SplitInfoScreen() {
+  const user = useAuth()
   const theme = useTheme()
   const router = useRouter()
   const insets = useModalScreenInsets()
@@ -138,7 +140,7 @@ export default function SplitInfoScreen() {
               onLoadMoreHistory={fetchNextPage}
               isLoadingHistory={isLoadingHistory || isFetchingNextPage}
               onRestoreVersion={
-                permissions?.canUpdateSplit(history[0]) ? restoreSplitVersion : undefined
+                permissions?.canUpdateSplit(user?.id, history[0]) ? restoreSplitVersion : undefined
               }
               isRestoringVersion={isRestoring}
             />
@@ -146,7 +148,7 @@ export default function SplitInfoScreen() {
 
           <View style={{ gap: 12 }}>
             {isDelayedSplit(history[0].type) &&
-              permissions?.canResolveDelayedSplit(history[0]) &&
+              permissions?.canResolveDelayedSplit(user?.id, history[0]) &&
               !groupInfo?.locked &&
               canResolveDelayedSplit && (
                 <Button
@@ -171,7 +173,7 @@ export default function SplitInfoScreen() {
                 />
               )}
 
-            {permissions?.canUpdateSplit(history[0]) && !groupInfo?.locked && (
+            {permissions?.canUpdateSplit(user?.id, history[0]) && !groupInfo?.locked && (
               <Button
                 title={t('split.edit')}
                 style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}

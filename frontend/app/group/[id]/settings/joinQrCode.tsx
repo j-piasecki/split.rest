@@ -5,14 +5,13 @@ import { useGroupJoinLink } from '@hooks/database/useGroupJoinLink'
 import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
-import { GroupPermissions } from '@utils/GroupPermissions'
 import { getJoinLinkURL } from '@utils/getJoinLinkURL'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
-import { GroupUserInfo } from 'shared'
+import { GroupMemberPermissions, GroupUserInfo } from 'shared'
 
 const MAX_QR_SIZE = 300
 
@@ -21,7 +20,7 @@ function QRCodeWrapper({
   permissions,
 }: {
   info: GroupUserInfo
-  permissions: GroupPermissions
+  permissions: GroupMemberPermissions
 }) {
   const theme = useTheme()
   const insets = useModalScreenInsets()

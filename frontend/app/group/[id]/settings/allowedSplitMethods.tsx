@@ -9,13 +9,12 @@ import { useSetGroupAllowedSplitMethodsMutation } from '@hooks/database/useSetGr
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
-import { GroupPermissions } from '@utils/GroupPermissions'
 import { AllSplitMethods } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
-import { GroupUserInfo, SplitMethod, validateAllowedSplitMethods } from 'shared'
+import { GroupMemberPermissions, GroupUserInfo, SplitMethod, validateAllowedSplitMethods } from 'shared'
 
 function Form({
   info,
@@ -23,7 +22,7 @@ function Form({
   groupInfo,
 }: {
   info: GroupUserInfo
-  permissions: GroupPermissions
+  permissions: GroupMemberPermissions
   groupInfo: GroupUserInfo
 }) {
   const router = useRouter()

@@ -304,6 +304,7 @@ function EditHistoryItem({
   type: EditHistoryItemType
   currentSplitType: SplitType
 }) {
+  const user = useAuth()
   const theme = useTheme()
   const { data: createdBy } = useUserById(split.createdById)
   const { data: permissions } = useGroupPermissions(groupInfo.id)
@@ -417,7 +418,7 @@ function EditHistoryItem({
             (split.type !== SplitType.Delayed || currentSplitType === SplitType.Delayed) &&
             type !== EditHistoryItemType.Only &&
             type !== EditHistoryItemType.First &&
-            permissions?.canUpdateSplit(split) && (
+            permissions?.canUpdateSplit(user?.id, split) && (
               <View style={{ flexDirection: 'row', paddingLeft: 16 }}>
                 <RoundIconButton
                   icon='undo'

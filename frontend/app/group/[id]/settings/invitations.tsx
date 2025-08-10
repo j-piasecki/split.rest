@@ -20,7 +20,6 @@ import { useInviteUserToGroupMutation } from '@hooks/database/useInviteUserToGro
 import { useSetInviteWithdrawnMutation } from '@hooks/database/useInviteWithdrawnMutation'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
-import { GroupPermissions } from '@utils/GroupPermissions'
 import { getJoinLinkURL } from '@utils/getJoinLinkURL'
 import { ApiError } from '@utils/makeApiRequest'
 import { invalidateDirectGroupInvites } from '@utils/queryClient'
@@ -29,14 +28,14 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, StyleProp, View, ViewStyle } from 'react-native'
-import { GroupInviteWithInvitee, GroupUserInfo } from 'shared'
+import { GroupInviteWithInvitee, GroupMemberPermissions, GroupUserInfo } from 'shared'
 
 function JoinLinkManager({
   info,
   permissions,
 }: {
   info: GroupUserInfo
-  permissions: GroupPermissions
+  permissions: GroupMemberPermissions
 }) {
   const theme = useTheme()
   const router = useRouter()
@@ -129,7 +128,7 @@ function InviteRow({
 }: {
   invite: GroupInviteWithInvitee
   info: GroupUserInfo
-  permissions: GroupPermissions
+  permissions: GroupMemberPermissions
   showSeparator: boolean
   manageOnlyOwnInvites: boolean
   style?: StyleProp<ViewStyle>
@@ -232,7 +231,7 @@ function InviteRow({
   )
 }
 
-function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupPermissions }) {
+function Form({ info, permissions }: { info: GroupUserInfo; permissions: GroupMemberPermissions }) {
   const theme = useTheme()
   const insets = useModalScreenInsets()
   const [fabRef, scrollHandler] = useFABScrollHandler()

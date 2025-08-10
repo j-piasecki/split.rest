@@ -18,21 +18,20 @@ import { useSetGroupLockedMutation } from '@hooks/database/useSetGroupLocked'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useSettleUpGroup } from '@hooks/database/useSettleUpGroup'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
-import { GroupPermissions } from '@utils/GroupPermissions'
 import { HapticFeedback } from '@utils/hapticFeedback'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { GroupUserInfo, SplitType, isTranslatableError } from 'shared'
+import { GroupMemberPermissions, GroupUserInfo, SplitType, isTranslatableError } from 'shared'
 
 function WrapItUpButton({
   info,
   permissions,
 }: {
   info: GroupUserInfo
-  permissions?: GroupPermissions
+  permissions?: GroupMemberPermissions
 }) {
   const { t } = useTranslation()
   const router = useRouter()
