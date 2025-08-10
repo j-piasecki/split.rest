@@ -20,7 +20,7 @@ for (const id of profilePictures) {
   if (process.argv.includes('--commit')) {
     const uploadCommand = new PutObjectCommand({
       Bucket: bucketName,
-      Key: `profile-pictures/${id}.png`,
+      Key: `profile-pictures/${id}`,
       Body: file,
       ContentType: 'image/png',
     })
