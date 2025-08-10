@@ -4,6 +4,7 @@ import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
 import { GetGroupMemberPermissionsArguments, GroupMemberPermissionsDTO } from 'shared'
 
+// TODO: Remove this function
 export async function getGroupMemberPermissions(
   pool: Pool,
   callerId: string,

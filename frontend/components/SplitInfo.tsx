@@ -5,7 +5,6 @@ import { FullPaneHeader, Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { useCompleteSplitEntryMutation } from '@hooks/database/useCompleteSplitEntryMutation'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useUncompleteSplitEntryMutation } from '@hooks/database/useUncompleteSplitEntryMutation'
 import { useUserById } from '@hooks/database/useUserById'
 import { styles } from '@styling/styles'
@@ -307,7 +306,6 @@ function EditHistoryItem({
   const user = useAuth()
   const theme = useTheme()
   const { data: createdBy } = useUserById(split.createdById)
-  const { data: permissions } = useGroupPermissions(groupInfo.id)
   const { t } = useTranslation()
 
   const indicatorStyle = useAnimatedStyle(() => ({
@@ -418,7 +416,7 @@ function EditHistoryItem({
             (split.type !== SplitType.Delayed || currentSplitType === SplitType.Delayed) &&
             type !== EditHistoryItemType.Only &&
             type !== EditHistoryItemType.First &&
-            permissions?.canUpdateSplit(user?.id, split) && (
+            groupInfo.permissions.canUpdateSplit(user?.id, split) && (
               <View style={{ flexDirection: 'row', paddingLeft: 16 }}>
                 <RoundIconButton
                   icon='undo'

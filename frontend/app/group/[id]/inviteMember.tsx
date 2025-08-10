@@ -8,7 +8,7 @@ import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { getUserByEmail } from '@database/getUserByEmail'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
+import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useInviteUserToGroupMutation } from '@hooks/database/useInviteUserToGroup'
 import { useSetInviteWithdrawnMutation } from '@hooks/database/useInviteWithdrawnMutation'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
@@ -117,8 +117,8 @@ function UserPicker() {
   const insets = useModalScreenInsets()
   const { id: groupId } = useLocalSearchParams()
   const { t } = useTranslation()
-
-  const { data: permissions } = useGroupPermissions(Number(groupId))
+  const { data: groupInfo } = useGroupInfo(Number(groupId))
+  
   const [email, setEmail] = useState('')
   const [user, waiting, error] = useUserByEmail(email)
   const [addingError, setAddingError] = useTranslatedError()
@@ -134,7 +134,7 @@ function UserPicker() {
 
     inviteUserToGroup(user.id)
       .then(() => {
-        if (permissions?.canManageDirectInvites()) {
+        if (groupInfo?.permissions?.canManageDirectInvites?.()) {
           snack.show({
             message: t('inviteMember.inviteSent', { name: user.name }),
             actionText: t('undo'),

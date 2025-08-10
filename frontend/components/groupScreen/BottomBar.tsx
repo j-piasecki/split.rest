@@ -1,7 +1,6 @@
 import { FloatingActionButtonRef } from '@components/FloatingActionButton'
 import { Icon } from '@components/Icon'
 import { Text } from '@components/Text'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { buttonCornerSpringConfig, buttonPaddingSpringConfig } from '@styling/animationConfigs'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
@@ -40,12 +39,11 @@ export function BottomBar({
   const [roulettePressed, setRoulettePressed] = useState(false)
   const [splitPressed, setSplitPressed] = useState(false)
   const { t } = useTranslation()
-  const { data: permissions } = useGroupPermissions(info?.id)
 
   const settleUpEnabled =
-    Number(info?.balance) !== 0 && permissions?.canSettleUp() && !disableSettleUp
-  const rouletteEnabled = permissions?.canAccessRoulette() && !disableRoulette
-  const splitEnabled = permissions?.canCreateSplits() && !disableSplit
+    Number(info?.balance) !== 0 && info?.permissions?.canSettleUp?.() && !disableSettleUp
+  const rouletteEnabled = info?.permissions?.canAccessRoulette?.() && !disableRoulette
+  const splitEnabled = info?.permissions?.canCreateSplits?.() && !disableSplit
 
   const hideSidebars = !settleUpEnabled && !rouletteEnabled && splitEnabled
   const hideEverything = !settleUpEnabled && !rouletteEnabled && !splitEnabled

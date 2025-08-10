@@ -2,7 +2,6 @@ import ModalScreen from '@components/ModalScreen'
 import { Text } from '@components/Text'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupJoinLink } from '@hooks/database/useGroupJoinLink'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { getJoinLinkURL } from '@utils/getJoinLinkURL'
@@ -11,16 +10,14 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
-import { GroupMemberPermissions, GroupUserInfo } from 'shared'
+import { GroupUserInfo } from 'shared'
 
 const MAX_QR_SIZE = 300
 
 function QRCodeWrapper({
   info,
-  permissions,
 }: {
   info: GroupUserInfo
-  permissions: GroupMemberPermissions
 }) {
   const theme = useTheme()
   const insets = useModalScreenInsets()
@@ -46,7 +43,7 @@ function QRCodeWrapper({
       }}
     >
       {isLoadingLink && <ActivityIndicator color={theme.colors.primary} />}
-      {!permissions.canSeeJoinLink() && (
+      {!info.permissions.canSeeJoinLink() && (
         <Text
           style={{
             fontSize: 18,
@@ -59,7 +56,7 @@ function QRCodeWrapper({
           {t('api.insufficientPermissions.group.joinLink.see')}
         </Text>
       )}
-      {link && permissions.canSeeJoinLink() && (
+      {link && info.permissions.canSeeJoinLink() && (
         <View
           onLayout={(event) => {
             setContainerWidth(event.nativeEvent.layout.width)
@@ -96,7 +93,6 @@ export default function Settings() {
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()
   const { data: info } = useGroupInfo(Number(id))
-  const { data: permissions } = useGroupPermissions(Number(id))
 
   return (
     <ModalScreen
@@ -107,7 +103,7 @@ export default function Settings() {
       opaque={false}
       slideAnimation={false}
     >
-      {info && permissions && <QRCodeWrapper info={info} permissions={permissions} />}
+      {info && <QRCodeWrapper info={info} />}
     </ModalScreen>
   )
 }

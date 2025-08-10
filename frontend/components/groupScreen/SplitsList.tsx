@@ -4,7 +4,6 @@ import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
 import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { Shimmer } from '@components/Shimmer'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { invalidateGroup } from '@utils/queryClient'
@@ -119,7 +118,6 @@ export function SplitsList({
   const router = useRouter()
   const displayClass = useDisplayClass()
   const { t } = useTranslation()
-  const { data: permissions } = useGroupPermissions(info?.id)
 
   const isSmallScreen = displayClass <= DisplayClass.Medium
   const [fabRef, scrollHandler] = useFABScrollHandler(!hideFab || !hideBottomBar)
@@ -194,7 +192,7 @@ export function SplitsList({
             disableRoulette={info?.locked}
           />
         )}
-        {!isSmallScreen && !hideFab && permissions?.canCreateSplits() && (
+        {!isSmallScreen && !hideFab && info?.permissions?.canCreateSplits?.() && (
           <FloatingActionButton
             ref={fabRef}
             icon='split'

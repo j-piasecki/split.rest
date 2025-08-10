@@ -1,7 +1,6 @@
 import { Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useSplitParticipantsSuggestions } from '@hooks/database/useSplitParticipantsSuggestions'
 import { useTheme } from '@styling/theme'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -101,7 +100,6 @@ function Suggestion({
 export function SuggestionsPane({ groupInfo, hiddenIds, onSelect }: SuggestionsPaneProps) {
   const theme = useTheme()
   const { t } = useTranslation()
-  const { data: permissions } = useGroupPermissions(groupInfo.id)
   const { data: participantsSuggestions, isLoading } = useSplitParticipantsSuggestions(groupInfo.id)
   const [collapsed, setCollapsed] = useState(false)
 
@@ -118,7 +116,7 @@ export function SuggestionsPane({ groupInfo, hiddenIds, onSelect }: SuggestionsP
     }
   }, [filteredSuggestions, isLoading])
 
-  if (!permissions?.canReadMembers()) {
+  if (!groupInfo.permissions.canReadMembers()) {
     return null
   }
 

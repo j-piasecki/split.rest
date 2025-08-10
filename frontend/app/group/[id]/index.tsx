@@ -10,7 +10,6 @@ import { MembersList } from '@components/groupScreen/MembersList'
 import { MembersOrderFilter } from '@components/groupScreen/MembersOrderFilter'
 import { SplitQueryButton } from '@components/groupScreen/SplitQueryButton'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
-import { useGroupPermissions } from '@hooks/database/useGroupPermissions'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
 import { useLocalSearchParams } from 'expo-router'
@@ -24,7 +23,6 @@ import { GroupUserInfo } from 'shared'
 
 function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
   const { t } = useTranslation()
-  const { data: permissions } = useGroupPermissions(info?.id)
 
   return (
     <GroupSplitsList
@@ -35,14 +33,14 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
       headerComponent={
         <View style={{ gap: 12 }}>
           <GroupInfoPane info={info} />
-          {(!permissions || permissions.canReadMembers()) && <MembersButton info={info} />}
+          {(!info?.permissions || info.permissions.canReadMembers()) && <MembersButton info={info} />}
           <ActionableSplitsPane info={info} />
           <FullPaneHeader
             icon='receipt'
             title={t('tabs.splits')}
             textLocation='start'
             adjustsFontSizeToFit
-            rightComponent={permissions?.canQuerySplits() && <SplitQueryButton />}
+            rightComponent={info?.permissions?.canQuerySplits?.() && <SplitQueryButton />}
           />
         </View>
       }
@@ -55,7 +53,6 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
   const displayClass = useDisplayClass()
-  const { data: permissions } = useGroupPermissions(groupInfo?.id)
   const [membersLowToHigh, setMembersLowToHigh] = useState<boolean | undefined>(true)
 
   const [membersExpanded, setMembersExpanded] = useState(false)
@@ -104,11 +101,11 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           containerStyle={{ flex: 1 }}
           collapsible
           collapsed={false}
-          rightComponent={permissions?.canQuerySplits() && <SplitQueryButton />}
+          rightComponent={groupInfo?.permissions?.canQuerySplits?.() && <SplitQueryButton />}
         >
           <GroupSplitsList info={groupInfo} hideFab={groupInfo?.locked} />
         </Pane>
-        {(!permissions || permissions?.canReadMembers()) && (
+        {(!groupInfo?.permissions || groupInfo.permissions.canReadMembers()) && (
           <Pane
             icon='members'
             title={t('tabs.members')}
@@ -241,6 +238,8 @@ export default function GroupScreen() {
   const threeBarLayout = useThreeBarLayout()
   const groupId = Number(id as string)
   const { data: groupInfo, error } = useGroupInfo(groupId)
+
+  console.log(groupInfo)
 
   if (error) {
     return <LoadingError />
