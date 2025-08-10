@@ -10,7 +10,7 @@ export function getProfilePictureUrl(userId?: string) {
 
   return __DEV__
     ? `http://localhost:3000/public/${userId}.png`
-    : `https://api.split.rest/public/${userId}.png`
+    : `https://assets.split.rest/profile-pictures/${userId}.png`
 }
 
 export interface ProfilePictureProps {
