@@ -21,17 +21,5 @@
     "react-native@*": "patch:react-native@npm%3A0.79.5#./.yarn/patches/react-native-npm-0.79.5-375b5dc2bf.patch",
     "react-native@0.79.5": "patch:react-native@npm%3A0.79.5#./.yarn/patches/react-native-npm-0.79.5-375b5dc2bf.patch"
   },
-  "packageManager": "yarn@3.6.4",
-  "expo": {
-    "install": {
-      "exclude": [
-        "react-native@~0.76.6",
-        "react-native-reanimated@~3.16.1",
-        "react-native-gesture-handler@~2.20.0",
-        "react-native-screens@~4.4.0",
-        "react-native-safe-area-context@~4.12.0",
-        "react-native-webview@~13.12.5"
-      ]
-    }
-  }
+  "packageManager": "yarn@3.6.4"
 }

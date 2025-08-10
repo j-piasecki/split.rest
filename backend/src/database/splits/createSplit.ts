@@ -144,7 +144,7 @@ async function dispatchNotifications(
 }
 
 export async function createSplit(pool: Pool, callerId: string, args: CreateSplitArguments) {
-  const allowedTypes = await getAllowedSplitTypes(this.databaseService.pool, args.groupId)
+  const allowedTypes = await getAllowedSplitTypes(pool, args.groupId)
 
   if (allowedTypes === null || !allowedTypes.includes(args.type)) {
     throw new BadRequestException('api.split.invalidSplitType')
