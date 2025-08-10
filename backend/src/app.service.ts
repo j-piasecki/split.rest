@@ -1,7 +1,12 @@
 import { DatabaseService } from './database.service'
-import { deleteProfilePicture, downloadProfilePicture } from './profilePicture'
+import {
+  deleteProfilePicture,
+  deleteProfilePictureFromR2,
+  downloadProfilePicture,
+  uploadProfilePictureToR2,
+} from './profilePicture'
+import { S3Client } from '@aws-sdk/client-s3'
 import { Injectable } from '@nestjs/common'
-import * as fs from 'fs'
 import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
@@ -55,14 +60,26 @@ import {
 
 @Injectable()
 export class AppService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  private s3Client: S3Client
+
+  constructor(private readonly databaseService: DatabaseService) {
+    this.s3Client = new S3Client({
+      region: 'auto',
+      endpoint: process.env.R2_ENDPOINT!,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+      },
+    })
+  }
 
   async createOrUpdateUser(user: User) {
-    await this.databaseService.createOrUpdateUser(user)
+    const updated = await this.databaseService.createOrUpdateUser(user)
 
-    if (user.photoUrl && !fs.existsSync(`public/${user.id}.png`)) {
+    if (!updated && user.photoUrl) {
       try {
         await downloadProfilePicture(user.photoUrl, user.id)
+        await uploadProfilePictureToR2(this.s3Client, process.env.R2_BUCKET_NAME!, user.id)
       } catch (error) {
         console.error(`Failed to download profile picture for ${user.id}`, error)
       }
@@ -199,6 +216,7 @@ export class AppService {
   async deleteUser(callerId: string) {
     try {
       await deleteProfilePicture(callerId)
+      await deleteProfilePictureFromR2(this.s3Client, process.env.R2_BUCKET_NAME!, callerId)
     } catch {
       // fail silently when profile picture deletion fails
     }
