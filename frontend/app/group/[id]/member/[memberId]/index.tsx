@@ -1,4 +1,4 @@
-import { Button } from '@components/Button'
+import { ButtonWithSecondaryActions } from '@components/ButtonWithSecondaryActions'
 import { EditableText } from '@components/EditableText'
 import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
@@ -200,12 +200,21 @@ export function MemberInfo() {
             memberId !== user?.id &&
             Number(groupInfo?.balance) !== 0 && (
               <View style={{ width: '100%' }}>
-                <Button
+                <ButtonWithSecondaryActions
                   leftIcon='balance'
                   title={t('memberInfo.settleUpWithMember')}
                   onPress={() => {
                     router.navigate(`/group/${groupId}/settleUp?withMembers=${memberId}`)
                   }}
+                  secondaryActions={[
+                    {
+                      label: t('memberInfo.settleUpWithMemberExactAmount'),
+                      icon: 'exactAmount',
+                      onPress: () => {
+                        router.navigate(`/group/${groupId}/member/${memberId}/settleUpExactAmount`)
+                      },
+                    },
+                  ]}
                 />
               </View>
             )}
