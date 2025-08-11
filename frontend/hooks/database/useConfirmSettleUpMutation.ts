@@ -3,8 +3,13 @@ import { makeRequest } from '@utils/makeApiRequest'
 import { invalidateGroup } from '@utils/queryClient'
 import { ConfirmSettleUpArguments, SplitInfo } from 'shared'
 
-async function confirmSettleUp(groupId: number, hash: string, withMembers?: string[]) {
-  const args: ConfirmSettleUpArguments = { groupId, entriesHash: hash, withMembers }
+async function confirmSettleUp(
+  groupId: number,
+  hash: string,
+  withMembers?: string[],
+  amounts?: string[]
+) {
+  const args: ConfirmSettleUpArguments = { groupId, entriesHash: hash, withMembers, amounts }
 
   const split = await makeRequest<ConfirmSettleUpArguments, SplitInfo>(
     'POST',
@@ -16,8 +21,12 @@ async function confirmSettleUp(groupId: number, hash: string, withMembers?: stri
   return split
 }
 
-export function useConfirmSettleUpMutation(groupId: number, withMembers?: string[]) {
+export function useConfirmSettleUpMutation(
+  groupId: number,
+  withMembers?: string[],
+  amounts?: string[]
+) {
   return useMutation({
-    mutationFn: (hash: string) => confirmSettleUp(groupId, hash, withMembers),
+    mutationFn: (hash: string) => confirmSettleUp(groupId, hash, withMembers, amounts),
   })
 }

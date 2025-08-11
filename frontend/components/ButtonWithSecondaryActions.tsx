@@ -315,7 +315,7 @@ export function ButtonWithSecondaryActions({
         style={{
           flexDirection: 'row',
           gap: 4,
-          alignItems: 'flex-end',
+          alignItems: 'center',
         }}
       >
         <Button

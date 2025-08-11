@@ -241,7 +241,18 @@
     "admin": "Moderator of this group",
     "noAccess": "No access to this group",
     "settleUpWithMember": "Settle up with this person",
+    "settleUpWithMemberExactAmount": "Settle up for an exact amount",
     "noSplits": "This person has no splits in this group"
+  },
+
+  "settleUpExactAmount": {
+    "amount": "How much do you want to settle up for?",
+    "outgoing": "I'm giving back",
+    "incoming": "I'm getting back",
+    "settleUp": "Settle up",
+    "amountRequired": "Amount is required",
+    "amountMustBeNumber": "Amount must be a number",
+    "amountMustBeGreaterThanZero": "Amount must be greater than zero"
   },
 
   "screenName": {
@@ -254,6 +265,7 @@
     "profile": "Profile",
     "members": "Members",
     "memberInfo": "Member information",
+    "settleUpExactAmount": "Settle up for an exact amount",
     "addSplit":"Add split",
     "settleUp": "Settle up",
     "filter": "Filter splits",

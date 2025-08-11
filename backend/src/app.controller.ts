@@ -632,6 +632,7 @@ export class AppController {
     const args: SettleUpArguments = {
       groupId: parseInt(query.groupId),
       withMembers: query.withMembers?.split?.(','),
+      amounts: query.amounts?.split?.(','),
     }
 
     // TODO: add support for full subgroup settle up (only one on one settle up for now)

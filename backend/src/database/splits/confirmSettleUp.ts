@@ -142,7 +142,8 @@ export async function confirmSettleUp(
       balance,
       settleUpData.members,
       settleUpData.pendingChanges,
-      args.withMembers
+      args.withMembers,
+      args.amounts
     )
     const entriesHash = hash(entries, { algorithm: 'sha1', encoding: 'base64' })
 

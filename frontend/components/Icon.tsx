@@ -52,6 +52,7 @@ export type IconName =
   | 'group'
   | 'home'
   | 'hourglass'
+  | 'incoming'
   | 'info'
   | 'lightTheme'
   | 'link'
@@ -69,6 +70,7 @@ export type IconName =
   | 'moreVertical'
   | 'oneOf'
   | 'openRightPanel'
+  | 'outgoing'
   | 'palette'
   | 'payment'
   | 'payments'
@@ -153,6 +155,7 @@ const iconMap: Record<IconName, unknown> = {
   home: require('@assets/icons/home.svg'),
   hourglass: require('@assets/icons/hourglass.svg'),
   info: require('@assets/icons/info.svg'),
+  incoming: require('@assets/icons/incoming.svg'),
   lightTheme: require('@assets/icons/light_theme.svg'),
   link: require('@assets/icons/link.svg'),
   listNumbered: require('@assets/icons/list_numbered.svg'),
@@ -169,6 +172,7 @@ const iconMap: Record<IconName, unknown> = {
   moreVertical: require('@assets/icons/more_vertical.svg'),
   oneOf: require('@assets/icons/one_of.svg'),
   openRightPanel: require('@assets/icons/open_right_panel.svg'),
+  outgoing: require('@assets/icons/outgoing.svg'),
   palette: require('@assets/icons/palette.svg'),
   payment: require('@assets/icons/payment.svg'),
   payments: require('@assets/icons/payments.svg'),

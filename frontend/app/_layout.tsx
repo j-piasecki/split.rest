@@ -135,8 +135,12 @@ function Content() {
                     options={{ title: t('screenName.settleUp'), ...modalOptions }}
                   />
                   <Stack.Screen
-                    name='group/[id]/member/[memberId]'
+                    name='group/[id]/member/[memberId]/index'
                     options={{ title: t('screenName.memberInfo'), ...modalOptions }}
+                  />
+                  <Stack.Screen
+                    name='group/[id]/member/[memberId]/settleUpExactAmount'
+                    options={{ title: t('screenName.settleUpExactAmount'), ...modalOptions }}
                   />
                   <Stack.Screen
                     name='group/[id]/filter'
