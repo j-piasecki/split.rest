@@ -8,7 +8,8 @@ export function prepareSettleUp(
   balance: number,
   allMembers: Member[],
   pendingChanges: TargetedBalanceChange[],
-  withMembers?: string[]
+  withMembers?: string[],
+  amounts?: string[]
 ): BalanceChange[] {
   // TODO: Better algorithm for this
   const entries: BalanceChange[] = [{ id: payerId, change: '0.00', pending: false }]
@@ -36,6 +37,16 @@ export function prepareSettleUp(
 
     const member = allMembers.find((m) => m.id === withMembers[0])
     assert(member !== undefined)
+
+    if (amounts !== undefined) {
+      assert(amounts.length === 1)
+      const providedAmount = currency(amounts[0])
+
+      if (providedAmount.intValue !== 0) {
+        entries.push({ id: member.id, change: providedAmount.toString(), pending: true })
+        return entries
+      }
+    }
 
     if (balance !== 0) {
       entries.push({ id: member.id, change: currency(balance).toString(), pending: true })

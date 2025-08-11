@@ -20,6 +20,7 @@ interface SettleUpPreviewProps {
   groupInfo: GroupUserInfo
   goBack: () => void
   withMembers?: string[]
+  amounts?: string[]
 }
 
 function SettleUpPreview(props: SettleUpPreviewProps) {
@@ -29,7 +30,8 @@ function SettleUpPreview(props: SettleUpPreviewProps) {
   const { t } = useTranslation()
   const { mutateAsync: confirmSettleUp, isPending: isCompleting } = useConfirmSettleUpMutation(
     props.groupInfo.id,
-    props.withMembers
+    props.withMembers,
+    props.amounts
   )
 
   return (
@@ -89,17 +91,24 @@ function SettleUpPreview(props: SettleUpPreviewProps) {
 
 export default function SettleUp() {
   const { t } = useTranslation()
-  const { id, withMembers: withMembersQuery } = useLocalSearchParams<{
+  const {
+    id,
+    withMembers: withMembersQuery,
+    amounts: amountsQuery,
+  } = useLocalSearchParams<{
     id: string
     withMembers?: string
+    amounts?: string
   }>()
 
   const withMembers = withMembersQuery?.split(',')
+  const amounts = amountsQuery?.split(',')
 
   const { data: groupInfo } = useGroupInfo(Number(id))
   const { data: settleUpPreview, error: settleUpError } = useSettleUpPreview(
     Number(id),
-    withMembers
+    withMembers,
+    amounts
   )
   const router = useRouter()
   const theme = useTheme()
@@ -131,6 +140,7 @@ export default function SettleUp() {
           groupInfo={groupInfo}
           goBack={goBack}
           withMembers={withMembers}
+          amounts={amounts}
         />
       ) : (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
