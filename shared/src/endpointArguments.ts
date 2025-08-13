@@ -11,6 +11,11 @@ export interface InviteUserToGroupArguments {
   userId: string
 }
 
+export interface RemoveMemberFromGroupArguments {
+  groupId: number
+  userId: string
+}
+
 export interface CreateSplitArguments {
   groupId: number
   paidBy?: string

@@ -30,6 +30,7 @@ import {
   JoinGroupByLinkArguments,
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
+  RemoveMemberFromGroupArguments,
   ResolveAllDelayedSplitsAtOnceArguments,
   ResolveDelayedSplitArguments,
   RestoreSplitArguments,
@@ -54,6 +55,10 @@ export function isCreateGroupArguments(obj: any): obj is CreateGroupArguments {
 }
 
 export function isInviteUserToGroupArguments(obj: any): obj is InviteUserToGroupArguments {
+  return obj.groupId !== undefined && obj.userId !== undefined
+}
+
+export function isRemoveMemberFromGroupArguments(obj: any): obj is RemoveMemberFromGroupArguments {
   return obj.groupId !== undefined && obj.userId !== undefined
 }
 

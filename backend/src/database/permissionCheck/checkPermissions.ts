@@ -212,7 +212,9 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
         }
 
         case 'removeMembers': {
-          if (!callerPermissions?.canRemoveMembers()) {
+          const args = unsafeArgs as PermissionArguments<['removeMembers']>
+
+          if (args.userId !== callerId || !callerPermissions?.canRemoveMembers()) {
             return 'api.insufficientPermissions.group.removeMembers'
           }
           continue

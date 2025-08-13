@@ -59,6 +59,13 @@ export function useNotificationPermission() {
         sound: 'default',
         enableVibrate: true,
       })
+
+      Notifications.setNotificationChannelAsync(AndroidNotificationChannel.GroupUpdates, {
+        name: t('notification.channel.groupUpdates'),
+        importance: Notifications.AndroidImportance.HIGH,
+        sound: 'default',
+        enableVibrate: true,
+      })
     }
 
     if (Platform.OS !== 'web') {

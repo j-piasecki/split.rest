@@ -35,6 +35,7 @@ import {
   JoinGroupByLinkArguments,
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
+  RemoveMemberFromGroupArguments,
   ResolveAllDelayedSplitsAtOnceArguments,
   ResolveDelayedSplitArguments,
   RestoreSplitArguments,
@@ -85,6 +86,7 @@ import {
   isJoinGroupByLinkArguments,
   isQueryGroupSplitsArguments,
   isRegisterOrUpdateNotificationTokenArguments,
+  isRemoveMemberFromGroupArguments,
   isResolveAllDelayedSplitsAtOnceArguments,
   isResolveDelayedSplitArguments,
   isRestoreSplitArguments,
@@ -741,5 +743,18 @@ export class AppController {
     }
 
     return await this.appService.getGroupMonthlyStats(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('removeMember')
+  async removeMember(
+    @Req() request: Request,
+    @Body() args: Partial<RemoveMemberFromGroupArguments>
+  ) {
+    if (!isRemoveMemberFromGroupArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.removeMember(request.user.sub, args)
   }
 }

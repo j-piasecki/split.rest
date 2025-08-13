@@ -21,6 +21,7 @@ import { getUserGroups } from './database/groups/getUserGroups'
 import { inviteUser } from './database/groups/inviteUser'
 import { joinGroupByLink } from './database/groups/joinGroupByLink'
 import { queryGroupSplits } from './database/groups/queryGroupSplits'
+import { removeMember } from './database/groups/removeMember'
 import { setGroupAccess } from './database/groups/setGroupAccess'
 import { setGroupAdmin } from './database/groups/setGroupAdmin'
 import { setGroupAllowedSplitMethods } from './database/groups/setGroupAllowedSplitMethods'
@@ -85,6 +86,7 @@ import {
   JoinGroupByLinkArguments,
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
+  RemoveMemberFromGroupArguments,
   ResolveAllDelayedSplitsAtOnceArguments,
   ResolveDelayedSplitArguments,
   RestoreSplitArguments,
@@ -395,5 +397,10 @@ export class DatabaseService {
   @RequirePermissions(['beGroupMember'])
   async getGroupMonthlyStats(callerId: string, args: GetGroupMonthlyStatsArguments) {
     return await getGroupMonthlyStats(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['removeMembers'])
+  async removeMember(callerId: string, args: RemoveMemberFromGroupArguments) {
+    return await removeMember(this.pool, callerId, args)
   }
 }

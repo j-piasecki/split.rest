@@ -114,6 +114,7 @@ export enum AndroidNotificationChannel {
   NewSplits = 'new-splits',
   SplitUpdates = 'split-updates',
   GroupInvites = 'group-invites',
+  GroupUpdates = 'group-updates',
 }
 
 export interface SplitInfo {
