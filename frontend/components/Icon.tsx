@@ -74,6 +74,7 @@ export type IconName =
   | 'palette'
   | 'payment'
   | 'payments'
+  | 'personRemove'
   | 'pieChart'
   | 'qrCode'
   | 'receipt'
@@ -176,6 +177,7 @@ const iconMap: Record<IconName, unknown> = {
   palette: require('@assets/icons/palette.svg'),
   payment: require('@assets/icons/payment.svg'),
   payments: require('@assets/icons/payments.svg'),
+  personRemove: require('@assets/icons/person_remove.svg'),
   pieChart: require('@assets/icons/pie_chart.svg'),
   qrCode: require('@assets/icons/qr_code.svg'),
   receipt: require('@assets/icons/receipt.svg'),
