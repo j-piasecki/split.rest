@@ -20,7 +20,7 @@ async function dispatchNotification(client: PoolClient, args: RemoveMemberFromGr
       body: {
         key: 'notification.groupRemoveMember.message',
       },
-      androidChannel: AndroidNotificationChannel.GroupInvites,
+      androidChannel: AndroidNotificationChannel.GroupUpdates,
     })
   })
 }
