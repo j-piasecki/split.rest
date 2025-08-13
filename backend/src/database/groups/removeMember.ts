@@ -47,6 +47,17 @@ export async function removeMember(
       throw new ForbiddenException('api.group.groupOwnerCannotBeRemoved')
     }
 
+    const balance = (
+      await client.query('SELECT balance FROM group_members WHERE group_id = $1 AND user_id = $2', [
+        args.groupId,
+        args.userId,
+      ])
+    ).rows[0].balance
+
+    if (Number(balance) !== 0) {
+      throw new BadRequestException('api.group.userIsSplitParticipant')
+    }
+
     // check if there are any splits in which the user is a participant
     const splits = await client.query(
       `
