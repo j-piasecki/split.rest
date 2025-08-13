@@ -117,6 +117,7 @@
         "uncompleteSplitEntry": "You don't have permission to mark splits as not completed",
         "readMembers": "You don't have permission to see members of this group",
         "inviteMembers": "You don't have permission to invite members to this group",
+        "removeMembers": "You don't have permission to remove members from this group",
         "rename": "You don't have permission to rename this group",
         "delete": "You don't have permission to delete this group",
         "manageAccess": "You don't have permission to manage the group access",

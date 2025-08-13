@@ -211,6 +211,13 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'removeMembers': {
+          if (!callerPermissions?.canRemoveMembers()) {
+            return 'api.insufficientPermissions.group.removeMembers'
+          }
+          continue
+        }
+
         case 'renameGroup': {
           if (!callerPermissions?.canRenameGroup()) {
             return 'api.insufficientPermissions.group.rename'
