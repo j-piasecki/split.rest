@@ -15,7 +15,7 @@ import React, { useState } from 'react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, View, ViewStyle } from 'react-native'
-import { CurrencyUtils } from 'shared'
+import { CurrencyUtils, TranslatableError } from 'shared'
 import { GroupUserInfo, Member } from 'shared'
 
 export interface MemberRowProps {
@@ -59,7 +59,6 @@ function ConfirmRemoveMemberModal({
   visible: boolean
   onClose: () => void
 }) {
-  const { t } = useTranslation()
   const { mutateAsync: removeMember } = useRemoveUserFromGroupMutation(info.id)
 
   return (
@@ -74,8 +73,7 @@ function ConfirmRemoveMemberModal({
       onClose={onClose}
       onConfirm={async () => {
         if (Number(member.balance) !== 0) {
-          alert(t('api.group.userIsSplitParticipant'))
-          return
+          throw new TranslatableError('api.group.userIsSplitParticipant') 
         }
 
         await removeMember(member.id)
