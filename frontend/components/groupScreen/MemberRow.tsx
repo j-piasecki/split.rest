@@ -1,3 +1,4 @@
+import { ConfirmationModal } from '@components/ConfirmationModal'
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
 import { Icon, IconName } from '@components/Icon'
 import { ProfilePicture } from '@components/ProfilePicture'
@@ -5,11 +6,12 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
+import { useRemoveUserFromGroupMutation } from '@hooks/database/useRemoveUserFromGroup'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { useRouter } from 'expo-router'
-import React from 'react'
+import React, { useState } from 'react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, View, ViewStyle } from 'react-native'
@@ -46,6 +48,43 @@ function Badge({ icon }: { icon: IconName }) {
   )
 }
 
+function ConfirmRemoveMemberModal({
+  member,
+  info,
+  visible,
+  onClose,
+}: {
+  member: Member
+  info: GroupUserInfo
+  visible: boolean
+  onClose: () => void
+}) {
+  const { t } = useTranslation()
+  const { mutateAsync: removeMember } = useRemoveUserFromGroupMutation(info.id)
+
+  return (
+    <ConfirmationModal
+      title={'memberInfo.removeFromGroupConfirmationText'}
+      confirmText={'memberInfo.removeFromGroupConfirm'}
+      cancelText={'memberInfo.cancel'}
+      cancelIcon='close'
+      confirmIcon='personRemove'
+      destructive
+      visible={visible}
+      onClose={onClose}
+      onConfirm={async () => {
+        if (Number(member.balance) !== 0) {
+          alert(t('api.group.userIsSplitParticipant'))
+          return
+        }
+
+        await removeMember(member.id)
+        onClose()
+      }}
+    />
+  )
+}
+
 export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
   const user = useAuth()
   const theme = useTheme()
@@ -54,10 +93,13 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
   const { t } = useTranslation()
   const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(info.id, member.id)
   const { mutate: setGroupAdminMutation } = useSetGroupAdminMutation(info.id, member.id)
+  const [confirmRemoveMemberModalVisible, setConfirmRemoveMemberModalVisible] = useState(false)
 
-  const hasContextActions = info.permissions.canManageAccess() || info.permissions.canManageAdmins()
-  const contextMenuDisabled =
-    member.deleted || member.id === user?.id || iconOnly || !hasContextActions
+  const hasContextActions =
+    info.permissions.canManageAccess() ||
+    info.permissions.canManageAdmins() ||
+    info.permissions.canRemoveMembers()
+  const contextMenuDisabled = member.id === user?.id || iconOnly || !hasContextActions
 
   return (
     <ContextMenu
@@ -67,7 +109,7 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
         {
           label: member.hasAccess ? t('member.revokeAccess') : t('member.giveAccess'),
           icon: member.hasAccess ? 'lock' : 'lockOpen',
-          disabled: !info.permissions.canManageAccess(),
+          disabled: !info.permissions.canManageAccess() || member.deleted,
           onPress: () => {
             setGroupAccessMutation(!member.hasAccess)
           },
@@ -76,9 +118,18 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
         {
           label: member.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin'),
           icon: member.isAdmin ? 'removeModerator' : 'addModerator',
-          disabled: !info.permissions.canManageAdmins() || !member.hasAccess,
+          disabled: !info.permissions.canManageAdmins() || !member.hasAccess || member.deleted,
           onPress: () => {
             setGroupAdminMutation(!member.isAdmin)
+          },
+        },
+        {
+          label: t('member.removeFromGroup'),
+          icon: 'personRemove',
+          destructive: true,
+          disabled: !info.permissions.canRemoveMembers() || member.id === info.owner,
+          onPress: () => {
+            setConfirmRemoveMemberModalVisible(true)
           },
         },
       ]}
@@ -99,6 +150,13 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
         router.navigate(`/group/${info.id}/member/${member.id}`)
       }}
     >
+      <ConfirmRemoveMemberModal
+        member={member}
+        info={info}
+        visible={confirmRemoveMemberModalVisible}
+        onClose={() => setConfirmRemoveMemberModalVisible(false)}
+      />
+
       <View
         key={member.id}
         style={[
