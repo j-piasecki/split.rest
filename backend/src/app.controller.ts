@@ -51,7 +51,6 @@ import {
   SetUserNameArguments,
   SettleUpArguments,
   SettleUpGroupArguments,
-  SplitType,
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
   User,
