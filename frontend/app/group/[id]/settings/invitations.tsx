@@ -27,7 +27,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, StyleProp, View, ViewStyle } from 'react-native'
-import { GroupInviteWithInvitee, GroupMemberPermissions, GroupUserInfo } from 'shared'
+import { GroupInviteWithInvitee, GroupUserInfo } from 'shared'
 
 function JoinLinkManager({ info }: { info: GroupUserInfo }) {
   const theme = useTheme()
@@ -114,14 +114,12 @@ function JoinLinkManager({ info }: { info: GroupUserInfo }) {
 function InviteRow({
   invite,
   info,
-  permissions,
   showSeparator,
   manageOnlyOwnInvites,
   style,
 }: {
   invite: GroupInviteWithInvitee
   info: GroupUserInfo
-  permissions: GroupMemberPermissions
   showSeparator: boolean
   manageOnlyOwnInvites: boolean
   style?: StyleProp<ViewStyle>
@@ -185,7 +183,7 @@ function InviteRow({
         </Text>
       )}
       <View style={{ flexDirection: 'row', gap: 8, position: 'absolute', right: 16, bottom: 8 }}>
-        {invite.rejected && permissions.canInviteMembers() && (
+        {invite.rejected && info.permissions.canInviteMembers() && (
           <RoundIconButton
             icon='cached'
             isLoading={isWithdrawing || isInviting}
@@ -255,7 +253,6 @@ function Form({ info }: { info: GroupUserInfo }) {
           <InviteRow
             invite={item}
             info={info}
-            permissions={info.permissions}
             showSeparator={index !== invites.length - 1}
             manageOnlyOwnInvites={manageOnlyOwnInvites}
             style={[
