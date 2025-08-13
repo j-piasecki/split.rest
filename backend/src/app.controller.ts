@@ -151,11 +151,6 @@ export class AppController {
       throw new BadRequestException('api.invalidArguments')
     }
 
-    // TODO: remove this once deployed for a while
-    if (args.type === undefined) {
-      args.type = SplitType.Normal
-    }
-
     return await this.appService.createSplit(request.user.sub, args)
   }
 
