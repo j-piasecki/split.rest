@@ -525,7 +525,8 @@
     "giveAccess": "Give access",
     "revokeAccess": "Revoke access",
     "makeAdmin": "Make a moderator",
-    "revokeAdmin": "Revoke moderator"
+    "revokeAdmin": "Revoke moderator",
+    "removeFromGroup": "Remove from group"
   },
 
   "split": {
