@@ -83,6 +83,7 @@ export function RoundIconButton({
               alignItems: 'center',
               gap: 8,
               userSelect: 'none',
+              opacity: disabled ? 0.5 : 1,
             },
             otherStyles,
           ]
