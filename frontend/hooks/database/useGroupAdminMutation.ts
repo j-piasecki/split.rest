@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { updateCachedGroupMember } from '@utils/queryClient'
+import { invalidateGroupMembers } from '@utils/queryClient'
 import { SetGroupAdminArguments } from 'shared'
 
 async function setGroupAdmin(groupId: number, userId: string, admin: boolean) {
@@ -8,7 +8,7 @@ async function setGroupAdmin(groupId: number, userId: string, admin: boolean) {
 
   await makeRequest('POST', 'setGroupAdmin', args)
 
-  await updateCachedGroupMember(groupId, userId, (member) => ({ ...member, isAdmin: admin }))
+  await invalidateGroupMembers(groupId)
 }
 
 export function useSetGroupAdminMutation(groupId: number, userId: string) {

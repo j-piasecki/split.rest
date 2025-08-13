@@ -10,8 +10,8 @@ export function useRemoveUserFromGroupMutation(groupId: number) {
 
       await makeRequest('POST', 'removeMember', args)
 
-      invalidateGroupInfo(groupId)
-      invalidateGroupMembers(groupId)
+      await invalidateGroupInfo(groupId)
+      await invalidateGroupMembers(groupId)
     },
   })
 }
