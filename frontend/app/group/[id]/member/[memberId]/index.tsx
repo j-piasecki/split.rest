@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { ButtonShimmer } from '@components/ButtonShimmer'
 import { ButtonWithSecondaryActions } from '@components/ButtonWithSecondaryActions'
 import { ConfirmationModal } from '@components/ConfirmationModal'
 import { Icon } from '@components/Icon'
@@ -23,13 +24,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import {
-  CurrencyUtils,
-  GroupUserInfo,
-  Member,
-  SplitInfo,
-  TranslatableError,
-} from 'shared'
+import { CurrencyUtils, GroupUserInfo, Member, SplitInfo, TranslatableError } from 'shared'
 
 function RemoveMemberButton({
   groupInfo,
@@ -282,7 +277,6 @@ export function MemberInfo({
               ) : null}
             </View>
           )}
-
         </View>
       </Pane>
 
@@ -294,26 +288,31 @@ export function MemberInfo({
       </ShimmerPlaceholder>
 
       <View style={{ gap: 8 }}>
-        {groupInfo?.permissions?.canSettleUp?.() &&
-          memberId !== user?.id &&
-          Number(groupInfo?.balance) !== 0 && (
-            <ButtonWithSecondaryActions
-              leftIcon='balance'
-              title={t('memberInfo.settleUpWithMember')}
-              onPress={() => {
-                router.navigate(`/group/${groupId}/settleUp?withMembers=${memberId}`)
-              }}
-              secondaryActions={[
-                {
-                  label: t('memberInfo.settleUpWithMemberExactAmount'),
-                  icon: 'exactAmount',
-                  onPress: () => {
-                    router.navigate(`/group/${groupId}/member/${memberId}/settleUpExactAmount`)
-                  },
-                },
-              ]}
-            />
-          )}
+        {memberId !== user?.id && (
+          <ButtonShimmer argument={groupInfo && memberInfo}>
+            {() =>
+              groupInfo?.permissions?.canSettleUp?.() &&
+              (Number(groupInfo?.balance) !== 0 || Number(memberInfo?.balance) !== 0) && (
+                <ButtonWithSecondaryActions
+                  leftIcon='balance'
+                  title={t('memberInfo.settleUpWithMember')}
+                  onPress={() => {
+                    router.navigate(`/group/${groupId}/settleUp?withMembers=${memberId}`)
+                  }}
+                  secondaryActions={[
+                    {
+                      label: t('memberInfo.settleUpWithMemberExactAmount'),
+                      icon: 'exactAmount',
+                      onPress: () => {
+                        router.navigate(`/group/${groupId}/member/${memberId}/settleUpExactAmount`)
+                      },
+                    },
+                  ]}
+                />
+              )
+            }
+          </ButtonShimmer>
+        )}
 
         {groupInfo &&
           memberInfo &&
