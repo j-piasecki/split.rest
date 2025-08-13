@@ -174,7 +174,8 @@
       "delayedSplitMustBeResolvedWithPayer": "Payer must be included when finalizing a delayed split",
       "invalidResolutionMethod": "Invalid resolution method",
       "noDelayedSplits": "There are no delayed splits to finalize",
-      "notAllParticipantsAreMembers": "All split participants must be members of the group"
+      "notAllParticipantsAreMembers": "All split participants must be members of the group",
+      "oneOfTheParticipantsIsNotAMember": "One of the participants is not a member of the group"
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
@@ -257,7 +258,9 @@
     "removeFromGroupConfirm": "Remove",
     "leaveGroupConfirmationText": "Are you sure you want to leave the group?",
     "leaveGroupConfirm": "Leave",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "youAreAParticipantInSomeSplits": "You are a participant in some splits in this group",
+    "youCannotLeaveAsOwner": "You cannot leave the group which you are the owner of"
   },
 
   "settleUpExactAmount": {

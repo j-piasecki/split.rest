@@ -46,9 +46,9 @@ function RemoveMemberButton({
 
   function openModal() {
     if (isMemberOwner) {
-      alert(t('api.group.groupOwnerCannotBeRemoved'))
+      alert(isSelf ? t('memberInfo.youCannotLeaveAsOwner') : t('api.group.groupOwnerCannotBeRemoved'))
     } else if (Number(memberInfo.balance) !== 0 || (splits && splits.length > 0)) {
-      alert(t('api.group.userIsSplitParticipant'))
+      alert(isSelf ? t('memberInfo.youAreAParticipantInSomeSplits') : t('api.group.userIsSplitParticipant'))
     } else {
       setModalVisible(true)
     }

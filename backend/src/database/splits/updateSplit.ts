@@ -275,7 +275,7 @@ export async function updateSplitNoTransaction(
     ).rowCount
 
     if (!userExists) {
-      throw new NotFoundException('api.notFound.user')
+      throw new NotFoundException('api.split.oneOfTheParticipantsIsNotAMember')
     }
 
     await client.query(
