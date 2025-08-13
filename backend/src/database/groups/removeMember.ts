@@ -44,7 +44,7 @@ export async function removeMember(
     }
 
     if (await isUserGroupOwner(client, args.groupId, args.userId)) {
-      throw new ForbiddenException('api.insufficientPermissions.group.manageOwner')
+      throw new ForbiddenException('api.group.groupOwnerCannotBeRemoved')
     }
 
     // check if there are any splits in which the user is a participant
@@ -76,7 +76,9 @@ export async function removeMember(
 
     await client.query('COMMIT')
 
-    await dispatchNotification(client, args)
+    if (callerId !== args.userId) {
+      await dispatchNotification(client, args)
+    }
   } catch (e) {
     await client.query('ROLLBACK')
     throw e

@@ -187,7 +187,8 @@
       "cannotReadAllMembers": "Failed to read all members of this group",
       "locked": "This group is locked",
       "settledUpButPending": "The group is already settled up, but some of the transactions haven't been confirmed yet",
-      "userIsSplitParticipant": "There are splits in which this user is a participant"
+      "userIsSplitParticipant": "There are splits in which this user is a participant",
+      "groupOwnerCannotBeRemoved": "The group owner cannot be removed from the group"
     },
     "user": {
       "nameTooLong": "Name is too long",
@@ -249,7 +250,14 @@
     "noAccess": "No access to this group",
     "settleUpWithMember": "Settle up with this person",
     "settleUpWithMemberExactAmount": "Settle up for an exact amount",
-    "noSplits": "This person has no splits in this group"
+    "noSplits": "This person has no splits in this group",
+    "removeFromGroup": "Remove from group",
+    "leaveGroup": "Leave group",
+    "removeFromGroupConfirmationText": "Are you sure you want to remove this person from the group?",
+    "removeFromGroupConfirm": "Remove",
+    "leaveGroupConfirmationText": "Are you sure you want to leave the group?",
+    "leaveGroupConfirm": "Leave",
+    "cancel": "Cancel"
   },
 
   "settleUpExactAmount": {

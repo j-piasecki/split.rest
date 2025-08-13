@@ -1,3 +1,4 @@
+import { Button } from '@components/Button'
 import { ButtonWithSecondaryActions } from '@components/ButtonWithSecondaryActions'
 import { EditableText } from '@components/EditableText'
 import { Icon } from '@components/Icon'
@@ -16,15 +17,82 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import React from 'react'
+import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { CurrencyUtils, isTranslatableError } from 'shared'
+import { CurrencyUtils, GroupUserInfo, isTranslatableError, Member, SplitInfo } from 'shared'
+import { useRemoveUserFromGroupMutation } from '@hooks/database/useRemoveUserFromGroup'
+import { ConfirmationModal } from '@components/ConfirmationModal'
 
-export function MemberInfo() {
+function RemoveMemberButton({
+  groupInfo,
+  memberInfo,
+  isSelf,
+  memberId,
+  splits,
+}: {
+  groupInfo: GroupUserInfo
+  memberInfo: Member
+  isSelf: boolean
+  memberId: string
+  splits?: SplitInfo[]
+}) {
+  const router = useRouter()
+  const { t } = useTranslation()
+  const { mutateAsync: removeMember } = useRemoveUserFromGroupMutation(groupInfo.id)
+  const [modalVisible, setModalVisible] = useState(false)
+  
+  const isMemberOwner = memberId === groupInfo.owner
+
+  function openModal() {
+    if (isMemberOwner) {
+      alert(t('api.group.groupOwnerCannotBeRemoved'))
+    } else if (Number(memberInfo.balance) !== 0 || (splits && splits.length > 0)) {
+      alert(t('api.group.userIsSplitParticipant'))
+    } else {
+      setModalVisible(true)
+    }
+  }
+
+  async function onConfirm() {
+    await removeMember(memberId).then(() => {
+      if (isSelf) {
+        router.dismissTo('/home')
+      } else if (router.canGoBack()) {
+        router.back()
+      } else {
+        router.dismissTo(`/group/${groupInfo.id}`)
+      }
+    })
+  }
+
+  return (
+    <>
+      <Button
+        destructive
+        leftIcon='personRemove'
+        title={isSelf ? t('memberInfo.leaveGroup') : t('memberInfo.removeFromGroup')}
+        onPress={openModal}
+      />
+
+      <ConfirmationModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onConfirm={onConfirm}
+        title={isSelf ? 'memberInfo.leaveGroupConfirmationText' : 'memberInfo.removeFromGroupConfirmationText'}
+        confirmText={isSelf ? 'memberInfo.leaveGroupConfirm' : 'memberInfo.removeFromGroupConfirm'}
+        cancelText='memberInfo.cancel'
+        cancelIcon='close'
+        confirmIcon='personRemove'
+        destructive
+      />
+    </>
+  )
+}
+
+export function MemberInfo({ splits }: { splits?: SplitInfo[] }) {
   const user = useAuth()
   const theme = useTheme()
-  const insets = useModalScreenInsets()
   const router = useRouter()
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
@@ -68,9 +136,6 @@ export function MemberInfo() {
       <View
         style={{
           flex: 1,
-          paddingTop: insets.top + 16,
-          paddingLeft: insets.left + 12,
-          paddingRight: insets.right + 12,
           alignItems: 'center',
           gap: 24,
         }}
@@ -218,6 +283,12 @@ export function MemberInfo() {
                 />
               </View>
             )}
+
+            {groupInfo && memberInfo && (memberId === user?.id || groupInfo?.permissions?.canRemoveMembers?.()) && (
+              <View style={{ width: '100%' }}>
+                <RemoveMemberButton groupInfo={groupInfo} memberInfo={memberInfo} isSelf={memberId === user?.id} memberId={memberId as string} splits={splits} />
+              </View>
+            )}
         </View>
       </View>
     </View>
@@ -225,6 +296,7 @@ export function MemberInfo() {
 }
 
 function MemberScreen() {
+  const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
   const { data: groupInfo } = useGroupInfo(Number(groupId))
@@ -247,8 +319,8 @@ function MemberScreen() {
       hideBottomBar
       emptyMessage={t('memberInfo.noSplits')}
       headerComponent={
-        <View style={{ gap: 24 }}>
-          <MemberInfo />
+        <View style={{ gap: 24, paddingTop: 16 }}>
+          <MemberInfo splits={splits} />
           <FullPaneHeader
             icon='receipt'
             title={t('tabs.splits')}
@@ -259,7 +331,14 @@ function MemberScreen() {
       }
     />
   ) : (
-    <MemberInfo />
+    <View style={{
+      flex: 1,
+      paddingTop: insets.top + 16,
+      paddingLeft: insets.left + 12,
+      paddingRight: insets.right + 12,
+    }}>
+      <MemberInfo />
+    </View>
   )
 }
 
