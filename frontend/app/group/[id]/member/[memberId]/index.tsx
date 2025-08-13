@@ -22,7 +22,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { CurrencyUtils, GroupUserInfo, Member, SplitInfo, isTranslatableError } from 'shared'
+import { CurrencyUtils, GroupUserInfo, Member, SplitInfo, TranslatableError, isTranslatableError } from 'shared'
 
 function RemoveMemberButton({
   groupInfo,
@@ -44,23 +44,15 @@ function RemoveMemberButton({
 
   const isMemberOwner = memberId === groupInfo.owner
 
-  function openModal() {
-    if (isMemberOwner) {
-      alert(
-        isSelf ? t('memberInfo.youCannotLeaveAsOwner') : t('api.group.groupOwnerCannotBeRemoved')
-      )
-    } else if (Number(memberInfo.balance) !== 0 || (splits && splits.length > 0)) {
-      alert(
-        isSelf
-          ? t('memberInfo.youAreAParticipantInSomeSplits')
-          : t('api.group.userIsSplitParticipant')
-      )
-    } else {
-      setModalVisible(true)
-    }
-  }
-
   async function onConfirm() {
+    if (isMemberOwner) {
+      throw new TranslatableError(isSelf ? 'memberInfo.youCannotLeaveAsOwner' : 'api.group.groupOwnerCannotBeRemoved')
+    }
+
+    if (Number(memberInfo.balance) !== 0 || (splits && splits.length > 0)) {
+      throw new TranslatableError(isSelf ? 'memberInfo.youAreAParticipantInSomeSplits' : 'api.group.userIsSplitParticipant')
+    }
+
     await removeMember(memberId).then(() => {
       if (isSelf) {
         router.dismissTo('/home')
@@ -78,7 +70,7 @@ function RemoveMemberButton({
         destructive
         leftIcon='personRemove'
         title={isSelf ? t('memberInfo.leaveGroup') : t('memberInfo.removeFromGroup')}
-        onPress={openModal}
+        onPress={() => setModalVisible(true)}
       />
 
       <ConfirmationModal

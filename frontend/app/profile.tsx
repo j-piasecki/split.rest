@@ -42,7 +42,7 @@ function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
           await deleteUser()
           snack.show({ message: t('settings.deleteAccount.accountDeleted') })
         } catch {
-          alert(t('api.auth.tryAgain'))
+          throw new TranslatableError('api.auth.tryAgain')
         }
       }}
     />

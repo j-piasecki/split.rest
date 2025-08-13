@@ -135,10 +135,8 @@ function WrapItUpButton({ info }: { info: GroupUserInfo }) {
               }
             })
             .catch((e) => {
-              if (isTranslatableError(e)) {
-                alert(t(e.message))
-              }
               HapticFeedback.reject()
+              throw e
             })
         }}
         title='groupSettings.settleUpGroupConfirmationText'

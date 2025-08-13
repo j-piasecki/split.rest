@@ -1,3 +1,4 @@
+import { useTranslatedError } from '@hooks/useTranslatedError'
 import { Button } from './Button'
 import { IconName } from './Icon'
 import { Text } from './Text'
@@ -6,7 +7,8 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Pressable, StyleSheet, View } from 'react-native'
 import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { LanguageTranslationKey, isTranslatableError } from 'shared'
+import { LanguageTranslationKey } from 'shared'
+import { ErrorText } from './ErrorText'
 
 export interface ConfirmationModalProps {
   visible: boolean
@@ -36,6 +38,12 @@ export function ConfirmationModal({
   const theme = useTheme()
   const { t } = useTranslation()
   const [isWaiting, setIsWaiting] = useState(false)
+  const [error, setError] = useTranslatedError()
+
+  function close() {
+    setError(null)
+    onClose?.()
+  }
 
   return (
     <Modal
@@ -43,7 +51,7 @@ export function ConfirmationModal({
       statusBarTranslucent
       navigationBarTranslucent
       visible={visible}
-      onRequestClose={onClose}
+      onRequestClose={close}
     >
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Animated.View
@@ -53,7 +61,7 @@ export function ConfirmationModal({
         >
           <Pressable
             style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.7)' }]}
-            onPress={onClose}
+            onPress={close}
           />
         </Animated.View>
         <Animated.View
@@ -76,6 +84,10 @@ export function ConfirmationModal({
             <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 16 }}>{t(message)}</Text>
           )}
 
+          {error && (
+            <ErrorText>{error}</ErrorText>
+          )}
+
           <View
             style={{
               flexDirection: 'row',
@@ -89,7 +101,7 @@ export function ConfirmationModal({
               <Button
                 title={cancelText ? t(cancelText) : undefined}
                 leftIcon={cancelIcon}
-                onPress={onClose}
+                onPress={close}
                 style={{ flexGrow: 1, backgroundColor: theme.colors.secondaryContainer }}
                 foregroundColor={theme.colors.onSecondaryContainer}
               />
@@ -102,16 +114,13 @@ export function ConfirmationModal({
               destructive={destructive}
               onPress={async () => {
                 setIsWaiting(true)
+                setError(null)
                 onConfirm?.()
                   .then(() => {
-                    onClose?.()
+                    close()
                   })
                   .catch((e) => {
-                    if (isTranslatableError(e)) {
-                      alert(t(e.message, e.args))
-                    } else {
-                      alert(t('api.auth.tryAgain'))
-                    }
+                    setError(e)
                   })
                   .finally(() => {
                     setIsWaiting(false)
