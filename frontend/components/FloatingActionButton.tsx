@@ -61,7 +61,13 @@ export const FloatingActionButton = React.forwardRef<
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      width: withSpring(expanded.value ? (expandedWidth.value as number) : 56, springConfig),
+      paddingLeft: withSpring(isPressed ? 20 : 16, springConfig),
+      paddingRight: 16,
+      width: withSpring(
+        (expanded.value ? (expandedWidth.value as number) : 56) + (isPressed ? 8 : 0),
+        springConfig
+      ),
+      height: withSpring(isPressed ? 64 : 56, buttonCornerSpringConfig),
     }
   })
 
@@ -79,7 +85,7 @@ export const FloatingActionButton = React.forwardRef<
   const outerAnimatedStyle = useAnimatedStyle(() => {
     return {
       borderRadius: withSpring(isPressed ? 30 : 12, buttonCornerSpringConfig),
-      transform: [{ scale: withSpring(isPressed ? 1.05 : 1, buttonCornerSpringConfig) }],
+      // transform: [{ scale: withSpring(isPressed ? 1.05 : 1, buttonCornerSpringConfig) }],
     }
   })
 
@@ -126,8 +132,6 @@ export const FloatingActionButton = React.forwardRef<
         <Animated.View
           style={[
             {
-              height: 56,
-              paddingHorizontal: 16,
               alignItems: 'center',
               flexDirection: 'row',
               gap: 8,
