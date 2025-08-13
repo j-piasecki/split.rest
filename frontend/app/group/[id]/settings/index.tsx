@@ -23,15 +23,9 @@ import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { GroupMemberPermissions, GroupUserInfo, SplitType, isTranslatableError } from 'shared'
+import { GroupUserInfo, SplitType, isTranslatableError } from 'shared'
 
-function WrapItUpButton({
-  info,
-  permissions,
-}: {
-  info: GroupUserInfo
-  permissions?: GroupMemberPermissions
-}) {
+function WrapItUpButton({ info }: { info: GroupUserInfo }) {
   const { t } = useTranslation()
   const router = useRouter()
   const snack = useSnack()
@@ -51,7 +45,7 @@ function WrapItUpButton({
   const secondaryActions: ButtonSecondaryAction[] = []
 
   // Add resolve delayed splits action if applicable
-  if (permissions?.canResolveAllDelayedSplitsAtOnce() && hasDelayedSplits) {
+  if (info.permissions?.canResolveAllDelayedSplitsAtOnce() && hasDelayedSplits) {
     secondaryActions.push({
       label: t('groupSettings.resolveAllDelayed.resolveAllText'),
       icon: 'chronic',
@@ -62,7 +56,7 @@ function WrapItUpButton({
   }
 
   // Add settle up action if applicable
-  if (permissions?.canSettleUpGroup() && canSettleUp) {
+  if (info.permissions?.canSettleUpGroup() && canSettleUp) {
     secondaryActions.push({
       label: t('groupSettings.settleUpGroup'),
       icon: 'balance',
@@ -76,7 +70,7 @@ function WrapItUpButton({
   }
 
   // Add lock/unlock action if applicable
-  if (permissions?.canLockGroup()) {
+  if (info.permissions?.canLockGroup()) {
     secondaryActions.push({
       label: info.locked ? t('groupSettings.unlockGroup') : t('groupSettings.lockGroup'),
       icon: info.locked ? 'lockOpen' : 'lock',
@@ -94,9 +88,9 @@ function WrapItUpButton({
 
   // Determine if the main "Wrap it up" button should be enabled
   const canWrapUp =
-    permissions?.canLockGroup() &&
-    (permissions?.canResolveAllDelayedSplitsAtOnce() || !hasDelayedSplits) &&
-    (permissions?.canSettleUpGroup() || !canSettleUp)
+    info.permissions?.canLockGroup() &&
+    (info.permissions?.canResolveAllDelayedSplitsAtOnce() || !hasDelayedSplits) &&
+    (info.permissions?.canSettleUpGroup() || !canSettleUp)
 
   return (
     <>
