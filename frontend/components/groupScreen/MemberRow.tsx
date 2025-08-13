@@ -73,7 +73,7 @@ function ConfirmRemoveMemberModal({
       onClose={onClose}
       onConfirm={async () => {
         if (Number(member.balance) !== 0) {
-          throw new TranslatableError('api.group.userIsSplitParticipant') 
+          throw new TranslatableError('api.group.userIsSplitParticipant')
         }
 
         await removeMember(member.id)

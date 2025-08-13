@@ -1,14 +1,14 @@
-import { useTranslatedError } from '@hooks/useTranslatedError'
 import { Button } from './Button'
+import { ErrorText } from './ErrorText'
 import { IconName } from './Icon'
 import { Text } from './Text'
+import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Pressable, StyleSheet, View } from 'react-native'
 import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { LanguageTranslationKey } from 'shared'
-import { ErrorText } from './ErrorText'
 
 export interface ConfirmationModalProps {
   visible: boolean
@@ -84,9 +84,7 @@ export function ConfirmationModal({
             <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 16 }}>{t(message)}</Text>
           )}
 
-          {error && (
-            <ErrorText>{error}</ErrorText>
-          )}
+          {error && <ErrorText>{error}</ErrorText>}
 
           <View
             style={{

@@ -22,7 +22,14 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { CurrencyUtils, GroupUserInfo, Member, SplitInfo, TranslatableError, isTranslatableError } from 'shared'
+import {
+  CurrencyUtils,
+  GroupUserInfo,
+  Member,
+  SplitInfo,
+  TranslatableError,
+  isTranslatableError,
+} from 'shared'
 
 function RemoveMemberButton({
   groupInfo,
@@ -46,11 +53,15 @@ function RemoveMemberButton({
 
   async function onConfirm() {
     if (isMemberOwner) {
-      throw new TranslatableError(isSelf ? 'memberInfo.youCannotLeaveAsOwner' : 'api.group.groupOwnerCannotBeRemoved')
+      throw new TranslatableError(
+        isSelf ? 'memberInfo.youCannotLeaveAsOwner' : 'api.group.groupOwnerCannotBeRemoved'
+      )
     }
 
     if (Number(memberInfo.balance) !== 0 || (splits && splits.length > 0)) {
-      throw new TranslatableError(isSelf ? 'memberInfo.youAreAParticipantInSomeSplits' : 'api.group.userIsSplitParticipant')
+      throw new TranslatableError(
+        isSelf ? 'memberInfo.youAreAParticipantInSomeSplits' : 'api.group.userIsSplitParticipant'
+      )
     }
 
     await removeMember(memberId).then(() => {
