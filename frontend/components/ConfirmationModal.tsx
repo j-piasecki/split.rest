@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Pressable, StyleSheet, View } from 'react-native'
 import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { LanguageTranslationKey, TranslatableError } from 'shared'
+import { isTranslatableError, LanguageTranslationKey } from 'shared'
 
 export interface ConfirmationModalProps {
   visible: boolean
@@ -68,7 +68,7 @@ export function ConfirmationModal({
             gap: 16,
           }}
         >
-          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 22 }}>{t(title)}</Text>
+          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 22, fontWeight: 600 }}>{t(title)}</Text>
 
           {message && (
             <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 16 }}>{t(message)}</Text>
@@ -105,8 +105,8 @@ export function ConfirmationModal({
                     onClose?.()
                   })
                   .catch((e) => {
-                    if (e instanceof TranslatableError) {
-                      alert(t(e.message))
+                    if (isTranslatableError(e)) {
+                      alert(t(e.message, e.args))
                     } else {
                       alert(t('api.auth.tryAgain'))
                     }
