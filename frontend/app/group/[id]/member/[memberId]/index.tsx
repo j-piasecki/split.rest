@@ -90,14 +90,12 @@ function RemoveMemberButton({
   )
 }
 
-export function MemberInfo({ splits }: { splits?: SplitInfo[] }) {
+export function MemberInfo({ groupInfo, memberInfo, splits }: { groupInfo?: GroupUserInfo, memberInfo?: Member, splits?: SplitInfo[] }) {
   const user = useAuth()
   const theme = useTheme()
   const router = useRouter()
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
-  const { data: groupInfo } = useGroupInfo(Number(groupId))
-  const { data: memberInfo, error } = useGroupMemberInfo(Number(groupId), String(memberId))
 
   const { mutateAsync: setDisplayName, isPending: isChangingDisplayName } =
     useSetUserDisplayNameMutation(Number(groupId), String(memberId))
@@ -105,31 +103,6 @@ export function MemberInfo({ splits }: { splits?: SplitInfo[] }) {
   const canEditDisplayName =
     groupInfo?.permissions?.canChangeEveryoneDisplayName?.() ||
     (groupInfo?.permissions?.canChangeDisplayName?.() && user?.id === memberId)
-
-  if (error || groupInfo?.permissions?.canReadMembers?.() === false) {
-    return (
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
-          {groupInfo?.permissions?.canReadMembers?.() ? (
-            <>
-              <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
-              <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
-                {t('api.group.userNotInGroup')}
-              </Text>
-            </>
-          ) : (
-            <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
-              {t('api.insufficientPermissions.group.readMembers')}
-            </Text>
-          )}
-        </View>
-      </View>
-    )
-  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -295,11 +268,11 @@ export function MemberInfo({ splits }: { splits?: SplitInfo[] }) {
   )
 }
 
-function MemberScreen() {
+function MemberScreen({ groupInfo, memberInfo }: { groupInfo?: GroupUserInfo, memberInfo?: Member }) {
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
-  const { data: groupInfo } = useGroupInfo(Number(groupId))
+  
   const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =
     useGroupSplitsQuery(Number(groupId), {
       participants: { type: 'oneOf', ids: [String(memberId)] },
@@ -320,7 +293,7 @@ function MemberScreen() {
       emptyMessage={t('memberInfo.noSplits')}
       headerComponent={
         <View style={{ gap: 24, paddingTop: 16 }}>
-          <MemberInfo splits={splits} />
+          <MemberInfo groupInfo={groupInfo} memberInfo={memberInfo} splits={splits} />
           <FullPaneHeader
             icon='receipt'
             title={t('tabs.splits')}
@@ -337,9 +310,37 @@ function MemberScreen() {
       paddingLeft: insets.left + 12,
       paddingRight: insets.right + 12,
     }}>
-      <MemberInfo />
+      <MemberInfo groupInfo={groupInfo} memberInfo={memberInfo} />
     </View>
   )
+}
+
+function MemberInfoError({ groupInfo }: { groupInfo?: GroupUserInfo }) {
+  const { t } = useTranslation()
+  const theme = useTheme()
+
+    return (
+      <View
+        style={{
+          flex: 1,
+        }}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
+          {groupInfo?.permissions?.canReadMembers?.() ? (
+            <>
+              <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
+              <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
+                {t('api.group.userNotInGroup')}
+              </Text>
+            </>
+          ) : (
+            <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
+              {t('api.insufficientPermissions.group.readMembers')}
+            </Text>
+          )}
+        </View>
+      </View>
+    )
 }
 
 export default function MemberInfoScreenWrapper() {
@@ -347,6 +348,9 @@ export default function MemberInfoScreenWrapper() {
   const theme = useTheme()
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()
+  const { id: groupId, memberId } = useLocalSearchParams()
+  const { data: groupInfo } = useGroupInfo(Number(groupId))
+  const { data: memberInfo, error } = useGroupMemberInfo(Number(groupId), String(memberId))
 
   if (user === null) {
     return <View style={{ flex: 1, backgroundColor: theme.colors.surface }} />
@@ -359,7 +363,11 @@ export default function MemberInfoScreenWrapper() {
       maxWidth={500}
       maxHeight={600}
     >
-      <MemberScreen />
+      {error || groupInfo?.permissions?.canReadMembers?.() === false ? (
+        <MemberInfoError groupInfo={groupInfo} />
+      ) : (
+        <MemberScreen groupInfo={groupInfo} memberInfo={memberInfo} />
+      )}
     </ModalScreen>
   )
 }
