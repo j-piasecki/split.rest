@@ -50,14 +50,14 @@ export function PaneHeader({
       {textVisible && (
         <View
           style={[
-            { flexDirection: 'row', gap: 16 },
+            { flexDirection: 'row', gap: 16, alignItems: 'center' },
             textLocation === 'center'
               ? { justifyContent: 'center' }
               : { paddingLeft: headerOffset },
             adjustsFontSizeToFit ? { flex: 1 } : { flexGrow: 1, flexShrink: 0 },
           ]}
         >
-          <Icon name={icon} size={threeBarLayout ? 20 : 24} color={foregroundColor} />
+          <Icon name={icon} size={threeBarLayout ? 20 : 22} color={foregroundColor} />
           <Text
             numberOfLines={1}
             adjustsFontSizeToFit={adjustsFontSizeToFit}
@@ -65,7 +65,7 @@ export function PaneHeader({
               flexShrink: 1,
               color: foregroundColor,
               fontSize: threeBarLayout ? 16 : 20,
-              fontWeight: 600,
+              fontWeight: 700,
             }}
           >
             {title}
