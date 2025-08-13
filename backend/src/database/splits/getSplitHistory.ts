@@ -67,12 +67,11 @@ export async function getSplitHistory(
               users.email, 
               users.deleted,
               group_members.display_name
-            FROM  users  INNER JOIN split_participants_edits
-              ON users.id = split_participants_edits.user_id
-              INNER JOIN group_members
-              ON users.id = group_members.user_id
+            FROM users 
+              INNER JOIN split_participants_edits ON users.id = split_participants_edits.user_id
+              LEFT JOIN group_members ON users.id = group_members.user_id AND group_members.group_id = $3
             WHERE 
-              split_id = $1 AND version = $2 AND group_id = $3
+              split_participants_edits.split_id = $1 AND split_participants_edits.version = $2
           `,
           [args.splitId, row.version, args.groupId]
         )

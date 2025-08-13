@@ -19,6 +19,7 @@ export const PermissionToFieldMap = {
   settleUp: ['groupId'] as const,
   readMembers: ['groupId'] as const,
   inviteMembers: ['groupId'] as const,
+  removeMembers: ['groupId', 'userId'] as const,
   renameGroup: ['groupId'] as const,
   deleteGroup: ['groupId'] as const,
   seeJoinLink: ['groupId'] as const,

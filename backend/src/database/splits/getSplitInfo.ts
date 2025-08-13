@@ -35,10 +35,9 @@ export async function getSplitInfo(
           users.email, 
           users.deleted,
           group_members.display_name
-        FROM users INNER JOIN split_participants 
-          ON users.id = split_participants.user_id
-          INNER JOIN group_members
-          ON users.id = group_members.user_id
+        FROM users
+          INNER JOIN split_participants ON users.id = split_participants.user_id
+          INNER JOIN group_members ON users.id = group_members.user_id
         WHERE 
           split_id = $1 AND group_id = $2
       `,

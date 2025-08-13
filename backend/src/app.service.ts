@@ -39,6 +39,7 @@ import {
   JoinGroupByLinkArguments,
   QueryGroupSplitsArguments,
   RegisterOrUpdateNotificationTokenArguments,
+  RemoveMemberFromGroupArguments,
   ResolveAllDelayedSplitsAtOnceArguments,
   ResolveDelayedSplitArguments,
   SetAllowedSplitMethodsArguments,
@@ -307,5 +308,9 @@ export class AppService {
 
   async getGroupMonthlyStats(callerId: string, args: GetGroupMonthlyStatsArguments) {
     return await this.databaseService.getGroupMonthlyStats(callerId, args)
+  }
+
+  async removeMember(callerId: string, args: RemoveMemberFromGroupArguments) {
+    return await this.databaseService.removeMember(callerId, args)
   }
 }

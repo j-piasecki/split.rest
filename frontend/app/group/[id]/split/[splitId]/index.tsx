@@ -14,7 +14,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, ScrollView, View } from 'react-native'
-import { SplitMethod, isDelayedSplit } from 'shared'
+import { SplitMethod, isDelayedSplit, isTranslatableError } from 'shared'
 
 const DelayedSplitResolutionAllowedSplitMethods = [
   SplitMethod.Equal,
@@ -89,8 +89,12 @@ export default function SplitInfoScreen() {
       } else if ((scrollableRef.current as ScrollView)?.scrollTo) {
         ;(scrollableRef.current as ScrollView).scrollTo(0)
       }
-    } catch {
-      alert(t('unknownError'))
+    } catch (e) {
+      if (isTranslatableError(e)) {
+        alert(t(e.message, e.args))
+      } else {
+        alert(t('unknownError'))
+      }
     }
   }
 

@@ -55,7 +55,8 @@
     "channel": {
       "newSplits": "New splits",
       "splitUpdates": "Split updates",
-      "groupInvites": "Group Invites"
+      "groupInvites": "Group Invites",
+      "groupUpdates": "Group Updates"
     },
     "createSplit": {
       "youOwe": "{{splitName}} — you owe {{amount}}",
@@ -71,6 +72,9 @@
     },
     "groupInvite": {
       "message": "You've been invited to join the group"
+    },
+    "groupRemoveMember": {
+      "message": "You've been removed from the group"
     },
     "settleUp": {
       "youOwe":"{{userName}} has settled up — pay them back {{amount}}",
@@ -117,6 +121,7 @@
         "uncompleteSplitEntry": "You don't have permission to mark splits as not completed",
         "readMembers": "You don't have permission to see members of this group",
         "inviteMembers": "You don't have permission to invite members to this group",
+        "removeMembers": "You don't have permission to remove members from this group",
         "rename": "You don't have permission to rename this group",
         "delete": "You don't have permission to delete this group",
         "manageAccess": "You don't have permission to manage the group access",
@@ -168,19 +173,23 @@
       "delayedSplitMustHavePayerAsParticipant": "Delayed split must have the payer as a participant",
       "delayedSplitMustBeResolvedWithPayer": "Payer must be included when finalizing a delayed split",
       "invalidResolutionMethod": "Invalid resolution method",
-      "noDelayedSplits": "There are no delayed splits to finalize"
+      "noDelayedSplits": "There are no delayed splits to finalize",
+      "notAllParticipantsAreMembers": "All split participants must be members of the group",
+      "oneOfTheParticipantsIsNotAMember": "One of the participants is not a member of the group"
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
       "callerAlreadyInGroup": "You already are a member of this group",
       "callerNotInGroup": "You are not a member of this group",
-      "userNotInGroup": "This user is not a member of this group",
+      "userNotInGroup": "This user is not a member of the group",
       "joinLinkAlreadyExists": "A join link already exists for this group",
       "failedToCreateGroup": "Failed to create group",
       "userAlreadyInvited": "User is already invited to this group",
       "cannotReadAllMembers": "Failed to read all members of this group",
       "locked": "This group is locked",
-      "settledUpButPending": "The group is already settled up, but some of the transactions haven't been confirmed yet"
+      "settledUpButPending": "The group is already settled up, but some of the transactions haven't been confirmed yet",
+      "userIsSplitParticipant": "There are splits in which this user is a participant",
+      "groupOwnerCannotBeRemoved": "The group owner cannot be removed from the group"
     },
     "user": {
       "nameTooLong": "Name is too long",
@@ -242,7 +251,16 @@
     "noAccess": "No access to this group",
     "settleUpWithMember": "Settle up with this person",
     "settleUpWithMemberExactAmount": "Settle up for an exact amount",
-    "noSplits": "This person has no splits in this group"
+    "noSplits": "This person has no splits in this group",
+    "removeFromGroup": "Remove from group",
+    "leaveGroup": "Leave group",
+    "removeFromGroupConfirmationText": "Are you sure you want to remove this person from the group?",
+    "removeFromGroupConfirm": "Remove",
+    "leaveGroupConfirmationText": "Are you sure you want to leave the group?",
+    "leaveGroupConfirm": "Leave",
+    "cancel": "Cancel",
+    "youAreAParticipantInSomeSplits": "You are a participant in some splits in this group",
+    "youCannotLeaveAsOwner": "You cannot leave the group which you are the owner of"
   },
 
   "settleUpExactAmount": {
