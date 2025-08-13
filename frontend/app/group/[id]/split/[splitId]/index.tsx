@@ -142,7 +142,9 @@ export default function SplitInfoScreen() {
               onLoadMoreHistory={fetchNextPage}
               isLoadingHistory={isLoadingHistory || isFetchingNextPage}
               onRestoreVersion={
-                groupInfo.permissions.canUpdateSplit(user?.id, history[0]) ? restoreSplitVersion : undefined
+                groupInfo.permissions.canUpdateSplit(user?.id, history[0])
+                  ? restoreSplitVersion
+                  : undefined
               }
               isRestoringVersion={isRestoring}
             />

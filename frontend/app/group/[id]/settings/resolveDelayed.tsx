@@ -13,13 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { GroupUserInfo, Member, UserWithDisplayName } from 'shared'
 
-function Form({
-  info,
-  memberInfo,
-}: {
-  info: GroupUserInfo
-  memberInfo: Member
-}) {
+function Form({ info, memberInfo }: { info: GroupUserInfo; memberInfo: Member }) {
   const router = useRouter()
   const selectedUsersRef = useRef<UserWithDisplayName[]>([])
   const snack = useSnack()
@@ -102,9 +96,7 @@ export default function Settings() {
       opaque={false}
       slideAnimation={false}
     >
-      {info && memberInfo && (
-        <Form info={info} memberInfo={memberInfo} />
-      )}
+      {info && memberInfo && <Form info={info} memberInfo={memberInfo} />}
     </ModalScreen>
   )
 }

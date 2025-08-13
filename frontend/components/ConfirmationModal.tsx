@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Pressable, StyleSheet, View } from 'react-native'
 import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { isTranslatableError, LanguageTranslationKey } from 'shared'
+import { LanguageTranslationKey, isTranslatableError } from 'shared'
 
 export interface ConfirmationModalProps {
   visible: boolean
@@ -68,7 +68,9 @@ export function ConfirmationModal({
             gap: 16,
           }}
         >
-          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 22, fontWeight: 600 }}>{t(title)}</Text>
+          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 22, fontWeight: 600 }}>
+            {t(title)}
+          </Text>
 
           {message && (
             <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 16 }}>{t(message)}</Text>

@@ -118,7 +118,7 @@ function UserPicker() {
   const { id: groupId } = useLocalSearchParams()
   const { t } = useTranslation()
   const { data: groupInfo } = useGroupInfo(Number(groupId))
-  
+
   const [email, setEmail] = useState('')
   const [user, waiting, error] = useUserByEmail(email)
   const [addingError, setAddingError] = useTranslatedError()

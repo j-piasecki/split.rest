@@ -1,4 +1,4 @@
-import { GroupMemberPermissions } from "./permissions"
+import { GroupMemberPermissions } from './permissions'
 
 export interface User {
   id: string

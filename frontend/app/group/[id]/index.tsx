@@ -33,7 +33,9 @@ function SingleColumnLayout({ info }: { info: GroupUserInfo | undefined }) {
       headerComponent={
         <View style={{ gap: 12 }}>
           <GroupInfoPane info={info} />
-          {(!info?.permissions || info.permissions.canReadMembers()) && <MembersButton info={info} />}
+          {(!info?.permissions || info.permissions.canReadMembers()) && (
+            <MembersButton info={info} />
+          )}
           <ActionableSplitsPane info={info} />
           <FullPaneHeader
             icon='receipt'

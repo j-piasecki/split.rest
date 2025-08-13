@@ -1,5 +1,6 @@
 import { Button } from '@components/Button'
 import { ButtonWithSecondaryActions } from '@components/ButtonWithSecondaryActions'
+import { ConfirmationModal } from '@components/ConfirmationModal'
 import { EditableText } from '@components/EditableText'
 import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
@@ -11,6 +12,7 @@ import { SplitsList } from '@components/groupScreen/SplitsList'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
+import { useRemoveUserFromGroupMutation } from '@hooks/database/useRemoveUserFromGroup'
 import { useSetUserDisplayNameMutation } from '@hooks/database/useSetUserDisplayName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
@@ -20,9 +22,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { CurrencyUtils, GroupUserInfo, isTranslatableError, Member, SplitInfo } from 'shared'
-import { useRemoveUserFromGroupMutation } from '@hooks/database/useRemoveUserFromGroup'
-import { ConfirmationModal } from '@components/ConfirmationModal'
+import { CurrencyUtils, GroupUserInfo, Member, SplitInfo, isTranslatableError } from 'shared'
 
 function RemoveMemberButton({
   groupInfo,
@@ -41,14 +41,20 @@ function RemoveMemberButton({
   const { t } = useTranslation()
   const { mutateAsync: removeMember } = useRemoveUserFromGroupMutation(groupInfo.id)
   const [modalVisible, setModalVisible] = useState(false)
-  
+
   const isMemberOwner = memberId === groupInfo.owner
 
   function openModal() {
     if (isMemberOwner) {
-      alert(isSelf ? t('memberInfo.youCannotLeaveAsOwner') : t('api.group.groupOwnerCannotBeRemoved'))
+      alert(
+        isSelf ? t('memberInfo.youCannotLeaveAsOwner') : t('api.group.groupOwnerCannotBeRemoved')
+      )
     } else if (Number(memberInfo.balance) !== 0 || (splits && splits.length > 0)) {
-      alert(isSelf ? t('memberInfo.youAreAParticipantInSomeSplits') : t('api.group.userIsSplitParticipant'))
+      alert(
+        isSelf
+          ? t('memberInfo.youAreAParticipantInSomeSplits')
+          : t('api.group.userIsSplitParticipant')
+      )
     } else {
       setModalVisible(true)
     }
@@ -79,7 +85,11 @@ function RemoveMemberButton({
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onConfirm={onConfirm}
-        title={isSelf ? 'memberInfo.leaveGroupConfirmationText' : 'memberInfo.removeFromGroupConfirmationText'}
+        title={
+          isSelf
+            ? 'memberInfo.leaveGroupConfirmationText'
+            : 'memberInfo.removeFromGroupConfirmationText'
+        }
         confirmText={isSelf ? 'memberInfo.leaveGroupConfirm' : 'memberInfo.removeFromGroupConfirm'}
         cancelText='memberInfo.cancel'
         cancelIcon='close'
@@ -90,7 +100,15 @@ function RemoveMemberButton({
   )
 }
 
-export function MemberInfo({ groupInfo, memberInfo, splits }: { groupInfo?: GroupUserInfo, memberInfo?: Member, splits?: SplitInfo[] }) {
+export function MemberInfo({
+  groupInfo,
+  memberInfo,
+  splits,
+}: {
+  groupInfo?: GroupUserInfo
+  memberInfo?: Member
+  splits?: SplitInfo[]
+}) {
   const user = useAuth()
   const theme = useTheme()
   const router = useRouter()
@@ -257,9 +275,17 @@ export function MemberInfo({ groupInfo, memberInfo, splits }: { groupInfo?: Grou
               </View>
             )}
 
-            {groupInfo && memberInfo && (memberId === user?.id || groupInfo?.permissions?.canRemoveMembers?.()) && (
+          {groupInfo &&
+            memberInfo &&
+            (memberId === user?.id || groupInfo?.permissions?.canRemoveMembers?.()) && (
               <View style={{ width: '100%' }}>
-                <RemoveMemberButton groupInfo={groupInfo} memberInfo={memberInfo} isSelf={memberId === user?.id} memberId={memberId as string} splits={splits} />
+                <RemoveMemberButton
+                  groupInfo={groupInfo}
+                  memberInfo={memberInfo}
+                  isSelf={memberId === user?.id}
+                  memberId={memberId as string}
+                  splits={splits}
+                />
               </View>
             )}
         </View>
@@ -268,11 +294,17 @@ export function MemberInfo({ groupInfo, memberInfo, splits }: { groupInfo?: Grou
   )
 }
 
-function MemberScreen({ groupInfo, memberInfo }: { groupInfo?: GroupUserInfo, memberInfo?: Member }) {
+function MemberScreen({
+  groupInfo,
+  memberInfo,
+}: {
+  groupInfo?: GroupUserInfo
+  memberInfo?: Member
+}) {
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
-  
+
   const { splits, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =
     useGroupSplitsQuery(Number(groupId), {
       participants: { type: 'oneOf', ids: [String(memberId)] },
@@ -304,12 +336,14 @@ function MemberScreen({ groupInfo, memberInfo }: { groupInfo?: GroupUserInfo, me
       }
     />
   ) : (
-    <View style={{
-      flex: 1,
-      paddingTop: insets.top + 16,
-      paddingLeft: insets.left + 12,
-      paddingRight: insets.right + 12,
-    }}>
+    <View
+      style={{
+        flex: 1,
+        paddingTop: insets.top + 16,
+        paddingLeft: insets.left + 12,
+        paddingRight: insets.right + 12,
+      }}
+    >
       <MemberInfo groupInfo={groupInfo} memberInfo={memberInfo} />
     </View>
   )
@@ -319,28 +353,28 @@ function MemberInfoError({ groupInfo }: { groupInfo?: GroupUserInfo }) {
   const { t } = useTranslation()
   const theme = useTheme()
 
-    return (
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
-          {groupInfo?.permissions?.canReadMembers?.() ? (
-            <>
-              <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
-              <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
-                {t('api.group.userNotInGroup')}
-              </Text>
-            </>
-          ) : (
+  return (
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
+        {groupInfo?.permissions?.canReadMembers?.() ? (
+          <>
+            <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
             <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
-              {t('api.insufficientPermissions.group.readMembers')}
+              {t('api.group.userNotInGroup')}
             </Text>
-          )}
-        </View>
+          </>
+        ) : (
+          <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>
+            {t('api.insufficientPermissions.group.readMembers')}
+          </Text>
+        )}
       </View>
-    )
+    </View>
+  )
 }
 
 export default function MemberInfoScreenWrapper() {

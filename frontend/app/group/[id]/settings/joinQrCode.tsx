@@ -14,11 +14,7 @@ import { GroupUserInfo } from 'shared'
 
 const MAX_QR_SIZE = 300
 
-function QRCodeWrapper({
-  info,
-}: {
-  info: GroupUserInfo
-}) {
+function QRCodeWrapper({ info }: { info: GroupUserInfo }) {
   const theme = useTheme()
   const insets = useModalScreenInsets()
   const [containerWidth, setContainerWidth] = useState(0)

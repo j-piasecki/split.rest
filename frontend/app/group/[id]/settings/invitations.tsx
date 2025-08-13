@@ -29,11 +29,7 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, StyleProp, View, ViewStyle } from 'react-native'
 import { GroupInviteWithInvitee, GroupMemberPermissions, GroupUserInfo } from 'shared'
 
-function JoinLinkManager({
-  info,
-}: {
-  info: GroupUserInfo
-}) {
+function JoinLinkManager({ info }: { info: GroupUserInfo }) {
   const theme = useTheme()
   const router = useRouter()
   const { t } = useTranslation()
@@ -278,9 +274,7 @@ function Form({ info }: { info: GroupUserInfo }) {
         keyExtractor={(item) => item.invitee.id}
         ListHeaderComponent={
           <View style={{ gap: 12 }}>
-            {info.permissions.canSeeJoinLink() && (
-              <JoinLinkManager info={info} />
-            )}
+            {info.permissions.canSeeJoinLink() && <JoinLinkManager info={info} />}
             <FullPaneHeader
               icon='stackedEmail'
               title={t('settings.invitations.directInvitations')}

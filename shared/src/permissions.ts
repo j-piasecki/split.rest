@@ -1,4 +1,4 @@
-import { isSettleUpSplit, SplitInfo } from "./types"
+import { SplitInfo, isSettleUpSplit } from './types'
 
 export const PermissionKeys = [
   'createSplit',
@@ -122,13 +122,15 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     this.manage = manage
   }
 
-  private checkSplitPermission(userId: string | undefined, split: SplitInfo, type: SplitPermissionType) {
+  private checkSplitPermission(
+    userId: string | undefined,
+    split: SplitInfo,
+    type: SplitPermissionType
+  ) {
     return (
       type === SplitPermissionType.All ||
       (type === SplitPermissionType.OnlyIfIncluded &&
-        (split.isUserParticipating ||
-          split.createdById === userId ||
-          split.paidById === userId))
+        (split.isUserParticipating || split.createdById === userId || split.paidById === userId))
     )
   }
 

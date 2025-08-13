@@ -15,13 +15,7 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { GroupUserInfo, SplitMethod, validateAllowedSplitMethods } from 'shared'
 
-function Form({
-  info,
-  groupInfo,
-}: {
-  info: GroupUserInfo
-  groupInfo: GroupUserInfo
-}) {
+function Form({ info, groupInfo }: { info: GroupUserInfo; groupInfo: GroupUserInfo }) {
   const router = useRouter()
   const insets = useModalScreenInsets()
   const [error, setError] = useTranslatedError()
@@ -114,9 +108,7 @@ export default function Settings() {
       opaque={false}
       slideAnimation={false}
     >
-      {info && groupInfo && (
-        <Form info={info} groupInfo={groupInfo} />
-      )}
+      {info && groupInfo && <Form info={info} groupInfo={groupInfo} />}
 
       {(!info || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
