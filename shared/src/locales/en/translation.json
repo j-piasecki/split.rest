@@ -168,7 +168,8 @@
       "delayedSplitMustHavePayerAsParticipant": "Delayed split must have the payer as a participant",
       "delayedSplitMustBeResolvedWithPayer": "Payer must be included when finalizing a delayed split",
       "invalidResolutionMethod": "Invalid resolution method",
-      "noDelayedSplits": "There are no delayed splits to finalize"
+      "noDelayedSplits": "There are no delayed splits to finalize",
+      "notAllParticipantsAreMembers": "All split participants must be members of the group"
     },
     "group": {
       "userAlreadyInGroup": "User is already a member of this group",
