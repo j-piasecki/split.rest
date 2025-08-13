@@ -64,14 +64,18 @@ export async function removeMember(
     }
 
     // remove the user from the group
-    await client.query('DELETE FROM group_members WHERE group_id = $1 AND user_id = $2', [
-      args.groupId,
-      args.userId,
-    ])
-
     await client.query(
-      'UPDATE groups SET member_count = member_count - 1, last_update = $1 WHERE id = $2',
-      [Date.now(), args.groupId]
+      `
+        WITH deleted AS (
+          DELETE FROM group_members
+          WHERE group_id = $1 AND user_id = $2
+          RETURNING 1
+        )
+        UPDATE groups
+        SET member_count = member_count - (SELECT COUNT(*) FROM deleted)
+        WHERE id = $1;
+      `,
+      [args.groupId, args.userId]
     )
 
     await client.query('COMMIT')
