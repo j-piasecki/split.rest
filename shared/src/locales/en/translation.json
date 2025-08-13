@@ -245,7 +245,8 @@
   },
 
   "memberInfo": {
-    "displayNamePlaceholder": "Display name",
+    "details": "Details",
+    "displayNamePlaceholder": "Nickname",
     "balance": "Balance: <Styled>{{balance}}</Styled>",
     "admin": "Moderator of this group",
     "noAccess": "No access to this group",
