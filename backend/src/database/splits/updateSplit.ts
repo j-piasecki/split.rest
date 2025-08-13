@@ -77,7 +77,10 @@ async function dispatchNotifications(
         id: balance.id,
         change: Number(balance.change),
       }))
-      .filter((balance) => !oldParticipants.has(balance.id) && balance.change !== 0)
+      .filter(
+        (balance) =>
+          !oldParticipants.has(balance.id) && balance.change !== 0 && balance.id !== callerId
+      )
       .map(async (balance) => ({
         ...balance,
         tokens: await getNotificationTokens(client, balance.id),
@@ -85,7 +88,10 @@ async function dispatchNotifications(
   )
   const removedFromSplit = await Promise.all(
     previousParticipants
-      .filter((participant) => !newParticipants.has(participant.user_id))
+      .filter(
+        (participant) =>
+          !newParticipants.has(participant.user_id) && participant.user_id !== callerId
+      )
       .map(async (participant) => ({
         id: participant.user_id,
         change: Number(participant.change),
@@ -98,7 +104,8 @@ async function dispatchNotifications(
         (balance) =>
           oldParticipants.has(balance.id) &&
           newParticipants.has(balance.id) &&
-          oldParticipants.get(balance.id) !== balance.change
+          oldParticipants.get(balance.id) !== balance.change &&
+          balance.id !== callerId
       )
       .map(async (balance) => ({
         id: balance.id,
