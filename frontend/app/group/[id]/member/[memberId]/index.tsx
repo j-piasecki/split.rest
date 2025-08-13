@@ -123,7 +123,7 @@ function DisplayNameSetter({
         disabled={!canEditDisplayName || isChangingDisplayName}
         value={value ?? ''}
         onChangeText={setValue}
-        containerStyle={{ paddingRight: 56 }}
+        containerStyle={{ flex: 1, paddingRight: 56 }}
       />
       <View
         style={{
@@ -431,7 +431,7 @@ export default function MemberInfoScreenWrapper() {
       returnPath={`/group/${id}`}
       title={t('screenName.memberInfo')}
       maxWidth={500}
-      maxHeight={600}
+      maxHeight={650}
     >
       {error || groupInfo?.permissions?.canReadMembers?.() === false ? (
         <MemberInfoError groupInfo={groupInfo} />
