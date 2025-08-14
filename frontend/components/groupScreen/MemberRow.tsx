@@ -107,7 +107,8 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
         {
           label: member.hasAccess ? t('member.revokeAccess') : t('member.giveAccess'),
           icon: member.hasAccess ? 'lock' : 'lockOpen',
-          disabled: !info.permissions.canManageAccess() || member.deleted || member.id === info.owner,
+          disabled:
+            !info.permissions.canManageAccess() || member.deleted || member.id === info.owner,
           onPress: () => {
             setGroupAccessMutation(!member.hasAccess)
           },
