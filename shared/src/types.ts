@@ -53,11 +53,11 @@ export interface BalanceChange {
   pending: boolean
 }
 
-export interface UserWithBalanceChange extends MaybeMember {
+export interface MaybeMemberWithBalanceChange extends MaybeMember {
   change: string
 }
 
-export interface UserWithPendingBalanceChange extends UserWithBalanceChange {
+export interface MaybeMemberWithPendingBalanceChange extends MaybeMemberWithBalanceChange {
   change: string
   pending: boolean
 }
@@ -161,7 +161,7 @@ export interface SplitWithChanges extends SplitInfo {
 }
 
 export interface SplitWithUsers extends SplitInfo {
-  users: UserWithPendingBalanceChange[]
+  users: MaybeMemberWithPendingBalanceChange[]
 }
 
 export interface SplitWithHashedChanges extends SplitWithUsers {

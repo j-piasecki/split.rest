@@ -1,6 +1,6 @@
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
-import { GetBalancesArguments, UserWithBalanceChange } from 'shared'
+import { GetBalancesArguments, MaybeMemberWithBalanceChange } from 'shared'
 import { NotFoundException } from 'src/errors/NotFoundException'
 
 // TODO: Change this to return Member[]
@@ -8,7 +8,7 @@ export async function getBalances(
   pool: Pool,
   callerId: string,
   args: GetBalancesArguments
-): Promise<UserWithBalanceChange[]> {
+): Promise<MaybeMemberWithBalanceChange[]> {
   if (await isGroupDeleted(pool, args.groupId)) {
     throw new NotFoundException('api.notFound.group')
   }

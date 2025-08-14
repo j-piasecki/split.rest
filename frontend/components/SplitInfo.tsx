@@ -29,11 +29,14 @@ import {
 import {
   GroupUserInfo,
   LanguageTranslationKey,
+  MaybeMemberWithPendingBalanceChange,
   SplitWithUsers,
-  UserWithPendingBalanceChange,
 } from 'shared'
 
-function getVisibleBalanceChange(user: UserWithPendingBalanceChange, splitInfo: SplitWithUsers) {
+function getVisibleBalanceChange(
+  user: MaybeMemberWithPendingBalanceChange,
+  splitInfo: SplitWithUsers
+) {
   const paidByThis = splitInfo.paidById === user.id
   let paidInThisSplit = user.change
 
@@ -63,7 +66,7 @@ function PaidAmount({
   splitInfo,
   groupInfo,
 }: {
-  user: UserWithPendingBalanceChange
+  user: MaybeMemberWithPendingBalanceChange
   splitInfo: SplitWithUsers
   groupInfo?: GroupUserInfo
 }) {
@@ -120,7 +123,7 @@ function UserRow({
   last = false,
   showCompleteButton = true,
 }: {
-  user: UserWithPendingBalanceChange
+  user: MaybeMemberWithPendingBalanceChange
   splitInfo: SplitWithUsers
   groupInfo: GroupUserInfo | undefined
   isNameUnique: boolean
@@ -546,7 +549,7 @@ function EditHistory({
   )
 }
 
-function getNameKey(user: UserWithPendingBalanceChange) {
+function getNameKey(user: MaybeMemberWithPendingBalanceChange) {
   if (user.displayName === null) {
     return user.name
   }

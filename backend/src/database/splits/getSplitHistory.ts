@@ -3,7 +3,7 @@ import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { splitExists } from '../utils/splitExists'
 import { getSplitInfo } from './getSplitInfo'
 import { Pool } from 'pg'
-import { SplitWithUsers, UserWithPendingBalanceChange } from 'shared'
+import { MaybeMemberWithPendingBalanceChange, SplitWithUsers } from 'shared'
 import { GetSplitHistoryArguments } from 'shared/src/endpointArguments'
 
 export async function getSplitHistory(
@@ -80,7 +80,7 @@ export async function getSplitHistory(
         )
       ).rows
 
-      const participants: UserWithPendingBalanceChange[] = participantRows.map((row) => ({
+      const participants: MaybeMemberWithPendingBalanceChange[] = participantRows.map((row) => ({
         id: row.id,
         name: row.name,
         email: row.email,
