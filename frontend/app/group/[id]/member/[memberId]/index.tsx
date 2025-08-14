@@ -225,15 +225,7 @@ function RemoveMemberButton({
   const { mutateAsync: removeMember } = useRemoveUserFromGroupMutation(groupInfo.id)
   const [modalVisible, setModalVisible] = useState(false)
 
-  const isMemberOwner = memberId === groupInfo.owner
-
   async function onConfirm() {
-    if (isMemberOwner) {
-      throw new TranslatableError(
-        isSelf ? 'memberInfo.youCannotLeaveAsOwner' : 'api.group.groupOwnerCannotBeRemoved'
-      )
-    }
-
     if (Number(memberInfo.balance) !== 0 || (splits && splits.length > 0)) {
       throw new TranslatableError(
         isSelf ? 'memberInfo.youAreAParticipantInSomeSplits' : 'api.group.userIsSplitParticipant'

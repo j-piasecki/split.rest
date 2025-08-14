@@ -262,8 +262,7 @@
     "leaveGroupConfirmationText": "Are you sure you want to leave the group?",
     "leaveGroupConfirm": "Leave",
     "cancel": "Cancel",
-    "youAreAParticipantInSomeSplits": "You are a participant in some splits in this group",
-    "youCannotLeaveAsOwner": "You cannot leave the group which you are the owner of"
+    "youAreAParticipantInSomeSplits": "You are a participant in some splits in this group"
   },
 
   "settleUpExactAmount": {
