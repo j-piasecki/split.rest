@@ -315,7 +315,7 @@ function MemberActions({
           <MemberActionButton
             disabled={!canManageAccess}
             icon={memberInfo.hasAccess ? 'lock' : 'lockOpen'}
-            title={memberInfo.hasAccess ? 'Revoke access' : 'Give access'}
+            title={memberInfo.hasAccess ? t('member.revokeAccess') : t('member.giveAccess')}
             color={memberInfo.hasAccess ? theme.colors.error : undefined}
             onPress={() => {
               setGroupAccessMutation(!memberInfo.hasAccess)
