@@ -444,41 +444,51 @@ export function MemberInfo({
             </View>
           </View>
 
-          {memberInfo && (!memberInfo.hasAccess || memberInfo.isAdmin) && (
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 8,
-              }}
-            >
-              {!memberInfo.hasAccess ? (
-                <>
-                  <View style={{ width: 24, alignItems: 'center' }}>
-                    <Icon name={'lock'} size={20} color={theme.colors.error} />
-                  </View>
-                  <Text
-                    style={{
-                      color: theme.colors.error,
-                      fontSize: 18,
-                    }}
-                  >
-                    {t('memberInfo.noAccess')}
-                  </Text>
-                </>
-              ) : memberInfo.isAdmin ? (
-                <>
-                  <View style={{ width: 24, alignItems: 'center' }}>
-                    <Icon name='shield' size={20} color={theme.colors.onSurface} />
-                  </View>
-                  <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
-                    {t('memberInfo.admin')}
-                  </Text>
-                </>
-              ) : null}
-            </View>
-          )}
+          {memberInfo &&
+            (!memberInfo.hasAccess || memberInfo.isAdmin || memberInfo.id === groupInfo?.owner) && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                }}
+              >
+                {memberInfo.id === groupInfo?.owner ? (
+                  <>
+                    <View style={{ width: 24, alignItems: 'center' }}>
+                      <Icon name='shield' size={20} color={theme.colors.tertiary} />
+                    </View>
+                    <Text style={{ color: theme.colors.tertiary, fontSize: 18 }}>
+                      {t('memberInfo.owner')}
+                    </Text>
+                  </>
+                ) : !memberInfo.hasAccess ? (
+                  <>
+                    <View style={{ width: 24, alignItems: 'center' }}>
+                      <Icon name={'lock'} size={20} color={theme.colors.error} />
+                    </View>
+                    <Text
+                      style={{
+                        color: theme.colors.error,
+                        fontSize: 18,
+                      }}
+                    >
+                      {t('memberInfo.noAccess')}
+                    </Text>
+                  </>
+                ) : memberInfo.isAdmin ? (
+                  <>
+                    <View style={{ width: 24, alignItems: 'center' }}>
+                      <Icon name='shield' size={20} color={theme.colors.onSurface} />
+                    </View>
+                    <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
+                      {t('memberInfo.admin')}
+                    </Text>
+                  </>
+                ) : null}
+              </View>
+            )}
         </View>
       </Pane>
 

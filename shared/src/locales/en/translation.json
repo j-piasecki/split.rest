@@ -250,6 +250,7 @@
     "displayNamePlaceholder": "Nickname",
     "balance": "Balance: <Styled>{{balance}}</Styled>",
     "admin": "Moderator of this group",
+    "owner": "Owner of this group",
     "noAccess": "No access to this group",
     "settleUpWithMember": "Settle up with this person",
     "settleUpWithMemberExactAmount": "Settle up for an exact amount",
