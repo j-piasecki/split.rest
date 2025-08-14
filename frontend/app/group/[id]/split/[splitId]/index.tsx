@@ -1,13 +1,17 @@
 import { Button } from '@components/Button'
 import Modal from '@components/ModalScreen'
+import { useSnack } from '@components/SnackBar'
 import { SplitInfo } from '@components/SplitInfo'
 import { Text } from '@components/Text'
+import { restoreSplit } from '@database/restoreSplit'
+import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useSplitHistory } from '@hooks/database/useSplitHistory'
 import { useUpdateSplit } from '@hooks/database/useUpdateSplit'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { getSplitDisplayName } from '@utils/getSplitDisplayName'
 import { measure } from '@utils/measure'
 import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -35,10 +39,12 @@ export default function SplitInfoScreen() {
   const theme = useTheme()
   const router = useRouter()
   const insets = useModalScreenInsets()
+  const snack = useSnack()
   const { id, splitId } = useLocalSearchParams()
   const { t } = useTranslation()
   const { data: groupInfo } = useGroupInfo(Number(id))
   const { mutateAsync: updateSplit, isPending: isRestoring } = useUpdateSplit()
+  const { mutateAsync: deleteSplit, isPending: isDeleting } = useDeleteSplit(Number(id))
   const {
     history,
     isLoading: isLoadingHistory,
@@ -55,6 +61,8 @@ export default function SplitInfoScreen() {
   const canResolveDelayedSplit = groupInfo?.allowedSplitMethods.some((method) =>
     DelayedSplitResolutionAllowedSplitMethods.includes(method)
   )
+
+  const interactionDisabled = isRestoring || isDeleting
 
   useLayoutEffect(() => {
     if (containerRef.current) {
@@ -165,7 +173,7 @@ export default function SplitInfoScreen() {
                 <Button
                   title={t('split.resolveDelayed')}
                   style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
-                  disabled={isRestoring}
+                  disabled={interactionDisabled}
                   leftIcon='chronic'
                   onPress={() => {
                     SplitCreationContext.create()
@@ -192,14 +200,47 @@ export default function SplitInfoScreen() {
                 />
               )}
 
-            {groupInfo.permissions.canUpdateSplit(user?.id, history[0]) && !groupInfo?.locked && (
+            {groupInfo.permissions.canUpdateSplit(user?.id, history[0]) && !groupInfo.locked && (
               <Button
                 title={t('split.edit')}
                 style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
-                disabled={isRestoring}
+                disabled={interactionDisabled}
                 leftIcon='edit'
                 onPress={() =>
                   router.navigate(`/group/${groupInfo?.id}/split/${history[0].id}/edit`)
+                }
+              />
+            )}
+
+            {groupInfo.permissions.canDeleteSplit(user?.id, history[0]) && !groupInfo.locked && (
+              <Button
+                destructive
+                title={t('split.delete')}
+                style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
+                disabled={interactionDisabled}
+                leftIcon='delete'
+                isLoading={isDeleting}
+                onPress={() =>
+                  deleteSplit(Number(splitId))
+                    .then(() => {
+                      router.dismissTo(`/group/${groupInfo.id}`)
+                      snack.show({
+                        message: t('split.deletedToast', {
+                          title: getSplitDisplayName(history[0]),
+                        }),
+                        actionText: t('undo'),
+                        action: async () => {
+                          await restoreSplit(Number(splitId), groupInfo.id)
+                        },
+                      })
+                    })
+                    .catch((e) => {
+                      if (isTranslatableError(e)) {
+                        alert(t(e.message, e.args))
+                      } else {
+                        alert(t('unknownError'))
+                      }
+                    })
                 }
               />
             )}
