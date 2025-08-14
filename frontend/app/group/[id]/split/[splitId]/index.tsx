@@ -14,7 +14,14 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, FlatList, ScrollView, View } from 'react-native'
-import { SplitMethod, isDelayedSplit, isTranslatableError } from 'shared'
+import {
+  DEFAULT_BALANCE_WHEN_NOT_SET,
+  DEFAULT_HAS_ACCESS_WHEN_NOT_SET,
+  DEFAULT_IS_ADMIN_WHEN_NOT_SET,
+  SplitMethod,
+  isDelayedSplit,
+  isTranslatableError,
+} from 'shared'
 
 const DelayedSplitResolutionAllowedSplitMethods = [
   SplitMethod.Equal,
@@ -165,7 +172,15 @@ export default function SplitInfoScreen() {
                       .resolveDelayedSplit(Number(splitId))
                       .setAllowedSplitMethods(DelayedSplitResolutionAllowedSplitMethods)
                       .setParticipants(
-                        history[0].users.map((user) => ({ user: user, value: user.change }))
+                        history[0].users.map((user) => ({
+                          user: {
+                            ...user,
+                            balance: user?.balance ?? DEFAULT_BALANCE_WHEN_NOT_SET,
+                            isAdmin: user?.isAdmin ?? DEFAULT_IS_ADMIN_WHEN_NOT_SET,
+                            hasAccess: user?.hasAccess ?? DEFAULT_HAS_ACCESS_WHEN_NOT_SET,
+                          },
+                          value: user.change,
+                        }))
                       )
                       .setPaidById(history[0].paidById ?? null)
                       .setTitle(history[0].title)

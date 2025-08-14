@@ -3,7 +3,7 @@ import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { splitExists } from '../utils/splitExists'
 import { getSplitInfo } from './getSplitInfo'
 import { Pool } from 'pg'
-import { SplitWithUsers, UserWithPendingBalanceChange } from 'shared'
+import { MaybeMemberWithPendingBalanceChange, SplitWithUsers } from 'shared'
 import { GetSplitHistoryArguments } from 'shared/src/endpointArguments'
 
 export async function getSplitHistory(
@@ -66,6 +66,9 @@ export async function getSplitHistory(
               users.name, 
               users.email, 
               users.deleted,
+              group_members.balance,
+              group_members.has_access,
+              group_members.is_admin,
               group_members.display_name
             FROM users 
               INNER JOIN split_participants_edits ON users.id = split_participants_edits.user_id
@@ -77,7 +80,7 @@ export async function getSplitHistory(
         )
       ).rows
 
-      const participants: UserWithPendingBalanceChange[] = participantRows.map((row) => ({
+      const participants: MaybeMemberWithPendingBalanceChange[] = participantRows.map((row) => ({
         id: row.id,
         name: row.name,
         email: row.email,
@@ -85,6 +88,9 @@ export async function getSplitHistory(
         change: row.change,
         pending: row.pending,
         deleted: row.deleted,
+        balance: row.balance,
+        hasAccess: row.has_access,
+        isAdmin: row.is_admin,
         displayName: row.display_name,
       }))
 

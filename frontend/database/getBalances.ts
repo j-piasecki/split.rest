@@ -1,10 +1,10 @@
 import { makeRequest } from '../utils/makeApiRequest'
-import { GetBalancesArguments, UserWithBalanceChange } from 'shared'
+import { GetBalancesArguments, MaybeMemberWithBalanceChange } from 'shared'
 
 export async function getBalances(
   groupId: number,
   ids: string[]
-): Promise<UserWithBalanceChange[]> {
+): Promise<MaybeMemberWithBalanceChange[]> {
   const args: GetBalancesArguments = { groupId, users: ids }
 
   try {

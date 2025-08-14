@@ -3,9 +3,9 @@ import { PersonEntry } from '@components/PeoplePicker'
 import { getBalances } from '@database/getBalances'
 import { sleep } from '@utils/sleep'
 import { useEffect, useState } from 'react'
-import { TranslatableError, UserWithDisplayName } from 'shared'
+import { Member, TranslatableError } from 'shared'
 
-interface UserWithMaybeBalanceChange extends UserWithDisplayName {
+interface UserWithMaybeBalanceChange extends Member {
   change: string | null
 }
 

@@ -29,7 +29,7 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, Pressable, ScrollView, View } from 'react-native'
 import Animated, { LinearTransition } from 'react-native-reanimated'
-import { SplitType, UserWithDisplayName, validateQuery } from 'shared'
+import { Member, SplitType, validateQuery } from 'shared'
 
 interface QueryProps {
   query: SplitQueryConfig
@@ -89,9 +89,9 @@ function ChipPeoplePicker({
   onAdd,
 }: {
   groupId: number
-  selected: UserWithDisplayName[]
+  selected: Member[]
   onRemove: (id: string) => void
-  onAdd: (user: UserWithDisplayName) => void
+  onAdd: (user: Member) => void
 }) {
   const theme = useTheme()
   const containerRef = useRef<View>(null)
@@ -281,8 +281,8 @@ function FilterUserArray({
 }: {
   title: string
   icon: IconName
-  people: UserWithDisplayName[] | undefined
-  onAdd: (user: UserWithDisplayName) => void
+  people: Member[] | undefined
+  onAdd: (user: Member) => void
   onRemove: (id: string) => void
 }) {
   const { id: groupId } = useLocalSearchParams()

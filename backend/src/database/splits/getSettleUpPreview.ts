@@ -77,6 +77,9 @@ export async function getSettleUpPreview(
           deleted: member.deleted,
           change: entry.change,
           pending: entry.pending,
+          balance: member.balance,
+          isAdmin: member.isAdmin,
+          hasAccess: member.hasAccess,
           displayName: member.displayName,
         }
       }),

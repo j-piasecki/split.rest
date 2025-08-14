@@ -11,7 +11,7 @@ import { useAuth } from '@utils/auth'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import { GroupUserInfo, LanguageTranslationKey, SplitMethod, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, LanguageTranslationKey, Member, SplitMethod } from 'shared'
 
 export interface SplitFormProps {
   groupInfo: GroupUserInfo
@@ -92,7 +92,7 @@ export function SplitForm({
       : splitMethod === SplitMethod.BalanceChanges
         ? 'form.change'
         : 'form.amount'
-  const filterSuggestions = (suggestions: UserWithDisplayName[]) => {
+  const filterSuggestions = (suggestions: Member[]) => {
     if (splitMethod === SplitMethod.Lend) {
       return suggestions.filter((suggestion) => suggestion.id !== user?.id)
     }
@@ -116,7 +116,7 @@ export function SplitForm({
     })
   }
 
-  async function setMembers(fetchMembers: () => Promise<UserWithDisplayName[]>) {
+  async function setMembers(fetchMembers: () => Promise<Member[]>) {
     if (fetchingMembers) {
       return
     }

@@ -7,7 +7,7 @@ import { useTheme } from '@styling/theme'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardTypeOptions, LayoutRectangle, Pressable, ScrollView, View } from 'react-native'
-import { CurrencyUtils, LanguageTranslationKey, UserWithDisplayName } from 'shared'
+import { CurrencyUtils, LanguageTranslationKey, Member } from 'shared'
 
 export interface SplitEntryProps {
   scrollRef?: React.RefObject<ScrollView | null>
@@ -22,7 +22,7 @@ export interface SplitEntryProps {
   focusIndex?: number
   first: boolean
   last: boolean
-  filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
+  filterSuggestions?: (suggestions: Member[]) => Member[]
   balanceKeyboardType?: KeyboardTypeOptions
   amountPlaceholder: LanguageTranslationKey
   integersOnly?: boolean

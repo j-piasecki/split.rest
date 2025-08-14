@@ -27,13 +27,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, LayoutRectangle, Platform, ScrollView, View } from 'react-native'
 import Animated, { LinearTransition } from 'react-native-reanimated'
-import {
-  CurrencyUtils,
-  GroupUserInfo,
-  SplitMethod,
-  TranslatableError,
-  UserWithDisplayName,
-} from 'shared'
+import { CurrencyUtils, GroupUserInfo, Member, SplitMethod, TranslatableError } from 'shared'
 
 const RouletteAllowedSplitMethods = [
   SplitMethod.Equal,
@@ -45,7 +39,7 @@ const RouletteAllowedSplitMethods = [
 interface RouletteProps {
   groupInfo: GroupUserInfo
   setQuery: (result: PersonEntry[]) => void
-  user: UserWithDisplayName
+  user: Member
 }
 
 function Roulette({ groupInfo, setQuery, user }: RouletteProps) {
@@ -235,7 +229,7 @@ function Result({ query, groupInfo, setQuery }: ResultProps) {
           textLocation='start'
         >
           {result.map((user, index) => {
-            const balanceNum = parseFloat(user.change ?? '')
+            const balanceNum = parseFloat(user.balance ?? '')
             const balanceColor = getBalanceColor(balanceNum, theme)
 
             return (
@@ -266,21 +260,31 @@ function Result({ query, groupInfo, setQuery }: ResultProps) {
                   ]}
                 >
                   <ProfilePicture userId={user.id} size={28} />
-                  <View style={{ flexDirection: 'column' }}>
-                    <Text style={{ fontSize: 18, fontWeight: 700, color: theme.colors.onSurface }}>
+                  <View style={{ flex: 1, flexDirection: 'column' }}>
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        flex: 1,
+                        fontSize: 18,
+                        fontWeight: 700,
+                        color: theme.colors.onSurface,
+                      }}
+                    >
                       {user.displayName ?? user.name}
                     </Text>
 
                     {user.displayName && (
-                      <Text style={{ fontSize: 12, fontWeight: 600, color: theme.colors.outline }}>
+                      <Text
+                        numberOfLines={1}
+                        style={{ fontSize: 12, fontWeight: 600, color: theme.colors.outline }}
+                      >
                         {user.name}
                       </Text>
                     )}
                   </View>
-                  <View style={{ flex: 1 }} />
 
                   <ShimmerPlaceholder
-                    argument={user.change}
+                    argument={user.balance}
                     shimmerStyle={{ width: 64, height: 24 }}
                   >
                     <Text style={{ fontSize: 18, color: balanceColor }}>

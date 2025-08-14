@@ -29,11 +29,14 @@ import {
 import {
   GroupUserInfo,
   LanguageTranslationKey,
+  MaybeMemberWithPendingBalanceChange,
   SplitWithUsers,
-  UserWithPendingBalanceChange,
 } from 'shared'
 
-function getVisibleBalanceChange(user: UserWithPendingBalanceChange, splitInfo: SplitWithUsers) {
+function getVisibleBalanceChange(
+  user: MaybeMemberWithPendingBalanceChange,
+  splitInfo: SplitWithUsers
+) {
   const paidByThis = splitInfo.paidById === user.id
   let paidInThisSplit = user.change
 
@@ -63,7 +66,7 @@ function PaidAmount({
   splitInfo,
   groupInfo,
 }: {
-  user: UserWithPendingBalanceChange
+  user: MaybeMemberWithPendingBalanceChange
   splitInfo: SplitWithUsers
   groupInfo?: GroupUserInfo
 }) {
@@ -120,7 +123,7 @@ function UserRow({
   last = false,
   showCompleteButton = true,
 }: {
-  user: UserWithPendingBalanceChange
+  user: MaybeMemberWithPendingBalanceChange
   splitInfo: SplitWithUsers
   groupInfo: GroupUserInfo | undefined
   isNameUnique: boolean
@@ -145,6 +148,8 @@ function UserRow({
     showCompleteButton &&
     user.pending &&
     (appUser?.id === splitInfo.paidById || appUser?.id === user.id)
+
+  const showBadge = (user.pending && showCompleteButton) || !user.hasAccess
 
   return (
     <View
@@ -176,7 +181,7 @@ function UserRow({
         <View>
           <ProfilePicture userId={user.id} size={32} />
 
-          {user.pending && showCompleteButton && (
+          {showBadge && (
             <View
               style={[
                 {
@@ -193,7 +198,11 @@ function UserRow({
                 styles.paneShadow,
               ]}
             >
-              <Icon name='hourglass' size={18} color={theme.colors.tertiary} />
+              <Icon
+                name={user.hasAccess ? 'hourglass' : 'lock'}
+                size={18}
+                color={theme.colors.tertiary}
+              />
             </View>
           )}
         </View>
@@ -540,12 +549,36 @@ function EditHistory({
   )
 }
 
-function getNameKey(user: UserWithPendingBalanceChange) {
+function getNameKey(user: MaybeMemberWithPendingBalanceChange) {
   if (user.displayName === null) {
     return user.name
   }
 
   return user.name + user.displayName
+}
+
+function ParticipantsWithNoAccessWarning({ splitHistory }: { splitHistory: SplitWithUsers[] }) {
+  const theme = useTheme()
+  const { t } = useTranslation()
+
+  const participants = splitHistory[0].users
+  const participantsWithNoAccess = participants.filter((p) => !p.hasAccess)
+
+  if (participantsWithNoAccess.length === 0) {
+    return null
+  }
+
+  return (
+    <FullPaneHeader
+      icon='warning'
+      title={t('splitInfo.participantsWithNoAccess')}
+      textLocation='start'
+      style={{ overflow: 'hidden', backgroundColor: theme.colors.tertiaryContainer }}
+      color={theme.colors.onTertiaryContainer}
+      expanded={false}
+      adjustsFontSizeToFit
+    />
+  )
 }
 
 export function SplitInfo({
@@ -560,6 +593,7 @@ export function SplitInfo({
   isLoadingHistory = false,
   onRestoreVersion,
   isRestoringVersion,
+  showNoAccessWarning = false,
 }: {
   splitHistory: SplitWithUsers[]
   groupInfo: GroupUserInfo
@@ -572,6 +606,7 @@ export function SplitInfo({
   onLoadMoreHistory?: () => void
   onRestoreVersion?: (version: number) => Promise<void>
   isRestoringVersion?: boolean
+  showNoAccessWarning?: boolean
 }) {
   const theme = useTheme()
   const { t } = useTranslation()
@@ -674,6 +709,8 @@ export function SplitInfo({
           selectedVersion={selectedVersion}
           setSelectedVersion={setSelectedVersion}
         />
+
+        {showNoAccessWarning && <ParticipantsWithNoAccessWarning splitHistory={splitHistory} />}
 
         {splitInfo.type === SplitType.Delayed && (
           <FullPaneHeader

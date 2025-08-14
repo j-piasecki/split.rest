@@ -97,6 +97,7 @@ export type IconName =
   | 'user'
   | 'visibilityOff'
   | 'visibility'
+  | 'warning'
 
 export interface IconProps {
   name?: IconName
@@ -200,6 +201,7 @@ const iconMap: Record<IconName, unknown> = {
   user: require('@assets/icons/user.svg'),
   visibilityOff: require('@assets/icons/visibility_off.svg'),
   visibility: require('@assets/icons/visibility.svg'),
+  warning: require('@assets/icons/warning.svg'),
 }
 
 // @ts-expect-error array of strings is expected, unknown is provided

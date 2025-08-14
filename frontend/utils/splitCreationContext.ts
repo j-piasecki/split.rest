@@ -4,16 +4,16 @@ import { resolveSplit } from '@hooks/database/useResolveSplit'
 import currency from 'currency.js'
 import {
   CreateSplitArguments,
+  MaybeMemberWithPendingBalanceChange,
+  Member,
   SplitMethod,
   SplitType,
   SplitWithUsers,
   TranslatableError,
-  UserWithDisplayName,
-  UserWithPendingBalanceChange,
 } from 'shared'
 
 export interface UserWithValue {
-  user: UserWithDisplayName
+  user: Member
   value?: string
 }
 
@@ -74,7 +74,7 @@ export class SplitCreationContext {
     return index === -1 ? undefined : index
   }
 
-  private getParticipantsData(): UserWithPendingBalanceChange[] {
+  private getParticipantsData(): MaybeMemberWithPendingBalanceChange[] {
     if (this._participants === null) {
       return []
     }

@@ -1,13 +1,13 @@
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
-import { GetSplitParticipantsSuggestionsArguments, UserWithDisplayName } from 'shared'
+import { GetSplitParticipantsSuggestionsArguments, Member } from 'shared'
 
 export async function getSplitParticipantsSuggestions(
   pool: Pool,
   callerId: string,
   args: GetSplitParticipantsSuggestionsArguments
-): Promise<UserWithDisplayName[]> {
+): Promise<Member[]> {
   if (await isGroupDeleted(pool, args.groupId)) {
     throw new NotFoundException('api.notFound.group')
   }
@@ -15,7 +15,15 @@ export async function getSplitParticipantsSuggestions(
   const rows = (
     await pool.query(
       `
-        SELECT users.id, users.name, users.email, group_members.display_name, count(split_participants.split_id)
+        SELECT
+          users.id,
+          users.name,
+          users.email,
+          group_members.balance,
+          group_members.has_access,
+          group_members.is_admin,
+          group_members.display_name,
+          count(split_participants.split_id)
         FROM split_participants
           INNER JOIN users on split_participants.user_id = users.id
           INNER JOIN group_members on split_participants.user_id = group_members.user_id
@@ -31,7 +39,7 @@ export async function getSplitParticipantsSuggestions(
             ORDER BY splits.timestamp DESC
             LIMIT 10
           )
-        GROUP BY users.id, group_members.display_name
+        GROUP BY users.id, group_members.balance, group_members.has_access, group_members.is_admin, group_members.display_name
         ORDER BY count DESC
         LIMIT 20;
       `,
@@ -45,6 +53,9 @@ export async function getSplitParticipantsSuggestions(
     email: row.email,
     photoUrl: null,
     deleted: false,
+    balance: row.balance,
+    hasAccess: row.has_access,
+    isAdmin: row.is_admin,
     displayName: row.display_name,
   }))
 }
