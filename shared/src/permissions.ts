@@ -32,6 +32,7 @@ export const PermissionKeys = [
   'lockGroup',
   'settleUpGroup',
   'manageAllowedSplitMethods',
+  'seeGroupTrends',
 ] as const
 
 export const enum SplitPermissionsDTO {
@@ -99,6 +100,7 @@ export const enum ManagePermissionsDTO {
   LockGroup = 1 << 13, // Lock or unlock the group
   SettleUpGroup = 1 << 14, // Settle up the group
   ManageAllowedSplitMethods = 1 << 15, // Manage allowed split methods of the group
+  SeeGroupTrends = 1 << 16, // See group trends
 }
 
 export interface GroupMemberPermissionsDTO {
@@ -331,6 +333,10 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return Boolean(this.manage & ManagePermissionsDTO.ManageAllowedSplitMethods)
   }
 
+  canSeeGroupTrends(): boolean {
+    return Boolean(this.manage & ManagePermissionsDTO.SeeGroupTrends)
+  }
+
   toObject() {
     return {
       createSplit: this.canCreateSplits(),
@@ -365,6 +371,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
       lockGroup: this.canLockGroup(),
       settleUpGroup: this.canSettleUpGroup(),
       manageAllowedSplitMethods: this.canManageAllowedSplitMethods(),
+      seeGroupTrends: this.canSeeGroupTrends(),
     }
   }
 }

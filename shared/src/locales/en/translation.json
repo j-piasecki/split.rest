@@ -138,7 +138,8 @@
         },
         "lockGroup": "You don't have permission to lock or unlock the group",
         "settleUpGroup": "You don't have permission to settle up the group",
-        "manageAllowedSplitMethods": "You don't have permission to manage allowed split methods"
+        "manageAllowedSplitMethods": "You don't have permission to manage allowed split methods",
+        "seeGroupTrends": "You don't have permission to see group trends"
       }
     },
     "notFound": {
