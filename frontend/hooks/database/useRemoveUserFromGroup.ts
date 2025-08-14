@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { invalidateGroupInfo, invalidateGroupMembers } from '@utils/queryClient'
+import { invalidateGroupInfo, invalidateGroupMember, invalidateGroupMembers } from '@utils/queryClient'
 import { RemoveMemberFromGroupArguments } from 'shared'
 
 export function useRemoveUserFromGroupMutation(groupId: number) {
@@ -12,6 +12,7 @@ export function useRemoveUserFromGroupMutation(groupId: number) {
 
       await invalidateGroupInfo(groupId)
       await invalidateGroupMembers(groupId)
+      await invalidateGroupMember(groupId, userId)
     },
   })
 }
