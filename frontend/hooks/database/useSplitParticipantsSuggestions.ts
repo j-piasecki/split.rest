@@ -1,20 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
 import { ApiError, makeRequest } from '@utils/makeApiRequest'
-import {
-  GetSplitParticipantsSuggestionsArguments,
-  TranslatableError,
-  UserWithDisplayName,
-} from 'shared'
+import { GetSplitParticipantsSuggestionsArguments, Member, TranslatableError } from 'shared'
 
 export function useSplitParticipantsSuggestions(groupId: number) {
   return useQuery({
     queryKey: ['splitParticipantsSuggestions', groupId],
-    queryFn: async (): Promise<UserWithDisplayName[]> => {
+    queryFn: async (): Promise<Member[]> => {
       const args: GetSplitParticipantsSuggestionsArguments = { groupId }
-      const info = await makeRequest<
-        GetSplitParticipantsSuggestionsArguments,
-        UserWithDisplayName[]
-      >('GET', 'getSplitParticipantsSuggestions', args)
+      const info = await makeRequest<GetSplitParticipantsSuggestionsArguments, Member[]>(
+        'GET',
+        'getSplitParticipantsSuggestions',
+        args
+      )
 
       if (info === null) {
         throw new TranslatableError('api.notFound.group')
