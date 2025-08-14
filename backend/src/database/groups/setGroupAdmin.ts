@@ -1,6 +1,7 @@
 import { ForbiddenException } from '../../errors/ForbiddenException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserGroupOwner } from '../utils/isUserGroupOwner'
+import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { userExists } from '../utils/userExists'
 import { NotFoundException } from '@nestjs/common/exceptions/not-found.exception'
 import { Pool } from 'pg'
@@ -18,6 +19,10 @@ export async function setGroupAdmin(pool: Pool, callerId: string, args: SetGroup
 
     if (!(await userExists(client, args.userId))) {
       throw new NotFoundException('notFound.user')
+    }
+
+    if (!(await isUserMemberOfGroup(client, args.groupId, args.userId))) {
+      throw new NotFoundException('api.group.userNotInGroup')
     }
 
     if (await isUserGroupOwner(client, args.groupId, args.userId)) {
