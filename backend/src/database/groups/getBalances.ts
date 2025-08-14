@@ -20,6 +20,7 @@ export async function getBalances(
           users.id,
           users.name, 
           users.email,
+          users.deleted,
           group_members.balance,
           group_members.has_access,
           group_members.is_admin,

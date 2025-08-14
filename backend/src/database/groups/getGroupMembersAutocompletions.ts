@@ -28,6 +28,9 @@ export async function getGroupMembersAutocompletions(
               users.email, 
               users.photo_url,
               users.deleted,
+              group_members.balance,
+              group_members.has_access,
+              group_members.is_admin,
               group_members.display_name
             FROM users JOIN group_members ON users.id = group_members.user_id
             WHERE group_members.group_id = $1 AND (users.name ILIKE $2 OR users.email ILIKE $2 OR group_members.display_name ILIKE $2)
