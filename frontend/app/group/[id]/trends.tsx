@@ -1067,7 +1067,16 @@ export default function Settings() {
       maxWidth={700}
       maxHeight={850}
     >
-      {info && statistics && <Stats info={info} statistics={statistics} />}
+      {info && statistics && info.permissions.canSeeGroupTrends() && (
+        <Stats info={info} statistics={statistics} />
+      )}
+      {info && statistics && !info.permissions.canSeeGroupTrends() && (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <Text style={{ color: theme.colors.onSurface, fontSize: 20, textAlign: 'center' }}>
+            {t('api.insufficientPermissions.group.seeGroupTrends')}
+          </Text>
+        </View>
+      )}
       {(!info || !statistics) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size='large' color={theme.colors.primary} />
