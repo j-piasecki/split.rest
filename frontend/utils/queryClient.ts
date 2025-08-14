@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
-import { GroupUserInfo, Member, SplitInfo, SplitQuery } from 'shared'
+import { GroupUserInfo, SplitInfo, SplitQuery } from 'shared'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -144,25 +144,6 @@ export async function updateCachedSplit(
       ...oldData,
       pages: oldData.pages.map((page) =>
         page.map((split) => (split.id === splitId ? updater(split) : split))
-      ),
-    }
-  })
-}
-
-export async function updateCachedGroupMember(
-  groupId: number,
-  userId: string,
-  updater: (data: Member) => Member
-) {
-  await queryClient.setQueryData(['groupMembers', groupId], (oldData?: { pages: Member[][] }) => {
-    if (!oldData) {
-      return
-    }
-
-    return {
-      ...oldData,
-      pages: oldData.pages.map((page) =>
-        page.map((member) => (member.id === userId ? updater(member) : member))
       ),
     }
   })

@@ -314,7 +314,7 @@ export function ButtonWithSecondaryActions({
         ref={wrapperRef}
         style={{
           flexDirection: 'row',
-          gap: 4,
+          gap: 8,
           alignItems: 'center',
         }}
       >

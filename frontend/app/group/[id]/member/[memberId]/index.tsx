@@ -1,27 +1,33 @@
-import { Button } from '@components/Button'
+import { ButtonShimmer } from '@components/ButtonShimmer'
 import { ButtonWithSecondaryActions } from '@components/ButtonWithSecondaryActions'
 import { ConfirmationModal } from '@components/ConfirmationModal'
-import { EditableText } from '@components/EditableText'
-import { Icon } from '@components/Icon'
+import { Icon, IconName } from '@components/Icon'
+import { LargeTextInput } from '@components/LargeTextInput'
 import ModalScreen from '@components/ModalScreen'
-import { FullPaneHeader } from '@components/Pane'
+import { FullPaneHeader, Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
+import { RoundIconButton } from '@components/RoundIconButton'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { SplitsList } from '@components/groupScreen/SplitsList'
+import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
+import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
 import { useRemoveUserFromGroupMutation } from '@hooks/database/useRemoveUserFromGroup'
 import { useSetUserDisplayNameMutation } from '@hooks/database/useSetUserDisplayName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import { buttonCornerSpringConfig, buttonPaddingSpringConfig } from '@styling/animationConfigs'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native'
+import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
 import {
   CurrencyUtils,
   GroupUserInfo,
@@ -31,33 +37,221 @@ import {
   isTranslatableError,
 } from 'shared'
 
+function DisplayNameSetter({
+  groupInfo,
+  memberInfo,
+}: {
+  groupInfo: GroupUserInfo
+  memberInfo: Member
+}) {
+  const theme = useTheme()
+  const user = useAuth()
+  const { t } = useTranslation()
+  const { mutateAsync: setDisplayName, isPending: isChangingDisplayName } =
+    useSetUserDisplayNameMutation(groupInfo.id, memberInfo.id)
+  const [value, setValue] = useState(memberInfo.displayName)
+
+  const canEditDisplayName =
+    groupInfo?.permissions?.canChangeEveryoneDisplayName?.() ||
+    (groupInfo?.permissions?.canChangeDisplayName?.() && user?.id === memberInfo.id)
+
+  return (
+    <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
+      <LargeTextInput
+        placeholder={t('memberInfo.displayNamePlaceholder')}
+        disabled={!canEditDisplayName || isChangingDisplayName}
+        value={value ?? ''}
+        onChangeText={setValue}
+        containerStyle={{ flex: 1, paddingRight: 56 }}
+      />
+      <View
+        style={{
+          position: 'absolute',
+          right: 8,
+          top: 0,
+          bottom: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {canEditDisplayName && value?.length && (
+          <RoundIconButton
+            color={theme.colors.secondary}
+            icon='check'
+            onPress={() => setDisplayName(value)}
+            size={32}
+            isLoading={isChangingDisplayName}
+            disabled={value === memberInfo.displayName}
+          />
+        )}
+      </View>
+    </View>
+  )
+}
+
+function MemberActionButton({
+  icon,
+  title,
+  onPress,
+  color,
+  destructive,
+  disabled,
+  horizontal,
+}: {
+  icon: IconName
+  title: string
+  onPress: () => Promise<void>
+  color?: string
+  destructive?: boolean
+  disabled?: boolean
+  horizontal?: boolean
+}) {
+  const theme = useTheme()
+  const { t } = useTranslation()
+  const [isPressed, setIsPressed] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const isSmallScreen = useDisplayClass() <= DisplayClass.Small
+  const foregroundColor =
+    color ?? (destructive ? theme.colors.onErrorContainer : theme.colors.secondary)
+  const backgroundColor = destructive ? theme.colors.errorContainer : theme.colors.surfaceContainer
+  const iconSize = horizontal ? 24 : isSmallScreen ? 28 : 24
+  const iconContainerSize = horizontal ? 48 : isSmallScreen ? 48 : 32
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      borderRadius: withSpring(isPressed ? 24 : 12, buttonCornerSpringConfig),
+      transform: [{ scaleX: withSpring(isPressed ? 1.05 : 1, buttonPaddingSpringConfig) }],
+    }
+  })
+
+  const innerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scaleX: withSpring(isPressed ? 1 / 1.05 : 1, buttonPaddingSpringConfig) }],
+    }
+  })
+
+  return (
+    <Animated.View
+      style={[
+        animatedStyle,
+        {
+          flex: 1,
+          backgroundColor: backgroundColor,
+          borderRadius: 12,
+          overflow: 'hidden',
+          opacity: disabled ? 0.5 : 1,
+        },
+      ]}
+    >
+      <View
+        style={[
+          StyleSheet.absoluteFillObject,
+          {
+            backgroundColor: `${theme.colors.onSurface}`,
+            opacity: isPressed ? 0.1 : isHovered ? 0.05 : 0,
+          },
+        ]}
+      />
+      <Pressable
+        onPress={() => {
+          setIsLoading(true)
+          onPress()
+            .catch((e) => {
+              if (isTranslatableError(e)) {
+                alert(t(e.message))
+              } else {
+                alert(t('unknownError'))
+              }
+            })
+            .finally(() => {
+              setIsLoading(false)
+            })
+        }}
+        disabled={disabled}
+        onPressIn={() => setIsPressed(true)}
+        onPressOut={() => setIsPressed(false)}
+        onHoverIn={() => setIsHovered(true)}
+        onHoverOut={() => setIsHovered(false)}
+        style={{
+          flex: 1,
+        }}
+      >
+        <Animated.View
+          style={[
+            innerAnimatedStyle,
+            {
+              flex: 1,
+              alignItems: 'center',
+              flexDirection: horizontal ? 'row' : 'column',
+              gap: 4,
+              paddingVertical: 8,
+              paddingHorizontal: 12,
+            },
+          ]}
+        >
+          <View
+            style={{
+              width: iconContainerSize,
+              height: iconContainerSize,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            {isLoading ? (
+              <ActivityIndicator size='small' color={foregroundColor} />
+            ) : (
+              <Icon name={icon} size={iconSize} color={foregroundColor} />
+            )}
+          </View>
+          <View
+            style={{
+              flex: horizontal ? undefined : 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text
+              style={{
+                fontSize: horizontal ? 20 : 16,
+                color: foregroundColor,
+                textAlign: 'center',
+                fontWeight: 600,
+              }}
+            >
+              {title}
+            </Text>
+          </View>
+        </Animated.View>
+      </Pressable>
+    </Animated.View>
+  )
+}
+
 function RemoveMemberButton({
   groupInfo,
   memberInfo,
   isSelf,
   memberId,
   splits,
+  disabled,
+  horizontal,
 }: {
   groupInfo: GroupUserInfo
   memberInfo: Member
   isSelf: boolean
   memberId: string
   splits?: SplitInfo[]
+  disabled?: boolean
+  horizontal?: boolean
 }) {
   const router = useRouter()
   const { t } = useTranslation()
   const { mutateAsync: removeMember } = useRemoveUserFromGroupMutation(groupInfo.id)
   const [modalVisible, setModalVisible] = useState(false)
 
-  const isMemberOwner = memberId === groupInfo.owner
-
   async function onConfirm() {
-    if (isMemberOwner) {
-      throw new TranslatableError(
-        isSelf ? 'memberInfo.youCannotLeaveAsOwner' : 'api.group.groupOwnerCannotBeRemoved'
-      )
-    }
-
     if (Number(memberInfo.balance) !== 0 || (splits && splits.length > 0)) {
       throw new TranslatableError(
         isSelf ? 'memberInfo.youAreAParticipantInSomeSplits' : 'api.group.userIsSplitParticipant'
@@ -77,11 +271,13 @@ function RemoveMemberButton({
 
   return (
     <>
-      <Button
+      <MemberActionButton
         destructive
-        leftIcon='personRemove'
+        disabled={disabled}
+        horizontal={horizontal}
+        icon='personRemove'
         title={isSelf ? t('memberInfo.leaveGroup') : t('memberInfo.removeFromGroup')}
-        onPress={() => setModalVisible(true)}
+        onPress={async () => setModalVisible(true)}
       />
 
       <ConfirmationModal
@@ -103,6 +299,83 @@ function RemoveMemberButton({
   )
 }
 
+function MemberActions({
+  groupInfo,
+  memberInfo,
+  splits,
+}: {
+  groupInfo: GroupUserInfo
+  memberInfo: Member
+  splits?: SplitInfo[]
+}) {
+  const user = useAuth()
+  const theme = useTheme()
+  const { t } = useTranslation()
+
+  const { mutateAsync: setGroupAccessMutation } = useSetGroupAccessMutation(
+    groupInfo.id,
+    memberInfo.id
+  )
+  const { mutateAsync: setGroupAdminMutation } = useSetGroupAdminMutation(
+    groupInfo.id,
+    memberInfo.id
+  )
+
+  const isSelf = memberInfo.id === user?.id
+
+  const canManageAccess =
+    groupInfo.permissions.canManageAccess() && memberInfo.id !== groupInfo.owner && !isSelf
+  const canManageAdmin =
+    groupInfo.permissions.canManageAdmins() &&
+    memberInfo.id !== groupInfo.owner &&
+    !isSelf &&
+    memberInfo.hasAccess
+  const canRemoveMember =
+    (groupInfo.permissions.canRemoveMembers() || isSelf) && memberInfo.id !== groupInfo.owner
+
+  const onlyRemoveMember = !canManageAccess && !canManageAdmin && canRemoveMember
+  const showAnything = canManageAccess || canManageAdmin || canRemoveMember
+
+  if (!showAnything) {
+    return null
+  }
+
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', gap: 8 }}>
+      {!onlyRemoveMember && (
+        <>
+          <MemberActionButton
+            disabled={!canManageAccess}
+            icon={memberInfo.hasAccess ? 'lock' : 'lockOpen'}
+            title={memberInfo.hasAccess ? t('member.revokeAccess') : t('member.giveAccess')}
+            color={memberInfo.hasAccess ? theme.colors.error : undefined}
+            onPress={async () => {
+              await setGroupAccessMutation(!memberInfo.hasAccess)
+            }}
+          />
+          <MemberActionButton
+            disabled={!canManageAdmin}
+            icon={memberInfo.isAdmin ? 'shield' : 'addModerator'}
+            title={memberInfo.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin')}
+            onPress={async () => {
+              await setGroupAdminMutation(!memberInfo.isAdmin)
+            }}
+          />
+        </>
+      )}
+      <RemoveMemberButton
+        groupInfo={groupInfo}
+        memberInfo={memberInfo}
+        isSelf={isSelf}
+        memberId={memberInfo.id}
+        splits={splits}
+        disabled={!canRemoveMember}
+        horizontal={onlyRemoveMember}
+      />
+    </View>
+  )
+}
+
 export function MemberInfo({
   groupInfo,
   memberInfo,
@@ -118,181 +391,167 @@ export function MemberInfo({
   const { t } = useTranslation()
   const { id: groupId, memberId } = useLocalSearchParams()
 
-  const { mutateAsync: setDisplayName, isPending: isChangingDisplayName } =
-    useSetUserDisplayNameMutation(Number(groupId), String(memberId))
-
-  const canEditDisplayName =
-    groupInfo?.permissions?.canChangeEveryoneDisplayName?.() ||
-    (groupInfo?.permissions?.canChangeDisplayName?.() && user?.id === memberId)
-
   return (
-    <View style={{ flex: 1 }}>
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          gap: 24,
-        }}
-      >
-        <View style={{ alignItems: 'center', gap: 8, width: '100%' }}>
-          <ShimmerPlaceholder
-            argument={memberInfo}
-            style={{ width: 128, height: 128 }}
-            shimmerStyle={{ borderRadius: 64 }}
-          >
-            {(memberInfo) => <ProfilePicture userId={memberInfo.id} size={128} />}
-          </ShimmerPlaceholder>
-          <ShimmerPlaceholder
-            argument={memberInfo}
-            style={{ width: '100%', alignItems: 'center' }}
-            shimmerStyle={{ width: 200, height: 32 }}
-          >
-            {(memberInfo) => (
-              <EditableText
-                value={memberInfo.displayName ?? memberInfo.name}
-                placeholder={t('memberInfo.displayNamePlaceholder')}
-                isPending={isChangingDisplayName}
-                disabled={!canEditDisplayName}
-                onSubmit={(name) => {
-                  let newName: string | null = name.trim()
-                  if (newName === memberInfo.name) {
-                    newName = null
-                  }
-                  setDisplayName(newName).catch((e) => {
-                    if (isTranslatableError(e)) {
-                      alert(t(e.message, e.args))
-                    }
-                  })
-                }}
-                style={{ alignSelf: 'stretch', justifyContent: 'center' }}
-                textStyle={{
-                  fontSize: 24,
-                  fontWeight: '600',
-                  color: theme.colors.onSurface,
-                  textAlign: 'center',
-                }}
-              />
-            )}
-          </ShimmerPlaceholder>
-          <ShimmerPlaceholder argument={memberInfo} shimmerStyle={{ width: 240, height: 22 }}>
-            {(memberInfo) =>
-              memberInfo.displayName && (
-                <Text
-                  style={{ fontSize: 16, fontWeight: '400', color: theme.colors.onSurfaceVariant }}
-                >
-                  {memberInfo.name}
-                </Text>
-              )
-            }
-          </ShimmerPlaceholder>
-          <ShimmerPlaceholder argument={memberInfo} shimmerStyle={{ width: 240, height: 22 }}>
-            {(memberInfo) => (
-              <Text
-                style={{ fontSize: 16, fontWeight: '400', color: theme.colors.onSurfaceVariant }}
-              >
-                {memberInfo.email}
-              </Text>
-            )}
-          </ShimmerPlaceholder>
-          <ShimmerPlaceholder argument={memberInfo} shimmerStyle={{ width: 240, height: 28 }}>
-            {(memberInfo) => (
-              <Text style={{ fontSize: 22, fontWeight: '500', color: theme.colors.onSurface }}>
-                <Trans
-                  values={{
-                    balance: CurrencyUtils.format(memberInfo.balance, groupInfo?.currency),
-                  }}
-                  i18nKey={'memberInfo.balance'}
-                  components={{
-                    Styled: (
-                      <Text
-                        style={{
-                          fontWeight: '600',
-                          color: getBalanceColor(Number(memberInfo.balance), theme),
-                        }}
-                      />
-                    ),
-                  }}
-                />
-              </Text>
-            )}
-          </ShimmerPlaceholder>
-
-          {memberInfo && (
-            <View
-              style={{
-                width: '100%',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 8,
-                paddingHorizontal: 16,
-              }}
+    <View
+      style={{
+        flex: 1,
+        gap: 12,
+      }}
+    >
+      <Pane icon='user' title={t('memberInfo.details')} textLocation='start'>
+        <View style={{ padding: 12, gap: 16 }}>
+          <View style={{ flexDirection: 'row', gap: 12 }}>
+            <ShimmerPlaceholder
+              argument={memberInfo}
+              style={{ width: 96, height: 96 }}
+              shimmerStyle={{ borderRadius: 64 }}
             >
-              {!memberInfo.hasAccess ? (
-                <>
-                  <View style={{ width: 24, alignItems: 'center' }}>
-                    <Icon name={'lock'} size={20} color={theme.colors.error} />
-                  </View>
-                  <Text
-                    style={{
-                      color: theme.colors.error,
-                      fontSize: 18,
-                    }}
-                  >
-                    {t('memberInfo.noAccess')}
-                  </Text>
-                </>
-              ) : memberInfo.isAdmin ? (
-                <>
-                  <View style={{ width: 24, alignItems: 'center' }}>
-                    <Icon name='shield' size={20} color={theme.colors.onSurface} />
-                  </View>
-                  <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
-                    {t('memberInfo.admin')}
-                  </Text>
-                </>
-              ) : null}
-            </View>
-          )}
+              {(memberInfo) => <ProfilePicture userId={memberInfo.id} size={96} />}
+            </ShimmerPlaceholder>
 
-          {groupInfo?.permissions?.canSettleUp?.() &&
-            memberId !== user?.id &&
-            Number(groupInfo?.balance) !== 0 && (
-              <View style={{ width: '100%' }}>
-                <ButtonWithSecondaryActions
-                  leftIcon='balance'
-                  title={t('memberInfo.settleUpWithMember')}
-                  onPress={() => {
-                    router.navigate(`/group/${groupId}/settleUp?withMembers=${memberId}`)
-                  }}
-                  secondaryActions={[
-                    {
-                      label: t('memberInfo.settleUpWithMemberExactAmount'),
-                      icon: 'exactAmount',
-                      onPress: () => {
-                        router.navigate(`/group/${groupId}/member/${memberId}/settleUpExactAmount`)
-                      },
-                    },
-                  ]}
-                />
+            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+              <View>
+                <ShimmerPlaceholder argument={memberInfo} shimmerStyle={{ width: 240, height: 28 }}>
+                  {(memberInfo) => (
+                    <Text
+                      numberOfLines={2}
+                      adjustsFontSizeToFit
+                      style={{
+                        fontSize: 22,
+                        fontWeight: 700,
+                        color: theme.colors.onSurface,
+                      }}
+                    >
+                      {memberInfo.name}
+                    </Text>
+                  )}
+                </ShimmerPlaceholder>
+                <ShimmerPlaceholder argument={memberInfo} shimmerStyle={{ width: 240, height: 22 }}>
+                  {(memberInfo) => (
+                    <Text
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 400,
+                        color: theme.colors.onSurfaceVariant,
+                      }}
+                    >
+                      {memberInfo.email}
+                    </Text>
+                  )}
+                </ShimmerPlaceholder>
               </View>
-            )}
 
-          {groupInfo &&
-            memberInfo &&
-            (memberId === user?.id || groupInfo?.permissions?.canRemoveMembers?.()) && (
-              <View style={{ width: '100%' }}>
-                <RemoveMemberButton
-                  groupInfo={groupInfo}
-                  memberInfo={memberInfo}
-                  isSelf={memberId === user?.id}
-                  memberId={memberId as string}
-                  splits={splits}
-                />
+              <ShimmerPlaceholder argument={memberInfo} shimmerStyle={{ width: 240, height: 28 }}>
+                {(memberInfo) => (
+                  <Text style={{ fontSize: 22, fontWeight: 500, color: theme.colors.onSurface }}>
+                    <Trans
+                      values={{
+                        balance: CurrencyUtils.format(memberInfo.balance, groupInfo?.currency),
+                      }}
+                      i18nKey={'memberInfo.balance'}
+                      components={{
+                        Styled: (
+                          <Text
+                            style={{
+                              fontWeight: 600,
+                              color: getBalanceColor(Number(memberInfo.balance), theme),
+                            }}
+                          />
+                        ),
+                      }}
+                    />
+                  </Text>
+                )}
+              </ShimmerPlaceholder>
+            </View>
+          </View>
+
+          {memberInfo &&
+            (!memberInfo.hasAccess || memberInfo.isAdmin || memberInfo.id === groupInfo?.owner) && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                }}
+              >
+                {memberInfo.id === groupInfo?.owner ? (
+                  <>
+                    <View style={{ width: 24, alignItems: 'center' }}>
+                      <Icon name='shield' size={20} color={theme.colors.tertiary} />
+                    </View>
+                    <Text style={{ color: theme.colors.tertiary, fontSize: 18 }}>
+                      {t('memberInfo.owner')}
+                    </Text>
+                  </>
+                ) : !memberInfo.hasAccess ? (
+                  <>
+                    <View style={{ width: 24, alignItems: 'center' }}>
+                      <Icon name={'lock'} size={20} color={theme.colors.error} />
+                    </View>
+                    <Text
+                      style={{
+                        color: theme.colors.error,
+                        fontSize: 18,
+                      }}
+                    >
+                      {t('memberInfo.noAccess')}
+                    </Text>
+                  </>
+                ) : memberInfo.isAdmin ? (
+                  <>
+                    <View style={{ width: 24, alignItems: 'center' }}>
+                      <Icon name='shield' size={20} color={theme.colors.onSurface} />
+                    </View>
+                    <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
+                      {t('memberInfo.admin')}
+                    </Text>
+                  </>
+                ) : null}
               </View>
             )}
         </View>
-      </View>
+      </Pane>
+
+      <ShimmerPlaceholder
+        argument={groupInfo && memberInfo}
+        shimmerStyle={{ width: '100%', height: 72 }}
+      >
+        <DisplayNameSetter groupInfo={groupInfo!} memberInfo={memberInfo!} />
+      </ShimmerPlaceholder>
+
+      {memberId !== user?.id && (
+        <ButtonShimmer argument={groupInfo && memberInfo}>
+          {() =>
+            groupInfo?.permissions?.canSettleUp?.() &&
+            (Number(groupInfo?.balance) !== 0 || Number(memberInfo?.balance) !== 0) && (
+              <ButtonWithSecondaryActions
+                leftIcon='balance'
+                title={t('memberInfo.settleUpWithMember')}
+                onPress={() => {
+                  router.navigate(`/group/${groupId}/settleUp?withMembers=${memberId}`)
+                }}
+                secondaryActions={[
+                  {
+                    label: t('memberInfo.settleUpWithMemberExactAmount'),
+                    icon: 'exactAmount',
+                    onPress: () => {
+                      router.navigate(`/group/${groupId}/member/${memberId}/settleUpExactAmount`)
+                    },
+                  },
+                ]}
+              />
+            )
+          }
+        </ButtonShimmer>
+      )}
+
+      {groupInfo && memberInfo && (
+        <MemberActions groupInfo={groupInfo} memberInfo={memberInfo} splits={splits} />
+      )}
     </View>
   )
 }
@@ -327,7 +586,7 @@ function MemberScreen({
       hideBottomBar
       emptyMessage={t('memberInfo.noSplits')}
       headerComponent={
-        <View style={{ gap: 24, paddingTop: 16 }}>
+        <View style={{ gap: 12, paddingTop: 16 }}>
           <MemberInfo groupInfo={groupInfo} memberInfo={memberInfo} splits={splits} />
           <FullPaneHeader
             icon='receipt'
@@ -397,8 +656,8 @@ export default function MemberInfoScreenWrapper() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.memberInfo')}
-      maxWidth={500}
-      maxHeight={600}
+      maxWidth={550}
+      maxHeight={650}
     >
       {error || groupInfo?.permissions?.canReadMembers?.() === false ? (
         <MemberInfoError groupInfo={groupInfo} />
