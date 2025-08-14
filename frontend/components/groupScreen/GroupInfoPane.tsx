@@ -45,13 +45,15 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
                 onPress={() => router.navigate(`/group/${info?.id}/settings`)}
               />
             )}
-            <RoundIconButton
-              icon={'barChartAlt'}
-              color={theme.colors.secondary}
-              onPress={() => {
-                router.navigate(`/group/${info?.id}/trends`)
-              }}
-            />
+            {info?.permissions?.canSeeGroupTrends?.() && (
+              <RoundIconButton
+                icon={'barChartAlt'}
+                color={theme.colors.secondary}
+                onPress={() => {
+                  router.navigate(`/group/${info?.id}/trends`)
+                }}
+              />
+            )}
           </View>
         }
       />
