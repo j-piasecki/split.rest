@@ -189,7 +189,8 @@
       "locked": "This group is locked",
       "settledUpButPending": "The group is already settled up, but some of the transactions haven't been confirmed yet",
       "userIsSplitParticipant": "There are splits in which this user is a participant",
-      "groupOwnerCannotBeRemoved": "The group owner cannot be removed from the group"
+      "groupOwnerCannotBeRemoved": "The group owner cannot be removed from the group",
+      "userWithNoAccessCannotBeMadeAdmin": "Users without group access cannot be made moderators"
     },
     "user": {
       "nameTooLong": "Name is too long",
