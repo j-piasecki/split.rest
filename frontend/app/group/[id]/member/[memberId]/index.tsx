@@ -26,9 +26,16 @@ import { getBalanceColor } from '@utils/getBalanceColor'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Pressable, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native'
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
-import { CurrencyUtils, GroupUserInfo, Member, SplitInfo, TranslatableError } from 'shared'
+import {
+  CurrencyUtils,
+  GroupUserInfo,
+  Member,
+  SplitInfo,
+  TranslatableError,
+  isTranslatableError,
+} from 'shared'
 
 function DisplayNameSetter({
   groupInfo,
@@ -93,15 +100,17 @@ function MemberActionButton({
 }: {
   icon: IconName
   title: string
-  onPress: () => void
+  onPress: () => Promise<void>
   color?: string
   destructive?: boolean
   disabled?: boolean
   horizontal?: boolean
 }) {
   const theme = useTheme()
+  const { t } = useTranslation()
   const [isPressed, setIsPressed] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const isSmallScreen = useDisplayClass() <= DisplayClass.Small
   const foregroundColor =
@@ -146,7 +155,20 @@ function MemberActionButton({
         ]}
       />
       <Pressable
-        onPress={onPress}
+        onPress={() => {
+          setIsLoading(true)
+          onPress()
+            .catch((e) => {
+              if (isTranslatableError(e)) {
+                alert(t(e.message))
+              } else {
+                alert(t('unknownError'))
+              }
+            })
+            .finally(() => {
+              setIsLoading(false)
+            })
+        }}
         disabled={disabled}
         onPressIn={() => setIsPressed(true)}
         onPressOut={() => setIsPressed(false)}
@@ -177,7 +199,11 @@ function MemberActionButton({
               alignItems: 'center',
             }}
           >
-            <Icon name={icon} size={iconSize} color={foregroundColor} />
+            {isLoading ? (
+              <ActivityIndicator size='small' color={foregroundColor} />
+            ) : (
+              <Icon name={icon} size={iconSize} color={foregroundColor} />
+            )}
           </View>
           <View
             style={{
@@ -251,7 +277,7 @@ function RemoveMemberButton({
         horizontal={horizontal}
         icon='personRemove'
         title={isSelf ? t('memberInfo.leaveGroup') : t('memberInfo.removeFromGroup')}
-        onPress={() => setModalVisible(true)}
+        onPress={async () => setModalVisible(true)}
       />
 
       <ConfirmationModal
@@ -286,8 +312,14 @@ function MemberActions({
   const theme = useTheme()
   const { t } = useTranslation()
 
-  const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(groupInfo.id, memberInfo.id)
-  const { mutate: setGroupAdminMutation } = useSetGroupAdminMutation(groupInfo.id, memberInfo.id)
+  const { mutateAsync: setGroupAccessMutation } = useSetGroupAccessMutation(
+    groupInfo.id,
+    memberInfo.id
+  )
+  const { mutateAsync: setGroupAdminMutation } = useSetGroupAdminMutation(
+    groupInfo.id,
+    memberInfo.id
+  )
 
   const isSelf = memberInfo.id === user?.id
 
@@ -317,16 +349,16 @@ function MemberActions({
             icon={memberInfo.hasAccess ? 'lock' : 'lockOpen'}
             title={memberInfo.hasAccess ? t('member.revokeAccess') : t('member.giveAccess')}
             color={memberInfo.hasAccess ? theme.colors.error : undefined}
-            onPress={() => {
-              setGroupAccessMutation(!memberInfo.hasAccess)
+            onPress={async () => {
+              await setGroupAccessMutation(!memberInfo.hasAccess)
             }}
           />
           <MemberActionButton
             disabled={!canManageAdmin}
             icon={memberInfo.isAdmin ? 'shield' : 'addModerator'}
             title={memberInfo.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin')}
-            onPress={() => {
-              setGroupAdminMutation(!memberInfo.isAdmin)
+            onPress={async () => {
+              await setGroupAdminMutation(!memberInfo.isAdmin)
             }}
           />
         </>
