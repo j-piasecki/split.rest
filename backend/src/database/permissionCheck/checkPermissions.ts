@@ -337,6 +337,13 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'seeGroupTrends': {
+          if (!callerPermissions?.canSeeGroupTrends()) {
+            return 'api.insufficientPermissions.group.seeGroupTrends'
+          }
+          continue
+        }
+
         default:
           console.log('Unknown permission required:', permission)
           return 'unknownError'

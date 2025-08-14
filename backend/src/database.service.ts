@@ -394,7 +394,7 @@ export class DatabaseService {
     return await setGroupAllowedSplitMethods(this.pool, callerId, args)
   }
 
-  @RequirePermissions(['beGroupMember'])
+  @RequirePermissions(['seeGroupTrends'])
   async getGroupMonthlyStats(callerId: string, args: GetGroupMonthlyStatsArguments) {
     return await getGroupMonthlyStats(this.pool, callerId, args)
   }
