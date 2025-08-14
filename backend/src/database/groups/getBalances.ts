@@ -3,6 +3,7 @@ import { Pool } from 'pg'
 import { GetBalancesArguments, UserWithBalanceChange } from 'shared'
 import { NotFoundException } from 'src/errors/NotFoundException'
 
+// TODO: Change this to return Member[]
 export async function getBalances(
   pool: Pool,
   callerId: string,
