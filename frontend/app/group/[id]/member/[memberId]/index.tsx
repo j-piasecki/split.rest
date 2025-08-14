@@ -89,6 +89,7 @@ function MemberActionButton({
   color,
   destructive,
   disabled,
+  horizontal,
 }: {
   icon: IconName
   title: string
@@ -96,6 +97,7 @@ function MemberActionButton({
   color?: string
   destructive?: boolean
   disabled?: boolean
+  horizontal?: boolean
 }) {
   const theme = useTheme()
   const [isPressed, setIsPressed] = useState(false)
@@ -105,8 +107,8 @@ function MemberActionButton({
   const foregroundColor =
     color ?? (destructive ? theme.colors.onErrorContainer : theme.colors.secondary)
   const backgroundColor = destructive ? theme.colors.errorContainer : theme.colors.surfaceContainer
-  const iconSize = isSmallScreen ? 28 : 24
-  const iconContainerSize = isSmallScreen ? 48 : 32
+  const iconSize = horizontal ? 24 : isSmallScreen ? 28 : 24
+  const iconContainerSize = horizontal ? 48 : isSmallScreen ? 48 : 32
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -160,6 +162,7 @@ function MemberActionButton({
             {
               flex: 1,
               alignItems: 'center',
+              flexDirection: horizontal ? 'row' : 'column',
               gap: 4,
               paddingVertical: 8,
               paddingHorizontal: 12,
@@ -176,9 +179,20 @@ function MemberActionButton({
           >
             <Icon name={icon} size={iconSize} color={foregroundColor} />
           </View>
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View
+            style={{
+              flex: horizontal ? undefined : 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
             <Text
-              style={{ fontSize: 16, color: foregroundColor, textAlign: 'center', fontWeight: 600 }}
+              style={{
+                fontSize: horizontal ? 20 : 16,
+                color: foregroundColor,
+                textAlign: 'center',
+                fontWeight: 600,
+              }}
             >
               {title}
             </Text>
@@ -195,12 +209,16 @@ function RemoveMemberButton({
   isSelf,
   memberId,
   splits,
+  disabled,
+  horizontal,
 }: {
   groupInfo: GroupUserInfo
   memberInfo: Member
   isSelf: boolean
   memberId: string
   splits?: SplitInfo[]
+  disabled?: boolean
+  horizontal?: boolean
 }) {
   const router = useRouter()
   const { t } = useTranslation()
@@ -237,6 +255,8 @@ function RemoveMemberButton({
     <>
       <MemberActionButton
         destructive
+        disabled={disabled}
+        horizontal={horizontal}
         icon='personRemove'
         title={isSelf ? t('memberInfo.leaveGroup') : t('memberInfo.removeFromGroup')}
         onPress={() => setModalVisible(true)}
@@ -279,38 +299,54 @@ function MemberActions({
 
   const isSelf = memberInfo.id === user?.id
 
+  const canManageAccess =
+    groupInfo.permissions.canManageAccess() && memberInfo.id !== groupInfo.owner && !isSelf
+  const canManageAdmin =
+    groupInfo.permissions.canManageAdmins() &&
+    memberInfo.id !== groupInfo.owner &&
+    !isSelf &&
+    memberInfo.hasAccess
+  const canRemoveMember =
+    (groupInfo.permissions.canRemoveMembers() || isSelf) && memberInfo.id !== groupInfo.owner
+
+  const onlyRemoveMember = !canManageAccess && !canManageAdmin && canRemoveMember
+  const showAnything = canManageAccess || canManageAdmin || canRemoveMember
+
+  if (!showAnything) {
+    return null
+  }
+
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', gap: 8 }}>
-      <MemberActionButton
-        disabled={
-          !groupInfo.permissions.canManageAccess() || memberInfo.id === groupInfo.owner || isSelf
-        }
-        icon={memberInfo.hasAccess ? 'lock' : 'lockOpen'}
-        title={memberInfo.hasAccess ? 'Revoke access' : 'Give access'}
-        color={memberInfo.hasAccess ? theme.colors.error : undefined}
-        onPress={() => {
-          setGroupAccessMutation(!memberInfo.hasAccess)
-        }}
-      />
-      <MemberActionButton
-        disabled={
-          !groupInfo.permissions.canManageAdmins() ||
-          memberInfo.id === groupInfo.owner ||
-          isSelf ||
-          !memberInfo.hasAccess
-        }
-        icon={memberInfo.isAdmin ? 'shield' : 'addModerator'}
-        title={memberInfo.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin')}
-        onPress={() => {
-          setGroupAdminMutation(!memberInfo.isAdmin)
-        }}
-      />
+      {!onlyRemoveMember && (
+        <>
+          <MemberActionButton
+            disabled={!canManageAccess}
+            icon={memberInfo.hasAccess ? 'lock' : 'lockOpen'}
+            title={memberInfo.hasAccess ? 'Revoke access' : 'Give access'}
+            color={memberInfo.hasAccess ? theme.colors.error : undefined}
+            onPress={() => {
+              setGroupAccessMutation(!memberInfo.hasAccess)
+            }}
+          />
+          <MemberActionButton
+            disabled={!canManageAdmin}
+            icon={memberInfo.isAdmin ? 'shield' : 'addModerator'}
+            title={memberInfo.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin')}
+            onPress={() => {
+              setGroupAdminMutation(!memberInfo.isAdmin)
+            }}
+          />
+        </>
+      )}
       <RemoveMemberButton
         groupInfo={groupInfo}
         memberInfo={memberInfo}
         isSelf={isSelf}
         memberId={memberInfo.id}
         splits={splits}
+        disabled={!canRemoveMember}
+        horizontal={onlyRemoveMember}
       />
     </View>
   )
