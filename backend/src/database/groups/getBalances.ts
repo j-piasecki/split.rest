@@ -20,6 +20,8 @@ export async function getBalances(
           users.name, 
           users.email,
           group_members.balance,
+          group_members.has_access,
+          group_members.is_admin,
           group_members.display_name
         FROM group_members
         INNER JOIN users ON group_members.user_id = users.id 
@@ -41,7 +43,10 @@ export async function getBalances(
     email: balance.email,
     photoUrl: null,
     deleted: balance.deleted,
+    balance: balance.balance,
     change: balance.balance,
     displayName: balance.display_name,
+    hasAccess: balance.has_access,
+    isAdmin: balance.is_admin,
   }))
 }

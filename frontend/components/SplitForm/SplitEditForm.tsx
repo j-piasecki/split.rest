@@ -1,5 +1,5 @@
 import { SplitForm, SplitFormProps } from './SplitForm'
-import { CurrencyUtils } from 'shared'
+import { CurrencyUtils, Member } from 'shared'
 import { SplitType, SplitWithUsers } from 'shared'
 
 export interface SplitEditFormProps
@@ -13,9 +13,16 @@ export interface SplitEditFormProps
 export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
   const initialEntries = [
     ...splitInfo.users.map((user) => {
+      const backfilledMember: Member = {
+        ...user,
+        balance: user.balance ?? '0.00',
+        isAdmin: user.isAdmin ?? false,
+        hasAccess: user.hasAccess ?? true,
+      }
+
       if (splitInfo.type === SplitType.BalanceChange) {
         return {
-          user: user,
+          user: backfilledMember,
           entry: user.email ?? '',
           amount: CurrencyUtils.format(Number(user.change)),
         }
@@ -23,7 +30,7 @@ export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
 
       if (splitInfo.type === SplitType.Delayed) {
         return {
-          user: user,
+          user: backfilledMember,
           entry: user.email ?? '',
           amount: '0.00',
         }
@@ -31,13 +38,13 @@ export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
 
       if (user.id === splitInfo.paidById) {
         return {
-          user: user,
+          user: backfilledMember,
           entry: user.email ?? '',
           amount: CurrencyUtils.format(Number(splitInfo.total) - Number(user.change)),
         }
       }
       return {
-        user: user,
+        user: backfilledMember,
         entry: user.email ?? '',
         amount: CurrencyUtils.format(-Number(user.change)),
       }

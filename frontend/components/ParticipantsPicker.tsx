@@ -16,10 +16,10 @@ import { UserWithValue } from '@utils/splitCreationContext'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutRectangle, ScrollView, View } from 'react-native'
-import { GroupUserInfo, TranslatableError, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, Member, TranslatableError } from 'shared'
 
 function getInitialEntries(
-  user: UserWithDisplayName,
+  user: Member,
   savedParticipants?: UserWithValue[],
   paidByIndex?: number,
   requiredPayer?: boolean
@@ -59,14 +59,14 @@ export function ParticipantsPicker({
   requiredPayer = true,
   error,
 }: {
-  user: UserWithDisplayName
+  user: Member
   groupInfo: GroupUserInfo
   buttonTitle: string
   buttonRightIcon?: IconName
   buttonLeftIcon?: IconName
   buttonLoading?: boolean
   autofocus?: boolean
-  onSubmit: (users: UserWithDisplayName[], payerId?: string) => void
+  onSubmit: (users: Member[], payerId?: string) => void
   savedParticipants?: UserWithValue[]
   paidByIndex?: number
   requiredPayer?: boolean

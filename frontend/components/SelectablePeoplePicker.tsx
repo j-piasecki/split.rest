@@ -7,11 +7,11 @@ import { useTheme } from '@styling/theme'
 import React, { useEffect, useImperativeHandle, useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
-import { UserWithDisplayName } from 'shared'
+import { Member } from 'shared'
 
 export interface PersonEntry {
   entry: string
-  user?: UserWithDisplayName
+  user?: Member
   selected?: boolean
   picked?: boolean
 }

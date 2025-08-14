@@ -11,11 +11,11 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { GroupUserInfo, Member, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, Member } from 'shared'
 
 function Form({ info, memberInfo }: { info: GroupUserInfo; memberInfo: Member }) {
   const router = useRouter()
-  const selectedUsersRef = useRef<UserWithDisplayName[]>([])
+  const selectedUsersRef = useRef<Member[]>([])
   const snack = useSnack()
   const [confirmModalVisible, setConfirmModalVisible] = useState(false)
   const [error, setError] = useTranslatedError()

@@ -7,10 +7,10 @@ import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, StyleProp, View, ViewStyle } from 'react-native'
-import { UserWithDisplayName } from 'shared'
+import { Member } from 'shared'
 
 export interface TextInputUserPickerProps extends TextInputWithUserSuggestionsProps {
-  user?: UserWithDisplayName
+  user?: Member
   onClearSelection?: () => void
   containerStyle?: StyleProp<ViewStyle>
 }

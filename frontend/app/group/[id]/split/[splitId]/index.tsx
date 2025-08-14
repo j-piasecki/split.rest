@@ -165,7 +165,15 @@ export default function SplitInfoScreen() {
                       .resolveDelayedSplit(Number(splitId))
                       .setAllowedSplitMethods(DelayedSplitResolutionAllowedSplitMethods)
                       .setParticipants(
-                        history[0].users.map((user) => ({ user: user, value: user.change }))
+                        history[0].users.map((user) => ({
+                          user: {
+                            ...user,
+                            balance: user?.balance ?? '0.00',
+                            isAdmin: user?.isAdmin ?? false,
+                            hasAccess: user?.hasAccess ?? true,
+                          },
+                          value: user.change,
+                        }))
                       )
                       .setPaidById(history[0].paidById ?? null)
                       .setTitle(history[0].title)

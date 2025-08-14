@@ -34,6 +34,9 @@ export async function getSplitInfo(
           users.name, 
           users.email, 
           users.deleted,
+          group_members.balance,
+          group_members.has_access,
+          group_members.is_admin,
           group_members.display_name
         FROM users
           INNER JOIN split_participants ON users.id = split_participants.user_id
@@ -68,6 +71,9 @@ export async function getSplitInfo(
       change: p.change,
       pending: p.pending,
       deleted: p.deleted,
+      balance: p.balance,
+      hasAccess: p.has_access,
+      isAdmin: p.is_admin,
       displayName: p.display_name,
     })),
   }

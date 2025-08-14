@@ -4,11 +4,11 @@ import { TextInputUserPicker } from '@components/TextInputUserPicker'
 import { useTheme } from '@styling/theme'
 import React, { useRef } from 'react'
 import { LayoutRectangle, Pressable, ScrollView, View } from 'react-native'
-import { UserWithDisplayName } from 'shared'
+import { Member } from 'shared'
 
 export interface PersonEntry {
   entry: string
-  user?: UserWithDisplayName
+  user?: Member
   selected?: boolean
 }
 

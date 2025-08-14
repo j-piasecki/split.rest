@@ -27,13 +27,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, LayoutRectangle, Platform, ScrollView, View } from 'react-native'
 import Animated, { LinearTransition } from 'react-native-reanimated'
-import {
-  CurrencyUtils,
-  GroupUserInfo,
-  SplitMethod,
-  TranslatableError,
-  UserWithDisplayName,
-} from 'shared'
+import { CurrencyUtils, GroupUserInfo, Member, SplitMethod, TranslatableError } from 'shared'
 
 const RouletteAllowedSplitMethods = [
   SplitMethod.Equal,
@@ -45,7 +39,7 @@ const RouletteAllowedSplitMethods = [
 interface RouletteProps {
   groupInfo: GroupUserInfo
   setQuery: (result: PersonEntry[]) => void
-  user: UserWithDisplayName
+  user: Member
 }
 
 function Roulette({ groupInfo, setQuery, user }: RouletteProps) {

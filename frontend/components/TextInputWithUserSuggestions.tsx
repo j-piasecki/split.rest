@@ -8,10 +8,10 @@ import { useTheme } from '@styling/theme'
 import { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { UserWithDisplayName } from 'shared'
+import { Member } from 'shared'
 
 interface SuggestionProps {
-  user: UserWithDisplayName
+  user: Member
   hovered?: boolean
   pressed?: boolean
 }
@@ -53,13 +53,10 @@ function Suggestion({ user, hovered, pressed }: SuggestionProps) {
 }
 
 export interface TextInputWithUserSuggestionsProps
-  extends Omit<
-    TextInputWithSuggestionsProps<UserWithDisplayName>,
-    'getSuggestions' | 'renderSuggestion'
-  > {
+  extends Omit<TextInputWithSuggestionsProps<Member>, 'getSuggestions' | 'renderSuggestion'> {
   groupId: number
-  onSuggestionSelect: (user: UserWithDisplayName) => void
-  filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
+  onSuggestionSelect: (user: Member) => void
+  filterSuggestions?: (suggestions: Member[]) => Member[]
 }
 
 export function TextInputWithUserSuggestions({

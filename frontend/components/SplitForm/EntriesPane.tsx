@@ -6,7 +6,7 @@ import { getAllGroupMembers } from '@database/getAllGroupMembers'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardTypeOptions, LayoutRectangle, ScrollView } from 'react-native'
-import { GroupUserInfo, LanguageTranslationKey, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, LanguageTranslationKey, Member } from 'shared'
 
 interface SplitEntriesPaneProps {
   formState: FormData
@@ -15,9 +15,9 @@ interface SplitEntriesPaneProps {
   showPayerSelector: boolean
   scrollRef?: React.RefObject<ScrollView | null>
   showAddAllMembers?: boolean
-  setMembers?: (fetchMembers: () => Promise<UserWithDisplayName[]>) => void
+  setMembers?: (fetchMembers: () => Promise<Member[]>) => void
   showPayerEntry?: boolean
-  filterSuggestions?: (suggestions: UserWithDisplayName[]) => UserWithDisplayName[]
+  filterSuggestions?: (suggestions: Member[]) => Member[]
   balanceKeyboardType?: KeyboardTypeOptions
   amountPlaceholder: LanguageTranslationKey
   integersOnly?: boolean

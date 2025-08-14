@@ -40,7 +40,10 @@ export interface Member extends User {
   displayName: string | null
 }
 
-export interface UserWithDisplayName extends User {
+export interface MaybeMember extends User {
+  balance: string | null
+  isAdmin: boolean | null
+  hasAccess: boolean | null
   displayName: string | null
 }
 
@@ -50,7 +53,7 @@ export interface BalanceChange {
   pending: boolean
 }
 
-export interface UserWithBalanceChange extends UserWithDisplayName {
+export interface UserWithBalanceChange extends MaybeMember {
   change: string
 }
 

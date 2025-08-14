@@ -1,6 +1,6 @@
 import { SplitQueryConfig } from '@utils/splitQueryConfig'
 import { useReducer } from 'react'
-import { SplitQuery, SplitType, UserWithDisplayName } from 'shared'
+import { Member, SplitQuery, SplitType } from 'shared'
 
 export type SplitQueryActionType =
   | {
@@ -17,7 +17,7 @@ export type SplitQueryActionType =
     }
   | {
       type: 'addParticipant'
-      participant: UserWithDisplayName
+      participant: Member
     }
   | {
       type: 'removeParticipant'
@@ -37,7 +37,7 @@ export type SplitQueryActionType =
     }
   | {
       type: 'addPaidBy'
-      participant: UserWithDisplayName
+      participant: Member
     }
   | {
       type: 'removePaidBy'
@@ -45,7 +45,7 @@ export type SplitQueryActionType =
     }
   | {
       type: 'addLastUpdateBy'
-      participant: UserWithDisplayName
+      participant: Member
     }
   | {
       type: 'removeLastUpdateBy'

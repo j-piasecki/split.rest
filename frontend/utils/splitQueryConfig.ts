@@ -1,15 +1,15 @@
-import { SplitType, UserWithDisplayName } from 'shared'
+import { Member, SplitType } from 'shared'
 
 export interface SplitQueryConfig {
   titleFilter?: string
   titleCaseSensitive: boolean
   titleRegex: boolean
-  participants?: UserWithDisplayName[]
+  participants?: Member[]
   participantsMode?: 'all' | 'oneOf'
   orderBy: 'timestamp' | 'createdAt' | 'total' | 'balanceChange' | 'updatedAt'
   orderDirection: 'asc' | 'desc'
-  paidBy?: UserWithDisplayName[]
-  lastUpdateBy?: UserWithDisplayName[]
+  paidBy?: Member[]
+  lastUpdateBy?: Member[]
   beforeTimestamp?: number
   afterTimestamp?: number
   lastUpdateBeforeTimestamp?: number

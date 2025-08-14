@@ -4,16 +4,16 @@ import { resolveSplit } from '@hooks/database/useResolveSplit'
 import currency from 'currency.js'
 import {
   CreateSplitArguments,
+  Member,
   SplitMethod,
   SplitType,
   SplitWithUsers,
   TranslatableError,
-  UserWithDisplayName,
   UserWithPendingBalanceChange,
 } from 'shared'
 
 export interface UserWithValue {
-  user: UserWithDisplayName
+  user: Member
   value?: string
 }
 

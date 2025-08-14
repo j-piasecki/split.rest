@@ -12,21 +12,15 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
-import { GroupUserInfo, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, Member } from 'shared'
 
 interface SuggestionsPaneProps {
   groupInfo: GroupUserInfo
   hiddenIds: string[]
-  onSelect: (user: UserWithDisplayName) => void
+  onSelect: (user: Member) => void
 }
 
-function Suggestion({
-  suggestion,
-  onSelect,
-}: {
-  suggestion: UserWithDisplayName
-  onSelect: () => void
-}) {
+function Suggestion({ suggestion, onSelect }: { suggestion: Member; onSelect: () => void }) {
   const theme = useTheme()
   const [pressed, setPressed] = useState(false)
   const [hovered, setHovered] = useState(false)

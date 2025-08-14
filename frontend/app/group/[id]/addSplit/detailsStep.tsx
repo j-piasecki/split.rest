@@ -6,6 +6,7 @@ import { LargeTextInput } from '@components/LargeTextInput'
 import ModalScreen from '@components/ModalScreen'
 import { TabView } from '@components/TabView'
 import { TextInput } from '@components/TextInput'
+import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useAuth } from '@utils/auth'
@@ -26,6 +27,7 @@ export default function Modal() {
   const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
+  const { data: groupInfo } = useGroupInfo(Number(id))
 
   const [title, setTitle] = useState(SplitCreationContext.current.title ?? '')
   const [timestamp, setTimestamp] = useState(SplitCreationContext.current.timestamp ?? Date.now())
@@ -99,6 +101,9 @@ export default function Modal() {
         {
           user: {
             ...user,
+            balance: groupInfo?.balance ?? '0.00',
+            isAdmin: groupInfo?.isAdmin ?? false,
+            hasAccess: groupInfo?.hasAccess ?? true,
             displayName: null,
           },
           value: '0.00',

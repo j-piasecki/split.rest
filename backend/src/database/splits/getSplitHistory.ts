@@ -66,6 +66,9 @@ export async function getSplitHistory(
               users.name, 
               users.email, 
               users.deleted,
+              group_members.balance,
+              group_members.has_access,
+              group_members.is_admin,
               group_members.display_name
             FROM users 
               INNER JOIN split_participants_edits ON users.id = split_participants_edits.user_id
@@ -85,6 +88,9 @@ export async function getSplitHistory(
         change: row.change,
         pending: row.pending,
         deleted: row.deleted,
+        balance: row.balance,
+        hasAccess: row.has_access,
+        isAdmin: row.is_admin,
         displayName: row.display_name,
       }))
 

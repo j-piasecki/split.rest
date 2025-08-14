@@ -12,9 +12,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupUserInfo, SplitMethod, TranslatableError, UserWithDisplayName } from 'shared'
+import { GroupUserInfo, Member, SplitMethod, TranslatableError } from 'shared'
 
-function initialEntriesFromContext(user: UserWithDisplayName): SplitEntryData[] {
+function initialEntriesFromContext(user: Member): SplitEntryData[] {
   let initialEntries: SplitEntryData[] =
     SplitCreationContext.current.participants === null
       ? []
@@ -33,7 +33,7 @@ function initialEntriesFromContext(user: UserWithDisplayName): SplitEntryData[] 
   return initialEntries
 }
 
-function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: UserWithDisplayName }) {
+function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Member }) {
   const router = useRouter()
   const insets = useModalScreenInsets()
   const [error, setError] = useTranslatedError()
