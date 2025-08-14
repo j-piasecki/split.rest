@@ -598,7 +598,8 @@
     "markCompleted": "Mark as complete",
     "settleUpTitle": "Settle up split",
     "loadMoreHistory": "Load more history",
-    "splitIsDelayed": "This split will be finalized later"
+    "splitIsDelayed": "This split will be finalized later",
+    "participantsWithNoAccess": "Participants with no group access"
   },
 
   "errorBoundary": {

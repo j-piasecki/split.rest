@@ -66,6 +66,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
         groupInfo={groupInfo}
         splitHistory={[split]}
         style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}
+        showNoAccessWarning
       />
 
       <View style={{ gap: 16 }}>
