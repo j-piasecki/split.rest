@@ -107,7 +107,7 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
         {
           label: member.hasAccess ? t('member.revokeAccess') : t('member.giveAccess'),
           icon: member.hasAccess ? 'lock' : 'lockOpen',
-          disabled: !info.permissions.canManageAccess() || member.deleted,
+          disabled: !info.permissions.canManageAccess() || member.deleted || member.id === info.owner,
           onPress: () => {
             setGroupAccessMutation(!member.hasAccess)
           },
@@ -116,7 +116,11 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
         {
           label: member.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin'),
           icon: member.isAdmin ? 'removeModerator' : 'addModerator',
-          disabled: !info.permissions.canManageAdmins() || !member.hasAccess || member.deleted,
+          disabled:
+            !info.permissions.canManageAdmins() ||
+            !member.hasAccess ||
+            member.deleted ||
+            member.id === info.owner,
           onPress: () => {
             setGroupAdminMutation(!member.isAdmin)
           },
