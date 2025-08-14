@@ -1,8 +1,7 @@
-import { Button } from '@components/Button'
 import { ButtonShimmer } from '@components/ButtonShimmer'
 import { ButtonWithSecondaryActions } from '@components/ButtonWithSecondaryActions'
 import { ConfirmationModal } from '@components/ConfirmationModal'
-import { Icon } from '@components/Icon'
+import { Icon, IconName } from '@components/Icon'
 import { LargeTextInput } from '@components/LargeTextInput'
 import ModalScreen from '@components/ModalScreen'
 import { FullPaneHeader, Pane } from '@components/Pane'
@@ -11,92 +10,25 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { SplitsList } from '@components/groupScreen/SplitsList'
+import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
+import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
 import { useRemoveUserFromGroupMutation } from '@hooks/database/useRemoveUserFromGroup'
 import { useSetUserDisplayNameMutation } from '@hooks/database/useSetUserDisplayName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import { buttonCornerSpringConfig, buttonPaddingSpringConfig } from '@styling/animationConfigs'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
+import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
 import { CurrencyUtils, GroupUserInfo, Member, SplitInfo, TranslatableError } from 'shared'
-
-function RemoveMemberButton({
-  groupInfo,
-  memberInfo,
-  isSelf,
-  memberId,
-  splits,
-}: {
-  groupInfo: GroupUserInfo
-  memberInfo: Member
-  isSelf: boolean
-  memberId: string
-  splits?: SplitInfo[]
-}) {
-  const router = useRouter()
-  const { t } = useTranslation()
-  const { mutateAsync: removeMember } = useRemoveUserFromGroupMutation(groupInfo.id)
-  const [modalVisible, setModalVisible] = useState(false)
-
-  const isMemberOwner = memberId === groupInfo.owner
-
-  async function onConfirm() {
-    if (isMemberOwner) {
-      throw new TranslatableError(
-        isSelf ? 'memberInfo.youCannotLeaveAsOwner' : 'api.group.groupOwnerCannotBeRemoved'
-      )
-    }
-
-    if (Number(memberInfo.balance) !== 0 || (splits && splits.length > 0)) {
-      throw new TranslatableError(
-        isSelf ? 'memberInfo.youAreAParticipantInSomeSplits' : 'api.group.userIsSplitParticipant'
-      )
-    }
-
-    await removeMember(memberId).then(() => {
-      if (isSelf) {
-        router.dismissTo('/home')
-      } else if (router.canGoBack()) {
-        router.back()
-      } else {
-        router.dismissTo(`/group/${groupInfo.id}`)
-      }
-    })
-  }
-
-  return (
-    <>
-      <Button
-        destructive
-        leftIcon='personRemove'
-        title={isSelf ? t('memberInfo.leaveGroup') : t('memberInfo.removeFromGroup')}
-        onPress={() => setModalVisible(true)}
-      />
-
-      <ConfirmationModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onConfirm={onConfirm}
-        title={
-          isSelf
-            ? 'memberInfo.leaveGroupConfirmationText'
-            : 'memberInfo.removeFromGroupConfirmationText'
-        }
-        confirmText={isSelf ? 'memberInfo.leaveGroupConfirm' : 'memberInfo.removeFromGroupConfirm'}
-        cancelText='memberInfo.cancel'
-        cancelIcon='close'
-        confirmIcon='personRemove'
-        destructive
-      />
-    </>
-  )
-}
 
 function DisplayNameSetter({
   groupInfo,
@@ -146,6 +78,240 @@ function DisplayNameSetter({
           />
         )}
       </View>
+    </View>
+  )
+}
+
+function MemberActionButton({
+  icon,
+  title,
+  onPress,
+  color,
+  destructive,
+  disabled,
+}: {
+  icon: IconName
+  title: string
+  onPress: () => void
+  color?: string
+  destructive?: boolean
+  disabled?: boolean
+}) {
+  const theme = useTheme()
+  const [isPressed, setIsPressed] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+
+  const isSmallScreen = useDisplayClass() <= DisplayClass.Small
+  const foregroundColor =
+    color ?? (destructive ? theme.colors.onErrorContainer : theme.colors.secondary)
+  const backgroundColor = destructive ? theme.colors.errorContainer : theme.colors.surfaceContainer
+  const iconSize = isSmallScreen ? 28 : 24
+  const iconContainerSize = isSmallScreen ? 48 : 32
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      borderRadius: withSpring(isPressed ? 24 : 12, buttonCornerSpringConfig),
+      transform: [{ scaleX: withSpring(isPressed ? 1.05 : 1, buttonPaddingSpringConfig) }],
+    }
+  })
+
+  const innerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scaleX: withSpring(isPressed ? 1 / 1.05 : 1, buttonPaddingSpringConfig) }],
+    }
+  })
+
+  return (
+    <Animated.View
+      style={[
+        animatedStyle,
+        {
+          flex: 1,
+          backgroundColor: backgroundColor,
+          borderRadius: 12,
+          overflow: 'hidden',
+          opacity: disabled ? 0.5 : 1,
+        },
+      ]}
+    >
+      <View
+        style={[
+          StyleSheet.absoluteFillObject,
+          {
+            backgroundColor: `${theme.colors.onSurface}`,
+            opacity: isPressed ? 0.1 : isHovered ? 0.05 : 0,
+          },
+        ]}
+      />
+      <Pressable
+        onPress={onPress}
+        disabled={disabled}
+        onPressIn={() => setIsPressed(true)}
+        onPressOut={() => setIsPressed(false)}
+        onHoverIn={() => setIsHovered(true)}
+        onHoverOut={() => setIsHovered(false)}
+        style={{
+          flex: 1,
+        }}
+      >
+        <Animated.View
+          style={[
+            innerAnimatedStyle,
+            {
+              flex: 1,
+              alignItems: 'center',
+              gap: 4,
+              paddingVertical: 8,
+              paddingHorizontal: 12,
+            },
+          ]}
+        >
+          <View
+            style={{
+              width: iconContainerSize,
+              height: iconContainerSize,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Icon name={icon} size={iconSize} color={foregroundColor} />
+          </View>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text
+              style={{ fontSize: 16, color: foregroundColor, textAlign: 'center', fontWeight: 600 }}
+            >
+              {title}
+            </Text>
+          </View>
+        </Animated.View>
+      </Pressable>
+    </Animated.View>
+  )
+}
+
+function RemoveMemberButton({
+  groupInfo,
+  memberInfo,
+  isSelf,
+  memberId,
+  splits,
+}: {
+  groupInfo: GroupUserInfo
+  memberInfo: Member
+  isSelf: boolean
+  memberId: string
+  splits?: SplitInfo[]
+}) {
+  const router = useRouter()
+  const { t } = useTranslation()
+  const { mutateAsync: removeMember } = useRemoveUserFromGroupMutation(groupInfo.id)
+  const [modalVisible, setModalVisible] = useState(false)
+
+  const isMemberOwner = memberId === groupInfo.owner
+
+  async function onConfirm() {
+    if (isMemberOwner) {
+      throw new TranslatableError(
+        isSelf ? 'memberInfo.youCannotLeaveAsOwner' : 'api.group.groupOwnerCannotBeRemoved'
+      )
+    }
+
+    if (Number(memberInfo.balance) !== 0 || (splits && splits.length > 0)) {
+      throw new TranslatableError(
+        isSelf ? 'memberInfo.youAreAParticipantInSomeSplits' : 'api.group.userIsSplitParticipant'
+      )
+    }
+
+    await removeMember(memberId).then(() => {
+      if (isSelf) {
+        router.dismissTo('/home')
+      } else if (router.canGoBack()) {
+        router.back()
+      } else {
+        router.dismissTo(`/group/${groupInfo.id}`)
+      }
+    })
+  }
+
+  return (
+    <>
+      <MemberActionButton
+        destructive
+        icon='personRemove'
+        title={isSelf ? t('memberInfo.leaveGroup') : t('memberInfo.removeFromGroup')}
+        onPress={() => setModalVisible(true)}
+      />
+
+      <ConfirmationModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onConfirm={onConfirm}
+        title={
+          isSelf
+            ? 'memberInfo.leaveGroupConfirmationText'
+            : 'memberInfo.removeFromGroupConfirmationText'
+        }
+        confirmText={isSelf ? 'memberInfo.leaveGroupConfirm' : 'memberInfo.removeFromGroupConfirm'}
+        cancelText='memberInfo.cancel'
+        cancelIcon='close'
+        confirmIcon='personRemove'
+        destructive
+      />
+    </>
+  )
+}
+
+function MemberActions({
+  groupInfo,
+  memberInfo,
+  splits,
+}: {
+  groupInfo: GroupUserInfo
+  memberInfo: Member
+  splits?: SplitInfo[]
+}) {
+  const user = useAuth()
+  const theme = useTheme()
+  const { t } = useTranslation()
+
+  const { mutate: setGroupAccessMutation } = useSetGroupAccessMutation(groupInfo.id, memberInfo.id)
+  const { mutate: setGroupAdminMutation } = useSetGroupAdminMutation(groupInfo.id, memberInfo.id)
+
+  const isSelf = memberInfo.id === user?.id
+
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', gap: 8 }}>
+      <MemberActionButton
+        disabled={
+          !groupInfo.permissions.canManageAccess() || memberInfo.id === groupInfo.owner || isSelf
+        }
+        icon={memberInfo.hasAccess ? 'lock' : 'lockOpen'}
+        title={memberInfo.hasAccess ? 'Revoke access' : 'Give access'}
+        color={memberInfo.hasAccess ? theme.colors.error : undefined}
+        onPress={() => {
+          setGroupAccessMutation(!memberInfo.hasAccess)
+        }}
+      />
+      <MemberActionButton
+        disabled={
+          !groupInfo.permissions.canManageAdmins() ||
+          memberInfo.id === groupInfo.owner ||
+          isSelf ||
+          !memberInfo.hasAccess
+        }
+        icon={memberInfo.isAdmin ? 'shield' : 'addModerator'}
+        title={memberInfo.isAdmin ? t('member.revokeAdmin') : t('member.makeAdmin')}
+        onPress={() => {
+          setGroupAdminMutation(!memberInfo.isAdmin)
+        }}
+      />
+      <RemoveMemberButton
+        groupInfo={groupInfo}
+        memberInfo={memberInfo}
+        isSelf={isSelf}
+        memberId={memberInfo.id}
+        splits={splits}
+      />
     </View>
   )
 }
@@ -287,45 +453,35 @@ export function MemberInfo({
         <DisplayNameSetter groupInfo={groupInfo!} memberInfo={memberInfo!} />
       </ShimmerPlaceholder>
 
-      <View style={{ gap: 8 }}>
-        {memberId !== user?.id && (
-          <ButtonShimmer argument={groupInfo && memberInfo}>
-            {() =>
-              groupInfo?.permissions?.canSettleUp?.() &&
-              (Number(groupInfo?.balance) !== 0 || Number(memberInfo?.balance) !== 0) && (
-                <ButtonWithSecondaryActions
-                  leftIcon='balance'
-                  title={t('memberInfo.settleUpWithMember')}
-                  onPress={() => {
-                    router.navigate(`/group/${groupId}/settleUp?withMembers=${memberId}`)
-                  }}
-                  secondaryActions={[
-                    {
-                      label: t('memberInfo.settleUpWithMemberExactAmount'),
-                      icon: 'exactAmount',
-                      onPress: () => {
-                        router.navigate(`/group/${groupId}/member/${memberId}/settleUpExactAmount`)
-                      },
+      {memberId !== user?.id && (
+        <ButtonShimmer argument={groupInfo && memberInfo}>
+          {() =>
+            groupInfo?.permissions?.canSettleUp?.() &&
+            (Number(groupInfo?.balance) !== 0 || Number(memberInfo?.balance) !== 0) && (
+              <ButtonWithSecondaryActions
+                leftIcon='balance'
+                title={t('memberInfo.settleUpWithMember')}
+                onPress={() => {
+                  router.navigate(`/group/${groupId}/settleUp?withMembers=${memberId}`)
+                }}
+                secondaryActions={[
+                  {
+                    label: t('memberInfo.settleUpWithMemberExactAmount'),
+                    icon: 'exactAmount',
+                    onPress: () => {
+                      router.navigate(`/group/${groupId}/member/${memberId}/settleUpExactAmount`)
                     },
-                  ]}
-                />
-              )
-            }
-          </ButtonShimmer>
-        )}
+                  },
+                ]}
+              />
+            )
+          }
+        </ButtonShimmer>
+      )}
 
-        {groupInfo &&
-          memberInfo &&
-          (memberId === user?.id || groupInfo?.permissions?.canRemoveMembers?.()) && (
-            <RemoveMemberButton
-              groupInfo={groupInfo}
-              memberInfo={memberInfo}
-              isSelf={memberId === user?.id}
-              memberId={memberId as string}
-              splits={splits}
-            />
-          )}
-      </View>
+      {groupInfo && memberInfo && (
+        <MemberActions groupInfo={groupInfo} memberInfo={memberInfo} splits={splits} />
+      )}
     </View>
   )
 }
@@ -430,7 +586,7 @@ export default function MemberInfoScreenWrapper() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.memberInfo')}
-      maxWidth={500}
+      maxWidth={550}
       maxHeight={650}
     >
       {error || groupInfo?.permissions?.canReadMembers?.() === false ? (
