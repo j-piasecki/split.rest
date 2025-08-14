@@ -74,7 +74,7 @@ function DisplayNameSetter({
           alignItems: 'center',
         }}
       >
-        {canEditDisplayName && value !== (memberInfo.displayName ?? '') && (
+        {canEditDisplayName && value !== null && value !== (memberInfo.displayName ?? '') && (
           <RoundIconButton
             color={theme.colors.secondary}
             icon='check'
