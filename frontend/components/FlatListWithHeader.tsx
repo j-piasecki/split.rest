@@ -97,6 +97,7 @@ export function FlatListWithHeader<T>({
       onScrollEndDrag={scrollHandlerWrapper}
       onMomentumScrollBegin={scrollHandlerWrapper}
       onMomentumScrollEnd={scrollHandlerWrapper}
+      keyboardShouldPersistTaps='handled'
       renderPullableHeader={
         hideHeader
           ? undefined

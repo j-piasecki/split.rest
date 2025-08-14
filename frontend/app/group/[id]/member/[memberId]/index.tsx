@@ -74,14 +74,13 @@ function DisplayNameSetter({
           alignItems: 'center',
         }}
       >
-        {canEditDisplayName && value?.length && (
+        {canEditDisplayName && value !== (memberInfo.displayName ?? '') && (
           <RoundIconButton
             color={theme.colors.secondary}
             icon='check'
             onPress={() => setDisplayName(value)}
             size={32}
             isLoading={isChangingDisplayName}
-            disabled={value === memberInfo.displayName}
           />
         )}
       </View>
