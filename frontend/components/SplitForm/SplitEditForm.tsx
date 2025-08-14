@@ -1,5 +1,11 @@
 import { SplitForm, SplitFormProps } from './SplitForm'
-import { CurrencyUtils, Member } from 'shared'
+import {
+  CurrencyUtils,
+  DEFAULT_BALANCE_WHEN_NOT_SET,
+  DEFAULT_HAS_ACCESS_WHEN_NOT_SET,
+  DEFAULT_IS_ADMIN_WHEN_NOT_SET,
+  Member,
+} from 'shared'
 import { SplitType, SplitWithUsers } from 'shared'
 
 export interface SplitEditFormProps
@@ -15,9 +21,9 @@ export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
     ...splitInfo.users.map((user) => {
       const backfilledMember: Member = {
         ...user,
-        balance: user.balance ?? '0.00',
-        isAdmin: user.isAdmin ?? false,
-        hasAccess: user.hasAccess ?? true,
+        balance: user.balance ?? DEFAULT_BALANCE_WHEN_NOT_SET,
+        isAdmin: user.isAdmin ?? DEFAULT_IS_ADMIN_WHEN_NOT_SET,
+        hasAccess: user.hasAccess ?? DEFAULT_HAS_ACCESS_WHEN_NOT_SET,
       }
 
       if (splitInfo.type === SplitType.BalanceChange) {

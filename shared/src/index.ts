@@ -5,6 +5,7 @@ export * from './errors'
 export * from './permissions'
 export * from './validateQuery'
 export * from './validateAllowedSplitMethods'
+export * from './consts'
 
 export { CurrencyUtils } from './CurrencyUtils'
 export { default as translation } from './locales/en/translation.json'

@@ -18,7 +18,14 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { CurrencyUtils, SplitMethod } from 'shared'
+import {
+  CurrencyUtils,
+  DEFAULT_BALANCE_WHEN_NOT_SET,
+  DEFAULT_DISPLAY_NAME_WHEN_NOT_SET,
+  DEFAULT_HAS_ACCESS_WHEN_NOT_SET,
+  DEFAULT_IS_ADMIN_WHEN_NOT_SET,
+  SplitMethod,
+} from 'shared'
 
 export default function Modal() {
   const user = useAuth()
@@ -101,10 +108,10 @@ export default function Modal() {
         {
           user: {
             ...user,
-            balance: groupInfo?.balance ?? '0.00',
-            isAdmin: groupInfo?.isAdmin ?? false,
-            hasAccess: groupInfo?.hasAccess ?? true,
-            displayName: null,
+            balance: groupInfo?.balance ?? DEFAULT_BALANCE_WHEN_NOT_SET,
+            isAdmin: groupInfo?.isAdmin ?? DEFAULT_IS_ADMIN_WHEN_NOT_SET,
+            hasAccess: groupInfo?.hasAccess ?? DEFAULT_HAS_ACCESS_WHEN_NOT_SET,
+            displayName: DEFAULT_DISPLAY_NAME_WHEN_NOT_SET,
           },
           value: '0.00',
         },

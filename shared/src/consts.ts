@@ -1,0 +1,4 @@
+export const DEFAULT_BALANCE_WHEN_NOT_SET = '0.00'
+export const DEFAULT_IS_ADMIN_WHEN_NOT_SET = false
+export const DEFAULT_HAS_ACCESS_WHEN_NOT_SET = true
+export const DEFAULT_DISPLAY_NAME_WHEN_NOT_SET = null
