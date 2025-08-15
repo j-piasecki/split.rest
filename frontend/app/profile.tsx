@@ -138,7 +138,7 @@ function Form({ user }: { user: User }) {
       await Image.clearDiskCache()
       await Image.clearMemoryCache()
       await Image.prefetch(getProfilePictureUrl(user.id)!)
-      notifyProfilePictureChanged(user.id, image.uri)
+      notifyProfilePictureChanged(user.id, Platform.OS !== 'web' ? image.uri : undefined)
 
       snack.show({ message: t('settings.profilePicture.profilePictureChanged') })
     } catch (e) {

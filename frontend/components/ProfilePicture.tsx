@@ -19,8 +19,13 @@ function addProfilePictureListener(userId: string | undefined, listener: () => v
   }
 }
 
-export function notifyProfilePictureChanged(userId: string, url: string) {
-  profilePictureMap.set(userId, url)
+export function notifyProfilePictureChanged(userId: string, url?: string) {
+  if (url) {
+    profilePictureMap.set(userId, url)
+  } else {
+    profilePictureMap.delete(userId)
+  }
+
   listeners.get(userId)?.forEach((listener) => listener())
 }
 
