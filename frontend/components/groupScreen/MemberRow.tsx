@@ -245,7 +245,7 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
                 onPress={(e) => {
                   contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
                 }}
-                style={{ marginLeft: 4, opacity: contextMenuDisabled ? 0.4 : 1 }}
+                containerStyle={{ marginLeft: 4, opacity: contextMenuDisabled ? 0.4 : 1 }}
               />
             )}
           </>

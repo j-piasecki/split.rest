@@ -19,6 +19,7 @@ export interface RoundIconButtonProps {
   disabled?: boolean
   size?: number
   style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
+  containerStyle?: StyleProp<ViewStyle>
   color?: string
   isLoading?: boolean
   tabIndex?: 0 | -1
@@ -30,6 +31,7 @@ export function RoundIconButton({
   onPress,
   disabled,
   size = 24,
+  containerStyle,
   style,
   color,
   isLoading,
@@ -40,7 +42,7 @@ export function RoundIconButton({
   const [pressed, setPressed] = useState(false)
   const [hovered, setHovered] = useState(false)
 
-  const containerStyle = useAnimatedStyle(() => {
+  const containerAnimatedStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: withTiming(
         pressed
@@ -63,7 +65,7 @@ export function RoundIconButton({
   })
 
   return (
-    <Animated.View style={[containerStyle, { borderRadius: 20 }]}>
+    <Animated.View style={[containerAnimatedStyle, { borderRadius: 20 }, containerStyle]}>
       <Pressable
         onPress={onPress}
         disabled={disabled}

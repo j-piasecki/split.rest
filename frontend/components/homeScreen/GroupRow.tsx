@@ -109,7 +109,7 @@ export function GroupRow({ info, style }: GroupRowProps) {
           onPress={(e) => {
             contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
           }}
-          style={{ marginLeft: 4 }}
+          containerStyle={{ marginLeft: 4 }}
         />
       </View>
     </ContextMenu>
