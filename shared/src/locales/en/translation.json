@@ -242,7 +242,8 @@
     },
     "profilePicture": {
       "changeProfilePicture": "Change profile picture",
-      "noImageSelected": "No image selected"
+      "noImageSelected": "No image selected",
+      "profilePictureChanged": "It may take some time for the new profile picture to propagate"
     },
     "invitations": {
       "manageInvitations": "Manage invitations",

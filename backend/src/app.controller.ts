@@ -814,6 +814,7 @@ export class AppController {
     }
 
     // TODO: upload to R2
+    // TODO: purge cache after upload
     await sharp(imageBuffer)
       .resize(128, 128)
       .toFormat('png')

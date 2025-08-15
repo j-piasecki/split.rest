@@ -62,6 +62,7 @@ function Form({ user }: { user: User }) {
   const router = useRouter()
   const displayClass = useDisplayClass()
   const insets = useModalScreenInsets()
+  const snack = useSnack()
   const { t } = useTranslation()
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
@@ -134,10 +135,13 @@ function Form({ user }: { user: User }) {
         })
       }
 
+      // TODO: is this right?
       await Image.clearDiskCache()
       await Image.clearMemoryCache()
       await Image.prefetch(getProfilePictureUrl(user.id)!)
       notifyProfilePictureChanged(user.id)
+
+      snack.show({ message: t('settings.profilePicture.profilePictureChanged') })
     } catch (e) {
       if (isTranslatableError(e)) {
         alert(t(e.message, e.args))
