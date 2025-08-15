@@ -5018,6 +5018,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/image-editor@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "@react-native-community/image-editor@npm:4.3.0"
+  peerDependencies:
+    react-native: ">=0.57.0"
+  peerDependenciesMeta:
+    react-native:
+      optional: true
+  checksum: 37c12e1188748d0cf58c5bf2123b7168835bd840ec40b0d680ccc23da4e829fe74c0362ec54a6ad0dd49698283a99a8195fafa9c4aa38b955fcb5162247fe555
+  languageName: node
+  linkType: hard
+
 "@react-native-firebase/analytics@npm:^22.2.0":
   version: 22.2.0
   resolution: "@react-native-firebase/analytics@npm:22.2.0"
@@ -10800,6 +10812,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-image-loader@npm:~5.1.0":
+  version: 5.1.0
+  resolution: "expo-image-loader@npm:5.1.0"
+  peerDependencies:
+    expo: "*"
+  checksum: dafd182e9cea5c6b81202f62d4016be51e5669e13f76e0a514b58b9c502c7366e5b5df02d600897e0d302acd1823eb5b2ca23a2c3f7242f173d2414caed42e1a
+  languageName: node
+  linkType: hard
+
+"expo-image-picker@npm:~16.1.4":
+  version: 16.1.4
+  resolution: "expo-image-picker@npm:16.1.4"
+  dependencies:
+    expo-image-loader: ~5.1.0
+  peerDependencies:
+    expo: "*"
+  checksum: 66fc8c4724c7b8219645259de4d9e61353120398ef2339fd8a5225e0a13a26d4a9851edd6d230086e4ff0997754eea0387d9f5f191502fb64e34228a1e65e340
+  languageName: node
+  linkType: hard
+
 "expo-image@npm:~2.4.0":
   version: 2.4.0
   resolution: "expo-image@npm:2.4.0"
@@ -11666,6 +11698,7 @@ __metadata:
     "@expo/vector-icons": ^14.1.0
     "@invertase/react-native-apple-authentication": ^2.4.1
     "@react-native-async-storage/async-storage": 2.1.2
+    "@react-native-community/image-editor": ^4.3.0
     "@react-native-firebase/analytics": ^22.2.0
     "@react-native-firebase/app": ^22.2.0
     "@react-native-firebase/auth": ^22.2.0
@@ -11700,6 +11733,7 @@ __metadata:
     expo-font: ~13.3.2
     expo-haptics: ~14.1.4
     expo-image: ~2.4.0
+    expo-image-picker: ~16.1.4
     expo-linear-gradient: ~14.1.5
     expo-linking: ~7.1.7
     expo-localization: ~16.1.6
