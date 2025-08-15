@@ -16,7 +16,7 @@ import ImageEditor from '@react-native-community/image-editor'
 import { useTheme } from '@styling/theme'
 import { deleteUser, logout, reauthenticate, useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
-import { makeRequestWithFile } from '@utils/makeApiRequest'
+import { makeRequest, makeRequestWithFile } from '@utils/makeApiRequest'
 import { Image } from 'expo-image'
 import * as ImagePicker from 'expo-image-picker'
 import { useRouter } from 'expo-router'
@@ -117,13 +117,22 @@ function Form({ user }: { user: User }) {
         displaySize: { width: 128, height: 128 },
       })
 
-      await makeRequestWithFile('POST', 'setProfilePicture', {
-        file: {
-          name: image.name,
-          type: image.type,
-          uri: image.uri,
-        },
-      })
+      if (Platform.OS === 'web') {
+        await makeRequest('POST', 'setProfilePicture', {
+          file: {
+            type: image.type,
+            uri: image.uri,
+          },
+        })
+      } else {
+        await makeRequestWithFile('POST', 'setProfilePicture', {
+          file: {
+            name: image.name,
+            type: image.type,
+            uri: image.uri,
+          },
+        })
+      }
 
       await Image.clearDiskCache()
       await Image.clearMemoryCache()
