@@ -240,6 +240,10 @@
       "deletionNotReversible": "This action is not reversible",
       "accountDeleted": "Your account was deleted"
     },
+    "profilePicture": {
+      "changeProfilePicture": "Change profile picture",
+      "noImageSelected": "No image selected"
+    },
     "invitations": {
       "manageInvitations": "Manage invitations",
       "directInvitations": "Direct invitations",

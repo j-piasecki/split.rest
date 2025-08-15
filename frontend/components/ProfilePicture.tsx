@@ -1,7 +1,25 @@
 import { useTheme } from '@styling/theme'
 import { Image } from 'expo-image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
+
+const listeners = new Map<string, (() => void)[]>()
+
+function addProfilePictureListener(userId: string | undefined, listener: () => void) {
+  if (!userId) {
+    return () => {}
+  }
+
+  listeners.set(userId, [...(listeners.get(userId) || []), listener])
+
+  return () => {
+    listeners.set(userId, listeners.get(userId)?.filter((l) => l !== listener) || [])
+  }
+}
+
+export function notifyProfilePictureChanged(userId: string) {
+  listeners.get(userId)?.forEach((listener) => listener())
+}
 
 export function getProfilePictureUrl(userId?: string) {
   if (!userId) {
@@ -26,8 +44,15 @@ export function ProfilePicture({ userId, size, style }: ProfilePictureProps) {
   const theme = useTheme()
   const [isLoading, setIsLoading] = useState(true)
   const [failed, setFailed] = useState(false)
+  const [key, setKey] = useState(0)
 
   const imageSize = failed ? size * 0.65 : size
+
+  useEffect(() => {
+    return addProfilePictureListener(userId, () => {
+      setKey((key) => key + 1)
+    })
+  }, [userId])
 
   return (
     <View
@@ -44,6 +69,7 @@ export function ProfilePicture({ userId, size, style }: ProfilePictureProps) {
       ]}
     >
       <Image
+        key={key}
         source={failed ? defaultProfilePicture : getProfilePictureUrl(userId)}
         placeholder={defaultProfilePicture}
         cachePolicy='memory-disk'

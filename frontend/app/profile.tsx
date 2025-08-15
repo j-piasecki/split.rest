@@ -2,20 +2,28 @@ import { Button } from '@components/Button'
 import { ConfirmationModal } from '@components/ConfirmationModal'
 import { EditableText } from '@components/EditableText'
 import ModalScreen from '@components/ModalScreen'
-import { ProfilePicture } from '@components/ProfilePicture'
+import {
+  ProfilePicture,
+  getProfilePictureUrl,
+  notifyProfilePictureChanged,
+} from '@components/ProfilePicture'
 import { SegmentedButton } from '@components/SegmentedButton'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { useSetUserNameMutation } from '@hooks/database/useSetUserName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import ImageEditor from '@react-native-community/image-editor'
 import { useTheme } from '@styling/theme'
 import { deleteUser, logout, reauthenticate, useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { makeRequestWithFile } from '@utils/makeApiRequest'
+import { Image } from 'expo-image'
+import * as ImagePicker from 'expo-image-picker'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Platform, ScrollView, View } from 'react-native'
-import { TranslatableError, User } from 'shared'
+import { TranslatableError, User, isTranslatableError } from 'shared'
 
 interface DeleteAccountModalProps {
   visible: boolean
@@ -57,6 +65,7 @@ function Form({ user }: { user: User }) {
   const { t } = useTranslation()
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
+  const [isChangingProfilePicture, setIsChangingProfilePicture] = useState(false)
   const { mutateAsync: setUserName, isPending: isChangingName } = useSetUserNameMutation()
 
   function setName(newName: string) {
@@ -79,6 +88,56 @@ function Form({ user }: { user: User }) {
         alert(t('unknownError'))
       }
     })
+  }
+
+  async function changeProfilePicture() {
+    try {
+      setIsChangingProfilePicture(true)
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        aspect: [1, 1],
+      })
+
+      if (result.canceled) {
+        return
+      }
+
+      if (result.assets.length === 0 || !result.assets[0].uri) {
+        throw new TranslatableError('settings.profilePicture.noImageSelected')
+      }
+
+      const width = result.assets[0].width
+      const height = result.assets[0].height
+      const size = Math.min(width, height)
+
+      const image = await ImageEditor.cropImage(result.assets[0].uri, {
+        offset: { x: (width - size) / 2, y: (height - size) / 2 },
+        size: { width: size, height: size },
+        displaySize: { width: 128, height: 128 },
+      })
+
+      await makeRequestWithFile('POST', 'setProfilePicture', {
+        file: {
+          name: image.name,
+          type: image.type,
+          uri: image.uri,
+        },
+      })
+
+      await Image.clearDiskCache()
+      await Image.clearMemoryCache()
+      await Image.prefetch(getProfilePictureUrl(user.id)!)
+      notifyProfilePictureChanged(user.id)
+    } catch (e) {
+      if (isTranslatableError(e)) {
+        alert(t(e.message, e.args))
+      } else {
+        alert(t('api.auth.tryAgain'))
+      }
+    } finally {
+      setIsChangingProfilePicture(false)
+    }
   }
 
   return (
@@ -111,6 +170,11 @@ function Form({ user }: { user: User }) {
             {user?.email}
           </Text>
         </View>
+        <Button
+          title={t('settings.profilePicture.changeProfilePicture')}
+          onPress={changeProfilePicture}
+          isLoading={isChangingProfilePicture}
+        />
         <SegmentedButton
           style={{ alignSelf: 'stretch' }}
           items={[
