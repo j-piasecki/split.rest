@@ -196,6 +196,12 @@
     "user": {
       "nameTooLong": "Name is too long",
       "nameCannotBeEmpty": "Name cannot be empty"
+    },
+    "file": {
+      "fileIsRequired": "File is required",
+      "fileSizeExceedsMaximumAllowedSize": "File size exceeds maximum allowed size",
+      "invalidFileType": "Invalid file type.",
+      "invalidImageDimensions": "Invalid image dimensions"
     }
   },
 

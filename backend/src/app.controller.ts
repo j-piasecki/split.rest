@@ -1,7 +1,22 @@
+import { FileSizeValidationPipe } from './FileSizeValidationPipe'
+import { ImageDimensionsValidationPipe } from './ImageDimensionsValidationPipe'
+import { MimeTypeValidationPipe } from './MimeTypeValidationPipe'
 import { AppService } from './app.service'
 import { AuthGuard } from './auth.guard'
 import { BadRequestException } from './errors/BadRequestException'
-import { Body, Controller, Delete, Get, Post, Query, Req, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Query,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
 import { Request } from 'express'
 import {
   AcceptGroupInviteArguments,
@@ -105,6 +120,7 @@ import {
   isUpdateSplitArguments,
   isUser,
 } from 'shared'
+import sharp from 'sharp'
 
 @Controller()
 export class AppController {
@@ -750,5 +766,30 @@ export class AppController {
     }
 
     return await this.appService.removeMember(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('setProfilePicture')
+  @UseInterceptors(FileInterceptor('file'))
+  async setProfilePicture(
+    @Req() request: Request,
+    @UploadedFile(
+      new FileSizeValidationPipe(20), // 20KB
+      new MimeTypeValidationPipe(['image/png', 'image/jpeg', 'image/jpg']),
+      new ImageDimensionsValidationPipe({
+        minWidth: 128,
+        aspectRatio: 1,
+      })
+    )
+    file: Express.Multer.File
+  ) {
+    // TODO: upload to R2
+    await sharp(file.buffer)
+      .resize(128, 128)
+      .toFormat('png')
+      .toFile(`public/${request.user.sub}.png`)
+    return {
+      message: 'File uploaded successfully',
+    }
   }
 }
