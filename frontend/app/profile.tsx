@@ -135,11 +135,10 @@ function Form({ user }: { user: User }) {
         })
       }
 
-      // TODO: is this right?
       await Image.clearDiskCache()
       await Image.clearMemoryCache()
       await Image.prefetch(getProfilePictureUrl(user.id)!)
-      notifyProfilePictureChanged(user.id)
+      notifyProfilePictureChanged(user.id, image.uri)
 
       snack.show({ message: t('settings.profilePicture.profilePictureChanged') })
     } catch (e) {

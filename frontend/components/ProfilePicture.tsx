@@ -1,9 +1,11 @@
+import { Shimmer } from './Shimmer'
 import { useTheme } from '@styling/theme'
 import { Image } from 'expo-image'
 import { useEffect, useState } from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 
 const listeners = new Map<string, (() => void)[]>()
+const profilePictureMap = new Map<string, string>()
 
 function addProfilePictureListener(userId: string | undefined, listener: () => void) {
   if (!userId) {
@@ -17,13 +19,19 @@ function addProfilePictureListener(userId: string | undefined, listener: () => v
   }
 }
 
-export function notifyProfilePictureChanged(userId: string) {
+export function notifyProfilePictureChanged(userId: string, url: string) {
+  profilePictureMap.set(userId, url)
   listeners.get(userId)?.forEach((listener) => listener())
 }
 
 export function getProfilePictureUrl(userId?: string) {
   if (!userId) {
     return undefined
+  }
+
+  const url = profilePictureMap.get(userId)
+  if (url) {
+    return url
   }
 
   return __DEV__
@@ -68,6 +76,18 @@ export function ProfilePicture({ userId, size, style }: ProfilePictureProps) {
         style,
       ]}
     >
+      {isLoading && (
+        <Shimmer
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+          }}
+        />
+      )}
       <Image
         key={key}
         source={failed ? defaultProfilePicture : getProfilePictureUrl(userId)}
@@ -75,6 +95,7 @@ export function ProfilePicture({ userId, size, style }: ProfilePictureProps) {
         cachePolicy='memory-disk'
         onError={() => {
           setFailed(true)
+          setIsLoading(false)
         }}
         onLoad={() => {
           setIsLoading(false)
