@@ -1,3 +1,4 @@
+import { Base64ImageValidation } from './Base64ImageValidation'
 import { FileSizeValidationPipe } from './FileSizeValidationPipe'
 import { ImageDimensionsValidationPipe } from './ImageDimensionsValidationPipe'
 import { MimeTypeValidationPipe } from './MimeTypeValidationPipe'
@@ -773,6 +774,14 @@ export class AppController {
   @UseInterceptors(FileInterceptor('file'))
   async setProfilePicture(
     @Req() request: Request,
+    @Body()
+    body: {
+      file: {
+        name: string
+        type: string
+        uri: string
+      }
+    },
     @UploadedFile(
       new FileSizeValidationPipe(20), // 20KB
       new MimeTypeValidationPipe(['image/png', 'image/jpeg', 'image/jpg']),
@@ -781,10 +790,31 @@ export class AppController {
         aspectRatio: 1,
       })
     )
-    file: Express.Multer.File
+    file?: Express.Multer.File
   ) {
+    let imageBuffer: Buffer
+
+    if (file) {
+      imageBuffer = file.buffer
+    } else if (body.file.uri && body.file.type) {
+      const validatedBase64 = await new Base64ImageValidation({
+        maxSizeKb: 20,
+        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg'],
+        dimensions: {
+          minWidth: 128,
+          aspectRatio: 1,
+        },
+      }).transform({
+        imageBase64: body.file.uri,
+        imageType: body.file.type,
+      })
+      imageBuffer = validatedBase64.buffer
+    } else {
+      throw new BadRequestException('api.file.fileIsRequired')
+    }
+
     // TODO: upload to R2
-    await sharp(file.buffer)
+    await sharp(imageBuffer)
       .resize(128, 128)
       .toFormat('png')
       .toFile(`public/${request.user.sub}.png`)

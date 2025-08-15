@@ -10,7 +10,7 @@ export class FileSizeValidationPipe implements PipeTransform {
 
   transform(value?: Express.Multer.File) {
     if (!value) {
-      throw new BadRequestException('api.file.fileIsRequired')
+      return value
     }
 
     if (value.size >= this.maxSize) {

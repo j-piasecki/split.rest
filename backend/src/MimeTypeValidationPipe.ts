@@ -11,7 +11,7 @@ export class MimeTypeValidationPipe implements PipeTransform {
 
   transform(value: Express.Multer.File) {
     if (!value || !value.mimetype) {
-      throw new BadRequestException('api.file.fileIsRequired')
+      return value
     }
 
     if (!this.allowedMimeTypes.includes(value.mimetype)) {

@@ -20,9 +20,9 @@ export class ImageDimensionsValidationPipe implements PipeTransform {
     this.options = options
   }
 
-  async transform(value?: Express.Multer.File): Promise<Express.Multer.File> {
+  async transform(value?: Express.Multer.File) {
     if (!value) {
-      throw new BadRequestException('api.file.fileIsRequired')
+      return value
     }
 
     try {
