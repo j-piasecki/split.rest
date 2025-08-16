@@ -31,7 +31,7 @@ interface DeleteAccountModalProps {
   onClose: () => void
 }
 
-const SHOW_PHOTO_UPLOAD_BUTTON = false
+const SHOW_PHOTO_UPLOAD_BUTTON = true
 
 function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
   const snack = useSnack()

@@ -364,7 +364,10 @@ export class AppService {
       throw new BadRequestException('api.file.nsfwImage')
     }
 
-    await sharp(imageBuffer).resize(128, 128).toFormat('png').toFile(`public/${callerId}.png`)
+    await sharp(imageBuffer)
+      .resize(128, 128)
+      .toFormat('jpg', { quality: 80 })
+      .toFile(`public/${callerId}.jpg`)
     await uploadProfilePictureToR2(this.s3Client, process.env.R2_BUCKET_NAME!, callerId)
     await fetch(
       `https://api.cloudflare.com/client/v4/zones/${process.env.CLOUDFLARE_ZONE_ID}/purge_cache`,
@@ -375,7 +378,7 @@ export class AppService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          files: [`https://assets.split.rest/profile-pictures/${callerId}.png`],
+          files: [`https://assets.split.rest/profile-pictures/${callerId}.jpg`],
         }),
       }
     )

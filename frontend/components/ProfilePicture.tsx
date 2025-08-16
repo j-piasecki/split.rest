@@ -40,8 +40,8 @@ export function getProfilePictureUrl(userId?: string) {
   }
 
   return __DEV__
-    ? `http://localhost:3000/public/${userId}.png`
-    : `https://assets.split.rest/profile-pictures/${userId}.png`
+    ? `http://localhost:3000/public/${userId}.jpg`
+    : `https://assets.split.rest/profile-pictures/${userId}.jpg`
 }
 
 export interface ProfilePictureProps {

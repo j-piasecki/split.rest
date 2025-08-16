@@ -1,5 +1,6 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import fs from 'fs'
+import sharp from 'sharp'
 
 const bucketName = process.env.R2_BUCKET_NAME
 const s3Client = new S3Client({
@@ -11,7 +12,15 @@ const s3Client = new S3Client({
   },
 })
 
-const profilePictures = fs.readdirSync('public').filter((file) => file.endsWith('.png'))
+const profilePicturesPngs = fs.readdirSync('public').filter((file) => file.endsWith('.png'))
+
+for (const id of profilePicturesPngs) {
+  sharp(`public/${id}`)
+    .toFormat('jpg', { quality: 80 })
+    .toFile(`public/${id.replace('.png', '.jpg')}`)
+}
+
+const profilePictures = fs.readdirSync('public').filter((file) => file.endsWith('.jpg'))
 
 for (const id of profilePictures) {
   const file = fs.readFileSync(`public/${id}`)
