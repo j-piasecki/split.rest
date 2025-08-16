@@ -31,7 +31,7 @@ for (const id of profilePictures) {
       Bucket: bucketName,
       Key: `profile-pictures/${id}`,
       Body: file,
-      ContentType: 'image/png',
+      ContentType: 'image/jpg',
     })
     await s3Client.send(uploadCommand)
   }
