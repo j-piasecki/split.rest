@@ -769,7 +769,7 @@ export class AppController {
     return await this.appService.removeMember(request.user.sub, args)
   }
 
-  @Throttle({ default: { limit: 1, ttl: 1000 * 60 * 60 * 24 } })
+  @Throttle({ default: { limit: 10, ttl: 1000 * 60 * 60 * 24 } })
   @UseGuards(AuthGuard)
   @Post('setProfilePicture')
   @UseInterceptors(FileInterceptor('file'))

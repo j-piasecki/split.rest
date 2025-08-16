@@ -9,6 +9,8 @@ import {
 } from './profilePicture'
 import { S3Client } from '@aws-sdk/client-s3'
 import { Injectable } from '@nestjs/common'
+import * as tf from '@tensorflow/tfjs-node'
+import * as nsfwjs from 'nsfwjs'
 import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
@@ -63,9 +65,12 @@ import {
 } from 'shared'
 import sharp from 'sharp'
 
+tf.enableProdMode()
+
 @Injectable()
 export class AppService {
   private s3Client: S3Client
+  private nsfwjsModel: nsfwjs.NSFWJS
 
   constructor(private readonly databaseService: DatabaseService) {
     this.s3Client = new S3Client({
@@ -75,6 +80,10 @@ export class AppService {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
       },
+    })
+
+    nsfwjs.load('MobileNetV2').then((model) => {
+      this.nsfwjsModel = model
     })
   }
 
@@ -338,6 +347,21 @@ export class AppService {
       imageBuffer = validatedBase64.buffer
     } else {
       throw new BadRequestException('api.file.fileIsRequired')
+    }
+
+    const image = tf.node.decodeImage(imageBuffer, 3) as tf.Tensor3D
+    const predictions = await this.nsfwjsModel.classify(image)
+    image.dispose()
+
+    if (
+      predictions[0].className === 'Porn' ||
+      predictions[0].className === 'Hentai' ||
+      predictions
+        .map((p) => ({ ...p, probability: p.probability / predictions[0].probability }))
+        .filter((p) => p.className === 'Porn' || p.className === 'Hentai')
+        .some((p) => p.probability > 0.7)
+    ) {
+      throw new BadRequestException('api.file.nsfwImage')
     }
 
     await sharp(imageBuffer).resize(128, 128).toFormat('png').toFile(`public/${callerId}.png`)

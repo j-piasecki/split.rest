@@ -201,7 +201,8 @@
       "fileIsRequired": "File is required",
       "fileSizeExceedsMaximumAllowedSize": "File size exceeds maximum allowed size",
       "invalidFileType": "Invalid file type.",
-      "invalidImageDimensions": "Invalid image dimensions"
+      "invalidImageDimensions": "Invalid image dimensions",
+      "nsfwImage": "The image has been flagged as containing explicit content"
     }
   },
 
