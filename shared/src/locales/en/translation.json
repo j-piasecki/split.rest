@@ -243,7 +243,8 @@
     "profilePicture": {
       "changeProfilePicture": "Change profile picture",
       "noImageSelected": "No image selected",
-      "profilePictureChanged": "It may take some time for the new profile picture to propagate"
+      "profilePictureChanged": "It may take some time for the new profile picture to propagate",
+      "tooManyRequests": "You have tried to change your profile picture too many times. Please try again in 24 hours."
     },
     "invitations": {
       "manageInvitations": "Manage invitations",

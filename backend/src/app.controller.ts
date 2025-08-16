@@ -18,6 +18,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
+import { Throttle } from '@nestjs/throttler'
 import { Request } from 'express'
 import {
   AcceptGroupInviteArguments,
@@ -769,6 +770,7 @@ export class AppController {
     return await this.appService.removeMember(request.user.sub, args)
   }
 
+  @Throttle({ default: { limit: 1, ttl: 1000 * 60 * 60 * 24 } })
   @UseGuards(AuthGuard)
   @Post('setProfilePicture')
   @UseInterceptors(FileInterceptor('file'))

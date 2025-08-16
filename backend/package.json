@@ -27,6 +27,7 @@
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.6",
     "@nestjs/platform-express": "^11.1.6",
+    "@nestjs/throttler": "^6.4.0",
     "currency.js": "^2.0.4",
     "dayjs": "^1.11.13",
     "jsonwebtoken": "^9.0.2",

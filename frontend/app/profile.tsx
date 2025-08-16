@@ -16,7 +16,7 @@ import ImageEditor from '@react-native-community/image-editor'
 import { useTheme } from '@styling/theme'
 import { deleteUser, logout, reauthenticate, useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
-import { makeRequest, makeRequestWithFile } from '@utils/makeApiRequest'
+import { ApiError, makeRequest, makeRequestWithFile } from '@utils/makeApiRequest'
 import { Image } from 'expo-image'
 import * as ImagePicker from 'expo-image-picker'
 import { useRouter } from 'expo-router'
@@ -142,7 +142,14 @@ function Form({ user }: { user: User }) {
 
       snack.show({ message: t('settings.profilePicture.profilePictureChanged') })
     } catch (e) {
-      if (isTranslatableError(e)) {
+      if (e instanceof ApiError) {
+        if (e.statusCode === 429) {
+          alert(t('settings.profilePicture.tooManyRequests'))
+          return
+        }
+
+        alert(t(e.message, e.args))
+      } else if (isTranslatableError(e)) {
         alert(t(e.message, e.args))
       } else {
         alert(t('api.auth.tryAgain'))
