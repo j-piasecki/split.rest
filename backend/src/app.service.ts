@@ -1,4 +1,6 @@
+import { Base64ImageValidation } from './Base64ImageValidation'
 import { DatabaseService } from './database.service'
+import { BadRequestException } from './errors/BadRequestException'
 import {
   deleteProfilePicture,
   deleteProfilePictureFromR2,
@@ -17,6 +19,7 @@ import {
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
+  FileUploadArguments,
   GetBalancesArguments,
   GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
@@ -58,6 +61,7 @@ import {
   UpdateSplitArguments,
   User,
 } from 'shared'
+import sharp from 'sharp'
 
 @Injectable()
 export class AppService {
@@ -312,5 +316,48 @@ export class AppService {
 
   async removeMember(callerId: string, args: RemoveMemberFromGroupArguments) {
     return await this.databaseService.removeMember(callerId, args)
+  }
+
+  async setProfilePicture(callerId: string, args: FileUploadArguments, file?: Express.Multer.File) {
+    let imageBuffer: Buffer
+
+    if (file) {
+      imageBuffer = file.buffer
+    } else if (args.file.uri && args.file.type) {
+      const validatedBase64 = await new Base64ImageValidation({
+        maxSizeKb: 20,
+        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg'],
+        dimensions: {
+          minWidth: 128,
+          aspectRatio: 1,
+        },
+      }).transform({
+        imageBase64: args.file.uri,
+        imageType: args.file.type,
+      })
+      imageBuffer = validatedBase64.buffer
+    } else {
+      throw new BadRequestException('api.file.fileIsRequired')
+    }
+
+    await sharp(imageBuffer).resize(128, 128).toFormat('png').toFile(`public/${callerId}.png`)
+    await uploadProfilePictureToR2(this.s3Client, process.env.R2_BUCKET_NAME!, callerId)
+    await fetch(
+      `https://api.cloudflare.com/client/v4/zones/${process.env.CLOUDFLARE_ZONE_ID}/purge_cache`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.CLOUDFLARE_CACHE_PURGE_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          files: [`https://assets.split.rest/profile-pictures/${callerId}.png`],
+        }),
+      }
+    )
+
+    return {
+      message: 'success',
+    }
   }
 }

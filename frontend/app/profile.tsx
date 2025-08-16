@@ -23,7 +23,7 @@ import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Platform, ScrollView, View } from 'react-native'
-import { TranslatableError, User, isTranslatableError } from 'shared'
+import { FileUploadArguments, TranslatableError, User, isTranslatableError } from 'shared'
 
 interface DeleteAccountModalProps {
   visible: boolean
@@ -119,7 +119,7 @@ function Form({ user }: { user: User }) {
       })
 
       if (Platform.OS === 'web') {
-        await makeRequest('POST', 'setProfilePicture', {
+        await makeRequest<FileUploadArguments, void>('POST', 'setProfilePicture', {
           file: {
             type: image.type,
             uri: image.uri,

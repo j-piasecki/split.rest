@@ -265,3 +265,10 @@ export interface SetAllowedSplitMethodsArguments {
 export interface GetGroupMonthlyStatsArguments {
   groupId: number
 }
+
+export interface FileUploadArguments {
+  file: {
+    type?: string
+    uri?: string
+  }
+}

@@ -1,4 +1,3 @@
-import { Base64ImageValidation } from './Base64ImageValidation'
 import { FileSizeValidationPipe } from './FileSizeValidationPipe'
 import { ImageDimensionsValidationPipe } from './ImageDimensionsValidationPipe'
 import { MimeTypeValidationPipe } from './MimeTypeValidationPipe'
@@ -30,6 +29,7 @@ import {
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
+  FileUploadArguments,
   GetBalancesArguments,
   GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
@@ -122,7 +122,6 @@ import {
   isUpdateSplitArguments,
   isUser,
 } from 'shared'
-import sharp from 'sharp'
 
 @Controller()
 export class AppController {
@@ -776,14 +775,7 @@ export class AppController {
   @UseInterceptors(FileInterceptor('file'))
   async setProfilePicture(
     @Req() request: Request,
-    @Body()
-    body: {
-      file: {
-        name: string
-        type: string
-        uri: string
-      }
-    },
+    @Body() args: FileUploadArguments,
     @UploadedFile(
       new FileSizeValidationPipe(20), // 20KB
       new MimeTypeValidationPipe(['image/png', 'image/jpeg', 'image/jpg']),
@@ -794,35 +786,6 @@ export class AppController {
     )
     file?: Express.Multer.File
   ) {
-    let imageBuffer: Buffer
-
-    if (file) {
-      imageBuffer = file.buffer
-    } else if (body.file.uri && body.file.type) {
-      const validatedBase64 = await new Base64ImageValidation({
-        maxSizeKb: 20,
-        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg'],
-        dimensions: {
-          minWidth: 128,
-          aspectRatio: 1,
-        },
-      }).transform({
-        imageBase64: body.file.uri,
-        imageType: body.file.type,
-      })
-      imageBuffer = validatedBase64.buffer
-    } else {
-      throw new BadRequestException('api.file.fileIsRequired')
-    }
-
-    // TODO: upload to R2
-    // TODO: purge cache after upload
-    await sharp(imageBuffer)
-      .resize(128, 128)
-      .toFormat('png')
-      .toFile(`public/${request.user.sub}.png`)
-    return {
-      message: 'File uploaded successfully',
-    }
+    return await this.appService.setProfilePicture(request.user.sub, args, file)
   }
 }
