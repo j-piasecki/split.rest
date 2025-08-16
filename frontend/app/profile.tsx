@@ -31,8 +31,6 @@ interface DeleteAccountModalProps {
   onClose: () => void
 }
 
-const SHOW_PHOTO_UPLOAD_BUTTON = true
-
 function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
   const snack = useSnack()
   const { t } = useTranslation()
@@ -182,22 +180,20 @@ function Form({ user }: { user: User }) {
         <View style={{ alignItems: 'center', gap: 4, alignSelf: 'stretch' }}>
           <View style={{ width: '100%', alignItems: 'center' }}>
             <ProfilePicture userId={user?.id} size={128} />
-            {SHOW_PHOTO_UPLOAD_BUTTON && (
-              <View
-                style={[
-                  StyleSheet.absoluteFillObject,
-                  { justifyContent: 'center', alignItems: 'center' },
-                ]}
-              >
-                <RoundIconButton
-                  size={48}
-                  icon='upload'
-                  onPress={changeProfilePicture}
-                  isLoading={isChangingProfilePicture}
-                  containerStyle={{ marginLeft: 200 }}
-                />
-              </View>
-            )}
+            <View
+              style={[
+                StyleSheet.absoluteFillObject,
+                { justifyContent: 'center', alignItems: 'center' },
+              ]}
+            >
+              <RoundIconButton
+                size={48}
+                icon='upload'
+                onPress={changeProfilePicture}
+                isLoading={isChangingProfilePicture}
+                containerStyle={{ marginLeft: 200 }}
+              />
+            </View>
           </View>
           <EditableText
             value={user?.name}
