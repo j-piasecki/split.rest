@@ -95,3 +95,57 @@ export async function makeRequest<TArgs, TReturn>(
     }
   }
 }
+
+export async function makeRequestWithFile<TArgs, TReturn>(
+  method: 'POST',
+  name: string,
+  args: { [K in keyof TArgs]: TArgs[K] } & {
+    file: {
+      name: string
+      type: string
+      uri: string
+    }
+  }
+) {
+  if (!auth.currentUser) {
+    throw new TranslatableError('api.mustBeLoggedIn')
+  }
+
+  if (__DEV__) {
+    console.log('Making request to', name, 'with', args)
+  }
+
+  const url = new URL(`${ENDPOINT}/${name}`)
+  const formData = new FormData()
+
+  for (const [key, value] of Object.entries(args)) {
+    if (key === 'file') {
+      // @ts-expect-error - IDK, seems like the RN types are wrong here
+      formData.append(key, value)
+    } else {
+      formData.append(key, String(value))
+    }
+  }
+
+  const result = await fetch(url, {
+    method: method,
+    headers: {
+      Authorization: `Bearer ${await auth.currentUser?.getIdToken()}`,
+    },
+    body: formData,
+  })
+
+  if (result.ok) {
+    const data = await result.json()
+    if (__DEV__) {
+      console.log('Request to', name, 'succeeded with', data)
+    }
+    return data as TReturn
+  } else {
+    const data = await result.json()
+    if (__DEV__) {
+      console.log('Request to', name, 'failed with', data)
+    }
+    throw new ApiError('unknownError', result.status, 'Unknown error')
+  }
+}

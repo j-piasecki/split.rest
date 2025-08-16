@@ -95,6 +95,7 @@ export type IconName =
   | 'title'
   | 'undo'
   | 'user'
+  | 'upload'
   | 'visibilityOff'
   | 'visibility'
   | 'warning'
@@ -199,6 +200,7 @@ const iconMap: Record<IconName, unknown> = {
   title: require('@assets/icons/title.svg'),
   undo: require('@assets/icons/undo.svg'),
   user: require('@assets/icons/user.svg'),
+  upload: require('@assets/icons/upload.svg'),
   visibilityOff: require('@assets/icons/visibility_off.svg'),
   visibility: require('@assets/icons/visibility.svg'),
   warning: require('@assets/icons/warning.svg'),

@@ -2,25 +2,36 @@ import { Button } from '@components/Button'
 import { ConfirmationModal } from '@components/ConfirmationModal'
 import { EditableText } from '@components/EditableText'
 import ModalScreen from '@components/ModalScreen'
-import { ProfilePicture } from '@components/ProfilePicture'
+import {
+  ProfilePicture,
+  getProfilePictureUrl,
+  notifyProfilePictureChanged,
+} from '@components/ProfilePicture'
+import { RoundIconButton } from '@components/RoundIconButton'
 import { SegmentedButton } from '@components/SegmentedButton'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { useSetUserNameMutation } from '@hooks/database/useSetUserName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import ImageEditor from '@react-native-community/image-editor'
 import { useTheme } from '@styling/theme'
 import { deleteUser, logout, reauthenticate, useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { ApiError, makeRequest, makeRequestWithFile } from '@utils/makeApiRequest'
+import { Image } from 'expo-image'
+import * as ImagePicker from 'expo-image-picker'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Platform, ScrollView, View } from 'react-native'
-import { TranslatableError, User } from 'shared'
+import { ActivityIndicator, Platform, ScrollView, StyleSheet, View } from 'react-native'
+import { FileUploadArguments, TranslatableError, User, isTranslatableError } from 'shared'
 
 interface DeleteAccountModalProps {
   visible: boolean
   onClose: () => void
 }
+
+const SHOW_PHOTO_UPLOAD_BUTTON = false
 
 function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
   const snack = useSnack()
@@ -54,9 +65,11 @@ function Form({ user }: { user: User }) {
   const router = useRouter()
   const displayClass = useDisplayClass()
   const insets = useModalScreenInsets()
+  const snack = useSnack()
   const { t } = useTranslation()
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
+  const [isChangingProfilePicture, setIsChangingProfilePicture] = useState(false)
   const { mutateAsync: setUserName, isPending: isChangingName } = useSetUserNameMutation()
 
   function setName(newName: string) {
@@ -81,6 +94,74 @@ function Form({ user }: { user: User }) {
     })
   }
 
+  async function changeProfilePicture() {
+    try {
+      setIsChangingProfilePicture(true)
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        aspect: [1, 1],
+      })
+
+      if (result.canceled) {
+        return
+      }
+
+      if (result.assets.length === 0 || !result.assets[0].uri) {
+        throw new TranslatableError('settings.profilePicture.noImageSelected')
+      }
+
+      const width = result.assets[0].width
+      const height = result.assets[0].height
+      const size = Math.min(width, height)
+
+      const image = await ImageEditor.cropImage(result.assets[0].uri, {
+        offset: { x: (width - size) / 2, y: (height - size) / 2 },
+        size: { width: size, height: size },
+        displaySize: { width: 128, height: 128 },
+      })
+
+      if (Platform.OS === 'web') {
+        await makeRequest<FileUploadArguments, void>('POST', 'setProfilePicture', {
+          file: {
+            type: image.type,
+            uri: image.uri,
+          },
+        })
+      } else {
+        await makeRequestWithFile('POST', 'setProfilePicture', {
+          file: {
+            name: image.name,
+            type: image.type,
+            uri: image.uri,
+          },
+        })
+      }
+
+      await Image.clearDiskCache()
+      await Image.clearMemoryCache()
+      await Image.prefetch(getProfilePictureUrl(user.id)!)
+      notifyProfilePictureChanged(user.id, Platform.OS !== 'web' ? image.uri : undefined)
+
+      snack.show({ message: t('settings.profilePicture.profilePictureChanged') })
+    } catch (e) {
+      if (e instanceof ApiError) {
+        if (e.statusCode === 429) {
+          alert(t('settings.profilePicture.tooManyRequests'))
+          return
+        }
+
+        alert(t(e.message, e.args))
+      } else if (isTranslatableError(e)) {
+        alert(t(e.message, e.args))
+      } else {
+        alert(t('api.auth.tryAgain'))
+      }
+    } finally {
+      setIsChangingProfilePicture(false)
+    }
+  }
+
   return (
     <ScrollView
       style={{
@@ -99,7 +180,25 @@ function Form({ user }: { user: User }) {
     >
       <View style={{ gap: 24, alignItems: 'center', paddingHorizontal: 16 }}>
         <View style={{ alignItems: 'center', gap: 4, alignSelf: 'stretch' }}>
-          <ProfilePicture userId={user?.id} size={128} />
+          <View style={{ width: '100%', alignItems: 'center' }}>
+            <ProfilePicture userId={user?.id} size={128} />
+            {SHOW_PHOTO_UPLOAD_BUTTON && (
+              <View
+                style={[
+                  StyleSheet.absoluteFillObject,
+                  { justifyContent: 'center', alignItems: 'center' },
+                ]}
+              >
+                <RoundIconButton
+                  size={48}
+                  icon='upload'
+                  onPress={changeProfilePicture}
+                  isLoading={isChangingProfilePicture}
+                  containerStyle={{ marginLeft: 200 }}
+                />
+              </View>
+            )}
+          </View>
           <EditableText
             value={user?.name}
             placeholder={t('settings.username')}

@@ -196,6 +196,12 @@
     "user": {
       "nameTooLong": "Name is too long",
       "nameCannotBeEmpty": "Name cannot be empty"
+    },
+    "file": {
+      "fileIsRequired": "File is required",
+      "fileSizeExceedsMaximumAllowedSize": "File size exceeds maximum allowed size",
+      "invalidFileType": "Invalid file type.",
+      "invalidImageDimensions": "Invalid image dimensions"
     }
   },
 
@@ -233,6 +239,12 @@
       "doYouWantToDeleteAccount": "Do you want to delete your account?",
       "deletionNotReversible": "This action is not reversible",
       "accountDeleted": "Your account was deleted"
+    },
+    "profilePicture": {
+      "changeProfilePicture": "Change profile picture",
+      "noImageSelected": "No image selected",
+      "profilePictureChanged": "It may take some time for the new profile picture to propagate",
+      "tooManyRequests": "You have tried to change your profile picture too many times. Please try again in 24 hours."
     },
     "invitations": {
       "manageInvitations": "Manage invitations",

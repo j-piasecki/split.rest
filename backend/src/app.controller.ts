@@ -1,7 +1,23 @@
+import { FileSizeValidationPipe } from './FileSizeValidationPipe'
+import { ImageDimensionsValidationPipe } from './ImageDimensionsValidationPipe'
+import { MimeTypeValidationPipe } from './MimeTypeValidationPipe'
 import { AppService } from './app.service'
 import { AuthGuard } from './auth.guard'
 import { BadRequestException } from './errors/BadRequestException'
-import { Body, Controller, Delete, Get, Post, Query, Req, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Query,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { Throttle } from '@nestjs/throttler'
 import { Request } from 'express'
 import {
   AcceptGroupInviteArguments,
@@ -13,6 +29,7 @@ import {
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
+  FileUploadArguments,
   GetBalancesArguments,
   GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
@@ -750,5 +767,25 @@ export class AppController {
     }
 
     return await this.appService.removeMember(request.user.sub, args)
+  }
+
+  @Throttle({ default: { limit: 1, ttl: 1000 * 60 * 60 * 24 } })
+  @UseGuards(AuthGuard)
+  @Post('setProfilePicture')
+  @UseInterceptors(FileInterceptor('file'))
+  async setProfilePicture(
+    @Req() request: Request,
+    @Body() args: FileUploadArguments,
+    @UploadedFile(
+      new FileSizeValidationPipe(20), // 20KB
+      new MimeTypeValidationPipe(['image/png', 'image/jpeg', 'image/jpg']),
+      new ImageDimensionsValidationPipe({
+        minWidth: 128,
+        aspectRatio: 1,
+      })
+    )
+    file?: Express.Multer.File
+  ) {
+    return await this.appService.setProfilePicture(request.user.sub, args, file)
   }
 }
