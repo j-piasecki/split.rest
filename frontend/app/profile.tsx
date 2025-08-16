@@ -7,6 +7,7 @@ import {
   getProfilePictureUrl,
   notifyProfilePictureChanged,
 } from '@components/ProfilePicture'
+import { RoundIconButton } from '@components/RoundIconButton'
 import { SegmentedButton } from '@components/SegmentedButton'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
@@ -22,13 +23,15 @@ import * as ImagePicker from 'expo-image-picker'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Platform, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Platform, ScrollView, StyleSheet, View } from 'react-native'
 import { FileUploadArguments, TranslatableError, User, isTranslatableError } from 'shared'
 
 interface DeleteAccountModalProps {
   visible: boolean
   onClose: () => void
 }
+
+const SHOW_PHOTO_UPLOAD_BUTTON = false
 
 function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
   const snack = useSnack()
@@ -177,7 +180,25 @@ function Form({ user }: { user: User }) {
     >
       <View style={{ gap: 24, alignItems: 'center', paddingHorizontal: 16 }}>
         <View style={{ alignItems: 'center', gap: 4, alignSelf: 'stretch' }}>
-          <ProfilePicture userId={user?.id} size={128} />
+          <View style={{ width: '100%', alignItems: 'center' }}>
+            <ProfilePicture userId={user?.id} size={128} />
+            {SHOW_PHOTO_UPLOAD_BUTTON && (
+              <View
+                style={[
+                  StyleSheet.absoluteFillObject,
+                  { justifyContent: 'center', alignItems: 'center' },
+                ]}
+              >
+                <RoundIconButton
+                  size={48}
+                  icon='upload'
+                  onPress={changeProfilePicture}
+                  isLoading={isChangingProfilePicture}
+                  containerStyle={{ marginLeft: 200 }}
+                />
+              </View>
+            )}
+          </View>
           <EditableText
             value={user?.name}
             placeholder={t('settings.username')}
@@ -189,11 +210,6 @@ function Form({ user }: { user: User }) {
             {user?.email}
           </Text>
         </View>
-        <Button
-          title={t('settings.profilePicture.changeProfilePicture')}
-          onPress={changeProfilePicture}
-          isLoading={isChangingProfilePicture}
-        />
         <SegmentedButton
           style={{ alignSelf: 'stretch' }}
           items={[
