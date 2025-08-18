@@ -20,6 +20,7 @@ export interface FlatListWithHeaderProps<T>
     | 'onScrollEndDrag'
     | 'onMomentumScrollBegin'
     | 'onMomentumScrollEnd'
+    | 'refreshing'
   > {
   isLoading?: boolean
   isRefreshing?: boolean
@@ -87,6 +88,8 @@ export function FlatListWithHeader<T>({
       }
     }
   }
+
+  console.log('isWaiting', 'flatlist', isLoading || isRefreshing)
 
   return (
     <PullableFlatList

@@ -124,7 +124,7 @@ export function MembersList({
   return (
     <View style={{ width: '100%', flex: 1 }}>
       <FlatListWithHeader
-        refreshing={isLoading || isRefetching}
+        isRefreshing={isLoading || isRefetching}
         onRefresh={refreshData}
         showBackButton
         hideHeader={!showPullableHeader}

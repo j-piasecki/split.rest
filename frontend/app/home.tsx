@@ -199,7 +199,7 @@ export default function Home() {
         >
           <FlatListWithHeader
             data={showHidden ? hiddenGroups : visibleGroups}
-            refreshing={
+            isRefreshing={
               visibleGroupsLoading ||
               hiddenGroupsLoading ||
               isRefetchingVisibleGroups ||

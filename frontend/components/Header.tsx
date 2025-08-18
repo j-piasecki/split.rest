@@ -24,8 +24,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const HEADER_HEIGHT = 68
 
-const SHOW_ROTATION = true
-
 export interface HeaderProps {
   offset?: SharedValue<number>
   isWaiting?: boolean
@@ -48,6 +46,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
   const router = useRouter()
   const displayClass = useDisplayClass()
   const isRotating = useSharedValue(false)
+  const rotationCounter = useSharedValue(0)
   const isWaitingSV = useSharedValue(isWaiting ?? false)
   const rotation = useSharedValue(0)
   const { width } = useWindowDimensions()
@@ -59,14 +58,20 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
   const spin = useCallback(() => {
     'worklet'
 
-    if (SHOW_ROTATION) {
+    if (rotation.value % 360 === 0 || rotation.value > 180) {
+      rotationCounter.value++
       isRotating.value = true
-      rotation.value = withSpring(360, { damping: 10, stiffness: 40 }, () => {
-        rotation.value = 0
-        isRotating.value = false
-      })
+      rotation.value = withSpring(
+        360 * rotationCounter.value,
+        { damping: 10, stiffness: 40 },
+        () => {
+          if (rotation.value % 360 === 0) {
+            isRotating.value = false
+          }
+        }
+      )
     }
-  }, [isRotating, rotation])
+  }, [isRotating, rotation, rotationCounter])
 
   useAnimatedReaction(
     () => (offset?.value ?? 0) < -100,
@@ -85,10 +90,10 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
     }
   )
 
-  useAnimatedReaction(
-    () => [isRotating.value, isWaitingSV.value],
-    ([isRotating, isWaiting]) => {
-      if (!isRotating && isWaiting) {
+  useAnimatedReaction<[boolean, boolean, number]>(
+    () => [isRotating.value, isWaitingSV.value, rotation.value],
+    ([isRotating, isWaiting, rotation]) => {
+      if (!isRotating && isWaiting && rotation % 360 === 0) {
         spin()
       }
     }
@@ -96,9 +101,6 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
 
   useEffect(() => {
     isWaitingSV.value = isWaiting ?? false
-    if (isWaiting && !isRotating.value) {
-      spin()
-    }
   }, [isRotating, isWaiting, isWaitingSV, spin])
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -107,7 +109,9 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
 
     return {
       transform: [
-        { scale: 0.5 + size / 96 + 0.125 - Math.sin(Math.abs(rotation.value - 180) / 1440) },
+        {
+          scale: 0.5 + size / 96 + 0.125 - Math.sin(Math.abs((rotation.value % 360) - 180) / 1440),
+        },
         { translateY: size / 1.25 },
         { rotate: `${rotation.value + Math.sqrt(normalizedOffset)}deg` },
       ],
@@ -115,7 +119,6 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
       height: 96,
       left: -48 + width / 2,
       bottom: -10,
-      opacity: withSpring(SHOW_ROTATION ? 1 : isWaitingSV.value ? 0.3 : 1),
     }
   })
 

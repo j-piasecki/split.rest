@@ -224,7 +224,7 @@ export default function Invites() {
           <FlatListWithHeader
             data={invites}
             showBackButton
-            refreshing={invitesLoading || isRefetchingInvites}
+            isRefreshing={invitesLoading || isRefetchingInvites}
             onRefresh={refresh}
             renderItem={({ item, index }) => (
               <Invite
