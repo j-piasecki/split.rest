@@ -10,6 +10,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import i18n from '@utils/i18n'
+import { tryInvalidateImageCache } from '@utils/imageCacheUtils'
 import { queryClient } from '@utils/queryClient'
 import { useLocales } from 'expo-localization'
 import { Stack, usePathname, useSegments } from 'expo-router'
@@ -34,6 +35,8 @@ SplashScreen.setOptions({
   duration: 250,
   fade: true,
 })
+
+tryInvalidateImageCache()
 
 Sentry.init({
   dsn: 'https://e70b6f5ed01c5af9180f540a254f551b@o4509667611639808.ingest.de.sentry.io/4509667612819536',
