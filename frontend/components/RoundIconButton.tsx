@@ -24,6 +24,7 @@ export interface RoundIconButtonProps {
   isLoading?: boolean
   tabIndex?: 0 | -1
   text?: string
+  opaque?: boolean
 }
 
 export function RoundIconButton({
@@ -37,6 +38,7 @@ export function RoundIconButton({
   isLoading,
   tabIndex,
   text,
+  opaque = false,
 }: RoundIconButtonProps) {
   const theme = useTheme()
   const [pressed, setPressed] = useState(false)
@@ -48,8 +50,12 @@ export function RoundIconButton({
         pressed
           ? `${theme.colors.onSurface}33`
           : hovered
-            ? `${theme.colors.onSurface}11`
-            : 'transparent',
+            ? opaque
+              ? `${theme.colors.onSurface}22`
+              : `${theme.colors.onSurface}11`
+            : opaque
+              ? `${theme.colors.onSurface}11`
+              : 'transparent',
         { duration: 200 }
       ),
       transform: [

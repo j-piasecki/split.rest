@@ -80,6 +80,7 @@ export type IconName =
   | 'receipt'
   | 'removeModerator'
   | 'regex'
+  | 'saveAlt'
   | 'save'
   | 'schedule'
   | 'sell'
@@ -185,6 +186,7 @@ const iconMap: Record<IconName, unknown> = {
   receipt: require('@assets/icons/receipt.svg'),
   removeModerator: require('@assets/icons/remove_moderator.svg'),
   regex: require('@assets/icons/regex.svg'),
+  saveAlt: require('@assets/icons/save_alt.svg'),
   save: require('@assets/icons/save.svg'),
   schedule: require('@assets/icons/schedule.svg'),
   sell: require('@assets/icons/sell.svg'),

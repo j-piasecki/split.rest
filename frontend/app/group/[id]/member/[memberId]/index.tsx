@@ -76,8 +76,9 @@ function DisplayNameSetter({
       >
         {canEditDisplayName && value !== null && value !== (memberInfo.displayName ?? '') && (
           <RoundIconButton
+            opaque
             color={theme.colors.secondary}
-            icon='check'
+            icon='saveAlt'
             onPress={() => setDisplayName(value)}
             size={32}
             isLoading={isChangingDisplayName}
