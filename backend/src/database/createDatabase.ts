@@ -25,6 +25,7 @@ export async function createDatabase(pool: Pool) {
       type SMALLINT NOT NULL,
       last_update BIGINT NOT NULL,
       locked BOOLEAN NOT NULL DEFAULT FALSE,
+      icon VARCHAR(36) NULL UNIQUE DEFAULT NULL,
 
       FOREIGN KEY (owner) REFERENCES users(id)
     )
