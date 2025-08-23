@@ -33,6 +33,7 @@ export const PermissionKeys = [
   'settleUpGroup',
   'manageAllowedSplitMethods',
   'seeGroupTrends',
+  'manageGroupIcon',
 ] as const
 
 export const enum SplitPermissionsDTO {
@@ -101,6 +102,7 @@ export const enum ManagePermissionsDTO {
   SettleUpGroup = 1 << 14, // Settle up the group
   ManageAllowedSplitMethods = 1 << 15, // Manage allowed split methods of the group
   SeeGroupTrends = 1 << 16, // See group trends
+  ManageGroupIcon = 1 << 17, // Manage the group icon
 }
 
 export interface GroupMemberPermissionsDTO {
@@ -337,6 +339,10 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return Boolean(this.manage & ManagePermissionsDTO.SeeGroupTrends)
   }
 
+  canManageGroupIcon(): boolean {
+    return Boolean(this.manage & ManagePermissionsDTO.ManageGroupIcon)
+  }
+
   toObject() {
     return {
       createSplit: this.canCreateSplits(),
@@ -372,6 +378,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
       settleUpGroup: this.canSettleUpGroup(),
       manageAllowedSplitMethods: this.canManageAllowedSplitMethods(),
       seeGroupTrends: this.canSeeGroupTrends(),
+      manageGroupIcon: this.canManageGroupIcon(),
     }
   }
 }
