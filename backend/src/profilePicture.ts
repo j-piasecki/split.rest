@@ -38,6 +38,17 @@ export async function uploadProfilePictureToR2(s3Client: S3Client, bucketName: s
   await s3Client.send(uploadCommand)
 }
 
+export async function uploadGroupIconToR2(s3Client: S3Client, bucketName: string, id: string) {
+  const file = fs.readFileSync(`public/groupIcon/${id}.jpg`)
+  const uploadCommand = new PutObjectCommand({
+    Bucket: bucketName,
+    Key: `group-icons/${id}.jpg`,
+    Body: file,
+    ContentType: 'image/jpg',
+  })
+  await s3Client.send(uploadCommand)
+}
+
 export async function deleteProfilePictureFromR2(
   s3Client: S3Client,
   bucketName: string,

@@ -51,6 +51,7 @@ import {
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
+  SetGroupIconArguments,
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
   SetGroupLockedArguments,
@@ -381,6 +382,54 @@ export class AppService {
           files: [`https://assets.split.rest/profile-pictures/${callerId}.jpg`],
         }),
       }
+    )
+
+    return {
+      message: 'success',
+    }
+  }
+
+  async setGroupIcon(callerId: string, args: SetGroupIconArguments, file?: Express.Multer.File) {
+    let imageBuffer: Buffer
+
+    if (file) {
+      imageBuffer = file.buffer
+    } else if (args.file.uri && args.file.type) {
+      const validatedBase64 = await new Base64ImageValidation({
+        maxSizeKb: 20,
+        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg'],
+        dimensions: {
+          minWidth: 128,
+          aspectRatio: 1,
+        },
+      }).transform({
+        imageBase64: args.file.uri,
+        imageType: args.file.type,
+      })
+      imageBuffer = validatedBase64.buffer
+    } else {
+      throw new BadRequestException('api.file.fileIsRequired')
+    }
+
+    const image = tf.node.decodeImage(imageBuffer, 3) as tf.Tensor3D
+    const predictions = await this.nsfwjsModel.classify(image)
+    image.dispose()
+
+    if (
+      predictions[0].className === 'Porn' ||
+      predictions[0].className === 'Hentai' ||
+      predictions
+        .map((p) => ({ ...p, probability: p.probability / predictions[0].probability }))
+        .filter((p) => p.className === 'Porn' || p.className === 'Hentai')
+        .some((p) => p.probability > 0.7)
+    ) {
+      throw new BadRequestException('api.file.nsfwImage')
+    }
+
+    await this.databaseService.setGroupIcon(
+      callerId,
+      { groupId: args.groupId, buffer: imageBuffer },
+      this.s3Client
     )
 
     return {

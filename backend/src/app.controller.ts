@@ -60,6 +60,7 @@ import {
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
+  SetGroupIconArguments,
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
   SetGroupLockedArguments,
@@ -110,6 +111,7 @@ import {
   isSetGroupAccessArguments,
   isSetGroupAdminArguments,
   isSetGroupHiddenArguments,
+  isSetGroupIconArguments,
   isSetGroupInviteRejectedArguments,
   isSetGroupInviteWithdrawnArguments,
   isSetGroupLockedArguments,
@@ -787,5 +789,29 @@ export class AppController {
     file?: Express.Multer.File
   ) {
     return await this.appService.setProfilePicture(request.user.sub, args, file)
+  }
+
+  @Throttle({ default: { limit: 10, ttl: 1000 * 60 * 60 * 24 } })
+  @UseGuards(AuthGuard)
+  @Post('setGroupIcon')
+  @UseInterceptors(FileInterceptor('file'))
+  async setGroupIcon(
+    @Req() request: Request,
+    @Body() args: SetGroupIconArguments,
+    @UploadedFile(
+      new FileSizeValidationPipe(20), // 20KB
+      new MimeTypeValidationPipe(['image/png', 'image/jpeg', 'image/jpg']),
+      new ImageDimensionsValidationPipe({
+        minWidth: 128,
+        aspectRatio: 1,
+      })
+    )
+    file?: Express.Multer.File
+  ) {
+    if (!isSetGroupIconArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.setGroupIcon('', args, file)
   }
 }
