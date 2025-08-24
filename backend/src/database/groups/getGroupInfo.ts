@@ -26,6 +26,7 @@ export async function getGroupInfo(
           groups.member_count,
           groups.last_update,
           groups.locked,
+          groups.icon,
           group_members.balance, 
           group_members.is_hidden, 
           group_members.is_admin, 
@@ -96,5 +97,6 @@ export async function getGroupInfo(
     locked: row.locked,
     allowedSplitMethods,
     permissions,
+    icon: row.icon,
   }
 }

@@ -22,6 +22,7 @@ export interface GroupInfo {
   type: GroupType
   lastUpdate: number
   locked: boolean
+  icon: string | null
 }
 
 export interface GroupUserInfo extends GroupInfo {
