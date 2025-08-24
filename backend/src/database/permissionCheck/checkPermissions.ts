@@ -344,6 +344,13 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'manageGroupIcon': {
+          if (!callerPermissions?.canManageGroupIcon()) {
+            return 'api.insufficientPermissions.group.manageGroupIcon'
+          }
+          continue
+        }
+
         default:
           console.log('Unknown permission required:', permission)
           return 'unknownError'

@@ -26,6 +26,7 @@ import { setGroupAccess } from './database/groups/setGroupAccess'
 import { setGroupAdmin } from './database/groups/setGroupAdmin'
 import { setGroupAllowedSplitMethods } from './database/groups/setGroupAllowedSplitMethods'
 import { setGroupHidden } from './database/groups/setGroupHidden'
+import { setGroupIcon } from './database/groups/setGroupIcon'
 import { setGroupLocked } from './database/groups/setGroupLocked'
 import { setGroupName } from './database/groups/setGroupName'
 import { setGroupInviteRejected } from './database/groups/setInviteRejected'
@@ -53,6 +54,7 @@ import { getUserById } from './database/users/getUserById'
 import { registerOrUpdateNotificationToken } from './database/users/registerOrUpdateNotificationToken'
 import { setUserName } from './database/users/setUserName'
 import { unregisterNotificationToken } from './database/users/unregisterNotificationToken'
+import { ImageService } from './image.service'
 import { Injectable } from '@nestjs/common'
 import { Pool } from 'pg'
 import {
@@ -402,5 +404,14 @@ export class DatabaseService {
   @RequirePermissions(['removeMembers'])
   async removeMember(callerId: string, args: RemoveMemberFromGroupArguments) {
     return await removeMember(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['manageGroupIcon'])
+  async setGroupIcon(
+    callerId: string,
+    args: { groupId: number; buffer: Buffer },
+    imageService: ImageService
+  ) {
+    return await setGroupIcon(this.pool, imageService, callerId, args.groupId, args.buffer)
   }
 }

@@ -272,3 +272,7 @@ export interface FileUploadArguments {
     uri?: string
   }
 }
+
+export interface SetGroupIconArguments extends FileUploadArguments {
+  groupId: number
+}

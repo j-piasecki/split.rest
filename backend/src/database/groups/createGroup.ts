@@ -95,6 +95,7 @@ export async function createGroup(
         ownerPermissions.members,
         ownerPermissions.manage
       ),
+      icon: null,
     }
   } catch (e) {
     await client.query('ROLLBACK')

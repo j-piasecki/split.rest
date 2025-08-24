@@ -46,7 +46,8 @@ export const ownerPermissions: GroupMemberPermissionsDTO = {
     ManagePermissionsDTO.LockGroup |
     ManagePermissionsDTO.SettleUpGroup |
     ManagePermissionsDTO.ManageAllowedSplitMethods |
-    ManagePermissionsDTO.SeeGroupTrends,
+    ManagePermissionsDTO.SeeGroupTrends |
+    ManagePermissionsDTO.ManageGroupIcon,
 } as const
 
 const adminPermissions: GroupMemberPermissionsDTO = {
@@ -83,7 +84,8 @@ const adminPermissions: GroupMemberPermissionsDTO = {
     ManagePermissionsDTO.ManageAllDirectInvites |
     ManagePermissionsDTO.ChangeDisplayName |
     ManagePermissionsDTO.ChangeEveryoneDisplayName |
-    ManagePermissionsDTO.SeeGroupTrends,
+    ManagePermissionsDTO.SeeGroupTrends |
+    ManagePermissionsDTO.ManageGroupIcon,
 } as const
 
 const memberPermissions: GroupMemberPermissionsDTO = {

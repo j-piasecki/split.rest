@@ -36,6 +36,7 @@ export const PermissionToFieldMap = {
   settleUpGroup: ['groupId'] as const,
   manageAllowedSplitMethods: ['groupId'] as const,
   seeGroupTrends: ['groupId'] as const,
+  manageGroupIcon: ['groupId'] as const,
 }
 
 export type PermissionToFieldMap = {

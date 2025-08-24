@@ -1,16 +1,6 @@
-import { Base64ImageValidation } from './Base64ImageValidation'
 import { DatabaseService } from './database.service'
-import { BadRequestException } from './errors/BadRequestException'
-import {
-  deleteProfilePicture,
-  deleteProfilePictureFromR2,
-  downloadProfilePicture,
-  uploadProfilePictureToR2,
-} from './profilePicture'
-import { S3Client } from '@aws-sdk/client-s3'
+import { ImageService } from './image.service'
 import { Injectable } from '@nestjs/common'
-import * as tf from '@tensorflow/tfjs-node'
-import * as nsfwjs from 'nsfwjs'
 import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
@@ -51,6 +41,7 @@ import {
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
+  SetGroupIconArguments,
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
   SetGroupLockedArguments,
@@ -63,37 +54,21 @@ import {
   UpdateSplitArguments,
   User,
 } from 'shared'
-import sharp from 'sharp'
-
-tf.enableProdMode()
 
 @Injectable()
 export class AppService {
-  private s3Client: S3Client
-  private nsfwjsModel: nsfwjs.NSFWJS
-
-  constructor(private readonly databaseService: DatabaseService) {
-    this.s3Client = new S3Client({
-      region: 'auto',
-      endpoint: process.env.R2_ENDPOINT!,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-      },
-    })
-
-    nsfwjs.load('MobileNetV2').then((model) => {
-      this.nsfwjsModel = model
-    })
-  }
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly imageService: ImageService
+  ) {}
 
   async createOrUpdateUser(user: User) {
     const updated = await this.databaseService.createOrUpdateUser(user)
 
     if (!updated && user.photoUrl) {
       try {
-        await downloadProfilePicture(user.photoUrl, user.id)
-        await uploadProfilePictureToR2(this.s3Client, process.env.R2_BUCKET_NAME!, user.id)
+        await this.imageService.downloadProfilePicture(user.photoUrl, user.id)
+        await this.imageService.uploadProfilePictureToR2(user.id)
       } catch (error) {
         console.error(`Failed to download profile picture for ${user.id}`, error)
       }
@@ -229,8 +204,8 @@ export class AppService {
 
   async deleteUser(callerId: string) {
     try {
-      await deleteProfilePicture(callerId)
-      await deleteProfilePictureFromR2(this.s3Client, process.env.R2_BUCKET_NAME!, callerId)
+      await this.imageService.deleteProfilePicture(callerId)
+      await this.imageService.deleteProfilePictureFromR2(callerId)
     } catch {
       // fail silently when profile picture deletion fails
     }
@@ -328,59 +303,25 @@ export class AppService {
   }
 
   async setProfilePicture(callerId: string, args: FileUploadArguments, file?: Express.Multer.File) {
-    let imageBuffer: Buffer
+    const imageBuffer = await this.imageService.argumentsToImageBuffer(args, file)
+    await this.imageService.ensureImageIsNotNSFW(imageBuffer)
+    await this.imageService.saveImageToFile(imageBuffer, `public/${callerId}.jpg`)
+    await this.imageService.uploadProfilePictureToR2(callerId)
+    await this.imageService.invalidateCache(`profile-pictures/${callerId}.jpg`)
 
-    if (file) {
-      imageBuffer = file.buffer
-    } else if (args.file.uri && args.file.type) {
-      const validatedBase64 = await new Base64ImageValidation({
-        maxSizeKb: 20,
-        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg'],
-        dimensions: {
-          minWidth: 128,
-          aspectRatio: 1,
-        },
-      }).transform({
-        imageBase64: args.file.uri,
-        imageType: args.file.type,
-      })
-      imageBuffer = validatedBase64.buffer
-    } else {
-      throw new BadRequestException('api.file.fileIsRequired')
+    return {
+      message: 'success',
     }
+  }
 
-    const image = tf.node.decodeImage(imageBuffer, 3) as tf.Tensor3D
-    const predictions = await this.nsfwjsModel.classify(image)
-    image.dispose()
+  async setGroupIcon(callerId: string, args: SetGroupIconArguments, file?: Express.Multer.File) {
+    const imageBuffer = await this.imageService.argumentsToImageBuffer(args, file)
+    await this.imageService.ensureImageIsNotNSFW(imageBuffer)
 
-    if (
-      predictions[0].className === 'Porn' ||
-      predictions[0].className === 'Hentai' ||
-      predictions
-        .map((p) => ({ ...p, probability: p.probability / predictions[0].probability }))
-        .filter((p) => p.className === 'Porn' || p.className === 'Hentai')
-        .some((p) => p.probability > 0.7)
-    ) {
-      throw new BadRequestException('api.file.nsfwImage')
-    }
-
-    await sharp(imageBuffer)
-      .resize(128, 128)
-      .toFormat('jpg', { quality: 80 })
-      .toFile(`public/${callerId}.jpg`)
-    await uploadProfilePictureToR2(this.s3Client, process.env.R2_BUCKET_NAME!, callerId)
-    await fetch(
-      `https://api.cloudflare.com/client/v4/zones/${process.env.CLOUDFLARE_ZONE_ID}/purge_cache`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.CLOUDFLARE_CACHE_PURGE_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          files: [`https://assets.split.rest/profile-pictures/${callerId}.jpg`],
-        }),
-      }
+    await this.databaseService.setGroupIcon(
+      callerId,
+      { groupId: args.groupId, buffer: imageBuffer },
+      this.imageService
     )
 
     return {

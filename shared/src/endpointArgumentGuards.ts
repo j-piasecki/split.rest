@@ -38,6 +38,7 @@ import {
   SetGroupAccessArguments,
   SetGroupAdminArguments,
   SetGroupHiddenArguments,
+  SetGroupIconArguments,
   SetGroupInviteRejectedArguments,
   SetGroupInviteWithdrawnArguments,
   SetGroupLockedArguments,
@@ -282,5 +283,9 @@ export function isSetAllowedSplitMethodsArguments(
 }
 
 export function isGetGroupMonthlyStatsArguments(obj: any): obj is GetGroupMonthlyStatsArguments {
+  return obj.groupId !== undefined
+}
+
+export function isSetGroupIconArguments(obj: any): obj is SetGroupIconArguments {
   return obj.groupId !== undefined
 }

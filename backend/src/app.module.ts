@@ -1,6 +1,7 @@
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { DatabaseService } from './database.service'
+import { ImageService } from './image.service'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_GUARD } from '@nestjs/core'
@@ -21,6 +22,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
   providers: [
     AppService,
     DatabaseService,
+    ImageService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard, // Applying global throttle guard
