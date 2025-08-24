@@ -1,14 +1,11 @@
 import { NotFoundException } from '../../errors/NotFoundException'
+import { ImageService } from '../../image.service'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
-import { S3Client } from '@aws-sdk/client-s3'
 import { Pool } from 'pg'
-import sharp from 'sharp'
-import { uploadGroupIconToR2 } from 'src/profilePicture'
 
 export async function setGroupIcon(
   pool: Pool,
-  s3Client: S3Client,
-  bucketName: string,
+  imageService: ImageService,
   callerId: string,
   groupId: number,
   buffer: Buffer
@@ -30,11 +27,8 @@ export async function setGroupIcon(
       groupId,
     ])
 
-    await sharp(buffer)
-      .resize(128, 128)
-      .toFormat('jpg', { quality: 80 })
-      .toFile(`public/groupIcon/${groupIconId}.jpg`)
-    await uploadGroupIconToR2(s3Client, bucketName, groupIconId)
+    await imageService.saveImageToFile(buffer, `public/groupIcon/${groupIconId}.jpg`)
+    await imageService.uploadGroupIconToR2(groupIconId)
 
     await client.query('COMMIT')
   } catch (error) {

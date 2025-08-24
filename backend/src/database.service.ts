@@ -54,7 +54,7 @@ import { getUserById } from './database/users/getUserById'
 import { registerOrUpdateNotificationToken } from './database/users/registerOrUpdateNotificationToken'
 import { setUserName } from './database/users/setUserName'
 import { unregisterNotificationToken } from './database/users/unregisterNotificationToken'
-import { S3Client } from '@aws-sdk/client-s3'
+import { ImageService } from './image.service'
 import { Injectable } from '@nestjs/common'
 import { Pool } from 'pg'
 import {
@@ -410,15 +410,8 @@ export class DatabaseService {
   async setGroupIcon(
     callerId: string,
     args: { groupId: number; buffer: Buffer },
-    s3Client: S3Client
+    imageService: ImageService
   ) {
-    return await setGroupIcon(
-      this.pool,
-      s3Client,
-      process.env.R2_BUCKET_NAME!,
-      callerId,
-      args.groupId,
-      args.buffer
-    )
+    return await setGroupIcon(this.pool, imageService, callerId, args.groupId, args.buffer)
   }
 }
