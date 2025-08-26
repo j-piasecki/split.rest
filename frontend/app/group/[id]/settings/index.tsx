@@ -4,10 +4,10 @@ import {
   ButtonWithSecondaryActions,
 } from '@components/ButtonWithSecondaryActions'
 import { ConfirmationModal } from '@components/ConfirmationModal'
-import { EditableText, EditableTextRef } from '@components/EditableText'
+import { LargeTextInput } from '@components/LargeTextInput'
 import ModalScreen from '@components/ModalScreen'
-import { Pane } from '@components/Pane'
 import { PaneButton } from '@components/PaneButton'
+import { RoundIconButton } from '@components/RoundIconButton'
 import { useSnack } from '@components/SnackBar'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
@@ -17,6 +17,7 @@ import { useSetGroupLockedMutation } from '@hooks/database/useSetGroupLocked'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useSettleUpGroup } from '@hooks/database/useSettleUpGroup'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import { useTheme } from '@styling/theme'
 import { HapticFeedback } from '@utils/hapticFeedback'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
@@ -150,18 +151,75 @@ function WrapItUpButton({ info }: { info: GroupUserInfo }) {
   )
 }
 
+function GroupNameInput({ info }: { info: GroupUserInfo }) {
+  const theme = useTheme()
+  const { t } = useTranslation()
+  const [name, setName] = useState(info.name)
+  const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
+
+  const canEditName = info.permissions.canRenameGroup()
+
+  function saveName() {
+    if (name === null || name === info.name) {
+      return
+    }
+
+    if (name.length === 0) {
+      alert(t('groupValidation.nameCannotBeEmpty'))
+      return
+    }
+
+    if (name.length > 128) {
+      alert(t('groupValidation.nameIsTooLong'))
+      return
+    }
+
+    setGroupName(name)
+  }
+
+  return (
+    <View>
+      <LargeTextInput
+        icon='title'
+        placeholder={t('groupSettings.groupName')}
+        value={name}
+        onChangeText={setName}
+        disabled={!canEditName}
+        containerStyle={{ flex: 1, paddingRight: 56 }}
+        onSubmit={saveName}
+      />
+
+      <View
+        style={{
+          position: 'absolute',
+          right: 8,
+          top: 0,
+          bottom: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {canEditName && name !== null && name !== (info.name ?? '') && (
+          <RoundIconButton
+            opaque
+            color={theme.colors.secondary}
+            icon='saveAlt'
+            onPress={saveName}
+            size={32}
+            isLoading={isSettingName}
+          />
+        )}
+      </View>
+    </View>
+  )
+}
+
 function Form({ info }: { info: GroupUserInfo }) {
   const router = useRouter()
   const { t } = useTranslation()
   const snack = useSnack()
-  const nameInputRef = React.useRef<EditableTextRef>(null)
   const insets = useModalScreenInsets()
-  const [name, setName] = useState(info.name)
-  const [isEditingName, setIsEditingName] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
-
-  const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
-
   const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
 
   return (
@@ -179,38 +237,7 @@ function Form({ info }: { info: GroupUserInfo }) {
       }}
     >
       <View style={{ gap: 16 }}>
-        <Pane
-          icon='home'
-          title={t('groupSettings.groupName')}
-          textLocation='start'
-          collapsed={false}
-          containerStyle={{ padding: 16 }}
-          collapsible={info.permissions.canRenameGroup()}
-          collapseIcon={isEditingName ? 'close' : 'editAlt'}
-          wholeHeaderInteractive={false}
-          onCollapseChange={() => {
-            if (isEditingName) {
-              nameInputRef.current?.cancel()
-            } else {
-              nameInputRef.current?.edit()
-            }
-            setIsEditingName(!isEditingName)
-          }}
-        >
-          <EditableText
-            ref={nameInputRef}
-            value={name}
-            iconHidden
-            placeholder={t('groupSettings.groupName')}
-            disabled={!info.permissions.canRenameGroup()}
-            onSubmit={(newName) => {
-              setGroupName(newName).then(() => {
-                setName(newName)
-              })
-            }}
-            isPending={isSettingName}
-          />
-        </Pane>
+        <GroupNameInput info={info} />
 
         {(info.permissions.canSeeJoinLink() || info.permissions.canManageDirectInvites()) && (
           <PaneButton
