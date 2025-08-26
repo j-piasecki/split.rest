@@ -280,11 +280,11 @@ function GroupIconInput({ info }: { info: GroupUserInfo }) {
 
       await invalidateGroupInfo(info.id)
 
-      snack.show({ message: t('settings.profilePicture.profilePictureChanged') })
+      snack.show({ message: t('settings.groupIcon.groupIconChanged') })
     } catch (e) {
       if (e instanceof ApiError) {
         if (e.statusCode === 429) {
-          alert(t('settings.profilePicture.tooManyRequests'))
+          alert(t('settings.groupIcon.tooManyRequests'))
           return
         }
 
