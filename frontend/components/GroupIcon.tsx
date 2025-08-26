@@ -47,7 +47,12 @@ export function GroupIcon({ info, size, style }: GroupIconProps) {
           borderRadius: size / 4,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: isLoading || failed ? theme.colors.surfaceBright : undefined,
+          backgroundColor:
+            isLoading || failed
+              ? theme.theme === 'dark'
+                ? theme.colors.surfaceBright
+                : theme.colors.surfaceDim
+              : undefined,
         },
         style,
       ]}

@@ -76,7 +76,12 @@ export function ProfilePicture({ userId, size, style }: ProfilePictureProps) {
           borderRadius: size / 2,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: isLoading || failed ? theme.colors.surfaceBright : undefined,
+          backgroundColor:
+            isLoading || failed
+              ? theme.theme === 'dark'
+                ? theme.colors.surfaceBright
+                : theme.colors.surfaceDim
+              : undefined,
         },
         style,
       ]}
