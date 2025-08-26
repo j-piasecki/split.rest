@@ -23,8 +23,6 @@ export async function getAllGroupMembers(groupId: number): Promise<Member[]> {
     }
 
     nextPageParam = result[result.length - 1].id
-
-    console.log('nextPageParam', nextPageParam, members)
   }
 
   return members

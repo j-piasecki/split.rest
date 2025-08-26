@@ -89,8 +89,6 @@ export function FlatListWithHeader<T>({
     }
   }
 
-  console.log('isWaiting', 'flatlist', isLoading || isRefreshing)
-
   return (
     <PullableFlatList
       {...props}
