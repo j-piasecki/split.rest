@@ -1,4 +1,5 @@
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
+import { GroupIcon } from '@components/GroupIcon'
 import { Icon } from '@components/Icon'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
@@ -57,7 +58,7 @@ export function GroupRow({ info, style }: GroupRowProps) {
     >
       <View
         style={{
-          paddingLeft: 16,
+          paddingLeft: 8,
           paddingRight: 4,
           height: GROUP_ROW_HEIGHT,
           opacity: info.hidden ? 0.7 : 1,
@@ -66,6 +67,7 @@ export function GroupRow({ info, style }: GroupRowProps) {
           justifyContent: 'space-between',
         }}
       >
+        <GroupIcon info={info} size={40} style={{ marginRight: 8 }} />
         <Text
           style={{ flex: 1, fontSize: 20, color: theme.colors.onSurface, marginRight: 8 }}
           numberOfLines={2}
