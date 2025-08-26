@@ -55,6 +55,24 @@ function DisplayNameSetter({
     groupInfo?.permissions?.canChangeEveryoneDisplayName?.() ||
     (groupInfo?.permissions?.canChangeDisplayName?.() && user?.id === memberInfo.id)
 
+  function saveDisplayName() {
+    if (value === null || value === memberInfo.displayName) {
+      return
+    }
+
+    if (value.length === 0) {
+      alert(t('api.user.nameCannotBeEmpty'))
+      return
+    }
+
+    if (value.length > 128) {
+      alert(t('api.user.nameTooLong'))
+      return
+    }
+
+    setDisplayName(value)
+  }
+
   return (
     <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
       <LargeTextInput
@@ -63,6 +81,7 @@ function DisplayNameSetter({
         value={value ?? ''}
         onChangeText={setValue}
         containerStyle={{ flex: 1, paddingRight: 56 }}
+        onSubmit={saveDisplayName}
       />
       <View
         style={{
@@ -79,7 +98,7 @@ function DisplayNameSetter({
             opaque
             color={theme.colors.secondary}
             icon='saveAlt'
-            onPress={() => setDisplayName(value)}
+            onPress={saveDisplayName}
             size={32}
             isLoading={isChangingDisplayName}
           />

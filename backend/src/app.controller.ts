@@ -812,6 +812,6 @@ export class AppController {
       throw new BadRequestException('api.invalidArguments')
     }
 
-    return await this.appService.setGroupIcon('', args, file)
+    return await this.appService.setGroupIcon(request.user.sub, args, file)
   }
 }

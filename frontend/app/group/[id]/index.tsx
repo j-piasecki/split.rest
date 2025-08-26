@@ -241,8 +241,6 @@ export default function GroupScreen() {
   const groupId = Number(id as string)
   const { data: groupInfo, error } = useGroupInfo(groupId)
 
-  console.log(groupInfo)
-
   if (error) {
     return <LoadingError />
   }

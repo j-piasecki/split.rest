@@ -1,13 +1,13 @@
 import { Button } from '@components/Button'
 import { ConfirmationModal } from '@components/ConfirmationModal'
 import { EditableText } from '@components/EditableText'
+import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
 import {
   ProfilePicture,
   getProfilePictureUrl,
   notifyProfilePictureChanged,
 } from '@components/ProfilePicture'
-import { RoundIconButton } from '@components/RoundIconButton'
 import { SegmentedButton } from '@components/SegmentedButton'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
@@ -23,7 +23,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Platform, ScrollView, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Platform, Pressable, ScrollView, View } from 'react-native'
 import { FileUploadArguments, TranslatableError, User, isTranslatableError } from 'shared'
 
 interface DeleteAccountModalProps {
@@ -179,21 +179,25 @@ function Form({ user }: { user: User }) {
       <View style={{ gap: 24, alignItems: 'center', paddingHorizontal: 16 }}>
         <View style={{ alignItems: 'center', gap: 4, alignSelf: 'stretch' }}>
           <View style={{ width: '100%', alignItems: 'center' }}>
-            <ProfilePicture userId={user?.id} size={128} />
-            <View
-              style={[
-                StyleSheet.absoluteFillObject,
-                { justifyContent: 'center', alignItems: 'center' },
-              ]}
-            >
-              <RoundIconButton
-                size={48}
-                icon='upload'
-                onPress={changeProfilePicture}
-                isLoading={isChangingProfilePicture}
-                containerStyle={{ marginLeft: 200 }}
-              />
-            </View>
+            <Pressable onPress={changeProfilePicture}>
+              <ProfilePicture userId={user?.id} size={128} />
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0,
+                  backgroundColor: theme.colors.surfaceContainerHighest,
+                  borderRadius: 24,
+                  padding: 4,
+                }}
+              >
+                {isChangingProfilePicture ? (
+                  <ActivityIndicator size='small' color={theme.colors.tertiary} />
+                ) : (
+                  <Icon name='upload' size={24} color={theme.colors.tertiary} />
+                )}
+              </View>
+            </Pressable>
           </View>
           <EditableText
             value={user?.name}

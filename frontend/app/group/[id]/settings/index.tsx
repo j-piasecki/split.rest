@@ -4,10 +4,12 @@ import {
   ButtonWithSecondaryActions,
 } from '@components/ButtonWithSecondaryActions'
 import { ConfirmationModal } from '@components/ConfirmationModal'
-import { EditableText, EditableTextRef } from '@components/EditableText'
+import { GroupIcon } from '@components/GroupIcon'
+import { Icon } from '@components/Icon'
+import { LargeTextInput } from '@components/LargeTextInput'
 import ModalScreen from '@components/ModalScreen'
-import { Pane } from '@components/Pane'
 import { PaneButton } from '@components/PaneButton'
+import { RoundIconButton } from '@components/RoundIconButton'
 import { useSnack } from '@components/SnackBar'
 import { useDeleteGroup } from '@hooks/database/useDeleteGroup'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
@@ -17,13 +19,24 @@ import { useSetGroupLockedMutation } from '@hooks/database/useSetGroupLocked'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useSettleUpGroup } from '@hooks/database/useSettleUpGroup'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import ImageEditor from '@react-native-community/image-editor'
+import { useTheme } from '@styling/theme'
 import { HapticFeedback } from '@utils/hapticFeedback'
+import { ApiError, makeRequest, makeRequestWithFile } from '@utils/makeApiRequest'
+import { invalidateGroupInfo } from '@utils/queryClient'
+import * as ImagePicker from 'expo-image-picker'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
-import { GroupUserInfo, SplitType, isTranslatableError } from 'shared'
+import { ActivityIndicator, Platform, Pressable, ScrollView, View } from 'react-native'
+import {
+  GroupUserInfo,
+  SetGroupIconArguments,
+  SplitType,
+  TranslatableError,
+  isTranslatableError,
+} from 'shared'
 
 function WrapItUpButton({ info }: { info: GroupUserInfo }) {
   const { t } = useTranslation()
@@ -150,18 +163,184 @@ function WrapItUpButton({ info }: { info: GroupUserInfo }) {
   )
 }
 
+function GroupNameInput({ info }: { info: GroupUserInfo }) {
+  const theme = useTheme()
+  const { t } = useTranslation()
+  const [name, setName] = useState(info.name)
+  const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
+
+  const canEditName = info.permissions.canRenameGroup()
+
+  function saveName() {
+    if (name === null || name === info.name) {
+      return
+    }
+
+    if (name.length === 0) {
+      alert(t('groupValidation.nameCannotBeEmpty'))
+      return
+    }
+
+    if (name.length > 128) {
+      alert(t('groupValidation.nameIsTooLong'))
+      return
+    }
+
+    setGroupName(name)
+  }
+
+  return (
+    <View>
+      <LargeTextInput
+        icon='title'
+        placeholder={t('groupSettings.groupName')}
+        value={name}
+        onChangeText={setName}
+        disabled={!canEditName}
+        containerStyle={{ flex: 1, paddingRight: 56 }}
+        onSubmit={saveName}
+      />
+
+      <View
+        style={{
+          position: 'absolute',
+          right: 8,
+          top: 0,
+          bottom: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {canEditName && name !== null && name !== (info.name ?? '') && (
+          <RoundIconButton
+            opaque
+            color={theme.colors.secondary}
+            icon='saveAlt'
+            onPress={saveName}
+            size={32}
+            isLoading={isSettingName}
+          />
+        )}
+      </View>
+    </View>
+  )
+}
+
+function GroupIconInput({ info }: { info: GroupUserInfo }) {
+  const theme = useTheme()
+  const snack = useSnack()
+  const { t } = useTranslation()
+  const [isChangingIcon, setIsChangingIcon] = useState(false)
+
+  async function changeGroupIcon() {
+    try {
+      setIsChangingIcon(true)
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        aspect: [1, 1],
+      })
+
+      if (result.canceled) {
+        return
+      }
+
+      if (result.assets.length === 0 || !result.assets[0].uri) {
+        throw new TranslatableError('settings.groupIcon.noImageSelected')
+      }
+
+      const width = result.assets[0].width
+      const height = result.assets[0].height
+      const size = Math.min(width, height)
+
+      const image = await ImageEditor.cropImage(result.assets[0].uri, {
+        offset: { x: (width - size) / 2, y: (height - size) / 2 },
+        size: { width: size, height: size },
+        displaySize: { width: 128, height: 128 },
+      })
+
+      if (Platform.OS === 'web') {
+        await makeRequest<SetGroupIconArguments, void>('POST', 'setGroupIcon', {
+          groupId: info.id,
+          file: {
+            type: image.type,
+            uri: image.uri,
+          },
+        })
+      } else {
+        await makeRequestWithFile<SetGroupIconArguments, void>('POST', 'setGroupIcon', {
+          groupId: info.id,
+          file: {
+            name: image.name,
+            type: image.type,
+            uri: image.uri,
+          },
+        })
+      }
+
+      await invalidateGroupInfo(info.id)
+
+      snack.show({ message: t('settings.groupIcon.groupIconChanged') })
+    } catch (e) {
+      if (e instanceof ApiError) {
+        if (e.statusCode === 429) {
+          alert(t('settings.groupIcon.tooManyRequests'))
+          return
+        }
+
+        alert(t(e.message, e.args))
+      } else if (isTranslatableError(e)) {
+        alert(t(e.message, e.args))
+      } else {
+        alert(t('api.auth.tryAgain'))
+      }
+    } finally {
+      setIsChangingIcon(false)
+    }
+  }
+
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Pressable
+        style={{
+          width: 128,
+          height: 128,
+          backgroundColor: theme.colors.surfaceContainer,
+          borderRadius: 32,
+        }}
+        disabled={!info.permissions.canManageGroupIcon()}
+        onPress={changeGroupIcon}
+      >
+        <GroupIcon info={info} size={128} />
+        {info.permissions.canManageGroupIcon() && (
+          <View
+            style={{
+              position: 'absolute',
+              bottom: -8,
+              right: -8,
+              backgroundColor: theme.colors.surfaceContainerHighest,
+              borderRadius: 24,
+              padding: 4,
+            }}
+          >
+            {isChangingIcon ? (
+              <ActivityIndicator size='small' color={theme.colors.tertiary} />
+            ) : (
+              <Icon name='upload' size={24} color={theme.colors.tertiary} />
+            )}
+          </View>
+        )}
+      </Pressable>
+    </View>
+  )
+}
+
 function Form({ info }: { info: GroupUserInfo }) {
   const router = useRouter()
   const { t } = useTranslation()
   const snack = useSnack()
-  const nameInputRef = React.useRef<EditableTextRef>(null)
   const insets = useModalScreenInsets()
-  const [name, setName] = useState(info.name)
-  const [isEditingName, setIsEditingName] = useState(false)
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
-
-  const { mutateAsync: setGroupName, isPending: isSettingName } = useSetGroupNameMutation(info.id)
-
   const { mutateAsync: deleteGroup, isPending: isDeletingGroup } = useDeleteGroup()
 
   return (
@@ -179,38 +358,8 @@ function Form({ info }: { info: GroupUserInfo }) {
       }}
     >
       <View style={{ gap: 16 }}>
-        <Pane
-          icon='home'
-          title={t('groupSettings.groupName')}
-          textLocation='start'
-          collapsed={false}
-          containerStyle={{ padding: 16 }}
-          collapsible={info.permissions.canRenameGroup()}
-          collapseIcon={isEditingName ? 'close' : 'editAlt'}
-          wholeHeaderInteractive={false}
-          onCollapseChange={() => {
-            if (isEditingName) {
-              nameInputRef.current?.cancel()
-            } else {
-              nameInputRef.current?.edit()
-            }
-            setIsEditingName(!isEditingName)
-          }}
-        >
-          <EditableText
-            ref={nameInputRef}
-            value={name}
-            iconHidden
-            placeholder={t('groupSettings.groupName')}
-            disabled={!info.permissions.canRenameGroup()}
-            onSubmit={(newName) => {
-              setGroupName(newName).then(() => {
-                setName(newName)
-              })
-            }}
-            isPending={isSettingName}
-          />
-        </Pane>
+        <GroupIconInput info={info} />
+        <GroupNameInput info={info} />
 
         {(info.permissions.canSeeJoinLink() || info.permissions.canManageDirectInvites()) && (
           <PaneButton
