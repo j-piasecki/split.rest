@@ -4,6 +4,8 @@ import {
   ButtonWithSecondaryActions,
 } from '@components/ButtonWithSecondaryActions'
 import { ConfirmationModal } from '@components/ConfirmationModal'
+import { GroupIcon } from '@components/GroupIcon'
+import { Icon } from '@components/Icon'
 import { LargeTextInput } from '@components/LargeTextInput'
 import ModalScreen from '@components/ModalScreen'
 import { PaneButton } from '@components/PaneButton'
@@ -17,14 +19,24 @@ import { useSetGroupLockedMutation } from '@hooks/database/useSetGroupLocked'
 import { useSetGroupNameMutation } from '@hooks/database/useSetGroupName'
 import { useSettleUpGroup } from '@hooks/database/useSettleUpGroup'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import ImageEditor from '@react-native-community/image-editor'
 import { useTheme } from '@styling/theme'
 import { HapticFeedback } from '@utils/hapticFeedback'
+import { ApiError, makeRequest, makeRequestWithFile } from '@utils/makeApiRequest'
+import { invalidateGroupInfo } from '@utils/queryClient'
+import * as ImagePicker from 'expo-image-picker'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
-import { GroupUserInfo, SplitType, isTranslatableError } from 'shared'
+import { ActivityIndicator, Platform, Pressable, ScrollView, View } from 'react-native'
+import {
+  GroupUserInfo,
+  SetGroupIconArguments,
+  SplitType,
+  TranslatableError,
+  isTranslatableError,
+} from 'shared'
 
 function WrapItUpButton({ info }: { info: GroupUserInfo }) {
   const { t } = useTranslation()
@@ -214,6 +226,115 @@ function GroupNameInput({ info }: { info: GroupUserInfo }) {
   )
 }
 
+function GroupIconInput({ info }: { info: GroupUserInfo }) {
+  const theme = useTheme()
+  const snack = useSnack()
+  const { t } = useTranslation()
+  const [isChangingIcon, setIsChangingIcon] = useState(false)
+
+  async function changeGroupIcon() {
+    try {
+      setIsChangingIcon(true)
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        aspect: [1, 1],
+      })
+
+      if (result.canceled) {
+        return
+      }
+
+      if (result.assets.length === 0 || !result.assets[0].uri) {
+        throw new TranslatableError('settings.groupIcon.noImageSelected')
+      }
+
+      const width = result.assets[0].width
+      const height = result.assets[0].height
+      const size = Math.min(width, height)
+
+      const image = await ImageEditor.cropImage(result.assets[0].uri, {
+        offset: { x: (width - size) / 2, y: (height - size) / 2 },
+        size: { width: size, height: size },
+        displaySize: { width: 128, height: 128 },
+      })
+
+      if (Platform.OS === 'web') {
+        await makeRequest<SetGroupIconArguments, void>('POST', 'setGroupIcon', {
+          groupId: info.id,
+          file: {
+            type: image.type,
+            uri: image.uri,
+          },
+        })
+      } else {
+        await makeRequestWithFile<SetGroupIconArguments, void>('POST', 'setGroupIcon', {
+          groupId: info.id,
+          file: {
+            name: image.name,
+            type: image.type,
+            uri: image.uri,
+          },
+        })
+      }
+
+      await invalidateGroupInfo(info.id)
+
+      snack.show({ message: t('settings.profilePicture.profilePictureChanged') })
+    } catch (e) {
+      if (e instanceof ApiError) {
+        if (e.statusCode === 429) {
+          alert(t('settings.profilePicture.tooManyRequests'))
+          return
+        }
+
+        alert(t(e.message, e.args))
+      } else if (isTranslatableError(e)) {
+        alert(t(e.message, e.args))
+      } else {
+        alert(t('api.auth.tryAgain'))
+      }
+    } finally {
+      setIsChangingIcon(false)
+    }
+  }
+
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Pressable
+        style={{
+          width: 128,
+          height: 128,
+          backgroundColor: theme.colors.surfaceContainer,
+          borderRadius: 32,
+        }}
+        disabled={!info.permissions.canManageGroupIcon()}
+        onPress={changeGroupIcon}
+      >
+        <GroupIcon info={info} size={128} />
+        {info.permissions.canManageGroupIcon() && (
+          <View
+            style={{
+              position: 'absolute',
+              bottom: -8,
+              right: -8,
+              backgroundColor: theme.colors.surfaceContainerHighest,
+              borderRadius: 24,
+              padding: 4,
+            }}
+          >
+            {isChangingIcon ? (
+              <ActivityIndicator size='small' color={theme.colors.tertiary} />
+            ) : (
+              <Icon name='upload' size={24} color={theme.colors.tertiary} />
+            )}
+          </View>
+        )}
+      </Pressable>
+    </View>
+  )
+}
+
 function Form({ info }: { info: GroupUserInfo }) {
   const router = useRouter()
   const { t } = useTranslation()
@@ -237,6 +358,7 @@ function Form({ info }: { info: GroupUserInfo }) {
       }}
     >
       <View style={{ gap: 16 }}>
+        <GroupIconInput info={info} />
         <GroupNameInput info={info} />
 
         {(info.permissions.canSeeJoinLink() || info.permissions.canManageDirectInvites()) && (
