@@ -45,15 +45,17 @@ export function getProfilePictureUrl(userId?: string) {
     : `https://assets.split.rest/profile-pictures/${userId}.jpg`
 }
 
-export type ProfilePictureProps = {
-  user?: User
-  size: number
-  style?: StyleProp<ViewStyle>
-} | {
-  pictureId: string
-  size: number
-  style?: StyleProp<ViewStyle>
-}
+export type ProfilePictureProps =
+  | {
+      user?: User
+      size: number
+      style?: StyleProp<ViewStyle>
+    }
+  | {
+      pictureId: string
+      size: number
+      style?: StyleProp<ViewStyle>
+    }
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const defaultProfilePicture = require('@assets/icons/user.svg')
