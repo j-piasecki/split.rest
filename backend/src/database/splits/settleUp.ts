@@ -238,7 +238,8 @@ export async function settleUp(
             group_members.balance,
             group_members.has_access,
             group_members.is_admin,
-            group_members.display_name
+            group_members.display_name,
+            users.picture_id
           FROM group_members 
           JOIN users ON group_members.user_id = users.id 
           WHERE group_id = $1 
@@ -255,6 +256,7 @@ export async function settleUp(
       hasAccess: row.has_access,
       isAdmin: row.is_admin,
       displayName: row.display_name,
+      pictureId: row.picture_id,
     }))
 
     const currency = (

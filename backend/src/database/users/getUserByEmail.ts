@@ -8,7 +8,9 @@ export async function getUserByEmail(
   args: GetUserByEmailArguments
 ): Promise<User> {
   const rows = (
-    await pool.query('SELECT id, name, email, deleted FROM users WHERE email = $1', [args.email])
+    await pool.query('SELECT id, name, email, deleted, picture_id FROM users WHERE email = $1', [
+      args.email,
+    ])
   ).rows
 
   if (rows.length === 0) {
@@ -20,5 +22,6 @@ export async function getUserByEmail(
     name: rows[0].name,
     email: rows[0].email,
     deleted: rows[0].deleted,
+    pictureId: rows[0].picture_id,
   }
 }

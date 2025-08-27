@@ -29,6 +29,7 @@ export async function getGroupSplits(
           users.name AS paid_by_name,
           users.email AS paid_by_email,
           users.deleted AS paid_by_deleted,
+          users.picture_id AS paid_by_picture_id,
           (SELECT EXISTS (SELECT 1 FROM split_participants WHERE split_participants.split_id = splits.id AND pending = true)) AS pending,
           (SELECT change FROM split_participants WHERE split_participants.split_id = splits.id AND split_participants.user_id = $3) AS user_change,
           ${
@@ -69,6 +70,7 @@ export async function getGroupSplits(
       name: row.paid_by_name,
       email: row.paid_by_email,
       deleted: row.paid_by_deleted,
+      pictureId: row.paid_by_picture_id,
     },
     createdById: row.created_by,
     timestamp: Number(row.timestamp),

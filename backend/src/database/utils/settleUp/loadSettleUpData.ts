@@ -11,6 +11,7 @@ export async function loadSettleUpData(client: pg.Client | pg.PoolClient, groupI
           users.name,
           users.email, 
           users.deleted,
+          users.picture_id,
           group_members.balance,
           group_members.has_access,
           group_members.is_admin,
@@ -31,6 +32,7 @@ export async function loadSettleUpData(client: pg.Client | pg.PoolClient, groupI
     hasAccess: row.has_access,
     isAdmin: row.is_admin,
     displayName: row.display_name,
+    pictureId: row.picture_id,
   }))
 
   const pendingChanges: TargetedBalanceChange[] = (

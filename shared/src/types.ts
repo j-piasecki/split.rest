@@ -5,6 +5,7 @@ export interface User {
   name: string
   email: string | null
   deleted: boolean
+  pictureId: string | null
 }
 
 export enum GroupType {

@@ -181,6 +181,7 @@ export async function queryGroupSplits(
       users.name AS paid_by_name,
       users.email AS paid_by_email,
       users.deleted AS paid_by_deleted,
+      users.picture_id AS paid_by_picture_id,
       (SELECT EXISTS (
         SELECT 1 FROM split_participants 
         WHERE split_participants.split_id = splits.id AND pending = true
@@ -206,7 +207,7 @@ export async function queryGroupSplits(
     INNER JOIN split_participants ON splits.id = split_participants.split_id
     LEFT JOIN users ON users.id = splits.paid_by
     WHERE ${whereClauses.join(' AND ')}
-    GROUP BY splits.id, users.name, users.email, users.deleted
+    GROUP BY splits.id, users.name, users.email, users.deleted, users.picture_id
     ${havingClause}
     ${orderClause}
     LIMIT 20
@@ -224,6 +225,7 @@ export async function queryGroupSplits(
       name: row.paid_by_name,
       email: row.paid_by_email,
       deleted: row.paid_by_deleted,
+      pictureId: row.paid_by_picture_id,
     },
     createdById: row.created_by,
     timestamp: Number(row.timestamp),

@@ -34,6 +34,7 @@ export async function getSplitInfo(
           users.name, 
           users.email, 
           users.deleted,
+          users.picture_id,
           group_members.balance,
           group_members.has_access,
           group_members.is_admin,
@@ -75,6 +76,7 @@ export async function getSplitInfo(
       hasAccess: p.has_access,
       isAdmin: p.is_admin,
       displayName: p.display_name,
+      pictureId: p.picture_id,
     })),
   }
 }

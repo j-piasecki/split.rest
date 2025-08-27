@@ -81,6 +81,7 @@ export async function getSettleUpPreview(
           isAdmin: member.isAdmin,
           hasAccess: member.hasAccess,
           displayName: member.displayName,
+          pictureId: member.pictureId,
         }
       }),
     }

@@ -69,7 +69,7 @@ export function ProfilePicture({ size, style, ...props }: ProfilePictureProps) {
   const imageSize = failed ? size * 0.65 : size
 
   // @ts-expect-error TS is dumb again
-  const pictureId = 'user' in props ? props.user?.id : props.pictureId
+  const pictureId = 'user' in props ? props.user?.pictureId : props.pictureId
 
   useEffect(() => {
     return addProfilePictureListener(pictureId, () => {

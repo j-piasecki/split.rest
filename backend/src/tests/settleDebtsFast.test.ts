@@ -13,6 +13,7 @@ function createMember(id: string, balance: string, hasAccess: boolean, deleted: 
     email: `user_${id}@email.com`,
     name: `User ${id}`,
     displayName: null,
+    pictureId: null,
   }
 }
 

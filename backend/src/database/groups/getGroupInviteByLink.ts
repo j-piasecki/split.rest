@@ -25,7 +25,8 @@ export async function getGroupInviteByLink(
         users.id as inviter_id,
         users.name as inviter_name,
         users.email as inviter_email,
-        users.deleted as inviter_deleted
+        users.deleted as inviter_deleted,
+        users.picture_id as inviter_picture_id
       FROM
         groups 
       JOIN group_join_links ON groups.id = group_join_links.group_id
@@ -41,16 +42,14 @@ export async function getGroupInviteByLink(
     throw new NotFoundException('api.notFound.group')
   }
 
-  const { rows: groupMemberIds } = await pool.query<{ user_id: string }>(
+  const { rows: groupMemberIds } = await pool.query<{ user_id: string; picture_id: string }>(
     `
       SELECT
-        user_id
-      FROM
-        group_members
-      WHERE
-        group_id = $1
-      ORDER BY
-        user_id
+        users.id as user_id,
+        users.picture_id as picture_id
+      FROM group_members INNER JOIN users ON users.id = group_members.user_id
+      WHERE group_id = $1
+      ORDER BY user_id
       LIMIT 20
     `,
     [rows[0].group_id]
@@ -88,11 +87,11 @@ export async function getGroupInviteByLink(
       name: rows[0].inviter_name,
       email: rows[0].inviter_email,
       deleted: rows[0].inviter_deleted,
+      pictureId: rows[0].inviter_picture_id,
     },
     // TODO: remove after deployed for a while
     memberIds: groupMemberIds.map((row) => row.user_id),
-    // TODO: map to actual profile pictures
-    profilePictures: groupMemberIds.map((row) => row.user_id),
+    profilePictures: groupMemberIds.map((row) => row.picture_id),
     createdAt: rows[0].created_at,
     rejected: false,
     withdrawn: false,

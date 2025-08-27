@@ -8,7 +8,8 @@ export async function createDatabase(pool: Pool) {
       email VARCHAR(512) NULL UNIQUE,
       created_at BIGINT NOT NULL,
       photo_url VARCHAR(512) NULL,
-      deleted BOOLEAN NOT NULL DEFAULT FALSE
+      deleted BOOLEAN NOT NULL DEFAULT FALSE,
+      picture_id VARCHAR(36) NULL UNIQUE DEFAULT NULL
     )
   `)
 

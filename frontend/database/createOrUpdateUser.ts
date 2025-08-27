@@ -13,6 +13,7 @@ export async function createOrUpdateUser() {
     email: auth.currentUser.email!,
     photoUrl: auth.currentUser.photoURL,
     deleted: false,
+    pictureId: null,
   }
 
   await makeRequest<CreateOrUpdateUserArguments, void>('POST', 'createOrUpdateUser', user)
