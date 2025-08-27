@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
-import { addCachedSplit, invalidateGroup } from '@utils/queryClient'
+import { invalidateGroup } from '@utils/queryClient'
 import { SettleUpArguments, SplitInfo, TranslatableError } from 'shared'
 
 async function settleUp(groupId?: number): Promise<SplitInfo> {
@@ -15,7 +15,6 @@ async function settleUp(groupId?: number): Promise<SplitInfo> {
     throw new TranslatableError('api.split.settleUpFailed')
   }
 
-  await addCachedSplit(args.groupId, splitInfo)
   await invalidateGroup(args.groupId)
 
   return splitInfo

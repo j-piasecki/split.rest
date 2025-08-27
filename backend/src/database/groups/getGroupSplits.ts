@@ -26,6 +26,9 @@ export async function getGroupSplits(
           splits.version,
           splits.deleted,
           splits.type,
+          users.name AS paid_by_name,
+          users.email AS paid_by_email,
+          users.deleted AS paid_by_deleted,
           (SELECT EXISTS (SELECT 1 FROM split_participants WHERE split_participants.split_id = splits.id AND pending = true)) AS pending,
           (SELECT change FROM split_participants WHERE split_participants.split_id = splits.id AND split_participants.user_id = $3) AS user_change,
           ${
@@ -41,7 +44,9 @@ export async function getGroupSplits(
                     (SELECT 1 FROM split_participants_edits WHERE split_participants_edits.split_id = splits.id AND split_participants_edits.user_id = $3)
                  )) AS user_participating`
           }
-        FROM splits INNER JOIN split_participants ON splits.id = split_participants.split_id
+        FROM splits
+          INNER JOIN split_participants ON splits.id = split_participants.split_id
+          INNER JOIN users ON users.id = splits.paid_by
         WHERE
           group_id = $1
           ${args.onlyIfIncluded ? 'AND split_participants.user_id = $3' : ''}
@@ -54,11 +59,17 @@ export async function getGroupSplits(
     )
   ).rows
 
-  return rows.map((row) => ({
+  return rows.map<SplitInfo>((row) => ({
     id: row.id,
     title: row.name,
     total: row.total,
     paidById: row.paid_by,
+    paidBy: {
+      id: row.paid_by,
+      name: row.paid_by_name,
+      email: row.paid_by_email,
+      deleted: row.paid_by_deleted,
+    },
     createdById: row.created_by,
     timestamp: Number(row.timestamp),
     version: row.version,

@@ -38,7 +38,7 @@ function getVisibleBalanceChange(
   user: MaybeMemberWithPendingBalanceChange,
   splitInfo: SplitWithUsers
 ) {
-  const paidByThis = splitInfo.paidById === user.id
+  const paidByThis = splitInfo.paidBy?.id === user.id
   let paidInThisSplit = user.change
 
   if (isInversedSplit(splitInfo.type)) {
@@ -72,7 +72,7 @@ function PaidAmount({
   groupInfo?: GroupUserInfo
 }) {
   const theme = useTheme()
-  const paidByThis = splitInfo.paidById === user.id
+  const paidByThis = splitInfo.paidBy?.id === user.id
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { t } = useTranslation()
 
@@ -144,11 +144,11 @@ function UserRow({
     splitInfo.id
   )
 
-  const paidByThis = splitInfo.paidById === user.id
+  const paidByThis = splitInfo.paidBy?.id === user.id
   const canCompleteSplit =
     showCompleteButton &&
     user.pending &&
-    (appUser?.id === splitInfo.paidById || appUser?.id === user.id)
+    (appUser?.id === splitInfo.paidBy?.id || appUser?.id === user.id)
 
   const showBadge = (user.pending && showCompleteButton) || !user.hasAccess
 
@@ -626,11 +626,11 @@ export function SplitInfo({
     setSelectedVersion(latestVersion)
   }, [latestVersion])
 
-  const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)
+  const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidBy?.id)
 
   const isSettleUp = isSettleUpSplit(splitInfo.type)
   const usersToShow = splitInfo.users.filter((user) => {
-    if (isSettleUp && user.id === splitInfo.paidById) {
+    if (isSettleUp && user.id === splitInfo.paidBy?.id) {
       return false
     }
 

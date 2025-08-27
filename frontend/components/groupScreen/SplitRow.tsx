@@ -213,7 +213,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
           {isBalanceChange ? (
             <Icon name='barChart' size={24} color={theme.colors.tertiary} />
           ) : (
-            <ProfilePicture user={split.paidById} size={32} />
+            <ProfilePicture user={split.paidBy} size={32} />
           )}
 
           {showBadge && (

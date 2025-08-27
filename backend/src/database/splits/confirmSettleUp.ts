@@ -14,6 +14,7 @@ import {
   CurrencyUtils,
   SplitInfo,
   SplitType,
+  User,
 } from 'shared'
 import NotificationUtils from 'src/notifications/NotificationUtils'
 
@@ -69,7 +70,7 @@ async function dispatchNotifications(
 
 async function createAndSaveSettleUpSplit(
   client: PoolClient,
-  callerId: string,
+  caller: User,
   total: number,
   entries: BalanceChange[],
   groupId: number,
@@ -77,10 +78,10 @@ async function createAndSaveSettleUpSplit(
 ): Promise<SplitInfo> {
   const splitType = SplitType.SettleUp | (total > 0 ? SplitType.Inversed : SplitType.Normal)
 
-  const splitId = await createSplitNoTransaction(client, callerId, {
+  const splitId = await createSplitNoTransaction(client, caller.id, {
     groupId: groupId,
     total: Math.abs(total).toFixed(2),
-    paidBy: callerId,
+    paidBy: caller.id,
     title: 'Settle up',
     timestamp: Date.now(),
     balances: entries,
@@ -88,14 +89,15 @@ async function createAndSaveSettleUpSplit(
     currency: currency,
   })
 
-  await dispatchNotifications(client, callerId, groupId, splitId, entries)
+  await dispatchNotifications(client, caller.id, groupId, splitId, entries)
 
   return {
     id: splitId,
     version: 1,
     total: Math.abs(total).toFixed(2),
-    paidById: callerId,
-    createdById: callerId,
+    paidBy: caller,
+    paidById: caller.id,
+    createdById: caller.id,
     title: 'Settle up',
     timestamp: Date.now(),
     updatedAt: Date.now(),
@@ -154,7 +156,7 @@ export async function confirmSettleUp(
     const total = entries.reduce((acc, entry) => acc + Number(entry.change), 0)
     const split = await createAndSaveSettleUpSplit(
       client,
-      callerId,
+      settleUpData.members.find((member) => member.id === callerId)!,
       total,
       entries,
       args.groupId,

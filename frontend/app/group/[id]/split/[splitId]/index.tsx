@@ -87,7 +87,7 @@ export default function SplitInfoScreen() {
       await updateSplit({
         groupId: Number(id),
         splitId: split.id,
-        paidBy: split.paidById,
+        paidBy: split.paidBy?.id,
         title: split.title,
         total: split.total,
         timestamp: split.timestamp,
@@ -190,7 +190,7 @@ export default function SplitInfoScreen() {
                           value: user.change,
                         }))
                       )
-                      .setPaidById(history[0].paidById ?? null)
+                      .setPaidById(history[0].paidBy?.id ?? null)
                       .setTitle(history[0].title)
                       .setTotalAmount(history[0].total)
                       .setTimestamp(history[0].timestamp)

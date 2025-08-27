@@ -29,7 +29,7 @@ function ActionableSplit({
   const [hovered, setHovered] = useState(false)
 
   const inverseSplit = isInversedSplit(split.type)
-  const paidByThis = split.paidById === user.id
+  const paidByThis = split.paidBy?.id === user.id
 
   const userChange = currency(split.userChange ?? 0)
   const pendingChange = paidByThis
@@ -106,7 +106,7 @@ function ActionableSplit({
             gap: 16,
           }}
         >
-          <ProfilePicture size={32} userId={split.paidById} />
+          <ProfilePicture size={32} user={split.paidBy} />
           <Text
             numberOfLines={1}
             adjustsFontSizeToFit
@@ -140,7 +140,7 @@ export function ActionableSplitsPane({
   })
 
   const actionableSplits = splits.filter((split) => {
-    if (split.paidById === user.id) {
+    if (split.paidBy?.id === user.id) {
       return true
     }
 

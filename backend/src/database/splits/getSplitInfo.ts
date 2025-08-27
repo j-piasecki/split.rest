@@ -56,6 +56,7 @@ export async function getSplitInfo(
     title: splitRow.name,
     total: splitRow.total,
     timestamp: Number(splitRow.timestamp),
+    paidBy: participants.find((p) => p.id === splitRow.paid_by)!,
     paidById: splitRow.paid_by,
     createdById: splitRow.created_by,
     version: splitRow.version,

@@ -98,6 +98,7 @@ export async function getSplitHistory(
         title: row.name,
         total: row.total,
         timestamp: Number(row.timestamp),
+        paidBy: participants.find((p) => p.id === row.paid_by)!,
         paidById: row.paid_by,
         createdById: row.created_by,
         version: row.version,

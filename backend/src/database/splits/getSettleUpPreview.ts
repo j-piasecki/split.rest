@@ -58,6 +58,7 @@ export async function getSettleUpPreview(
       id: -1,
       version: 1,
       total: Math.abs(total).toFixed(2),
+      paidBy: settleUpData.members.find((member) => member.id === callerId)!,
       paidById: callerId,
       createdById: callerId,
       title: 'Settle up',

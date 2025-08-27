@@ -184,6 +184,7 @@ async function createAndSaveSettleUpSplit(
     id: splitId,
     version: 1,
     total: Math.abs(balance).toFixed(2),
+    paidBy: members.find((m) => m.id === callerId)!,
     paidById: callerId,
     createdById: callerId,
     title: 'Settle up',
