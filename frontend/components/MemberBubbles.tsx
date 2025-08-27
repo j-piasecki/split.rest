@@ -107,7 +107,7 @@ function useBubbles(
 }
 
 export function MemberBubbles({
-  memberIds,
+  profilePictures,
   width,
   height,
   info,
@@ -115,12 +115,12 @@ export function MemberBubbles({
 }: {
   width: number
   height: number
-  memberIds: string[]
+  profilePictures: string[]
   info: GroupInfo | undefined
   middleIconSize?: number
 }) {
   const theme = useTheme()
-  const bubbles = useBubbles(memberIds.length, width, height, middleIconSize)
+  const bubbles = useBubbles(profilePictures.length, width, height, middleIconSize)
 
   return (
     <View
@@ -150,7 +150,7 @@ export function MemberBubbles({
             borderRadius: bubble.size / 2,
           }}
         >
-          <ProfilePicture key={index} size={bubble.size} userId={memberIds[index]} />
+          <ProfilePicture key={index} size={bubble.size} pictureId={profilePictures[index]} />
         </Animated.View>
       ))}
 

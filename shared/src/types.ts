@@ -4,8 +4,8 @@ export interface User {
   id: string
   name: string
   email: string | null
-  photoUrl: string | null
   deleted: boolean
+  pictureId: string | null
 }
 
 export enum GroupType {
@@ -126,6 +126,8 @@ export interface SplitInfo {
   title: string
   total: string
   timestamp: number
+  paidBy?: User
+  // TODO: Remove this when deployed for a while
   paidById?: string
   createdById: string
   version: number
@@ -198,6 +200,7 @@ export interface GroupInviteWithGroupInfo extends GroupInvite {
 
 export interface GroupInviteWithGroupInfoAndMemberIds extends GroupInviteWithGroupInfo {
   memberIds: string[]
+  profilePictures: string[]
 }
 
 export interface GroupInviteWithInvitee extends GroupInvite {
@@ -209,7 +212,6 @@ export function isUser(obj: any): obj is User {
     obj.id !== undefined &&
     obj.name !== undefined &&
     obj.email !== undefined &&
-    obj.photoUrl !== undefined &&
     obj.deleted !== undefined
   )
 }

@@ -1,4 +1,8 @@
-import { BalanceChange, SplitInfo, SplitMethod, SplitQuery, SplitType } from './types'
+import { BalanceChange, SplitInfo, SplitMethod, SplitQuery, SplitType, User } from './types'
+
+export interface CreateOrUpdateUserArguments extends User {
+  photoUrl: string | null
+}
 
 export interface CreateGroupArguments {
   name: string

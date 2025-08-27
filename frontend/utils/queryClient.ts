@@ -87,24 +87,6 @@ export async function invalidateUserById(userId?: string) {
   }
 }
 
-export async function addCachedSplit(groupId: number, split: SplitInfo) {
-  ;[true, false].forEach((onlyIncluded) => {
-    queryClient.setQueryData(
-      ['groupSplits', groupId, 'onlyIncluded', onlyIncluded],
-      (oldData?: { pages: SplitInfo[][] }) => {
-        if (!oldData) {
-          return
-        }
-
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page, index) => (index === 0 ? [split, ...page] : page)),
-        }
-      }
-    )
-  })
-}
-
 export async function deleteCachedSplit(groupId: number, splitId: number) {
   await queryClient.setQueryData(['groupSplits', groupId], (oldData?: { pages: SplitInfo[][] }) => {
     if (!oldData) {
@@ -127,24 +109,5 @@ export async function updateCachedGroup(
       return
     }
     return updater(oldData)
-  })
-}
-
-export async function updateCachedSplit(
-  groupId: number,
-  splitId: number,
-  updater: (data: SplitInfo) => SplitInfo
-) {
-  await queryClient.setQueryData(['groupSplits', groupId], (oldData?: { pages: SplitInfo[][] }) => {
-    if (!oldData) {
-      return
-    }
-
-    return {
-      ...oldData,
-      pages: oldData.pages.map((page) =>
-        page.map((split) => (split.id === splitId ? updater(split) : split))
-      ),
-    }
   })
 }

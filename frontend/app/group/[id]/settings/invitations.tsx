@@ -154,7 +154,7 @@ function InviteRow({
       ]}
     >
       <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
-        <ProfilePicture userId={invite.invitee.id} size={32} />
+        <ProfilePicture user={invite.invitee} size={32} />
         <Text style={{ color: theme.colors.primary, fontSize: 20, fontWeight: 600 }}>
           {invite.invitee.name}
         </Text>
@@ -165,7 +165,7 @@ function InviteRow({
           {t('settings.invitations.invitedBy')}
         </Text>
         <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
-          <ProfilePicture userId={invite.createdBy.id} size={24} />
+          <ProfilePicture user={invite.createdBy} size={24} />
           <Text style={{ color: theme.colors.primary, fontSize: 16, fontWeight: 500 }}>
             {invite.createdBy.name}
           </Text>

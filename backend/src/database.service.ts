@@ -63,6 +63,7 @@ import {
   ConfirmSettleUpArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
+  CreateOrUpdateUserArguments,
   CreateSplitArguments,
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
@@ -106,7 +107,6 @@ import {
   SettleUpGroupArguments,
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
-  User,
 } from 'shared'
 
 @Injectable()
@@ -129,7 +129,7 @@ export class DatabaseService {
     await createDatabase(this.pool)
   }
 
-  async createOrUpdateUser(user: User) {
+  async createOrUpdateUser(user: CreateOrUpdateUserArguments) {
     return await createOrUpdateUser(this.pool, user)
   }
 

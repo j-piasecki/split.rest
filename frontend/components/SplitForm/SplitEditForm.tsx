@@ -42,7 +42,7 @@ export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
         }
       }
 
-      if (user.id === splitInfo.paidById) {
+      if (user.id === splitInfo.paidBy?.id) {
         return {
           user: backfilledMember,
           entry: user.email ?? '',
@@ -58,7 +58,7 @@ export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
     { entry: '', amount: '' },
   ]
 
-  const initialPaidByIndex = splitInfo.users.findIndex((user) => user.id === splitInfo.paidById)
+  const initialPaidByIndex = splitInfo.users.findIndex((user) => user.id === splitInfo.paidBy?.id)
 
   return (
     <SplitForm

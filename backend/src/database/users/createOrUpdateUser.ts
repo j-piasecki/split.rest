@@ -1,8 +1,11 @@
 import { Pool } from 'pg'
-import { User } from 'shared'
+import { CreateOrUpdateUserArguments } from 'shared'
 import { BadRequestException } from 'src/errors/BadRequestException'
 
-export async function createOrUpdateUser(pool: Pool, user: User): Promise<boolean> {
+export async function createOrUpdateUser(
+  pool: Pool,
+  user: CreateOrUpdateUserArguments
+): Promise<boolean> {
   if (!user.name || !user.email) {
     throw new BadRequestException('api.invalidArguments')
   }
@@ -27,12 +30,13 @@ export async function createOrUpdateUser(pool: Pool, user: User): Promise<boolea
   try {
     await pool.query(
       `
-        INSERT INTO users(id, name, email, created_at, photo_url)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO users(id, name, email, created_at, photo_url, picture_id)
+        VALUES ($1, $2, $3, $4, $5, $6)
         ON CONFLICT (id) DO UPDATE
-        SET photo_url = $5, deleted = FALSE
+        SET photo_url = $5, deleted = FALSE, picture_id = $6
       `,
-      [user.id, name, user.email, Date.now(), photoUrl]
+      // TODO: Use a random id for the picture_id
+      [user.id, name, user.email, Date.now(), photoUrl, user.id]
     )
   } catch (error) {
     console.error(`Failed to create or update user ${user.id} (${user.name}, ${user.email})`, error)

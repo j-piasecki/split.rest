@@ -184,6 +184,7 @@ async function createAndSaveSettleUpSplit(
     id: splitId,
     version: 1,
     total: Math.abs(balance).toFixed(2),
+    paidBy: members.find((m) => m.id === callerId)!,
     paidById: callerId,
     createdById: callerId,
     title: 'Settle up',
@@ -237,7 +238,8 @@ export async function settleUp(
             group_members.balance,
             group_members.has_access,
             group_members.is_admin,
-            group_members.display_name
+            group_members.display_name,
+            users.picture_id
           FROM group_members 
           JOIN users ON group_members.user_id = users.id 
           WHERE group_id = $1 
@@ -249,12 +251,12 @@ export async function settleUp(
       id: row.id,
       name: row.name,
       email: row.email,
-      photoUrl: null,
       deleted: row.deleted,
       balance: row.balance,
       hasAccess: row.has_access,
       isAdmin: row.is_admin,
       displayName: row.display_name,
+      pictureId: row.picture_id,
     }))
 
     const currency = (

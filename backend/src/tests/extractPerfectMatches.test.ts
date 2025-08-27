@@ -10,8 +10,8 @@ function createMember(id: string, balance: string): Member {
     isAdmin: false,
     email: `user_${id}@email.com`,
     name: `User ${id}`,
-    photoUrl: '',
     displayName: null,
+    pictureId: null,
   }
 }
 

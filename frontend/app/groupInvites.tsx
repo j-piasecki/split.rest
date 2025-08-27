@@ -88,7 +88,7 @@ function Invite({
             >
               {t('home.invitedBy', { name: invite.createdBy.name })}
             </Text>
-            <ProfilePicture size={24} userId={invite.createdBy.id} />
+            <ProfilePicture size={24} user={invite.createdBy} />
           </View>
         </View>
 

@@ -58,6 +58,7 @@ export async function getSettleUpPreview(
       id: -1,
       version: 1,
       total: Math.abs(total).toFixed(2),
+      paidBy: settleUpData.members.find((member) => member.id === callerId)!,
       paidById: callerId,
       createdById: callerId,
       title: 'Settle up',
@@ -73,7 +74,6 @@ export async function getSettleUpPreview(
           id: entry.id,
           name: member.name,
           email: member.email,
-          photoUrl: member.photoUrl,
           deleted: member.deleted,
           change: entry.change,
           pending: entry.pending,
@@ -81,6 +81,7 @@ export async function getSettleUpPreview(
           isAdmin: member.isAdmin,
           hasAccess: member.hasAccess,
           displayName: member.displayName,
+          pictureId: member.pictureId,
         }
       }),
     }

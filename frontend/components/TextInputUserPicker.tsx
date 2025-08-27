@@ -59,7 +59,7 @@ export function TextInputUserPicker({
             paddingVertical: 8,
           }}
         >
-          <ProfilePicture userId={user.id} size={24} />
+          <ProfilePicture user={user} size={24} />
           <View
             style={{
               flex: 1,

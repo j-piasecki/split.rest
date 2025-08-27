@@ -34,6 +34,7 @@ export async function getSplitInfo(
           users.name, 
           users.email, 
           users.deleted,
+          users.picture_id,
           group_members.balance,
           group_members.has_access,
           group_members.is_admin,
@@ -56,6 +57,7 @@ export async function getSplitInfo(
     title: splitRow.name,
     total: splitRow.total,
     timestamp: Number(splitRow.timestamp),
+    paidBy: participants.find((p) => p.id === splitRow.paid_by)!,
     paidById: splitRow.paid_by,
     createdById: splitRow.created_by,
     version: splitRow.version,
@@ -67,7 +69,6 @@ export async function getSplitInfo(
       id: p.id,
       name: p.name,
       email: p.email,
-      photoUrl: null,
       change: p.change,
       pending: p.pending,
       deleted: p.deleted,
@@ -75,6 +76,7 @@ export async function getSplitInfo(
       hasAccess: p.has_access,
       isAdmin: p.is_admin,
       displayName: p.display_name,
+      pictureId: p.picture_id,
     })),
   }
 }

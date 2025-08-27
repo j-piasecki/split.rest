@@ -134,7 +134,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return (
       type === SplitPermissionType.All ||
       (type === SplitPermissionType.OnlyIfIncluded &&
-        (split.isUserParticipating || split.createdById === userId || split.paidById === userId))
+        (split.isUserParticipating || split.createdById === userId || split.paidBy?.id === userId))
     )
   }
 

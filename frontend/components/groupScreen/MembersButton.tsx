@@ -87,7 +87,7 @@ export function MembersButton({ info }: { info: GroupUserInfo | undefined }) {
                     translateX={index * 8}
                     delay={index * 50 + (Platform.OS !== 'web' ? 175 : 0)}
                   >
-                    <ProfilePicture userId={member.id} size={singleIconSize} />
+                    <ProfilePicture user={member} size={singleIconSize} />
                   </Bubble>
                 )
               })}

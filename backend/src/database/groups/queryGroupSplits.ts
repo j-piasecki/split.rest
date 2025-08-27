@@ -14,7 +14,7 @@ export async function queryGroupSplits(
 
   validateQuery(args.query)
 
-  const whereClauses: string[] = [`group_id = $1`, `deleted = false`]
+  const whereClauses: string[] = [`group_id = $1`, `splits.deleted = false`]
   const values: any[] = [args.groupId, callerId, args.query.targetUser ?? callerId]
   let paramIndex = values.length + 1
 
@@ -178,6 +178,10 @@ export async function queryGroupSplits(
       splits.version,
       splits.deleted,
       splits.type,
+      users.name AS paid_by_name,
+      users.email AS paid_by_email,
+      users.deleted AS paid_by_deleted,
+      users.picture_id AS paid_by_picture_id,
       (SELECT EXISTS (
         SELECT 1 FROM split_participants 
         WHERE split_participants.split_id = splits.id AND pending = true
@@ -201,8 +205,9 @@ export async function queryGroupSplits(
       )) AS caller_participating
     FROM splits
     INNER JOIN split_participants ON splits.id = split_participants.split_id
+    LEFT JOIN users ON users.id = splits.paid_by
     WHERE ${whereClauses.join(' AND ')}
-    GROUP BY splits.id
+    GROUP BY splits.id, users.name, users.email, users.deleted, users.picture_id
     ${havingClause}
     ${orderClause}
     LIMIT 20
@@ -210,11 +215,18 @@ export async function queryGroupSplits(
 
   const { rows } = await pool.query(query, values)
 
-  return rows.map((row) => ({
+  return rows.map<SplitInfo>((row) => ({
     id: row.id,
     title: row.name,
     total: row.total,
     paidById: row.paid_by,
+    paidBy: {
+      id: row.paid_by,
+      name: row.paid_by_name,
+      email: row.paid_by_email,
+      deleted: row.paid_by_deleted,
+      pictureId: row.paid_by_picture_id,
+    },
     createdById: row.created_by,
     timestamp: Number(row.timestamp),
     version: row.version,

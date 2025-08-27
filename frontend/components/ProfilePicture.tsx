@@ -3,6 +3,7 @@ import { useTheme } from '@styling/theme'
 import { Image } from 'expo-image'
 import { useEffect, useState } from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
+import { User } from 'shared'
 
 const listeners = new Map<string, (() => void)[]>()
 const profilePictureMap = new Map<string, string>()
@@ -44,16 +45,22 @@ export function getProfilePictureUrl(userId?: string) {
     : `https://assets.split.rest/profile-pictures/${userId}.jpg`
 }
 
-export interface ProfilePictureProps {
-  userId?: string
-  size: number
-  style?: StyleProp<ViewStyle>
-}
+export type ProfilePictureProps =
+  | {
+      user?: User
+      size: number
+      style?: StyleProp<ViewStyle>
+    }
+  | {
+      pictureId: string
+      size: number
+      style?: StyleProp<ViewStyle>
+    }
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const defaultProfilePicture = require('@assets/icons/user.svg')
 
-export function ProfilePicture({ userId, size, style }: ProfilePictureProps) {
+export function ProfilePicture({ size, style, ...props }: ProfilePictureProps) {
   const theme = useTheme()
   const [isLoading, setIsLoading] = useState(true)
   const [failed, setFailed] = useState(false)
@@ -61,11 +68,14 @@ export function ProfilePicture({ userId, size, style }: ProfilePictureProps) {
 
   const imageSize = failed ? size * 0.65 : size
 
+  // @ts-expect-error TS is dumb again
+  const pictureId = 'user' in props ? props.user?.pictureId : props.pictureId
+
   useEffect(() => {
-    return addProfilePictureListener(userId, () => {
+    return addProfilePictureListener(pictureId, () => {
       setKey((key) => key + 1)
     })
-  }, [userId])
+  }, [pictureId])
 
   return (
     <View
@@ -100,7 +110,7 @@ export function ProfilePicture({ userId, size, style }: ProfilePictureProps) {
       )}
       <Image
         key={key}
-        source={failed ? defaultProfilePicture : getProfilePictureUrl(userId)}
+        source={failed ? defaultProfilePicture : getProfilePictureUrl(pictureId)}
         placeholder={defaultProfilePicture}
         cachePolicy='memory-disk'
         onError={() => {

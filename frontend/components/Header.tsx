@@ -198,7 +198,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
           onPress={() => router.navigate('/profile')}
           style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
         >
-          <ProfilePicture userId={user?.id} size={32} />
+          <ProfilePicture user={user ?? undefined} size={32} />
         </Pressable>
       </Animated.View>
     </View>

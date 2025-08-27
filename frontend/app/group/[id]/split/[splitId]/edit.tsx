@@ -60,14 +60,14 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
         await updateSplit({
           splitId: splitInfo.id,
           groupId: groupInfo.id,
-          paidBy: splitInfo.paidById,
+          paidBy: splitInfo.paidBy?.id,
           title: form.title,
           total: total,
           timestamp: form.timestamp,
           currency: groupInfo.currency,
           balances: [
             {
-              id: splitInfo.paidById!,
+              id: splitInfo.paidBy!.id,
               change: '0.00',
               pending: false,
             },

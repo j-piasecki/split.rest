@@ -29,7 +29,7 @@ function Content({ groupInfo, split }: { groupInfo: GroupUserInfo; split: SplitW
     try {
       await SplitCreationContext.current.saveSplit({
         groupId: groupInfo.id,
-        paidBy: split.paidById,
+        paidBy: split.paidBy?.id,
         title: split.title,
         total: split.total,
         timestamp: split.timestamp,

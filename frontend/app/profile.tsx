@@ -180,7 +180,7 @@ function Form({ user }: { user: User }) {
         <View style={{ alignItems: 'center', gap: 4, alignSelf: 'stretch' }}>
           <View style={{ width: '100%', alignItems: 'center' }}>
             <Pressable onPress={changeProfilePicture}>
-              <ProfilePicture userId={user?.id} size={128} />
+              <ProfilePicture user={user} size={128} />
               <View
                 style={{
                   position: 'absolute',

@@ -20,6 +20,7 @@ import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import {
   CurrencyUtils,
   SplitType,
+  User,
   isBalanceChangeSplit,
   isInversedSplit,
   isLendSplit,
@@ -37,7 +38,7 @@ function getVisibleBalanceChange(
   user: MaybeMemberWithPendingBalanceChange,
   splitInfo: SplitWithUsers
 ) {
-  const paidByThis = splitInfo.paidById === user.id
+  const paidByThis = splitInfo.paidBy?.id === user.id
   let paidInThisSplit = user.change
 
   if (isInversedSplit(splitInfo.type)) {
@@ -71,7 +72,7 @@ function PaidAmount({
   groupInfo?: GroupUserInfo
 }) {
   const theme = useTheme()
-  const paidByThis = splitInfo.paidById === user.id
+  const paidByThis = splitInfo.paidBy?.id === user.id
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { t } = useTranslation()
 
@@ -143,11 +144,11 @@ function UserRow({
     splitInfo.id
   )
 
-  const paidByThis = splitInfo.paidById === user.id
+  const paidByThis = splitInfo.paidBy?.id === user.id
   const canCompleteSplit =
     showCompleteButton &&
     user.pending &&
-    (appUser?.id === splitInfo.paidById || appUser?.id === user.id)
+    (appUser?.id === splitInfo.paidBy?.id || appUser?.id === user.id)
 
   const showBadge = (user.pending && showCompleteButton) || !user.hasAccess
 
@@ -179,7 +180,7 @@ function UserRow({
         }}
       >
         <View>
-          <ProfilePicture userId={user.id} size={32} />
+          <ProfilePicture user={user} size={32} />
 
           {showBadge && (
             <View
@@ -264,16 +265,16 @@ interface EditInfoTextProps {
   icon: IconName
   translationKey: LanguageTranslationKey
   values: Record<string, string>
-  userIdPhoto?: string
+  user?: User
 }
 
-function IconInfoText({ icon, translationKey, values, userIdPhoto }: EditInfoTextProps) {
+function IconInfoText({ icon, translationKey, values, user }: EditInfoTextProps) {
   const theme = useTheme()
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 4 }}>
       <Icon name={icon} size={20} color={theme.colors.outline} style={{ marginRight: 12 }} />
-      {userIdPhoto && <ProfilePicture userId={userIdPhoto} size={20} style={{ marginRight: 8 }} />}
+      {user && <ProfilePicture user={user} size={20} style={{ marginRight: 8 }} />}
       <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
         <Trans
           // typescript broke :(
@@ -418,7 +419,7 @@ function EditHistoryItem({
               icon='edit'
               translationKey='splitInfo.createAuthorText'
               values={{ editor: createdBy.name }}
-              userIdPhoto={createdBy.id}
+              user={createdBy}
             />
           )}
           {isSelected &&
@@ -625,11 +626,11 @@ export function SplitInfo({
     setSelectedVersion(latestVersion)
   }, [latestVersion])
 
-  const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidById)
+  const paidBy = splitInfo.users.find((user) => user.id === splitInfo.paidBy?.id)
 
   const isSettleUp = isSettleUpSplit(splitInfo.type)
   const usersToShow = splitInfo.users.filter((user) => {
-    if (isSettleUp && user.id === splitInfo.paidById) {
+    if (isSettleUp && user.id === splitInfo.paidBy?.id) {
       return false
     }
 
@@ -688,7 +689,7 @@ export function SplitInfo({
                 payer: paidBy.displayName ?? paidBy.name,
                 amount: CurrencyUtils.format(splitInfo.total, groupInfo.currency),
               }}
-              userIdPhoto={paidBy.id}
+              user={paidBy}
             />
           )}
           <IconInfoText
