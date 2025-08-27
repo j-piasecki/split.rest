@@ -204,7 +204,7 @@ export async function queryGroupSplits(
       )) AS caller_participating
     FROM splits
     INNER JOIN split_participants ON splits.id = split_participants.split_id
-    INNER JOIN users ON users.id = splits.paid_by
+    LEFT JOIN users ON users.id = splits.paid_by
     WHERE ${whereClauses.join(' AND ')}
     GROUP BY splits.id, users.name, users.email, users.deleted
     ${havingClause}

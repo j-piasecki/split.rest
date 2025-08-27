@@ -46,7 +46,7 @@ export async function getGroupSplits(
           }
         FROM splits
           INNER JOIN split_participants ON splits.id = split_participants.split_id
-          INNER JOIN users ON users.id = splits.paid_by
+          LEFT JOIN users ON users.id = splits.paid_by
         WHERE
           group_id = $1
           ${args.onlyIfIncluded ? 'AND split_participants.user_id = $3' : ''}
