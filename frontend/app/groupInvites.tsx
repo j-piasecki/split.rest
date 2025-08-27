@@ -1,4 +1,5 @@
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
+import { GroupIcon } from '@components/GroupIcon'
 import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { FullPaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
@@ -62,12 +63,15 @@ function Invite({
           >
             {t('home.invitedToGroupMessage')}
           </Text>
-          <Text
-            style={{ flex: 1, fontSize: 24, fontWeight: 600, color: theme.colors.onSurface }}
-            numberOfLines={2}
-          >
-            {invite.groupInfo.name}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <GroupIcon info={invite.groupInfo} size={40} />
+            <Text
+              style={{ flex: 1, fontSize: 24, fontWeight: 600, color: theme.colors.onSurface }}
+              numberOfLines={2}
+            >
+              {invite.groupInfo.name}
+            </Text>
+          </View>
 
           <View
             style={{
