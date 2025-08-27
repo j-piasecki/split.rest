@@ -20,6 +20,7 @@ import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import {
   CurrencyUtils,
   SplitType,
+  User,
   isBalanceChangeSplit,
   isInversedSplit,
   isLendSplit,
@@ -179,7 +180,7 @@ function UserRow({
         }}
       >
         <View>
-          <ProfilePicture userId={user.id} size={32} />
+          <ProfilePicture user={user} size={32} />
 
           {showBadge && (
             <View
@@ -264,16 +265,16 @@ interface EditInfoTextProps {
   icon: IconName
   translationKey: LanguageTranslationKey
   values: Record<string, string>
-  userIdPhoto?: string
+  user?: User
 }
 
-function IconInfoText({ icon, translationKey, values, userIdPhoto }: EditInfoTextProps) {
+function IconInfoText({ icon, translationKey, values, user }: EditInfoTextProps) {
   const theme = useTheme()
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 4 }}>
       <Icon name={icon} size={20} color={theme.colors.outline} style={{ marginRight: 12 }} />
-      {userIdPhoto && <ProfilePicture userId={userIdPhoto} size={20} style={{ marginRight: 8 }} />}
+      {user && <ProfilePicture user={user} size={20} style={{ marginRight: 8 }} />}
       <Text style={{ color: theme.colors.onSurface, fontSize: 18, flex: 1 }}>
         <Trans
           // typescript broke :(
@@ -418,7 +419,7 @@ function EditHistoryItem({
               icon='edit'
               translationKey='splitInfo.createAuthorText'
               values={{ editor: createdBy.name }}
-              userIdPhoto={createdBy.id}
+              user={createdBy}
             />
           )}
           {isSelected &&
@@ -688,7 +689,7 @@ export function SplitInfo({
                 payer: paidBy.displayName ?? paidBy.name,
                 amount: CurrencyUtils.format(splitInfo.total, groupInfo.currency),
               }}
-              userIdPhoto={paidBy.id}
+              user={paidBy}
             />
           )}
           <IconInfoText

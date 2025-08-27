@@ -197,6 +197,7 @@ export interface GroupInviteWithGroupInfo extends GroupInvite {
 
 export interface GroupInviteWithGroupInfoAndMemberIds extends GroupInviteWithGroupInfo {
   memberIds: string[]
+  profilePictures: string[]
 }
 
 export interface GroupInviteWithInvitee extends GroupInvite {

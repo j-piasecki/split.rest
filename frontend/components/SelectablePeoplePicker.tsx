@@ -81,7 +81,7 @@ function ListPersonRow({ toggleSelect, entry, pickable, pick }: ListPersonRowPro
             />
           </Pressable>
         )}
-        <ProfilePicture userId={entry.user?.id} size={32} />
+        <ProfilePicture user={entry.user} size={32} />
         <View style={{ flexShrink: 1, flexGrow: 1 }}>
           <Text
             numberOfLines={1}

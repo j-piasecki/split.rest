@@ -131,7 +131,7 @@ function ChipPeoplePicker({
                 maxWidth: maxChipWidth,
               })}
             >
-              <ProfilePicture userId={user.id} size={24} />
+              <ProfilePicture user={user} size={24} />
               <Text
                 style={{ flexShrink: 1, fontSize: 18, color: theme.colors.onSurface }}
                 numberOfLines={1}

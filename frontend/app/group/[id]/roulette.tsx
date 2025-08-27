@@ -259,7 +259,7 @@ function Result({ query, groupInfo, setQuery }: ResultProps) {
                     },
                   ]}
                 >
-                  <ProfilePicture userId={user.id} size={28} />
+                  <ProfilePicture user={user} size={28} />
                   <View style={{ flex: 1, flexDirection: 'column' }}>
                     <Text
                       numberOfLines={1}

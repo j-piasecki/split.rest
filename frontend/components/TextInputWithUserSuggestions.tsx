@@ -34,7 +34,7 @@ function Suggestion({ user, hovered, pressed }: SuggestionProps) {
         gap: 8,
       }}
     >
-      <ProfilePicture userId={user.id} size={24} />
+      <ProfilePicture user={user} size={24} />
       <View style={{ flex: 1 }}>
         <Text style={{ color: theme.colors.onSurface, fontSize: 16, fontWeight: 500 }}>
           {user.displayName ?? user.name}

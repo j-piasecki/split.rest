@@ -71,7 +71,7 @@ function Suggestion({ suggestion, onSelect }: { suggestion: Member; onSelect: ()
         }}
       >
         <Animated.View style={[StyleSheet.absoluteFillObject, animatedStyle]} />
-        <ProfilePicture userId={suggestion.id} size={72} />
+        <ProfilePicture user={suggestion} size={72} />
         <Text
           numberOfLines={1}
           style={{ fontSize: 16, fontWeight: 700, color: theme.colors.onSurface }}

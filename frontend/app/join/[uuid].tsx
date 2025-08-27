@@ -138,7 +138,7 @@ function InvitePane({ invite, uuid }: InvitePaneProps) {
                     }}
                   />
                 </Text>
-                <ProfilePicture userId={invite.createdBy.id} size={24} />
+                <ProfilePicture user={invite.createdBy} size={24} />
               </View>
             )}
           </ShimmerPlaceholder>
@@ -151,7 +151,7 @@ function InvitePane({ invite, uuid }: InvitePaneProps) {
               {(invite) => (
                 <MemberBubbles
                   middleIconSize={52}
-                  memberIds={invite.memberIds}
+                  profilePictures={invite.profilePictures}
                   width={bubblesContainerWidth}
                   height={140}
                   info={invite.groupInfo}

@@ -93,7 +93,7 @@ function UserPane({
 
         {user && (
           <View style={{ flexDirection: 'column', gap: 16, alignItems: 'center' }}>
-            <ProfilePicture userId={user.id} size={128} />
+            <ProfilePicture user={user} size={128} />
             <Text
               style={{
                 color: theme.colors.onSurface,

@@ -425,7 +425,7 @@ export function MemberInfo({
               style={{ width: 96, height: 96 }}
               shimmerStyle={{ borderRadius: 64 }}
             >
-              {(memberInfo) => <ProfilePicture userId={memberInfo.id} size={96} />}
+              {(memberInfo) => <ProfilePicture user={memberInfo} size={96} />}
             </ShimmerPlaceholder>
 
             <View style={{ flex: 1, justifyContent: 'space-between' }}>

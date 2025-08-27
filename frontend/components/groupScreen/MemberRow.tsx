@@ -183,7 +183,7 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
             borderColor: getBalanceColor(Number(member.balance), theme),
           }}
         >
-          <ProfilePicture userId={member.id} size={36} />
+          <ProfilePicture user={member} size={36} />
           {(member.isAdmin || !member.hasAccess) && (
             <Badge icon={member.hasAccess ? 'shield' : 'lock'} />
           )}
