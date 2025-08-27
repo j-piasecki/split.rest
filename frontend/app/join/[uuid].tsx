@@ -1,6 +1,7 @@
 import { Button } from '@components/Button'
 import { ButtonShimmer } from '@components/ButtonShimmer'
 import { ErrorText } from '@components/ErrorText'
+import { GroupIcon } from '@components/GroupIcon'
 import Header from '@components/Header'
 import { Icon } from '@components/Icon'
 import { MemberBubbles } from '@components/MemberBubbles'
@@ -76,18 +77,22 @@ function InvitePane({ invite, uuid }: InvitePaneProps) {
             {t('joinGroup.youveBeenInvitedToJoin')}
           </Text>
 
-          <ShimmerPlaceholder argument={invite} shimmerStyle={{ height: 32 }}>
+          <ShimmerPlaceholder argument={invite} shimmerStyle={{ height: 40 }}>
             {(invite) => (
-              <Text
-                numberOfLines={3}
-                style={{
-                  color: theme.colors.onSurface,
-                  fontSize: 24,
-                  fontWeight: 800,
-                }}
-              >
-                {invite.groupInfo.name}
-              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <GroupIcon info={invite.groupInfo} size={40} />
+                <Text
+                  numberOfLines={3}
+                  style={{
+                    flex: 1,
+                    color: theme.colors.onSurface,
+                    fontSize: 24,
+                    fontWeight: 800,
+                  }}
+                >
+                  {invite.groupInfo.name}
+                </Text>
+              </View>
             )}
           </ShimmerPlaceholder>
 
