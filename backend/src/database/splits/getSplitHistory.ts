@@ -84,7 +84,6 @@ export async function getSplitHistory(
         id: row.id,
         name: row.name,
         email: row.email,
-        photoUrl: null,
         change: row.change,
         pending: row.pending,
         deleted: row.deleted,

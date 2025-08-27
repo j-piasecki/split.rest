@@ -25,6 +25,7 @@ import {
   ConfirmSettleUpArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
+  CreateOrUpdateUserArguments,
   CreateSplitArguments,
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
@@ -71,12 +72,12 @@ import {
   SettleUpGroupArguments,
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
-  User,
   isAcceptGroupInviteArguments,
   isCompleteSplitEntryArguments,
   isConfirmSettleUpArguments,
   isCreateGroupArguments,
   isCreateGroupJoinLinkArguments,
+  isCreateOrUpdateUserArguments,
   isCreateSplitArguments,
   isDeleteGroupArguments,
   isDeleteGroupJoinLinkArguments,
@@ -122,7 +123,6 @@ import {
   isSettleUpGroupArguments,
   isUnregisterNotificationTokenArguments,
   isUpdateSplitArguments,
-  isUser,
 } from 'shared'
 
 @Controller()
@@ -131,8 +131,8 @@ export class AppController {
 
   @UseGuards(AuthGuard)
   @Post('createOrUpdateUser')
-  async createOrUpdateUser(@Body() user: Partial<User>) {
-    if (!isUser(user)) {
+  async createOrUpdateUser(@Body() user: Partial<CreateOrUpdateUserArguments>) {
+    if (!isCreateOrUpdateUserArguments(user)) {
       throw new BadRequestException('api.invalidArguments')
     }
 

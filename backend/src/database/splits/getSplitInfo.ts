@@ -67,7 +67,6 @@ export async function getSplitInfo(
       id: p.id,
       name: p.name,
       email: p.email,
-      photoUrl: null,
       change: p.change,
       pending: p.pending,
       deleted: p.deleted,

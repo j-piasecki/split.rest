@@ -42,7 +42,6 @@ export async function getUserGroupInvites(
       id: row.inviter_id,
       name: row.inviter_name,
       email: row.inviter_email,
-      photoUrl: null,
       deleted: row.inviter_deleted,
     },
     groupInfo: {

@@ -73,7 +73,6 @@ export async function getSettleUpPreview(
           id: entry.id,
           name: member.name,
           email: member.email,
-          photoUrl: member.photoUrl,
           deleted: member.deleted,
           change: entry.change,
           pending: entry.pending,

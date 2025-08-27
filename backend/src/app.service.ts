@@ -7,6 +7,7 @@ import {
   ConfirmSettleUpArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
+  CreateOrUpdateUserArguments,
   CreateSplitArguments,
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
@@ -52,7 +53,6 @@ import {
   SettleUpGroupArguments,
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
-  User,
 } from 'shared'
 
 @Injectable()
@@ -62,7 +62,7 @@ export class AppService {
     private readonly imageService: ImageService
   ) {}
 
-  async createOrUpdateUser(user: User) {
+  async createOrUpdateUser(user: CreateOrUpdateUserArguments) {
     const updated = await this.databaseService.createOrUpdateUser(user)
 
     if (!updated && user.photoUrl) {

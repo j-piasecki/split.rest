@@ -51,7 +51,6 @@ export async function getSplitParticipantsSuggestions(
     id: row.id,
     name: row.name,
     email: row.email,
-    photoUrl: null,
     deleted: false,
     balance: row.balance,
     hasAccess: row.has_access,

@@ -19,7 +19,6 @@ export async function getUserByEmail(
     id: rows[0].id,
     name: rows[0].name,
     email: rows[0].email,
-    photoUrl: null,
     deleted: rows[0].deleted,
   }
 }

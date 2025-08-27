@@ -4,6 +4,7 @@ import {
   ConfirmSettleUpArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
+  CreateOrUpdateUserArguments,
   CreateSplitArguments,
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
@@ -50,6 +51,11 @@ import {
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
 } from './endpointArguments'
+import { isUser } from './types'
+
+export function isCreateOrUpdateUserArguments(obj: any): obj is CreateOrUpdateUserArguments {
+  return obj.photoUrl !== undefined && isUser(obj)
+}
 
 export function isCreateGroupArguments(obj: any): obj is CreateGroupArguments {
   return obj.name !== undefined && obj.currency !== undefined

@@ -87,7 +87,6 @@ export async function getGroupInviteByLink(
       id: rows[0].inviter_id,
       name: rows[0].inviter_name,
       email: rows[0].inviter_email,
-      photoUrl: null,
       deleted: rows[0].inviter_deleted,
     },
     memberIds: groupMemberIds.map((row) => row.user_id),

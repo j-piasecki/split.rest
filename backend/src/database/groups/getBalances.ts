@@ -43,7 +43,6 @@ export async function getBalances(
     id: balance.id,
     name: balance.name,
     email: balance.email,
-    photoUrl: null,
     deleted: balance.deleted,
     balance: balance.balance,
     change: balance.balance,

@@ -4,7 +4,6 @@ export interface User {
   id: string
   name: string
   email: string | null
-  photoUrl: string | null
   deleted: boolean
 }
 
@@ -209,7 +208,6 @@ export function isUser(obj: any): obj is User {
     obj.id !== undefined &&
     obj.name !== undefined &&
     obj.email !== undefined &&
-    obj.photoUrl !== undefined &&
     obj.deleted !== undefined
   )
 }

@@ -1,8 +1,11 @@
 import { Pool } from 'pg'
-import { User } from 'shared'
+import { CreateOrUpdateUserArguments } from 'shared'
 import { BadRequestException } from 'src/errors/BadRequestException'
 
-export async function createOrUpdateUser(pool: Pool, user: User): Promise<boolean> {
+export async function createOrUpdateUser(
+  pool: Pool,
+  user: CreateOrUpdateUserArguments
+): Promise<boolean> {
   if (!user.name || !user.email) {
     throw new BadRequestException('api.invalidArguments')
   }
