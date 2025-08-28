@@ -284,7 +284,7 @@ function Result({ query, groupInfo, setQuery }: ResultProps) {
                   </View>
 
                   <ShimmerPlaceholder
-                    argument={user.balance}
+                    argument={user.maybeBalance}
                     shimmerStyle={{ width: 64, height: 24 }}
                   >
                     <Text style={{ fontSize: 18, color: balanceColor }}>

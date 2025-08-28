@@ -5,15 +5,15 @@ import { sleep } from '@utils/sleep'
 import { useEffect, useState } from 'react'
 import { Member, TranslatableError } from 'shared'
 
-interface UserWithMaybeBalanceChange extends Member {
-  change: string | null
+interface UserWithMaybeBalance extends Member {
+  maybeBalance: string | null
 }
 
 export function useRouletteQuery(groupId: number, query: PersonEntry[]) {
   const [finished, setFinished] = useState(false)
   const [error, setError] = useTranslatedError()
-  const [result, setResult] = useState<UserWithMaybeBalanceChange[]>(
-    query.map((user) => ({ ...user.user!, change: null }))
+  const [result, setResult] = useState<UserWithMaybeBalance[]>(
+    query.map((user) => ({ ...user.user!, maybeBalance: null }))
   )
 
   useEffect(() => {
@@ -41,12 +41,12 @@ export function useRouletteQuery(groupId: number, query: PersonEntry[]) {
 
               return {
                 ...entry.user!,
-                change: foundUser.change,
+                maybeBalance: foundUser.change,
               }
             })
             .sort((a, b) => {
-              const changeA = Number(a.change)
-              const changeB = Number(b.change)
+              const changeA = Number(a.maybeBalance)
+              const changeB = Number(b.maybeBalance)
 
               return changeA - changeB
             })
