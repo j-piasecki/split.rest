@@ -21,6 +21,7 @@ export async function getGroupMembers(
             users.name,
             users.email, 
             users.deleted,
+            users.picture_id,
             group_members.balance,
             group_members.has_access,
             group_members.is_admin,
