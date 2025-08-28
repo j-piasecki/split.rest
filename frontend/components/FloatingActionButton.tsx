@@ -63,10 +63,12 @@ export const FloatingActionButton = React.forwardRef<
     return {
       paddingLeft: withSpring(isPressed ? 20 : 16, springConfig),
       paddingRight: 16,
-      width: withSpring(
-        (expanded.value ? (expandedWidth.value as number) : 56) + (isPressed ? 8 : 0),
-        springConfig
-      ),
+      width: expandedWidth.value
+        ? withSpring(
+            (expanded.value ? expandedWidth.value : 56) + (isPressed ? 8 : 0),
+            springConfig
+          )
+        : undefined,
       height: withSpring(isPressed ? 64 : 56, buttonCornerSpringConfig),
     }
   })
