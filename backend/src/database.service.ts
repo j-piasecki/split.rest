@@ -52,6 +52,7 @@ import { deleteUser } from './database/users/deleteUser'
 import { getUserByEmail } from './database/users/getUserByEmail'
 import { getUserById } from './database/users/getUserById'
 import { registerOrUpdateNotificationToken } from './database/users/registerOrUpdateNotificationToken'
+import { setProfilePicture } from './database/users/setProfilePicture'
 import { setUserName } from './database/users/setUserName'
 import { unregisterNotificationToken } from './database/users/unregisterNotificationToken'
 import { ImageService } from './image.service'
@@ -129,8 +130,8 @@ export class DatabaseService {
     await createDatabase(this.pool)
   }
 
-  async createOrUpdateUser(user: CreateOrUpdateUserArguments) {
-    return await createOrUpdateUser(this.pool, user)
+  async createOrUpdateUser(user: CreateOrUpdateUserArguments, imageService: ImageService) {
+    return await createOrUpdateUser(this.pool, user, imageService)
   }
 
   // Every user can create a group
@@ -404,6 +405,11 @@ export class DatabaseService {
   @RequirePermissions(['removeMembers'])
   async removeMember(callerId: string, args: RemoveMemberFromGroupArguments) {
     return await removeMember(this.pool, callerId, args)
+  }
+
+  // Every user can set their own profile picture
+  async setProfilePicture(callerId: string, args: { buffer: Buffer }, imageService: ImageService) {
+    return await setProfilePicture(this.pool, imageService, callerId, args.buffer)
   }
 
   @RequirePermissions(['manageGroupIcon'])

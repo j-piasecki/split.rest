@@ -148,7 +148,7 @@ export async function deleteUser() {
   router.dismissTo('/login')
 }
 
-export function signInWithGoogle() {
+export async function signInWithGoogle() {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
   const provider = new GoogleAuthProvider()
@@ -159,7 +159,7 @@ export function signInWithGoogle() {
   }
 }
 
-export function signInWithApple() {
+export async function signInWithApple() {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
   const provider = new OAuthProvider('apple.com')

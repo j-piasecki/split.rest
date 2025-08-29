@@ -5,39 +5,9 @@ import { useEffect, useState } from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 import { User } from 'shared'
 
-const listeners = new Map<string, (() => void)[]>()
-const profilePictureMap = new Map<string, string>()
-
-function addProfilePictureListener(userId: string | undefined, listener: () => void) {
-  if (!userId) {
-    return () => {}
-  }
-
-  listeners.set(userId, [...(listeners.get(userId) || []), listener])
-
-  return () => {
-    listeners.set(userId, listeners.get(userId)?.filter((l) => l !== listener) || [])
-  }
-}
-
-export function notifyProfilePictureChanged(userId: string, url?: string) {
-  if (url) {
-    profilePictureMap.set(userId, url)
-  } else {
-    profilePictureMap.delete(userId)
-  }
-
-  listeners.get(userId)?.forEach((listener) => listener())
-}
-
 export function getProfilePictureUrl(userId?: string) {
   if (!userId) {
     return undefined
-  }
-
-  const url = profilePictureMap.get(userId)
-  if (url) {
-    return url
   }
 
   return __DEV__
@@ -64,17 +34,20 @@ export function ProfilePicture({ size, style, ...props }: ProfilePictureProps) {
   const theme = useTheme()
   const [isLoading, setIsLoading] = useState(true)
   const [failed, setFailed] = useState(false)
-  const [key, setKey] = useState(0)
 
-  const imageSize = failed ? size * 0.65 : size
+  const imageSize = failed || isLoading ? size * 0.65 : size
 
   // @ts-expect-error TS is dumb again
   const pictureId = 'user' in props ? props.user?.pictureId : props.pictureId
 
   useEffect(() => {
-    return addProfilePictureListener(pictureId, () => {
-      setKey((key) => key + 1)
-    })
+    if (!pictureId) {
+      setFailed(true)
+      setIsLoading(false)
+    } else {
+      setFailed(false)
+      setIsLoading(true)
+    }
   }, [pictureId])
 
   return (
@@ -109,7 +82,6 @@ export function ProfilePicture({ size, style, ...props }: ProfilePictureProps) {
         />
       )}
       <Image
-        key={key}
         source={failed ? defaultProfilePicture : getProfilePictureUrl(pictureId)}
         placeholder={defaultProfilePicture}
         cachePolicy='memory-disk'

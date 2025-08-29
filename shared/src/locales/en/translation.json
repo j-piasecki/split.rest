@@ -245,13 +245,11 @@
     "profilePicture": {
       "changeProfilePicture": "Change profile picture",
       "noImageSelected": "No image selected",
-      "profilePictureChanged": "It may take some time for the new profile picture to propagate",
       "tooManyRequests": "You have tried to change your profile picture too many times. Please try again in 24 hours."
     },
     "groupIcon": {
       "changeGroupIcon": "Change group icon",
       "noImageSelected": "No image selected",
-      "groupIconChanged": "It may take some time for the new group icon to propagate",
       "tooManyRequests": "You have tried to change the group icon too many times. Please try again in 24 hours."
     },
     "invitations": {

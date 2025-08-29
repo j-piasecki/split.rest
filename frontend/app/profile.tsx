@@ -3,11 +3,7 @@ import { ConfirmationModal } from '@components/ConfirmationModal'
 import { EditableText } from '@components/EditableText'
 import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
-import {
-  ProfilePicture,
-  getProfilePictureUrl,
-  notifyProfilePictureChanged,
-} from '@components/ProfilePicture'
+import { ProfilePicture } from '@components/ProfilePicture'
 import { SegmentedButton } from '@components/SegmentedButton'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
@@ -18,7 +14,7 @@ import { useTheme } from '@styling/theme'
 import { deleteUser, logout, reauthenticate, useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { ApiError, makeRequest, makeRequestWithFile } from '@utils/makeApiRequest'
-import { Image } from 'expo-image'
+import { invalidateUserById } from '@utils/queryClient'
 import * as ImagePicker from 'expo-image-picker'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
@@ -63,7 +59,6 @@ function Form({ user }: { user: User }) {
   const router = useRouter()
   const displayClass = useDisplayClass()
   const insets = useModalScreenInsets()
-  const snack = useSnack()
   const { t } = useTranslation()
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
@@ -136,12 +131,7 @@ function Form({ user }: { user: User }) {
         })
       }
 
-      await Image.clearDiskCache()
-      await Image.clearMemoryCache()
-      await Image.prefetch(getProfilePictureUrl(user.id)!)
-      notifyProfilePictureChanged(user.id, Platform.OS !== 'web' ? image.uri : undefined)
-
-      snack.show({ message: t('settings.profilePicture.profilePictureChanged') })
+      await invalidateUserById(user.id)
     } catch (e) {
       if (e instanceof ApiError) {
         if (e.statusCode === 429) {

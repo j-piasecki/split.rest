@@ -1,5 +1,6 @@
 import { makeRequest } from '../utils/makeApiRequest'
 import { auth } from '@utils/firebase'
+import { invalidateUserById } from '@utils/queryClient'
 import { CreateOrUpdateUserArguments, TranslatableError } from 'shared'
 
 export async function createOrUpdateUser() {
@@ -17,4 +18,5 @@ export async function createOrUpdateUser() {
   }
 
   await makeRequest<CreateOrUpdateUserArguments, void>('POST', 'createOrUpdateUser', user)
+  await invalidateUserById(auth.currentUser.uid)
 }

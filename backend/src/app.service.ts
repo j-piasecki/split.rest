@@ -63,16 +63,7 @@ export class AppService {
   ) {}
 
   async createOrUpdateUser(user: CreateOrUpdateUserArguments) {
-    const updated = await this.databaseService.createOrUpdateUser(user)
-
-    if (!updated && user.photoUrl) {
-      try {
-        await this.imageService.downloadProfilePicture(user.photoUrl, user.id)
-        await this.imageService.uploadProfilePictureToR2(user.id)
-      } catch (error) {
-        console.error(`Failed to download profile picture for ${user.id}`, error)
-      }
-    }
+    await this.databaseService.createOrUpdateUser(user, this.imageService)
   }
 
   async createGroup(userId: string, args: CreateGroupArguments) {
@@ -305,9 +296,12 @@ export class AppService {
   async setProfilePicture(callerId: string, args: FileUploadArguments, file?: Express.Multer.File) {
     const imageBuffer = await this.imageService.argumentsToImageBuffer(args, file)
     await this.imageService.ensureImageIsNotNSFW(imageBuffer)
-    await this.imageService.saveImageToFile(imageBuffer, `public/${callerId}.jpg`)
-    await this.imageService.uploadProfilePictureToR2(callerId)
-    await this.imageService.invalidateCache(`profile-pictures/${callerId}.jpg`)
+
+    await this.databaseService.setProfilePicture(
+      callerId,
+      { buffer: imageBuffer },
+      this.imageService
+    )
 
     return {
       message: 'success',
