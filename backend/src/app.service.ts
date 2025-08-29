@@ -63,16 +63,7 @@ export class AppService {
   ) {}
 
   async createOrUpdateUser(user: CreateOrUpdateUserArguments) {
-    const updated = await this.databaseService.createOrUpdateUser(user)
-
-    if (!updated && user.photoUrl) {
-      try {
-        await this.imageService.downloadProfilePicture(user.photoUrl, user.id)
-        await this.imageService.uploadProfilePictureToR2(user.id)
-      } catch (error) {
-        console.error(`Failed to download profile picture for ${user.id}`, error)
-      }
-    }
+    await this.databaseService.createOrUpdateUser(user, this.imageService)
   }
 
   async createGroup(userId: string, args: CreateGroupArguments) {

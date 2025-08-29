@@ -129,8 +129,8 @@ export class DatabaseService {
     await createDatabase(this.pool)
   }
 
-  async createOrUpdateUser(user: CreateOrUpdateUserArguments) {
-    return await createOrUpdateUser(this.pool, user)
+  async createOrUpdateUser(user: CreateOrUpdateUserArguments, imageService: ImageService) {
+    return await createOrUpdateUser(this.pool, user, imageService)
   }
 
   // Every user can create a group
