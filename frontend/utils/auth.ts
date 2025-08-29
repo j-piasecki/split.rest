@@ -11,7 +11,7 @@ import { getMessaging } from '@react-native-firebase/messaging'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { router, usePathname, useRouter } from 'expo-router'
 import { t } from 'i18next'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Platform } from 'react-native'
 import uuid from 'react-native-uuid'
 import { TranslatableError, User } from 'shared'
@@ -59,9 +59,7 @@ export function useAuth(redirectToIndex = true) {
     authReady ? createUser(auth.currentUser) : undefined
   )
   const { data: remoteUser } = useUserById(firebaseUser?.id)
-  const user = useMemo<User | null | undefined>(() => {
-    return remoteUser ?? firebaseUser
-  }, [remoteUser, firebaseUser])
+  const user = remoteUser
 
   useEffect(() => {
     const subscriber = auth.onAuthStateChanged((user) => {

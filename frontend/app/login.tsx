@@ -5,6 +5,7 @@ import { useTheme } from '@styling/theme'
 import { signInWithApple, signInWithGoogle, useAuth } from '@utils/auth'
 import { Image } from 'expo-image'
 import { Redirect, useLocalSearchParams } from 'expo-router'
+import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View, useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -16,6 +17,7 @@ export default function Screen() {
   const { t } = useTranslation()
   const { join } = useLocalSearchParams()
   const { width, height } = useWindowDimensions()
+  const [signingIn, setSigningIn] = useState(false)
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
@@ -112,13 +114,34 @@ export default function Screen() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 16,
+                pointerEvents: signingIn ? 'none' : 'auto',
               }}
             >
-              <SignInWithGoogleButton onPress={signInWithGoogle} />
-              <SignInWithAppleButton onPress={() => signInWithApple()} />
+              {signingIn && (
+                <ActivityIndicator
+                  size='small'
+                  color={theme.colors.onSurface}
+                  style={{ marginBottom: 16 }}
+                />
+              )}
+              <SignInWithGoogleButton
+                onPress={async () => {
+                  setSigningIn(true)
+                  await signInWithGoogle()
+                  setSigningIn(false)
+                }}
+              />
+              <SignInWithAppleButton
+                onPress={async () => {
+                  setSigningIn(true)
+                  await signInWithApple()
+                  setSigningIn(false)
+                }}
+              />
             </View>
           </View>
         )}
+        {/* TODO: handle this better, this flashes */}
         {user && !join && <Redirect href='/home' withAnchor />}
         {user && join && <Redirect href={`/join/${join}`} withAnchor />}
       </ScrollView>
