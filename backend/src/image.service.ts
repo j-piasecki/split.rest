@@ -151,6 +151,18 @@ export class ImageService {
     await this.s3Client.send(uploadCommand)
   }
 
+  async deleteProfilePictureFromR2(id: string) {
+    const deleteCommand = new DeleteObjectCommand({
+      Bucket: process.env.R2_BUCKET_NAME!,
+      Key: `profile-pictures/${id}.jpg`,
+    })
+    await this.s3Client.send(deleteCommand)
+  }
+
+  async deleteGroupIcon(id: string) {
+    fs.unlinkSync(`public/groupIcon/${id}.jpg`)
+  }
+
   async uploadGroupIconToR2(id: string) {
     const file = fs.readFileSync(`public/groupIcon/${id}.jpg`)
     const uploadCommand = new PutObjectCommand({
@@ -162,10 +174,10 @@ export class ImageService {
     await this.s3Client.send(uploadCommand)
   }
 
-  async deleteProfilePictureFromR2(id: string) {
+  async deleteGroupIconFromR2(id: string) {
     const deleteCommand = new DeleteObjectCommand({
       Bucket: process.env.R2_BUCKET_NAME!,
-      Key: `profile-pictures/${id}.jpg`,
+      Key: `group-icons/${id}.jpg`,
     })
     await this.s3Client.send(deleteCommand)
   }

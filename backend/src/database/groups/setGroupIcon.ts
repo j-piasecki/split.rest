@@ -21,16 +21,24 @@ export async function setGroupIcon(
 
     const groupIconId = crypto.randomUUID()
 
-    await client.query('UPDATE groups SET icon = $1, last_update = $2 WHERE id = $3', [
-      groupIconId,
-      Date.now(),
-      groupId,
-    ])
+    const oldIconId = await client
+      .query<{
+        icon: string | null
+      }>(
+        'WITH old AS (SELECT icon FROM groups WHERE id = $1) UPDATE groups SET icon = $2, last_update = $3 FROM old WHERE id = $1 RETURNING old.icon',
+        [groupId, groupIconId, Date.now()]
+      )
+      .then((r) => r.rows[0].icon)
 
     await imageService.saveImageToFile(buffer, `public/groupIcon/${groupIconId}.jpg`)
     await imageService.uploadGroupIconToR2(groupIconId)
 
     await client.query('COMMIT')
+
+    if (oldIconId) {
+      imageService.deleteGroupIcon(oldIconId).catch(() => {})
+      imageService.deleteGroupIconFromR2(oldIconId).catch(() => {})
+    }
   } catch (error) {
     await client.query('ROLLBACK')
     throw error
