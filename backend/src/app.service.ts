@@ -296,9 +296,12 @@ export class AppService {
   async setProfilePicture(callerId: string, args: FileUploadArguments, file?: Express.Multer.File) {
     const imageBuffer = await this.imageService.argumentsToImageBuffer(args, file)
     await this.imageService.ensureImageIsNotNSFW(imageBuffer)
-    await this.imageService.saveImageToFile(imageBuffer, `public/${callerId}.jpg`)
-    await this.imageService.uploadProfilePictureToR2(callerId)
-    await this.imageService.invalidateCache(`profile-pictures/${callerId}.jpg`)
+
+    await this.databaseService.setProfilePicture(
+      callerId,
+      { buffer: imageBuffer },
+      this.imageService
+    )
 
     return {
       message: 'success',
