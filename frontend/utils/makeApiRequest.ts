@@ -142,10 +142,24 @@ export async function makeRequestWithFile<TArgs, TReturn>(
     }
     return data as TReturn
   } else {
-    const data = await result.json()
-    if (__DEV__) {
-      console.log('Request to', name, 'failed with', data)
+    try {
+      const data = await result.json()
+
+      if (isApiErrorPayload(data)) {
+        if (__DEV__) {
+          console.log('Request to', name, 'failed with', data)
+        }
+
+        throw new ApiError(data.message, data.statusCode, data.error, data.args)
+      } else {
+        throw new ApiError('unknownError', result.status, 'Unknown error')
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error
+      }
+
+      throw new ApiError('unknownError', result.status, 'Unknown error')
     }
-    throw new ApiError('unknownError', result.status, 'Unknown error')
   }
 }
