@@ -35,5 +35,7 @@ export async function setProfilePicture(
   } catch (error) {
     await client.query('ROLLBACK')
     throw error
+  } finally {
+    client.release()
   }
 }
