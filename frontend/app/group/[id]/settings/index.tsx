@@ -228,7 +228,6 @@ function GroupNameInput({ info }: { info: GroupUserInfo }) {
 
 function GroupIconInput({ info }: { info: GroupUserInfo }) {
   const theme = useTheme()
-  const snack = useSnack()
   const { t } = useTranslation()
   const [isChangingIcon, setIsChangingIcon] = useState(false)
 
@@ -279,8 +278,6 @@ function GroupIconInput({ info }: { info: GroupUserInfo }) {
       }
 
       await invalidateGroupInfo(info.id)
-
-      snack.show({ message: t('settings.groupIcon.groupIconChanged') })
     } catch (e) {
       if (e instanceof ApiError) {
         if (e.statusCode === 429) {
