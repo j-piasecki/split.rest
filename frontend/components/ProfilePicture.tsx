@@ -1,7 +1,7 @@
 import { Shimmer } from './Shimmer'
 import { useTheme } from '@styling/theme'
 import { Image } from 'expo-image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { StyleProp, View, ViewStyle } from 'react-native'
 import { User } from 'shared'
 
@@ -35,10 +35,20 @@ export function ProfilePicture({ size, style, ...props }: ProfilePictureProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [failed, setFailed] = useState(false)
 
-  const imageSize = failed ? size * 0.65 : size
+  const imageSize = failed || isLoading ? size * 0.65 : size
 
   // @ts-expect-error TS is dumb again
   const pictureId = 'user' in props ? props.user?.pictureId : props.pictureId
+
+  useEffect(() => {
+    if (!pictureId) {
+      setFailed(true)
+      setIsLoading(false)
+    } else {
+      setFailed(false)
+      setIsLoading(true)
+    }
+  }, [pictureId])
 
   return (
     <View

@@ -29,12 +29,15 @@ export function GroupIcon({ info, size, style }: GroupIconProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [failed, setFailed] = useState(false)
 
-  const imageSize = failed ? Math.min(size * 0.5, 44) : size
+  const imageSize = failed || isLoading ? Math.min(size * 0.5, 44) : size
 
   useEffect(() => {
     if (!info?.icon) {
       setFailed(true)
       setIsLoading(false)
+    } else {
+      setFailed(false)
+      setIsLoading(true)
     }
   }, [info?.icon])
 
