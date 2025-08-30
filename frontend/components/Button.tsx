@@ -76,6 +76,7 @@ export function Button({
             : theme.colors.primaryContainer,
           justifyContent: 'center',
           alignItems: 'center',
+          overflow: 'hidden',
         },
         typeof style === 'function'
           ? style({
