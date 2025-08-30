@@ -291,7 +291,7 @@ function RouletteResultRow({ user, index, result, groupInfo }: RouletteResultRow
       ]}
     >
       {isFirst && (
-        <View style={{ marginBottom: 16 }}>
+        <View style={{ marginBottom: 4 }}>
           <ProfilePicture user={user} size={96} />
           <View
             style={{
