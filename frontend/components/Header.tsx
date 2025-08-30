@@ -1,4 +1,3 @@
-import { GroupIcon } from './GroupIcon'
 import { Icon } from './Icon'
 import { ProfilePicture } from './ProfilePicture'
 import { Text } from '@components/Text'
@@ -22,7 +21,6 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupInfo } from 'shared'
 
 export const HEADER_HEIGHT = 68
 
@@ -31,7 +29,6 @@ export interface HeaderProps {
   isWaiting?: boolean
   onPull?: () => void
   showBackButton?: boolean
-  groupInfo?: GroupInfo
 }
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -41,13 +38,7 @@ function feedback() {
   HapticFeedback.pullDownActive()
 }
 
-export default function Header({
-  offset,
-  isWaiting,
-  onPull,
-  showBackButton,
-  groupInfo,
-}: HeaderProps) {
+export default function Header({ offset, isWaiting, onPull, showBackButton }: HeaderProps) {
   const { t } = useTranslation()
   const theme = useTheme()
   const user = useAuth()
@@ -61,7 +52,8 @@ export default function Header({
   const { width } = useWindowDimensions()
 
   const backButtonVisible =
-    Platform.OS === 'ios' && (showBackButton || displayClass > DisplayClass.Medium)
+    (Platform.OS === 'ios' || Platform.OS === 'web') &&
+    (showBackButton || displayClass > DisplayClass.Medium)
 
   const spin = useCallback(() => {
     'worklet'
@@ -176,21 +168,16 @@ export default function Header({
               style={{ opacity: showBackButton ? 1 : 0 }}
             />
           )}
-          {!groupInfo && (
-            <Text
-              style={{
-                fontSize: 28,
-                fontWeight: 600,
-                color: theme.colors.primary,
-                letterSpacing: 1,
-                userSelect: 'none',
-              }}
-            >
-              {t('appName')}
-            </Text>
-          )}
-
-          {groupInfo && <GroupIcon info={groupInfo} size={48} />}
+          <Text
+            style={{
+              fontSize: 28,
+              fontWeight: 600,
+              color: theme.colors.primary,
+              letterSpacing: 1,
+            }}
+          >
+            {t('appName')}
+          </Text>
         </Animated.View>
       </Pressable>
 

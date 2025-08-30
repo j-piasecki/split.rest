@@ -10,7 +10,6 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GroupInfo } from 'shared'
 
 export interface FlatListWithHeaderProps<T>
   extends Omit<
@@ -29,7 +28,6 @@ export interface FlatListWithHeaderProps<T>
   scrollHandler?: (e: NativeSyntheticEvent<NativeScrollEvent>) => void
   showBackButton?: boolean
   hideHeader?: boolean
-  groupInfo?: GroupInfo
 }
 
 export function FlatListWithHeader<T>({
@@ -40,7 +38,6 @@ export function FlatListWithHeader<T>({
   scrollHandler,
   showBackButton,
   hideHeader,
-  groupInfo,
   ...props
 }: FlatListWithHeaderProps<T>) {
   const theme = useTheme()
@@ -133,7 +130,6 @@ export function FlatListWithHeader<T>({
                     offset={pullValue}
                     isWaiting={isLoading || isRefreshing}
                     onPull={onRefresh}
-                    groupInfo={groupInfo}
                   />
                 </Animated.View>
               </View>
