@@ -102,7 +102,7 @@ export function RoundIconButton({
           {!isLoading && <Icon name={icon} size={size} color={color ?? theme.colors.outline} />}
         </View>
         {text && (
-          <Text style={{ color: theme.colors.onSurface, fontWeight: 500, fontSize: 16 }}>
+          <Text style={{ color: color ?? theme.colors.onSurface, fontWeight: 500, fontSize: 16 }}>
             {text}
           </Text>
         )}

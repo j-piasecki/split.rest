@@ -145,7 +145,7 @@ function InviteRow({
         {
           justifyContent: 'space-between',
           padding: 16,
-          paddingBottom: 48,
+          paddingBottom: 52,
           backgroundColor: theme.colors.surfaceContainer,
           gap: 8,
           marginBottom: showSeparator ? 2 : 0,
@@ -186,6 +186,7 @@ function InviteRow({
         {invite.rejected && info.permissions.canInviteMembers() && (
           <RoundIconButton
             icon='cached'
+            text={t('settings.invitations.resendInvite')}
             isLoading={isWithdrawing || isInviting}
             onPress={() => {
               inviteUser(invite.invitee.id)
@@ -198,6 +199,8 @@ function InviteRow({
         )}
         <RoundIconButton
           icon='close'
+          text={t('settings.invitations.withdrawInvite')}
+          color={theme.colors.error}
           isLoading={isWithdrawing || isInviting}
           onPress={() => {
             setInvitationWithdrawn({ withdrawn: true, userId: invite.invitee.id })

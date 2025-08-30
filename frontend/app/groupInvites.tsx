@@ -53,6 +53,7 @@ function Invite({
         style={{
           opacity: invite.rejected ? 0.7 : 1,
           justifyContent: 'space-between',
+          gap: 4,
         }}
       >
         <View style={{ flex: 1 }}>
@@ -95,6 +96,7 @@ function Invite({
         <View style={{ flexDirection: 'row', gap: 8, justifyContent: 'flex-end' }}>
           <RoundIconButton
             icon='check'
+            text={t('home.acceptInvite')}
             disabled={isChangingVisibility}
             isLoading={isAcceptingInvite}
             onPress={() => {
@@ -106,8 +108,10 @@ function Invite({
 
           <RoundIconButton
             icon={'close'}
+            text={t('home.rejectInvite')}
             disabled={isAcceptingInvite}
             isLoading={isChangingVisibility}
+            color={theme.colors.error}
             onPress={() => {
               setInviteRejected(true).then(() => {
                 snack.show({
