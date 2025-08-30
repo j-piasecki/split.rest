@@ -22,10 +22,16 @@ export function useRouletteQuery(groupId: number, query: PersonEntry[]) {
   useEffect(() => {
     async function fetchBalances() {
       try {
+        const startTime = performance.now()
         const response = await getBalances(
           groupId,
           query.map((entry) => entry.user!.id)
         )
+
+        // Wait for 300ms to ensure the response is not too fast
+        if (performance.now() - startTime < 400) {
+          await sleep(300 - (performance.now() - startTime))
+        }
 
         const result = query
           .map((entry) => {
