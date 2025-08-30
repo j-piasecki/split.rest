@@ -124,6 +124,7 @@ export function MembersList({
   return (
     <View style={{ width: '100%', flex: 1 }}>
       <FlatListWithHeader
+        groupInfo={info}
         isRefreshing={isLoading || isRefetching}
         onRefresh={refreshData}
         showBackButton

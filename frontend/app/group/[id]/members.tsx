@@ -48,7 +48,7 @@ export function GroupMembersScreen() {
           backgroundColor: theme.colors.surface,
         }}
       >
-        <Header showBackButton />
+        <Header showBackButton groupInfo={groupInfo} />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 8 }}>
           <Text style={{ color: theme.colors.onSurface, fontSize: 32 }}>{':('}</Text>
           <Text style={{ color: theme.colors.onSurface, fontSize: 16 }}>

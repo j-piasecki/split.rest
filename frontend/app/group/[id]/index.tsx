@@ -84,7 +84,10 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
             zIndex: 1,
           }}
         >
-          <Header showBackButton />
+          <Header
+            showBackButton={Platform.OS !== 'web' && Platform.OS !== 'android'}
+            groupInfo={groupInfo}
+          />
         </View>
         <View
           style={[

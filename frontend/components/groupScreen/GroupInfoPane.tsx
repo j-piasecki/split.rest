@@ -1,6 +1,5 @@
 import { ActionableSplitsPane } from './ActionableSplitsPane'
 import { GroupActionButtons } from './GroupActionButtons'
-import { GroupIcon } from '@components/GroupIcon'
 import { Icon } from '@components/Icon'
 import { FullPaneHeader } from '@components/Pane'
 import { RoundIconButton } from '@components/RoundIconButton'
@@ -126,18 +125,13 @@ function TitleWithBalance({ info }: { info: GroupUserInfo | undefined }) {
     <>
       <ShimmerPlaceholder argument={info} shimmerStyle={{ height: 44 }}>
         {(info) => (
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <GroupIcon info={info} size={44} />
-            <View style={{ flex: 1 }}>
-              <Text
-                style={{ fontSize: 32, color: theme.colors.primary, fontWeight: '600' }}
-                numberOfLines={3}
-                adjustsFontSizeToFit
-              >
-                {info.name}
-              </Text>
-            </View>
-          </View>
+          <Text
+            style={{ fontSize: 32, color: theme.colors.primary, fontWeight: '600' }}
+            numberOfLines={3}
+            adjustsFontSizeToFit
+          >
+            {info.name}
+          </Text>
         )}
       </ShimmerPlaceholder>
 
