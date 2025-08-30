@@ -14,13 +14,13 @@
       "bundleIdentifier": "rest.split.app",
       "usesAppleSignIn": true,
       "associatedDomains": ["applinks:split.rest"],
-      "buildNumber": "2",
+      "buildNumber": "4",
       "entitlements": {
         "aps-environment": "production"
       }
     },
     "android": {
-      "versionCode": 51,
+      "versionCode": 53,
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon-foreground.png",
