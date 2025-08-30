@@ -13,6 +13,7 @@ import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { getSplitDisplayName } from '@utils/getSplitDisplayName'
+import { useRouter } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Pressable, RefreshControl, ScrollView, StyleProp, View, ViewStyle } from 'react-native'
@@ -134,6 +135,7 @@ function UserRow({
   const appUser = useAuth()
   const theme = useTheme()
   const snack = useSnack()
+  const router = useRouter()
   const { t } = useTranslation()
   const { mutateAsync: completeEntry, isPending: isCompleting } = useCompleteSplitEntryMutation(
     groupInfo?.id,
@@ -144,6 +146,9 @@ function UserRow({
     splitInfo.id
   )
 
+  const [isPressed, setIsPressed] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+
   const paidByThis = splitInfo.paidBy?.id === user.id
   const canCompleteSplit =
     showCompleteButton &&
@@ -153,10 +158,18 @@ function UserRow({
   const showBadge = (user.pending && showCompleteButton) || !user.hasAccess
 
   return (
-    <View
+    <Pressable
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}
+      onHoverIn={() => setIsHovered(true)}
+      onHoverOut={() => setIsHovered(false)}
       style={[
         {
-          backgroundColor: theme.colors.surfaceContainer,
+          backgroundColor: isPressed
+            ? theme.colors.surfaceContainerHighest
+            : isHovered
+              ? theme.colors.surfaceContainerHigh
+              : theme.colors.surfaceContainer,
           paddingTop: 12,
           paddingBottom: canCompleteSplit ? 4 : 12,
           paddingHorizontal: 16,
@@ -170,6 +183,9 @@ function UserRow({
           borderBottomRightRadius: 16,
         },
       ]}
+      onPress={() => {
+        router.navigate(`/group/${groupInfo?.id}/member/${user.id}`)
+      }}
     >
       <View
         style={{
@@ -257,7 +273,7 @@ function UserRow({
           />
         </View>
       )}
-    </View>
+    </Pressable>
   )
 }
 
