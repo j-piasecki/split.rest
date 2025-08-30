@@ -52,6 +52,10 @@ const darkCustomColors: CustomColors = {
   balancePositive: '#1dd150',
   balanceNegative: '#eb4646',
   balanceNeutral: '#9e8c90',
+
+  podiumGold: '#D4AF37',
+  podiumSilver: '#C0C0C0',
+  podiumBronze: '#CD7F32',
 }
 
 const darkColors: Colors = {
@@ -104,6 +108,10 @@ const lightCustomColors: CustomColors = {
   balancePositive: '#00C853',
   balanceNegative: '#D32F2F',
   balanceNeutral: '#9e8c90',
+
+  podiumGold: '#D4AF37',
+  podiumSilver: '#888888',
+  podiumBronze: '#CD7F32',
 }
 
 const lightColors: Colors = {

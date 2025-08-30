@@ -56,4 +56,36 @@ export class HapticFeedback {
 
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
   }
+
+  static async rouletteFirst() {
+    if (Platform.OS === 'web') {
+      return
+    }
+
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft)
+  }
+
+  static async rouletteSecond() {
+    if (Platform.OS === 'web') {
+      return
+    }
+
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+  }
+
+  static async rouletteThird() {
+    if (Platform.OS === 'web') {
+      return
+    }
+
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+  }
+
+  static async rouletteRest() {
+    if (Platform.OS === 'web') {
+      return
+    }
+
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+  }
 }

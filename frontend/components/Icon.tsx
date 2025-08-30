@@ -94,6 +94,7 @@ export type IconName =
   | 'tag'
   | 'timeline'
   | 'title'
+  | 'trophy'
   | 'undo'
   | 'user'
   | 'upload'
@@ -200,6 +201,7 @@ const iconMap: Record<IconName, unknown> = {
   tag: require('@assets/icons/tag.svg'),
   timeline: require('@assets/icons/timeline.svg'),
   title: require('@assets/icons/title.svg'),
+  trophy: require('@assets/icons/trophy.svg'),
   undo: require('@assets/icons/undo.svg'),
   user: require('@assets/icons/user.svg'),
   upload: require('@assets/icons/upload.svg'),

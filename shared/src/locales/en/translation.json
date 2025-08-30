@@ -388,7 +388,8 @@
     "youNeedToAddAtLeastTwoUsers": "You need to add at least 2 users",
     "submit": "Submit",
     "createSplit": "Create split",
-    "result": "Result"
+    "result": "Result",
+    "others": "Others"
   },
 
   "joinGroup": {

@@ -46,6 +46,10 @@ export interface CustomColors {
   balancePositive: string
   balanceNegative: string
   balanceNeutral: string
+
+  podiumGold: string
+  podiumSilver: string
+  podiumBronze: string
 }
 
 export interface Colors extends MaterialColors, CustomColors {}
