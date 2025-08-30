@@ -4,7 +4,7 @@ import { Text } from './Text'
 import { useTheme } from '@styling/theme'
 import { Rect, measure } from '@utils/measure'
 import { resolveFontName } from '@utils/resolveFontName'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useLayoutEffect, useRef, useState } from 'react'
 import {
   Modal,
@@ -20,6 +20,8 @@ import {
 import Animated, {
   FadeIn,
   FadeInUp,
+  FadeOutUp,
+  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -46,17 +48,19 @@ export function Picker({ hint, items, selectedItem, onSelectionChange, style }: 
   const buttonRotation = useSharedValue(0)
   const wrapperRef = useRef<View>(null)
   const [isOpened, setIsOpened] = useState(false)
+  const [showContent, setShowContent] = useState(true)
   const [wrapperLayout, setWrapperLayout] = useState<Rect>({ width: 0, height: 0, x: 0, y: 0 })
 
   const selected = items.find((item) => item.value === selectedItem) ?? items[0]
 
-  useEffect(() => {
-    if (isOpened) {
-      buttonRotation.value = withTiming(180, { duration: 200 })
-    } else {
-      buttonRotation.value = withTiming(0, { duration: 200 })
+  useAnimatedReaction(
+    () => isFocused.value,
+    (value, previous) => {
+      if (value !== previous) {
+        buttonRotation.value = withTiming(value ? 180 : 0, { duration: 200 })
+      }
     }
-  }, [buttonRotation, isOpened])
+  )
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -87,6 +91,22 @@ export function Picker({ hint, items, selectedItem, onSelectionChange, style }: 
       setIsOpened(true)
       isFocused.value = true
     }
+  }
+
+  function close() {
+    if (Platform.OS === 'web') {
+      setIsOpened(false)
+      setShowContent(true)
+      isFocused.value = false
+      return
+    }
+
+    setShowContent(false)
+    isFocused.value = false
+    setTimeout(() => {
+      setIsOpened(false)
+      setShowContent(true)
+    }, 200)
   }
 
   return (
@@ -137,28 +157,20 @@ export function Picker({ hint, items, selectedItem, onSelectionChange, style }: 
       </Pressable>
 
       <Modal visible={isOpened} transparent statusBarTranslucent navigationBarTranslucent>
-        <Animated.View style={StyleSheet.absoluteFill} entering={FadeIn.duration(200)}>
-          <Pressable
-            onPress={() => {
-              setIsOpened(false)
-              isFocused.value = false
-            }}
-            style={{
-              flex: 1,
-              backgroundColor: 'transparent',
-            }}
-          />
-        </Animated.View>
-        <PickerContent
-          items={items}
-          selectedItem={selectedItem}
-          onSelectionChange={(item) => {
-            onSelectionChange(item)
-            setIsOpened(false)
-            isFocused.value = false
-          }}
-          wrapperLayout={wrapperLayout}
-        />
+        {showContent && (
+          <Animated.View style={StyleSheet.absoluteFill} entering={FadeIn.duration(200)}>
+            <Pressable onPress={close} style={StyleSheet.absoluteFill} />
+            <PickerContent
+              items={items}
+              selectedItem={selectedItem}
+              onSelectionChange={(item) => {
+                onSelectionChange(item)
+                close()
+              }}
+              wrapperLayout={wrapperLayout}
+            />
+          </Animated.View>
+        )}
       </Modal>
     </View>
   )
@@ -202,6 +214,7 @@ function PickerContent({
   return (
     <Animated.View
       entering={FadeInUp.duration(200)}
+      exiting={Platform.OS !== 'web' ? FadeOutUp.duration(200) : undefined}
       ref={containerRef}
       style={[
         {

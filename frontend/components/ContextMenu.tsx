@@ -22,6 +22,8 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   FadeIn,
   FadeInUp,
+  FadeOut,
+  FadeOutUp,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -102,10 +104,10 @@ interface ContextMenuItemsProps {
   anchorRect: Rect
   touchPoint: Point
   items: ContextMenuItem[]
-  setVisible: (visible: boolean) => void
+  closeModal: () => void
 }
 
-function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: ContextMenuItemsProps) {
+function ContextMenuItems({ anchorRect, touchPoint, items, closeModal }: ContextMenuItemsProps) {
   const theme = useTheme()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const contentRef = useRef<View>(null)
@@ -142,6 +144,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
   return (
     <Animated.View
       entering={Platform.OS !== 'web' ? FadeInUp.duration(250) : undefined}
+      exiting={Platform.OS !== 'web' ? FadeOutUp.duration(250) : undefined}
       ref={contentRef}
       style={{
         transformOrigin: isBelow ? 'top' : 'bottom',
@@ -165,7 +168,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, setVisible }: Context
             {...item}
             onPress={() => {
               item.onPress()
-              setVisible(false)
+              closeModal()
             }}
           />
 
@@ -206,6 +209,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
   const theme = useTheme()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const [visible, setVisible] = useState(false)
+  const [showContent, setShowContent] = useState(true)
   const [pressed, setPressed] = useState(false)
   const [hovered, setHovered] = useState(false)
   const anchorRef = useRef<View>(null)
@@ -317,10 +321,24 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
   })
 
   useEffect(() => {
-    if (!visible) {
+    if (!showContent) {
       scaleAnimation.value = withTiming(0, { duration: 200 })
     }
-  }, [scaleAnimation, visible])
+  }, [scaleAnimation, showContent])
+
+  function closeModal() {
+    if (Platform.OS === 'web') {
+      setVisible(false)
+      setShowContent(true)
+      return
+    }
+
+    setShowContent(false)
+    setTimeout(() => {
+      setVisible(false)
+      setShowContent(true)
+    }, 200)
+  }
 
   return (
     <>
@@ -376,54 +394,59 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
         visible={visible}
         navigationBarTranslucent
         statusBarTranslucent
-        onRequestClose={() => setVisible(false)}
+        onRequestClose={closeModal}
         transparent
       >
-        <Animated.View
-          style={StyleSheet.absoluteFillObject}
-          entering={Platform.OS !== 'web' ? FadeIn.duration(200) : undefined}
-        >
-          <Animated.View style={StyleSheet.absoluteFillObject}>
-            <Pressable
-              onPress={() => setVisible(false)}
-              // @ts-expect-error - onContextMenu does not exist on Pressable on mobile
-              onContextMenu={(e) => {
-                setVisible(false)
-                e.preventDefault()
-              }}
-              style={[
-                StyleSheet.absoluteFillObject,
-                { backgroundColor: isSmallScreen ? 'rgba(0, 0, 0, 0.5)' : 'transparent' },
-              ]}
-            />
-          </Animated.View>
-          {isSmallScreen && (
+        {showContent && (
+          <>
             <Animated.View
-              style={[
-                scaleStyle,
-                {
-                  position: 'absolute',
-                  left: anchorRect.current?.x,
-                  top: anchorRect.current?.y,
-                  width: anchorRect.current?.width,
-                  height: anchorRect.current?.height,
-                  backgroundColor: theme.colors.surfaceContainer,
-                  overflow: 'hidden',
-                  pointerEvents: 'none',
-                  borderRadius: 8,
-                },
-              ]}
+              style={StyleSheet.absoluteFillObject}
+              entering={Platform.OS !== 'web' ? FadeIn.duration(200) : undefined}
+              exiting={Platform.OS !== 'web' ? FadeOut.duration(200) : undefined}
             >
-              {props.children}
+              <Animated.View style={StyleSheet.absoluteFillObject}>
+                <Pressable
+                  onPress={closeModal}
+                  // @ts-expect-error - onContextMenu does not exist on Pressable on mobile
+                  onContextMenu={(e) => {
+                    closeModal()
+                    e.preventDefault()
+                  }}
+                  style={[
+                    StyleSheet.absoluteFillObject,
+                    { backgroundColor: isSmallScreen ? 'rgba(0, 0, 0, 0.5)' : 'transparent' },
+                  ]}
+                />
+              </Animated.View>
+              {isSmallScreen && (
+                <Animated.View
+                  style={[
+                    scaleStyle,
+                    {
+                      position: 'absolute',
+                      left: anchorRect.current?.x,
+                      top: anchorRect.current?.y,
+                      width: anchorRect.current?.width,
+                      height: anchorRect.current?.height,
+                      backgroundColor: theme.colors.surfaceContainer,
+                      overflow: 'hidden',
+                      pointerEvents: 'none',
+                      borderRadius: 8,
+                    },
+                  ]}
+                >
+                  {props.children}
+                </Animated.View>
+              )}
+              <ContextMenuItems
+                anchorRect={anchorRect.current!}
+                touchPoint={touchPoint.current!}
+                items={props.items}
+                closeModal={closeModal}
+              />
             </Animated.View>
-          )}
-          <ContextMenuItems
-            anchorRect={anchorRect.current!}
-            touchPoint={touchPoint.current!}
-            items={props.items}
-            setVisible={setVisible}
-          />
-        </Animated.View>
+          </>
+        )}
       </Modal>
     </>
   )
