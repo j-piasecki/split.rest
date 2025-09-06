@@ -76,7 +76,7 @@ export default function MembersScreenWrapper() {
   const { t } = useTranslation()
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title={t('tabs.members')}>
+    <ModalScreen returnPath={`/group/${id}`} title={t('tabs.members')} maxWidth={700}>
       <GroupMembersScreen />
     </ModalScreen>
   )
