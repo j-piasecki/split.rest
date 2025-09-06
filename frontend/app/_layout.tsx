@@ -128,7 +128,7 @@ function Content() {
                   />
                   <Stack.Screen
                     name='group/[id]/members'
-                    options={{ title: t('screenName.members') }}
+                    options={{ title: t('screenName.members'), ...modalOptions }}
                   />
                   <Stack.Screen
                     name='group/[id]/settleUp'

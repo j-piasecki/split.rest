@@ -88,6 +88,7 @@ export interface MembersListProps {
   iconOnly?: boolean
   applyBottomInset?: boolean
   horizontalPadding?: number
+  paddingTop?: number
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   headerComponent?: React.ComponentType<any> | React.ReactElement
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -101,6 +102,7 @@ export function MembersList({
   lowToHigh,
   iconOnly,
   horizontalPadding = 0,
+  paddingTop = 0,
   headerComponent,
   footerComponent,
   applyBottomInset = false,
@@ -134,6 +136,7 @@ export function MembersList({
           alignSelf: 'center',
           paddingBottom: 88 + (applyBottomInset ? insets.bottom : 0),
           paddingHorizontal: horizontalPadding,
+          paddingTop,
         }}
         ListEmptyComponent={
           <ListEmptyComponent
