@@ -4,9 +4,9 @@ import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { LayoutChangeEvent, Platform, Pressable, StyleSheet, View } from 'react-native'
-import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
+import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface FullscreenModalProps {
@@ -100,10 +100,24 @@ function ModalScreen({
   maxHeight = 800,
 }: ModalScreenProps) {
   const theme = useTheme()
+  const [showContent, setShowContent] = useState(true)
+
+  function close() {
+    setShowContent(false)
+    setTimeout(() => {
+      setShowContent(true)
+      goBack()
+    }, 150)
+  }
+
+  if (!showContent) {
+    return null
+  }
 
   return (
     <Animated.View
       entering={opaque ? FadeIn.duration(100) : undefined}
+      exiting={opaque ? FadeOut.duration(100) : undefined}
       style={{
         flex: 1,
         justifyContent: 'center',
@@ -112,10 +126,11 @@ function ModalScreen({
     >
       <Pressable
         style={[StyleSheet.absoluteFill, { backgroundColor: opaque ? '#000000a0' : 'transparent' }]}
-        onPress={goBack}
+        onPress={close}
       />
       <Animated.View
         entering={slideAnimation ? FadeInDown.duration(200) : undefined}
+        exiting={slideAnimation ? FadeOutDown.duration(100) : undefined}
         style={{
           width: '90%',
           height: '80%',
@@ -140,7 +155,7 @@ function ModalScreen({
           <Text style={{ fontSize: 20, fontWeight: 800, color: theme.colors.onSurface }}>
             {title}
           </Text>
-          <RoundIconButton icon='close' onPress={goBack} />
+          <RoundIconButton icon='close' onPress={close} />
         </View>
         <View onLayout={onLayout} style={{ flex: 1 }}>
           {children}
