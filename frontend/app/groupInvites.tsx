@@ -1,6 +1,6 @@
-import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { GroupIcon } from '@components/GroupIcon'
 import { ListEmptyComponent } from '@components/ListEmptyComponent'
+import ModalScreen from '@components/ModalScreen'
 import { FullPaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
@@ -16,7 +16,7 @@ import { invalidateGroupInvites } from '@utils/queryClient'
 import { router } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, View, ViewStyle } from 'react-native'
+import { FlatList, RefreshControl, StyleProp, View, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GroupInviteWithGroupInfo } from 'shared'
 
@@ -62,7 +62,7 @@ function Invite({
             numberOfLines={1}
             adjustsFontSizeToFit
           >
-            {t('home.invitedToGroupMessage')}
+            {t('groupInvites.invitedToGroupMessage')}
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <GroupIcon info={invite.groupInfo} size={40} />
@@ -87,7 +87,7 @@ function Invite({
               style={{ color: theme.colors.outline, fontSize: 16, fontWeight: 500, flexShrink: 1 }}
               numberOfLines={1}
             >
-              {t('home.invitedBy', { name: invite.createdBy.name })}
+              {t('groupInvites.invitedBy', { name: invite.createdBy.name })}
             </Text>
             <ProfilePicture size={24} user={invite.createdBy} />
           </View>
@@ -96,7 +96,7 @@ function Invite({
         <View style={{ flexDirection: 'row', gap: 8, justifyContent: 'flex-end' }}>
           <RoundIconButton
             icon='check'
-            text={t('home.acceptInvite')}
+            text={t('groupInvites.acceptInvite')}
             disabled={isChangingVisibility}
             isLoading={isAcceptingInvite}
             onPress={() => {
@@ -108,14 +108,14 @@ function Invite({
 
           <RoundIconButton
             icon={'close'}
-            text={t('home.rejectInvite')}
+            text={t('groupInvites.rejectInvite')}
             disabled={isAcceptingInvite}
             isLoading={isChangingVisibility}
             color={theme.colors.error}
             onPress={() => {
               setInviteRejected(true).then(() => {
                 snack.show({
-                  message: t('home.rejectedInvite', { name: invite.groupInfo.name }),
+                  message: t('groupInvites.rejectedInvite', { name: invite.groupInfo.name }),
                   actionText: t('undo'),
                   action: async () => {
                     await setInviteRejected(false)
@@ -200,10 +200,9 @@ function InvitesShimmer({ count }: { count: number }) {
   )
 }
 
-export default function Invites() {
+export function InvitesContent() {
   const theme = useTheme()
   const { t } = useTranslation()
-  const displayClass = useDisplayClass()
   const insets = useSafeAreaInsets()
 
   const {
@@ -229,11 +228,14 @@ export default function Invites() {
             width: '100%',
           }}
         >
-          <FlatListWithHeader
+          <FlatList
             data={invites}
-            showBackButton
-            isRefreshing={invitesLoading || isRefetchingInvites}
-            onRefresh={refresh}
+            refreshControl={
+              <RefreshControl
+                refreshing={invitesLoading || isRefetchingInvites}
+                onRefresh={refresh}
+              />
+            }
             renderItem={({ item, index }) => (
               <Invite
                 invite={item}
@@ -252,7 +254,7 @@ export default function Invites() {
               paddingHorizontal: 12,
               paddingBottom: 88 + insets.bottom,
               alignSelf: 'center',
-              paddingTop: displayClass <= DisplayClass.Medium ? 8 : 0,
+              paddingTop: 12,
             }}
             onEndReachedThreshold={0.5}
             keyExtractor={(item) => `${item.groupInfo.id}-${item.rejected}`}
@@ -260,14 +262,16 @@ export default function Invites() {
             ListHeaderComponent={
               <FullPaneHeader
                 icon='stackedEmail'
-                title={t('home.groupInvites')}
+                title={t('groupInvites.groupInvitesHeader')}
                 textLocation='start'
               />
             }
             ListEmptyComponent={
               <ListEmptyComponent
                 isLoading={invitesLoading}
-                emptyText={t(invitesError ? 'home.errorLoadingInvites' : 'home.noGroupInvites')}
+                emptyText={t(
+                  invitesError ? 'groupInvites.errorLoadingInvites' : 'groupInvites.noGroupInvites'
+                )}
                 loadingPlaceholder={<InvitesShimmer count={3} />}
               />
             }
@@ -280,5 +284,15 @@ export default function Invites() {
         </View>
       </View>
     </View>
+  )
+}
+
+export default function Invites() {
+  const { t } = useTranslation()
+
+  return (
+    <ModalScreen returnPath='/home' title={t('screenName.groupInvites')} maxWidth={600}>
+      <InvitesContent />
+    </ModalScreen>
   )
 }

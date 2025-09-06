@@ -35,22 +35,25 @@
     "groups": "Groups",
     "noGroups": "No groups",
     "noHiddenGroups": "No hidden groups",
-    "groupInvites": "Group invites",
     "errorLoadingGroups": "Could not load your groups",
     "showGroupInvites": "Show group invites",
     "noGroupInvitesButton": "No pending invites",
-    "errorLoadingInvites": "Could not load your invites",
-    "noGroupInvites": "You don't have any pending invites",
     "createGroup": "Create group",
-    "invitedToGroupMessage": "You've been invited to join",
-    "invitedBy": "By {{name}}",
-    "rejectedInvite": "Rejected invite to {{name}}",
-    "acceptInvite": "Accept",
-    "rejectInvite": "Reject",
     "showingHiddenGroups": "Showing hidden groups",
     "showingVisibleGroups": "Showing visible groups",
     "hideGroup": "Hide group",
     "showGroup": "Show group"
+  },
+
+  "groupInvites": {
+    "groupInvitesHeader": "Group invites",
+    "errorLoadingInvites": "Could not load your invites",
+    "noGroupInvites": "You don't have any pending invites",
+    "invitedToGroupMessage": "You've been invited to join",
+    "invitedBy": "By {{name}}",
+    "rejectedInvite": "Rejected invite to {{name}}",
+    "acceptInvite": "Accept",
+    "rejectInvite": "Reject"
   },
 
   "notification": {
@@ -299,6 +302,7 @@
   },
 
   "screenName": {
+    "groupInvites": "Group invites",
     "createGroup": "Create group",
     "group": "Group",
     "inviteMember": "Invite member",

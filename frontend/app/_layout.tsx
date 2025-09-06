@@ -123,6 +123,10 @@ function Content() {
                   <Stack.Screen name='home' options={{ title: t('appName'), animation: 'none' }} />
                   <Stack.Screen name='login' options={{ title: t('appName'), animation: 'none' }} />
                   <Stack.Screen
+                    name='groupInvites'
+                    options={{ title: t('screenName.groupInvites'), ...modalOptions }}
+                  />
+                  <Stack.Screen
                     name='group/[id]/index'
                     options={{ title: t('screenName.group') }}
                   />
