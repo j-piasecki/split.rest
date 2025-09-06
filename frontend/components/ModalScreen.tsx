@@ -36,28 +36,32 @@ function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalP
             alignItems: 'center',
             paddingTop: insets.top,
             justifyContent: 'flex-start',
-            paddingHorizontal: 4,
-            gap: 4,
+            paddingHorizontal: Platform.OS !== 'ios' ? 8 : 4,
+            gap: Platform.OS !== 'ios' ? 16 : 4,
           },
-          Platform.OS !== 'web' && {
+          Platform.OS === 'ios' && {
             backgroundColor: theme.colors.surfaceContainerLow,
             boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
           },
         ]}
       >
         <RoundIconButton
-          icon={Platform.OS === 'android' ? 'arrowBack' : 'chevronBack'}
+          icon={Platform.OS !== 'ios' ? 'arrowBack' : 'chevronBack'}
           onPress={goBack}
           size={24}
           color={theme.colors.onSurface}
-          style={{ padding: 12, borderRadius: 48 }}
+          style={{
+            padding: 12,
+            borderRadius: 48,
+            backgroundColor: Platform.OS !== 'ios' ? `${theme.colors.onSurface}16` : undefined,
+          }}
         />
         <Text
           style={{
             flex: 1,
-            paddingRight: 48,
-            textAlign: Platform.OS === 'ios' ? 'center' : 'left',
-            fontSize: 20,
+            paddingRight: Platform.OS !== 'ios' ? 0 : 48,
+            textAlign: Platform.OS !== 'ios' ? 'left' : 'center',
+            fontSize: Platform.OS !== 'ios' ? 22 : 20,
             color: theme.colors.onSurface,
             fontWeight: 600,
           }}
