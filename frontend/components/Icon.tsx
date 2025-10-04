@@ -211,7 +211,7 @@ const iconMap: Record<IconName, unknown> = {
 }
 
 // @ts-expect-error array of strings is expected, unknown is provided
-Image.prefetch(Object.values(iconMap))
+Object.values(iconMap).forEach(Image.loadAsync)
 
 export function Icon({ name, size, color, style }: IconProps) {
   if (color === 'transparent') {
