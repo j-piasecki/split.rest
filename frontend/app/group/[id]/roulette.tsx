@@ -242,7 +242,7 @@ function RouletteResultRow({ user, index, result, groupInfo }: RouletteResultRow
         style={{ marginTop: index !== 0 ? 16 : 0 }}
         layout={
           Platform.OS !== 'web'
-            ? LinearTransition.springify().damping(100).stiffness(250)
+            ? LinearTransition.springify().damping(100).stiffness(750)
             : undefined
         }
         exiting={Platform.OS !== 'web' ? FadeOut : undefined}
@@ -266,7 +266,7 @@ function RouletteResultRow({ user, index, result, groupInfo }: RouletteResultRow
         Platform.OS !== 'web'
           ? LinearTransition.springify()
               .damping(100)
-              .stiffness(250)
+              .stiffness(750)
               .delay(50 * index)
           : undefined
       }
