@@ -201,8 +201,8 @@ export function SnackBarProvider({ children }: { children: React.ReactNode }) {
       transform: [
         {
           translateY: withSpring(-(insets.bottom + 8 + bottomInset.value), {
-            damping: 20,
-            stiffness: 250,
+            damping: 50,
+            stiffness: 500,
           }),
         },
       ],
