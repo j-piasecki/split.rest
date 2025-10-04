@@ -63,7 +63,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
       isRotating.value = true
       rotation.value = withSpring(
         360 * rotationCounter.value,
-        { damping: 10, stiffness: 40 },
+        { damping: 35, stiffness: 120 },
         () => {
           if (rotation.value % 360 === 0) {
             isRotating.value = false

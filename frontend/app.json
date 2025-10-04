@@ -27,6 +27,7 @@
         "monochromeImage": "./assets/icon-foreground.png",
         "backgroundColor": "#8e004a"
       },
+      "predictiveBackGestureEnabled": true,
       "package": "rest.split.app",
       "intentFilters": [
         {
@@ -63,7 +64,8 @@
         "expo-build-properties",
         {
           "ios": {
-            "useFrameworks": "static"
+            "useFrameworks": "static",
+            "buildReactNativeFromSource": true
           }
         }
       ],
