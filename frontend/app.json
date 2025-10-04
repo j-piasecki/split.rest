@@ -2,7 +2,7 @@
   "expo": {
     "name": "Split",
     "slug": "Split",
-    "version": "0.0.28",
+    "version": "0.0.29",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -14,13 +14,13 @@
       "bundleIdentifier": "rest.split.app",
       "usesAppleSignIn": true,
       "associatedDomains": ["applinks:split.rest"],
-      "buildNumber": "4",
+      "buildNumber": "1",
       "entitlements": {
         "aps-environment": "production"
       }
     },
     "android": {
-      "versionCode": 53,
+      "versionCode": 54,
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon-foreground.png",
