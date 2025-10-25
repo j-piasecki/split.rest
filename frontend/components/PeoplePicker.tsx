@@ -62,6 +62,7 @@ function PersonRow({
         borderRadius: 4,
         borderBottomLeftRadius: entries.length - 1 === index ? 16 : 4,
         borderBottomRightRadius: entries.length - 1 === index ? 16 : 4,
+        zIndex: entries.length - index,
       }}
     >
       <View
