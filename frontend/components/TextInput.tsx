@@ -160,6 +160,7 @@ export const TextInput = React.forwardRef<TextInputRef, Props>(function TextInpu
                 color: theme.colors.onSurface,
                 fontWeight: '600',
                 fontSize: 14,
+                padding: 0,
               },
               fontStyle,
               inputStyle,
