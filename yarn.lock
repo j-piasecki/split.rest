@@ -5979,20 +5979,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-google-signin/google-signin@npm:^14.0.1":
-  version: 14.0.1
-  resolution: "@react-native-google-signin/google-signin@npm:14.0.1"
+"@react-native-google-signin/google-signin@npm:^16.0.0":
+  version: 16.0.0
+  resolution: "@react-native-google-signin/google-signin@npm:16.0.0"
   peerDependencies:
     expo: ">=52.0.40"
     react: "*"
-    react-dom: "*"
     react-native: "*"
   peerDependenciesMeta:
     expo:
       optional: true
-    react-dom:
-      optional: true
-  checksum: b3030e8d2f0ef72e5dd60822be0ffa3782ac6dc451e54ac1b3e8aafec3f260b129e91b17e7a2ca3dfdd5382ec1e76899cf2e465ef2e85ea14e916f525ffe2c0e
+  checksum: a03f66e0473e28eb4a5bf53afe802cef15b24f81d332474ad13bb564dbbbe4c2aa01e9c35dfe5fd3e8d97d81e34b4f7f0acee02c5d4e3e3258f8fc49e9c62d8b
   languageName: node
   linkType: hard
 
@@ -12944,7 +12941,7 @@ __metadata:
     "@react-native-firebase/auth": ^23.4.0
     "@react-native-firebase/crashlytics": ^23.4.0
     "@react-native-firebase/messaging": ^23.4.0
-    "@react-native-google-signin/google-signin": ^14.0.1
+    "@react-native-google-signin/google-signin": ^16.0.0
     "@sentry/react-native": ~7.2.0
     "@tanstack/eslint-plugin-query": ^5.62.1
     "@tanstack/react-query": ^5.62.3
