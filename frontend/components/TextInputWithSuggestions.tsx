@@ -2,7 +2,10 @@ import { Props, TextInput, TextInputRef } from './TextInput'
 import { useTheme } from '@styling/theme'
 import { measure } from '@utils/measure'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Pressable, ScrollView, View, ViewStyle } from 'react-native'
+import { Pressable, View, ViewStyle } from 'react-native'
+// RN's ScrollView doesn't work on Android in the following scenario:
+// RNScrollView > ... > Animated.View, position: absolute > RNScrollView
+import { ScrollView } from 'react-native-gesture-handler'
 import Animated, { FadeInUp, FadeOutDown } from 'react-native-reanimated'
 import { useDebounce } from 'use-debounce'
 
