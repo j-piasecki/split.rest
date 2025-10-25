@@ -468,7 +468,9 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
                 }, 50)
               }
             } else {
-              ref?.scrollTo({ x: containerWidth * 2, y: 0, animated: false })
+              setTimeout(() => {
+                ref?.scrollTo({ x: containerWidth * 2, y: 0, animated: false })
+              }, 0)
             }
           }}
           onLayout={({ nativeEvent }) => {
