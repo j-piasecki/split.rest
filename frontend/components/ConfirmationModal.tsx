@@ -64,6 +64,7 @@ export function ConfirmationModal({
       navigationBarTranslucent
       visible={visible}
       onRequestClose={close}
+      onDismiss={close}
     >
       {showContent && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

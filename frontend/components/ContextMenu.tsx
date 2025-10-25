@@ -395,6 +395,7 @@ export const ContextMenu = React.forwardRef(function ContextMenu(
         navigationBarTranslucent
         statusBarTranslucent
         onRequestClose={closeModal}
+        onDismiss={closeModal}
         transparent
       >
         {showContent && (

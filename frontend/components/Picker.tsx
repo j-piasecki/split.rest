@@ -156,7 +156,14 @@ export function Picker({ hint, items, selectedItem, onSelectionChange, style }: 
         </Animated.View>
       </Pressable>
 
-      <Modal visible={isOpened} transparent statusBarTranslucent navigationBarTranslucent>
+      <Modal
+        visible={isOpened}
+        transparent
+        statusBarTranslucent
+        navigationBarTranslucent
+        onRequestClose={close}
+        onDismiss={close}
+      >
         {showContent && (
           <Animated.View style={StyleSheet.absoluteFill} entering={FadeIn.duration(200)}>
             <Pressable onPress={close} style={StyleSheet.absoluteFill} />

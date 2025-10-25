@@ -152,24 +152,33 @@ function ActionMenu({
     }
   }
 
+  function close() {
+    // Don't close if any action is loading
+    if (loadingActionIndex === null) {
+      onClose()
+    }
+  }
+
   if (!visible) {
     return null
   }
 
   return (
-    <Modal transparent statusBarTranslucent navigationBarTranslucent visible={visible}>
+    <Modal
+      transparent
+      statusBarTranslucent
+      navigationBarTranslucent
+      visible={visible}
+      onRequestClose={close}
+      onDismiss={close}
+    >
       <Animated.View
         style={StyleSheet.absoluteFill}
         entering={FadeIn.duration(150)}
         exiting={FadeOut.duration(150)}
       >
         <Pressable
-          onPress={() => {
-            // Don't close if any action is loading
-            if (loadingActionIndex === null) {
-              onClose()
-            }
-          }}
+          onPress={close}
           style={{
             flex: 1,
             backgroundColor: 'rgba(0, 0, 0, 0.3)',
