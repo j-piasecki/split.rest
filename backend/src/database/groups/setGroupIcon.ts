@@ -1,6 +1,7 @@
 import { NotFoundException } from '../../errors/NotFoundException'
 import { ImageService } from '../../image.service'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
+import crypto from 'crypto'
 import { Pool } from 'pg'
 
 export async function setGroupIcon(
