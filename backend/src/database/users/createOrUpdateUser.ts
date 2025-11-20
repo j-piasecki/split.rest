@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { Pool } from 'pg'
 import { CreateOrUpdateUserArguments } from 'shared'
 import { BadRequestException } from 'src/errors/BadRequestException'
