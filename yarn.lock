@@ -12019,9 +12019,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-image@npm:~3.0.8":
-  version: 3.0.8
-  resolution: "expo-image@npm:3.0.8"
+"expo-image@npm:~3.0.10":
+  version: 3.0.10
+  resolution: "expo-image@npm:3.0.10"
   peerDependencies:
     expo: "*"
     react: "*"
@@ -12030,7 +12030,7 @@ __metadata:
   peerDependenciesMeta:
     react-native-web:
       optional: true
-  checksum: 78b17ab0d8acb6f46f4a464ec077e92b080142a4c3d0c3d296f4f659a191f594b1946ad430560f76646a2a062fb3ce7e5196a9f6bd8f49f838d47c94d05b3c81
+  checksum: f7af2701061aa47b890d37d8aaab06eb1bacc7936937a1d241d02e6df01da713e2614ef022e9cda81b72175d0041e83c3c5c772a76690e86cc5b279b53df18b0
   languageName: node
   linkType: hard
 
@@ -12969,7 +12969,7 @@ __metadata:
     expo-constants: ~18.0.9
     expo-font: ~14.0.8
     expo-haptics: ~15.0.7
-    expo-image: ~3.0.8
+    expo-image: ~3.0.10
     expo-image-picker: ~17.0.8
     expo-linear-gradient: ~15.0.7
     expo-linking: ~8.0.8
