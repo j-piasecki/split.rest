@@ -44,7 +44,7 @@ export default function Screen() {
   return (
     <>
       {Platform.OS !== 'web' && <Redirect href='/login' withAnchor />}
-      {Platform.OS === 'web' && user && <Redirect href='/home' withAnchor />}
+      {Platform.OS === 'web' && user && <Redirect href='/group/none' withAnchor />}
       {Platform.OS === 'web' && <HomePage />}
     </>
   )

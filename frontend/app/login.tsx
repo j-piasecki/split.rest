@@ -142,7 +142,7 @@ export default function Screen() {
           </View>
         )}
         {/* TODO: handle this better, this flashes */}
-        {user && !join && <Redirect href='/home' withAnchor />}
+        {user && !join && <Redirect href='/group/none' withAnchor />}
         {user && join && <Redirect href={`/join/${join}`} withAnchor />}
       </ScrollView>
     </View>

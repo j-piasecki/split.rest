@@ -32,7 +32,7 @@ export default function NotFound() {
           title={t('goBack')}
           style={{ marginTop: 16 }}
           onPress={() => {
-            router.replace('/home')
+            router.replace('/group/none')
           }}
         />
       </View>

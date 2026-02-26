@@ -1,3 +1,4 @@
+import { DrawerLayoutContext } from './DrawerLayout'
 import React, { useContext, useRef } from 'react'
 import { LayoutRectangle, Platform, View } from 'react-native'
 import { Gesture, GestureDetector, PanGesture } from 'react-native-gesture-handler'
@@ -13,7 +14,6 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import { DrawerLayoutContext } from './DrawerLayout'
 
 const ENABLE_PAN_DRAGGING = Platform.OS === 'android'
 

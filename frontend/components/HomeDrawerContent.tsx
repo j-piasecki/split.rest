@@ -151,7 +151,7 @@ function VisibilityFilter({
   )
 }
 
-export default function Home() {
+export function HomeDrawerContent() {
   const theme = useTheme()
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()

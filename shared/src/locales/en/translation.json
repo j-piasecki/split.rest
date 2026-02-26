@@ -226,7 +226,8 @@
 
   "group": {
     "details": "Details",
-    "allowedSplitMethods": "Allowed split methods"
+    "allowedSplitMethods": "Allowed split methods",
+    "selectGroup": "Select a group from the drawer"
   },
 
   "settings": {

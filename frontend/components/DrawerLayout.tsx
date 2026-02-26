@@ -12,7 +12,9 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 
-export const DrawerLayoutContext = createContext<{ panGesture: React.RefObject<GestureType | undefined> } | undefined>(undefined)
+export const DrawerLayoutContext = createContext<
+  { panGesture: React.RefObject<GestureType | undefined> } | undefined
+>(undefined)
 
 interface OverlayProps {
   progress: SharedValue<number>
@@ -33,9 +35,7 @@ function Overlay(props: OverlayProps) {
 
   return (
     <GestureDetector gesture={tap}>
-      <Animated.View
-        style={[style, StyleSheet.absoluteFillObject, { backgroundColor: 'black' }]}
-      />
+      <Animated.View style={[style, StyleSheet.absoluteFillObject, { backgroundColor: 'black' }]} />
     </GestureDetector>
   )
 }
@@ -69,7 +69,7 @@ export function DrawerLayout({
   ref,
 }: DrawerLayoutProps) {
   const theme = useTheme()
-  const {width: screenWidth} = useWindowDimensions()
+  const { width: screenWidth } = useWindowDimensions()
   const drawerWidth = propsDrawerWidth ?? Math.min(screenWidth * 0.85, 350)
 
   const panRef = useRef<GestureType | undefined>(undefined)
@@ -104,10 +104,14 @@ export function DrawerLayout({
     runOnJS(hapticFeedback)()
   }, [isOpen, progress])
 
-  useImperativeHandle(ref, () => ({
-    openDrawer,
-    closeDrawer,
-  }), [openDrawer, closeDrawer])
+  useImperativeHandle(
+    ref,
+    () => ({
+      openDrawer,
+      closeDrawer,
+    }),
+    [openDrawer, closeDrawer]
+  )
 
   const pan = Gesture.Pan()
     .enabled(enabled)
@@ -163,13 +167,23 @@ export function DrawerLayout({
 
   return (
     <GestureDetector gesture={pan}>
-      <Animated.View style={{flex: 1}}>
+      <Animated.View style={{ flex: 1 }}>
         <Animated.View
-          style={[drawerContainerStyle, { width: drawerWidth, position: 'absolute', top: 0, left: 0, bottom: 0, backgroundColor: theme.colors.surface }]}
+          style={[
+            drawerContainerStyle,
+            {
+              width: drawerWidth,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              backgroundColor: theme.colors.surface,
+            },
+          ]}
         >
           {renderDrawerContent?.()}
         </Animated.View>
-        <Animated.View style={[{ flex: 1 }, contentContainerStyle]}>
+        <Animated.View style={[{ flex: 1, overflow: 'hidden' }, contentContainerStyle]}>
           <DrawerLayoutContext.Provider value={{ panGesture: panRef }}>
             {children}
           </DrawerLayoutContext.Provider>

@@ -1,5 +1,6 @@
 import { DrawerLayout } from '@components/DrawerLayout'
 import { ErrorBoundary } from '@components/ErrorBoundary'
+import { HomeDrawerContent } from '@components/HomeDrawerContent'
 import { SnackBarProvider } from '@components/SnackBar'
 import { SpinningLogo } from '@components/SpinningLogo'
 import { useFonts } from '@hooks/useFonts'
@@ -119,11 +120,16 @@ function Content() {
           <SnackBarProvider>
             <ErrorBoundary>
               {!isLoading && (
-                <DrawerLayout>
+                <DrawerLayout renderDrawerContent={() => <HomeDrawerContent />}>
                   <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
-                    <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
-                    <Stack.Screen name='home' options={{ title: t('appName'), animation: 'none' }} />
-                    <Stack.Screen name='login' options={{ title: t('appName'), animation: 'none' }} />
+                    <Stack.Screen
+                      name='index'
+                      options={{ title: t('appName'), animation: 'none' }}
+                    />
+                    <Stack.Screen
+                      name='login'
+                      options={{ title: t('appName'), animation: 'none' }}
+                    />
                     <Stack.Screen
                       name='groupInvites'
                       options={{ title: t('screenName.groupInvites'), ...modalOptions }}

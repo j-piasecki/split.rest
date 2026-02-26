@@ -153,7 +153,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
           if (router.canGoBack()) {
             router.back()
           } else {
-            router.navigate('/home')
+            router.navigate('/group/none')
           }
         }}
       >
