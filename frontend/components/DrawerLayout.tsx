@@ -75,7 +75,7 @@ export function DrawerLayout({
 }: DrawerLayoutProps) {
   const theme = useTheme()
   const { width: screenWidth } = useWindowDimensions()
-  const drawerWidth = propsDrawerWidth ?? Math.min(screenWidth * 0.85, 350)
+  const drawerWidth = propsDrawerWidth ?? Math.min(screenWidth * 0.85, 400)
 
   const panRef = useRef<GestureType | undefined>(undefined)
   const progress = useSharedValue(1)
