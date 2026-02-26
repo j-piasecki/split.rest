@@ -198,6 +198,7 @@ export function HomeDrawerContent() {
           }}
         >
           <FlatListWithHeader
+            hideHeader
             data={showHidden ? hiddenGroups : visibleGroups}
             isRefreshing={
               visibleGroupsLoading ||
@@ -221,6 +222,7 @@ export function HomeDrawerContent() {
             contentContainerStyle={{
               width: '100%',
               maxWidth: 768,
+              paddingTop: insets.top,
               paddingHorizontal: 12,
               paddingBottom: 88 + insets.bottom,
               alignSelf: 'center',
