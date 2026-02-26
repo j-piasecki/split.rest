@@ -243,24 +243,24 @@ function NoGroupSelected() {
       style={{
         flex: 1,
         backgroundColor: theme.colors.surface,
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 8,
         paddingBottom: 128,
       }}
     >
-      <Text style={{ color: theme.colors.onSurface, fontSize: 64, opacity: 0.3 }}>{'👈'}</Text>
-      <Text
-        style={{
-          color: theme.colors.onSurfaceVariant,
-          fontSize: 18,
-          fontWeight: 500,
-          textAlign: 'center',
-          paddingHorizontal: 32,
-        }}
-      >
-        {t('group.selectGroup')}
-      </Text>
+      <Header showBackButton />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: theme.colors.onSurface, fontSize: 64, opacity: 0.3 }}>{'👈'}</Text>
+        <Text
+          style={{
+            color: theme.colors.onSurfaceVariant,
+            fontSize: 18,
+            fontWeight: 500,
+            textAlign: 'center',
+            paddingHorizontal: 32,
+          }}
+        >
+          {t('group.selectGroup')}
+        </Text>
+      </View>
     </View>
   )
 }
