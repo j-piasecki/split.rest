@@ -1,0 +1,181 @@
+import { drawerSpringConfig } from '@styling/animationConfigs'
+import { useTheme } from '@styling/theme'
+import { HapticFeedback } from '@utils/hapticFeedback'
+import React, { createContext, useCallback, useImperativeHandle, useRef } from 'react'
+import { Keyboard, StyleSheet, useWindowDimensions } from 'react-native'
+import { Gesture, GestureDetector, GestureType } from 'react-native-gesture-handler'
+import Animated, {
+  SharedValue,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
+
+export const DrawerLayoutContext = createContext<{ panGesture: React.RefObject<GestureType | undefined> } | undefined>(undefined)
+
+interface OverlayProps {
+  progress: SharedValue<number>
+  closeDrawer: () => void
+}
+
+function Overlay(props: OverlayProps) {
+  const tap = Gesture.Tap().onStart(() => {
+    props.closeDrawer()
+  })
+
+  const style = useAnimatedStyle(() => {
+    return {
+      opacity: props.progress.value * 0.75,
+      transform: [{ translateX: props.progress.value === 0 ? 10000 : 0 }],
+    }
+  })
+
+  return (
+    <GestureDetector gesture={tap}>
+      <Animated.View
+        style={[style, StyleSheet.absoluteFillObject, { backgroundColor: 'black' }]}
+      />
+    </GestureDetector>
+  )
+}
+
+interface DrawerLayoutProps {
+  drawerWidth?: number
+  children?: React.ReactNode
+  enabled?: boolean
+  renderDrawerContent?: () => React.ReactNode
+  ref?: React.RefObject<DrawerLayoutRef>
+}
+
+export interface DrawerLayoutRef {
+  openDrawer: () => void
+  closeDrawer: () => void
+}
+
+function closeKeyboard() {
+  Keyboard.dismiss()
+}
+
+function hapticFeedback() {
+  HapticFeedback.pullDownActive()
+}
+
+export function DrawerLayout({
+  drawerWidth: propsDrawerWidth,
+  children,
+  enabled = true,
+  renderDrawerContent,
+  ref,
+}: DrawerLayoutProps) {
+  const theme = useTheme()
+  const {width: screenWidth} = useWindowDimensions()
+  const drawerWidth = propsDrawerWidth ?? Math.min(screenWidth * 0.85, 350)
+
+  const panRef = useRef<GestureType | undefined>(undefined)
+  const progress = useSharedValue(1)
+  const isDragging = useSharedValue(false)
+  const isOpen = useSharedValue(true)
+  const translationStart = useSharedValue(0)
+  const progressStart = useSharedValue(0)
+
+  const drawerContainerStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: (progress.value - 1) * drawerWidth }],
+    }
+  })
+
+  const contentContainerStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: drawerWidth * progress.value }],
+    }
+  })
+
+  const closeDrawer = useCallback(() => {
+    'worklet'
+    progress.value = withSpring(0, drawerSpringConfig)
+    isOpen.value = false
+  }, [isOpen, progress])
+
+  const openDrawer = useCallback(() => {
+    'worklet'
+    progress.value = withSpring(1, drawerSpringConfig)
+    isOpen.value = true
+    runOnJS(hapticFeedback)()
+  }, [isOpen, progress])
+
+  useImperativeHandle(ref, () => ({
+    openDrawer,
+    closeDrawer,
+  }), [openDrawer, closeDrawer])
+
+  const pan = Gesture.Pan()
+    .enabled(enabled)
+    // eslint-disable-next-line react-compiler/react-compiler
+    .withRef(panRef)
+    .minDistance(40)
+    .failOffsetY([-15, 15])
+    .onBegin((e) => {
+      console.log('onBegin', e)
+    })
+    .onFinalize((e) => {
+      console.log('onFinalize', e)
+    })
+    .onStart((e) => {
+      translationStart.value = e.translationX
+      progressStart.value = progress.value
+
+      if (progressStart.value !== 0) {
+        isDragging.value = true
+      }
+      runOnJS(closeKeyboard)()
+    })
+    .onChange((e) => {
+      if (!isDragging.value) {
+        isDragging.value = true
+        translationStart.value = e.translationX
+      } else {
+        const newProgress = Math.max(
+          0,
+          Math.min(1, (e.translationX - translationStart.value) / drawerWidth + progressStart.value)
+        )
+        progress.value = newProgress
+      }
+    })
+    .onEnd((e) => {
+      if ((e.velocityX > 500 || progress.value > 0.4) && e.velocityX > -500) {
+        if (!isOpen.value) {
+          runOnJS(hapticFeedback)()
+        }
+
+        isOpen.value = true
+        progress.value = withSpring(1, drawerSpringConfig)
+      } else {
+        if (isOpen.value) {
+          runOnJS(hapticFeedback)()
+        }
+        isOpen.value = false
+        progress.value = withSpring(0, drawerSpringConfig)
+      }
+
+      isDragging.value = false
+    })
+
+  return (
+    <GestureDetector gesture={pan}>
+      <Animated.View style={{flex: 1}}>
+        <Animated.View
+          style={[drawerContainerStyle, { width: drawerWidth, position: 'absolute', top: 0, left: 0, bottom: 0, backgroundColor: theme.colors.surface }]}
+        >
+          {renderDrawerContent?.()}
+        </Animated.View>
+        <Animated.View style={[{ flex: 1 }, contentContainerStyle]}>
+          <DrawerLayoutContext.Provider value={{ panGesture: panRef }}>
+            {children}
+          </DrawerLayoutContext.Provider>
+          <Overlay progress={progress} closeDrawer={closeDrawer} />
+        </Animated.View>
+      </Animated.View>
+    </GestureDetector>
+  )
+}

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useContext, useRef } from 'react'
 import { LayoutRectangle, Platform, View } from 'react-native'
 import { Gesture, GestureDetector, PanGesture } from 'react-native-gesture-handler'
 import Animated, {
@@ -13,6 +13,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
+import { DrawerLayoutContext } from './DrawerLayout'
 
 const ENABLE_PAN_DRAGGING = Platform.OS === 'android'
 
@@ -21,6 +22,7 @@ export interface PullableFlatListProps<T> extends FlatListPropsWithLayout<T> {
 }
 
 export function PullableFlatList<T>(props: PullableFlatListProps<T>) {
+  const { panGesture } = useContext(DrawerLayoutContext) ?? {}
   const enablePull = props.refreshControl === undefined
 
   const containerLayout = useRef<LayoutRectangle | null>(null)
@@ -67,6 +69,10 @@ export function PullableFlatList<T>(props: PullableFlatListProps<T>) {
         enableScroll()
       }
     })
+
+  if (panGesture?.current) {
+    dragGesture.simultaneousWithExternalGesture(panGesture.current)
+  }
 
   const Header = props.renderPullableHeader?.(normalizedDrag)
 
