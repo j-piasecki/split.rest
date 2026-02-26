@@ -128,9 +128,12 @@ function useGroupStatistics(id: number): GroupStatistics | null {
       return year === currentYear
     })
     .reduce((acc, stat) => acc + Number(stat.totalValue), 0)
-  const monthsWithStats = monthlyStats.stats.filter(
-    (stat) => dayjs(stat.startTimestamp).year() === dayjs().year()
-  )
+  const monthsWithStats = monthlyStats.stats.filter((stat) => {
+    const month = dayjs(stat.startTimestamp).month()
+    const year = dayjs(stat.startTimestamp).year()
+    const currentYear = month > dayjs().month() ? dayjs().year() - 1 : dayjs().year()
+    return year === currentYear
+  })
   const this12MonthPeriodAverage =
     monthsWithStats.length > 0 ? this12MonthPeriodTotal / monthsWithStats.length : 0
 
@@ -142,9 +145,12 @@ function useGroupStatistics(id: number): GroupStatistics | null {
       return year === lastYear
     })
     .reduce((acc, stat) => acc + Number(stat.totalValue), 0)
-  const last12MonthPeriodMonthsWithStats = monthlyStats.stats.filter(
-    (stat) => dayjs(stat.startTimestamp).year() === dayjs().year() - 1
-  )
+  const last12MonthPeriodMonthsWithStats = monthlyStats.stats.filter((stat) => {
+    const month = dayjs(stat.startTimestamp).month()
+    const year = dayjs(stat.startTimestamp).year()
+    const lastYear = month > dayjs().month() ? dayjs().year() - 2 : dayjs().year() - 1
+    return year === lastYear
+  })
   const last12MonthPeriodAverage =
     last12MonthPeriodMonthsWithStats.length > 0
       ? last12MonthPeriodTotal / last12MonthPeriodMonthsWithStats.length
