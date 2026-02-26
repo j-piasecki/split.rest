@@ -174,7 +174,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       value={{
         theme,
         setTheme: (theme: ThemeType | null) => {
-          setTheme((theme ?? systemTheme === 'unspecified') ? 'dark' : systemTheme)
+          setTheme(theme ?? (systemTheme === 'unspecified' ? 'dark' : systemTheme))
           setUserTheme(theme)
 
           if (theme) {

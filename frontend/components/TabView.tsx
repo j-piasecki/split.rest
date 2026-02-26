@@ -32,7 +32,7 @@ function TabButton({
         mass: 1,
         stiffness: 200,
         damping: 12,
-        restDisplacementThreshold: 0.0001,
+        energyThreshold: 0.0001,
       }),
     }
   })
@@ -45,7 +45,7 @@ function TabButton({
             mass: 1,
             stiffness: 200,
             damping: 12,
-            restDisplacementThreshold: 0.0001,
+            energyThreshold: 0.0001,
           }),
         },
       ],
