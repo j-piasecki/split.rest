@@ -26,7 +26,7 @@
         "monochromeImage": "./assets/icon-foreground.png",
         "backgroundColor": "#8e004a"
       },
-      "predictiveBackGestureEnabled": true,
+      "predictiveBackGestureEnabled": false,
       "package": "rest.split.app",
       "intentFilters": [
         {
