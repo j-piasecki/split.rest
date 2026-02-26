@@ -724,6 +724,9 @@ function BarChart({ info, statistics }: { info: GroupUserInfo; statistics: Group
                   color: badge.foregroundColor,
                   fontSize: Platform.OS === 'web' ? 13 : 16,
                   fontWeight: 700,
+                  textAlign: 'center',
+                  textAlignVertical: 'center',
+                  includeFontPadding: false,
                 }}
               >
                 {badge.text}
