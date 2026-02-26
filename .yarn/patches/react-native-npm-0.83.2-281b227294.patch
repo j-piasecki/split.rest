@@ -95,3 +95,27 @@ index fb8f4b1bf79ca61b21ba58976521fd06e4d8ec09..4c4a73f33add041a2d83443f71f6d733
      return focused
    }
  
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
+index 9b04cadc22f5ae7b105f9f9875a242b53188cf03..2643f9114e5c0cf7f39dadf30e9259acfcd2bea5 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
+@@ -373,12 +373,18 @@ static UIFontDescriptorSystemDesign RCTGetFontDescriptorSystemDesign(NSString *f
+       CGFloat closestWeight = INFINITY;
+       for (NSString *name in fontNames) {
+         UIFont *fontMatch = [UIFont fontWithName:name size:effectiveFontSize];
+-
++        
+         if (RCTGetFontStyle(fontMatch) != fontProperties.style) {
+           continue;
+         }
+ 
+         CGFloat testWeight = RCTGetFontWeight(fontMatch);
++        if ([name isEqualToString:fontProperties.family]) {
++          font = fontMatch;
++          closestWeight = testWeight;
++          break;
++        }
++
+         if (ABS(testWeight - fontWeight) < ABS(closestWeight - fontWeight)) {
+           font = fontMatch;
+           closestWeight = testWeight;
