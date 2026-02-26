@@ -52,9 +52,9 @@ const SplitTypeCard = ({
       transform: [
         {
           scale: withSpring(pressed ? 1.025 : 1, {
-            damping: 15,
-            stiffness: 200,
-            restSpeedThreshold: 0.0001,
+            damping: 40,
+            stiffness: 500,
+            energyThreshold: 0.0001,
           }),
         },
       ],
