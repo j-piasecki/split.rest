@@ -13,7 +13,12 @@ import Animated, {
 } from 'react-native-reanimated'
 
 export const DrawerLayoutContext = createContext<
-  { panGesture: React.RefObject<GestureType | undefined>; closeDrawer: () => void } | undefined
+  | {
+      panGesture: React.RefObject<GestureType | undefined>
+      closeDrawer: () => void
+      openDrawer: () => void
+    }
+  | undefined
 >(undefined)
 
 interface OverlayProps {
@@ -168,7 +173,7 @@ export function DrawerLayout({
   return (
     <GestureDetector gesture={pan}>
       <Animated.View style={{ flex: 1 }}>
-        <DrawerLayoutContext.Provider value={{ panGesture: panRef, closeDrawer }}>
+        <DrawerLayoutContext.Provider value={{ panGesture: panRef, closeDrawer, openDrawer }}>
           <Animated.View
             style={[
               drawerContainerStyle,

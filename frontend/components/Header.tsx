@@ -1,3 +1,4 @@
+import { DrawerLayoutContext } from './DrawerLayout'
 import { Icon } from './Icon'
 import { ProfilePicture } from './ProfilePicture'
 import { Text } from '@components/Text'
@@ -7,7 +8,7 @@ import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { HapticFeedback } from '@utils/hapticFeedback'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform } from 'react-native'
 import { Pressable, View, useWindowDimensions } from 'react-native'
@@ -50,10 +51,9 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
   const isWaitingSV = useSharedValue(isWaiting ?? false)
   const rotation = useSharedValue(0)
   const { width } = useWindowDimensions()
+  const drawerLayoutContext = useContext(DrawerLayoutContext)
 
-  const backButtonVisible =
-    (Platform.OS === 'ios' || Platform.OS === 'web') &&
-    (showBackButton || displayClass > DisplayClass.Medium)
+  const backButtonVisible = (Platform.OS === 'ios' || Platform.OS === 'web') && showBackButton
 
   const spin = useCallback(() => {
     'worklet'
@@ -147,13 +147,16 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
       }}
     >
       <Pressable
-        disabled={!backButtonVisible}
         style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
         onPress={() => {
-          if (router.canGoBack()) {
-            router.back()
+          if (backButtonVisible) {
+            if (router.canGoBack()) {
+              router.back()
+            } else {
+              router.navigate('/group/none')
+            }
           } else {
-            router.navigate('/group/none')
+            drawerLayoutContext?.openDrawer()
           }
         }}
       >
@@ -161,23 +164,26 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
           style={[{ flexDirection: 'row', alignItems: 'center', gap: 8 }, offsetStyle]}
         >
           {backButtonVisible && (
-            <Icon
-              name='chevronBack'
-              size={24}
-              color={theme.colors.primary}
-              style={{ opacity: showBackButton ? 1 : 0 }}
-            />
+            <>
+              <Icon
+                name='chevronBack'
+                size={24}
+                color={theme.colors.primary}
+                style={{ opacity: showBackButton ? 1 : 0 }}
+              />
+              <Text
+                style={{
+                  fontSize: 28,
+                  fontWeight: 600,
+                  color: theme.colors.primary,
+                  letterSpacing: 1,
+                }}
+              >
+                {t('appName')}
+              </Text>
+            </>
           )}
-          <Text
-            style={{
-              fontSize: 28,
-              fontWeight: 600,
-              color: theme.colors.primary,
-              letterSpacing: 1,
-            }}
-          >
-            {t('appName')}
-          </Text>
+          {!showBackButton && <Icon name='menu' size={32} color={theme.colors.primary} />}
         </Animated.View>
       </Pressable>
 

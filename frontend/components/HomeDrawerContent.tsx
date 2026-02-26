@@ -1,3 +1,4 @@
+import { Text } from './Text'
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
 import { ListEmptyComponent } from '@components/ListEmptyComponent'
@@ -232,7 +233,20 @@ export function HomeDrawerContent() {
             scrollHandler={scrollHandler}
             ItemSeparatorComponent={Divider}
             ListHeaderComponent={
-              <View style={{ gap: 12 }}>
+              <View style={{ gap: 12, paddingTop: 12 }}>
+                <View style={[{ flexDirection: 'row', alignItems: 'center', gap: 8 }]}>
+                  <Text
+                    style={{
+                      fontSize: 28,
+                      fontWeight: 600,
+                      color: theme.colors.primary,
+                      letterSpacing: 1,
+                    }}
+                  >
+                    {t('appName')}
+                  </Text>
+                </View>
+
                 <InvitationsButton invites={invites} isLoadingInvites={isLoadingInvites} />
 
                 <FullPaneHeader

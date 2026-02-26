@@ -13,7 +13,7 @@ export default function NotFound() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
-      <Header showBackButton />
+      <Header />
       <View
         style={{
           flex: 1,
