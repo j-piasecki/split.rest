@@ -68,6 +68,7 @@
         "expo-build-properties",
         {
           "buildReactNativeFromSource": true,
+          "useHermesV1": true,
           "ios": {
             "useFrameworks": "static"
           }

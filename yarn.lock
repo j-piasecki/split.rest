@@ -13614,10 +13614,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hermes-compiler@npm:0.14.1":
-  version: 0.14.1
-  resolution: "hermes-compiler@npm:0.14.1"
-  checksum: f904c190a51977e33c9c54d2817de25d217c01057c2249fbaa7976b1aaf473a759d9899d7c020329a5840ca68d1b8d40cd8c9add2c56d02306d4d9f8c47940ba
+"hermes-compiler@npm:250829098.0.4":
+  version: 250829098.0.4
+  resolution: "hermes-compiler@npm:250829098.0.4"
+  checksum: 2995e527cb21859eeda9404507ca8cb439d6b83e86ee3d0491a4f31fbb3b26da88ef10fcc8705430f6fc1f8228f73389abf07c2a357c17cb55c32d5152b4a176
   languageName: node
   linkType: hard
 
@@ -18258,7 +18258,7 @@ __metadata:
 
 "react-native@patch:react-native@npm%3A0.83.2#./.yarn/patches/react-native-npm-0.83.2-281b227294.patch::locator=split%40workspace%3A.":
   version: 0.83.2
-  resolution: "react-native@patch:react-native@npm%3A0.83.2#./.yarn/patches/react-native-npm-0.83.2-281b227294.patch::version=0.83.2&hash=328aef&locator=split%40workspace%3A."
+  resolution: "react-native@patch:react-native@npm%3A0.83.2#./.yarn/patches/react-native-npm-0.83.2-281b227294.patch::version=0.83.2&hash=47280d&locator=split%40workspace%3A."
   dependencies:
     "@jest/create-cache-key-function": ^29.7.0
     "@react-native/assets-registry": 0.83.2
@@ -18303,7 +18303,7 @@ __metadata:
       optional: true
   bin:
     react-native: cli.js
-  checksum: 160f4cba369c8f86c424ea75e66463c02990475c48df04dfb523d2909f9389b8d449c90c4f8ba709e79c728249ee659c1d33d36db1b92965617e6b84946630cb
+  checksum: 74561300c0d2fce9e0e2107cebcee508b36ebf1a8af5b1a730b47bbdcb9775708f35be38c1d49ea286f037f3c314653a50a00877662e08672db31cb87f7bd8c0
   languageName: node
   linkType: hard
 
