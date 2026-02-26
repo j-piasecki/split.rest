@@ -84,7 +84,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
             zIndex: 1,
           }}
         >
-          <Header showBackButton />
+          <Header />
         </View>
         <View
           style={[
@@ -215,7 +215,7 @@ function LoadingError() {
         backgroundColor: theme.colors.surface,
       }}
     >
-      <Header showBackButton />
+      <Header />
       <View
         style={{
           flex: 1,
@@ -246,7 +246,7 @@ function NoGroupSelected() {
         paddingBottom: 128,
       }}
     >
-      <Header showBackButton />
+      <Header />
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ color: theme.colors.onSurface, fontSize: 64, opacity: 0.3 }}>{'👈'}</Text>
         <Text

@@ -13,7 +13,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 export const DrawerLayoutContext = createContext<
-  { panGesture: React.RefObject<GestureType | undefined> } | undefined
+  { panGesture: React.RefObject<GestureType | undefined>; closeDrawer: () => void } | undefined
 >(undefined)
 
 interface OverlayProps {
@@ -168,27 +168,27 @@ export function DrawerLayout({
   return (
     <GestureDetector gesture={pan}>
       <Animated.View style={{ flex: 1 }}>
-        <Animated.View
-          style={[
-            drawerContainerStyle,
-            {
-              width: drawerWidth,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              bottom: 0,
-              backgroundColor: theme.colors.surface,
-            },
-          ]}
-        >
-          {renderDrawerContent?.()}
-        </Animated.View>
-        <Animated.View style={[{ flex: 1, overflow: 'hidden' }, contentContainerStyle]}>
-          <DrawerLayoutContext.Provider value={{ panGesture: panRef }}>
+        <DrawerLayoutContext.Provider value={{ panGesture: panRef, closeDrawer }}>
+          <Animated.View
+            style={[
+              drawerContainerStyle,
+              {
+                width: drawerWidth,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                backgroundColor: theme.colors.surface,
+              },
+            ]}
+          >
+            {renderDrawerContent?.()}
+          </Animated.View>
+          <Animated.View style={[{ flex: 1, overflow: 'hidden' }, contentContainerStyle]}>
             {children}
-          </DrawerLayoutContext.Provider>
-          <Overlay progress={progress} closeDrawer={closeDrawer} />
-        </Animated.View>
+            <Overlay progress={progress} closeDrawer={closeDrawer} />
+          </Animated.View>
+        </DrawerLayoutContext.Provider>
       </Animated.View>
     </GestureDetector>
   )

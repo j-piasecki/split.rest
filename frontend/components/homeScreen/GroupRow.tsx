@@ -1,4 +1,5 @@
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
+import { DrawerLayoutContext } from '@components/DrawerLayout'
 import { GroupIcon } from '@components/GroupIcon'
 import { Icon } from '@components/Icon'
 import { RoundIconButton } from '@components/RoundIconButton'
@@ -8,7 +9,7 @@ import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { router } from 'expo-router'
-import React, { useRef } from 'react'
+import React, { useContext, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, View, ViewStyle } from 'react-native'
 import { CurrencyUtils } from 'shared'
@@ -27,6 +28,7 @@ export function GroupRow({ info, style }: GroupRowProps) {
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { t } = useTranslation()
   const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info?.id)
+  const drawerContext = useContext(DrawerLayoutContext)
 
   const balanceColor = getBalanceColor(Number(info.balance), theme)
 
@@ -43,7 +45,8 @@ export function GroupRow({ info, style }: GroupRowProps) {
         },
       ]}
       onPress={() => {
-        router.navigate(`/group/${info.id}`)
+        router.replace(`/group/${info.id}`)
+        drawerContext?.closeDrawer()
       }}
       style={({ pressed, hovered }) => [
         {

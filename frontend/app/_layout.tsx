@@ -136,7 +136,7 @@ function Content() {
                     />
                     <Stack.Screen
                       name='group/[id]/index'
-                      options={{ title: t('screenName.group') }}
+                      options={{ title: t('screenName.group'), animation: 'none' }}
                     />
                     <Stack.Screen
                       name='group/[id]/members'
