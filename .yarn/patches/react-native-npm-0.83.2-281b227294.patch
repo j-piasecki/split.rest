@@ -1,0 +1,97 @@
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.java b/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.java
+index 6047316172f7307d37d575a6848f518955bd3add..3c0b2818b719b99b07fe75eeeeaf02cafd2fa255 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.java
++++ b/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.java
+@@ -414,6 +414,7 @@ public class SurfaceMountingManager {
+       // thus prevent the RemoveDeleteTree worker from deleting this
+       // View in the future.
+       if (viewParent instanceof ViewGroup) {
++        ((ViewGroup) viewParent).endViewTransition(view);
+         ((ViewGroup) viewParent).removeView(view);
+       }
+       mErroneouslyReaddedReactTags.add(tag);
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
+index 7e86543794f44e6fc4c0325093e037e72464a62a..2ae80c976a298240d3e4297a0bbae94e7d0b7340 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
+@@ -11,6 +11,8 @@ import android.animation.Animator
+ import android.animation.ValueAnimator
+ import android.content.Context
+ import android.graphics.Point
++import android.os.Handler
++import android.os.Looper
+ import android.os.Build
+ import android.view.View
+ import android.view.ViewGroup
+@@ -374,6 +376,7 @@ public object ReactScrollViewHelper {
+     forceUpdateState(scrollView)
+   }
+ 
++  private val handler = Handler(Looper.getMainLooper())
+   @JvmStatic
+   public fun <T> forceUpdateState(scrollView: T)
+       where T : HasScrollState?, T : HasStateWrapper?, T : ViewGroup {
+@@ -391,17 +394,18 @@ public object ReactScrollViewHelper {
+           scrollY,
+       )
+     }
+-    val stateWrapper = scrollView.stateWrapper
+-    if (stateWrapper != null) {
+-      val newStateData: WritableMap = WritableNativeMap()
+-      newStateData.putDouble(CONTENT_OFFSET_LEFT, toDIPFromPixel(scrollX.toFloat()).toDouble())
+-      newStateData.putDouble(CONTENT_OFFSET_TOP, toDIPFromPixel(scrollY.toFloat()).toDouble())
+-      newStateData.putDouble(
+-          SCROLL_AWAY_PADDING_TOP,
+-          toDIPFromPixel(scrollAwayPaddingTop.toFloat()).toDouble(),
+-      )
+-      stateWrapper.updateState(newStateData)
+-    }
++    handler.removeCallbacksAndMessages(null)
++    handler.postDelayed({
++      val stateWrapper = scrollView.stateWrapper
++      if (stateWrapper != null) {
++        val newStateData: WritableMap = WritableNativeMap()
++        newStateData.putDouble(CONTENT_OFFSET_LEFT, toDIPFromPixel(scrollX.toFloat()).toDouble())
++        newStateData.putDouble(CONTENT_OFFSET_TOP, toDIPFromPixel(scrollY.toFloat()).toDouble())
++        newStateData.putDouble(
++            SCROLL_AWAY_PADDING_TOP, toDIPFromPixel(scrollAwayPaddingTop.toFloat()).toDouble())
++        stateWrapper.updateState(newStateData)
++      }
++    }, 64)
+   }
+ 
+   @JvmStatic
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt b/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
+index fb8f4b1bf79ca61b21ba58976521fd06e4d8ec09..4c4a73f33add041a2d83443f71f6d7338fd8bc61 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
+@@ -139,6 +139,7 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+   private var contextMenuHidden = false
+   private var didAttachToWindow = false
+   private var selectTextOnFocus = false
++  private var didSelectTextOnFocus = false
+   private var placeholder: String? = null
+   private var overflow = Overflow.VISIBLE
+ 
+@@ -289,11 +290,12 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+ 
+   override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+     onContentSizeChange()
+-    if (selectTextOnFocus && isFocused) {
++    if (selectTextOnFocus && isFocused && !didSelectTextOnFocus) {
+       // Explicitly call this method to select text when layout is drawn
+       selectAll()
+       // Prevent text on being selected for next layout pass
+       selectTextOnFocus = false
++      didSelectTextOnFocus = true
+     }
+   }
+ 
+@@ -403,6 +405,7 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+       showSoftKeyboard()
+     }
+ 
++    didSelectTextOnFocus = true
+     return focused
+   }
+ 

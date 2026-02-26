@@ -6,14 +6,15 @@
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "scheme": "splitrest",
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "rest.split.app",
       "usesAppleSignIn": true,
-      "associatedDomains": ["applinks:split.rest"],
+      "associatedDomains": [
+        "applinks:split.rest"
+      ],
       "buildNumber": "1",
       "entitlements": {
         "aps-environment": "production"
@@ -40,7 +41,10 @@
               "pathPrefix": "/*"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -63,9 +67,9 @@
       [
         "expo-build-properties",
         {
+          "buildReactNativeFromSource": true,
           "ios": {
-            "useFrameworks": "static",
-            "buildReactNativeFromSource": true
+            "useFrameworks": "static"
           }
         }
       ],

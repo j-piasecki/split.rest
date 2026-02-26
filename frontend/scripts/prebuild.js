@@ -6,33 +6,6 @@ const path = require('path')
 // Get all arguments passed to the script
 const args = process.argv.slice(2)
 
-function ensureBuildFromSource() {
-  const filePath = path.join(process.cwd(), 'android', 'settings.gradle')
-  const append = `
-    includeBuild('../../node_modules/react-native') {
-      dependencySubstitution {
-        substitute(module("com.facebook.react:react-android")).using(project(":packages:react-native:ReactAndroid"))
-        substitute(module("com.facebook.react:react-native")).using(project(":packages:react-native:ReactAndroid"))
-        substitute(module("com.facebook.react:hermes-android")).using(project(":packages:react-native:ReactAndroid:hermes-engine"))
-        substitute(module("com.facebook.react:hermes-engine")).using(project(":packages:react-native:ReactAndroid:hermes-engine"))
-      }
-    }
-  `
-
-  if (!fs.existsSync(filePath)) {
-    console.error(`settings.gradle file not found at ${filePath}`)
-    process.exit(1)
-  }
-
-  const fileContent = fs.readFileSync(filePath, 'utf8')
-  if (!fileContent.includes(append)) {
-    fs.appendFileSync(filePath, `\n${append}\n`)
-    console.log('build from source enabled for Android')
-  } else {
-    console.log('build from source is already enabled for Android')
-  }
-}
-
 function ensureFullDebugSymbols() {
   const filePath = path.join(process.cwd(), 'android', 'app', 'build.gradle')
   const append = `android.buildTypes.release.ndk.debugSymbolLevel = 'full'`
@@ -84,7 +57,6 @@ expoPrebuild.on('close', (code) => {
 
   console.log('expo prebuild completed successfully.')
 
-  ensureBuildFromSource()
   ensureFullDebugSymbols()
   fixIconColor()
   fixSentryScriptPath()
