@@ -7,16 +7,21 @@ import { unregisterNotificationToken } from '@database/unregisterNotificationTok
 import { useUserById } from '@hooks/database/useUserById'
 import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication'
 import {
+  AppleAuthProvider,
   FirebaseAuthTypes,
+  GoogleAuthProvider,
+  deleteUser as firebaseDeleteUser,
   onAuthStateChanged,
   reauthenticateWithCredential,
   signInWithCredential,
   signOut,
-  deleteUser as firebaseDeleteUser,
-  GoogleAuthProvider,
-  AppleAuthProvider,
 } from '@react-native-firebase/auth'
-import { getMessaging, getToken, deleteToken, unregisterDeviceForRemoteMessages } from '@react-native-firebase/messaging'
+import {
+  deleteToken,
+  getMessaging,
+  getToken,
+  unregisterDeviceForRemoteMessages,
+} from '@react-native-firebase/messaging'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { router, usePathname, useRouter } from 'expo-router'
 import { t } from 'i18next'

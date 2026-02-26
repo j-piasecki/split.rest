@@ -12,9 +12,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "rest.split.app",
       "usesAppleSignIn": true,
-      "associatedDomains": [
-        "applinks:split.rest"
-      ],
+      "associatedDomains": ["applinks:split.rest"],
       "buildNumber": "1",
       "entitlements": {
         "aps-environment": "production"
@@ -41,10 +39,7 @@
               "pathPrefix": "/*"
             }
           ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ]
     },

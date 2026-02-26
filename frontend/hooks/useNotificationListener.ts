@@ -1,7 +1,7 @@
 import {
   FirebaseMessagingTypes,
-  getMessaging,
   getInitialNotification,
+  getMessaging,
   onNotificationOpenedApp,
 } from '@react-native-firebase/messaging'
 import { router } from 'expo-router'
