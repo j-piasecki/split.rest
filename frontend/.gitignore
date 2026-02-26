@@ -3,6 +3,7 @@ ios/
 !modules/*/android/
 !modules/*/ios/
 modules/*/android/build
+modules/*/android/.gradle
 
 .env.local
 .env.sentry-build-plugin

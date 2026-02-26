@@ -6,7 +6,6 @@
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "scheme": "splitrest",
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
@@ -27,7 +26,7 @@
         "monochromeImage": "./assets/icon-foreground.png",
         "backgroundColor": "#8e004a"
       },
-      "predictiveBackGestureEnabled": true,
+      "predictiveBackGestureEnabled": false,
       "package": "rest.split.app",
       "intentFilters": [
         {
@@ -63,9 +62,10 @@
       [
         "expo-build-properties",
         {
+          "buildReactNativeFromSource": true,
+          "useHermesV1": true,
           "ios": {
-            "useFrameworks": "static",
-            "buildReactNativeFromSource": true
+            "useFrameworks": "static"
           }
         }
       ],
@@ -99,6 +99,8 @@
             "./assets/fonts/Nunito-Italic.ttf",
             "./assets/fonts/Nunito-Light.ttf",
             "./assets/fonts/Nunito-LightItalic.ttf",
+            "./assets/fonts/Nunito-Medium.ttf",
+            "./assets/fonts/Nunito-MediumItalic.ttf",
             "./assets/fonts/Nunito-Regular.ttf",
             "./assets/fonts/Nunito-SemiBold.ttf",
             "./assets/fonts/Nunito-SemiBoldItalic.ttf",

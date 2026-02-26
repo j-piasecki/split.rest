@@ -1,4 +1,4 @@
-import { getAnalytics } from '@react-native-firebase/analytics'
+import { getAnalytics, logEvent } from '@react-native-firebase/analytics'
 import { getAuth } from '@react-native-firebase/auth'
 import { getCrashlytics } from '@react-native-firebase/crashlytics'
 
@@ -8,8 +8,8 @@ export const crashlytics = getCrashlytics()
 const analytics = getAnalytics()
 
 export function logScreenView(screenName: string, screenClass: string) {
-  analytics.logScreenView({
-    screen_name: screenName,
-    screen_class: screenClass,
+  logEvent(analytics, 'screen_view', {
+    firebase_screen: screenName,
+    firebase_screen_class: screenClass,
   })
 }

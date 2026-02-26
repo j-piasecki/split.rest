@@ -143,7 +143,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (Platform.OS !== 'web') {
-      Appearance.setColorScheme(userTheme)
+      Appearance.setColorScheme(userTheme ?? 'unspecified')
     }
   }, [userTheme])
 
@@ -154,7 +154,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
           setTheme(value)
           setUserTheme(value)
         } else {
-          setTheme(systemTheme ?? 'dark')
+          setTheme(systemTheme === 'unspecified' ? 'dark' : systemTheme)
           setUserTheme(null)
         }
       })
@@ -174,7 +174,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       value={{
         theme,
         setTheme: (theme: ThemeType | null) => {
-          setTheme(theme ?? systemTheme ?? 'dark')
+          setTheme(theme ?? (systemTheme === 'unspecified' ? 'dark' : systemTheme))
           setUserTheme(theme)
 
           if (theme) {

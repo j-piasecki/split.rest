@@ -6,8 +6,22 @@ import { deleteUser as remoteDeleteUser } from '@database/deleteUser'
 import { unregisterNotificationToken } from '@database/unregisterNotificationToken'
 import { useUserById } from '@hooks/database/useUserById'
 import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication'
-import { FirebaseAuthTypes, firebase } from '@react-native-firebase/auth'
-import { getMessaging } from '@react-native-firebase/messaging'
+import {
+  AppleAuthProvider,
+  FirebaseAuthTypes,
+  GoogleAuthProvider,
+  deleteUser as firebaseDeleteUser,
+  onAuthStateChanged,
+  reauthenticateWithCredential,
+  signInWithCredential,
+  signOut,
+} from '@react-native-firebase/auth'
+import {
+  deleteToken,
+  getMessaging,
+  getToken,
+  unregisterDeviceForRemoteMessages,
+} from '@react-native-firebase/messaging'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { router, usePathname, useRouter } from 'expo-router'
 import { t } from 'i18next'
@@ -46,10 +60,11 @@ async function tryToCreateUser(createUserRetries = 5) {
 }
 
 async function unregisterNotifications() {
-  const token = await getMessaging().getToken()
+  const messaging = getMessaging()
+  const token = await getToken(messaging)
   await unregisterNotificationToken(token)
-  await getMessaging().deleteToken()
-  await getMessaging().unregisterDeviceForRemoteMessages()
+  await deleteToken(messaging)
+  await unregisterDeviceForRemoteMessages(messaging)
 }
 
 export function useAuth(redirectToIndex = true) {
@@ -62,7 +77,7 @@ export function useAuth(redirectToIndex = true) {
   const user = remoteUser
 
   useEffect(() => {
-    const subscriber = auth.onAuthStateChanged((user) => {
+    const subscriber = onAuthStateChanged(auth, (user) => {
       authReady = true
       setFirebaseUser(createUser(user))
     })
@@ -92,11 +107,11 @@ export async function reauthenticate(skipAppleSignIn = false) {
   if (providerIds.includes('apple.com')) {
     if (!skipAppleSignIn) {
       const appleCredential = await getAppleCredential()
-      await auth.currentUser?.reauthenticateWithCredential(appleCredential)
+      await reauthenticateWithCredential(auth.currentUser, appleCredential)
     }
   } else if (providerIds.includes('google.com')) {
     const googleCredential = await getGoogleCredential()
-    await auth.currentUser?.reauthenticateWithCredential(googleCredential)
+    await reauthenticateWithCredential(auth.currentUser, googleCredential)
   } else {
     throw new TranslatableError('api.auth.unknownProvider')
   }
@@ -128,7 +143,7 @@ export async function deleteUser() {
     }
   }
 
-  await auth.currentUser?.delete()
+  await firebaseDeleteUser(auth.currentUser)
 
   queryClient.clear()
   router.dismissAll()
@@ -138,8 +153,7 @@ export async function signInWithGoogle() {
   const googleCredential = await getGoogleCredential()
 
   // Sign-in the user with the credential
-  return auth
-    .signInWithCredential(googleCredential)
+  return signInWithCredential(auth, googleCredential)
     .then((user) => {
       console.log('User signed in', user.user?.email)
       tryToCreateUser()
@@ -151,7 +165,7 @@ export async function signInWithGoogle() {
 
 export async function signInWithApple() {
   const appleCredential = await getAppleCredential()
-  const userCredential = await firebase.auth().signInWithCredential(appleCredential)
+  const userCredential = await signInWithCredential(auth, appleCredential)
 
   await tryToCreateUser()
 
@@ -161,7 +175,7 @@ export async function signInWithApple() {
 
 export async function logout() {
   await unregisterNotifications()
-  auth.signOut()
+  await signOut(auth)
   queryClient.clear()
 }
 
@@ -178,7 +192,7 @@ async function getGoogleCredential() {
   }
 
   // Create a Google credential with the token
-  const googleCredential = firebase.auth.GoogleAuthProvider.credential(idToken)
+  const googleCredential = GoogleAuthProvider.credential(idToken)
 
   return googleCredential
 }
@@ -197,7 +211,7 @@ async function getAppleCredential() {
     // can be null in some scenarios
     if (identityToken) {
       // 3). create a Firebase `AppleAuthProvider` credential
-      const appleCredential = firebase.auth.AppleAuthProvider.credential(identityToken, nonce)
+      const appleCredential = AppleAuthProvider.credential(identityToken, nonce)
 
       return appleCredential
     } else {
@@ -236,10 +250,7 @@ async function getAppleCredential() {
     const response = await appleAuthAndroid.signIn()
 
     if (response.id_token) {
-      const appleCredential = firebase.auth.AppleAuthProvider.credential(
-        response.id_token,
-        rawNonce
-      )
+      const appleCredential = AppleAuthProvider.credential(response.id_token, rawNonce)
 
       return appleCredential
     } else {

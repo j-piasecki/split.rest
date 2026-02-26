@@ -63,7 +63,7 @@ export function PullableFlatList<T>(props: PullableFlatListProps<T>) {
     })
     .onFinalize(() => {
       if (scrollOffset.value <= 0) {
-        dragDistance.set(withSpring(0, { damping: 50, stiffness: 500 }))
+        dragDistance.set(withSpring(0, { duration: 500 }))
         enableScroll()
       }
     })

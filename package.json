@@ -17,10 +17,12 @@
     "backups"
   ],
   "resolutions": {
+    "hermes-compiler": "250829098.0.4",
     "react-native-calendar-picker@^8.0.5": "patch:react-native-calendar-picker@npm%3A8.0.5#./.yarn/patches/react-native-calendar-picker-npm-8.0.5-bbacf272ff.patch",
-    "react-native@*": "patch:react-native@npm%3A0.81.4#./.yarn/patches/react-native-npm-0.81.4-bb96b34eb3.patch",
     "react-native@0.79.5": "patch:react-native@npm%3A0.79.5#./.yarn/patches/react-native-npm-0.79.5-375b5dc2bf.patch",
-    "react-native@0.81.4": "patch:react-native@npm%3A0.81.4#./.yarn/patches/react-native-npm-0.81.4-bb96b34eb3.patch"
+    "react-native@0.81.4": "patch:react-native@npm%3A0.81.4#./.yarn/patches/react-native-npm-0.81.4-bb96b34eb3.patch",
+    "react-native@0.83.2": "patch:react-native@npm%3A0.83.2#./.yarn/patches/react-native-npm-0.83.2-281b227294.patch",
+    "react-native@*": "patch:react-native@npm%3A0.83.2#./.yarn/patches/react-native-npm-0.83.2-281b227294.patch"
   },
   "packageManager": "yarn@3.6.4"
 }

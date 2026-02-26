@@ -1,8 +1,8 @@
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.java b/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.java
-index dee20e3f89b04ddf98737f96c1949a534b7b5d2d..cdcd812c7d2245d89e9116fe207064ea735328b5 100644
+index 6047316172f7307d37d575a6848f518955bd3add..3c0b2818b719b99b07fe75eeeeaf02cafd2fa255 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.java
 +++ b/ReactAndroid/src/main/java/com/facebook/react/fabric/mounting/SurfaceMountingManager.java
-@@ -398,6 +398,7 @@ public class SurfaceMountingManager {
+@@ -414,6 +414,7 @@ public class SurfaceMountingManager {
        // thus prevent the RemoveDeleteTree worker from deleting this
        // View in the future.
        if (viewParent instanceof ViewGroup) {
@@ -11,7 +11,7 @@ index dee20e3f89b04ddf98737f96c1949a534b7b5d2d..cdcd812c7d2245d89e9116fe207064ea
        }
        mErroneouslyReaddedReactTags.add(tag);
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
-index 55e4d53fb94cb148338c703dae2b7877684a6090..ccc413a1795e4135bf07e49ff0739d7574ab5c1c 100644
+index 7e86543794f44e6fc4c0325093e037e72464a62a..2ae80c976a298240d3e4297a0bbae94e7d0b7340 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
 +++ b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
 @@ -11,6 +11,8 @@ import android.animation.Animator
@@ -23,17 +23,17 @@ index 55e4d53fb94cb148338c703dae2b7877684a6090..ccc413a1795e4135bf07e49ff0739d75
  import android.os.Build
  import android.view.View
  import android.view.ViewGroup
-@@ -339,6 +341,7 @@ public object ReactScrollViewHelper {
+@@ -374,6 +376,7 @@ public object ReactScrollViewHelper {
      forceUpdateState(scrollView)
    }
  
 +  private val handler = Handler(Looper.getMainLooper())
    @JvmStatic
-   public fun <T> forceUpdateState(scrollView: T) where
-   T : HasScrollState?,
-@@ -353,15 +356,18 @@ public object ReactScrollViewHelper {
-       FLog.i(
-           TAG, "updateFabricScrollState[%d] scrollX %d scrollY %d", scrollView.id, scrollX, scrollY)
+   public fun <T> forceUpdateState(scrollView: T)
+       where T : HasScrollState?, T : HasStateWrapper?, T : ViewGroup {
+@@ -391,17 +394,18 @@ public object ReactScrollViewHelper {
+           scrollY,
+       )
      }
 -    val stateWrapper = scrollView.stateWrapper
 -    if (stateWrapper != null) {
@@ -41,7 +41,9 @@ index 55e4d53fb94cb148338c703dae2b7877684a6090..ccc413a1795e4135bf07e49ff0739d75
 -      newStateData.putDouble(CONTENT_OFFSET_LEFT, toDIPFromPixel(scrollX.toFloat()).toDouble())
 -      newStateData.putDouble(CONTENT_OFFSET_TOP, toDIPFromPixel(scrollY.toFloat()).toDouble())
 -      newStateData.putDouble(
--          SCROLL_AWAY_PADDING_TOP, toDIPFromPixel(scrollAwayPaddingTop.toFloat()).toDouble())
+-          SCROLL_AWAY_PADDING_TOP,
+-          toDIPFromPixel(scrollAwayPaddingTop.toFloat()).toDouble(),
+-      )
 -      stateWrapper.updateState(newStateData)
 -    }
 +    handler.removeCallbacksAndMessages(null)
@@ -60,18 +62,18 @@ index 55e4d53fb94cb148338c703dae2b7877684a6090..ccc413a1795e4135bf07e49ff0739d75
  
    @JvmStatic
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt b/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
-index 42f6e037fa42319aff2cc1439394c152af1f5ee7..84ea4c9f6e541373d27981d814cda10917325bdc 100644
+index fb8f4b1bf79ca61b21ba58976521fd06e4d8ec09..4c4a73f33add041a2d83443f71f6d7338fd8bc61 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
 +++ b/ReactAndroid/src/main/java/com/facebook/react/views/textinput/ReactEditText.kt
-@@ -140,6 +140,7 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+@@ -139,6 +139,7 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
    private var contextMenuHidden = false
    private var didAttachToWindow = false
    private var selectTextOnFocus = false
-+  private var didSelectTextOnFocus = false;
++  private var didSelectTextOnFocus = false
    private var placeholder: String? = null
    private var overflow = Overflow.VISIBLE
  
-@@ -284,11 +285,12 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+@@ -289,11 +290,12 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
  
    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
      onContentSizeChange()
@@ -85,12 +87,35 @@ index 42f6e037fa42319aff2cc1439394c152af1f5ee7..84ea4c9f6e541373d27981d814cda109
      }
    }
  
-@@ -391,6 +393,8 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
+@@ -403,6 +405,7 @@ public open class ReactEditText public constructor(context: Context) : AppCompat
        showSoftKeyboard()
      }
  
-+    didSelectTextOnFocus = true;
-+
++    didSelectTextOnFocus = true
      return focused
    }
  
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
+index 9b04cadc22f5ae7b105f9f9875a242b53188cf03..2643f9114e5c0cf7f39dadf30e9259acfcd2bea5 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
+@@ -373,12 +373,18 @@ static UIFontDescriptorSystemDesign RCTGetFontDescriptorSystemDesign(NSString *f
+       CGFloat closestWeight = INFINITY;
+       for (NSString *name in fontNames) {
+         UIFont *fontMatch = [UIFont fontWithName:name size:effectiveFontSize];
+-
++        
+         if (RCTGetFontStyle(fontMatch) != fontProperties.style) {
+           continue;
+         }
+ 
+         CGFloat testWeight = RCTGetFontWeight(fontMatch);
++        if ([name isEqualToString:fontProperties.family]) {
++          font = fontMatch;
++          closestWeight = testWeight;
++          break;
++        }
++
+         if (ABS(testWeight - fontWeight) < ABS(closestWeight - fontWeight)) {
+           font = fontMatch;
+           closestWeight = testWeight;

@@ -10,8 +10,7 @@ import { NativeScrollEvent, NativeSyntheticEvent, Pressable } from 'react-native
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
 const springConfig = {
-  damping: 50,
-  stiffness: 500,
+  duration: 400,
 }
 
 export interface FloatingActionButtonProps {

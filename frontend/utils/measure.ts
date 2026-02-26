@@ -6,7 +6,6 @@ export function measure(ref: View) {
   let frame!: Rect
 
   if (Platform.OS === 'web') {
-    // @ts-expect-error - getBoundingClientRect will not work on mobile
     frame = ref.getBoundingClientRect()
   } else {
     ref.measureInWindow((x, y, width, height) => {
