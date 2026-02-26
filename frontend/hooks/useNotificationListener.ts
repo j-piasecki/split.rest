@@ -1,4 +1,9 @@
-import { FirebaseMessagingTypes, getMessaging } from '@react-native-firebase/messaging'
+import {
+  FirebaseMessagingTypes,
+  getMessaging,
+  getInitialNotification,
+  onNotificationOpenedApp,
+} from '@react-native-firebase/messaging'
 import { router } from 'expo-router'
 import { useEffect } from 'react'
 import { Platform } from 'react-native'
@@ -12,15 +17,15 @@ function handleNotification(notification: FirebaseMessagingTypes.RemoteMessage) 
 export function useNotificationListener() {
   useEffect(() => {
     if (Platform.OS !== 'web') {
-      getMessaging()
-        .getInitialNotification()
-        .then((notification) => {
-          if (notification) {
-            handleNotification(notification)
-          }
-        })
+      const messaging = getMessaging()
 
-      return getMessaging().onNotificationOpenedApp((notification) => {
+      getInitialNotification(messaging).then((notification) => {
+        if (notification) {
+          handleNotification(notification)
+        }
+      })
+
+      return onNotificationOpenedApp(messaging, (notification) => {
         handleNotification(notification)
       })
     }
