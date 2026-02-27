@@ -13,8 +13,6 @@ import { StyleProp, View, ViewStyle } from 'react-native'
 import { CurrencyUtils } from 'shared'
 import { GroupUserInfo } from 'shared'
 
-export const GROUP_ROW_HEIGHT = 64
-
 export interface GroupRowProps {
   info: GroupUserInfo
   style?: StyleProp<ViewStyle>
@@ -60,14 +58,14 @@ export function GroupRow({ info, style }: GroupRowProps) {
         style={{
           paddingLeft: 8,
           paddingRight: 4,
-          height: GROUP_ROW_HEIGHT,
+          paddingVertical: 8,
           opacity: info.hidden ? 0.7 : 1,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
-        <GroupIcon info={info} size={48} style={{ marginRight: 8 }} />
+        <GroupIcon info={info} size={48} style={{ marginRight: 12 }} />
         <View style={{ flex: 1, marginRight: 4 }}>
           <Text style={{ fontSize: 18, color: theme.colors.onSurface }} numberOfLines={1}>
             {info.name}

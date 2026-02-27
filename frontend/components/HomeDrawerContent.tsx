@@ -6,13 +6,13 @@ import { FullPaneHeader } from '@components/Pane'
 import { SegmentedButton } from '@components/SegmentedButton'
 import { Shimmer } from '@components/Shimmer'
 import { useSnack } from '@components/SnackBar'
-import { GROUP_ROW_HEIGHT, GroupRow } from '@components/homeScreen/GroupRow'
+import { GroupRow } from '@components/homeScreen/GroupRow'
 import { InvitationsButton } from '@components/homeScreen/InvitationsButton'
 import { useUserGroupInvites } from '@hooks/database/useUserGroupInvites'
 import { useUserGroups } from '@hooks/database/useUserGroups'
 import { useNotificationPermission } from '@hooks/useNotificationPermission'
 import { useTheme } from '@styling/theme'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+
 import { invalidateGroupInvites, invalidateUserGroups } from '@utils/queryClient'
 import { router } from 'expo-router'
 import React from 'react'
@@ -26,7 +26,6 @@ function Divider() {
 }
 
 function GroupsShimmer({ count }: { count: number }) {
-  const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const theme = useTheme()
 
   return (
@@ -37,12 +36,11 @@ function GroupsShimmer({ count }: { count: number }) {
             style={[
               {
                 width: '100%',
-                height: GROUP_ROW_HEIGHT,
-                gap: 20,
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: 16,
+                paddingLeft: 8,
+                paddingRight: 4,
+                paddingVertical: 8,
                 backgroundColor: theme.colors.surfaceContainer,
                 borderRadius: 4,
               },
@@ -54,35 +52,17 @@ function GroupsShimmer({ count }: { count: number }) {
           >
             <Shimmer
               offset={1 - index * 0.05}
-              style={{
-                flex: 1,
-                height: 28,
-                borderRadius: 14,
-              }}
+              style={{ width: 48, height: 48, borderRadius: 12, marginRight: 12, flexShrink: 0 }}
             />
 
-            <View
-              style={{
-                flexDirection: isSmallScreen ? 'column' : 'row',
-                gap: isSmallScreen ? 4 : 20,
-                alignItems: 'flex-end',
-              }}
-            >
+            <View style={{ flex: 1, gap: 6, marginRight: 4 }}>
               <Shimmer
-                offset={1 - index * 0.05 + 0.65}
-                style={{
-                  width: 60,
-                  height: 24,
-                  borderRadius: 14,
-                }}
+                offset={1 - index * 0.05 + 0.2}
+                style={{ height: 18, borderRadius: 9, width: '70%' }}
               />
               <Shimmer
-                offset={1 - index * 0.05 + (isSmallScreen ? 0.65 : 0.7)}
-                style={{
-                  width: 60,
-                  height: 24,
-                  borderRadius: 14,
-                }}
+                offset={1 - index * 0.05 + 0.4}
+                style={{ height: 18, borderRadius: 9, width: '35%' }}
               />
             </View>
           </View>
