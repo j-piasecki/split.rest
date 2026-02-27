@@ -3,7 +3,7 @@ import { useTheme } from '@styling/theme'
 import { HapticFeedback } from '@utils/hapticFeedback'
 import { usePathname, useSegments } from 'expo-router'
 import React, { createContext, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
-import { Keyboard, StyleSheet, useWindowDimensions } from 'react-native'
+import { Keyboard, Platform, StyleSheet, useWindowDimensions } from 'react-native'
 import { Gesture, GestureDetector, GestureType } from 'react-native-gesture-handler'
 import Animated, {
   SharedValue,
@@ -154,12 +154,6 @@ export function DrawerLayout({
     .withRef(panRef)
     .minDistance(40)
     .failOffsetY([-15, 15])
-    .onBegin((e) => {
-      console.log('onBegin', e)
-    })
-    .onFinalize((e) => {
-      console.log('onFinalize', e)
-    })
     .onStart((e) => {
       translationStart.value = e.translationX
       progressStart.value = progress.value
@@ -170,6 +164,10 @@ export function DrawerLayout({
       runOnJS(closeKeyboard)()
     })
     .onChange((e) => {
+      if (!isOpen.value && Platform.OS === 'web') {
+        return
+      }
+
       if (!isDragging.value) {
         isDragging.value = true
         translationStart.value = e.translationX
@@ -182,6 +180,10 @@ export function DrawerLayout({
       }
     })
     .onEnd((e) => {
+      if (!isOpen.value && Platform.OS === 'web') {
+        return
+      }
+
       if ((e.velocityX > 500 || progress.value > 0.4) && e.velocityX > -500) {
         if (!isOpen.value) {
           runOnJS(hapticFeedback)()
