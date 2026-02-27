@@ -153,7 +153,7 @@ export default function Modal() {
 
   return (
     <ModalScreen
-      returnPath='/home'
+      returnPath='/group/none'
       title={t('screenName.createGroup')}
       maxWidth={500}
       maxHeight={600}

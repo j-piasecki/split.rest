@@ -279,7 +279,7 @@ function RemoveMemberButton({
 
     await removeMember(memberId).then(() => {
       if (isSelf) {
-        router.dismissTo('/home')
+        router.dismissTo('/group/none')
       } else if (router.canGoBack()) {
         router.back()
       } else {

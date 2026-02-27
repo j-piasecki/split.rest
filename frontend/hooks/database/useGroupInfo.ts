@@ -7,9 +7,10 @@ import {
   TranslatableError,
 } from 'shared'
 
-export function useGroupInfo(id: number) {
+export function useGroupInfo(id: number, enabled = true) {
   return useQuery({
     queryKey: ['groupInfo', id],
+    enabled,
     queryFn: async (): Promise<GroupUserInfo> => {
       const args: GetGroupInfoArguments = { groupId: id }
       const info = await makeRequest<GetGroupInfoArguments, GroupUserInfo>(

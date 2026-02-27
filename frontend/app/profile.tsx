@@ -291,7 +291,12 @@ export default function ProfileScreen() {
   const user = useAuth()
   const theme = useTheme()
   return (
-    <ModalScreen returnPath='/home' title={t('screenName.profile')} maxWidth={400} maxHeight={550}>
+    <ModalScreen
+      returnPath='/group/none'
+      title={t('screenName.profile')}
+      maxWidth={400}
+      maxHeight={550}
+    >
       {!user && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
       {user && <Form user={user} />}
     </ModalScreen>

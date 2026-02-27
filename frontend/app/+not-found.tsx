@@ -13,7 +13,7 @@ export default function NotFound() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
-      <Header showBackButton />
+      <Header />
       <View
         style={{
           flex: 1,
@@ -32,7 +32,7 @@ export default function NotFound() {
           title={t('goBack')}
           style={{ marginTop: 16 }}
           onPress={() => {
-            router.replace('/home')
+            router.replace('/group/none')
           }}
         />
       </View>

@@ -84,7 +84,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
             zIndex: 1,
           }}
         >
-          <Header showBackButton />
+          <Header />
         </View>
         <View
           style={[
@@ -215,7 +215,7 @@ function LoadingError() {
         backgroundColor: theme.colors.surface,
       }}
     >
-      <Header showBackButton />
+      <Header />
       <View
         style={{
           flex: 1,
@@ -234,12 +234,48 @@ function LoadingError() {
   )
 }
 
+function NoGroupSelected() {
+  const theme = useTheme()
+  const { t } = useTranslation()
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.surface,
+        paddingBottom: 128,
+      }}
+    >
+      <Header />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: theme.colors.onSurface, fontSize: 64, opacity: 0.3 }}>{'👈'}</Text>
+        <Text
+          style={{
+            color: theme.colors.onSurfaceVariant,
+            fontSize: 18,
+            fontWeight: 500,
+            textAlign: 'center',
+            paddingHorizontal: 32,
+          }}
+        >
+          {t('group.selectGroup')}
+        </Text>
+      </View>
+    </View>
+  )
+}
+
 export default function GroupScreen() {
   const theme = useTheme()
   const { id } = useLocalSearchParams()
   const threeBarLayout = useThreeBarLayout()
   const groupId = Number(id as string)
-  const { data: groupInfo, error } = useGroupInfo(groupId)
+  const noGroupSelected = !id || id === 'none' || isNaN(groupId)
+  const { data: groupInfo, error } = useGroupInfo(noGroupSelected ? 0 : groupId, !noGroupSelected)
+
+  if (noGroupSelected) {
+    return <NoGroupSelected />
+  }
 
   if (error) {
     return <LoadingError />

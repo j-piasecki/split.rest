@@ -132,7 +132,6 @@ export function SplitsList({
   return (
     <View style={{ width: '100%', flex: 1 }}>
       <FlatListWithHeader
-        showBackButton
         isLoading={isLoading}
         isRefreshing={isRefetching}
         onRefresh={refreshData}

@@ -291,7 +291,7 @@ export default function Invites() {
   const { t } = useTranslation()
 
   return (
-    <ModalScreen returnPath='/home' title={t('screenName.groupInvites')} maxWidth={600}>
+    <ModalScreen returnPath='/group/none' title={t('screenName.groupInvites')} maxWidth={600}>
       <InvitesContent />
     </ModalScreen>
   )
