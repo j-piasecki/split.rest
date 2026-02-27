@@ -6,7 +6,7 @@ import { Text } from '@components/Text'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { useTheme } from '@styling/theme'
 import { getBalanceColor } from '@utils/getBalanceColor'
-import { router } from 'expo-router'
+import { router, usePathname } from 'expo-router'
 import React, { useContext, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, View, ViewStyle } from 'react-native'
@@ -24,7 +24,9 @@ export function GroupRow({ info, style }: GroupRowProps) {
   const { t } = useTranslation()
   const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info?.id)
   const drawerContext = useContext(DrawerLayoutContext)
+  const pathname = usePathname()
 
+  const isActive = pathname === `/group/${info.id}` || pathname.startsWith(`/group/${info.id}/`)
   const balanceColor = getBalanceColor(Number(info.balance), theme)
 
   return (
@@ -49,15 +51,17 @@ export function GroupRow({ info, style }: GroupRowProps) {
             ? theme.colors.surfaceContainerHighest
             : hovered
               ? theme.colors.surfaceContainerHigh
-              : theme.colors.surfaceContainer,
+              : isActive
+                ? theme.colors.surfaceContainerHigh
+                : 'transparent',
         },
         style,
       ]}
     >
       <View
         style={{
-          paddingLeft: 8,
-          paddingRight: 4,
+          paddingLeft: 16,
+          paddingRight: 8,
           paddingVertical: 8,
           opacity: info.hidden ? 0.7 : 1,
           flexDirection: 'row',

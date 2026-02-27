@@ -166,35 +166,12 @@ export function HomeDrawerContent() {
                   </Pressable>
                 )
               }
-
-              const isLastVisible = index === visibleGroups.length - 1
-              const isLastHidden = showHidden && index === data.length - 1
-              // First hidden group follows the header separator — needs rounded top
-              const isFirstVisible = index === 0
-              const isFirstHidden = showHidden && index === visibleGroups.length + 1 // +1 for the header sentinel
-
-              return (
-                <GroupRow
-                  info={item}
-                  style={[
-                    { borderRadius: 4 },
-                    (isFirstHidden || isFirstVisible) && {
-                      borderTopLeftRadius: 16,
-                      borderTopRightRadius: 16,
-                    },
-                    (isLastVisible || isLastHidden) && {
-                      borderBottomLeftRadius: 16,
-                      borderBottomRightRadius: 16,
-                    },
-                  ]}
-                />
-              )
+              return <GroupRow info={item} />
             }}
             contentContainerStyle={{
               width: '100%',
               maxWidth: 768,
               paddingTop: insets.top,
-              paddingHorizontal: 12,
               paddingBottom: 88 + insets.bottom,
               alignSelf: 'center',
               flexGrow: 1,
@@ -209,7 +186,7 @@ export function HomeDrawerContent() {
               return <Divider />
             }}
             ListHeaderComponent={
-              <View style={{ gap: 12, paddingTop: 12, paddingBottom: 12 }}>
+              <View style={{ gap: 12, padding: 12 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <Text
                     style={{
