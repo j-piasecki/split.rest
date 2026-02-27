@@ -37,8 +37,6 @@
     "noHiddenGroups": "No hidden groups",
     "hiddenGroups": "Hidden groups",
     "errorLoadingGroups": "Could not load your groups",
-    "showGroupInvites": "Show group invites",
-    "noGroupInvitesButton": "No pending invites",
     "createGroup": "Create group",
     "showingHiddenGroups": "Showing hidden groups",
     "showingVisibleGroups": "Showing visible groups",

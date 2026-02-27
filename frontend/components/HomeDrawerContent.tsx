@@ -187,7 +187,14 @@ export function HomeDrawerContent() {
             }}
             ListHeaderComponent={
               <View style={{ gap: 12, padding: 12 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 8,
+                    justifyContent: 'space-between',
+                  }}
+                >
                   <Text
                     style={{
                       fontSize: 28,
@@ -198,9 +205,9 @@ export function HomeDrawerContent() {
                   >
                     {t('appName')}
                   </Text>
-                </View>
 
-                <InvitationsButton invites={invites} isLoadingInvites={isLoadingInvites} />
+                  <InvitationsButton invites={invites} isLoadingInvites={isLoadingInvites} />
+                </View>
               </View>
             }
             ListEmptyComponent={
