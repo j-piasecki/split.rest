@@ -134,21 +134,19 @@ export function DrawerLayout({
   const hasAutoOpened = useRef(false)
 
   useEffect(() => {
-    if (isOnGroupScreen && !hasAutoOpened.current) {
-      hasAutoOpened.current = true
-      progress.value = 1
-      isOpen.value = true
-    }
-  }, [isOnGroupScreen, progress, isOpen])
-
-  useEffect(() => {
     lockOpen.value = isNoGroupSelected
     if (isNoGroupSelected) {
-      openDrawer()
+      if (!hasAutoOpened.current && isOnGroupScreen) {
+        progress.value = 1
+        isOpen.value = true
+        hasAutoOpened.current = true
+      } else {
+        openDrawer()
+      }
     } else {
       closeDrawer(true)
     }
-  }, [isNoGroupSelected, lockOpen, openDrawer, closeDrawer])
+  }, [isNoGroupSelected, lockOpen, openDrawer, closeDrawer, progress, isOpen])
 
   const pan = Gesture.Pan()
     .enabled(enabled && isOnGroupScreen)

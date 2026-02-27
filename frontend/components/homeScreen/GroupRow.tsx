@@ -6,6 +6,7 @@ import { Text } from '@components/Text'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { useTheme } from '@styling/theme'
 import { getBalanceColor } from '@utils/getBalanceColor'
+import { setLastOpenedGroupId } from '@utils/lastOpenedGroup'
 import { router, usePathname } from 'expo-router'
 import React, { useContext, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -42,6 +43,7 @@ export function GroupRow({ info, style }: GroupRowProps) {
         },
       ]}
       onPress={() => {
+        setLastOpenedGroupId(info.id)
         router.replace(`/group/${info.id}`)
         drawerContext?.closeDrawer()
       }}

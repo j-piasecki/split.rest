@@ -3,9 +3,10 @@ import { SignInWithGoogleButton } from '@components/SignInWithGoogleButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { signInWithApple, signInWithGoogle, useAuth } from '@utils/auth'
+import { getLastOpenedGroupId } from '@utils/lastOpenedGroup'
 import { Image } from 'expo-image'
-import { Redirect, useLocalSearchParams } from 'expo-router'
-import { useState } from 'react'
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
+import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View, useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -18,6 +19,14 @@ export default function Screen() {
   const { join } = useLocalSearchParams()
   const { width, height } = useWindowDimensions()
   const [signingIn, setSigningIn] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!user || join) return
+    getLastOpenedGroupId().then((id) => {
+      router.replace(id !== null ? `/group/${id}` : '/group/none')
+    })
+  }, [user, join, router])
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
@@ -142,7 +151,6 @@ export default function Screen() {
           </View>
         )}
         {/* TODO: handle this better, this flashes */}
-        {user && !join && <Redirect href='/group/none' withAnchor />}
         {user && join && <Redirect href={`/join/${join}`} withAnchor />}
       </ScrollView>
     </View>
