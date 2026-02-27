@@ -2,8 +2,6 @@ import { Button } from './Button'
 import { Icon } from './Icon'
 import { Text } from './Text'
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
-import { ListEmptyComponent } from '@components/ListEmptyComponent'
-import { FullPaneHeader } from '@components/Pane'
 import { Shimmer } from '@components/Shimmer'
 import { GroupRow } from '@components/homeScreen/GroupRow'
 import { InvitationsButton } from '@components/homeScreen/InvitationsButton'
@@ -134,7 +132,7 @@ export function HomeDrawerContent() {
             isRefreshing={isRefetchingVisibleGroups || isRefetchingHiddenGroups}
             onRefresh={refresh}
             showsVerticalScrollIndicator={false}
-            renderItem={({ item, index }) => {
+            renderItem={({ item }) => {
               if (isHiddenHeader(item)) {
                 return (
                   <Pressable
@@ -178,11 +176,15 @@ export function HomeDrawerContent() {
             }}
             onEndReachedThreshold={0.5}
             keyExtractor={(item) => {
-              if (isHiddenHeader(item)) return HIDDEN_HEADER_KEY
+              if (isHiddenHeader(item)) {
+                return HIDDEN_HEADER_KEY
+              }
               return `${item.id}-${item.hidden}`
             }}
             ItemSeparatorComponent={({ leadingItem }) => {
-              if (isHiddenHeader(leadingItem)) return null
+              if (isHiddenHeader(leadingItem)) {
+                return null
+              }
               return <Divider />
             }}
             ListHeaderComponent={

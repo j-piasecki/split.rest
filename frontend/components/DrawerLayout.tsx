@@ -132,7 +132,7 @@ export function DrawerLayout({
   )
 
   const hasAutoOpened = useRef(false)
-  
+
   useEffect(() => {
     lockOpen.value = isNoGroupSelected
     if (isNoGroupSelected) {

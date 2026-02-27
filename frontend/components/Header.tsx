@@ -4,14 +4,13 @@ import { ProfilePicture } from './ProfilePicture'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { HapticFeedback } from '@utils/hapticFeedback'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import { useCallback, useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform } from 'react-native'
-import { Pressable, View, useWindowDimensions } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   SharedValue,
@@ -45,12 +44,10 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
   const user = useAuth()
   const insets = useSafeAreaInsets()
   const router = useRouter()
-  const displayClass = useDisplayClass()
   const isRotating = useSharedValue(false)
   const rotationCounter = useSharedValue(0)
   const isWaitingSV = useSharedValue(isWaiting ?? false)
   const rotation = useSharedValue(0)
-  const { width } = useWindowDimensions()
   const drawerLayoutContext = useContext(DrawerLayoutContext)
 
   const backButtonVisible = (Platform.OS === 'ios' || Platform.OS === 'web') && showBackButton

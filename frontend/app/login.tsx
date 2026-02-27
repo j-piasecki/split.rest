@@ -22,7 +22,9 @@ export default function Screen() {
   const router = useRouter()
 
   useEffect(() => {
-    if (!user || join) return
+    if (!user || join) {
+      return
+    }
     getLastOpenedGroupId().then((id) => {
       router.replace(id !== null ? `/group/${id}` : '/group/none')
     })
