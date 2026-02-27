@@ -1,6 +1,6 @@
+import { Button } from './Button'
 import { Text } from './Text'
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
-import { FloatingActionButton, useFABScrollHandler } from '@components/FloatingActionButton'
 import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { FullPaneHeader } from '@components/Pane'
 import { SegmentedButton } from '@components/SegmentedButton'
@@ -17,7 +17,7 @@ import { router } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, View, ViewStyle } from 'react-native'
+import { Platform, StyleProp, View, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function Divider() {
@@ -135,7 +135,6 @@ export function HomeDrawerContent() {
   const theme = useTheme()
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
-  const [fabRef, scrollHandler] = useFABScrollHandler()
 
   useNotificationPermission()
 
@@ -209,7 +208,6 @@ export function HomeDrawerContent() {
             }}
             onEndReachedThreshold={0.5}
             keyExtractor={(item) => `${item.id}-${item.hidden}`}
-            scrollHandler={scrollHandler}
             ItemSeparatorComponent={Divider}
             ListHeaderComponent={
               <View style={{ gap: 12, paddingTop: 12 }}>
@@ -264,14 +262,23 @@ export function HomeDrawerContent() {
               }
             }}
           />
-          <View style={{ position: 'absolute', right: 16, bottom: 16 + insets.bottom }}>
-            <FloatingActionButton
-              ref={fabRef}
+          <View
+            style={{
+              position: 'absolute',
+              right: 0,
+              left: 0,
+              bottom: 0,
+              paddingBottom: insets.bottom + (Platform.OS === 'web' ? 16 : 0),
+              paddingHorizontal: 16,
+            }}
+          >
+            <Button
+              style={{ flex: 1 }}
+              leftIcon='add'
               onPress={() => {
                 router.navigate('/createGroup')
               }}
               title={t('home.createGroup')}
-              icon='add'
             />
           </View>
         </View>

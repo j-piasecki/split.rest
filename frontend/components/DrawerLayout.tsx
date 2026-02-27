@@ -143,7 +143,12 @@ export function DrawerLayout({
 
   useEffect(() => {
     lockOpen.value = isNoGroupSelected
-  }, [isNoGroupSelected, lockOpen])
+    if (isNoGroupSelected) {
+      openDrawer()
+    } else {
+      closeDrawer(true)
+    }
+  }, [isNoGroupSelected, lockOpen, openDrawer, closeDrawer])
 
   const pan = Gesture.Pan()
     .enabled(enabled && isOnGroupScreen)
