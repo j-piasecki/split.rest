@@ -1,7 +1,8 @@
 import { drawerSpringConfig } from '@styling/animationConfigs'
 import { useTheme } from '@styling/theme'
 import { HapticFeedback } from '@utils/hapticFeedback'
-import React, { createContext, useCallback, useImperativeHandle, useRef } from 'react'
+import { useSegments } from 'expo-router'
+import React, { createContext, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 import { Keyboard, StyleSheet, useWindowDimensions } from 'react-native'
 import { Gesture, GestureDetector, GestureType } from 'react-native-gesture-handler'
 import Animated, {
@@ -76,11 +77,13 @@ export function DrawerLayout({
   const theme = useTheme()
   const { width: screenWidth } = useWindowDimensions()
   const drawerWidth = propsDrawerWidth ?? Math.min(screenWidth * 0.85, 400)
+  const segments = useSegments()
+  const isOnGroupScreen = segments[0] === 'group'
 
   const panRef = useRef<GestureType | undefined>(undefined)
-  const progress = useSharedValue(1)
+  const progress = useSharedValue(0)
   const isDragging = useSharedValue(false)
-  const isOpen = useSharedValue(true)
+  const isOpen = useSharedValue(false)
   const translationStart = useSharedValue(0)
   const progressStart = useSharedValue(0)
 
@@ -118,8 +121,18 @@ export function DrawerLayout({
     [openDrawer, closeDrawer]
   )
 
+  const hasAutoOpened = useRef(false)
+
+  useEffect(() => {
+    if (isOnGroupScreen && !hasAutoOpened.current) {
+      hasAutoOpened.current = true
+      progress.value = 1
+      isOpen.value = true
+    }
+  }, [isOnGroupScreen, progress, isOpen])
+
   const pan = Gesture.Pan()
-    .enabled(enabled)
+    .enabled(enabled && isOnGroupScreen)
     // eslint-disable-next-line react-compiler/react-compiler
     .withRef(panRef)
     .minDistance(40)
