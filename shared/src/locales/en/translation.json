@@ -33,7 +33,7 @@
 
   "home": {
     "groups": "Groups",
-    "noGroups": "No groups",
+    "noGroups": "You are not part of any group yet",
     "noHiddenGroups": "No hidden groups",
     "hiddenGroups": "Hidden groups",
     "errorLoadingGroups": "Could not load your groups",

@@ -131,12 +131,7 @@ export function HomeDrawerContent() {
           <FlatListWithHeader
             hideHeader
             data={data}
-            isRefreshing={
-              visibleGroupsLoading ||
-              hiddenGroupsLoading ||
-              isRefetchingVisibleGroups ||
-              isRefetchingHiddenGroups
-            }
+            isRefreshing={isRefetchingVisibleGroups || isRefetchingHiddenGroups}
             onRefresh={refresh}
             showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
@@ -175,6 +170,7 @@ export function HomeDrawerContent() {
               const isLastVisible = index === visibleGroups.length - 1
               const isLastHidden = showHidden && index === data.length - 1
               // First hidden group follows the header separator — needs rounded top
+              const isFirstVisible = index === 0
               const isFirstHidden = showHidden && index === visibleGroups.length + 1 // +1 for the header sentinel
 
               return (
@@ -182,7 +178,7 @@ export function HomeDrawerContent() {
                   info={item}
                   style={[
                     { borderRadius: 4 },
-                    isFirstHidden && {
+                    (isFirstHidden || isFirstVisible) && {
                       borderTopLeftRadius: 16,
                       borderTopRightRadius: 16,
                     },
@@ -201,6 +197,7 @@ export function HomeDrawerContent() {
               paddingHorizontal: 12,
               paddingBottom: 88 + insets.bottom,
               alignSelf: 'center',
+              flexGrow: 1,
             }}
             onEndReachedThreshold={0.5}
             keyExtractor={(item) => {
@@ -212,7 +209,7 @@ export function HomeDrawerContent() {
               return <Divider />
             }}
             ListHeaderComponent={
-              <View style={{ gap: 12, paddingTop: 12 }}>
+              <View style={{ gap: 12, paddingTop: 12, paddingBottom: 12 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <Text
                     style={{
@@ -227,16 +224,32 @@ export function HomeDrawerContent() {
                 </View>
 
                 <InvitationsButton invites={invites} isLoadingInvites={isLoadingInvites} />
-
-                <FullPaneHeader icon='group' title={t('home.groups')} textLocation='start' />
               </View>
             }
             ListEmptyComponent={
-              <ListEmptyComponent
-                isLoading={visibleGroupsLoading}
-                emptyText={t(groupsError ? 'home.errorLoadingGroups' : 'home.noGroups')}
-                loadingPlaceholder={<GroupsShimmer count={5} />}
-              />
+              visibleGroupsLoading ? (
+                <GroupsShimmer count={5} />
+              ) : (
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingVertical: 24,
+                    paddingHorizontal: 24,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      color: theme.colors.onSurfaceVariant,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {t(groupsError ? 'home.errorLoadingGroups' : 'home.noGroups')}
+                  </Text>
+                </View>
+              )
             }
             onEndReached={() => {
               if (!isFetchingNextVisibleGroups && hasNextVisibleGroups) {
