@@ -112,13 +112,11 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
         {
           scale: 0.5 + size / 96 + 0.125 - Math.sin(Math.abs((rotation.value % 360) - 180) / 1440),
         },
-        { translateY: size / 1.25 },
+        { translateY: size / 1.25 - (Platform.OS === 'web' ? 0 : 10) },
         { rotate: `${rotation.value + Math.sqrt(normalizedOffset)}deg` },
       ],
       width: 96,
       height: 96,
-      left: -48 + width / 2,
-      bottom: -10,
     }
   })
 
@@ -194,7 +192,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
           .onStart(() => onPull?.())}
       >
         {/* don't animate the image directly, it causes it to be recreated every frame on ios */}
-        <Animated.View style={[{ position: 'absolute' }, animatedStyle]}>
+        <Animated.View style={animatedStyle}>
           <Image source={icon} style={{ width: 96, height: 96 }} tintColor={theme.colors.primary} />
         </Animated.View>
       </GestureDetector>
