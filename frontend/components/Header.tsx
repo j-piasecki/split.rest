@@ -178,7 +178,7 @@ export default function Header({ offset, isWaiting, onPull, showBackButton }: He
               </Text>
             </>
           )}
-          {!showBackButton && <Icon name='menu' size={32} color={theme.colors.primary} />}
+          {!backButtonVisible && <Icon name='menu' size={32} color={theme.colors.primary} />}
         </Animated.View>
       </Pressable>
 
