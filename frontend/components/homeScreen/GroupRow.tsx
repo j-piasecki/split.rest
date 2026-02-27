@@ -1,12 +1,10 @@
 import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
 import { DrawerLayoutContext } from '@components/DrawerLayout'
 import { GroupIcon } from '@components/GroupIcon'
-import { Icon } from '@components/Icon'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { useTheme } from '@styling/theme'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { router } from 'expo-router'
 import React, { useContext, useRef } from 'react'
@@ -15,7 +13,7 @@ import { StyleProp, View, ViewStyle } from 'react-native'
 import { CurrencyUtils } from 'shared'
 import { GroupUserInfo } from 'shared'
 
-export const GROUP_ROW_HEIGHT = 80
+export const GROUP_ROW_HEIGHT = 64
 
 export interface GroupRowProps {
   info: GroupUserInfo
@@ -25,7 +23,6 @@ export interface GroupRowProps {
 export function GroupRow({ info, style }: GroupRowProps) {
   const theme = useTheme()
   const contextMenuRef = useRef<ContextMenuRef>(null)
-  const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { t } = useTranslation()
   const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info?.id)
   const drawerContext = useContext(DrawerLayoutContext)
@@ -70,43 +67,14 @@ export function GroupRow({ info, style }: GroupRowProps) {
           justifyContent: 'space-between',
         }}
       >
-        <GroupIcon info={info} size={40} style={{ marginRight: 8 }} />
-        <Text
-          style={{ flex: 1, fontSize: 20, color: theme.colors.onSurface, marginRight: 8 }}
-          numberOfLines={2}
-        >
-          {info.name}
-        </Text>
-
-        <View
-          style={{
-            flexDirection: isSmallScreen ? 'column' : 'row',
-            gap: isSmallScreen ? 4 : 20,
-            alignItems: 'flex-end',
-          }}
-        >
+        <GroupIcon info={info} size={48} style={{ marginRight: 8 }} />
+        <View style={{ flex: 1, marginRight: 4 }}>
+          <Text style={{ fontSize: 18, color: theme.colors.onSurface }} numberOfLines={1}>
+            {info.name}
+          </Text>
           <Text style={{ fontSize: 18, fontWeight: 600, color: balanceColor }}>
             {CurrencyUtils.format(info.balance, info.currency, true, true)}
           </Text>
-          <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
-            <Text style={{ fontSize: 16, color: theme.colors.outline }}>{info.memberCount}</Text>
-            <Icon name='members' size={20} color={theme.colors.outline} />
-
-            {(!isSmallScreen || !info.hasAccess || info.isAdmin || info.locked) && (
-              <Icon
-                name={info.isAdmin && !info.locked ? 'shield' : 'lock'}
-                size={16}
-                color={
-                  info.locked
-                    ? theme.colors.error
-                    : info.hasAccess && !info.isAdmin
-                      ? theme.colors.transparent
-                      : theme.colors.outline
-                }
-                style={{ marginLeft: 4 }}
-              />
-            )}
-          </View>
         </View>
 
         <RoundIconButton
