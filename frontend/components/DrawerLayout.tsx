@@ -77,8 +77,8 @@ export function DrawerLayout({
   const theme = useTheme()
   const { width: screenWidth } = useWindowDimensions()
   const drawerWidth = propsDrawerWidth ?? Math.min(screenWidth * 0.85, 400)
-  const segments = useSegments()
-  const isOnGroupScreen = segments[0] === 'group'
+  const segments = useSegments() as string[]
+  const isOnGroupScreen = segments[0] === 'group' && segments.length === 2
 
   const panRef = useRef<GestureType | undefined>(undefined)
   const progress = useSharedValue(0)
