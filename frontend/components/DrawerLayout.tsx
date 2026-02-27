@@ -1,7 +1,7 @@
 import { drawerSpringConfig } from '@styling/animationConfigs'
 import { useTheme } from '@styling/theme'
 import { HapticFeedback } from '@utils/hapticFeedback'
-import { useSegments } from 'expo-router'
+import { usePathname, useSegments } from 'expo-router'
 import React, { createContext, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 import { Keyboard, StyleSheet, useWindowDimensions } from 'react-native'
 import { Gesture, GestureDetector, GestureType } from 'react-native-gesture-handler'
@@ -16,7 +16,7 @@ import Animated, {
 export const DrawerLayoutContext = createContext<
   | {
       panGesture: React.RefObject<GestureType | undefined>
-      closeDrawer: () => void
+      closeDrawer: (ignoreLock?: boolean) => void
       openDrawer: () => void
     }
   | undefined
@@ -24,12 +24,12 @@ export const DrawerLayoutContext = createContext<
 
 interface OverlayProps {
   progress: SharedValue<number>
-  closeDrawer: () => void
+  closeDrawer: (ignoreLock?: boolean) => void
 }
 
 function Overlay(props: OverlayProps) {
   const tap = Gesture.Tap().onStart(() => {
-    props.closeDrawer()
+    props.closeDrawer(false)
   })
 
   const style = useAnimatedStyle(() => {
@@ -56,7 +56,7 @@ interface DrawerLayoutProps {
 
 export interface DrawerLayoutRef {
   openDrawer: () => void
-  closeDrawer: () => void
+  closeDrawer: (ignoreLock?: boolean) => void
 }
 
 function closeKeyboard() {
@@ -78,12 +78,15 @@ export function DrawerLayout({
   const { width: screenWidth } = useWindowDimensions()
   const drawerWidth = propsDrawerWidth ?? Math.min(screenWidth * 0.85, 400)
   const segments = useSegments() as string[]
+  const pathname = usePathname()
   const isOnGroupScreen = segments[0] === 'group' && segments.length === 2
+  const isNoGroupSelected = pathname === '/group/none'
 
   const panRef = useRef<GestureType | undefined>(undefined)
   const progress = useSharedValue(0)
   const isDragging = useSharedValue(false)
   const isOpen = useSharedValue(false)
+  const lockOpen = useSharedValue(isNoGroupSelected)
   const translationStart = useSharedValue(0)
   const progressStart = useSharedValue(0)
 
@@ -99,11 +102,18 @@ export function DrawerLayout({
     }
   })
 
-  const closeDrawer = useCallback(() => {
-    'worklet'
-    progress.value = withSpring(0, drawerSpringConfig)
-    isOpen.value = false
-  }, [isOpen, progress])
+  const closeDrawer = useCallback(
+    (ignoreLock: boolean = true) => {
+      'worklet'
+      if (lockOpen.value && !ignoreLock) {
+        return
+      }
+
+      progress.value = withSpring(0, drawerSpringConfig)
+      isOpen.value = false
+    },
+    [isOpen, lockOpen, progress]
+  )
 
   const openDrawer = useCallback(() => {
     'worklet'
@@ -130,6 +140,10 @@ export function DrawerLayout({
       isOpen.value = true
     }
   }, [isOnGroupScreen, progress, isOpen])
+
+  useEffect(() => {
+    lockOpen.value = isNoGroupSelected
+  }, [isNoGroupSelected, lockOpen])
 
   const pan = Gesture.Pan()
     .enabled(enabled && isOnGroupScreen)
@@ -158,7 +172,7 @@ export function DrawerLayout({
         translationStart.value = e.translationX
       } else {
         const newProgress = Math.max(
-          0,
+          lockOpen.value ? 1 : 0,
           Math.min(1, (e.translationX - translationStart.value) / drawerWidth + progressStart.value)
         )
         progress.value = newProgress
@@ -176,8 +190,12 @@ export function DrawerLayout({
         if (isOpen.value) {
           runOnJS(hapticFeedback)()
         }
-        isOpen.value = false
-        progress.value = withSpring(0, drawerSpringConfig)
+        if (!lockOpen.value) {
+          isOpen.value = false
+          progress.value = withSpring(0, drawerSpringConfig)
+        } else {
+          progress.value = withSpring(1, drawerSpringConfig)
+        }
       }
 
       isDragging.value = false

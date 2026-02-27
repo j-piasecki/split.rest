@@ -12,7 +12,6 @@ import { useUserGroupInvites } from '@hooks/database/useUserGroupInvites'
 import { useUserGroups } from '@hooks/database/useUserGroups'
 import { useNotificationPermission } from '@hooks/useNotificationPermission'
 import { useTheme } from '@styling/theme'
-
 import { invalidateGroupInvites, invalidateUserGroups } from '@utils/queryClient'
 import { router } from 'expo-router'
 import React from 'react'
