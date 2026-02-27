@@ -1,11 +1,10 @@
 import { Button } from './Button'
+import { Icon } from './Icon'
 import { Text } from './Text'
 import { FlatListWithHeader } from '@components/FlatListWithHeader'
 import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { FullPaneHeader } from '@components/Pane'
-import { SegmentedButton } from '@components/SegmentedButton'
 import { Shimmer } from '@components/Shimmer'
-import { useSnack } from '@components/SnackBar'
 import { GroupRow } from '@components/homeScreen/GroupRow'
 import { InvitationsButton } from '@components/homeScreen/InvitationsButton'
 import { useUserGroupInvites } from '@hooks/database/useUserGroupInvites'
@@ -17,8 +16,18 @@ import { router } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Platform, StyleProp, View, ViewStyle } from 'react-native'
+import { Platform, Pressable, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { GroupUserInfo } from 'shared'
+
+const HIDDEN_HEADER_KEY = '__hidden_header__'
+
+type HiddenHeader = { type: 'hidden_header' }
+type ListItem = GroupUserInfo | HiddenHeader
+
+function isHiddenHeader(item: ListItem): item is HiddenHeader {
+  return (item as HiddenHeader).type === 'hidden_header'
+}
 
 function Divider() {
   return <View style={{ width: '100%', height: 2, backgroundColor: 'transparent' }} />
@@ -72,65 +81,6 @@ function GroupsShimmer({ count }: { count: number }) {
   )
 }
 
-let visibleGroupsSnackShown = false
-let hiddenGroupsSnackShown = false
-function VisibilityFilter({
-  style,
-  onChange,
-}: {
-  style?: StyleProp<ViewStyle>
-  onChange: (hidden: boolean) => void
-}) {
-  const snack = useSnack()
-  const { t } = useTranslation()
-  const [hidden, setHidden] = useState(false)
-
-  return (
-    <SegmentedButton
-      // this seems to work with flex
-      style={[{ maxWidth: 112, minWidth: 112 }, style]}
-      items={[
-        {
-          icon: 'visibility',
-          selected: !hidden,
-          onPress: () => {
-            if (hidden) {
-              if (!visibleGroupsSnackShown) {
-                // eslint-disable-next-line react-compiler/react-compiler
-                visibleGroupsSnackShown = true
-                snack.show({
-                  message: t('home.showingVisibleGroups'),
-                  duration: snack.duration.SHORT,
-                })
-              }
-              setHidden(false)
-              onChange(false)
-            }
-          },
-        },
-        {
-          icon: 'visibilityOff',
-          selected: hidden,
-          onPress: () => {
-            if (!hidden) {
-              if (!hiddenGroupsSnackShown) {
-                // eslint-disable-next-line react-compiler/react-compiler
-                hiddenGroupsSnackShown = true
-                snack.show({
-                  message: t('home.showingHiddenGroups'),
-                  duration: snack.duration.SHORT,
-                })
-              }
-              setHidden(true)
-              onChange(true)
-            }
-          },
-        },
-      ]}
-    />
-  )
-}
-
 export function HomeDrawerContent() {
   const theme = useTheme()
   const { t } = useTranslation()
@@ -155,7 +105,6 @@ export function HomeDrawerContent() {
     fetchNextPage: fetchNextHiddenGroups,
     isFetchingNextPage: isFetchingNextHiddenGroups,
     isRefetching: isRefetchingHiddenGroups,
-    error: hiddenGroupsError,
   } = useUserGroups(true)
 
   const { invites, isLoading: isLoadingInvites } = useUserGroupInvites(false)
@@ -167,18 +116,21 @@ export function HomeDrawerContent() {
     invalidateGroupInvites(true)
   }
 
+  const hasHiddenGroups = hiddenGroups.length > 0 || hiddenGroupsLoading
+
+  const data: ListItem[] = [
+    ...visibleGroups,
+    ...(hasHiddenGroups ? [{ type: 'hidden_header' } as HiddenHeader] : []),
+    ...(showHidden && hasHiddenGroups ? hiddenGroups : []),
+  ]
+
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
       <View style={{ flex: 1, alignItems: 'center' }}>
-        <View
-          style={{
-            flex: 1,
-            width: '100%',
-          }}
-        >
+        <View style={{ flex: 1, width: '100%' }}>
           <FlatListWithHeader
             hideHeader
-            data={showHidden ? hiddenGroups : visibleGroups}
+            data={data}
             isRefreshing={
               visibleGroupsLoading ||
               hiddenGroupsLoading ||
@@ -186,18 +138,62 @@ export function HomeDrawerContent() {
               isRefetchingHiddenGroups
             }
             onRefresh={refresh}
-            renderItem={({ item, index }) => (
-              <GroupRow
-                info={item}
-                style={[
-                  { borderRadius: 4 },
-                  index === visibleGroups.length - 1 && {
-                    borderBottomLeftRadius: 16,
-                    borderBottomRightRadius: 16,
-                  },
-                ]}
-              />
-            )}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item, index }) => {
+              if (isHiddenHeader(item)) {
+                return (
+                  <Pressable
+                    onPress={() => setShowHidden((prev) => !prev)}
+                    style={({ pressed }) => ({
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      paddingHorizontal: 4,
+                      paddingVertical: 12,
+                      opacity: pressed ? 0.7 : 1,
+                    })}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 600,
+                        color: theme.colors.onSurfaceVariant,
+                        letterSpacing: 0.5,
+                      }}
+                    >
+                      {t('home.hiddenGroups')}
+                    </Text>
+                    <Icon
+                      size={20}
+                      name={showHidden ? 'arrowUp' : 'arrowDown'}
+                      color={theme.colors.onSurfaceVariant}
+                    />
+                  </Pressable>
+                )
+              }
+
+              const isLastVisible = index === visibleGroups.length - 1
+              const isLastHidden = showHidden && index === data.length - 1
+              // First hidden group follows the header separator — needs rounded top
+              const isFirstHidden = showHidden && index === visibleGroups.length + 1 // +1 for the header sentinel
+
+              return (
+                <GroupRow
+                  info={item}
+                  style={[
+                    { borderRadius: 4 },
+                    isFirstHidden && {
+                      borderTopLeftRadius: 16,
+                      borderTopRightRadius: 16,
+                    },
+                    (isLastVisible || isLastHidden) && {
+                      borderBottomLeftRadius: 16,
+                      borderBottomRightRadius: 16,
+                    },
+                  ]}
+                />
+              )
+            }}
             contentContainerStyle={{
               width: '100%',
               maxWidth: 768,
@@ -207,11 +203,17 @@ export function HomeDrawerContent() {
               alignSelf: 'center',
             }}
             onEndReachedThreshold={0.5}
-            keyExtractor={(item) => `${item.id}-${item.hidden}`}
-            ItemSeparatorComponent={Divider}
+            keyExtractor={(item) => {
+              if (isHiddenHeader(item)) return HIDDEN_HEADER_KEY
+              return `${item.id}-${item.hidden}`
+            }}
+            ItemSeparatorComponent={({ leadingItem }) => {
+              if (isHiddenHeader(leadingItem)) return null
+              return <Divider />
+            }}
             ListHeaderComponent={
               <View style={{ gap: 12, paddingTop: 12 }}>
-                <View style={[{ flexDirection: 'row', alignItems: 'center', gap: 8 }]}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <Text
                     style={{
                       fontSize: 28,
@@ -226,37 +228,20 @@ export function HomeDrawerContent() {
 
                 <InvitationsButton invites={invites} isLoadingInvites={isLoadingInvites} />
 
-                <FullPaneHeader
-                  icon='group'
-                  title={t('home.groups')}
-                  textLocation='start'
-                  rightComponentVisible
-                  rightComponent={
-                    <VisibilityFilter
-                      onChange={(hidden) => {
-                        setShowHidden(hidden)
-                      }}
-                    />
-                  }
-                />
+                <FullPaneHeader icon='group' title={t('home.groups')} textLocation='start' />
               </View>
             }
             ListEmptyComponent={
               <ListEmptyComponent
-                isLoading={showHidden ? hiddenGroupsLoading : visibleGroupsLoading}
-                emptyText={
-                  showHidden
-                    ? t(hiddenGroupsError ? 'home.errorLoadingGroups' : 'home.noHiddenGroups')
-                    : t(groupsError ? 'home.errorLoadingGroups' : 'home.noGroups')
-                }
+                isLoading={visibleGroupsLoading}
+                emptyText={t(groupsError ? 'home.errorLoadingGroups' : 'home.noGroups')}
                 loadingPlaceholder={<GroupsShimmer count={5} />}
               />
             }
             onEndReached={() => {
-              if (!showHidden && !isFetchingNextVisibleGroups && hasNextVisibleGroups) {
+              if (!isFetchingNextVisibleGroups && hasNextVisibleGroups) {
                 fetchNextVisibleGroups()
               }
-
               if (showHidden && !isFetchingNextHiddenGroups && hasNextHiddenGroups) {
                 fetchNextHiddenGroups()
               }
