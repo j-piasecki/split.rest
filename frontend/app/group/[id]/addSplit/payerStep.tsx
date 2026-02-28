@@ -111,6 +111,7 @@ function PayerRow({ user, isLast, isSelected, onSelect }: PayerRowProps) {
 }
 
 export default function Modal() {
+  const theme = useTheme()
   const router = useRouter()
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
@@ -255,6 +256,8 @@ export default function Modal() {
             <Button
               leftIcon='casino'
               title={t('screenName.roulette')}
+              style={{ backgroundColor: theme.colors.secondaryContainer }}
+              foregroundColor={theme.colors.onSecondaryContainer}
               onPress={() => {
                 setIsRouletteActive(true)
                 setSelectedPayerId(undefined)
