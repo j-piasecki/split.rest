@@ -1,5 +1,10 @@
 import { registerOrUpdateNotificationToken } from '@database/registerOrUpdateNotificationToken'
-import { AuthorizationStatus, getMessaging } from '@react-native-firebase/messaging'
+import {
+  AuthorizationStatus,
+  getMessaging,
+  getToken,
+  registerDeviceForRemoteMessages,
+} from '@react-native-firebase/messaging'
 import { auth } from '@utils/firebase'
 import * as Notifications from 'expo-notifications'
 import { useEffect } from 'react'
@@ -16,8 +21,8 @@ async function requestPermissionAndGetToken(): Promise<string | null> {
       authStatus === AuthorizationStatus.PROVISIONAL
 
     if (enabled) {
-      await messaging.registerDeviceForRemoteMessages()
-      return await messaging.getToken()
+      await registerDeviceForRemoteMessages(messaging)
+      return await getToken(messaging)
     }
   } else if (Platform.OS === 'android') {
     const messaging = getMessaging()
@@ -26,8 +31,8 @@ async function requestPermissionAndGetToken(): Promise<string | null> {
     )
 
     if (status === 'granted') {
-      await messaging.registerDeviceForRemoteMessages()
-      return await messaging.getToken()
+      await registerDeviceForRemoteMessages(messaging)
+      return await getToken(messaging)
     }
   }
 

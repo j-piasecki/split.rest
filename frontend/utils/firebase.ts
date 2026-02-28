@@ -1,5 +1,5 @@
 import { getAnalytics, logEvent } from '@react-native-firebase/analytics'
-import { getAuth } from '@react-native-firebase/auth'
+import { getAuth, getIdToken as rnGetIdToken } from '@react-native-firebase/auth'
 import { getCrashlytics } from '@react-native-firebase/crashlytics'
 
 export const authObj = getAuth()
@@ -13,3 +13,5 @@ export function logScreenView(screenName: string, screenClass: string) {
     firebase_screen_class: screenClass,
   })
 }
+
+export const getIdToken = rnGetIdToken

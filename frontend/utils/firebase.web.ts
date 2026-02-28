@@ -1,7 +1,7 @@
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import { initializeApp } from 'firebase/app'
 import { ReCaptchaV3Provider, initializeAppCheck } from 'firebase/app-check'
-import { getAuth } from 'firebase/auth'
+import { getAuth, getIdToken as webGetIdToken } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD1wsW6_XCS3xymhiG0euK60xiDxNZHIoY',
@@ -35,3 +35,5 @@ export function logScreenView(screenName: string, screenClass: string) {
     firebase_screen_class: screenClass,
   })
 }
+
+export const getIdToken = webGetIdToken

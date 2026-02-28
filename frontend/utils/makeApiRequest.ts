@@ -1,4 +1,4 @@
-import { auth } from '@utils/firebase'
+import { auth, getIdToken } from '@utils/firebase'
 import {
   ApiErrorPayload,
   LanguageTranslationKey,
@@ -52,7 +52,7 @@ export async function makeRequest<TArgs, TReturn>(
     method: method,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${await auth.currentUser?.getIdToken()}`,
+      'Authorization': `Bearer ${auth.currentUser ? await getIdToken(auth.currentUser) : undefined}`,
     },
     body: method === 'POST' || method === 'DELETE' ? JSON.stringify(args) : undefined,
   })
@@ -130,7 +130,7 @@ export async function makeRequestWithFile<TArgs, TReturn>(
   const result = await fetch(url, {
     method: method,
     headers: {
-      Authorization: `Bearer ${await auth.currentUser?.getIdToken()}`,
+      Authorization: `Bearer ${auth.currentUser ? await getIdToken(auth.currentUser) : undefined}`,
     },
     body: formData,
   })
