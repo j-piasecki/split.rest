@@ -1,5 +1,6 @@
 import { DisplayClass, getDisplayClass } from './dimensionUtils'
 import { auth } from './firebase.web'
+import { ApiError } from './makeApiRequest'
 import { queryClient } from './queryClient'
 import { sleep } from './sleep'
 import { createOrUpdateUser } from '@database/createOrUpdateUser'
@@ -19,7 +20,7 @@ import {
   signInWithRedirect,
 } from 'firebase/auth'
 import { t } from 'i18next'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { User } from 'shared'
 
 let authReady = false
@@ -51,12 +52,16 @@ function addAuthListener(listener: AuthListener) {
 async function tryToCreateUser(createUserRetries = 5) {
   try {
     await createOrUpdateUser()
-  } catch {
+  } catch (error) {
     if (createUserRetries > 0) {
       await sleep(100)
       await tryToCreateUser(createUserRetries - 1)
     } else {
-      alert(t('api.auth.createUserFailed'))
+      if (error instanceof ApiError && error.statusCode === -1) {
+        console.error('Server is down, cannot create user')
+      } else {
+        alert(t('api.auth.createUserFailed'))
+      }
     }
   }
 }
@@ -80,10 +85,8 @@ export function useAuth(redirectToIndex = true) {
   const [firebaseUser, setFirebaseUser] = useState<User | null | undefined>(
     authReady ? createUser(auth.currentUser) : undefined
   )
-  const { data: remoteUser } = useUserById(firebaseUser?.id)
-  const user = useMemo<User | null | undefined>(() => {
-    return remoteUser ?? firebaseUser
-  }, [remoteUser, firebaseUser])
+  const { user: remoteUser, serverDown } = useUserById(firebaseUser?.id)
+  const user = remoteUser
 
   useEffect(() => {
     return addAuthListener(setFirebaseUser)
@@ -99,7 +102,7 @@ export function useAuth(redirectToIndex = true) {
     }
   }, [path, router, firebaseUser, redirectToIndex])
 
-  return { user }
+  return { user, firebaseUser, serverDown }
 }
 
 async function reauthenticateWithPopupOrRedirect(provider: GoogleAuthProvider | OAuthProvider) {
