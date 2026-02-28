@@ -68,10 +68,8 @@ export function useAuth(redirectToIndex = true) {
 
   useEffect(() => {
     const subscriber = onAuthStateChanged(auth, (user) => {
-      if (!authReady) {
-        authReady = true
-        setFirebaseUser(user)
-      }
+      authReady = true
+      setFirebaseUser(user)
     })
     return subscriber
   }, [])
