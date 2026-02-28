@@ -59,7 +59,7 @@ export async function makeRequest<TArgs, TReturn>(
       body: method === 'POST' || method === 'DELETE' ? JSON.stringify(args) : undefined,
     })
   } catch {
-    throw new ApiError('api.serverIsDown', -1, 'Server is down')
+    throw new ApiError('api.serverIsNotResponding', -1, 'Server is down')
   }
 
   if (__DEV__) {
