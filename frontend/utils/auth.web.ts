@@ -86,7 +86,7 @@ export function useAuth(redirectToIndex = true) {
     authReady ? createUser(auth.currentUser) : undefined
   )
   const { user: remoteUser, serverDown } = useUserById(firebaseUser?.id)
-  const user = remoteUser
+  const user = remoteUser ?? firebaseUser
 
   useEffect(() => {
     return addAuthListener(setFirebaseUser)
