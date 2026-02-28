@@ -56,6 +56,8 @@ export function Button({
   const outerAnimatedStyle = useAnimatedStyle(() => {
     return {
       borderRadius: withSpring(isPressed ? (growsOnPress ? 28 : 22) : 12, buttonCornerSpringConfig),
+      marginTop: withSpring(isPressed && growsOnPress ? -4 : 0, buttonPaddingSpringConfig),
+      marginBottom: withSpring(isPressed && growsOnPress ? -4 : 0, buttonPaddingSpringConfig),
     }
   })
 
