@@ -141,7 +141,7 @@ export function HomeDrawerContent() {
                       flexDirection: 'row',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      paddingHorizontal: 4,
+                      paddingHorizontal: 16,
                       paddingVertical: 12,
                       opacity: pressed ? 0.7 : 1,
                     })}
