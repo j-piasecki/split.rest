@@ -103,11 +103,15 @@ function ModalScreen({
   const [showContent, setShowContent] = useState(true)
 
   function close() {
-    setShowContent(false)
-    setTimeout(() => {
-      setShowContent(true)
+    if (opaque) {
+      setShowContent(false)
+      setTimeout(() => {
+        setShowContent(true)
+        goBack()
+      }, 150)
+    } else {
       goBack()
-    }, 150)
+    }
   }
 
   if (!showContent) {
