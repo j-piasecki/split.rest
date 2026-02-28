@@ -178,10 +178,6 @@ function Content() {
                       options={{ title: t('screenName.addSplit'), ...modalOptions }}
                     />
                     <Stack.Screen
-                      name='group/[id]/roulette'
-                      options={{ title: t('screenName.roulette'), ...modalOptions }}
-                    />
-                    <Stack.Screen
                       name='group/[id]/settings'
                       options={{ title: t('screenName.groupSettings.index'), ...modalOptions }}
                     />

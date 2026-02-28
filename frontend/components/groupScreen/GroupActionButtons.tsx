@@ -33,21 +33,6 @@ export function GroupActionButtons({ info }: { info: GroupUserInfo | undefined }
         gap: 12,
       }}
     >
-      <ButtonShimmer argument={info}>
-        {(info) =>
-          info.permissions.canAccessRoulette?.() &&
-          !info?.locked && (
-            <Button
-              onPress={() => {
-                router.navigate(`/group/${info!.id}/roulette`)
-              }}
-              title={t('groupInfo.roulette')}
-              leftIcon='casino'
-            />
-          )
-        }
-      </ButtonShimmer>
-
       <ButtonShimmer argument={info} offset={(shimmerOffset -= 0.05)}>
         {(info) =>
           Number(info?.balance) !== 0 &&
