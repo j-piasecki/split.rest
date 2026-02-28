@@ -153,15 +153,16 @@ export function ActionableSplitsPane({
     // TODO: Figure out what to do with this place
     return threeBarLayout ? (
       <View
-        style={{
-          flex: 1,
-          marginTop: 6,
-          borderRadius: 16,
-          backgroundColor: theme.colors.surfaceContainer,
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 16,
-        }}
+        style={[
+          {
+            borderRadius: 16,
+            backgroundColor: theme.colors.surfaceContainer,
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 16,
+          },
+          style,
+        ]}
       >
         <Text style={{ fontSize: 20, color: theme.colors.outlineVariant }}>
           {t('groupInfo.youAreAllCaughtUp')}
