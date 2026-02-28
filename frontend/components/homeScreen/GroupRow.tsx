@@ -5,6 +5,7 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutation'
 import { useTheme } from '@styling/theme'
+import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { setLastOpenedGroupId } from '@utils/lastOpenedGroup'
 import { router, usePathname } from 'expo-router'
@@ -26,6 +27,7 @@ export function GroupRow({ info, style }: GroupRowProps) {
   const { mutate: setGroupHiddenMutation } = useSetGroupHiddenMutation(info?.id)
   const drawerContext = useContext(DrawerLayoutContext)
   const pathname = usePathname()
+  const displayClass = useDisplayClass()
 
   const isActive = pathname === `/group/${info.id}` || pathname.startsWith(`/group/${info.id}/`)
   const balanceColor = getBalanceColor(Number(info.balance), theme)
@@ -81,13 +83,15 @@ export function GroupRow({ info, style }: GroupRowProps) {
           </Text>
         </View>
 
-        <RoundIconButton
-          icon='moreVertical'
-          onPress={(e) => {
-            contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
-          }}
-          containerStyle={{ marginLeft: 4 }}
-        />
+        {displayClass >= DisplayClass.Large && (
+          <RoundIconButton
+            icon='moreVertical'
+            onPress={(e) => {
+              contextMenuRef.current?.open({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
+            }}
+            containerStyle={{ marginLeft: 4 }}
+          />
+        )}
       </View>
     </ContextMenu>
   )
