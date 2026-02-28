@@ -24,12 +24,7 @@ export interface BottomBarProps {
   disableSplit?: boolean
 }
 
-export function BottomBar({
-  info,
-  ref,
-  disableSettleUp,
-  disableSplit,
-}: BottomBarProps) {
+export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBarProps) {
   const theme = useTheme()
   const router = useRouter()
   const isExpanded = useSharedValue(Platform.OS === 'web')
@@ -67,7 +62,13 @@ export function BottomBar({
   const containerAnimatedStyle = useAnimatedStyle(() => {
     return {
       pointerEvents: isExpanded.value ? 'auto' : 'none',
-      transform: [{ translateY: withTiming(isExpanded.value ? 0 : 8, { duration: 200 }) }],
+      transform: [
+        {
+          translateY: withTiming(isExpanded.value || Platform.OS === 'web' ? 0 : 16, {
+            duration: 200,
+          }),
+        },
+      ],
     }
   })
 
@@ -80,7 +81,7 @@ export function BottomBar({
 
   const sideBarAnimatedStyle = useAnimatedStyle(() => {
     return {
-      width: withSpring(isExpanded.value ? 144 : 64, buttonPaddingSpringConfig),
+      maxWidth: withSpring(isExpanded.value ? 250 : 64, buttonPaddingSpringConfig),
       height: withSpring(isExpanded.value ? 56 : 40, buttonPaddingSpringConfig),
     }
   })
@@ -167,7 +168,7 @@ export function BottomBar({
               settleUpAnimatedStyle,
             ]}
           >
-            <Animated.View style={[StyleSheet.absoluteFillObject, settleUpBackgroundAnimatedStyle]}>
+            <Animated.View style={[{ height: '100%' }, settleUpBackgroundAnimatedStyle]}>
               <Pressable
                 disabled={!settleUpEnabled}
                 onPress={() => {
@@ -176,8 +177,8 @@ export function BottomBar({
                 onPressIn={() => setSettleUpPressed(true)}
                 onPressOut={() => setSettleUpPressed(false)}
                 style={{
-                  ...StyleSheet.absoluteFillObject,
-                  paddingRight: 24,
+                  height: '100%',
+                  paddingHorizontal: 24,
                   flexDirection: 'row-reverse',
                   alignItems: 'center',
                   gap: 8,

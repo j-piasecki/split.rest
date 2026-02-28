@@ -184,11 +184,7 @@ export function SplitsList({
         }}
       >
         {isSmallScreen && !hideBottomBar && (
-          <BottomBar
-            info={info}
-            ref={fabRef}
-            disableSplit={info?.locked}
-          />
+          <BottomBar info={info} ref={fabRef} disableSplit={info?.locked} />
         )}
         {!isSmallScreen && !hideFab && info?.permissions?.canCreateSplits?.() && (
           <FloatingActionButton
