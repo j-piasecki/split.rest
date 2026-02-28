@@ -3,7 +3,7 @@ import { PersonEntry } from '@components/PeoplePicker'
 import { getBalances } from '@database/getBalances'
 import { HapticFeedback } from '@utils/hapticFeedback'
 import { sleep } from '@utils/sleep'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Member, TranslatableError } from 'shared'
 
 export interface UserWithMaybeBalance extends Member {
@@ -18,6 +18,10 @@ export function useRouletteQuery(groupId: number, query: PersonEntry[]) {
     [query]
   )
   const [result, setResult] = useState<(UserWithMaybeBalance | null)[]>([null, ...initialOrder])
+
+  const [started, setStarted] = useState(false)
+
+  const start = useCallback(() => setStarted(true), [])
 
   useEffect(() => {
     async function fetchBalances() {
@@ -107,8 +111,10 @@ export function useRouletteQuery(groupId: number, query: PersonEntry[]) {
       }
     }
 
-    fetchBalances()
-  }, [groupId, initialOrder, query, setError])
+    if (query.length > 0 && started) {
+      fetchBalances()
+    }
+  }, [groupId, initialOrder, query, setError, started])
 
-  return { error, result, finished }
+  return { error, result, finished, start }
 }
