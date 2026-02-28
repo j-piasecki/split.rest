@@ -92,7 +92,8 @@ export function useRouletteQuery(groupId: number, query: PersonEntry[]) {
 
         const outsidePodium = result.slice(3)
         const initialOrderOutsidePodium = initialOrder.filter(
-          (user) => user.id !== result[0].id && user.id !== result[1].id && user.id !== result[2].id
+          (user) =>
+            user.id !== result[0]?.id && user.id !== result[1]?.id && user.id !== result[2]?.id
         )
 
         const pairs = outsidePodium.map((user, index) => [user, initialOrderOutsidePodium[index]])
