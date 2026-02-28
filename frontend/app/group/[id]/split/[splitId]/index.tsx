@@ -35,7 +35,7 @@ const DelayedSplitResolutionAllowedSplitMethods = [
 ]
 
 export default function SplitInfoScreen() {
-  const user = useAuth()
+  const { user } = useAuth()
   const theme = useTheme()
   const router = useRouter()
   const insets = useModalScreenInsets()

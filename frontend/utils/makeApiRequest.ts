@@ -48,7 +48,7 @@ export async function makeRequest<TArgs, TReturn>(
     url.search = params.toString()
   }
 
-  let result: Response;
+  let result: Response
   try {
     result = await fetch(url, {
       method: method,

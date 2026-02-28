@@ -12,7 +12,7 @@ import { ActivityIndicator, ScrollView, View, useWindowDimensions } from 'react-
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function Screen() {
-  const user = useAuth(false)
+  const { user } = useAuth(false)
   const theme = useTheme()
   const insets = useSafeAreaInsets()
   const { t } = useTranslation()

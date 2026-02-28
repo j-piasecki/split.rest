@@ -116,7 +116,7 @@ export default function Modal() {
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
-  const user = useAuth()
+  const { user } = useAuth()
 
   const participants = SplitCreationContext.current.participants
 

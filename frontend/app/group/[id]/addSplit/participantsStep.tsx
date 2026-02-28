@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 export default function Modal() {
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
-  const user = useAuth()
+  const { user } = useAuth()
   const router = useRouter()
   const { data: groupInfo } = useGroupInfo(Number(id))
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)

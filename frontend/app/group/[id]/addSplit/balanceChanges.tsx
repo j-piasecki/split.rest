@@ -104,7 +104,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Member }) {
 }
 
 export default function Modal() {
-  const user = useAuth()
+  const { user } = useAuth()
   const theme = useTheme()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()

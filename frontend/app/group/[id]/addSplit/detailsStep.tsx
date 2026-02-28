@@ -28,7 +28,7 @@ import {
 } from 'shared'
 
 export default function Modal() {
-  const user = useAuth()
+  const { user } = useAuth()
   const router = useRouter()
   const insets = useModalScreenInsets()
   const threeBarLayout = useThreeBarLayout()

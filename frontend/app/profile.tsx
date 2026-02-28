@@ -288,7 +288,7 @@ function Form({ user }: { user: User }) {
 
 export default function ProfileScreen() {
   const { t } = useTranslation()
-  const user = useAuth()
+  const { user } = useAuth()
   const theme = useTheme()
   return (
     <ModalScreen

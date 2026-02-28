@@ -41,7 +41,7 @@ function feedback() {
 export default function Header({ offset, isWaiting, onPull, showBackButton }: HeaderProps) {
   const { t } = useTranslation()
   const theme = useTheme()
-  const user = useAuth()
+  const { user } = useAuth()
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const isRotating = useSharedValue(false)

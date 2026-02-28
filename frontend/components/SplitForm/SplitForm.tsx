@@ -58,7 +58,7 @@ export function SplitForm({
   showPayerSelector = true,
   style,
 }: SplitFormProps) {
-  const user = useAuth()
+  const { user } = useAuth()
   const scrollRef = useRef<ScrollView>(null)
   const { t } = useTranslation()
   const [fetchingMembers, setFetchingMembers] = useState(false)

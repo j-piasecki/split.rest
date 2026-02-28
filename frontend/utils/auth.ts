@@ -94,7 +94,7 @@ export function useAuth(redirectToIndex = true) {
     }
   }, [path, router, firebaseUser, redirectToIndex])
 
-  return user
+  return { user }
 }
 
 export async function reauthenticate(skipAppleSignIn = false) {

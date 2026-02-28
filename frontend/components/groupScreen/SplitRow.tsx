@@ -94,7 +94,7 @@ export interface LoadedSplitRowProps {
 }
 
 function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
-  const user = useAuth()
+  const { user } = useAuth()
   const theme = useTheme()
   const router = useRouter()
   const snack = useSnack()

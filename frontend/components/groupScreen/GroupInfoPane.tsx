@@ -19,7 +19,7 @@ import { CurrencyUtils } from 'shared'
 import { GroupUserInfo } from 'shared'
 
 function useHasSettingsAccess(info: GroupUserInfo | undefined) {
-  const user = useAuth()
+  const { user } = useAuth()
   return info && (info.isAdmin || info.owner === user?.id)
 }
 

@@ -99,7 +99,7 @@ export function useAuth(redirectToIndex = true) {
     }
   }, [path, router, firebaseUser, redirectToIndex])
 
-  return user
+  return { user }
 }
 
 async function reauthenticateWithPopupOrRedirect(provider: GoogleAuthProvider | OAuthProvider) {

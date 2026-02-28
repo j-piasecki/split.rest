@@ -23,14 +23,14 @@ function ActionableSplit({
   last: boolean
 }) {
   const theme = useTheme()
-  const user = useAuth()!
+  const { user } = useAuth()
   const router = useRouter()
   const { t } = useTranslation()
   const [pressed, setPressed] = useState(false)
   const [hovered, setHovered] = useState(false)
 
   const inverseSplit = isInversedSplit(split.type)
-  const paidByThis = split.paidBy?.id === user.id
+  const paidByThis = split.paidBy?.id === user!.id
 
   const userChange = currency(split.userChange ?? 0)
   const pendingChange = paidByThis
@@ -130,19 +130,19 @@ export function ActionableSplitsPane({
   style?: StyleProp<ViewStyle>
 }) {
   const theme = useTheme()
-  const user = useAuth()!
+  const { user } = useAuth()
   const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
 
   // Let's assume that showing at most 20 pending splits is enough
   // and there's no need to try fetching more pages
   const { splits: splits } = useGroupSplitsQuery(info?.id, {
-    participants: { type: 'oneOf', ids: [user.id] },
+    participants: { type: 'oneOf', ids: [user!.id] },
     pending: true,
   })
 
   const actionableSplits = splits.filter((split) => {
-    if (split.paidBy?.id === user.id) {
+    if (split.paidBy?.id === user!.id) {
       return true
     }
 

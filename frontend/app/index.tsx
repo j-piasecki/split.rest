@@ -39,7 +39,7 @@ function StoreButton(props: { src: string; href: string }) {
 // This screen shouldn't be acccessible on mobile
 
 export default function Screen() {
-  const user = useAuth(false)
+  const { user } = useAuth(false)
 
   return (
     <>

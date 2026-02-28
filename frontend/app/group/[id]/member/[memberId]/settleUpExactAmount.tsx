@@ -138,7 +138,7 @@ function MemberScreen({ groupInfo }: { groupInfo: GroupUserInfo }) {
 }
 
 export default function MemberInfoScreenWrapper() {
-  const user = useAuth()
+  const { user } = useAuth()
   const theme = useTheme()
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()

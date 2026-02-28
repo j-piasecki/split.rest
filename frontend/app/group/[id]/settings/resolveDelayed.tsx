@@ -83,7 +83,7 @@ function Form({ info, memberInfo }: { info: GroupUserInfo; memberInfo: Member })
 export default function Settings() {
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()
-  const user = useAuth()
+  const { user } = useAuth()
   const { data: info } = useGroupInfo(Number(id))
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
 

@@ -84,7 +84,7 @@ function ConfirmRemoveMemberModal({
 }
 
 export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
-  const user = useAuth()
+  const { user } = useAuth()
   const theme = useTheme()
   const router = useRouter()
   const contextMenuRef = useRef<ContextMenuRef>(null)

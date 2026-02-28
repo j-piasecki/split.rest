@@ -47,7 +47,7 @@ Sentry.init({
 function Content() {
   const pathname = usePathname()
   const segments = useSegments()
-  const user = useAuth(
+  const { user } = useAuth(
     !pathname.startsWith('/join') &&
       !pathname.startsWith('/login') &&
       !pathname.startsWith('/privacyPolicy')

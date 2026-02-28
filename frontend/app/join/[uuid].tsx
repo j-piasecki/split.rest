@@ -223,7 +223,7 @@ function JoinForm() {
 }
 
 export default function JoinPage() {
-  const auth = useAuth(false)
+  const { user } = useAuth(false)
   const theme = useTheme()
   const { uuid } = useLocalSearchParams()
   const insets = useSafeAreaInsets()
@@ -235,11 +235,11 @@ export default function JoinPage() {
         backgroundColor: theme.colors.surface,
       }}
     >
-      {auth && <Header showBackButton />}
+      {user && <Header showBackButton />}
       <View style={{ flex: 1, paddingBottom: insets.bottom || 16 }}>
-        {auth === undefined && <ActivityIndicator color={theme.colors.primary} />}
-        {auth === null && <Redirect href={`/login?join=${uuid}`} withAnchor />}
-        {auth && <JoinForm />}
+        {user === undefined && <ActivityIndicator color={theme.colors.primary} />}
+        {user === null && <Redirect href={`/login?join=${uuid}`} withAnchor />}
+        {user && <JoinForm />}
       </View>
     </View>
   )

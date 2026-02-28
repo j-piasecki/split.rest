@@ -45,7 +45,7 @@ function DisplayNameSetter({
   memberInfo: Member
 }) {
   const theme = useTheme()
-  const user = useAuth()
+  const { user } = useAuth()
   const { t } = useTranslation()
   const { mutateAsync: setDisplayName, isPending: isChangingDisplayName } =
     useSetUserDisplayNameMutation(groupInfo.id, memberInfo.id)
@@ -327,7 +327,7 @@ function MemberActions({
   memberInfo: Member
   splits?: SplitInfo[]
 }) {
-  const user = useAuth()
+  const { user } = useAuth()
   const theme = useTheme()
   const { t } = useTranslation()
 
@@ -404,7 +404,7 @@ export function MemberInfo({
   memberInfo?: Member
   splits?: SplitInfo[]
 }) {
-  const user = useAuth()
+  const { user } = useAuth()
   const theme = useTheme()
   const router = useRouter()
   const { t } = useTranslation()
@@ -659,7 +659,7 @@ function MemberInfoError({ groupInfo }: { groupInfo?: GroupUserInfo }) {
 }
 
 export default function MemberInfoScreenWrapper() {
-  const user = useAuth()
+  const { user } = useAuth()
   const theme = useTheme()
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()

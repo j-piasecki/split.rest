@@ -132,7 +132,7 @@ function UserRow({
   last?: boolean
   showCompleteButton?: boolean
 }) {
-  const appUser = useAuth()
+  const { user: appUser } = useAuth()
   const theme = useTheme()
   const snack = useSnack()
   const router = useRouter()
@@ -329,7 +329,7 @@ function EditHistoryItem({
   type: EditHistoryItemType
   currentSplitType: SplitType
 }) {
-  const user = useAuth()
+  const { user } = useAuth()
   const theme = useTheme()
   const { data: createdBy } = useUserById(split.createdById)
   const { t } = useTranslation()
