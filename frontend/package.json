@@ -91,5 +91,10 @@
     "prettier": "^3.3.3",
     "typescript": "~5.9.2"
   },
+  "reanimated": {
+    "staticFeatureFlags": {
+      "FORCE_REACT_RENDER_FOR_SETTLED_ANIMATIONS": true
+    }
+  },
   "private": true
 }
