@@ -40,6 +40,7 @@ export default function AddFlow() {
             name='participantsStep'
             options={{ title: t('screenName.splitParticipants') }}
           />
+          <Stack.Screen name='payerStep' options={{ title: t('screenName.payerStep') }} />
         </Stack>
       </ThemeProvider>
     </Animated.View>

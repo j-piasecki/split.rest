@@ -33,6 +33,7 @@ export interface SplitFormProps {
   buttonIconLocation?: 'left' | 'right'
   style?: StyleProp<ViewStyle>
   showAddAllMembers?: boolean
+  showPayerSelector?: boolean
 }
 
 export function SplitForm({
@@ -54,6 +55,7 @@ export function SplitForm({
   buttonTitle = 'form.save',
   buttonIconLocation = 'left',
   showAddAllMembers = true,
+  showPayerSelector = true,
   style,
 }: SplitFormProps) {
   const user = useAuth()
@@ -71,8 +73,6 @@ export function SplitForm({
     cleanError
   )
 
-  const showPayerSelector =
-    splitMethod !== SplitMethod.BalanceChanges && splitMethod !== SplitMethod.Lend
   const showPaidByHint = splitMethod !== SplitMethod.BalanceChanges
   const showPayerEntry = splitMethod !== SplitMethod.Lend
   const showEntries = splitMethod !== SplitMethod.Delayed
