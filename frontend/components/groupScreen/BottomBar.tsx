@@ -36,7 +36,7 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
     Number(info?.balance) !== 0 && info?.permissions?.canSettleUp?.() && !disableSettleUp
   const splitEnabled = info?.permissions?.canCreateSplits?.() && !disableSplit
 
-  const hideSidebars = !settleUpEnabled && splitEnabled
+  const isAddSplitSidebar = !settleUpEnabled && splitEnabled
   const hideEverything = !settleUpEnabled && !splitEnabled
   const onlySettleUp = settleUpEnabled && !splitEnabled
 
@@ -79,10 +79,14 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
     }
   })
 
+  // If we are showing the "Add split" sidebar, we fully hide it when collapsed (width 0).
+  // Otherwise it collapses to 64.
   const sideBarAnimatedStyle = useAnimatedStyle(() => {
+    const collapsedWidth = isAddSplitSidebar ? 0 : 64
     return {
-      maxWidth: withSpring(isExpanded.value ? 250 : 64, buttonPaddingSpringConfig),
+      maxWidth: withSpring(isExpanded.value ? 250 : collapsedWidth, buttonPaddingSpringConfig),
       height: withSpring(isExpanded.value ? 56 : 40, buttonPaddingSpringConfig),
+      opacity: withTiming(isExpanded.value || !isAddSplitSidebar ? 1 : 0, { duration: 200 }),
     }
   })
 
@@ -90,7 +94,7 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
     return {
       width: withSpring(isExpanded.value ? 72 : 56, buttonPaddingSpringConfig),
       height: withSpring(isExpanded.value ? 72 : 56, buttonPaddingSpringConfig),
-      borderRadius: withSpring(splitPressed ? 34 : 16, buttonCornerSpringConfig),
+      borderRadius: withSpring(splitPressed ? 28 : 16, buttonCornerSpringConfig),
       transform: [{ scale: withSpring(splitPressed ? 1.15 : 1, buttonPaddingSpringConfig) }],
     }
   })
@@ -129,6 +133,14 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
     return null
   }
 
+  const sidebarBgColor = isAddSplitSidebar
+    ? theme.colors.primaryContainer
+    : theme.colors.secondaryContainer
+
+  const sidebarTextColor = isAddSplitSidebar
+    ? theme.colors.onPrimaryContainer
+    : theme.colors.onSecondaryContainer
+
   return (
     <Pressable
       onPress={() => {
@@ -139,7 +151,7 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
       style={{
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
-        // @ts-expect-error userSelect does not exist on StyleSheet
+        /* @ts-expect-error userSelect does not exist on StyleSheet */
         userSelect: 'none',
         // catch touches on Android
         backgroundColor: '#00000001',
@@ -155,50 +167,53 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
           containerAnimatedStyle,
         ]}
       >
-        {!hideSidebars && (
-          <Animated.View
-            style={[
-              {
-                backgroundColor: theme.colors.secondaryContainer,
-                transform: [{ translateX: onlySettleUp ? 0 : 12 }],
-                overflow: 'hidden',
-              },
-              styles.bottomBarShadow,
-              sideBarAnimatedStyle,
-              settleUpAnimatedStyle,
-            ]}
-          >
-            <Animated.View style={[{ height: '100%' }, settleUpBackgroundAnimatedStyle]}>
-              <Pressable
-                disabled={!settleUpEnabled}
-                onPress={() => {
+        <Animated.View
+          style={[
+            {
+              backgroundColor: sidebarBgColor,
+              transform: [{ translateX: onlySettleUp ? 0 : 12 }],
+              overflow: 'hidden',
+            },
+            styles.bottomBarShadow,
+            sideBarAnimatedStyle,
+            settleUpAnimatedStyle,
+          ]}
+        >
+          <Animated.View style={[{ height: '100%' }, settleUpBackgroundAnimatedStyle]}>
+            <Pressable
+              disabled={isAddSplitSidebar ? !splitEnabled : !settleUpEnabled}
+              onPress={() => {
+                if (isAddSplitSidebar) {
+                  SplitCreationContext.create().begin()
+                  router.navigate(`/group/${info?.id}/addSplit`)
+                } else {
                   router.navigate(`/group/${info?.id}/settleUp`)
-                }}
-                onPressIn={() => setSettleUpPressed(true)}
-                onPressOut={() => setSettleUpPressed(false)}
-                style={{
-                  height: '100%',
-                  paddingHorizontal: 24,
-                  flexDirection: 'row-reverse',
-                  alignItems: 'center',
-                  gap: 8,
-                  opacity: settleUpEnabled ? 1 : 0.4,
-                }}
-              >
-                <Icon name='balance' color={theme.colors.onSecondaryContainer} size={20} />
-                <Animated.View style={[textAnimatedStyle, { transformOrigin: 'right center' }]}>
-                  <Text
-                    style={[
-                      { fontSize: 16, fontWeight: '700', color: theme.colors.onSecondaryContainer },
-                    ]}
-                  >
-                    {t('groupInfo.settleUp.settleUp')}
-                  </Text>
-                </Animated.View>
-              </Pressable>
-            </Animated.View>
+                }
+              }}
+              onPressIn={() => setSettleUpPressed(true)}
+              onPressOut={() => setSettleUpPressed(false)}
+              style={{
+                height: '100%',
+                paddingLeft: 24,
+                paddingRight: isAddSplitSidebar ? 0 : 24,
+                flexDirection: 'row-reverse',
+                alignItems: 'center',
+                gap: 8,
+                opacity: (isAddSplitSidebar ? splitEnabled : settleUpEnabled) ? 1 : 0.4,
+              }}
+            >
+              {!isAddSplitSidebar && <Icon name='balance' color={sidebarTextColor} size={20} />}
+              {isAddSplitSidebar && (
+                <Animated.View style={{ width: 12 }} /> // Maintain some spacing so text isn't directly touching the circle button
+              )}
+              <Animated.View style={[textAnimatedStyle, { transformOrigin: 'right center' }]}>
+                <Text style={[{ fontSize: 16, fontWeight: '700', color: sidebarTextColor }]}>
+                  {isAddSplitSidebar ? t('groupInfo.addSplit') : t('groupInfo.settleUp.settleUp')}
+                </Text>
+              </Animated.View>
+            </Pressable>
           </Animated.View>
-        )}
+        </Animated.View>
 
         {!onlySettleUp && (
           <Animated.View
