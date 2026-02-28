@@ -10,7 +10,7 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
@@ -128,14 +128,15 @@ export default function Modal() {
   const [selectedPayerId, setSelectedPayerId] = useState<string | undefined>(initialPayer)
   const [error, setError] = useState<string | null>(null)
 
-  if (!participants) {
-    if (router.canGoBack()) {
-      router.back()
-    } else {
-      router.replace(`/group/${id}`)
+  useEffect(() => {
+    if (!participants || participants.length === 0) {
+      if (router.canGoBack()) {
+        router.back()
+      } else {
+        router.replace(`/group/${id}`)
+      }
     }
-    return null
-  }
+  }, [id, router, participants])
 
   const submit = () => {
     if (!selectedPayerId) {
@@ -178,7 +179,7 @@ export default function Modal() {
               title={t('payerStep.selectPayer')}
               textLocation='start'
             />
-            {participants.map((p, index) => (
+            {participants?.map((p, index) => (
               <PayerRow
                 key={p.user.id}
                 user={p.user}
