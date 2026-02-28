@@ -41,12 +41,6 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Member }) {
     try {
       setWaiting(true)
       await validateSplitForm(form)
-      const paidBy = form.entries[form.paidByIndex]
-
-      if (paidBy.user === undefined) {
-        setError(new TranslatableError('splitValidation.thePayerDataMustBeFilledIn'))
-        return
-      }
 
       const userEntries = form.entries
         .filter((entry) => entry.user !== undefined)
@@ -79,9 +73,8 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Member }) {
       }
 
       SplitCreationContext.current.setParticipants(userEntries)
-      SplitCreationContext.current.setPaidById(paidBy.user.id)
 
-      router.navigate(`/group/${groupInfo.id}/addSplit/summary`)
+      router.navigate(`/group/${groupInfo.id}/addSplit/payerStep`)
     } catch (error) {
       setError(error)
     } finally {
@@ -117,6 +110,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Member }) {
         buttonIcon='chevronForward'
         buttonIconLocation='right'
         showAddAllMembers={groupInfo.permissions.canReadMembers()}
+        showPayerSelector={false}
       />
     </View>
   )
