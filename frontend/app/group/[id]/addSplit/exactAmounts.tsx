@@ -12,7 +12,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { GroupUserInfo, Member, SplitMethod, TranslatableError } from 'shared'
+import { GroupUserInfo, Member, SplitMethod } from 'shared'
 
 function initialEntriesFromContext(currentUser: Member): SplitEntryData[] {
   const initialEntries: SplitEntryData[] =
@@ -41,12 +41,6 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Member }) {
     try {
       setWaiting(true)
       const { sumToSave } = await validateSplitForm(form)
-      const paidBy = form.entries[form.paidByIndex]
-
-      if (paidBy.user === undefined) {
-        setError(new TranslatableError('splitValidation.thePayerDataMustBeFilledIn'))
-        return
-      }
 
       const userEntries = form.entries
         .filter((entry) => entry.user !== undefined)
@@ -56,11 +50,10 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Member }) {
         }))
 
       SplitCreationContext.current.setParticipants(userEntries)
-      SplitCreationContext.current.setPaidById(paidBy.user.id)
       SplitCreationContext.current.setTitle(form.title)
       SplitCreationContext.current.setTotalAmount(sumToSave.toFixed(2))
 
-      router.navigate(`/group/${groupInfo.id}/addSplit/summary`)
+      router.navigate(`/group/${groupInfo.id}/addSplit/payerStep`)
     } catch (error) {
       setError(error)
     } finally {
@@ -95,6 +88,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Member }) {
         buttonTitle='form.buttonNext'
         buttonIcon='chevronForward'
         buttonIconLocation='right'
+        showPayerSelector={false}
         showAddAllMembers={groupInfo.permissions.canReadMembers()}
       />
     </View>

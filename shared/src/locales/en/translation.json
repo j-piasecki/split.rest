@@ -336,7 +336,8 @@
     "shares": "Shares",
     "balanceChanges": "Balance changes",
     "lend": "Lend",
-    "splitParticipants": "Participants"
+    "splitParticipants": "Participants",
+    "payerStep": "Who paid?"
   },
 
   "filter": {
@@ -392,6 +393,12 @@
     "balanceChanges": "Select participants and update their balances. Multiple people can have negative balances as long as the total equals zero. Perfect for poker games!",
     "lend": "Lend money to other people. You can use this to transfer debts from outside of the group.",
     "delayed": "Submit only the paid amount without setting participants. You can finalize the split later."
+  },
+
+  "payerStep": {
+    "selectPayer": "Select who paid",
+    "confirm": "Confirm",
+    "noPayerSelected": "Please select who paid"
   },
 
   "roulette": {

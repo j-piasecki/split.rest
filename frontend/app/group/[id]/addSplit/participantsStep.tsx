@@ -28,13 +28,12 @@ export default function Modal() {
           user={memberInfo}
           groupInfo={groupInfo}
           savedParticipants={SplitCreationContext.current.participants ?? undefined}
-          paidByIndex={SplitCreationContext.current.paidByIndex}
           buttonTitle={t('form.buttonNext')}
           buttonRightIcon='chevronForward'
-          onSubmit={(users, payerId) => {
+          requiredPayer={false}
+          onSubmit={(users) => {
             SplitCreationContext.current.setParticipants(users.map((user) => ({ user })))
-            SplitCreationContext.current.setPaidById(payerId!)
-            router.navigate(`/group/${groupInfo.id}/addSplit/summary`)
+            router.navigate(`/group/${groupInfo.id}/addSplit/payerStep`)
           }}
         />
       )}

@@ -97,6 +97,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Member }) {
         buttonIcon='chevronForward'
         buttonIconLocation='right'
         showAddAllMembers={groupInfo.permissions.canReadMembers()}
+        showPayerSelector={false}
       />
     </View>
   )
