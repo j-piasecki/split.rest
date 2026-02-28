@@ -4,13 +4,16 @@ import { Icon } from '@components/Icon'
 import ModalScreen from '@components/ModalScreen'
 import { FullPaneHeader } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
+import { RouletteResultRow } from '@components/RouletteResultRow'
 import { Text } from '@components/Text'
+import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import { useRouletteQuery } from '@hooks/useRouletteQuery'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
@@ -128,6 +131,31 @@ export default function Modal() {
   const [selectedPayerId, setSelectedPayerId] = useState<string | undefined>(initialPayer)
   const [error, setError] = useState<string | null>(null)
 
+  const [isRouletteActive, setIsRouletteActive] = useState(false)
+  const { data: groupInfo } = useGroupInfo(Number(id))
+  const canAccessRoulette = groupInfo?.permissions?.canAccessRoulette?.() ?? false
+
+  const rouletteQuery = useMemo(() => {
+    if (!participants) {
+      return []
+    }
+    return participants.map((p) => ({ user: p.user, entry: p.user.email ?? '' }))
+  }, [participants])
+
+  const {
+    error: rouletteError,
+    result: rouletteResult,
+    finished: rouletteFinished,
+    start: startRoulette,
+  } = useRouletteQuery(Number(id), rouletteQuery)
+
+  useEffect(() => {
+    if (rouletteError) {
+      alert(rouletteError)
+      setIsRouletteActive(false)
+    }
+  }, [rouletteError])
+
   useEffect(() => {
     if (!participants || participants.length === 0) {
       if (router.canGoBack()) {
@@ -137,6 +165,12 @@ export default function Modal() {
       }
     }
   }, [id, router, participants])
+
+  useEffect(() => {
+    if (isRouletteActive && rouletteFinished && rouletteResult.length > 0 && rouletteResult[0]) {
+      setSelectedPayerId(rouletteResult[0].id)
+    }
+  }, [isRouletteActive, rouletteFinished, rouletteResult])
 
   const submit = () => {
     if (!selectedPayerId) {
@@ -174,29 +208,66 @@ export default function Modal() {
           }}
         >
           <View style={{ paddingBottom: 8 }}>
-            <FullPaneHeader
-              icon='payments'
-              title={t('payerStep.selectPayer')}
-              textLocation='start'
-            />
-            {participants?.map((p, index) => (
-              <PayerRow
-                key={p.user.id}
-                user={p.user}
-                isLast={index === participants.length - 1}
-                isSelected={p.user.id === selectedPayerId}
-                onSelect={() => {
-                  setSelectedPayerId(p.user.id)
-                  setError(null)
-                }}
+            {!isRouletteActive && (
+              <FullPaneHeader
+                icon='payments'
+                title={t('payerStep.selectPayer')}
+                textLocation='start'
               />
-            ))}
+            )}
+            {isRouletteActive && groupInfo
+              ? rouletteResult.map((u, index) => (
+                  <RouletteResultRow
+                    key={u?.id ?? `header-${index}`}
+                    user={u}
+                    index={index}
+                    result={rouletteResult}
+                    groupInfo={groupInfo}
+                    isSelected={u?.id === selectedPayerId}
+                    onSelect={
+                      u
+                        ? () => {
+                            setSelectedPayerId(u.id)
+                            setError(null)
+                          }
+                        : undefined
+                    }
+                  />
+                ))
+              : participants?.map((p, index) => (
+                  <PayerRow
+                    key={p.user.id}
+                    user={p.user}
+                    isLast={index === participants.length - 1}
+                    isSelected={p.user.id === selectedPayerId}
+                    onSelect={() => {
+                      setSelectedPayerId(p.user.id)
+                      setError(null)
+                    }}
+                  />
+                ))}
           </View>
         </ScrollView>
 
         <View style={{ gap: 16, paddingLeft: insets.left + 12, paddingRight: insets.right + 12 }}>
           {error && <ErrorText>{error}</ErrorText>}
-          <Button rightIcon='chevronForward' title={t('payerStep.confirm')} onPress={submit} />
+          {!isRouletteActive && canAccessRoulette && groupInfo ? (
+            <Button
+              leftIcon='casino'
+              title={t('screenName.roulette')}
+              onPress={() => {
+                setIsRouletteActive(true)
+                setSelectedPayerId(undefined)
+                startRoulette()
+              }}
+            />
+          ) : null}
+          <Button
+            rightIcon='chevronForward'
+            title={t('payerStep.confirm')}
+            onPress={submit}
+            disabled={isRouletteActive && !rouletteFinished}
+          />
         </View>
       </View>
     </ModalScreen>
