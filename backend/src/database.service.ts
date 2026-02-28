@@ -13,7 +13,6 @@ import { getGroupMemberPermissions } from './database/groups/getGroupMemberPermi
 import { getGroupMembers } from './database/groups/getGroupMembers'
 import { getGroupMembersAutocompletions } from './database/groups/getGroupMembersAutocompletions'
 import { getGroupMonthlyStats } from './database/groups/getGroupMonthlyStats'
-import { getGroupSplits } from './database/groups/getGroupSplits'
 import { getMemberInfo } from './database/groups/getMemberInfo'
 import { getSplitParticipantsSuggestions } from './database/groups/getSplitParticipantsSuggestions'
 import { getUserGroupInvites } from './database/groups/getUserGroupInvites'
@@ -77,7 +76,6 @@ import {
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMonthlyStatsArguments,
-  GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
   GetSplitParticipantsSuggestionsArguments,
@@ -176,11 +174,6 @@ export class DatabaseService {
   // Every user can set their own group hidden status
   async setGroupHidden(callerId: string, args: SetGroupHiddenArguments) {
     return await setGroupHidden(this.pool, callerId, args)
-  }
-
-  @RequirePermissions(['readSplits'])
-  async getGroupSplits(callerId: string, args: GetGroupSplitsArguments) {
-    return await getGroupSplits(this.pool, callerId, args)
   }
 
   @RequirePermissions(['querySplits'])

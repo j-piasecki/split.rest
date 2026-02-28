@@ -5,7 +5,6 @@ export const ExtendedPermissionKeys = [...PermissionKeys, 'beGroupMember'] as co
 export const PermissionToFieldMap = {
   beGroupMember: ['groupId'] as const,
   createSplit: ['groupId'] as const,
-  readSplits: ['groupId', 'onlyIfIncluded?'] as const,
   querySplits: ['groupId'] as const,
   seeSplitDetails: ['groupId', 'splitId'] as const,
   updateSplit: ['groupId', 'splitId'] as const,

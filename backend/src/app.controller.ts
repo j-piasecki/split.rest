@@ -41,7 +41,6 @@ import {
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMonthlyStatsArguments,
-  GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
   GetSplitParticipantsSuggestionsArguments,
@@ -92,7 +91,6 @@ import {
   isGetGroupMembersArguments,
   isGetGroupMembersAutocompletionsArguments,
   isGetGroupMonthlyStatsArguments,
-  isGetGroupSplitsArguments,
   isGetSplitHistoryArguments,
   isGetSplitInfoArguments,
   isGetSplitParticipantsSuggestionsArguments,
@@ -279,20 +277,6 @@ export class AppController {
     }
 
     return await this.appService.queryGroupSplits(request.user.sub, args)
-  }
-
-  // TODO: remove this (and related parts of the code) once deployed for a while
-  @UseGuards(AuthGuard)
-  @Get('getGroupSplits')
-  async getGroupSplits(@Req() request: Request, @Query() args: Partial<GetGroupSplitsArguments>) {
-    if (!isGetGroupSplitsArguments(args)) {
-      throw new BadRequestException('api.invalidArguments')
-    }
-
-    // @ts-expect-error onlyIfIncluded is a string due to being a get query parameter
-    args.onlyIfIncluded = args.onlyIfIncluded === 'true'
-
-    return await this.appService.getGroupSplits(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

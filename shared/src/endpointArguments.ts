@@ -80,12 +80,6 @@ export interface GetGroupMembersArguments {
   startAfterBalance?: string
 }
 
-export interface GetGroupSplitsArguments {
-  groupId: number
-  onlyIfIncluded?: boolean
-  startAfterId?: number
-}
-
 export interface QueryGroupSplitsArguments {
   groupId: number
   startAfter?: SplitInfo

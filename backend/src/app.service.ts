@@ -23,7 +23,6 @@ import {
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMonthlyStatsArguments,
-  GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
   GetSplitParticipantsSuggestionsArguments,
@@ -104,10 +103,6 @@ export class AppService {
 
   async getGroupMembers(callerId: string, args: GetGroupMembersArguments) {
     return await this.databaseService.getGroupMembers(callerId, args)
-  }
-
-  async getGroupSplits(callerId: string, args: GetGroupSplitsArguments) {
-    return await this.databaseService.getGroupSplits(callerId, args)
   }
 
   async queryGroupSplits(callerId: string, args: QueryGroupSplitsArguments) {

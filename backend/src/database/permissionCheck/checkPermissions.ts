@@ -41,22 +41,6 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
-        case 'readSplits': {
-          const args = unsafeArgs as PermissionArguments<['readSplits']>
-          const canReadSplits = callerPermissions?.canReadSplits()
-          if (canReadSplits === undefined || canReadSplits === SplitPermissionType.None) {
-            return 'api.insufficientPermissions.group.readSplits'
-          }
-
-          if (
-            canReadSplits === SplitPermissionType.OnlyIfIncluded &&
-            args.onlyIfIncluded !== true
-          ) {
-            return 'api.insufficientPermissions.group.readSplits'
-          }
-          continue
-        }
-
         case 'querySplits': {
           if (!callerPermissions?.canQuerySplits()) {
             return 'api.insufficientPermissions.group.querySplits'

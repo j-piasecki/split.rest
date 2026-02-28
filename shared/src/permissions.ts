@@ -2,7 +2,6 @@ import { SplitInfo, isSettleUpSplit } from './types'
 
 export const PermissionKeys = [
   'createSplit',
-  'readSplits',
   'querySplits',
   'seeSplitDetails',
   'updateSplit',
@@ -161,18 +160,6 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
 
   canCreateSplits(): boolean {
     return Boolean(this.splits & SplitPermissionsDTO.Create)
-  }
-
-  canReadSplits(): SplitPermissionType {
-    if (this.splits & SplitPermissionsDTO.ReadAll) {
-      return SplitPermissionType.All
-    }
-
-    if (this.splits & SplitPermissionsDTO.Read) {
-      return SplitPermissionType.OnlyIfIncluded
-    }
-
-    return SplitPermissionType.None
   }
 
   canQuerySplits(): boolean {
@@ -346,7 +333,6 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
   toObject() {
     return {
       createSplit: this.canCreateSplits(),
-      readSplits: splitPermissionTypeToString(this.canReadSplits()),
       querySplits: this.canQuerySplits(),
       seeSplitsDetails: splitPermissionTypeToString(this.canSeeSplitsDetails()),
       updateSplits: splitPermissionTypeToString(this.canUpdateSplits()),

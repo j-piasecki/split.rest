@@ -19,7 +19,6 @@ import {
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMonthlyStatsArguments,
-  GetGroupSplitsArguments,
   GetSplitHistoryArguments,
   GetSplitInfoArguments,
   GetSplitParticipantsSuggestionsArguments,
@@ -115,10 +114,6 @@ export function isSetGroupHiddenArguments(obj: any): obj is SetGroupHiddenArgume
 }
 
 export function isGetGroupMembersArguments(obj: any): obj is GetGroupMembersArguments {
-  return obj.groupId !== undefined
-}
-
-export function isGetGroupSplitsArguments(obj: any): obj is GetGroupSplitsArguments {
   return obj.groupId !== undefined
 }
 

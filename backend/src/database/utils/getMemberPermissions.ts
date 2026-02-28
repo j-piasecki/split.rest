@@ -10,8 +10,6 @@ import {
 export const ownerPermissions: GroupMemberPermissionsDTO = {
   splits:
     SplitPermissionsDTO.Create |
-    SplitPermissionsDTO.Read |
-    SplitPermissionsDTO.ReadAll |
     SplitPermissionsDTO.SeeDetails |
     SplitPermissionsDTO.SeeDetailsAll |
     SplitPermissionsDTO.Update |
@@ -53,8 +51,6 @@ export const ownerPermissions: GroupMemberPermissionsDTO = {
 const adminPermissions: GroupMemberPermissionsDTO = {
   splits:
     SplitPermissionsDTO.Create |
-    SplitPermissionsDTO.Read |
-    SplitPermissionsDTO.ReadAll |
     SplitPermissionsDTO.SeeDetails |
     SplitPermissionsDTO.SeeDetailsAll |
     SplitPermissionsDTO.Update |
@@ -91,8 +87,6 @@ const adminPermissions: GroupMemberPermissionsDTO = {
 const memberPermissions: GroupMemberPermissionsDTO = {
   splits:
     SplitPermissionsDTO.Create |
-    SplitPermissionsDTO.Read |
-    SplitPermissionsDTO.ReadAll |
     SplitPermissionsDTO.SeeDetails |
     SplitPermissionsDTO.SeeDetailsAll |
     SplitPermissionsDTO.Update |
