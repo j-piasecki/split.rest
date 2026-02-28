@@ -27,7 +27,7 @@ export function SpinningLogo({ size = 64 }: SpinningLogoProps) {
   }))
 
   useEffect(() => {
-    progress.value = withRepeat(withSpring(1, { damping: 20, stiffness: 30 }), -1, false)
+    progress.value = withRepeat(withSpring(1, { damping: 40, stiffness: 180 }), -1, false)
   }, [progress])
 
   return (
