@@ -212,9 +212,6 @@ const iconMap: Record<IconName, unknown> = {
   warning: require('@assets/icons/warning.svg'),
 }
 
-// @ts-expect-error array of strings is expected, unknown is provided
-Object.values(iconMap).forEach(Image.loadAsync)
-
 export function Icon({ name, size, color, style }: IconProps) {
   if (color === 'transparent') {
     return <View style={[style, { width: size, height: size }]} />
