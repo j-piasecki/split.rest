@@ -50,12 +50,11 @@ export function FlatListWithHeader<T>({
 
   const headerWrapperStyle = useAnimatedStyle(() => {
     return {
-      opacity: withSpring(headerVisible.value ? 1 : 0, { damping: 100, stiffness: 400 }),
+      opacity: withSpring(headerVisible.value ? 1 : 0, { duration: 400 }),
       transform: [
         {
           translateY: withSpring(headerVisible.value ? 0 : -headerHeight, {
-            damping: 100,
-            stiffness: 500,
+            duration: 400,
           }),
         },
       ],
