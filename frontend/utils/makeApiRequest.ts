@@ -48,14 +48,19 @@ export async function makeRequest<TArgs, TReturn>(
     url.search = params.toString()
   }
 
-  const result = await fetch(url, {
-    method: method,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${auth.currentUser ? await getIdToken(auth.currentUser) : undefined}`,
-    },
-    body: method === 'POST' || method === 'DELETE' ? JSON.stringify(args) : undefined,
-  })
+  let result: Response;
+  try {
+    result = await fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${auth.currentUser ? await getIdToken(auth.currentUser) : undefined}`,
+      },
+      body: method === 'POST' || method === 'DELETE' ? JSON.stringify(args) : undefined,
+    })
+  } catch {
+    throw new ApiError('api.serverIsDown', -1, 'Server is down')
+  }
 
   if (__DEV__) {
     console.log('Request to', name, 'status:', result.status)

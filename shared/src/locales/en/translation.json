@@ -102,6 +102,7 @@
     "invalidArguments": "Invalid arguments",
     "mustBeLoggedIn": "You must be logged in to do that",
     "unsupportedCurrency": "This currency is not supported",
+    "serverIsDown": "Application server is not responding, please try again later",
     "auth": {
       "unknownProvider": "Unknown provider",
       "missingToken": "Missing token",
