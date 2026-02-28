@@ -41,6 +41,7 @@ export function useUserById(id: string | undefined) {
 
   return {
     user: result.data,
+    // keep a time window where the value is constant to prevent infinite render loop
     serverDown: localServerDown && Date.now() - lastServerDownErrorTimestamp < 5000,
   }
 }
