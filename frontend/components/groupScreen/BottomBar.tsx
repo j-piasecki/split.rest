@@ -173,6 +173,8 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
               backgroundColor: sidebarBgColor,
               transform: [{ translateX: onlySettleUp ? 0 : 12 }],
               overflow: 'hidden',
+              maxWidth: 250,
+              borderRadius: 16,
             },
             styles.bottomBarShadow,
             sideBarAnimatedStyle,

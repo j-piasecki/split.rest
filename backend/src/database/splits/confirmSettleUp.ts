@@ -96,7 +96,6 @@ async function createAndSaveSettleUpSplit(
     version: 1,
     total: Math.abs(total).toFixed(2),
     paidBy: caller,
-    paidById: caller.id,
     createdById: caller.id,
     title: 'Settle up',
     timestamp: Date.now(),

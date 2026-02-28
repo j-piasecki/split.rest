@@ -127,8 +127,6 @@ export interface SplitInfo {
   total: string
   timestamp: number
   paidBy?: User
-  // TODO: Remove this when deployed for a while
-  paidById?: string
   createdById: string
   version: number
   updatedAt: number

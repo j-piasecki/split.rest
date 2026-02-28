@@ -267,7 +267,6 @@ export class SplitCreationContext {
       total: this._totalAmount,
       timestamp: this._timestamp,
       paidBy: this.participants?.find((participant) => participant.user.id === paidById)?.user,
-      paidById: paidById ?? undefined,
       version: 1,
       createdById: auth.currentUser.uid,
       updatedAt: Date.now(),

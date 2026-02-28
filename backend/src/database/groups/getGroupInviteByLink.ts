@@ -89,7 +89,6 @@ export async function getGroupInviteByLink(
       deleted: rows[0].inviter_deleted,
       pictureId: rows[0].inviter_picture_id,
     },
-    // TODO: remove after deployed for a while
     memberIds: groupMemberIds.map((row) => row.user_id),
     profilePictures: groupMemberIds.map((row) => row.picture_id),
     createdAt: rows[0].created_at,
