@@ -157,6 +157,7 @@
       "invite": "Invite not found"
     },
     "split": {
+      "invalidCurrency": "Currency must match the group's currency",
       "sumOfChangesMustBeZero": "Sum of changes must be equal to zero",
       "payerNotInTransaction": "Payer must be included in the transaction",
       "payerMustGetBackSumOthersLose": "Payer must get back an equal amount to the sum others lose",

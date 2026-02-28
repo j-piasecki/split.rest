@@ -29,7 +29,13 @@ export async function createSplitNoTransaction(
   callerId: string,
   args: CreateSplitArguments
 ): Promise<number> {
-  // TODO: validate currency
+  const groupCurrency = (
+    await client.query('SELECT currency FROM groups WHERE id = $1', [args.groupId])
+  ).rows[0]?.currency
+
+  if (args.currency !== groupCurrency) {
+    throw new BadRequestException('api.split.invalidCurrency')
+  }
 
   const splitId = (
     await client.query(

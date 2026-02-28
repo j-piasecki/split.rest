@@ -80,7 +80,6 @@ export async function resolveDelayedSplit(
     throw new BadRequestException('api.split.invalidSplitType')
   }
 
-  // TODO: validate currency
   if (!isBalanceChangeSplit(args.type)) {
     validateNormalSplitArgs(args)
   }

@@ -161,7 +161,13 @@ export async function updateSplitNoTransaction(
   }
   participants: Array<{ user_id: string; change: string; pending: boolean }>
 }> {
-  // TODO: validate currency
+  const groupCurrency = (
+    await client.query('SELECT currency FROM groups WHERE id = $1', [args.groupId])
+  ).rows[0]?.currency
+
+  if (args.currency !== groupCurrency) {
+    throw new BadRequestException('api.split.invalidCurrency')
+  }
 
   const splitInfo = (
     await client.query<{
