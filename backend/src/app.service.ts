@@ -220,10 +220,6 @@ export class AppService {
     return await this.databaseService.setUserName(callerId, args)
   }
 
-  async settleUp(callerId: string, args: SettleUpArguments) {
-    return await this.databaseService.settleUp(callerId, args)
-  }
-
   async setUserDisplayName(callerId: string, args: SetUserDisplayNameArguments) {
     return await this.databaseService.setUserDisplayName(callerId, args)
   }

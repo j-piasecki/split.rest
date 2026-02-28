@@ -44,7 +44,6 @@ import { getSplitInfo } from './database/splits/getSplitInfo'
 import { resolveAllDelayedSplits } from './database/splits/resolveAllDelayedSplits'
 import { resolveDelayedSplit } from './database/splits/resolveDelayedSplit'
 import { restoreSplit } from './database/splits/restoreSplit'
-import { settleUp } from './database/splits/settleUp'
 import { uncompleteSplitEntry } from './database/splits/uncompleteSplitEntry'
 import { updateSplit } from './database/splits/updateSplit'
 import { createOrUpdateUser } from './database/users/createOrUpdateUser'
@@ -316,11 +315,6 @@ export class DatabaseService {
   // Every user can set their own name
   async setUserName(callerId: string, args: SetUserNameArguments) {
     return await setUserName(this.pool, callerId, args)
-  }
-
-  @RequirePermissions(['settleUp'])
-  async settleUp(callerId: string, args: SettleUpArguments) {
-    return await settleUp(this.pool, callerId, args)
   }
 
   @RequirePermissions(['changeDisplayName'])
