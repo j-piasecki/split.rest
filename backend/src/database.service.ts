@@ -118,6 +118,7 @@ export class DatabaseService {
       host: process.env.SPLIT_HOST,
       port: Number(process.env.SPLIT_PORT),
       database: process.env.SPLIT_DATABASE,
+      ssl: true,
     })
 
     this.createDatabase()
