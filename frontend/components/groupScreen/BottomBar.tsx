@@ -21,7 +21,6 @@ export interface BottomBarProps {
   info: GroupUserInfo | undefined
   ref: React.RefObject<FloatingActionButtonRef | null>
   disableSettleUp?: boolean
-  disableRoulette?: boolean
   disableSplit?: boolean
 }
 
@@ -29,25 +28,22 @@ export function BottomBar({
   info,
   ref,
   disableSettleUp,
-  disableRoulette,
   disableSplit,
 }: BottomBarProps) {
   const theme = useTheme()
   const router = useRouter()
   const isExpanded = useSharedValue(Platform.OS === 'web')
   const [settleUpPressed, setSettleUpPressed] = useState(false)
-  const [roulettePressed, setRoulettePressed] = useState(false)
   const [splitPressed, setSplitPressed] = useState(false)
   const { t } = useTranslation()
 
   const settleUpEnabled =
     Number(info?.balance) !== 0 && info?.permissions?.canSettleUp?.() && !disableSettleUp
-  const rouletteEnabled = info?.permissions?.canAccessRoulette?.() && !disableRoulette
   const splitEnabled = info?.permissions?.canCreateSplits?.() && !disableSplit
 
-  const hideSidebars = !settleUpEnabled && !rouletteEnabled && splitEnabled
-  const hideEverything = !settleUpEnabled && !rouletteEnabled && !splitEnabled
-  const onlySettleUp = settleUpEnabled && !rouletteEnabled && !splitEnabled
+  const hideSidebars = !settleUpEnabled && splitEnabled
+  const hideEverything = !settleUpEnabled && !splitEnabled
+  const onlySettleUp = settleUpEnabled && !splitEnabled
 
   useEffect(() => {
     if (Platform.OS !== 'web') {
@@ -128,20 +124,6 @@ export function BottomBar({
     }
   })
 
-  const rouletteAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      borderTopRightRadius: withSpring(roulettePressed ? 28 : 16, buttonCornerSpringConfig),
-      borderBottomRightRadius: withSpring(roulettePressed ? 28 : 16, buttonCornerSpringConfig),
-      height: withSpring(roulettePressed ? 64 : 56, buttonPaddingSpringConfig),
-    }
-  })
-
-  const rouletteBackgroundAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      backgroundColor: withTiming(roulettePressed ? `${theme.colors.primary}33` : 'transparent'),
-    }
-  })
-
   if (hideEverything) {
     return null
   }
@@ -154,7 +136,8 @@ export function BottomBar({
         }
       }}
       style={{
-        width: '100%',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
         // @ts-expect-error userSelect does not exist on StyleSheet
         userSelect: 'none',
         // catch touches on Android
@@ -164,8 +147,7 @@ export function BottomBar({
       <Animated.View
         style={[
           {
-            width: '100%',
-            justifyContent: 'center',
+            justifyContent: 'flex-end',
             alignItems: 'center',
             flexDirection: 'row',
           },
@@ -246,51 +228,6 @@ export function BottomBar({
                 }}
               >
                 <Icon name='split' color={theme.colors.onPrimaryContainer} size={24} />
-              </Pressable>
-            </Animated.View>
-          </Animated.View>
-        )}
-
-        {!hideSidebars && !onlySettleUp && (
-          <Animated.View
-            style={[
-              {
-                backgroundColor: theme.colors.secondaryContainer,
-                transform: [{ translateX: -12 }],
-                overflow: 'hidden',
-              },
-              styles.bottomBarShadow,
-              sideBarAnimatedStyle,
-              rouletteAnimatedStyle,
-            ]}
-          >
-            <Animated.View style={[StyleSheet.absoluteFillObject, rouletteBackgroundAnimatedStyle]}>
-              <Pressable
-                onPress={() => {
-                  router.navigate(`/group/${info?.id}/roulette`)
-                }}
-                disabled={!rouletteEnabled}
-                onPressIn={() => setRoulettePressed(true)}
-                onPressOut={() => setRoulettePressed(false)}
-                style={{
-                  ...StyleSheet.absoluteFillObject,
-                  paddingLeft: 24,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: 8,
-                  opacity: rouletteEnabled ? 1 : 0.4,
-                }}
-              >
-                <Icon name='casino' color={theme.colors.onSecondaryContainer} size={20} />
-                <Animated.View style={[textAnimatedStyle, { transformOrigin: 'left center' }]}>
-                  <Text
-                    style={[
-                      { fontSize: 16, fontWeight: '700', color: theme.colors.onSecondaryContainer },
-                    ]}
-                  >
-                    {t('groupInfo.roulette')}
-                  </Text>
-                </Animated.View>
               </Pressable>
             </Animated.View>
           </Animated.View>

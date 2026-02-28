@@ -188,7 +188,6 @@ export function SplitsList({
             info={info}
             ref={fabRef}
             disableSplit={info?.locked}
-            disableRoulette={info?.locked}
           />
         )}
         {!isSmallScreen && !hideFab && info?.permissions?.canCreateSplits?.() && (
