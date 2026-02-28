@@ -606,7 +606,8 @@
       "openSettleUp": "Show"
     },
     "groupLocked": "This group is locked",
-    "groupLockedDescription": "You can't add new splits, edit or delete existing ones. You can still settle up and complete existing settle-ups."
+    "groupLockedDescription": "You can't add new splits, edit or delete existing ones. You can still settle up and complete existing settle-ups.",
+    "youAreAllCaughtUp": "You're all caught up!"
   },
 
   "splitInfo": {

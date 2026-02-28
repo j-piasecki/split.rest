@@ -1,5 +1,6 @@
 import { ActionableSplitsPane } from './ActionableSplitsPane'
-import { GroupActionButtons } from './GroupActionButtons'
+import { Button } from '@components/Button'
+import { ButtonShimmer } from '@components/ButtonShimmer'
 import { GroupIcon } from '@components/GroupIcon'
 import { Icon } from '@components/Icon'
 import { FullPaneHeader } from '@components/Pane'
@@ -13,7 +14,7 @@ import { getBalanceColor } from '@utils/getBalanceColor'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { CurrencyUtils } from 'shared'
 import { GroupUserInfo } from 'shared'
 
@@ -65,14 +66,31 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
             backgroundColor: theme.colors.surfaceContainer,
             paddingHorizontal: 16,
             paddingVertical: 8,
-            paddingBottom: !info?.locked ? 16 : undefined,
+            paddingBottom: !info?.locked || Platform.OS === 'web' ? 16 : undefined,
             borderRadius: 4,
+            gap: 12,
           },
-          !threeBarLayout &&
-            !info?.locked && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
+          !info?.locked && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
         ]}
       >
         <TitleWithBalance info={info} />
+
+        {threeBarLayout && (
+          <ButtonShimmer argument={info}>
+            {(info) =>
+              Number(info?.balance) !== 0 &&
+              info.permissions.canSettleUp?.() && (
+                <Button
+                  onPress={() => {
+                    router.navigate(`/group/${info!.id}/settleUp`)
+                  }}
+                  title={t('groupInfo.settleUp.settleUp')}
+                  leftIcon='balance'
+                />
+              )
+            }
+          </ButtonShimmer>
+        )}
       </View>
 
       {info?.locked && (
@@ -83,8 +101,9 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
               paddingHorizontal: 16,
               paddingVertical: 12,
               borderRadius: 4,
+              borderBottomLeftRadius: 16,
+              borderBottomRightRadius: 16,
             },
-            !threeBarLayout && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
           ]}
         >
           <View>
@@ -108,12 +127,7 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
         </View>
       )}
 
-      {threeBarLayout && (
-        <>
-          <GroupActionButtons info={info} />
-          <ActionableSplitsPane info={info} style={{ flexGrow: 100, marginTop: 6 }} />
-        </>
-      )}
+      {threeBarLayout && <ActionableSplitsPane info={info} style={{ marginTop: 6 }} />}
     </View>
   )
 }

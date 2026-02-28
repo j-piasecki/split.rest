@@ -5,6 +5,7 @@ import { Text } from '@components/Text'
 import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { useThreeBarLayout } from '@utils/dimensionUtils'
 import currency from 'currency.js'
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
@@ -130,6 +131,7 @@ export function ActionableSplitsPane({
 }) {
   const theme = useTheme()
   const user = useAuth()!
+  const threeBarLayout = useThreeBarLayout()
   const { t } = useTranslation()
 
   // Let's assume that showing at most 20 pending splits is enough
@@ -148,7 +150,24 @@ export function ActionableSplitsPane({
   })
 
   if (actionableSplits.length === 0) {
-    return null
+    // TODO: Figure out what to do with this place
+    return threeBarLayout ? (
+      <View
+        style={{
+          flex: 1,
+          marginTop: 6,
+          borderRadius: 16,
+          backgroundColor: theme.colors.surfaceContainer,
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: 16,
+        }}
+      >
+        <Text style={{ fontSize: 20, color: theme.colors.outlineVariant }}>
+          {t('groupInfo.youAreAllCaughtUp')}
+        </Text>
+      </View>
+    ) : null
   }
 
   return (
