@@ -28,23 +28,13 @@ import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { Platform } from 'react-native'
 import uuid from 'react-native-uuid'
-import { TranslatableError, User } from 'shared'
+import { TranslatableError } from 'shared'
 
 GoogleSignin.configure({
   webClientId: '461804772528-ci5dbjajrcrlv2lsgdap364ki2r2nnkb.apps.googleusercontent.com',
 })
 
 let authReady = false
-
-function createUser(user: FirebaseAuthTypes.User | null): User | null {
-  if (user) {
-    const uid = user.uid
-    const name = user.displayName || user.email?.split('@')[0] || 'Anonymous'
-    return { name, email: user.email!, id: uid, deleted: false, pictureId: null }
-  }
-
-  return null
-}
 
 async function tryToCreateUser(createUserRetries = 5) {
   try {
@@ -70,16 +60,16 @@ async function unregisterNotifications() {
 export function useAuth(redirectToIndex = true) {
   const path = usePathname()
   const router = useRouter()
-  const [firebaseUser, setFirebaseUser] = useState<User | null | undefined>(
-    authReady ? createUser(auth.currentUser) : undefined
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseAuthTypes.User | null | undefined>(
+    authReady ? auth.currentUser : undefined
   )
-  const { data: remoteUser } = useUserById(firebaseUser?.id)
+  const { user: remoteUser, serverDown } = useUserById(firebaseUser?.uid)
   const user = remoteUser
 
   useEffect(() => {
     const subscriber = onAuthStateChanged(auth, (user) => {
       authReady = true
-      setFirebaseUser(createUser(user))
+      setFirebaseUser(user)
     })
     return subscriber
   }, [])
@@ -94,7 +84,7 @@ export function useAuth(redirectToIndex = true) {
     }
   }, [path, router, firebaseUser, redirectToIndex])
 
-  return { user }
+  return { user, firebaseUser, serverDown }
 }
 
 export async function reauthenticate(skipAppleSignIn = false) {

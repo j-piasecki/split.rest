@@ -47,7 +47,7 @@ Sentry.init({
 function Content() {
   const pathname = usePathname()
   const segments = useSegments()
-  const { user } = useAuth(
+  const { user, serverDown } = useAuth(
     !pathname.startsWith('/join') &&
       !pathname.startsWith('/login') &&
       !pathname.startsWith('/privacyPolicy')
@@ -61,7 +61,7 @@ function Content() {
   const [loadingVisible, setLoadingVisible] = useState(Platform.OS === 'web')
   const loadingOpacity = useSharedValue(1)
 
-  const isLoading = user === undefined || !fontsLoaded || !theme.ready
+  const isLoading = (user === undefined && !serverDown) || !fontsLoaded || !theme.ready
 
   const loadingStyle = useAnimatedStyle(() => {
     return {

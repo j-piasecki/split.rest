@@ -331,7 +331,7 @@ function EditHistoryItem({
 }) {
   const { user } = useAuth()
   const theme = useTheme()
-  const { data: createdBy } = useUserById(split.createdById)
+  const { user: createdBy } = useUserById(split.createdById)
   const { t } = useTranslation()
 
   const indicatorStyle = useAnimatedStyle(() => ({

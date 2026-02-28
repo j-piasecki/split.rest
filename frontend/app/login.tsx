@@ -1,3 +1,4 @@
+import { Icon } from '@components/Icon'
 import { SignInWithAppleButton } from '@components/SignInWithAppleButton'
 import { SignInWithGoogleButton } from '@components/SignInWithGoogleButton'
 import { Text } from '@components/Text'
@@ -12,7 +13,7 @@ import { ActivityIndicator, ScrollView, View, useWindowDimensions } from 'react-
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function Screen() {
-  const { user } = useAuth(false)
+  const { user, serverDown } = useAuth(false)
   const theme = useTheme()
   const insets = useSafeAreaInsets()
   const { t } = useTranslation()
@@ -72,11 +73,19 @@ export default function Screen() {
           paddingBottom: insets.bottom,
         }}
       >
-        {user === undefined && (
-          <View>
+        {user === undefined && !serverDown && (
+          <View style={{ padding: 16, alignItems: 'center', gap: 8 }}>
             <ActivityIndicator size='small' color={theme.colors.onSurface} />
-            <Text style={{ margin: 8, color: theme.colors.onSurface }}>
+            <Text style={{ fontSize: 18, textAlign: 'center', color: theme.colors.onSurface }}>
               {t('checkingIfYouAreLoggedIn')}
+            </Text>
+          </View>
+        )}
+        {serverDown && (
+          <View style={{ padding: 16, alignItems: 'center', gap: 32 }}>
+            <Icon name='powerOff' size={80} color={theme.colors.onSurface} />
+            <Text style={{ fontSize: 18, textAlign: 'center', color: theme.colors.onSurface }}>
+              {t('api.serverIsNotResponding')}
             </Text>
           </View>
         )}
