@@ -14,7 +14,7 @@ i18n.init({
   },
   defaultNS: 'translation',
   interpolation: {
-    escapeValue: true,
+    escapeValue: false, // Not needed for plain text notifications
   },
 })
 
