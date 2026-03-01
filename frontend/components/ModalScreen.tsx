@@ -53,7 +53,6 @@ function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalP
           style={{
             padding: 12,
             borderRadius: 48,
-            backgroundColor: Platform.OS !== 'ios' ? `${theme.colors.onSurface}16` : undefined,
           }}
         />
         <Text
