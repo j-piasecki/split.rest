@@ -132,13 +132,18 @@ export async function makeRequestWithFile<TArgs, TReturn>(
     }
   }
 
-  const result = await fetch(url, {
-    method: method,
-    headers: {
-      Authorization: `Bearer ${auth.currentUser ? await getIdToken(auth.currentUser) : undefined}`,
-    },
-    body: formData,
-  })
+  let result
+  try {
+    result = await fetch(url, {
+      method: method,
+      headers: {
+        Authorization: `Bearer ${auth.currentUser ? await getIdToken(auth.currentUser) : undefined}`,
+      },
+      body: formData,
+    })
+  } catch {
+    throw new ApiError('api.serverIsNotResponding', -1, 'Server is down')
+  }
 
   if (result.ok) {
     const data = await result.json()
