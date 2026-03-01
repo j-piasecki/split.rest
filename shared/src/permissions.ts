@@ -91,6 +91,7 @@ export const enum ManagePermissionsDTO {
   DeleteJoinLink = 1 << 4, // Delete the join link of the group
   ManageAccess = 1 << 5, // Manage access to the group
   ManageAdmins = 1 << 6, // Manage admins of the group
+  // TODO: Remove this permission?
   ReadPermissions = 1 << 7, // Read permissions of the group
   ManagePermissions = 1 << 8, // Manage permissions of the group (cannot grant permissions that the doer does not have)
   ManageDirectInvites = 1 << 9, // Manage direct invites to the group created by the user

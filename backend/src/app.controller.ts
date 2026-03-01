@@ -37,7 +37,6 @@ import {
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberInfoArguments,
-  GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMonthlyStatsArguments,
@@ -87,7 +86,6 @@ import {
   isGetGroupInviteByLinkArguments,
   isGetGroupJoinLinkArguments,
   isGetGroupMemberInfoArguments,
-  isGetGroupMemberPermissionsArguments,
   isGetGroupMembersArguments,
   isGetGroupMembersAutocompletionsArguments,
   isGetGroupMonthlyStatsArguments,
@@ -437,19 +435,6 @@ export class AppController {
     }
 
     return await this.appService.getSplitHistory(request.user.sub, args)
-  }
-
-  @UseGuards(AuthGuard)
-  @Get('getGroupMemberPermissions')
-  async getGroupMemberPermissions(
-    @Req() request: Request,
-    @Query() args: Partial<GetGroupMemberPermissionsArguments>
-  ) {
-    if (!isGetGroupMemberPermissionsArguments(args)) {
-      throw new BadRequestException('api.invalidArguments')
-    }
-
-    return await this.appService.getGroupMemberPermissions(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

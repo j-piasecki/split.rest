@@ -9,7 +9,6 @@ import { getDirectGroupInvites } from './database/groups/getDirectGroupInvites'
 import { getGroupInfo } from './database/groups/getGroupInfo'
 import { getGroupInviteByLink } from './database/groups/getGroupInviteByLink'
 import { getGroupJoinLink } from './database/groups/getGroupJoinLink'
-import { getGroupMemberPermissions } from './database/groups/getGroupMemberPermissions'
 import { getGroupMembers } from './database/groups/getGroupMembers'
 import { getGroupMembersAutocompletions } from './database/groups/getGroupMembersAutocompletions'
 import { getGroupMonthlyStats } from './database/groups/getGroupMonthlyStats'
@@ -264,11 +263,6 @@ export class DatabaseService {
   @RequirePermissions(['seeSplitDetails'])
   async getSplitHistory(callerId: string, args: GetSplitHistoryArguments) {
     return await getSplitHistory(this.pool, callerId, args)
-  }
-
-  @RequirePermissions(['readPermissions'])
-  async getGroupMemberPermissions(callerId: string, args: GetGroupMembersArguments) {
-    return await getGroupMemberPermissions(this.pool, callerId, args)
   }
 
   // Every user can see their own group invites

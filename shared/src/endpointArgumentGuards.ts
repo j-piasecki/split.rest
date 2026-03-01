@@ -15,7 +15,6 @@ import {
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberInfoArguments,
-  GetGroupMemberPermissionsArguments,
   GetGroupMembersArguments,
   GetGroupMembersAutocompletionsArguments,
   GetGroupMonthlyStatsArguments,
@@ -189,12 +188,6 @@ export function isJoinGroupByLinkArguments(obj: any): obj is JoinGroupByLinkArgu
 
 export function isGetSplitHistoryArguments(obj: any): obj is GetSplitHistoryArguments {
   return obj.groupId !== undefined && obj.splitId !== undefined
-}
-
-export function isGetGroupMemberPermissionsArguments(
-  obj: any
-): obj is GetGroupMemberPermissionsArguments {
-  return obj.groupId !== undefined
 }
 
 export function isGetUserInvitesArguments(obj: any): obj is GetUserInvitesArguments {

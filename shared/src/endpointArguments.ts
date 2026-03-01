@@ -154,11 +154,6 @@ export interface GetSplitHistoryArguments {
   startAfter?: number
 }
 
-export interface GetGroupMemberPermissionsArguments {
-  groupId: number
-  userId?: string
-}
-
 export interface GetUserInvitesArguments {
   startAfter?: number
   rejected: boolean
