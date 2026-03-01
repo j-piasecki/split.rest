@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common'
 import * as tf from '@tensorflow/tfjs-node'
 import * as fs from 'fs'
 import * as nsfwjs from 'nsfwjs'
+import { dirname } from 'path'
 import { FileUploadArguments } from 'shared'
 import sharp from 'sharp'
 
@@ -76,6 +77,11 @@ export class ImageService {
       }
     } = {}
   ) {
+    const dir = dirname(path)
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true })
+    }
+
     await sharp(imageBuffer)
       .resize(options.resize?.width ?? 128, options.resize?.height ?? 128)
       .toFormat('jpg', { quality: 80 })
