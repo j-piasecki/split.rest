@@ -43,7 +43,8 @@
     "showingHiddenGroups": "Showing hidden groups",
     "showingVisibleGroups": "Showing visible groups",
     "hideGroup": "Hide group",
-    "showGroup": "Show group"
+    "showGroup": "Show group",
+    "youMustSelectAGroup": "You must select a group"
   },
 
   "groupInvites": {

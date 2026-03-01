@@ -3,7 +3,8 @@ import { useTheme } from '@styling/theme'
 import { HapticFeedback } from '@utils/hapticFeedback'
 import { usePathname, useSegments } from 'expo-router'
 import React, { createContext, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
-import { Keyboard, Platform, StyleSheet, useWindowDimensions } from 'react-native'
+import { useTranslation } from 'react-i18next'
+import { Keyboard, Platform, StyleSheet, ToastAndroid, useWindowDimensions } from 'react-native'
 import { Gesture, GestureDetector, GestureType } from 'react-native-gesture-handler'
 import Animated, {
   SharedValue,
@@ -75,6 +76,7 @@ export function DrawerLayout({
   ref,
 }: DrawerLayoutProps) {
   const theme = useTheme()
+  const { t } = useTranslation()
   const { width: screenWidth } = useWindowDimensions()
   const drawerWidth = propsDrawerWidth ?? Math.min(screenWidth * 0.85, 400)
   const segments = useSegments() as string[]
@@ -102,17 +104,24 @@ export function DrawerLayout({
     }
   })
 
+  const showToast = useCallback(() => {
+    if (Platform.OS === 'android') {
+      ToastAndroid.show(t('home.youMustSelectAGroup'), ToastAndroid.SHORT)
+    }
+  }, [t])
+
   const closeDrawer = useCallback(
     (ignoreLock: boolean = true) => {
       'worklet'
       if (lockOpen.value && !ignoreLock) {
+        runOnJS(showToast)()
         return
       }
 
       progress.value = withSpring(0, drawerSpringConfig)
       isOpen.value = false
     },
-    [isOpen, lockOpen, progress]
+    [isOpen, lockOpen, progress, showToast]
   )
 
   const openDrawer = useCallback(() => {
@@ -199,6 +208,7 @@ export function DrawerLayout({
           isOpen.value = false
           progress.value = withSpring(0, drawerSpringConfig)
         } else {
+          runOnJS(showToast)()
           progress.value = withSpring(1, drawerSpringConfig)
         }
       }
