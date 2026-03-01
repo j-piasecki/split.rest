@@ -14,6 +14,7 @@
 
   "index": {
     "or": "OR",
+    "openInBrowser": "Open in browser",
     "headline": "Pay once and <Styled>split</Styled> between the <Styled>rest</Styled> of the group",
     "tagLine": "Easily split expenses with friends, family, or colleagues. Using Split.rest, one person pays, and the rest of the group settles up — simple, fair, and hassle-free.",
     "mockLightMode": "Available in bright colors if you are not the dead inside type",
