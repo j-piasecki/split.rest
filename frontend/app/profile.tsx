@@ -15,12 +15,16 @@ import { deleteUser, logout, reauthenticate, useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { ApiError, makeRequest, makeRequestWithFile } from '@utils/makeApiRequest'
 import { invalidateUserById } from '@utils/queryClient'
+import { Image } from 'expo-image'
 import * as ImagePicker from 'expo-image-picker'
 import { useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Platform, Pressable, ScrollView, View } from 'react-native'
 import { FileUploadArguments, TranslatableError, User, isTranslatableError } from 'shared'
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const icon = require('@assets/icon.svg')
 
 interface DeleteAccountModalProps {
   visible: boolean
@@ -241,6 +245,34 @@ function Form({ user }: { user: User }) {
             ]}
           />
         )}
+
+        <View
+          style={{
+            padding: 16,
+            borderRadius: 16,
+            width: '100%',
+            backgroundColor: theme.colors.surfaceContainer,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 16,
+          }}
+        >
+          <View>
+            <Image
+              source={icon}
+              style={{ width: 48, height: 48, position: 'absolute', left: -4, top: -2 }}
+              tintColor={theme.colors.primaryContainer}
+            />
+            <Image
+              source={icon}
+              style={{ width: 48, height: 48 }}
+              tintColor={theme.colors.primary}
+            />
+          </View>
+          <Text style={{ fontSize: 14, color: theme.colors.onSurface, flexShrink: 1 }}>
+            {t('settings.splitMoreMessage')}
+          </Text>
+        </View>
       </View>
       <View style={{ flexDirection: 'column', gap: 16, marginTop: 24 }}>
         {/* Don't show delete button on web on small screen; it uses redirect to sign in which requires
@@ -294,8 +326,8 @@ export default function ProfileScreen() {
     <ModalScreen
       returnPath='/group/none'
       title={t('screenName.profile')}
-      maxWidth={400}
-      maxHeight={550}
+      maxWidth={500}
+      maxHeight={660}
     >
       {!user && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
       {user && <Form user={user} />}

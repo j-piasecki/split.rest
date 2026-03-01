@@ -234,6 +234,7 @@
 
   "settings": {
     "username": "Display name",
+    "splitMoreMessage": "Thank you for being an early adopter! During this phase you are enjoying all benefits of Split More for free!",
     "theme": {
       "hint": "Choose your theme",
       "light": "Light",
