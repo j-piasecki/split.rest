@@ -61,9 +61,7 @@ export function RoundIconButton({
       transform: [
         {
           scale: withSpring(pressed ? (text ? 1.05 : 1.1) : 1, {
-            mass: 1,
-            stiffness: 250,
-            damping: 10,
+            duration: 300,
           }),
         },
       ],
