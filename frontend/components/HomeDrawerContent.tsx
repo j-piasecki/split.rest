@@ -252,7 +252,7 @@ export function HomeDrawerContent() {
               right: 0,
               left: 0,
               bottom: 0,
-              paddingBottom: insets.bottom + (Platform.OS === 'web' ? 16 : 0),
+              paddingBottom: insets.bottom + (Platform.OS === 'web' ? 16 : 8),
               paddingHorizontal: 16,
             }}
           >
