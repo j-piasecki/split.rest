@@ -121,18 +121,22 @@ export function Button({
               justifyContent: 'center',
               alignItems: 'center',
               flexDirection: 'row',
-              gap: 8,
+              gap: title || (leftIcon && rightIcon) ? 8 : 0,
             },
           ]}
         >
           {isLoading && <ActivityIndicator size='small' color={foregroundColor} />}
           {leftIcon && !isLoading && <Icon name={leftIcon} size={24} color={foregroundColor} />}
-          {title !== undefined && title.length > 0 && (
+          {title !== undefined && title.length > 0 ? (
             <Text
               selectable={false}
               style={{ fontSize: 18, fontWeight: '700', color: foregroundColor }}
             >
               {title}
+            </Text>
+          ) : (
+            <Text selectable={false} style={{ fontSize: 18, fontWeight: '700', width: 0 }}>
+              {' '}
             </Text>
           )}
           {rightIcon && <Icon name={rightIcon} size={24} color={foregroundColor} />}
