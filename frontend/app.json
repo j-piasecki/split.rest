@@ -36,7 +36,12 @@
             {
               "scheme": "https",
               "host": "*.split.rest",
-              "pathPrefix": "/*"
+              "pathPrefix": "/"
+            },
+            {
+              "scheme": "https",
+              "host": "split.rest",
+              "pathPrefix": "/"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]
