@@ -121,7 +121,7 @@ export default function SplitInfoScreen() {
         </View>
       )}
 
-      {!isLoadingHistory && groupInfo === null && (
+      {!isLoadingHistory && (groupInfo === null || history.length === 0) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 20 }}>
             {t('splitInfo.splitNotFound')}
@@ -129,7 +129,7 @@ export default function SplitInfoScreen() {
         </View>
       )}
 
-      {!isLoadingHistory && groupInfo && (
+      {!isLoadingHistory && groupInfo && history.length > 0 && (
         <View ref={containerRef} style={{ flex: 1, paddingBottom: insets.bottom }}>
           <View
             style={{
