@@ -44,6 +44,12 @@ Sentry.init({
   profilesSampleRate: 1.0,
 })
 
+// TODO: The current setup with this results in index redirecting back to group screen after a deep link
+// Without this, group navigation works, but join links close the app after navigating back
+// export const unstable_settings = {
+//   initialRouteName: 'index',
+// }
+
 function Content() {
   const pathname = usePathname()
   const segments = useSegments()

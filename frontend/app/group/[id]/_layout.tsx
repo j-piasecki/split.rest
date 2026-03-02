@@ -2,6 +2,10 @@ import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { Stack } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 
+export const unstable_settings = {
+  initialRouteName: 'index',
+}
+
 export default function GroupFlow() {
   const { t } = useTranslation()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
