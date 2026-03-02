@@ -113,7 +113,10 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
         buttonCornerSpringConfig
       ),
       maxWidth: withSpring(isExpanded.value ? 250 : collapsedWidth, buttonPaddingSpringConfig),
-      height: withSpring(settleUpPressed? 64 : isExpanded.value ? 56 : 40, buttonPaddingSpringConfig),
+      height: withSpring(
+        settleUpPressed ? 64 : isExpanded.value ? 56 : 40,
+        buttonPaddingSpringConfig
+      ),
       opacity: withTiming(isExpanded.value || !isAddSplitSidebar ? 1 : 0, { duration: 200 }),
     }
   })

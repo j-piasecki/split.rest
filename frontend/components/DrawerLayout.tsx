@@ -3,8 +3,7 @@ import { useTheme } from '@styling/theme'
 import { HapticFeedback } from '@utils/hapticFeedback'
 import { usePathname, useSegments } from 'expo-router'
 import React, { createContext, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Keyboard, Platform, StyleSheet, ToastAndroid, useWindowDimensions } from 'react-native'
+import { Keyboard, Platform, StyleSheet, useWindowDimensions } from 'react-native'
 import { Gesture, GestureDetector, GestureType } from 'react-native-gesture-handler'
 import Animated, {
   SharedValue,
@@ -17,7 +16,7 @@ import Animated, {
 export const DrawerLayoutContext = createContext<
   | {
       panGesture: React.RefObject<GestureType | undefined>
-      closeDrawer: (ignoreLock?: boolean) => void
+      closeDrawer: () => void
       openDrawer: () => void
     }
   | undefined
@@ -25,12 +24,12 @@ export const DrawerLayoutContext = createContext<
 
 interface OverlayProps {
   progress: SharedValue<number>
-  closeDrawer: (ignoreLock?: boolean) => void
+  closeDrawer: () => void
 }
 
 function Overlay(props: OverlayProps) {
   const tap = Gesture.Tap().onStart(() => {
-    props.closeDrawer(false)
+    props.closeDrawer()
   })
 
   const style = useAnimatedStyle(() => {
@@ -57,7 +56,7 @@ interface DrawerLayoutProps {
 
 export interface DrawerLayoutRef {
   openDrawer: () => void
-  closeDrawer: (ignoreLock?: boolean) => void
+  closeDrawer: () => void
 }
 
 function closeKeyboard() {
@@ -76,7 +75,6 @@ export function DrawerLayout({
   ref,
 }: DrawerLayoutProps) {
   const theme = useTheme()
-  const { t } = useTranslation()
   const { width: screenWidth } = useWindowDimensions()
   const drawerWidth = propsDrawerWidth ?? Math.min(screenWidth * 0.85, 400)
   const segments = useSegments() as string[]
@@ -88,7 +86,6 @@ export function DrawerLayout({
   const progress = useSharedValue(0)
   const isDragging = useSharedValue(false)
   const isOpen = useSharedValue(false)
-  const lockOpen = useSharedValue(isNoGroupSelected)
   const translationStart = useSharedValue(0)
   const progressStart = useSharedValue(0)
 
@@ -104,25 +101,11 @@ export function DrawerLayout({
     }
   })
 
-  const showToast = useCallback(() => {
-    if (Platform.OS === 'android') {
-      ToastAndroid.show(t('home.youMustSelectAGroup'), ToastAndroid.SHORT)
-    }
-  }, [t])
-
-  const closeDrawer = useCallback(
-    (ignoreLock: boolean = true) => {
-      'worklet'
-      if (lockOpen.value && !ignoreLock) {
-        runOnJS(showToast)()
-        return
-      }
-
-      progress.value = withSpring(0, drawerSpringConfig)
-      isOpen.value = false
-    },
-    [isOpen, lockOpen, progress, showToast]
-  )
+  const closeDrawer = useCallback(() => {
+    'worklet'
+    progress.value = withSpring(0, drawerSpringConfig)
+    isOpen.value = false
+  }, [isOpen, progress])
 
   const openDrawer = useCallback(() => {
     'worklet'
@@ -143,7 +126,6 @@ export function DrawerLayout({
   const hasAutoOpened = useRef(false)
 
   useEffect(() => {
-    lockOpen.value = isNoGroupSelected
     if (isNoGroupSelected) {
       if (!hasAutoOpened.current && isOnGroupScreen) {
         progress.value = 1
@@ -153,9 +135,9 @@ export function DrawerLayout({
         openDrawer()
       }
     } else {
-      closeDrawer(true)
+      closeDrawer()
     }
-  }, [isOnGroupScreen, isNoGroupSelected, lockOpen, openDrawer, closeDrawer, progress, isOpen])
+  }, [isOnGroupScreen, isNoGroupSelected, openDrawer, closeDrawer, progress, isOpen])
 
   const pan = Gesture.Pan()
     .enabled(enabled && isOnGroupScreen)
@@ -182,7 +164,7 @@ export function DrawerLayout({
         translationStart.value = e.translationX
       } else {
         const newProgress = Math.max(
-          lockOpen.value ? 1 : 0,
+          0,
           Math.min(1, (e.translationX - translationStart.value) / drawerWidth + progressStart.value)
         )
         progress.value = newProgress
@@ -204,13 +186,8 @@ export function DrawerLayout({
         if (isOpen.value) {
           runOnJS(hapticFeedback)()
         }
-        if (!lockOpen.value) {
-          isOpen.value = false
-          progress.value = withSpring(0, drawerSpringConfig)
-        } else {
-          runOnJS(showToast)()
-          progress.value = withSpring(1, drawerSpringConfig)
-        }
+        isOpen.value = false
+        progress.value = withSpring(0, drawerSpringConfig)
       }
 
       isDragging.value = false

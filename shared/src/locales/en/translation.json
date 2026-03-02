@@ -44,8 +44,7 @@
     "showingHiddenGroups": "Showing hidden groups",
     "showingVisibleGroups": "Showing visible groups",
     "hideGroup": "Hide group",
-    "showGroup": "Show group",
-    "youMustSelectAGroup": "You must select a group"
+    "showGroup": "Show group"
   },
 
   "groupInvites": {
@@ -231,7 +230,7 @@
   "group": {
     "details": "Details",
     "allowedSplitMethods": "Allowed split methods",
-    "selectGroup": "Select a group from the drawer"
+    "selectGroup": "Select a group from the list"
   },
 
   "settings": {

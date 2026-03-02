@@ -1,4 +1,5 @@
 import Header, { HEADER_HEIGHT } from '@components/Header'
+import { Icon } from '@components/Icon'
 import { FullPaneHeader, Pane } from '@components/Pane'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
@@ -248,7 +249,7 @@ function NoGroupSelected() {
     >
       <Header />
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ color: theme.colors.onSurface, fontSize: 64, opacity: 0.3 }}>{'👈'}</Text>
+        <Icon name='arrowLeftAlt' size={80} color={theme.colors.outline} />
         <Text
           style={{
             color: theme.colors.onSurfaceVariant,

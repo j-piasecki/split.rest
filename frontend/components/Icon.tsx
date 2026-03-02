@@ -13,6 +13,8 @@ export type IconName =
   | 'arrowBack'
   | 'arrowDown'
   | 'arrowDownAlt'
+  | 'arrowLeftAlt'
+  | 'arrowRightAlt'
   | 'arrowUp'
   | 'articlePerson'
   | 'arrowUpAlt'
@@ -122,6 +124,8 @@ const iconMap: Record<IconName, unknown> = {
   arrowBack: require('@assets/icons/arrow_back.svg'),
   arrowDown: require('@assets/icons/arrow_down.svg'),
   arrowDownAlt: require('@assets/icons/arrow_down_alt.svg'),
+  arrowLeftAlt: require('@assets/icons/arrow_left_alt.svg'),
+  arrowRightAlt: require('@assets/icons/arrow_right_alt.svg'),
   articlePerson: require('@assets/icons/article_person.svg'),
   arrowUp: require('@assets/icons/arrow_up.svg'),
   arrowUpAlt: require('@assets/icons/arrow_up_alt.svg'),
