@@ -135,30 +135,6 @@ function Content() {
                       options={{ title: t('screenName.groupInvites'), ...modalOptions }}
                     />
                     <Stack.Screen
-                      name='group/[id]/index'
-                      options={{ title: t('screenName.group'), animation: 'none' }}
-                    />
-                    <Stack.Screen
-                      name='group/[id]/members'
-                      options={{ title: t('screenName.members'), ...modalOptions }}
-                    />
-                    <Stack.Screen
-                      name='group/[id]/settleUp'
-                      options={{ title: t('screenName.settleUp'), ...modalOptions }}
-                    />
-                    <Stack.Screen
-                      name='group/[id]/member/[memberId]/index'
-                      options={{ title: t('screenName.memberInfo'), ...modalOptions }}
-                    />
-                    <Stack.Screen
-                      name='group/[id]/member/[memberId]/settleUpExactAmount'
-                      options={{ title: t('screenName.settleUpExactAmount'), ...modalOptions }}
-                    />
-                    <Stack.Screen
-                      name='group/[id]/filter'
-                      options={{ title: t('screenName.filter'), ...modalOptions }}
-                    />
-                    <Stack.Screen
                       name='createGroup'
                       options={{
                         title: t('screenName.createGroup'),
@@ -168,30 +144,6 @@ function Content() {
                     <Stack.Screen
                       name='profile'
                       options={{ title: t('screenName.profile'), ...modalOptions }}
-                    />
-                    <Stack.Screen
-                      name='group/[id]/inviteMember'
-                      options={{ title: t('screenName.inviteMember'), ...modalOptions }}
-                    />
-                    <Stack.Screen
-                      name='group/[id]/addSplit'
-                      options={{ title: t('screenName.addSplit'), ...modalOptions }}
-                    />
-                    <Stack.Screen
-                      name='group/[id]/settings'
-                      options={{ title: t('screenName.groupSettings.index'), ...modalOptions }}
-                    />
-                    <Stack.Screen
-                      name='group/[id]/trends'
-                      options={{ title: t('screenName.groupStats'), ...modalOptions }}
-                    />
-                    <Stack.Screen
-                      name='group/[id]/split/[splitId]/index'
-                      options={{ title: t('screenName.splitInfo'), ...modalOptions }}
-                    />
-                    <Stack.Screen
-                      name='group/[id]/split/[splitId]/edit'
-                      options={{ title: t('screenName.editSplit'), ...modalOptions }}
                     />
                   </Stack>
                 </DrawerLayout>
