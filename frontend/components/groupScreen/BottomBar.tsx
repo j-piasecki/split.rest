@@ -79,17 +79,6 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
     }
   })
 
-  // If we are showing the "Add split" sidebar, we fully hide it when collapsed (width 0).
-  // Otherwise it collapses to 64.
-  const sideBarAnimatedStyle = useAnimatedStyle(() => {
-    const collapsedWidth = isAddSplitSidebar ? 0 : 64
-    return {
-      maxWidth: withSpring(isExpanded.value ? 250 : collapsedWidth, buttonPaddingSpringConfig),
-      height: withSpring(isExpanded.value ? 56 : 40, buttonPaddingSpringConfig),
-      opacity: withTiming(isExpanded.value || !isAddSplitSidebar ? 1 : 0, { duration: 200 }),
-    }
-  })
-
   const splitAnimatedStyle = useAnimatedStyle(() => {
     return {
       width: withSpring(isExpanded.value ? 72 : 56, buttonPaddingSpringConfig),
@@ -108,6 +97,10 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
   })
 
   const settleUpAnimatedStyle = useAnimatedStyle(() => {
+    // If we are showing the "Add split" sidebar, we fully hide it when collapsed (width 0).
+    // Otherwise it collapses to 64.
+    const collapsedWidth = isAddSplitSidebar ? 0 : 64
+
     return {
       borderTopLeftRadius: withSpring(settleUpPressed ? 28 : 16, buttonCornerSpringConfig),
       borderBottomLeftRadius: withSpring(settleUpPressed ? 28 : 16, buttonCornerSpringConfig),
@@ -119,7 +112,9 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
         onlySettleUp ? (settleUpPressed ? 28 : 16) : 0,
         buttonCornerSpringConfig
       ),
-      height: withSpring(settleUpPressed ? 64 : 56, buttonPaddingSpringConfig),
+      maxWidth: withSpring(isExpanded.value ? 250 : collapsedWidth, buttonPaddingSpringConfig),
+      height: withSpring(settleUpPressed? 64 : isExpanded.value ? 56 : 40, buttonPaddingSpringConfig),
+      opacity: withTiming(isExpanded.value || !isAddSplitSidebar ? 1 : 0, { duration: 200 }),
     }
   })
 
@@ -173,11 +168,8 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
               backgroundColor: sidebarBgColor,
               transform: [{ translateX: onlySettleUp ? 0 : 12 }],
               overflow: 'hidden',
-              maxWidth: 250,
-              borderRadius: 16,
             },
             styles.bottomBarShadow,
-            sideBarAnimatedStyle,
             settleUpAnimatedStyle,
           ]}
         >
