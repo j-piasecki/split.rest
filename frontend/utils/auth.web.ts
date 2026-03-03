@@ -148,7 +148,7 @@ export async function deleteUser() {
   await auth.currentUser?.delete()
 
   queryClient.clear()
-  router.dismissTo('/login')
+  router.dismissTo('/')
 }
 
 export async function signInWithGoogle() {

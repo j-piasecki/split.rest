@@ -55,7 +55,7 @@ function Content() {
   const segments = useSegments()
   const { user, serverDown } = useAuth(
     !pathname.startsWith('/join') &&
-      !pathname.startsWith('/login') &&
+      !pathname.startsWith('/index') &&
       !pathname.startsWith('/privacyPolicy')
   )
   const theme = useTheme()
@@ -130,10 +130,6 @@ function Content() {
                   <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
                     <Stack.Screen
                       name='index'
-                      options={{ title: t('appName'), animation: 'none' }}
-                    />
-                    <Stack.Screen
-                      name='login'
                       options={{ title: t('appName'), animation: 'none' }}
                     />
                     <Stack.Screen

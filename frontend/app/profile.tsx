@@ -303,7 +303,7 @@ function Form({ user }: { user: User }) {
             await logout()
             setIsSigningOut(false)
             router.dismissAll()
-            router.replace('/login')
+            router.replace('/')
           }}
           isLoading={isSigningOut}
           rightIcon='logout'

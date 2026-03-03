@@ -12,22 +12,6 @@
   "undo": "Undo",
   "ok": "Ok",
 
-  "index": {
-    "or": "OR",
-    "openInBrowser": "Open in browser",
-    "headline": "Pay once and <Styled>split</Styled> between the <Styled>rest</Styled> of the group",
-    "tagLine": "Easily split expenses with friends, family, or colleagues. Using Split.rest, one person pays, and the rest of the group settles up — simple, fair, and hassle-free.",
-    "mockLightMode": "Available in bright colors if you are not the dead inside type",
-    "mockSplit": "Easily view the details of each split, including edit history!",
-    "mockSplitTypes": "Multiple split types to choose from",
-    "mockRoulette": "Never be in doubt who should pay next with the roulette (it's fair, we promise)",
-    "mockSettleUp": "Settle up with a single click. Well, two actually, but who's counting?",
-    "mockMembers": "Easily manage group members",
-    "mockBig": "Works great on both small and big screens",
-    "privacyPolicy": "Privacy policy",
-    "contact": "Contact"
-  },
-
   "login": {
     "youMustSignIn": "Sign in to start <Styled>splitting</Styled>"
   },
