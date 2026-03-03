@@ -48,28 +48,24 @@ export function useNotificationPermission() {
       Notifications.setNotificationChannelAsync(AndroidNotificationChannel.NewSplits, {
         name: t('notification.channel.newSplits'),
         importance: Notifications.AndroidImportance.HIGH,
-        sound: 'default',
         enableVibrate: true,
       })
 
       Notifications.setNotificationChannelAsync(AndroidNotificationChannel.SplitUpdates, {
         name: t('notification.channel.splitUpdates'),
         importance: Notifications.AndroidImportance.HIGH,
-        sound: 'default',
         enableVibrate: true,
       })
 
       Notifications.setNotificationChannelAsync(AndroidNotificationChannel.GroupInvites, {
         name: t('notification.channel.groupInvites'),
         importance: Notifications.AndroidImportance.HIGH,
-        sound: 'default',
         enableVibrate: true,
       })
 
       Notifications.setNotificationChannelAsync(AndroidNotificationChannel.GroupUpdates, {
         name: t('notification.channel.groupUpdates'),
         importance: Notifications.AndroidImportance.HIGH,
-        sound: 'default',
         enableVibrate: true,
       })
     }
