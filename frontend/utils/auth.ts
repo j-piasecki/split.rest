@@ -23,7 +23,7 @@ import {
   unregisterDeviceForRemoteMessages,
 } from '@react-native-firebase/messaging'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
-import { router, usePathname, useRouter } from 'expo-router'
+import { router } from 'expo-router'
 import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { Platform } from 'react-native'
@@ -57,9 +57,7 @@ async function unregisterNotifications() {
   await unregisterDeviceForRemoteMessages(messaging)
 }
 
-export function useAuth(redirectToIndex = true) {
-  const path = usePathname()
-  const router = useRouter()
+export function useAuth() {
   const [firebaseUser, setFirebaseUser] = useState<FirebaseAuthTypes.User | null | undefined>(
     authReady ? auth.currentUser : undefined
   )
@@ -73,16 +71,6 @@ export function useAuth(redirectToIndex = true) {
     })
     return subscriber
   }, [])
-
-  useEffect(() => {
-    if (redirectToIndex && firebaseUser === null) {
-      if (path !== '/') {
-        setTimeout(() => {
-          router.replace('/')
-        }, 0)
-      }
-    }
-  }, [path, router, firebaseUser, redirectToIndex])
 
   return { user, firebaseUser, serverDown }
 }

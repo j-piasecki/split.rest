@@ -200,8 +200,8 @@ function JoinForm() {
   const theme = useTheme()
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const { t } = useTranslation()
-  const { uuid } = useLocalSearchParams()
-  const { data: invite, isLoading: isLoadingInvite } = useGroupInviteByLink(uuid as string)
+  const { joinUuid } = useLocalSearchParams()
+  const { data: invite, isLoading: isLoadingInvite } = useGroupInviteByLink(joinUuid as string)
 
   const groupDoesntExist = !isLoadingInvite && !invite
 
@@ -212,7 +212,7 @@ function JoinForm() {
         (!isSmallScreen || groupDoesntExist) && { alignItems: 'center', paddingTop: 64 },
       ]}
     >
-      {!groupDoesntExist && <InvitePane invite={invite} uuid={uuid as string} />}
+      {!groupDoesntExist && <InvitePane invite={invite} uuid={joinUuid as string} />}
       {groupDoesntExist && (
         <Text style={{ color: theme.colors.onSurface, fontSize: 20, fontWeight: 800 }}>
           {t('joinGroup.noGroupFoundForThisJoinLink')}
@@ -223,9 +223,9 @@ function JoinForm() {
 }
 
 export default function JoinPage() {
-  const { user } = useAuth(false)
+  const { user } = useAuth()
   const theme = useTheme()
-  const { uuid } = useLocalSearchParams()
+  const { joinUuid } = useLocalSearchParams()
   const insets = useSafeAreaInsets()
 
   return (
@@ -238,7 +238,7 @@ export default function JoinPage() {
       {user && <Header showBackButton />}
       <View style={{ flex: 1, paddingBottom: insets.bottom || 16 }}>
         {user === undefined && <ActivityIndicator color={theme.colors.primary} />}
-        {user === null && <Redirect href={`/?join=${uuid}`} withAnchor />}
+        {user === null && <Redirect href={`/?joinUuid=${joinUuid}`} withAnchor />}
         {user && <JoinForm />}
       </View>
     </View>

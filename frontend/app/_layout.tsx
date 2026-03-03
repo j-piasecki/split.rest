@@ -1,6 +1,4 @@
-import { DrawerLayout } from '@components/DrawerLayout'
 import { ErrorBoundary } from '@components/ErrorBoundary'
-import { HomeDrawerContent } from '@components/HomeDrawerContent'
 import { SnackBarProvider } from '@components/SnackBar'
 import { SpinningLogo } from '@components/SpinningLogo'
 import { useFonts } from '@hooks/useFonts'
@@ -10,7 +8,6 @@ import * as Sentry from '@sentry/react-native'
 import { ThemeProvider, useTheme } from '@styling/theme'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useAuth } from '@utils/auth'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import i18n from '@utils/i18n'
 import { queryClient } from '@utils/queryClient'
 import { useLocales } from 'expo-localization'
@@ -46,20 +43,15 @@ Sentry.init({
 
 // TODO: The current setup with this results in index redirecting back to group screen after a deep link
 // Without this, group navigation works, but join links close the app after navigating back
-// export const unstable_settings = {
-//   initialRouteName: 'index',
-// }
+export const unstable_settings = {
+  initialRouteName: 'index',
+}
 
 function Content() {
   const pathname = usePathname()
   const segments = useSegments()
-  const { user, serverDown } = useAuth(
-    !pathname.startsWith('/join') &&
-      !pathname.startsWith('/index') &&
-      !pathname.startsWith('/privacyPolicy')
-  )
+  const { user, serverDown } = useAuth()
   const theme = useTheme()
-  const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const locales = useLocales()
   const { t } = useTranslation()
   const [fontsLoaded, _error] = useFonts()
@@ -106,7 +98,9 @@ function Content() {
   // TODO: combine this with loading assets
   useEffect(() => {
     if (!isLoading) {
-      SplashScreen.hide()
+      setTimeout(() => {
+        SplashScreen.hide()
+      }, 100)
     }
   }, [isLoading])
 
@@ -114,42 +108,21 @@ function Content() {
     logScreenView(pathname, segments.join('/'))
   }, [segments, pathname])
 
-  const modalOptions: Record<string, unknown> = {
-    presentation: isSmallScreen ? 'card' : 'transparentModal',
-    animation: isSmallScreen ? undefined : 'fade',
-  }
-
   return (
     <GestureHandlerRootView>
       <KeyboardProvider>
         <NavigationThemeProvider value={navigationTheme}>
           <SnackBarProvider>
             <ErrorBoundary>
-              {!isLoading && (
-                <DrawerLayout renderDrawerContent={() => <HomeDrawerContent />}>
-                  <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
-                    <Stack.Screen
-                      name='index'
-                      options={{ title: t('appName'), animation: 'none' }}
-                    />
-                    <Stack.Screen
-                      name='groupInvites'
-                      options={{ title: t('screenName.groupInvites'), ...modalOptions }}
-                    />
-                    <Stack.Screen
-                      name='createGroup'
-                      options={{
-                        title: t('screenName.createGroup'),
-                        ...modalOptions,
-                      }}
-                    />
-                    <Stack.Screen
-                      name='profile'
-                      options={{ title: t('screenName.profile'), ...modalOptions }}
-                    />
-                  </Stack>
-                </DrawerLayout>
-              )}
+              {!isLoading && <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
+                <Stack.Protected guard={!user}>
+                  <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
+                </Stack.Protected>
+
+                <Stack.Protected guard={!!user}>
+                  <Stack.Screen name='(app)' options={{ animation: 'none' }} />
+                </Stack.Protected>
+              </Stack>}
 
               {loadingVisible && (
                 <Animated.View

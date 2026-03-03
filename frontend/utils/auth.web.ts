@@ -8,7 +8,7 @@ import { deleteUser as remoteDeleteUser } from '@database/deleteUser'
 import { useUserById } from '@hooks/database/useUserById'
 import { AuthListener } from '@type/auth'
 import { getLocales } from 'expo-localization'
-import { router, usePathname, useRouter } from 'expo-router'
+import { router } from 'expo-router'
 import {
   User as FirebaseUser,
   GoogleAuthProvider,
@@ -79,9 +79,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 })
 
-export function useAuth(redirectToIndex = true) {
-  const path = usePathname()
-  const router = useRouter()
+export function useAuth() {
   const [firebaseUser, setFirebaseUser] = useState<User | null | undefined>(
     authReady ? createUser(auth.currentUser) : undefined
   )
@@ -91,16 +89,6 @@ export function useAuth(redirectToIndex = true) {
   useEffect(() => {
     return addAuthListener(setFirebaseUser)
   }, [])
-
-  useEffect(() => {
-    if (redirectToIndex && firebaseUser === null) {
-      if (path !== '/') {
-        setTimeout(() => {
-          router.replace('/')
-        }, 50)
-      }
-    }
-  }, [path, router, firebaseUser, redirectToIndex])
 
   return { user, firebaseUser, serverDown }
 }

@@ -79,7 +79,7 @@ export function DrawerLayout({
   const drawerWidth = propsDrawerWidth ?? Math.min(screenWidth * 0.85, 400)
   const segments = useSegments() as string[]
   const pathname = usePathname()
-  const isOnGroupScreen = segments[0] === 'group' && segments.length === 2
+  const isOnGroupScreen = segments[1] === 'group' && segments.length === 3
   const isNoGroupSelected = pathname === '/group/none'
 
   const panRef = useRef<GestureType | undefined>(undefined)

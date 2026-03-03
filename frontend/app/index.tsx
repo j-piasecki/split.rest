@@ -4,32 +4,26 @@ import { SignInWithGoogleButton } from '@components/SignInWithGoogleButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { signInWithApple, signInWithGoogle, useAuth } from '@utils/auth'
-import { getLastOpenedGroupId } from '@utils/lastOpenedGroup'
+import { setJoinRedirect } from '@utils/startNavigationHelper'
 import { Image } from 'expo-image'
-import { Redirect, useLocalSearchParams, useRouter } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View, useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function Screen() {
-  const { user, serverDown } = useAuth(false)
+  const { user, serverDown } = useAuth()
   const theme = useTheme()
   const insets = useSafeAreaInsets()
   const { t } = useTranslation()
-  const { join } = useLocalSearchParams()
+  const { joinUuid } = useLocalSearchParams()
   const { width, height } = useWindowDimensions()
   const [signingIn, setSigningIn] = useState(false)
-  const router = useRouter()
 
   useEffect(() => {
-    if (!user || join) {
-      return
-    }
-    getLastOpenedGroupId().then((id) => {
-      router.replace(id !== null ? `/group/${id}` : '/group/none')
-    })
-  }, [user, join, router])
+    setJoinRedirect(joinUuid as string)
+  }, [joinUuid])
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
@@ -123,7 +117,7 @@ export default function Screen() {
               >
                 <Trans
                   i18nKey='login.youMustSignIn'
-                  components={{ Styled: <Text style={{ color: theme.colors.primary }} /> }}
+                  components={{ Styled: <Text style={{ color: theme.colors.primary, fontWeight: 700 }} /> }}
                 />
               </Text>
             </View>
@@ -161,8 +155,6 @@ export default function Screen() {
             </View>
           </View>
         )}
-        {/* TODO: handle this better, this flashes */}
-        {user && join && <Redirect href={`/join/${join}`} withAnchor />}
       </ScrollView>
     </View>
   )

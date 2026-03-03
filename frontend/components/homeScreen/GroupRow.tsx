@@ -8,7 +8,7 @@ import { useSetGroupHiddenMutation } from '@hooks/database/useGroupHiddenMutatio
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
-import { setLastOpenedGroupId } from '@utils/lastOpenedGroup'
+import { setLastOpenedGroupId } from '@utils/startNavigationHelper'
 import { router, usePathname } from 'expo-router'
 import React, { useContext, useRef } from 'react'
 import { useTranslation } from 'react-i18next'

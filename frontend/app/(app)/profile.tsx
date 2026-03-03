@@ -13,6 +13,7 @@ import ImageEditor from '@react-native-community/image-editor'
 import { useTheme } from '@styling/theme'
 import { deleteUser, logout, reauthenticate, useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { setLastOpenedGroupId } from '@utils/startNavigationHelper'
 import { ApiError, makeRequest, makeRequestWithFile } from '@utils/makeApiRequest'
 import { invalidateUserById } from '@utils/queryClient'
 import { Image } from 'expo-image'
@@ -301,9 +302,9 @@ function Form({ user }: { user: User }) {
           onPress={async () => {
             setIsSigningOut(true)
             await logout()
+            setLastOpenedGroupId(null)
             setIsSigningOut(false)
             router.dismissAll()
-            router.replace('/')
           }}
           isLoading={isSigningOut}
           rightIcon='logout'
