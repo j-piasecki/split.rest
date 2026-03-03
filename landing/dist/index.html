@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Split.rest - Pay once & split between the rest of the group</title>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+    :root {
+      --primary: #fcc0d2;
+      --on-primary: #650033;
+      --primary-container: #8e004a;
+      --on-primary-container: #ffd9e2;
+      --secondary: #e3bdc6;
+      --on-secondary: #422931;
+      --secondary-container: #5a3f47;
+      --on-secondary-container: #ffd9e2;
+      --surface: #1c1416;
+      --surface-container: #261d20;
+      --on-surface: #efdfe1;
+      --outline: #9e8c90;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--surface);
+      color: var(--on-surface);
+      overflow-x: hidden;
+    }
+
+    /* Resets & Utility Classes */
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    
+    img {
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* Landing Section */
+    .landing {
+      position: relative;
+      width: 100%;
+      min-height: 66vh;
+      padding: 32px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .landing-bg-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: env(safe-area-inset-top, 0);
+      background-color: var(--primary-container);
+    }
+
+    /* Triangle logic replaced with simpler rotated backgrounds or polygon clip paths, 
+       since the React Native approach specifically uses borders. We can use simplified SVGs or clip-paths */
+    .triangle-top-right {
+      position: absolute;
+      top: 0; /* Fallback for env */
+      left: 0;
+      width: 100%;
+      height: 66vh;
+      max-height: 1066px;
+      background-color: var(--primary-container);
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+      z-index: -1;
+    }
+
+    .landing-content {
+      width: 100%;
+      max-width: 1400px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .landing-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .app-name {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .app-name span {
+      color: var(--outline);
+    }
+
+    .logo-icon {
+      width: 160px;
+      height: 160px;
+      /* Inverting colors via filter for primary color approximating */
+      filter: brightness(0) saturate(100%) invert(75%) sepia(26%) saturate(479%) hue-rotate(299deg) brightness(107%) contrast(98%);
+    }
+
+    .landing-text-area {
+      flex: 1;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px 16px;
+      gap: 8px;
+    }
+
+    .headline {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--on-surface);
+      text-align: center;
+    }
+
+    .headline span {
+      color: var(--primary);
+    }
+
+    .tagline {
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--on-surface);
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .login-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      background-color: var(--primary-container);
+      color: var(--on-primary-container);
+      font-weight: 600;
+      border-radius: 8px;
+      margin: 32px 16px 0;
+      font-size: 16px;
+      transition: all 0.5s;
+      width: 100%;
+      max-width: 300px;
+      gap: 8px;
+    }
+    
+    .login-btn:hover {
+      background-color: rgb(126, 0, 65); /* Lighter primary */
+    }
+
+    .login-btn:active {
+      border-radius: 99px;
+    }
+
+    .or-divider {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+      align-items: center;
+      margin: 12px 0;
+      max-width: 450px;
+    }
+
+    .or-divider .line {
+      flex: 1;
+      height: 1px;
+      background-color: var(--outline);
+    }
+
+    .or-divider span {
+      color: var(--outline);
+    }
+
+    .store-buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      padding: 0 16px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .store-button {
+      display: block;
+      width: 135px;
+      height: 40px;
+      transition: transform 0.2s;
+    }
+    .store-button:hover {
+      transform: scale(1.05);
+    }
+
+    .landing-image {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* Section Styles */
+    .section {
+      width: 100%;
+      min-height: 133vh;
+      padding: 32px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .section-bg-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-color: var(--surface); /* Default */
+    }
+
+    .section-primary-bg .section-bg-left {
+      background-color: var(--primary-container);
+      clip-path: polygon(0 0, 0 100%, 100% 50%);
+    }
+
+    .section-secondary-bg .section-bg-left {
+      background-color: var(--secondary-container);
+      clip-path: polygon(100% 0, 100% 100%, 0 50%);
+    }
+
+    .section-content {
+      width: 100%;
+      max-width: 1400px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .section-text-container {
+      flex: 1;
+      max-width: 500px;
+    }
+
+    .section-text {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--on-surface);
+      text-align: center;
+    }
+
+    .section-image {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+    }
+
+    .section-image.big {
+      max-width: 800px;
+      border-radius: 24px;
+    }
+
+    /* Footer */
+    .footer {
+      width: 100%;
+      margin-top: 32px;
+      padding: 128px 16px;
+      background-color: var(--surface-container);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .footer-content {
+      flex: 1;
+      width: 100%;
+      max-width: 1400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .footer-links {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .footer-link {
+      color: var(--on-surface);
+      font-size: 14px;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    .footer-link:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    .footer-bottom {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .footer-brand img {
+      width: 48px;
+      height: 48px;
+    }
+
+    .footer-brand span {
+      color: var(--on-surface);
+      font-size: 18px;
+      font-weight: 400;
+    }
+
+    .footer-made-in {
+      color: var(--on-surface);
+      font-size: 18px;
+      font-weight: 400;
+      text-align: center;
+    }
+
+    /* Media Queries for >= 840px (Medium Screen or Less -> Row) */
+    @media (min-width: 840px) {
+      .landing {
+        padding: 32px 48px;
+      }
+      .landing-content {
+        flex-direction: row;
+      }
+      .landing-text-area {
+        max-width: 600px;
+      }
+      
+      .section {
+        padding: 32px 48px;
+      }
+      
+      /* In react code: backgroundLocation === 'left' ? 'row' : 'row-reverse' */
+      .section-left .section-content {
+        flex-direction: row;
+      }
+      
+      .section-right .section-content {
+        flex-direction: row-reverse;
+      }
+
+      .section-text-container {
+        transform: translateY(-140px);
+      }
+    }
+
+    /* Media Queries for >= 1200px (Expanded Screen) */
+    @media (min-width: 1200px) {
+      .footer {
+        padding-left: 128px;
+        padding-right: 128px;
+      }
+      .footer-links {
+        align-items: flex-start;
+      }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Landing Section -->
+  <header class="landing">
+    <div class="landing-bg-top"></div>
+    <div class="triangle-top-right"></div>
+    
+    <div class="landing-content">
+      <div class="landing-left">
+        <div class="logo-container">
+          <div class="app-name">Split<span>.rest</span></div>
+          <img src="assets/icon.svg" class="logo-icon" alt="Split.rest Logo" />
+        </div>
+
+        <div class="landing-text-area">
+          <h1 class="headline">Pay once and <span>split</span> between the <span>rest</span> of the group</h1>
+          <p class="tagline">Easily split expenses with friends, family, or colleagues. Using Split.rest, one person pays, and the rest of the group settles up — simple, fair, and hassle-free.</p>
+          
+          <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+            <a href="https://app.split.rest/login" class="login-btn">
+              <img src="assets/open_in_browser.svg" alt="Login" />
+              Sign in
+            </a>
+
+            <div class="or-divider">
+              <div class="line"></div>
+              <span>OR</span>
+              <div class="line"></div>
+            </div>
+
+            <div class="store-buttons">
+              <a href="https://play.google.com/store/apps/details?id=rest.split.app" target="_blank">
+                <img src="google_play.png" alt="Get it on Google Play" class="store-button" />
+              </a>
+              <a href="https://apps.apple.com/us/app/split-rest/id6740080711?platform=iphone" target="_blank">
+                <img src="app_store.png" alt="Download on the App Store" class="store-button" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <img src="assets/mocks/mock_group.png" alt="Group mockup" class="landing-image" />
+    </div>
+  </header>
+
+  <main>
+    <!-- Section 1 -->
+    <section class="section section-right section-secondary-bg">
+      <div class="section-bg-left"></div>
+      <div class="section-content">
+        <div class="section-text-container">
+          <h2 class="section-text">Available in bright colors if you are not the dead inside type</h2>
+        </div>
+        <img src="assets/mocks/mock_light_mode.png" alt="Light mode mockup" class="section-image" />
+      </div>
+    </section>
+
+    <!-- Section 2 -->
+    <section class="section section-left section-primary-bg">
+      <div class="section-bg-left"></div>
+      <div class="section-content">
+        <div class="section-text-container">
+          <h2 class="section-text">Easily view the details of each split, including edit history!</h2>
+        </div>
+        <img src="assets/mocks/mock_split.png" alt="Split mockup" class="section-image" />
+      </div>
+    </section>
+
+    <!-- Section 3 -->
+    <section class="section section-right section-secondary-bg">
+      <div class="section-bg-left"></div>
+      <div class="section-content">
+        <div class="section-text-container">
+          <h2 class="section-text">Multiple split types to choose from</h2>
+        </div>
+        <img src="assets/mocks/mock_split_types.png" alt="Split types mockup" class="section-image" />
+      </div>
+    </section>
+
+    <!-- Section 4 -->
+    <section class="section section-left section-primary-bg">
+      <div class="section-bg-left"></div>
+      <div class="section-content">
+        <div class="section-text-container">
+          <h2 class="section-text">Never be in doubt who should pay next with the roulette (it's fair, we promise)</h2>
+        </div>
+        <img src="assets/mocks/mock_roulette.png" alt="Roulette mockup" class="section-image" />
+      </div>
+    </section>
+
+    <!-- Section 5 -->
+    <section class="section section-right section-secondary-bg">
+      <div class="section-bg-left"></div>
+      <div class="section-content">
+        <div class="section-text-container">
+          <h2 class="section-text">Settle up with a single click. Well, two actually, but who's counting?</h2>
+        </div>
+        <img src="assets/mocks/mock_settleup.png" alt="Settle up mockup" class="section-image" />
+      </div>
+    </section>
+
+    <!-- Section 6 -->
+    <section class="section section-left section-primary-bg">
+      <div class="section-bg-left"></div>
+      <div class="section-content">
+        <div class="section-text-container">
+          <h2 class="section-text">Easily manage group members</h2>
+        </div>
+        <img src="assets/mocks/mock_members.png" alt="Members mockup" class="section-image" />
+      </div>
+    </section>
+
+    <!-- Section 7 (Big) -->
+    <section class="section section-right section-secondary-bg">
+      <div class="section-bg-left"></div>
+      <div class="section-content">
+        <div class="section-text-container">
+          <h2 class="section-text">Works great on both small and big screens</h2>
+        </div>
+        <img src="assets/mocks/mock_big.png" alt="Big screens mockup" class="section-image big" />
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="privacyPolicy.html" class="footer-link">Privacy policy</a>
+        <a href="mailto:contact@split.rest" class="footer-link">Contact</a>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-brand">
+          <img src="assets/icon.svg" class="logo-icon" alt="Split.rest Icon" />
+          <span>© <script>document.write(new Date().getFullYear())</script> Split.rest</span>
+        </div>
+        <div class="footer-made-in">
+          Made in Poland 🇵🇱 with ❤️
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "5YJP9RXU5N.rest.split.app",
+        "paths": ["/*"]
+      }
+    ]
+  },
+  "activitycontinuation": {
+    "apps": ["5YJP9RXU5N.rest.split.app"]
+  },
+  "webcredentials": {
+    "apps": ["5YJP9RXU5N.rest.split.app"]
+  }
+}
