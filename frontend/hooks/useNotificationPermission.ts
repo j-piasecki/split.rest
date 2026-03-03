@@ -4,6 +4,7 @@ import {
   getMessaging,
   getToken,
   registerDeviceForRemoteMessages,
+  requestPermission
 } from '@react-native-firebase/messaging'
 import { auth } from '@utils/firebase'
 import * as Notifications from 'expo-notifications'
@@ -15,7 +16,7 @@ import { AndroidNotificationChannel } from 'shared'
 async function requestPermissionAndGetToken(): Promise<string | null> {
   if (Platform.OS === 'ios') {
     const messaging = getMessaging()
-    const authStatus = await messaging.requestPermission()
+    const authStatus = await requestPermission(messaging)
     const enabled =
       authStatus === AuthorizationStatus.AUTHORIZED ||
       authStatus === AuthorizationStatus.PROVISIONAL
