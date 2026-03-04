@@ -1,7 +1,8 @@
 import { drawerSpringConfig } from '@styling/animationConfigs'
 import { useTheme } from '@styling/theme'
 import { HapticFeedback } from '@utils/hapticFeedback'
-import { usePathname, useSegments } from 'expo-router'
+import { getLastOpenedGroupId } from '@utils/startNavigationHelper'
+import { usePathname, useRouter, useSegments } from 'expo-router'
 import React, { createContext, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 import { Keyboard, Platform, StyleSheet, useWindowDimensions } from 'react-native'
 import { Gesture, GestureDetector, GestureType } from 'react-native-gesture-handler'
@@ -75,6 +76,7 @@ export function DrawerLayout({
   ref,
 }: DrawerLayoutProps) {
   const theme = useTheme()
+  const router = useRouter()
   const { width: screenWidth } = useWindowDimensions()
   const drawerWidth = propsDrawerWidth ?? Math.min(screenWidth * 0.85, 400)
   const segments = useSegments() as string[]
@@ -88,6 +90,22 @@ export function DrawerLayout({
   const isOpen = useSharedValue(false)
   const translationStart = useSharedValue(0)
   const progressStart = useSharedValue(0)
+  const lastGroupOpened = useRef(false)
+
+  useEffect(() => {
+    if (isNoGroupSelected && !lastGroupOpened.current) {
+      getLastOpenedGroupId().then((lastGroupId) => {
+        if (lastGroupId) {
+          router.replace(`/group/${lastGroupId}`)
+
+          progress.value = 0
+          isOpen.value = false
+        }
+      })
+
+      lastGroupOpened.current = true
+    }
+  }, [isNoGroupSelected, router, progress, isOpen])
 
   const drawerContainerStyle = useAnimatedStyle(() => {
     return {
