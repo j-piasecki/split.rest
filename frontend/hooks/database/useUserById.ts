@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import { User } from 'shared'
 
 let serverDown: boolean | undefined = undefined
-let lastServerDownErrorTimestamp: number = 0
 
 export function useUserById(id: string | undefined) {
   const [localServerDown, setLocalServerDown] = useState<boolean | undefined>(serverDown)
@@ -32,7 +31,6 @@ export function useUserById(id: string | undefined) {
     if (result.error instanceof ApiError && result.error.statusCode === -1) {
       serverDown = true
       setLocalServerDown(true)
-      lastServerDownErrorTimestamp = Date.now()
     } else if (result.data !== undefined) {
       serverDown = false
       setLocalServerDown(false)
@@ -41,7 +39,6 @@ export function useUserById(id: string | undefined) {
 
   return {
     user: result.data,
-    // keep a time window where the value is constant to prevent infinite render loop
-    serverDown: localServerDown && Date.now() - lastServerDownErrorTimestamp < 5000,
+    serverDown: localServerDown,
   }
 }

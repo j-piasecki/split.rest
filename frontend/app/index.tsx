@@ -4,13 +4,44 @@ import { SignInWithGoogleButton } from '@components/SignInWithGoogleButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { signInWithApple, signInWithGoogle, useAuth } from '@utils/auth'
+import { queryClient } from '@utils/queryClient'
 import { setJoinRedirect } from '@utils/startNavigationHelper'
 import { Image } from 'expo-image'
 import { useLocalSearchParams } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View, useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
+function ServerDown() {
+  const theme = useTheme()
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const { t } = useTranslation()
+  const { firebaseUser } = useAuth()
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      if (firebaseUser) {
+        queryClient.invalidateQueries({ queryKey: ['user', firebaseUser.uid] })
+      }
+    }, 10000)
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
+  }, [firebaseUser])
+
+  return (
+    <View style={{ padding: 16, alignItems: 'center', gap: 32 }}>
+      <Icon name='powerOff' size={80} color={theme.colors.onSurface} />
+      <Text style={{ fontSize: 18, textAlign: 'center', color: theme.colors.onSurface }}>
+        {t('api.serverIsNotResponding')}
+      </Text>
+    </View>
+  )
+}
 
 export default function Screen() {
   const { user, serverDown } = useAuth()
@@ -75,14 +106,7 @@ export default function Screen() {
             </Text>
           </View>
         )}
-        {serverDown && (
-          <View style={{ padding: 16, alignItems: 'center', gap: 32 }}>
-            <Icon name='powerOff' size={80} color={theme.colors.onSurface} />
-            <Text style={{ fontSize: 18, textAlign: 'center', color: theme.colors.onSurface }}>
-              {t('api.serverIsNotResponding')}
-            </Text>
-          </View>
-        )}
+        {serverDown && <ServerDown />}
         {user === null && (
           <View style={{ flex: 1, justifyContent: 'space-between' }}>
             <View
