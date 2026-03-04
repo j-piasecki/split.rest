@@ -4,7 +4,7 @@ import {
   getMessaging,
   getToken,
   registerDeviceForRemoteMessages,
-  requestPermission
+  requestPermission,
 } from '@react-native-firebase/messaging'
 import { auth } from '@utils/firebase'
 import * as Notifications from 'expo-notifications'

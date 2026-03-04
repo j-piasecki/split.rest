@@ -141,7 +141,9 @@ export default function Screen() {
               >
                 <Trans
                   i18nKey='login.youMustSignIn'
-                  components={{ Styled: <Text style={{ color: theme.colors.primary, fontWeight: 700 }} /> }}
+                  components={{
+                    Styled: <Text style={{ color: theme.colors.primary, fontWeight: 700 }} />,
+                  }}
                 />
               </Text>
             </View>

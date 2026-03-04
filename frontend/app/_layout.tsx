@@ -114,15 +114,20 @@ function Content() {
         <NavigationThemeProvider value={navigationTheme}>
           <SnackBarProvider>
             <ErrorBoundary>
-              {!isLoading && <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
-                <Stack.Protected guard={!user}>
-                  <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
-                </Stack.Protected>
+              {!isLoading && (
+                <Stack screenOptions={{ headerShown: false, fullScreenGestureEnabled: true }}>
+                  <Stack.Protected guard={!user}>
+                    <Stack.Screen
+                      name='index'
+                      options={{ title: t('appName'), animation: 'none' }}
+                    />
+                  </Stack.Protected>
 
-                <Stack.Protected guard={!!user}>
-                  <Stack.Screen name='(app)' options={{ animation: 'none' }} />
-                </Stack.Protected>
-              </Stack>}
+                  <Stack.Protected guard={!!user}>
+                    <Stack.Screen name='(app)' options={{ animation: 'none' }} />
+                  </Stack.Protected>
+                </Stack>
+              )}
 
               {loadingVisible && (
                 <Animated.View
