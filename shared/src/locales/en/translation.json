@@ -225,6 +225,10 @@
     "splitMoreMessage": "Thank you for being an early adopter! During this phase you are enjoying all benefits of Split More for free!",
     "theme": {
       "hint": "Choose your theme",
+      "themeTitle": "App theme",
+      "themeDescription": "Select the color theme for the app",
+      "colorsTitle": "Dynamic colors",
+      "colorsDescription": "Extract colors from your wallpaper to theme the app",
       "light": "Light",
       "dark": "Dark",
       "system": "System",
