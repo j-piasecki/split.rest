@@ -197,13 +197,6 @@ function Form({ user }: { user: User }) {
         </View>
 
         <DisplayNameSetter />
-
-        <LargeTextInput
-          value={user?.email ?? ''}
-          placeholder={t('settings.email')}
-          onChangeText={() => {}}
-          disabled
-        />
       </View>
 
       <PaneButton

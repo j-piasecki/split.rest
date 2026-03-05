@@ -237,7 +237,8 @@
       "deleteAccount": "Delete acount",
       "doYouWantToDeleteAccount": "Do you want to delete your account?",
       "deletionNotReversible": "This action is not reversible",
-      "accountDeleted": "Your account was deleted"
+      "accountDeleted": "Your account was deleted",
+      "explanation": "Deleting your account is permanent. This will lock you out of your account, delete your profile data, and make it impossible for you to see any pending splits or transactions."
     },
     "profilePicture": {
       "changeProfilePicture": "Change profile picture",

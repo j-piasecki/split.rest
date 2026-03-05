@@ -1,9 +1,12 @@
 import { Button } from '@components/Button'
 import { ConfirmationModal } from '@components/ConfirmationModal'
+import { LargeTextInput } from '@components/LargeTextInput'
 import ModalScreen from '@components/ModalScreen'
 import { useSnack } from '@components/SnackBar'
+import { Text } from '@components/Text'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
-import { deleteUser, logout, reauthenticate } from '@utils/auth'
+import { useTheme } from '@styling/theme'
+import { deleteUser, logout, reauthenticate, useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { setLastOpenedGroupId } from '@utils/startNavigationHelper'
 import { useRouter } from 'expo-router'
@@ -46,7 +49,9 @@ function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
 
 export default function AccountScreen() {
   const { t } = useTranslation()
+  const { user } = useAuth()
   const router = useRouter()
+  const theme = useTheme()
   const insets = useModalScreenInsets()
   const displayClass = useDisplayClass()
   const [deleteModalVisible, setDeleteModalVisible] = useState(false)
@@ -73,23 +78,29 @@ export default function AccountScreen() {
             gap: 24,
           }}
         >
-          <View style={{ gap: 16 }}>
-            <Button
-              title={t('signOut')}
-              onPress={async () => {
-                setIsSigningOut(true)
-                await logout()
-                setLastOpenedGroupId(null)
-                setIsSigningOut(false)
-                router.dismissAll()
+          <LargeTextInput
+            value={user?.email ?? ''}
+            placeholder={t('settings.email')}
+            onChangeText={() => {}}
+            disabled
+          />
+
+          {/* Don't show delete button on web on small screen; it uses redirect to sign in which requires
+           * special handling which is not implemented yet. This will break on browsers in mobile devices.
+           * which use redirect to sign in on all display classes. */}
+          {Platform.OS !== 'web' || displayClass !== DisplayClass.Small ? (
+            <View
+              style={{
+                borderColor: theme.colors.error,
+                borderWidth: 1,
+                borderRadius: 16,
+                padding: 16,
+                gap: 16,
               }}
-              isLoading={isSigningOut}
-              rightIcon='logout'
-            />
-            {/* Don't show delete button on web on small screen; it uses redirect to sign in which requires
-             * special handling which is not implemented yet. This will break on browsers in mobile devices.
-             * which use redirect to sign in on all display classes. */}
-            {(Platform.OS !== 'web' || displayClass !== DisplayClass.Small) && (
+            >
+              <Text style={{ color: theme.colors.error, fontSize: 16, fontWeight: 500 }}>
+                {t('settings.deleteAccount.explanation')}
+              </Text>
               <Button
                 destructive
                 title={t('settings.deleteAccount.deleteAccount')}
@@ -106,8 +117,25 @@ export default function AccountScreen() {
                 }}
                 leftIcon='delete'
               />
-            )}
-          </View>
+            </View>
+          ) : (
+            <View />
+          )}
+
+          <View style={{ flex: 1 }} />
+
+          <Button
+            title={t('signOut')}
+            onPress={async () => {
+              setIsSigningOut(true)
+              await logout()
+              setLastOpenedGroupId(null)
+              setIsSigningOut(false)
+              router.dismissAll()
+            }}
+            isLoading={isSigningOut}
+            rightIcon='logout'
+          />
         </ScrollView>
         <DeleteAccountModal
           visible={deleteModalVisible}
