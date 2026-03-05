@@ -329,6 +329,7 @@ export default function ProfileScreen() {
       title={t('screenName.profile')}
       maxWidth={500}
       maxHeight={660}
+      opaque={false}
     >
       {!user && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
       {user && <Form user={user} />}
