@@ -219,6 +219,9 @@
 
   "settings": {
     "username": "Display name",
+    "email": "Email",
+    "appearance": "Appearance",
+    "account": "Account",
     "splitMoreMessage": "Thank you for being an early adopter! During this phase you are enjoying all benefits of Split More for free!",
     "theme": {
       "hint": "Choose your theme",
@@ -298,7 +301,11 @@
     "roulette": "Roulette",
     "splitInfo": "Split details",
     "editSplit": "Edit split",
-    "profile": "Profile",
+    "profile": {
+      "index": "Profile",
+      "appearance": "Appearance",
+      "account": "Account"
+    },
     "members": "Members",
     "memberInfo": "Member information",
     "settleUpExactAmount": "Settle up for an exact amount",

@@ -29,7 +29,9 @@ export default function ProfileFlow() {
             animation: isSmallScreen ? 'default' : 'none',
           }}
         >
-          <Stack.Screen name='index' options={{ title: t('screenName.profile') }} />
+          <Stack.Screen name='index' options={{ title: t('screenName.profile.index') }} />
+          <Stack.Screen name='appearance' options={{ title: t('screenName.profile.appearance') }} />
+          <Stack.Screen name='account' options={{ title: t('screenName.profile.account') }} />
         </Stack>
       </ThemeProvider>
     </Animated.View>

@@ -1,21 +1,17 @@
-import { Button } from '@components/Button'
-import { ConfirmationModal } from '@components/ConfirmationModal'
-import { EditableText } from '@components/EditableText'
 import { Icon } from '@components/Icon'
+import { LargeTextInput } from '@components/LargeTextInput'
 import ModalScreen from '@components/ModalScreen'
+import { PaneButton } from '@components/PaneButton'
 import { ProfilePicture } from '@components/ProfilePicture'
-import { SegmentedButton } from '@components/SegmentedButton'
-import { useSnack } from '@components/SnackBar'
+import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useSetUserNameMutation } from '@hooks/database/useSetUserName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import ImageEditor from '@react-native-community/image-editor'
 import { useTheme } from '@styling/theme'
-import { deleteUser, logout, reauthenticate, useAuth } from '@utils/auth'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { useAuth } from '@utils/auth'
 import { ApiError, makeRequest, makeRequestWithFile } from '@utils/makeApiRequest'
 import { invalidateUserById } from '@utils/queryClient'
-import { setLastOpenedGroupId } from '@utils/startNavigationHelper'
 import { Image } from 'expo-image'
 import * as ImagePicker from 'expo-image-picker'
 import { useRouter } from 'expo-router'
@@ -27,51 +23,16 @@ import { FileUploadArguments, TranslatableError, User, isTranslatableError } fro
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const icon = require('@assets/icon.svg')
 
-interface DeleteAccountModalProps {
-  visible: boolean
-  onClose: () => void
-}
-
-function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
-  const snack = useSnack()
-  const { t } = useTranslation()
-
-  return (
-    <ConfirmationModal
-      visible={visible}
-      title='settings.deleteAccount.doYouWantToDeleteAccount'
-      message='settings.deleteAccount.deletionNotReversible'
-      confirmText='settings.deleteAccount.delete'
-      confirmIcon='delete'
-      cancelText='settings.deleteAccount.cancel'
-      cancelIcon='close'
-      destructive
-      onClose={onClose}
-      onConfirm={async () => {
-        try {
-          await deleteUser()
-          snack.show({ message: t('settings.deleteAccount.accountDeleted') })
-        } catch {
-          throw new TranslatableError('api.auth.tryAgain')
-        }
-      }}
-    />
-  )
-}
-
-function Form({ user }: { user: User }) {
+function DisplayNameSetter() {
   const theme = useTheme()
-  const router = useRouter()
-  const displayClass = useDisplayClass()
-  const insets = useModalScreenInsets()
+  const { user } = useAuth()
   const { t } = useTranslation()
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false)
-  const [isSigningOut, setIsSigningOut] = useState(false)
-  const [isChangingProfilePicture, setIsChangingProfilePicture] = useState(false)
+  const [value, setValue] = useState(user?.name ?? '')
+
   const { mutateAsync: setUserName, isPending: isChangingName } = useSetUserNameMutation()
 
-  function setName(newName: string) {
-    newName = newName.trim()
+  function saveDisplayName() {
+    const newName = value.trim()
 
     if (newName.length === 0) {
       alert(t('api.user.nameCannotBeEmpty'))
@@ -91,6 +52,48 @@ function Form({ user }: { user: User }) {
       }
     })
   }
+
+  return (
+    <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
+      <LargeTextInput
+        placeholder={t('settings.username')}
+        disabled={isChangingName}
+        value={value ?? ''}
+        onChangeText={setValue}
+        containerStyle={{ flex: 1, paddingRight: 56 }}
+        onSubmit={saveDisplayName}
+      />
+      <View
+        style={{
+          position: 'absolute',
+          right: 8,
+          top: 0,
+          bottom: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {value !== null && value !== (user?.name ?? '') && (
+          <RoundIconButton
+            opaque
+            color={theme.colors.secondary}
+            icon='saveAlt'
+            onPress={saveDisplayName}
+            size={32}
+            isLoading={isChangingName}
+          />
+        )}
+      </View>
+    </View>
+  )
+}
+
+function Form({ user }: { user: User }) {
+  const theme = useTheme()
+  const router = useRouter()
+  const insets = useModalScreenInsets()
+  const { t } = useTranslation()
+  const [isChangingProfilePicture, setIsChangingProfilePicture] = useState(false)
 
   async function changeProfilePicture() {
     try {
@@ -162,7 +165,6 @@ function Form({ user }: { user: User }) {
       }}
       contentContainerStyle={{
         flexGrow: 1,
-        justifyContent: 'space-between',
         paddingLeft: insets.left + 12,
         paddingRight: insets.right + 12,
         paddingBottom: insets.bottom,
@@ -171,150 +173,75 @@ function Form({ user }: { user: User }) {
       }}
       keyboardShouldPersistTaps='handled'
     >
-      <View style={{ gap: 24, alignItems: 'center', paddingHorizontal: 16 }}>
-        <View style={{ alignItems: 'center', gap: 4, alignSelf: 'stretch' }}>
-          <View style={{ width: '100%', alignItems: 'center' }}>
-            <Pressable onPress={changeProfilePicture}>
-              <ProfilePicture user={user} size={128} />
-              <View
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  right: 0,
-                  backgroundColor: theme.colors.surfaceContainerHighest,
-                  borderRadius: 24,
-                  padding: 4,
-                }}
-              >
-                {isChangingProfilePicture ? (
-                  <ActivityIndicator size='small' color={theme.colors.tertiary} />
-                ) : (
-                  <Icon name='upload' size={24} color={theme.colors.tertiary} />
-                )}
-              </View>
-            </Pressable>
-          </View>
-          <EditableText
-            value={user?.name}
-            placeholder={t('settings.username')}
-            isPending={isChangingName}
-            onSubmit={setName}
-            style={{ alignSelf: 'stretch', justifyContent: 'center' }}
-          />
-          <Text style={{ fontSize: 16, fontWeight: '400', color: theme.colors.onSurfaceVariant }}>
-            {user?.email}
-          </Text>
+      <View style={{ gap: 12, marginBottom: 8 }}>
+        <View style={{ alignItems: 'center' }}>
+          <Pressable onPress={changeProfilePicture}>
+            <ProfilePicture user={user} size={128} />
+            <View
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                right: 0,
+                backgroundColor: theme.colors.surfaceContainerHighest,
+                borderRadius: 24,
+                padding: 4,
+              }}
+            >
+              {isChangingProfilePicture ? (
+                <ActivityIndicator size='small' color={theme.colors.tertiary} />
+              ) : (
+                <Icon name='upload' size={24} color={theme.colors.tertiary} />
+              )}
+            </View>
+          </Pressable>
         </View>
-        <SegmentedButton
-          style={{ alignSelf: 'stretch' }}
-          items={[
-            {
-              title: t('settings.theme.light'),
-              icon: 'lightTheme',
-              selected: theme.userSelectedTheme === 'light',
-              onPress: () => theme.setTheme('light'),
-            },
-            {
-              title: t('settings.theme.dark'),
-              icon: 'darkTheme',
-              selected: theme.userSelectedTheme === 'dark',
-              onPress: () => theme.setTheme('dark'),
-            },
-            {
-              title: t('settings.theme.system'),
-              icon: 'systemTheme',
-              selected: theme.userSelectedTheme === null,
-              onPress: () => theme.setTheme(null),
-            },
-          ]}
-        />
-        {theme.isMaterialYouSupported() && (
-          <SegmentedButton
-            items={[
-              {
-                title: t('settings.theme.defaultColors'),
-                icon: 'colors',
-                selected: !theme.shouldUseMaterialYou,
-                onPress: () => theme.setShouldUseMaterialYou(false),
-              },
-              {
-                title: t('settings.theme.materialYouColors'),
-                icon: 'palette',
-                selected: theme.shouldUseMaterialYou,
-                onPress: () => theme.setShouldUseMaterialYou(true),
-              },
-            ]}
-          />
-        )}
 
-        <View
-          style={{
-            padding: 16,
-            borderRadius: 16,
-            width: '100%',
-            backgroundColor: theme.colors.surfaceContainer,
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 16,
-          }}
-        >
-          <View>
-            <Image
-              source={icon}
-              style={{ width: 48, height: 48, position: 'absolute', left: -4, top: -2 }}
-              tintColor={theme.colors.primaryContainer}
-            />
-            <Image
-              source={icon}
-              style={{ width: 48, height: 48 }}
-              tintColor={theme.colors.primary}
-            />
-          </View>
-          <Text style={{ fontSize: 14, color: theme.colors.onSurface, flexShrink: 1 }}>
-            {t('settings.splitMoreMessage')}
-          </Text>
-        </View>
-      </View>
-      <View style={{ flexDirection: 'column', gap: 16, marginTop: 24 }}>
-        {/* Don't show delete button on web on small screen; it uses redirect to sign in which requires
-         * special handling which is not implemented yet. This will break on browsers in mobile devices.
-         * which use redirect to sign in on all display classes. */}
-        {(Platform.OS !== 'web' || displayClass !== DisplayClass.Small) && (
-          <Button
-            destructive
-            title={t('settings.deleteAccount.deleteAccount')}
-            onPress={() => {
-              // skip sign in with apple reauthentication on ios, it's done automatically
-              // when refreshing token for revocation
-              reauthenticate(Platform.OS === 'ios')
-                .then(() => {
-                  setDeleteModalVisible(true)
-                })
-                .catch(() => {
-                  alert(t('api.auth.tryAgain'))
-                })
-            }}
-            leftIcon='delete'
-          />
-        )}
-        <Button
-          title={t('signOut')}
-          onPress={async () => {
-            setIsSigningOut(true)
-            await logout()
-            setLastOpenedGroupId(null)
-            setIsSigningOut(false)
-            router.dismissAll()
-          }}
-          isLoading={isSigningOut}
-          rightIcon='logout'
+        <DisplayNameSetter />
+
+        <LargeTextInput
+          value={user?.email ?? ''}
+          placeholder={t('settings.email')}
+          onChangeText={() => {}}
+          disabled
         />
       </View>
 
-      <DeleteAccountModal
-        visible={deleteModalVisible}
-        onClose={() => setDeleteModalVisible(false)}
+      <PaneButton
+        icon='palette'
+        title={t('settings.appearance')}
+        onPress={() => router.push('/profile/appearance')}
       />
+
+      <PaneButton
+        icon='user'
+        title={t('settings.account')}
+        onPress={() => router.push('/profile/account')}
+      />
+
+      <View style={{ flex: 1, minHeight: 24 }} />
+
+      <View
+        style={{
+          padding: 16,
+          borderRadius: 16,
+          backgroundColor: theme.colors.surfaceContainer,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 16,
+        }}
+      >
+        <View>
+          <Image
+            source={icon}
+            style={{ width: 48, height: 48, position: 'absolute', left: -4, top: -2 }}
+            tintColor={theme.colors.primaryContainer}
+          />
+          <Image source={icon} style={{ width: 48, height: 48 }} tintColor={theme.colors.primary} />
+        </View>
+        <Text style={{ fontSize: 14, color: theme.colors.onSurface, flexShrink: 1 }}>
+          {t('settings.splitMoreMessage')}
+        </Text>
+      </View>
     </ScrollView>
   )
 }
@@ -326,7 +253,7 @@ export default function ProfileScreen() {
   return (
     <ModalScreen
       returnPath='/group/none'
-      title={t('screenName.profile')}
+      title={t('screenName.profile.index')}
       maxWidth={500}
       maxHeight={660}
       opaque={false}
