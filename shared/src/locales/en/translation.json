@@ -219,9 +219,16 @@
 
   "settings": {
     "username": "Display name",
+    "email": "Email",
+    "appearance": "Appearance",
+    "account": "Account",
     "splitMoreMessage": "Thank you for being an early adopter! During this phase you are enjoying all benefits of Split More for free!",
     "theme": {
       "hint": "Choose your theme",
+      "themeTitle": "App theme",
+      "themeDescription": "Select the color theme for the app",
+      "colorsTitle": "Dynamic colors",
+      "colorsDescription": "Extract colors from your wallpaper to theme the app",
       "light": "Light",
       "dark": "Dark",
       "system": "System",
@@ -234,7 +241,8 @@
       "deleteAccount": "Delete acount",
       "doYouWantToDeleteAccount": "Do you want to delete your account?",
       "deletionNotReversible": "This action is not reversible",
-      "accountDeleted": "Your account was deleted"
+      "accountDeleted": "Your account was deleted",
+      "explanation": "Deleting your account is permanent. This will lock you out of your account, delete your profile data, and make it impossible for you to see any pending splits or transactions."
     },
     "profilePicture": {
       "changeProfilePicture": "Change profile picture",
@@ -298,7 +306,11 @@
     "roulette": "Roulette",
     "splitInfo": "Split details",
     "editSplit": "Edit split",
-    "profile": "Profile",
+    "profile": {
+      "index": "Profile",
+      "appearance": "Appearance",
+      "account": "Account"
+    },
     "members": "Members",
     "memberInfo": "Member information",
     "settleUpExactAmount": "Settle up for an exact amount",
