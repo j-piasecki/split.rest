@@ -30,6 +30,10 @@ export interface DeleteGhostClaimCodeArguments {
   memberId: string
 }
 
+export interface ClaimGhostUserArguments {
+  claimCode: string
+}
+
 export interface RemoveMemberFromGroupArguments {
   groupId: number
   userId: string

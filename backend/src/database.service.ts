@@ -1,5 +1,6 @@
 import { createDatabase } from './database/createDatabase'
 import { acceptGroupInvite } from './database/groups/acceptInvite'
+import { claimGhostUser } from './database/groups/claimGhostUser'
 import { createGhost } from './database/groups/createGhost'
 import { createGhostClaimCode } from './database/groups/createGhostClaimCode'
 import { createGroup } from './database/groups/createGroup'
@@ -60,6 +61,7 @@ import { Injectable } from '@nestjs/common'
 import { Pool } from 'pg'
 import {
   AcceptGroupInviteArguments,
+  ClaimGhostUserArguments,
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
   CreateGhostArguments,
@@ -155,6 +157,10 @@ export class DatabaseService {
   @RequirePermissions(['manageGhosts'])
   async deleteGhostClaimCode(callerId: string, args: DeleteGhostClaimCodeArguments) {
     return await deleteGhostClaimCode(this.pool, callerId, args)
+  }
+
+  async claimGhostUser(callerId: string, args: ClaimGhostUserArguments) {
+    return await claimGhostUser(this.pool, callerId, args)
   }
 
   @RequirePermissions(['inviteMembers'])

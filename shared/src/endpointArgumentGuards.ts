@@ -4,6 +4,7 @@ import {
   ConfirmSettleUpArguments,
   CreateGhostArguments,
   CreateGhostClaimCodeArguments,
+  ClaimGhostUserArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
@@ -72,6 +73,10 @@ export function isCreateGhostClaimCodeArguments(obj: any): obj is CreateGhostCla
 
 export function isDeleteGhostClaimCodeArguments(obj: any): obj is DeleteGhostClaimCodeArguments {
   return obj.groupId !== undefined && obj.memberId !== undefined
+}
+
+export function isClaimGhostUserArguments(obj: any): obj is ClaimGhostUserArguments {
+  return obj.claimCode !== undefined && typeof obj.claimCode === 'string'
 }
 
 export function isInviteUserToGroupArguments(obj: any): obj is InviteUserToGroupArguments {

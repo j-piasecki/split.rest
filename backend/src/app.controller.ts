@@ -21,6 +21,7 @@ import { Throttle } from '@nestjs/throttler'
 import { Request } from 'express'
 import {
   AcceptGroupInviteArguments,
+  ClaimGhostUserArguments,
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
   CreateGhostArguments,
@@ -74,6 +75,7 @@ import {
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
   isAcceptGroupInviteArguments,
+  isClaimGhostUserArguments,
   isCompleteSplitEntryArguments,
   isConfirmSettleUpArguments,
   isCreateGhostArguments,
@@ -185,6 +187,16 @@ export class AppController {
     }
 
     return await this.appService.deleteGhostClaimCode(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('claimGhostUser')
+  async claimGhostUser(@Req() request: Request, @Body() args: Partial<ClaimGhostUserArguments>) {
+    if (!isClaimGhostUserArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.claimGhostUser(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

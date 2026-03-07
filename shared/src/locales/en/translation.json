@@ -191,7 +191,8 @@
       "ghostsCannotBeAdmins": "Ghost users cannot be made moderators",
       "failedToCreateGhost": "Failed to create a local user",
       "failedToCreateGhostClaimCode": "Failed to create a claim code for the local user",
-      "notAGhost": "This action can only be performed on a local user"
+      "notAGhost": "This action can only be performed on a local user",
+      "invalidClaimCode": "The claim code is invalid or has expired"
     },
     "user": {
       "nameTooLong": "Name is too long",

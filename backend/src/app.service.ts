@@ -3,6 +3,7 @@ import { ImageService } from './image.service'
 import { Injectable } from '@nestjs/common'
 import {
   AcceptGroupInviteArguments,
+  ClaimGhostUserArguments,
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
   CreateGhostArguments,
@@ -156,6 +157,10 @@ export class AppService {
 
   async deleteGroup(callerId: string, args: DeleteGroupArguments) {
     return await this.databaseService.deleteGroup(callerId, args)
+  }
+
+  async claimGhostUser(callerId: string, args: ClaimGhostUserArguments) {
+    return await this.databaseService.claimGhostUser(callerId, args)
   }
 
   async setGroupName(callerId: string, args: SetGroupNameArguments) {
