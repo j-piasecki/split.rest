@@ -86,7 +86,8 @@ export const FloatingActionButton = React.forwardRef<
   const outerAnimatedStyle = useAnimatedStyle(() => {
     return {
       borderRadius: withSpring(isPressed ? 30 : 12, buttonCornerSpringConfig),
-      // transform: [{ scale: withSpring(isPressed ? 1.05 : 1, buttonCornerSpringConfig) }],
+      marginBottom: withSpring(isPressed ? -4 : 0, buttonCornerSpringConfig),
+      marginRight: withSpring(isPressed ? -4 : 0, buttonCornerSpringConfig),
     }
   })
 
