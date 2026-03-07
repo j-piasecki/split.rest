@@ -187,7 +187,8 @@
       "groupOwnerCannotBeRemoved": "The group owner cannot be removed from the group",
       "userWithNoAccessCannotBeMadeAdmin": "Users without group access cannot be made moderators",
       "ghostsAlwaysHaveAccess": "Ghost users must always have access to the group",
-      "ghostsCannotBeAdmins": "Ghost users cannot be made moderators"
+      "ghostsCannotBeAdmins": "Ghost users cannot be made moderators",
+      "failedToCreateGhost": "Failed to create ghost user"
     },
     "user": {
       "nameTooLong": "Name is too long",
