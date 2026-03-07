@@ -16,6 +16,7 @@ export const PermissionKeys = [
   'readMembers',
   'inviteMembers',
   'createGhosts',
+  'manageGhosts',
   'removeMembers',
   'renameGroup',
   'deleteGroup',
@@ -82,6 +83,7 @@ export const enum MembersPermissionsDTO {
   Invite = 1 << 1, // Invite new members to the group
   Remove = 1 << 2, // Remove members from the group
   CreateGhosts = 1 << 3, // Create ghost users
+  ManageGhosts = 1 << 4, // Manage ghost users (e.g. claim codes)
 }
 
 export const enum ManagePermissionsDTO {
@@ -261,6 +263,10 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return Boolean(this.members & MembersPermissionsDTO.CreateGhosts)
   }
 
+  canManageGhosts(): boolean {
+    return Boolean(this.members & MembersPermissionsDTO.ManageGhosts)
+  }
+
   canRemoveMembers(): boolean {
     return Boolean(this.members & MembersPermissionsDTO.Remove)
   }
@@ -354,6 +360,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
       readMembers: this.canReadMembers(),
       inviteMembers: this.canInviteMembers(),
       createGhosts: this.canCreateGhosts(),
+      manageGhosts: this.canManageGhosts(),
       removeMembers: this.canRemoveMembers(),
       renameGroup: this.canRenameGroup(),
       deleteGroup: this.canDeleteGroup(),

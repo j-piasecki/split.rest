@@ -24,10 +24,12 @@ import {
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
   CreateGhostArguments,
+  CreateGhostClaimCodeArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
   CreateSplitArguments,
+  DeleteGhostClaimCodeArguments,
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
@@ -75,10 +77,12 @@ import {
   isCompleteSplitEntryArguments,
   isConfirmSettleUpArguments,
   isCreateGhostArguments,
+  isCreateGhostClaimCodeArguments,
   isCreateGroupArguments,
   isCreateGroupJoinLinkArguments,
   isCreateOrUpdateUserArguments,
   isCreateSplitArguments,
+  isDeleteGhostClaimCodeArguments,
   isDeleteGroupArguments,
   isDeleteGroupJoinLinkArguments,
   isDeleteSplitArguments,
@@ -155,6 +159,32 @@ export class AppController {
     }
 
     return await this.appService.createGhost(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('createGhostClaimCode')
+  async createGhostClaimCode(
+    @Req() request: Request,
+    @Body() args: Partial<CreateGhostClaimCodeArguments>
+  ) {
+    if (!isCreateGhostClaimCodeArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.createGhostClaimCode(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('deleteGhostClaimCode')
+  async deleteGhostClaimCode(
+    @Req() request: Request,
+    @Body() args: Partial<DeleteGhostClaimCodeArguments>
+  ) {
+    if (!isDeleteGhostClaimCodeArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.deleteGhostClaimCode(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

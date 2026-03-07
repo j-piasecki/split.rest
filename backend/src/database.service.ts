@@ -1,8 +1,10 @@
 import { createDatabase } from './database/createDatabase'
 import { acceptGroupInvite } from './database/groups/acceptInvite'
 import { createGhost } from './database/groups/createGhost'
+import { createGhostClaimCode } from './database/groups/createGhostClaimCode'
 import { createGroup } from './database/groups/createGroup'
 import { createGroupJoinLink } from './database/groups/createGroupJoinLink'
+import { deleteGhostClaimCode } from './database/groups/deleteGhostClaimCode'
 import { deleteGroup } from './database/groups/deleteGroup'
 import { deleteGroupJoinLink } from './database/groups/deleteGroupJoinLink'
 import { getBalances } from './database/groups/getBalances'
@@ -61,10 +63,12 @@ import {
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
   CreateGhostArguments,
+  CreateGhostClaimCodeArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
   CreateSplitArguments,
+  DeleteGhostClaimCodeArguments,
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
@@ -141,6 +145,16 @@ export class DatabaseService {
   @RequirePermissions(['createGhosts'])
   async createGhost(callerId: string, args: CreateGhostArguments) {
     return await createGhost(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['manageGhosts'])
+  async createGhostClaimCode(callerId: string, args: CreateGhostClaimCodeArguments) {
+    return await createGhostClaimCode(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['manageGhosts'])
+  async deleteGhostClaimCode(callerId: string, args: DeleteGhostClaimCodeArguments) {
+    return await deleteGhostClaimCode(this.pool, callerId, args)
   }
 
   @RequirePermissions(['inviteMembers'])

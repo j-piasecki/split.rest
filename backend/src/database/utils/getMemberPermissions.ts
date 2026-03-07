@@ -30,7 +30,8 @@ export const ownerPermissions: GroupMemberPermissionsDTO = {
     MembersPermissionsDTO.Read |
     MembersPermissionsDTO.Invite |
     MembersPermissionsDTO.Remove |
-    MembersPermissionsDTO.CreateGhosts,
+    MembersPermissionsDTO.CreateGhosts |
+    MembersPermissionsDTO.ManageGhosts,
   manage:
     ManagePermissionsDTO.Rename |
     ManagePermissionsDTO.Delete |
@@ -74,7 +75,8 @@ const adminPermissions: GroupMemberPermissionsDTO = {
     MembersPermissionsDTO.Read |
     MembersPermissionsDTO.Invite |
     MembersPermissionsDTO.Remove |
-    MembersPermissionsDTO.CreateGhosts,
+    MembersPermissionsDTO.CreateGhosts |
+    MembersPermissionsDTO.ManageGhosts,
   manage:
     ManagePermissionsDTO.Rename |
     ManagePermissionsDTO.SeeJoinLink |

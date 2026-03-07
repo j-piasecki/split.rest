@@ -20,6 +20,16 @@ export interface CreateGhostArguments {
   name: string
 }
 
+export interface CreateGhostClaimCodeArguments {
+  groupId: number
+  memberId: string
+}
+
+export interface DeleteGhostClaimCodeArguments {
+  groupId: number
+  memberId: string
+}
+
 export interface RemoveMemberFromGroupArguments {
   groupId: number
   userId: string

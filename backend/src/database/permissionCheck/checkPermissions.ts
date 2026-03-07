@@ -202,6 +202,13 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
           continue
         }
 
+        case 'manageGhosts': {
+          if (!callerPermissions?.canManageGhosts()) {
+            return 'api.insufficientPermissions.group.manageGhosts'
+          }
+          continue
+        }
+
         case 'removeMembers': {
           const args = unsafeArgs as PermissionArguments<['removeMembers']>
 

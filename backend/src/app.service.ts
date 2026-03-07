@@ -6,10 +6,12 @@ import {
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
   CreateGhostArguments,
+  CreateGhostClaimCodeArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
   CreateSplitArguments,
+  DeleteGhostClaimCodeArguments,
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
@@ -71,6 +73,14 @@ export class AppService {
 
   async createGhost(userId: string, args: CreateGhostArguments) {
     return await this.databaseService.createGhost(userId, args)
+  }
+
+  async createGhostClaimCode(userId: string, args: CreateGhostClaimCodeArguments) {
+    return await this.databaseService.createGhostClaimCode(userId, args)
+  }
+
+  async deleteGhostClaimCode(userId: string, args: DeleteGhostClaimCodeArguments) {
+    return await this.databaseService.deleteGhostClaimCode(userId, args)
   }
 
   async inviteUser(callerId: string, args: InviteUserToGroupArguments) {
