@@ -11,6 +11,7 @@ import { deleteGroupJoinLink } from './database/groups/deleteGroupJoinLink'
 import { getBalances } from './database/groups/getBalances'
 import { getDirectGroupInvites } from './database/groups/getDirectGroupInvites'
 import { getGroupInfo } from './database/groups/getGroupInfo'
+import { getGroupInviteByClaimCode } from './database/groups/getGroupInviteByClaimCode'
 import { getGroupInviteByLink } from './database/groups/getGroupInviteByLink'
 import { getGroupJoinLink } from './database/groups/getGroupJoinLink'
 import { getGroupMembers } from './database/groups/getGroupMembers'
@@ -77,6 +78,7 @@ import {
   GetBalancesArguments,
   GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
+  GetGroupInviteByClaimCodeArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberInfoArguments,
@@ -270,6 +272,10 @@ export class DatabaseService {
   // Every user can get group info by link if they have it
   async getGroupInviteByLink(callerId: string, args: GetGroupInviteByLinkArguments) {
     return await getGroupInviteByLink(this.pool, callerId, args)
+  }
+
+  async getGroupInviteByClaimCode(callerId: string, args: GetGroupInviteByClaimCodeArguments) {
+    return await getGroupInviteByClaimCode(this.pool, callerId, args)
   }
 
   @RequirePermissions(['createJoinLink'])

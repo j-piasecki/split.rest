@@ -215,6 +215,11 @@ export interface GroupInviteWithInvitee extends GroupInvite {
   invitee: User
 }
 
+export interface GroupInviteByClaimCodeResponse {
+  invite: GroupInviteWithGroupInfoAndMemberIds
+  splits: SplitInfo[]
+}
+
 export function isUser(obj: any): obj is User {
   return (
     obj.id !== undefined &&

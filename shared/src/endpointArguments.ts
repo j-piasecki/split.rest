@@ -25,6 +25,10 @@ export interface CreateGhostClaimCodeArguments {
   memberId: string
 }
 
+export interface GetGroupInviteByClaimCodeArguments {
+  claimCode: string
+}
+
 export interface DeleteGhostClaimCodeArguments {
   groupId: number
   memberId: string

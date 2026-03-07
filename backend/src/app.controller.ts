@@ -38,6 +38,7 @@ import {
   GetBalancesArguments,
   GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
+  GetGroupInviteByClaimCodeArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberInfoArguments,
@@ -91,6 +92,7 @@ import {
   isGetBalancesArguments,
   isGetDirectGroupInvitesArguments,
   isGetGroupInfoArguments,
+  isGetGroupInviteByClaimCodeArguments,
   isGetGroupInviteByLinkArguments,
   isGetGroupJoinLinkArguments,
   isGetGroupMemberInfoArguments,
@@ -440,6 +442,19 @@ export class AppController {
     }
 
     return await this.appService.getGroupInviteByLink(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getGroupInviteByClaimCode')
+  async getGroupInviteByClaimCode(
+    @Req() request: Request,
+    @Query() args: GetGroupInviteByClaimCodeArguments
+  ) {
+    if (!isGetGroupInviteByClaimCodeArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.getGroupInviteByClaimCode(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

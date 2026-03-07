@@ -20,6 +20,7 @@ import {
   GetBalancesArguments,
   GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
+  GetGroupInviteByClaimCodeArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberInfoArguments,
@@ -173,6 +174,10 @@ export class AppService {
 
   async getGroupInviteByLink(callerId: string, args: GetGroupInviteByLinkArguments) {
     return await this.databaseService.getGroupInviteByLink(callerId, args)
+  }
+
+  async getGroupInviteByClaimCode(callerId: string, args: GetGroupInviteByClaimCodeArguments) {
+    return await this.databaseService.getGroupInviteByClaimCode(callerId, args)
   }
 
   async createGroupJoinLink(callerId: string, args: CreateGroupJoinLinkArguments) {

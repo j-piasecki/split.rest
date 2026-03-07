@@ -16,6 +16,7 @@ import {
   GetBalancesArguments,
   GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
+  GetGroupInviteByClaimCodeArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberInfoArguments,
@@ -198,8 +199,16 @@ export function isDeleteGroupJoinLinkArguments(obj: any): obj is DeleteGroupJoin
   return obj.groupId !== undefined
 }
 
-export function isGetGroupInviteByLinkArguments(obj: any): obj is GetGroupInviteByLinkArguments {
-  return obj.uuid !== undefined
+export function isGetGroupInviteByLinkArguments(
+  args: any
+): args is GetGroupInviteByLinkArguments {
+  return typeof args?.uuid === 'string'
+}
+
+export function isGetGroupInviteByClaimCodeArguments(
+  args: any
+): args is GetGroupInviteByClaimCodeArguments {
+  return typeof args?.claimCode === 'string'
 }
 
 export function isJoinGroupByLinkArguments(obj: any): obj is JoinGroupByLinkArguments {
