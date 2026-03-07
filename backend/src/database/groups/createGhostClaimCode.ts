@@ -36,7 +36,7 @@ export async function createGhostClaimCode(
 
     const claimCode = crypto.randomUUID()
 
-    await client.query(
+    const result = await client.query(
       `
       UPDATE ghost_users
       SET claim_code = $1, code_created_at = $2
@@ -44,6 +44,10 @@ export async function createGhostClaimCode(
       `,
       [claimCode, Date.now(), args.memberId, args.groupId]
     )
+
+    if (result.rowCount === 0) {
+      throw new NotFoundException('api.notFound.user')
+    }
 
     await client.query('COMMIT')
 
