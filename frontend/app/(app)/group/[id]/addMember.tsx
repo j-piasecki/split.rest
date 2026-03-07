@@ -278,8 +278,8 @@ export default function Modal() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.addMember')}
-      maxWidth={400}
-      maxHeight={600}
+      maxWidth={500}
+      maxHeight={650}
     >
       <ScrollView
         contentContainerStyle={{
