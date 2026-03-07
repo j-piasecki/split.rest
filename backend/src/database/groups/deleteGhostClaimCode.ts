@@ -33,7 +33,7 @@ export async function deleteGhostClaimCode(
       throw new ForbiddenException('api.group.notAGhost')
     }
 
-    await client.query(
+    const result = await client.query(
       `
       UPDATE ghost_users
       SET claim_code = NULL
@@ -41,6 +41,10 @@ export async function deleteGhostClaimCode(
       `,
       [args.memberId, args.groupId]
     )
+
+    if (result.rowCount === 0) {
+      throw new NotFoundException('api.notFound.user')
+    }
 
     await client.query('COMMIT')
   } catch (e) {
