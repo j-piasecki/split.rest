@@ -1,3 +1,4 @@
+import { Button } from '@components/Button'
 import { ButtonShimmer } from '@components/ButtonShimmer'
 import { ButtonWithSecondaryActions } from '@components/ButtonWithSecondaryActions'
 import { ConfirmationModal } from '@components/ConfirmationModal'
@@ -10,6 +11,8 @@ import { RoundIconButton } from '@components/RoundIconButton'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { SplitsList } from '@components/groupScreen/SplitsList'
+import { useCreateGhostClaimCode } from '@hooks/database/useCreateGhostClaimCode'
+import { useDeleteGhostClaimCode } from '@hooks/database/useDeleteGhostClaimCode'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
@@ -23,6 +26,7 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
+import * as Clipboard from 'expo-clipboard'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -32,6 +36,7 @@ import {
   CurrencyUtils,
   GroupUserInfo,
   Member,
+  MemberWithClaimCode,
   SplitInfo,
   TranslatableError,
   isTranslatableError,
@@ -404,13 +409,69 @@ function MemberActions({
   )
 }
 
+function ClaimCodeManagement({
+  groupInfo,
+  memberInfo,
+}: {
+  groupInfo: GroupUserInfo
+  memberInfo: MemberWithClaimCode
+}) {
+  const { t } = useTranslation()
+  const { mutateAsync: createClaimCode, isPending: isCreating } = useCreateGhostClaimCode()
+  const { mutateAsync: deleteClaimCode, isPending: isDeleting } = useDeleteGhostClaimCode()
+
+  if (!groupInfo.permissions?.canManageGhosts?.() || !memberInfo.isGhost) {
+    return null
+  }
+
+  return (
+    <ButtonShimmer argument={groupInfo && memberInfo}>
+      {() => {
+        if (!memberInfo.claimCode) {
+          return (
+            <Button
+              leftIcon='addLink'
+              title={t('memberInfo.generateClaimCode')}
+              isLoading={isCreating}
+              onPress={async () => {
+                await createClaimCode({ groupId: groupInfo.id, memberId: memberInfo.id })
+              }}
+            />
+          )
+        } else {
+          return (
+            <View style={{ flexDirection: 'row', gap: 8 }}>
+              <Button
+                style={{ flex: 1 }}
+                leftIcon='copy'
+                title={t('memberInfo.copyClaimCode')}
+                onPress={async () => {
+                  await Clipboard.setStringAsync(memberInfo.claimCode!)
+                }}
+              />
+              <Button
+                destructive
+                leftIcon='deleteLink'
+                isLoading={isDeleting}
+                onPress={async () => {
+                  await deleteClaimCode({ groupId: groupInfo.id, memberId: memberInfo.id })
+                }}
+              />
+            </View>
+          )
+        }
+      }}
+    </ButtonShimmer>
+  )
+}
+
 export function MemberInfo({
   groupInfo,
   memberInfo,
   splits,
 }: {
   groupInfo?: GroupUserInfo
-  memberInfo?: Member
+  memberInfo?: MemberWithClaimCode
   splits?: SplitInfo[]
 }) {
   const { user } = useAuth()
@@ -556,12 +617,20 @@ export function MemberInfo({
         </View>
       </Pane>
 
+      {groupInfo && memberInfo && (
+        <ClaimCodeManagement groupInfo={groupInfo} memberInfo={memberInfo} />
+      )}
+
       <ShimmerPlaceholder
         argument={groupInfo && memberInfo}
         shimmerStyle={{ width: '100%', height: 72 }}
       >
         <DisplayNameSetter groupInfo={groupInfo!} memberInfo={memberInfo!} />
       </ShimmerPlaceholder>
+
+      {groupInfo && memberInfo && (
+        <MemberActions groupInfo={groupInfo} memberInfo={memberInfo} splits={splits} />
+      )}
 
       {memberId !== user?.id && (
         <ButtonShimmer argument={groupInfo && memberInfo}>
@@ -588,10 +657,6 @@ export function MemberInfo({
           }
         </ButtonShimmer>
       )}
-
-      {groupInfo && memberInfo && (
-        <MemberActions groupInfo={groupInfo} memberInfo={memberInfo} splits={splits} />
-      )}
     </View>
   )
 }
@@ -601,7 +666,7 @@ function MemberScreen({
   memberInfo,
 }: {
   groupInfo?: GroupUserInfo
-  memberInfo?: Member
+  memberInfo?: MemberWithClaimCode
 }) {
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
