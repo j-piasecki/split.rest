@@ -83,8 +83,8 @@ export class ImageService {
     }
 
     await sharp(imageBuffer)
-      .resize(options.resize?.width ?? 128, options.resize?.height ?? 128)
-      .toFormat('jpg', { quality: 80 })
+      .resize(options.resize?.width ?? 192, options.resize?.height ?? 192)
+      .toFormat('jpg', { quality: 85 })
       .toFile(path)
   }
 
@@ -125,8 +125,8 @@ export class ImageService {
     const photo = await fetch(url)
     const buffer = await photo.arrayBuffer()
     await sharp(Buffer.from(buffer))
-      .resize(128, 128)
-      .toFormat('jpg', { quality: 80 })
+      .resize(192, 192)
+      .toFormat('jpg', { quality: 85 })
       .toFile(`public/${id}.jpg`)
   }
 
