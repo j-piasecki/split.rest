@@ -53,11 +53,15 @@ export default function Screen() {
   const [signingIn, setSigningIn] = useState(false)
 
   useEffect(() => {
-    setJoinRedirect(joinUuid as string)
+    if (joinUuid) {
+      setJoinRedirect(joinUuid as string)
+    }
   }, [joinUuid])
 
   useEffect(() => {
-    setClaimRedirect(claimCode as string)
+    if (claimCode) {
+      setClaimRedirect(claimCode as string)
+    }
   }, [claimCode])
 
   return (
