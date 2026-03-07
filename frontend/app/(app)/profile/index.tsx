@@ -173,7 +173,7 @@ function Form({ user }: { user: User }) {
       }}
       keyboardShouldPersistTaps='handled'
     >
-      <View style={{ gap: 12, marginBottom: 8 }}>
+      <View style={{ gap: 20 }}>
         <View style={{ alignItems: 'center' }}>
           <Pressable onPress={changeProfilePicture}>
             <ProfilePicture user={user} size={128} />

@@ -33,10 +33,6 @@ export default function AppLayout() {
             ...modalOptions,
           }}
         />
-        <Stack.Screen
-          name='profile'
-          options={{ title: t('screenName.profile'), ...modalOptions }}
-        />
       </Stack>
     </DrawerLayout>
   )
