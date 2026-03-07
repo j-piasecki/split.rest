@@ -54,6 +54,10 @@ export interface MaybeMember extends User {
   isGhost: boolean | null
 }
 
+export interface GhostClaimCode {
+  claimCode: string | null
+}
+
 export interface BalanceChange {
   id: string
   change: string

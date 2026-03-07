@@ -6,13 +6,13 @@ import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { userExists } from '../utils/userExists'
 import * as crypto from 'crypto'
 import { Pool } from 'pg'
-import { CreateGhostClaimCodeArguments } from 'shared'
+import { CreateGhostClaimCodeArguments, GhostClaimCode } from 'shared'
 
 export async function createGhostClaimCode(
   pool: Pool,
   callerId: string,
   args: CreateGhostClaimCodeArguments
-): Promise<string> {
+): Promise<GhostClaimCode> {
   const client = await pool.connect()
 
   try {
@@ -47,7 +47,7 @@ export async function createGhostClaimCode(
 
     await client.query('COMMIT')
 
-    return claimCode
+    return { claimCode }
   } catch (e) {
     await client.query('ROLLBACK')
     throw e

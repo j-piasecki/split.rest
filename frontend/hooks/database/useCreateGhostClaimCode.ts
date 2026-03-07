@@ -1,24 +1,24 @@
 import { useMutation } from '@tanstack/react-query'
 import { makeRequest } from '@utils/makeApiRequest'
 import { invalidateGroupMember } from '@utils/queryClient'
-import { CreateGhostClaimCodeArguments, TranslatableError } from 'shared'
+import { CreateGhostClaimCodeArguments, GhostClaimCode, TranslatableError } from 'shared'
 
 export function useCreateGhostClaimCode() {
   return useMutation({
     mutationFn: async (args: CreateGhostClaimCodeArguments): Promise<string> => {
-      const claimCode = await makeRequest<CreateGhostClaimCodeArguments, string>(
+      const result = await makeRequest<CreateGhostClaimCodeArguments, GhostClaimCode>(
         'POST',
         'createGhostClaimCode',
         args
       )
 
-      if (claimCode === null) {
+      if (result === null || result.claimCode === null) {
         throw new TranslatableError('api.group.failedToCreateGhostClaimCode')
       }
 
       await invalidateGroupMember(args.groupId, args.memberId)
 
-      return claimCode
+      return result.claimCode
     },
   })
 }
