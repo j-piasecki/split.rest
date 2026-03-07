@@ -60,11 +60,6 @@ function DisplayNameSetter({
       return
     }
 
-    if (value.length === 0) {
-      alert(t('api.user.nameCannotBeEmpty'))
-      return
-    }
-
     if (value.length > 128) {
       alert(t('api.user.nameTooLong'))
       return
@@ -72,6 +67,15 @@ function DisplayNameSetter({
 
     setDisplayName(value)
   }
+
+  async function deleteDisplayName() {
+    await setDisplayName(null)
+    setValue(null)
+  }
+
+  const showSaveButton =
+    canEditDisplayName && value !== null && value !== (memberInfo.displayName ?? '')
+  const showDeleteButton = !showSaveButton && memberInfo.displayName !== null
 
   return (
     <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
@@ -82,6 +86,7 @@ function DisplayNameSetter({
         onChangeText={setValue}
         containerStyle={{ flex: 1, paddingRight: 56 }}
         onSubmit={saveDisplayName}
+        autoCorrect={false}
       />
       <View
         style={{
@@ -93,12 +98,12 @@ function DisplayNameSetter({
           alignItems: 'center',
         }}
       >
-        {canEditDisplayName && value !== null && value !== (memberInfo.displayName ?? '') && (
+        {(showSaveButton || showDeleteButton) && (
           <RoundIconButton
             opaque
             color={theme.colors.secondary}
-            icon='saveAlt'
-            onPress={saveDisplayName}
+            icon={showSaveButton ? 'saveAlt' : 'close'}
+            onPress={showSaveButton ? saveDisplayName : deleteDisplayName}
             size={32}
             isLoading={isChangingDisplayName}
           />

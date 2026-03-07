@@ -62,6 +62,7 @@ function DisplayNameSetter() {
         onChangeText={setValue}
         containerStyle={{ flex: 1, paddingRight: 56 }}
         onSubmit={saveDisplayName}
+        autoCorrect={false}
       />
       <View
         style={{

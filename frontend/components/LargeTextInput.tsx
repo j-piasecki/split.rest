@@ -16,6 +16,7 @@ interface LargeTextInputProps {
   containerStyle?: StyleProp<ViewStyle>
   disabled?: boolean
   onSubmit?: () => void
+  autoCorrect?: boolean
 }
 
 export function LargeTextInput({
@@ -29,6 +30,7 @@ export function LargeTextInput({
   containerStyle,
   disabled = false,
   onSubmit,
+  autoCorrect,
 }: LargeTextInputProps) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
@@ -72,6 +74,7 @@ export function LargeTextInput({
         onBlur={onBlur}
         editable={!disabled}
         onSubmitEditing={onSubmit}
+        autoCorrect={autoCorrect}
       />
     </Pressable>
   )
