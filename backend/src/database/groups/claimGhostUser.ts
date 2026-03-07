@@ -45,21 +45,27 @@ export async function claimGhostUser(
     // 3. Sequentially UPDATE all child tables safely mapping ghostId to callerId
     // We update ONLY the rows for the specific group_id to ensure we do not touch rows belonging to other groups if the ghost was somehow reused (though it shouldn't be based on the model).
 
-    // group_members (user_id and invited_by)
+    // group_members (user_id)
+    // Lock the row first to prevent concurrent deletion racing the claim
+    const lockRes = await client.query(
+      `
+      SELECT 1
+      FROM group_members
+      WHERE group_id = $1 AND user_id = $2
+      FOR UPDATE
+      `,
+      [groupId, ghostId]
+    )
+
+    if (lockRes.rowCount === 0) {
+      throw new NotFoundException('api.group.userNotInGroup')
+    }
+
     await client.query(
       `
       UPDATE group_members
       SET user_id = $1
       WHERE group_id = $2 AND user_id = $3
-      `,
-      [callerId, groupId, ghostId]
-    )
-
-    await client.query(
-      `
-      UPDATE group_members
-      SET invited_by = $1
-      WHERE group_id = $2 AND invited_by = $3
       `,
       [callerId, groupId, ghostId]
     )
