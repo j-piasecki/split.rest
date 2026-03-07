@@ -6,7 +6,7 @@ import { Pool } from 'pg'
 import { CreateGhostArguments, Member } from 'shared'
 
 function getGhostProfilePicture() {
-  const NUMBER_OF_PICTURES = 18
+  const NUMBER_OF_PICTURES = 27
 
   return Math.floor(Math.random() * NUMBER_OF_PICTURES) + 1
 }
