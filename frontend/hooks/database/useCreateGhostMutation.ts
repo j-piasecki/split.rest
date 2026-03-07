@@ -6,11 +6,7 @@ import { CreateGhostArguments, Member, TranslatableError } from 'shared'
 async function createGhost(groupId: number, name: string) {
   const args: CreateGhostArguments = { groupId, name }
 
-  const response = await makeRequest<CreateGhostArguments, Member>(
-    'POST',
-    'createGhost',
-    args
-  )
+  const response = await makeRequest<CreateGhostArguments, Member>('POST', 'createGhost', args)
 
   if (!response) {
     throw new TranslatableError('api.group.failedToCreateGhost')
