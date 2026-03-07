@@ -213,14 +213,21 @@ export function AddByNamePane() {
   )
 
   function handlePress() {
-    if (name.trim() === '') {
+    const nameToUse = name.trim()
+
+    if (nameToUse === '') {
       setAddingError(new TranslatableError('api.user.nameCannotBeEmpty'))
       return
     }
 
-    createGhost(name)
+    if (nameToUse.length > 128) {
+      setAddingError(new TranslatableError('api.user.nameTooLong'))
+      return
+    }
+
+    createGhost(nameToUse)
       .then(() => {
-        snack.show({ message: t('addMember.addByNameSuccess', { name }) })
+        snack.show({ message: t('addMember.addByNameSuccess', { name: nameToUse }) })
         if (router.canGoBack()) {
           router.back()
         } else {
