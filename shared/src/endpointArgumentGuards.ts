@@ -66,15 +66,11 @@ export function isCreateGhostArguments(obj: any): obj is CreateGhostArguments {
   return obj.groupId !== undefined && obj.name !== undefined
 }
 
-export function isCreateGhostClaimCodeArguments(
-  obj: any
-): obj is CreateGhostClaimCodeArguments {
+export function isCreateGhostClaimCodeArguments(obj: any): obj is CreateGhostClaimCodeArguments {
   return obj.groupId !== undefined && obj.memberId !== undefined
 }
 
-export function isDeleteGhostClaimCodeArguments(
-  obj: any
-): obj is DeleteGhostClaimCodeArguments {
+export function isDeleteGhostClaimCodeArguments(obj: any): obj is DeleteGhostClaimCodeArguments {
   return obj.groupId !== undefined && obj.memberId !== undefined
 }
 
