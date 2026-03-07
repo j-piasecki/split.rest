@@ -39,6 +39,7 @@ export interface Member extends User {
   isAdmin: boolean
   hasAccess: boolean
   displayName: string | null
+  isGhost: boolean
 }
 
 export interface MaybeMember extends User {
@@ -46,6 +47,7 @@ export interface MaybeMember extends User {
   isAdmin: boolean | null
   hasAccess: boolean | null
   displayName: string | null
+  isGhost: boolean | null
 }
 
 export interface BalanceChange {

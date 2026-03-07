@@ -4,6 +4,7 @@ import {
   DEFAULT_BALANCE_WHEN_NOT_SET,
   DEFAULT_HAS_ACCESS_WHEN_NOT_SET,
   DEFAULT_IS_ADMIN_WHEN_NOT_SET,
+  DEFAULT_IS_GHOST_WHEN_NOT_SET,
   Member,
 } from 'shared'
 import { SplitType, SplitWithUsers } from 'shared'
@@ -24,6 +25,7 @@ export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
         balance: user.balance ?? DEFAULT_BALANCE_WHEN_NOT_SET,
         isAdmin: user.isAdmin ?? DEFAULT_IS_ADMIN_WHEN_NOT_SET,
         hasAccess: user.hasAccess ?? DEFAULT_HAS_ACCESS_WHEN_NOT_SET,
+        isGhost: user.isGhost ?? DEFAULT_IS_GHOST_WHEN_NOT_SET,
       }
 
       if (splitInfo.type === SplitType.BalanceChange) {

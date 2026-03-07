@@ -112,6 +112,7 @@ export default function Modal() {
             isAdmin: groupInfo?.isAdmin ?? DEFAULT_IS_ADMIN_WHEN_NOT_SET,
             hasAccess: groupInfo?.hasAccess ?? DEFAULT_HAS_ACCESS_WHEN_NOT_SET,
             displayName: DEFAULT_DISPLAY_NAME_WHEN_NOT_SET,
+            isGhost: false, // A real user should never be marked as ghost
           },
           value: '0.00',
         },
