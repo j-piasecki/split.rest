@@ -35,7 +35,7 @@ function useUserByEmail(email: string): [User | null, boolean, string | null] {
     }
 
     if (debouncedEmail.length > 512) {
-      setError(new TranslatableError('inviteMember.emailIsTooLong'))
+      setError(new TranslatableError('addMember.emailIsTooLong'))
       return
     }
 
@@ -45,7 +45,7 @@ function useUserByEmail(email: string): [User | null, boolean, string | null] {
     getUserByEmail(email)
       .then((user) => {
         if (user === null) {
-          setError(new TranslatableError('inviteMember.userNotFound'))
+          setError(new TranslatableError('addMember.userNotFound'))
           return
         }
 
@@ -128,7 +128,7 @@ function UserPicker() {
 
   function handlePress() {
     if (user === null) {
-      setAddingError(new TranslatableError('inviteMember.userNotFound'))
+      setAddingError(new TranslatableError('addMember.userNotFound'))
       return
     }
 
@@ -136,7 +136,7 @@ function UserPicker() {
       .then(() => {
         if (groupInfo?.permissions?.canManageDirectInvites?.()) {
           snack.show({
-            message: t('inviteMember.inviteSent', { name: user.name }),
+            message: t('addMember.inviteSent', { name: user.name }),
             actionText: t('undo'),
             action: async () => {
               try {
@@ -151,7 +151,7 @@ function UserPicker() {
             },
           })
         } else {
-          snack.show({ message: t('inviteMember.inviteSent', { name: user.name }) })
+          snack.show({ message: t('addMember.inviteSent', { name: user.name }) })
         }
 
         if (router.canGoBack()) {
@@ -181,7 +181,7 @@ function UserPicker() {
       <View style={{ gap: 16 }}>
         <Pane
           icon='user'
-          title={t('inviteMember.findByEmail')}
+          title={t('addMember.findByEmail')}
           textLocation='start'
           containerStyle={{ padding: 16, gap: 32 }}
         >
@@ -208,7 +208,7 @@ function UserPicker() {
         {addingError && <ErrorText>{addingError}</ErrorText>}
         <Button
           leftIcon='addMember'
-          title={t('inviteMember.inviteMember')}
+          title={t('addMember.inviteMember')}
           onPress={handlePress}
           isLoading={isAddingToGroup}
           disabled={isAddingToGroup || waiting || user === null}
@@ -225,7 +225,7 @@ export default function Modal() {
   return (
     <ModalScreen
       returnPath={`/group/${id}`}
-      title={t('screenName.inviteMember')}
+      title={t('screenName.addMember')}
       maxWidth={400}
       maxHeight={600}
     >

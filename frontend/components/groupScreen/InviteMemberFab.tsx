@@ -35,9 +35,9 @@ export function InviteMemberFab({
         <FloatingActionButton
           ref={fabRef}
           icon='addMember'
-          title={iconOnly ? '' : t('inviteMember.inviteMember')}
+          title={iconOnly ? '' : t('addMember.addMember')}
           onPress={() => {
-            router.navigate(`/group/${info?.id}/inviteMember`)
+            router.navigate(`/group/${info?.id}/addMember`)
           }}
         />
       </View>

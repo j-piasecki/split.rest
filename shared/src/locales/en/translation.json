@@ -306,7 +306,7 @@
     "groupInvites": "Group invites",
     "createGroup": "Create group",
     "group": "Group",
-    "inviteMember": "Invite member",
+    "addMember": "Add member",
     "roulette": "Roulette",
     "splitInfo": "Split details",
     "editSplit": "Edit split",
@@ -498,7 +498,8 @@
     "changeYearOverYear": "Change year-over-year:"
   },
 
-  "inviteMember": {
+  "addMember": {
+    "addMember": "Add member",
     "findByEmail": "Find by e-mail",
     "emailIsTooLong": "E-mail is too long",
     "userNotFound": "User not found",
