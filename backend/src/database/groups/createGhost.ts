@@ -5,6 +5,12 @@ import * as crypto from 'crypto'
 import { Pool } from 'pg'
 import { CreateGhostArguments, Member } from 'shared'
 
+function getGhostProfilePicture() {
+  const NUMBER_OF_PICTURES = 18
+
+  return Math.floor(Math.random() * NUMBER_OF_PICTURES) + 1
+}
+
 export async function createGhost(
   pool: Pool,
   callerId: string,
@@ -34,10 +40,10 @@ export async function createGhost(
     // Create the user record
     await client.query(
       `
-        INSERT INTO users (id, name, created_at, photo_url, is_ghost)
-        VALUES ($1, $2, $3, NULL, TRUE)
+        INSERT INTO users (id, name, created_at, photo_url, is_ghost, picture_id)
+        VALUES ($1, $2, $3, NULL, TRUE, $4)
       `,
-      [ghostId, name, now]
+      [ghostId, name, now, `local_${getGhostProfilePicture()}`]
     )
 
     // Create the ghost_users record
