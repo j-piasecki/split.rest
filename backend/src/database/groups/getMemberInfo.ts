@@ -1,13 +1,14 @@
 import { NotFoundException } from '../../errors/NotFoundException'
+import { getMemberPermissions } from '../utils/getMemberPermissions'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { Pool } from 'pg'
-import { GetGroupMemberInfoArguments, Member } from 'shared'
+import { GetGroupMemberInfoArguments, MemberWithClaimCode } from 'shared'
 
 export async function getMemberInfo(
   pool: Pool,
   callerId: string,
   args: GetGroupMemberInfoArguments
-): Promise<Member> {
+): Promise<MemberWithClaimCode> {
   if (await isGroupDeleted(pool, args.groupId)) {
     throw new NotFoundException('api.notFound.group')
   }
@@ -25,10 +26,12 @@ export async function getMemberInfo(
           group_members.balance,
           group_members.has_access,
           group_members.is_admin,
-          group_members.display_name
+          group_members.display_name,
+          ghost_users.claim_code
         FROM group_members 
         JOIN users ON group_members.user_id = users.id 
-        WHERE group_id = $1 AND users.id = $2 
+        LEFT JOIN ghost_users ON ghost_users.id = users.id AND ghost_users.group_id = group_members.group_id
+        WHERE group_members.group_id = $1 AND users.id = $2 
       `,
       [args.groupId, args.memberId ?? '']
     )
@@ -36,6 +39,14 @@ export async function getMemberInfo(
 
   if (rows.length === 0) {
     throw new NotFoundException('api.group.userNotInGroup')
+  }
+
+  let claimCode: string | null = null
+  if (rows[0].is_ghost && rows[0].claim_code) {
+    const permissions = await getMemberPermissions(pool, args.groupId, callerId)
+    if (permissions?.canManageGhosts()) {
+      claimCode = rows[0].claim_code
+    }
   }
 
   return {
@@ -49,5 +60,6 @@ export async function getMemberInfo(
     hasAccess: rows[0].has_access,
     isAdmin: rows[0].is_admin,
     displayName: rows[0].display_name,
+    claimCode,
   }
 }

@@ -42,6 +42,10 @@ export interface Member extends User {
   isGhost: boolean
 }
 
+export interface MemberWithClaimCode extends Member {
+  claimCode: string | null
+}
+
 export interface MaybeMember extends User {
   balance: string | null
   isAdmin: boolean | null
