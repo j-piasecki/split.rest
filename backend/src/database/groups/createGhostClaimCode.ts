@@ -39,10 +39,10 @@ export async function createGhostClaimCode(
     await client.query(
       `
       UPDATE ghost_users
-      SET claim_code = $1
-      WHERE id = $2 AND group_id = $3
+      SET claim_code = $1, code_created_at = $2
+      WHERE id = $3 AND group_id = $4
       `,
-      [claimCode, args.memberId, args.groupId]
+      [claimCode, Date.now(), args.memberId, args.groupId]
     )
 
     await client.query('COMMIT')

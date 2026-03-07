@@ -42,6 +42,7 @@ export async function createDatabase(pool: Pool) {
       is_ghost BOOLEAN NOT NULL DEFAULT TRUE,
       created_by VARCHAR(32) NOT NULL,
       claim_code VARCHAR(36) NULL UNIQUE DEFAULT NULL,
+      code_created_at BIGINT NULL DEFAULT NULL,
 
       FOREIGN KEY (created_by) REFERENCES users(id),
       FOREIGN KEY (id, is_ghost) REFERENCES users(id, is_ghost),

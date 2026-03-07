@@ -27,7 +27,7 @@ export async function getGroupInviteByClaimCode(
         users.deleted as inviter_deleted,
         users.picture_id as inviter_picture_id,
         ghost_users.id as ghost_id,
-        groups.created_at as created_at,
+        ghost_users.code_created_at as created_at,
         group_members.balance as ghost_balance
       FROM ghost_users
       JOIN groups ON groups.id = ghost_users.group_id

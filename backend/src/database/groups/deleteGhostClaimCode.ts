@@ -36,7 +36,7 @@ export async function deleteGhostClaimCode(
     const result = await client.query(
       `
       UPDATE ghost_users
-      SET claim_code = NULL
+      SET claim_code = NULL, code_created_at = NULL
       WHERE id = $1 AND group_id = $2
       `,
       [args.memberId, args.groupId]

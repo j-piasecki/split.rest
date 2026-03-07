@@ -1,10 +1,10 @@
 import {
   AcceptGroupInviteArguments,
+  ClaimGhostUserArguments,
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
   CreateGhostArguments,
   CreateGhostClaimCodeArguments,
-  ClaimGhostUserArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
@@ -199,9 +199,7 @@ export function isDeleteGroupJoinLinkArguments(obj: any): obj is DeleteGroupJoin
   return obj.groupId !== undefined
 }
 
-export function isGetGroupInviteByLinkArguments(
-  args: any
-): args is GetGroupInviteByLinkArguments {
+export function isGetGroupInviteByLinkArguments(args: any): args is GetGroupInviteByLinkArguments {
   return typeof args?.uuid === 'string'
 }
 
