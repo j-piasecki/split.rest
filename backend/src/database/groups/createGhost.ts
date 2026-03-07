@@ -1,3 +1,4 @@
+import { BadRequestException } from '../../errors/BadRequestException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import * as crypto from 'crypto'
@@ -14,6 +15,14 @@ export async function createGhost(
   try {
     await client.query('BEGIN')
 
+    const name = args.name.trim()
+
+    if (name.length > 128) {
+      throw new BadRequestException('api.user.nameTooLong')
+    } else if (name.length === 0) {
+      throw new BadRequestException('api.user.nameCannotBeEmpty')
+    }
+
     if (await isGroupDeleted(client, args.groupId)) {
       throw new NotFoundException('api.notFound.group')
     }
@@ -28,7 +37,7 @@ export async function createGhost(
         INSERT INTO users (id, name, created_at, photo_url, is_ghost)
         VALUES ($1, $2, $3, NULL, TRUE)
       `,
-      [ghostId, args.name, now]
+      [ghostId, name, now]
     )
 
     // Create the ghost_users record
@@ -61,7 +70,7 @@ export async function createGhost(
 
     return {
       id: ghostId,
-      name: args.name,
+      name: name,
       email: null,
       pictureId: null,
       balance: '0.00',
