@@ -348,12 +348,16 @@ function MemberActions({
   const isSelf = memberInfo.id === user?.id
 
   const canManageAccess =
-    groupInfo.permissions.canManageAccess() && memberInfo.id !== groupInfo.owner && !isSelf
+    groupInfo.permissions.canManageAccess() &&
+    memberInfo.id !== groupInfo.owner &&
+    !isSelf &&
+    !memberInfo.isGhost
   const canManageAdmin =
     groupInfo.permissions.canManageAdmins() &&
     memberInfo.id !== groupInfo.owner &&
     !isSelf &&
-    memberInfo.hasAccess
+    memberInfo.hasAccess &&
+    !memberInfo.isGhost
   const canRemoveMember =
     (groupInfo.permissions.canRemoveMembers() || isSelf) && memberInfo.id !== groupInfo.owner
 
@@ -493,7 +497,10 @@ export function MemberInfo({
           </View>
 
           {memberInfo &&
-            (!memberInfo.hasAccess || memberInfo.isAdmin || memberInfo.id === groupInfo?.owner) && (
+            (!memberInfo.hasAccess ||
+              memberInfo.isAdmin ||
+              memberInfo.id === groupInfo?.owner ||
+              memberInfo.isGhost) && (
               <View
                 style={{
                   flexDirection: 'row',
@@ -502,7 +509,16 @@ export function MemberInfo({
                   gap: 8,
                 }}
               >
-                {memberInfo.id === groupInfo?.owner ? (
+                {memberInfo.isGhost ? (
+                  <>
+                    <View style={{ width: 24, alignItems: 'center' }}>
+                      <Icon name='nearby' size={20} color={theme.colors.tertiary} />
+                    </View>
+                    <Text style={{ color: theme.colors.tertiary, fontSize: 18 }}>
+                      {t('memberInfo.noAccount')}
+                    </Text>
+                  </>
+                ) : memberInfo.id === groupInfo?.owner ? (
                   <>
                     <View style={{ width: 24, alignItems: 'center' }}>
                       <Icon name='shield' size={20} color={theme.colors.tertiary} />

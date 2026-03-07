@@ -108,7 +108,10 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
           label: member.hasAccess ? t('member.revokeAccess') : t('member.giveAccess'),
           icon: member.hasAccess ? 'lock' : 'lockOpen',
           disabled:
-            !info.permissions.canManageAccess() || member.deleted || member.id === info.owner,
+            !info.permissions.canManageAccess() ||
+            member.deleted ||
+            member.id === info.owner ||
+            member.isGhost,
           onPress: () => {
             setGroupAccessMutation(!member.hasAccess)
           },
@@ -121,7 +124,8 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
             !info.permissions.canManageAdmins() ||
             !member.hasAccess ||
             member.deleted ||
-            member.id === info.owner,
+            member.id === info.owner ||
+            member.isGhost,
           onPress: () => {
             setGroupAdminMutation(!member.isAdmin)
           },
@@ -225,6 +229,29 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
                 >
                   {member.name}
                 </Text>
+              )}
+
+              {member.isGhost && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 4,
+                    marginTop: 4,
+                    alignSelf: 'flex-start',
+                    paddingHorizontal: 6,
+                    paddingVertical: 2,
+                    backgroundColor: theme.colors.surfaceContainerHigh,
+                    borderRadius: 4,
+                  }}
+                >
+                  <Icon name='nearby' size={12} color={theme.colors.onSurfaceVariant} />
+                  <Text
+                    style={{ fontSize: 10, color: theme.colors.onSurfaceVariant, fontWeight: 600 }}
+                  >
+                    {t('member.noAccount')}
+                  </Text>
+                </View>
               )}
             </View>
             <View style={{ justifyContent: 'center', alignItems: 'flex-end', minWidth: 100 }}>

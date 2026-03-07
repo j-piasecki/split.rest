@@ -279,6 +279,7 @@
     "admin": "Moderator of this group",
     "owner": "Owner of this group",
     "noAccess": "No access to this group",
+    "noAccount": "Local profile",
     "settleUpWithMember": "Settle up with this person",
     "settleUpWithMemberExactAmount": "Settle up for an exact amount",
     "noSplits": "This person has no splits in this group",
@@ -573,7 +574,7 @@
     "makeAdmin": "Make a moderator",
     "revokeAdmin": "Revoke moderator",
     "removeFromGroup": "Remove from group",
-    "needsAccount": "Needs account"
+    "noAccount": "Local profile"
   },
 
   "split": {

@@ -70,6 +70,7 @@ export type IconName =
   | 'merge'
   | 'money'
   | 'moreVertical'
+  | 'nearby'
   | 'oneOf'
   | 'openInBrowser'
   | 'openRightPanel'
@@ -181,6 +182,7 @@ const iconMap: Record<IconName, unknown> = {
   merge: require('@assets/icons/merge.svg'),
   money: require('@assets/icons/money.svg'),
   moreVertical: require('@assets/icons/more_vertical.svg'),
+  nearby: require('@assets/icons/nearby.svg'),
   oneOf: require('@assets/icons/one_of.svg'),
   openInBrowser: require('@assets/icons/open_in_browser.svg'),
   openRightPanel: require('@assets/icons/open_right_panel.svg'),
