@@ -575,7 +575,8 @@ export function MemberInfo({
             (!memberInfo.hasAccess ||
               memberInfo.isAdmin ||
               memberInfo.id === groupInfo?.owner ||
-              memberInfo.isGhost) && (
+              memberInfo.isGhost ||
+              memberInfo.deleted) && (
               <View
                 style={{
                   flexDirection: 'row',
@@ -584,7 +585,16 @@ export function MemberInfo({
                   gap: 8,
                 }}
               >
-                {memberInfo.isGhost ? (
+                {memberInfo.deleted ? (
+                  <>
+                    <View style={{ width: 24, alignItems: 'center' }}>
+                      <Icon name='personOff' size={20} color={theme.colors.tertiary} />
+                    </View>
+                    <Text style={{ color: theme.colors.tertiary, fontSize: 18 }}>
+                      {t('memberInfo.deletedAccount')}
+                    </Text>
+                  </>
+                ) : memberInfo.isGhost ? (
                   <>
                     <View style={{ width: 24, alignItems: 'center' }}>
                       <Icon name='nearby' size={20} color={theme.colors.tertiary} />

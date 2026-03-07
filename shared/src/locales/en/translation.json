@@ -285,6 +285,7 @@
     "owner": "Owner of this group",
     "noAccess": "No access to this group",
     "noAccount": "Local profile",
+    "deletedAccount": "Account deleted",
     "settleUpWithMember": "Settle up with this person",
     "settleUpWithMemberExactAmount": "Settle up for an exact amount",
     "noSplits": "This person has no splits in this group",
