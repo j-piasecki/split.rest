@@ -23,8 +23,11 @@ export function InviteMemberFab({
   const insets = useSafeAreaInsets()
   const router = useRouter()
 
+  const fabVisible =
+    info?.permissions?.canInviteMembers?.() || info?.permissions?.canCreateGhosts?.()
+
   return (
-    info?.permissions?.canInviteMembers?.() && (
+    fabVisible && (
       <View
         style={{
           position: 'absolute',

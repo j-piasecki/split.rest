@@ -505,7 +505,13 @@
     "userNotFound": "User not found",
     "userAlreadyInGroup": "User is already a member of the group",
     "inviteMember": "Invite member",
-    "inviteSent": "Invite to {{name}} sent"
+    "inviteSent": "Invite to {{name}} sent",
+    "addByNameOnly": "Add by name only",
+    "addWithoutAccount": "Add without an account",
+    "addByNameDescription": "Track expenses for someone who doesn't have the app. They can join and claim their activity later.",
+    "addByEmailDescription": "Invite someone to the group by e-mail if they already use the app.",
+    "addByNameSuccess": "{{name}} added to the group",
+    "name": "Name"
   },
 
   "splitValidation": {
@@ -566,7 +572,8 @@
     "revokeAccess": "Revoke access",
     "makeAdmin": "Make a moderator",
     "revokeAdmin": "Revoke moderator",
-    "removeFromGroup": "Remove from group"
+    "removeFromGroup": "Remove from group",
+    "needsAccount": "Needs account"
   },
 
   "split": {

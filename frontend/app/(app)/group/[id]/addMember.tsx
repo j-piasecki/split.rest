@@ -8,6 +8,7 @@ import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { TextInput } from '@components/TextInput'
 import { getUserByEmail } from '@database/getUserByEmail'
+import { useCreateGhostMutation } from '@hooks/database/useCreateGhostMutation'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useInviteUserToGroupMutation } from '@hooks/database/useInviteUserToGroup'
 import { useSetInviteWithdrawnMutation } from '@hooks/database/useInviteWithdrawnMutation'
@@ -61,7 +62,7 @@ function useUserByEmail(email: string): [User | null, boolean, string | null] {
   return [user, waiting, error]
 }
 
-function UserPane({
+function UserPreview({
   user,
   waiting,
   error,
@@ -77,44 +78,39 @@ function UserPane({
   }
 
   return (
-    <Pane
-      headerHidden
-      containerStyle={{
-        height: 224,
-        padding: 16,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
+    <View
+      style={{ backgroundColor: theme.colors.surfaceContainerHigh, padding: 8, borderRadius: 16 }}
     >
-      <View>
-        {error && <ErrorText>{error}</ErrorText>}
+      {error && <ErrorText>{error}</ErrorText>}
 
-        {waiting && <ActivityIndicator color={theme.colors.onSurface} />}
+      {waiting && <ActivityIndicator color={theme.colors.onSurface} />}
 
-        {user && (
-          <View style={{ flexDirection: 'column', gap: 16, alignItems: 'center' }}>
-            <ProfilePicture user={user} size={128} />
-            <Text
-              style={{
-                color: theme.colors.onSurface,
-                textAlign: 'center',
-                fontSize: 24,
-                fontWeight: 600,
-              }}
-            >
-              {user.name}
-            </Text>
-          </View>
-        )}
-      </View>
-    </Pane>
+      {user && (
+        <View style={{ flexDirection: 'row', gap: 24, alignItems: 'center' }}>
+          <ProfilePicture user={user} size={96} />
+          <Text
+            numberOfLines={2}
+            adjustsFontSizeToFit
+            style={{
+              flexShrink: 1,
+              color: theme.colors.onSurface,
+              textAlign: 'center',
+              fontSize: 22,
+              fontWeight: 600,
+            }}
+          >
+            {user.name}
+          </Text>
+        </View>
+      )}
+    </View>
   )
 }
 
-function UserPicker() {
+function AddByEmailPane() {
   const router = useRouter()
   const snack = useSnack()
-  const insets = useModalScreenInsets()
+  const theme = useTheme()
   const { id: groupId } = useLocalSearchParams()
   const { t } = useTranslation()
   const { data: groupInfo } = useGroupInfo(Number(groupId))
@@ -166,42 +162,27 @@ function UserPicker() {
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        flexGrow: 1,
-        gap: 24,
-        justifyContent: 'space-between',
-        paddingLeft: insets.left + 12,
-        paddingRight: insets.right + 12,
-        paddingBottom: insets.bottom,
-        paddingTop: insets.top + 16,
-      }}
-      keyboardShouldPersistTaps='handled'
-    >
+    <View style={{ padding: 16, gap: 16 }}>
+      <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 16 }}>
+        {t('addMember.addByEmailDescription')}
+      </Text>
       <View style={{ gap: 16 }}>
-        <Pane
-          icon='user'
-          title={t('addMember.findByEmail')}
-          textLocation='start'
-          containerStyle={{ padding: 16, gap: 32 }}
-        >
-          <Form onSubmit={handlePress} autofocus>
-            <TextInput
-              placeholder={t('email')}
-              keyboardType='email-address'
-              autoCapitalize='none'
-              autoCorrect={false}
-              value={email}
-              onChangeText={(text) => {
-                setEmail(text)
-                setAddingError('')
-              }}
-              editable={!isAddingToGroup}
-            />
-          </Form>
-        </Pane>
+        <Form onSubmit={handlePress}>
+          <TextInput
+            placeholder={t('email')}
+            keyboardType='email-address'
+            autoCapitalize='none'
+            autoCorrect={false}
+            value={email}
+            onChangeText={(text) => {
+              setEmail(text)
+              setAddingError('')
+            }}
+            editable={!isAddingToGroup}
+          />
+        </Form>
 
-        <UserPane user={user} waiting={waiting} error={error} />
+        <UserPreview user={user} waiting={waiting} error={error} />
       </View>
 
       <View style={{ gap: 8 }}>
@@ -214,13 +195,84 @@ function UserPicker() {
           disabled={isAddingToGroup || waiting || user === null}
         />
       </View>
-    </ScrollView>
+    </View>
+  )
+}
+
+export function AddByNamePane() {
+  const router = useRouter()
+  const snack = useSnack()
+  const { id: groupId } = useLocalSearchParams()
+  const { t } = useTranslation()
+  const theme = useTheme()
+
+  const [name, setName] = useState('')
+  const [addingError, setAddingError] = useTranslatedError()
+  const { mutateAsync: createGhost, isPending: isCreating } = useCreateGhostMutation(
+    Number(groupId)
+  )
+
+  function handlePress() {
+    if (name.trim() === '') {
+      setAddingError(new TranslatableError('api.user.nameCannotBeEmpty'))
+      return
+    }
+
+    createGhost(name)
+      .then(() => {
+        snack.show({ message: t('addMember.addByNameSuccess', { name }) })
+        if (router.canGoBack()) {
+          router.back()
+        } else {
+          router.navigate(`/group/${groupId}`)
+        }
+      })
+      .catch((error) => {
+        setAddingError(error)
+      })
+  }
+
+  return (
+    <View style={{ padding: 16, gap: 16 }}>
+      <View style={{ gap: 16 }}>
+        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 16 }}>
+          {t('addMember.addByNameDescription')}
+        </Text>
+        <Form onSubmit={handlePress}>
+          <TextInput
+            placeholder={t('addMember.name')}
+            value={name}
+            onChangeText={(text) => {
+              setName(text)
+              setAddingError('')
+            }}
+            editable={!isCreating}
+          />
+        </Form>
+      </View>
+
+      <View style={{ gap: 8 }}>
+        {addingError && <ErrorText>{addingError}</ErrorText>}
+        <Button
+          leftIcon='addMember'
+          title={t('addMember.addMember')}
+          onPress={handlePress}
+          isLoading={isCreating}
+          disabled={isCreating || name.trim() === ''}
+        />
+      </View>
+    </View>
   )
 }
 
 export default function Modal() {
   const { id } = useLocalSearchParams()
   const { t } = useTranslation()
+  const insets = useModalScreenInsets()
+  const { data: groupInfo } = useGroupInfo(Number(id))
+
+  const canInviteByEmail = groupInfo?.permissions?.canInviteMembers?.() ?? false
+  const canCreateGhosts = groupInfo?.permissions?.canCreateGhosts?.() ?? false
 
   return (
     <ModalScreen
@@ -229,7 +281,40 @@ export default function Modal() {
       maxWidth={400}
       maxHeight={600}
     >
-      <UserPicker />
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingLeft: insets.left + 16,
+          paddingRight: insets.right + 16,
+          paddingBottom: insets.bottom + 16,
+          paddingTop: insets.top + 16,
+          gap: 16,
+        }}
+        keyboardShouldPersistTaps='handled'
+      >
+        {canInviteByEmail && (
+          <Pane
+            title={t('addMember.findByEmail')}
+            icon='stackedEmail'
+            collapsible
+            textLocation='start'
+            style={{ overflow: 'hidden' }}
+          >
+            <AddByEmailPane />
+          </Pane>
+        )}
+        {canCreateGhosts && (
+          <Pane
+            title={t('addMember.addWithoutAccount')}
+            icon='user'
+            collapsible
+            textLocation='start'
+            style={{ overflow: 'hidden' }}
+          >
+            <AddByNamePane />
+          </Pane>
+        )}
+      </ScrollView>
     </ModalScreen>
   )
 }
