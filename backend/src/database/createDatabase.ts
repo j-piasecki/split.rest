@@ -17,21 +17,6 @@ export async function createDatabase(pool: Pool) {
   `)
 
   await pool.query(`
-    CREATE TABLE IF NOT EXISTS ghost_users(
-      id VARCHAR(32) PRIMARY KEY,
-      group_id INTEGER NOT NULL,
-      is_ghost BOOLEAN NOT NULL DEFAULT TRUE,
-      created_by VARCHAR(32) NOT NULL,
-      claim_code VARCHAR(36) NULL UNIQUE DEFAULT NULL,
-
-      FOREIGN KEY (created_by) REFERENCES users(id),
-      FOREIGN KEY (id, is_ghost) REFERENCES users(id, is_ghost),
-      FOREIGN KEY (group_id) REFERENCES groups(id),
-      CONSTRAINT valid_ghost_user CHECK (is_ghost = TRUE)
-    )
-  `)
-
-  await pool.query(`
     CREATE TABLE IF NOT EXISTS groups(
       id SERIAL PRIMARY KEY,
       name VARCHAR(128) NOT NULL,
@@ -47,6 +32,21 @@ export async function createDatabase(pool: Pool) {
       icon VARCHAR(36) NULL UNIQUE DEFAULT NULL,
 
       FOREIGN KEY (owner) REFERENCES users(id)
+    )
+  `)
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS ghost_users(
+      id VARCHAR(32) PRIMARY KEY,
+      group_id INTEGER NOT NULL,
+      is_ghost BOOLEAN NOT NULL DEFAULT TRUE,
+      created_by VARCHAR(32) NOT NULL,
+      claim_code VARCHAR(36) NULL UNIQUE DEFAULT NULL,
+
+      FOREIGN KEY (created_by) REFERENCES users(id),
+      FOREIGN KEY (id, is_ghost) REFERENCES users(id, is_ghost),
+      FOREIGN KEY (group_id) REFERENCES groups(id),
+      CONSTRAINT valid_ghost_user CHECK (is_ghost = TRUE)
     )
   `)
 
