@@ -87,6 +87,7 @@ export interface SplitsListProps {
   hideBottomBar?: boolean
   onRefresh?: () => void
   applyBottomInset?: boolean
+  applyBottomPadding?: boolean
   applyHorizontalPadding?: boolean
   splits: SplitInfo[]
   isLoading: boolean
@@ -104,6 +105,7 @@ export function SplitsList({
   onRefresh,
   emptyMessage,
   applyBottomInset = false,
+  applyBottomPadding = true,
   applyHorizontalPadding = true,
   hideFab = false,
   hideBottomBar = false,
@@ -143,7 +145,7 @@ export function SplitsList({
           alignSelf: 'center',
           paddingLeft: insets.left + (applyHorizontalPadding ? 12 : 0),
           paddingRight: insets.right + (applyHorizontalPadding ? 12 : 0),
-          paddingBottom: 96 + (applyBottomInset ? insets.bottom : 0),
+          paddingBottom: (applyBottomPadding ? 96 : 0) + (applyBottomInset ? insets.bottom : 0),
         }}
         ListEmptyComponent={
           <ListEmptyComponent

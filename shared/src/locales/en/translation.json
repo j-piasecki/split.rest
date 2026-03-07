@@ -11,6 +11,7 @@
   "goBack": "Go back",
   "undo": "Undo",
   "ok": "Ok",
+  "cancel": "Cancel",
 
   "login": {
     "youMustSignIn": "Sign in to start <Styled>splitting</Styled>"
@@ -112,6 +113,8 @@
         "uncompleteSplitEntry": "You don't have permission to mark splits as not completed",
         "readMembers": "You don't have permission to see members of this group",
         "inviteMembers": "You don't have permission to invite members to this group",
+        "createGhosts": "You don't have permission to create local users in this group",
+        "manageGhosts": "You don't have permission to manage local users in this group",
         "removeMembers": "You don't have permission to remove members from this group",
         "rename": "You don't have permission to rename this group",
         "delete": "You don't have permission to delete this group",
@@ -184,7 +187,13 @@
       "settledUpButPending": "The group is already settled up, but some of the transactions haven't been confirmed yet",
       "userIsSplitParticipant": "This user already participated in a split and cannot be removed",
       "groupOwnerCannotBeRemoved": "The group owner cannot be removed from the group",
-      "userWithNoAccessCannotBeMadeAdmin": "Users without group access cannot be made moderators"
+      "userWithNoAccessCannotBeMadeAdmin": "Users without group access cannot be made moderators",
+      "ghostsAlwaysHaveAccess": "Ghost users must always have access to the group",
+      "ghostsCannotBeAdmins": "Ghost users cannot be made moderators",
+      "failedToCreateGhost": "Failed to create a local user",
+      "failedToCreateGhostClaimCode": "Failed to create a claim code for the local user",
+      "notAGhost": "This action can only be performed on a local user",
+      "invalidClaimCode": "The claim code is invalid or has expired"
     },
     "user": {
       "nameTooLong": "Name is too long",
@@ -275,6 +284,7 @@
     "admin": "Moderator of this group",
     "owner": "Owner of this group",
     "noAccess": "No access to this group",
+    "noAccount": "Local profile",
     "settleUpWithMember": "Settle up with this person",
     "settleUpWithMemberExactAmount": "Settle up for an exact amount",
     "noSplits": "This person has no splits in this group",
@@ -285,7 +295,10 @@
     "leaveGroupConfirmationText": "Are you sure you want to leave the group?",
     "leaveGroupConfirm": "Leave",
     "cancel": "Cancel",
-    "youAreAParticipantInSomeSplits": "You are a participant in some splits in this group"
+    "youAreAParticipantInSomeSplits": "You are a participant in some splits in this group",
+    "generateClaimCode": "Generate claim link",
+    "copyClaimCode": "Copy claim link",
+    "claimCodeCopied": "Claim link copied to clipboard"
   },
 
   "settleUpExactAmount": {
@@ -302,7 +315,7 @@
     "groupInvites": "Group invites",
     "createGroup": "Create group",
     "group": "Group",
-    "inviteMember": "Invite member",
+    "addMember": "Add member",
     "roulette": "Roulette",
     "splitInfo": "Split details",
     "editSplit": "Edit split",
@@ -418,6 +431,16 @@
     "openGroup": "Open group"
   },
 
+  "claimGhost": {
+    "header": "Claim local account",
+    "youHaveBeenInvited": "You've been invited to claim a local account in the group",
+    "claim": "Claim account",
+    "openGroup": "Open group",
+    "invalidCode": "This claim link is invalid or has expired",
+    "noSplits": "No splits found for this local account",
+    "balance": "Balance:"
+  },
+
   "groupSettings": {
     "joinLink": {
       "create": "Create invitation link",
@@ -494,13 +517,20 @@
     "changeYearOverYear": "Change year-over-year:"
   },
 
-  "inviteMember": {
+  "addMember": {
+    "addMember": "Add member",
     "findByEmail": "Find by e-mail",
     "emailIsTooLong": "E-mail is too long",
     "userNotFound": "User not found",
     "userAlreadyInGroup": "User is already a member of the group",
     "inviteMember": "Invite member",
-    "inviteSent": "Invite to {{name}} sent"
+    "inviteSent": "Invite to {{name}} sent",
+    "addByNameOnly": "Add by name only",
+    "addWithoutAccount": "Add without an account",
+    "addByNameDescription": "Track expenses for someone who doesn't have the app. They can join and claim their activity later.",
+    "addByEmailDescription": "Invite someone to the group by e-mail if they already use the app.",
+    "addByNameSuccess": "{{name}} added to the group",
+    "name": "Name"
   },
 
   "splitValidation": {
@@ -561,7 +591,8 @@
     "revokeAccess": "Revoke access",
     "makeAdmin": "Make a moderator",
     "revokeAdmin": "Revoke moderator",
-    "removeFromGroup": "Remove from group"
+    "removeFromGroup": "Remove from group",
+    "noAccount": "Local profile"
   },
 
   "split": {

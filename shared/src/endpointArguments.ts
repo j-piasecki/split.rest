@@ -15,6 +15,29 @@ export interface InviteUserToGroupArguments {
   userId: string
 }
 
+export interface CreateGhostArguments {
+  groupId: number
+  name: string
+}
+
+export interface CreateGhostClaimCodeArguments {
+  groupId: number
+  memberId: string
+}
+
+export interface GetGroupInviteByClaimCodeArguments {
+  claimCode: string
+}
+
+export interface DeleteGhostClaimCodeArguments {
+  groupId: number
+  memberId: string
+}
+
+export interface ClaimGhostUserArguments {
+  claimCode: string
+}
+
 export interface RemoveMemberFromGroupArguments {
   groupId: number
   userId: string

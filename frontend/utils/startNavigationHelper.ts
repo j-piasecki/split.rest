@@ -28,6 +28,7 @@ export async function setLastOpenedGroupId(id: number | null): Promise<void> {
 }
 
 let joinRedirect: string | null = null
+let claimRedirect: string | null = null
 
 export function setJoinRedirect(join: string | null) {
   joinRedirect = join
@@ -39,4 +40,16 @@ export function getJoinRedirect() {
 
 export function clearJoinRedirect() {
   joinRedirect = null
+}
+
+export function setClaimRedirect(claim: string | null) {
+  claimRedirect = claim
+}
+
+export function getClaimRedirect() {
+  return claimRedirect
+}
+
+export function clearClaimRedirect() {
+  claimRedirect = null
 }

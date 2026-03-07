@@ -38,8 +38,8 @@ export default function GroupFlow() {
       />
       <Stack.Screen name='filter' options={{ title: t('screenName.filter'), ...modalOptions }} />
       <Stack.Screen
-        name='inviteMember'
-        options={{ title: t('screenName.inviteMember'), ...modalOptions }}
+        name='addMember'
+        options={{ title: t('screenName.addMember'), ...modalOptions }}
       />
       <Stack.Screen
         name='addSplit'

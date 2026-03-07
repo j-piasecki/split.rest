@@ -1,17 +1,22 @@
 import {
   AcceptGroupInviteArguments,
+  ClaimGhostUserArguments,
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
+  CreateGhostArguments,
+  CreateGhostClaimCodeArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
   CreateSplitArguments,
+  DeleteGhostClaimCodeArguments,
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
   GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
+  GetGroupInviteByClaimCodeArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberInfoArguments,
@@ -57,6 +62,22 @@ export function isCreateOrUpdateUserArguments(obj: any): obj is CreateOrUpdateUs
 
 export function isCreateGroupArguments(obj: any): obj is CreateGroupArguments {
   return obj.name !== undefined && obj.currency !== undefined
+}
+
+export function isCreateGhostArguments(obj: any): obj is CreateGhostArguments {
+  return obj.groupId !== undefined && obj.name !== undefined
+}
+
+export function isCreateGhostClaimCodeArguments(obj: any): obj is CreateGhostClaimCodeArguments {
+  return obj.groupId !== undefined && obj.memberId !== undefined
+}
+
+export function isDeleteGhostClaimCodeArguments(obj: any): obj is DeleteGhostClaimCodeArguments {
+  return obj.groupId !== undefined && obj.memberId !== undefined
+}
+
+export function isClaimGhostUserArguments(obj: any): obj is ClaimGhostUserArguments {
+  return obj.claimCode !== undefined && typeof obj.claimCode === 'string'
 }
 
 export function isInviteUserToGroupArguments(obj: any): obj is InviteUserToGroupArguments {
@@ -178,8 +199,14 @@ export function isDeleteGroupJoinLinkArguments(obj: any): obj is DeleteGroupJoin
   return obj.groupId !== undefined
 }
 
-export function isGetGroupInviteByLinkArguments(obj: any): obj is GetGroupInviteByLinkArguments {
-  return obj.uuid !== undefined
+export function isGetGroupInviteByLinkArguments(args: any): args is GetGroupInviteByLinkArguments {
+  return typeof args?.uuid === 'string'
+}
+
+export function isGetGroupInviteByClaimCodeArguments(
+  args: any
+): args is GetGroupInviteByClaimCodeArguments {
+  return typeof args?.claimCode === 'string'
 }
 
 export function isJoinGroupByLinkArguments(obj: any): obj is JoinGroupByLinkArguments {

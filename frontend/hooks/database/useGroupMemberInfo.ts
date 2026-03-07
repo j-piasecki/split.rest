@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { ApiError, makeRequest } from '@utils/makeApiRequest'
-import { GetGroupMemberInfoArguments, Member, TranslatableError } from 'shared'
+import { GetGroupMemberInfoArguments, MemberWithClaimCode, TranslatableError } from 'shared'
 
 export function useGroupMemberInfo(groupId: number | undefined, memberId: string | undefined) {
   return useQuery({
     queryKey: ['group', groupId, 'member', memberId],
-    queryFn: async (): Promise<Member> => {
+    queryFn: async (): Promise<MemberWithClaimCode> => {
       if (!groupId) {
         throw new TranslatableError('api.notFound.group')
       }
@@ -15,7 +15,7 @@ export function useGroupMemberInfo(groupId: number | undefined, memberId: string
       }
 
       const args: GetGroupMemberInfoArguments = { groupId: groupId, memberId: memberId }
-      const member = await makeRequest<GetGroupMemberInfoArguments, Member>(
+      const member = await makeRequest<GetGroupMemberInfoArguments, MemberWithClaimCode>(
         'GET',
         'getGroupMemberInfo',
         args

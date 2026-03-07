@@ -1,12 +1,17 @@
 import { createDatabase } from './database/createDatabase'
 import { acceptGroupInvite } from './database/groups/acceptInvite'
+import { claimGhostUser } from './database/groups/claimGhostUser'
+import { createGhost } from './database/groups/createGhost'
+import { createGhostClaimCode } from './database/groups/createGhostClaimCode'
 import { createGroup } from './database/groups/createGroup'
 import { createGroupJoinLink } from './database/groups/createGroupJoinLink'
+import { deleteGhostClaimCode } from './database/groups/deleteGhostClaimCode'
 import { deleteGroup } from './database/groups/deleteGroup'
 import { deleteGroupJoinLink } from './database/groups/deleteGroupJoinLink'
 import { getBalances } from './database/groups/getBalances'
 import { getDirectGroupInvites } from './database/groups/getDirectGroupInvites'
 import { getGroupInfo } from './database/groups/getGroupInfo'
+import { getGroupInviteByClaimCode } from './database/groups/getGroupInviteByClaimCode'
 import { getGroupInviteByLink } from './database/groups/getGroupInviteByLink'
 import { getGroupJoinLink } from './database/groups/getGroupJoinLink'
 import { getGroupMembers } from './database/groups/getGroupMembers'
@@ -57,18 +62,23 @@ import { Injectable } from '@nestjs/common'
 import { Pool } from 'pg'
 import {
   AcceptGroupInviteArguments,
+  ClaimGhostUserArguments,
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
+  CreateGhostArguments,
+  CreateGhostClaimCodeArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
   CreateSplitArguments,
+  DeleteGhostClaimCodeArguments,
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
   GetBalancesArguments,
   GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
+  GetGroupInviteByClaimCodeArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberInfoArguments,
@@ -134,6 +144,25 @@ export class DatabaseService {
   // Every user can create a group
   async createGroup(callerId: string, args: CreateGroupArguments) {
     return await createGroup(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['createGhosts'])
+  async createGhost(callerId: string, args: CreateGhostArguments) {
+    return await createGhost(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['manageGhosts'])
+  async createGhostClaimCode(callerId: string, args: CreateGhostClaimCodeArguments) {
+    return await createGhostClaimCode(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['manageGhosts'])
+  async deleteGhostClaimCode(callerId: string, args: DeleteGhostClaimCodeArguments) {
+    return await deleteGhostClaimCode(this.pool, callerId, args)
+  }
+
+  async claimGhostUser(callerId: string, args: ClaimGhostUserArguments) {
+    return await claimGhostUser(this.pool, callerId, args)
   }
 
   @RequirePermissions(['inviteMembers'])
@@ -243,6 +272,10 @@ export class DatabaseService {
   // Every user can get group info by link if they have it
   async getGroupInviteByLink(callerId: string, args: GetGroupInviteByLinkArguments) {
     return await getGroupInviteByLink(this.pool, callerId, args)
+  }
+
+  async getGroupInviteByClaimCode(callerId: string, args: GetGroupInviteByClaimCodeArguments) {
+    return await getGroupInviteByClaimCode(this.pool, callerId, args)
   }
 
   @RequirePermissions(['createJoinLink'])

@@ -39,6 +39,11 @@ export interface Member extends User {
   isAdmin: boolean
   hasAccess: boolean
   displayName: string | null
+  isGhost: boolean
+}
+
+export interface MemberWithClaimCode extends Member {
+  claimCode: string | null
 }
 
 export interface MaybeMember extends User {
@@ -46,6 +51,11 @@ export interface MaybeMember extends User {
   isAdmin: boolean | null
   hasAccess: boolean | null
   displayName: string | null
+  isGhost: boolean | null
+}
+
+export interface GhostClaimCode {
+  claimCode: string | null
 }
 
 export interface BalanceChange {
@@ -203,6 +213,12 @@ export interface GroupInviteWithGroupInfoAndMemberIds extends GroupInviteWithGro
 
 export interface GroupInviteWithInvitee extends GroupInvite {
   invitee: User
+}
+
+export interface GroupInviteByClaimCodeResponse {
+  invite: GroupInviteWithGroupInfoAndMemberIds
+  splits: SplitInfo[]
+  balance: string
 }
 
 export function isUser(obj: any): obj is User {

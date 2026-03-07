@@ -26,7 +26,12 @@ export const ownerPermissions: GroupMemberPermissionsDTO = {
     SplitPermissionsDTO.ResolveDelayedSplitsAll |
     SplitPermissionsDTO.ResolveAllDelayedSplitsAtOnce |
     SplitPermissionsDTO.Query,
-  members: MembersPermissionsDTO.Read | MembersPermissionsDTO.Invite | MembersPermissionsDTO.Remove,
+  members:
+    MembersPermissionsDTO.Read |
+    MembersPermissionsDTO.Invite |
+    MembersPermissionsDTO.Remove |
+    MembersPermissionsDTO.CreateGhosts |
+    MembersPermissionsDTO.ManageGhosts,
   manage:
     ManagePermissionsDTO.Rename |
     ManagePermissionsDTO.Delete |
@@ -66,7 +71,12 @@ const adminPermissions: GroupMemberPermissionsDTO = {
     SplitPermissionsDTO.ResolveDelayedSplits |
     SplitPermissionsDTO.ResolveDelayedSplitsAll |
     SplitPermissionsDTO.Query,
-  members: MembersPermissionsDTO.Read | MembersPermissionsDTO.Invite | MembersPermissionsDTO.Remove,
+  members:
+    MembersPermissionsDTO.Read |
+    MembersPermissionsDTO.Invite |
+    MembersPermissionsDTO.Remove |
+    MembersPermissionsDTO.CreateGhosts |
+    MembersPermissionsDTO.ManageGhosts,
   manage:
     ManagePermissionsDTO.Rename |
     ManagePermissionsDTO.SeeJoinLink |

@@ -3,12 +3,16 @@ import { ImageService } from './image.service'
 import { Injectable } from '@nestjs/common'
 import {
   AcceptGroupInviteArguments,
+  ClaimGhostUserArguments,
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
+  CreateGhostArguments,
+  CreateGhostClaimCodeArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
   CreateSplitArguments,
+  DeleteGhostClaimCodeArguments,
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
@@ -16,6 +20,7 @@ import {
   GetBalancesArguments,
   GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
+  GetGroupInviteByClaimCodeArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberInfoArguments,
@@ -66,6 +71,18 @@ export class AppService {
 
   async createGroup(userId: string, args: CreateGroupArguments) {
     return await this.databaseService.createGroup(userId, args)
+  }
+
+  async createGhost(userId: string, args: CreateGhostArguments) {
+    return await this.databaseService.createGhost(userId, args)
+  }
+
+  async createGhostClaimCode(userId: string, args: CreateGhostClaimCodeArguments) {
+    return await this.databaseService.createGhostClaimCode(userId, args)
+  }
+
+  async deleteGhostClaimCode(userId: string, args: DeleteGhostClaimCodeArguments) {
+    return await this.databaseService.deleteGhostClaimCode(userId, args)
   }
 
   async inviteUser(callerId: string, args: InviteUserToGroupArguments) {
@@ -143,6 +160,10 @@ export class AppService {
     return await this.databaseService.deleteGroup(callerId, args)
   }
 
+  async claimGhostUser(callerId: string, args: ClaimGhostUserArguments) {
+    return await this.databaseService.claimGhostUser(callerId, args)
+  }
+
   async setGroupName(callerId: string, args: SetGroupNameArguments) {
     return await this.databaseService.setGroupName(callerId, args)
   }
@@ -153,6 +174,10 @@ export class AppService {
 
   async getGroupInviteByLink(callerId: string, args: GetGroupInviteByLinkArguments) {
     return await this.databaseService.getGroupInviteByLink(callerId, args)
+  }
+
+  async getGroupInviteByClaimCode(callerId: string, args: GetGroupInviteByClaimCodeArguments) {
+    return await this.databaseService.getGroupInviteByClaimCode(callerId, args)
   }
 
   async createGroupJoinLink(callerId: string, args: CreateGroupJoinLinkArguments) {

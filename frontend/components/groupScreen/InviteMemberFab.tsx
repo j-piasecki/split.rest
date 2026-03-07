@@ -23,8 +23,11 @@ export function InviteMemberFab({
   const insets = useSafeAreaInsets()
   const router = useRouter()
 
+  const fabVisible =
+    info?.permissions?.canInviteMembers?.() || info?.permissions?.canCreateGhosts?.()
+
   return (
-    info?.permissions?.canInviteMembers?.() && (
+    fabVisible && (
       <View
         style={{
           position: 'absolute',
@@ -35,9 +38,9 @@ export function InviteMemberFab({
         <FloatingActionButton
           ref={fabRef}
           icon='addMember'
-          title={iconOnly ? '' : t('inviteMember.inviteMember')}
+          title={iconOnly ? '' : t('addMember.addMember')}
           onPress={() => {
-            router.navigate(`/group/${info?.id}/inviteMember`)
+            router.navigate(`/group/${info?.id}/addMember`)
           }}
         />
       </View>

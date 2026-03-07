@@ -5,7 +5,7 @@ import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { signInWithApple, signInWithGoogle, useAuth } from '@utils/auth'
 import { queryClient } from '@utils/queryClient'
-import { setJoinRedirect } from '@utils/startNavigationHelper'
+import { setClaimRedirect, setJoinRedirect } from '@utils/startNavigationHelper'
 import { Image } from 'expo-image'
 import { useLocalSearchParams } from 'expo-router'
 import { useEffect, useRef, useState } from 'react'
@@ -48,13 +48,21 @@ export default function Screen() {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
   const { t } = useTranslation()
-  const { joinUuid } = useLocalSearchParams()
+  const { joinUuid, claimCode } = useLocalSearchParams()
   const { width, height } = useWindowDimensions()
   const [signingIn, setSigningIn] = useState(false)
 
   useEffect(() => {
-    setJoinRedirect(joinUuid as string)
+    if (joinUuid) {
+      setJoinRedirect(joinUuid as string)
+    }
   }, [joinUuid])
+
+  useEffect(() => {
+    if (claimCode) {
+      setClaimRedirect(claimCode as string)
+    }
+  }, [claimCode])
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>

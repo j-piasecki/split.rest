@@ -1,6 +1,7 @@
 import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
+import { isUserGhost } from '../utils/isUserGhost'
 import { isUserGroupOwner } from '../utils/isUserGroupOwner'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { userExists } from '../utils/userExists'
@@ -34,6 +35,10 @@ export async function setGroupAccess(pool: Pool, callerId: string, args: SetGrou
         [args.access, args.groupId, args.userId]
       )
     } else {
+      if (await isUserGhost(client, args.userId)) {
+        throw new ForbiddenException('api.group.ghostsAlwaysHaveAccess')
+      }
+
       await client.query(
         'UPDATE group_members SET has_access = $1, is_admin = false WHERE group_id = $2 AND user_id = $3',
         [args.access, args.groupId, args.userId]

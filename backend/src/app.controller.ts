@@ -21,12 +21,16 @@ import { Throttle } from '@nestjs/throttler'
 import { Request } from 'express'
 import {
   AcceptGroupInviteArguments,
+  ClaimGhostUserArguments,
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
+  CreateGhostArguments,
+  CreateGhostClaimCodeArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
   CreateSplitArguments,
+  DeleteGhostClaimCodeArguments,
   DeleteGroupArguments,
   DeleteGroupJoinLinkArguments,
   DeleteSplitArguments,
@@ -34,6 +38,7 @@ import {
   GetBalancesArguments,
   GetDirectGroupInvitesArguments,
   GetGroupInfoArguments,
+  GetGroupInviteByClaimCodeArguments,
   GetGroupInviteByLinkArguments,
   GetGroupJoinLinkArguments,
   GetGroupMemberInfoArguments,
@@ -71,18 +76,23 @@ import {
   UnregisterNotificationTokenArguments,
   UpdateSplitArguments,
   isAcceptGroupInviteArguments,
+  isClaimGhostUserArguments,
   isCompleteSplitEntryArguments,
   isConfirmSettleUpArguments,
+  isCreateGhostArguments,
+  isCreateGhostClaimCodeArguments,
   isCreateGroupArguments,
   isCreateGroupJoinLinkArguments,
   isCreateOrUpdateUserArguments,
   isCreateSplitArguments,
+  isDeleteGhostClaimCodeArguments,
   isDeleteGroupArguments,
   isDeleteGroupJoinLinkArguments,
   isDeleteSplitArguments,
   isGetBalancesArguments,
   isGetDirectGroupInvitesArguments,
   isGetGroupInfoArguments,
+  isGetGroupInviteByClaimCodeArguments,
   isGetGroupInviteByLinkArguments,
   isGetGroupJoinLinkArguments,
   isGetGroupMemberInfoArguments,
@@ -143,6 +153,52 @@ export class AppController {
     }
 
     return await this.appService.createGroup(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('createGhost')
+  async createGhost(@Req() request: Request, @Body() args: Partial<CreateGhostArguments>) {
+    if (!isCreateGhostArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.createGhost(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('createGhostClaimCode')
+  async createGhostClaimCode(
+    @Req() request: Request,
+    @Body() args: Partial<CreateGhostClaimCodeArguments>
+  ) {
+    if (!isCreateGhostClaimCodeArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.createGhostClaimCode(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('deleteGhostClaimCode')
+  async deleteGhostClaimCode(
+    @Req() request: Request,
+    @Body() args: Partial<DeleteGhostClaimCodeArguments>
+  ) {
+    if (!isDeleteGhostClaimCodeArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.deleteGhostClaimCode(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('claimGhostUser')
+  async claimGhostUser(@Req() request: Request, @Body() args: Partial<ClaimGhostUserArguments>) {
+    if (!isClaimGhostUserArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.claimGhostUser(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)
@@ -386,6 +442,19 @@ export class AppController {
     }
 
     return await this.appService.getGroupInviteByLink(request.user.sub, args)
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('getGroupInviteByClaimCode')
+  async getGroupInviteByClaimCode(
+    @Req() request: Request,
+    @Query() args: GetGroupInviteByClaimCodeArguments
+  ) {
+    if (!isGetGroupInviteByClaimCodeArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.getGroupInviteByClaimCode(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)
