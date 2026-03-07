@@ -190,6 +190,7 @@
       "ghostsAlwaysHaveAccess": "Ghost users must always have access to the group",
       "ghostsCannotBeAdmins": "Ghost users cannot be made moderators",
       "failedToCreateGhost": "Failed to create a local user",
+      "failedToCreateGhostClaimCode": "Failed to create a claim code for the local user",
       "notAGhost": "This action can only be performed on a local user"
     },
     "user": {
