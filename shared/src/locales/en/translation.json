@@ -296,8 +296,9 @@
     "leaveGroupConfirm": "Leave",
     "cancel": "Cancel",
     "youAreAParticipantInSomeSplits": "You are a participant in some splits in this group",
-    "generateClaimCode": "Generate claim code",
-    "copyClaimCode": "Copy claim code"
+    "generateClaimCode": "Generate claim link",
+    "copyClaimCode": "Copy claim link",
+    "claimCodeCopied": "Claim link copied to clipboard"
   },
 
   "settleUpExactAmount": {

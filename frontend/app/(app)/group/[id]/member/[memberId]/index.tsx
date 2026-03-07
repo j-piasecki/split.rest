@@ -9,6 +9,7 @@ import { FullPaneHeader, Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
+import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { SplitsList } from '@components/groupScreen/SplitsList'
 import { useCreateGhostClaimCode } from '@hooks/database/useCreateGhostClaimCode'
@@ -26,6 +27,7 @@ import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
+import { getClaimLinkURL } from '@utils/getClaimLinkURL'
 import * as Clipboard from 'expo-clipboard'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useState } from 'react'
@@ -419,9 +421,17 @@ function ClaimCodeManagement({
   const { t } = useTranslation()
   const { mutateAsync: createClaimCode, isPending: isCreating } = useCreateGhostClaimCode()
   const { mutateAsync: deleteClaimCode, isPending: isDeleting } = useDeleteGhostClaimCode()
+  const snack = useSnack()
 
   if (!groupInfo.permissions?.canManageGhosts?.() || !memberInfo.isGhost) {
     return null
+  }
+
+  async function setClipboard(claimCode: string) {
+    await Clipboard.setStringAsync(getClaimLinkURL(claimCode))
+    snack.show({
+      message: t('memberInfo.claimCodeCopied'),
+    })
   }
 
   return (
@@ -434,7 +444,11 @@ function ClaimCodeManagement({
               title={t('memberInfo.generateClaimCode')}
               isLoading={isCreating}
               onPress={async () => {
-                await createClaimCode({ groupId: groupInfo.id, memberId: memberInfo.id })
+                const code = await createClaimCode({
+                  groupId: groupInfo.id,
+                  memberId: memberInfo.id,
+                })
+                await setClipboard(code)
               }}
             />
           )
@@ -446,7 +460,7 @@ function ClaimCodeManagement({
                 leftIcon='copy'
                 title={t('memberInfo.copyClaimCode')}
                 onPress={async () => {
-                  await Clipboard.setStringAsync(memberInfo.claimCode!)
+                  await setClipboard(memberInfo.claimCode!)
                 }}
               />
               <Button
