@@ -34,10 +34,10 @@ export async function createGhost(
     // Create the ghost_users record
     await client.query(
       `
-        INSERT INTO ghost_users (id, is_ghost, created_by, claim_code)
-        VALUES ($1, TRUE, $2, NULL)
+        INSERT INTO ghost_users (id, group_id, is_ghost, created_by, claim_code)
+        VALUES ($1, $2, TRUE, $3, NULL)
       `,
-      [ghostId, callerId]
+      [ghostId, args.groupId, callerId]
     )
 
     // Add ghost to the group
