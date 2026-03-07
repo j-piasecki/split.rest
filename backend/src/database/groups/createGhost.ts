@@ -43,10 +43,10 @@ export async function createGhost(
     // Add ghost to the group
     await client.query(
       `
-        INSERT INTO group_members (group_id, user_id, has_access, is_admin, balance, joined_at)
-        VALUES ($1, $2, TRUE, FALSE, 0, $3)
+        INSERT INTO group_members (group_id, user_id, has_access, is_admin, is_hidden, balance, joined_at, invited_by)
+        VALUES ($1, $2, TRUE, FALSE, FALSE, 0, $3, $4)
       `,
-      [args.groupId, ghostId, now]
+      [args.groupId, ghostId, now, callerId]
     )
 
     // Update group member count

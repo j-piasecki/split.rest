@@ -147,6 +147,7 @@ export class AppController {
     return await this.appService.createGroup(request.user.sub, args)
   }
 
+  @UseGuards(AuthGuard)
   @Post('createGhost')
   async createGhost(@Req() request: Request, @Body() args: Partial<CreateGhostArguments>) {
     if (!isCreateGhostArguments(args)) {
