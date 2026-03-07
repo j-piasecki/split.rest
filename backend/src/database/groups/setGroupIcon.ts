@@ -31,20 +31,14 @@ export async function setGroupIcon(
       )
       .then((r) => r.rows[0].icon)
 
-    if (process.env.DEV === '1') {
-      await imageService.saveImageToFile(buffer, `public/groupIcon/${groupIconId}.jpg`)
-    } else {
-      await imageService.uploadGroupIconToR2(groupIconId)
-    }
+    await imageService.saveImageToFile(buffer, `public/groupIcon/${groupIconId}.jpg`)
+    await imageService.uploadGroupIconToR2(groupIconId)
 
     await client.query('COMMIT')
 
     if (oldIconId) {
-      if (process.env.DEV === '1') {
-        imageService.deleteGroupIcon(oldIconId).catch(() => {})
-      } else {
-        imageService.deleteGroupIconFromR2(oldIconId).catch(() => {})
-      }
+      imageService.deleteGroupIcon(oldIconId).catch(() => {})
+      imageService.deleteGroupIconFromR2(oldIconId).catch(() => {})
     }
   } catch (error) {
     await client.query('ROLLBACK')
