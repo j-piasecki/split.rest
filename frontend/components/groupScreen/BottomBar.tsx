@@ -201,7 +201,7 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
             >
               {!isAddSplitSidebar && <Icon name='balance' color={sidebarTextColor} size={20} />}
               {isAddSplitSidebar && (
-                <Animated.View style={{ width: 12 }} /> // Maintain some spacing so text isn't directly touching the circle button
+                <Animated.View style={{ width: 16 }} /> // Maintain some spacing so text isn't directly touching the circle button
               )}
               <Animated.View style={[textAnimatedStyle, { transformOrigin: 'right center' }]}>
                 <Text style={[{ fontSize: 16, fontWeight: '700', color: sidebarTextColor }]}>
