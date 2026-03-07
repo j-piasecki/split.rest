@@ -14,7 +14,7 @@ import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, View, ViewStyle } from 'react-native'
+import { Platform, StyleProp, View, ViewStyle } from 'react-native'
 import { CurrencyUtils, TranslatableError } from 'shared'
 import { GroupUserInfo, Member } from 'shared'
 
@@ -132,7 +132,9 @@ export function MemberRow({ member, info, iconOnly, style }: MemberRowProps) {
           destructive: true,
           disabled: !info.permissions.canRemoveMembers() || member.id === info.owner,
           onPress: () => {
-            setConfirmRemoveMemberModalVisible(true)
+            setTimeout(() => {
+              setConfirmRemoveMemberModalVisible(true)
+            }, Platform.OS === 'ios' ? 400 : 0)
           },
         },
       ]}
