@@ -43,7 +43,7 @@ function useUserByEmail(email: string): [User | null, boolean, string | null] {
     setWaiting(true)
     setUser(null)
 
-    getUserByEmail(email)
+    getUserByEmail(debouncedEmail)
       .then((user) => {
         if (user === null) {
           setError(new TranslatableError('addMember.userNotFound'))
