@@ -15,6 +15,11 @@ export interface InviteUserToGroupArguments {
   userId: string
 }
 
+export interface CreateGhostArguments {
+  groupId: number
+  name: string
+}
+
 export interface RemoveMemberFromGroupArguments {
   groupId: number
   userId: string

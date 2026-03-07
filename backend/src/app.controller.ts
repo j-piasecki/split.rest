@@ -23,6 +23,7 @@ import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
+  CreateGhostArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
@@ -73,6 +74,7 @@ import {
   isAcceptGroupInviteArguments,
   isCompleteSplitEntryArguments,
   isConfirmSettleUpArguments,
+  isCreateGhostArguments,
   isCreateGroupArguments,
   isCreateGroupJoinLinkArguments,
   isCreateOrUpdateUserArguments,
@@ -143,6 +145,15 @@ export class AppController {
     }
 
     return await this.appService.createGroup(request.user.sub, args)
+  }
+
+  @Post('createGhost')
+  async createGhost(@Req() request: Request, @Body() args: Partial<CreateGhostArguments>) {
+    if (!isCreateGhostArguments(args)) {
+      throw new BadRequestException('api.invalidArguments')
+    }
+
+    return await this.appService.createGhost(request.user.sub, args)
   }
 
   @UseGuards(AuthGuard)

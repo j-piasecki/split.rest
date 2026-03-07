@@ -15,6 +15,7 @@ export const PermissionKeys = [
   'settleUp',
   'readMembers',
   'inviteMembers',
+  'createGhosts',
   'removeMembers',
   'renameGroup',
   'deleteGroup',
@@ -80,6 +81,7 @@ export const enum MembersPermissionsDTO {
   Read = 1 << 0, // Read members of the group (if not, the user cannot get hints when adding splits and in the roulette)
   Invite = 1 << 1, // Invite new members to the group
   Remove = 1 << 2, // Remove members from the group
+  CreateGhosts = 1 << 3, // Create ghost users
 }
 
 export const enum ManagePermissionsDTO {
@@ -255,6 +257,10 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
     return Boolean(this.members & MembersPermissionsDTO.Invite)
   }
 
+  canCreateGhosts(): boolean {
+    return Boolean(this.members & MembersPermissionsDTO.CreateGhosts)
+  }
+
   canRemoveMembers(): boolean {
     return Boolean(this.members & MembersPermissionsDTO.Remove)
   }
@@ -347,6 +353,7 @@ export class GroupMemberPermissions implements GroupMemberPermissionsDTO {
       settleUp: this.canSettleUp(),
       readMembers: this.canReadMembers(),
       inviteMembers: this.canInviteMembers(),
+      createGhosts: this.canCreateGhosts(),
       removeMembers: this.canRemoveMembers(),
       renameGroup: this.canRenameGroup(),
       deleteGroup: this.canDeleteGroup(),

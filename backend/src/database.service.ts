@@ -1,5 +1,6 @@
 import { createDatabase } from './database/createDatabase'
 import { acceptGroupInvite } from './database/groups/acceptInvite'
+import { createGhost } from './database/groups/createGhost'
 import { createGroup } from './database/groups/createGroup'
 import { createGroupJoinLink } from './database/groups/createGroupJoinLink'
 import { deleteGroup } from './database/groups/deleteGroup'
@@ -59,6 +60,7 @@ import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
+  CreateGhostArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
@@ -134,6 +136,11 @@ export class DatabaseService {
   // Every user can create a group
   async createGroup(callerId: string, args: CreateGroupArguments) {
     return await createGroup(this.pool, callerId, args)
+  }
+
+  @RequirePermissions(['createGhosts'])
+  async createGhost(callerId: string, args: CreateGhostArguments) {
+    return await createGhost(this.pool, callerId, args)
   }
 
   @RequirePermissions(['inviteMembers'])

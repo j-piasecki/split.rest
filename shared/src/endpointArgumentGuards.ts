@@ -2,6 +2,7 @@ import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
+  CreateGhostArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
@@ -57,6 +58,10 @@ export function isCreateOrUpdateUserArguments(obj: any): obj is CreateOrUpdateUs
 
 export function isCreateGroupArguments(obj: any): obj is CreateGroupArguments {
   return obj.name !== undefined && obj.currency !== undefined
+}
+
+export function isCreateGhostArguments(obj: any): obj is CreateGhostArguments {
+  return obj.groupId !== undefined && obj.name !== undefined
 }
 
 export function isInviteUserToGroupArguments(obj: any): obj is InviteUserToGroupArguments {

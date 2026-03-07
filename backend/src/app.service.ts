@@ -5,6 +5,7 @@ import {
   AcceptGroupInviteArguments,
   CompleteSplitEntryArguments,
   ConfirmSettleUpArguments,
+  CreateGhostArguments,
   CreateGroupArguments,
   CreateGroupJoinLinkArguments,
   CreateOrUpdateUserArguments,
@@ -66,6 +67,10 @@ export class AppService {
 
   async createGroup(userId: string, args: CreateGroupArguments) {
     return await this.databaseService.createGroup(userId, args)
+  }
+
+  async createGhost(userId: string, args: CreateGhostArguments) {
+    return await this.databaseService.createGhost(userId, args)
   }
 
   async inviteUser(callerId: string, args: InviteUserToGroupArguments) {

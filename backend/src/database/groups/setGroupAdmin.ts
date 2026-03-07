@@ -1,5 +1,6 @@
 import { ForbiddenException } from '../../errors/ForbiddenException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
+import { isUserGhost } from '../utils/isUserGhost'
 import { isUserGroupOwner } from '../utils/isUserGroupOwner'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { userExists } from '../utils/userExists'
@@ -30,6 +31,10 @@ export async function setGroupAdmin(pool: Pool, callerId: string, args: SetGroup
     }
 
     if (args.admin) {
+      if (await isUserGhost(client, args.userId)) {
+        throw new ForbiddenException('api.group.ghostsCannotBeAdmins')
+      }
+
       const hasAccess = await client.query(
         'SELECT has_access FROM group_members WHERE group_id = $1 AND user_id = $2',
         [args.groupId, args.userId]
