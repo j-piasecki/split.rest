@@ -11,6 +11,7 @@
   "goBack": "Go back",
   "undo": "Undo",
   "ok": "Ok",
+  "cancel": "Cancel",
 
   "login": {
     "youMustSignIn": "Sign in to start <Styled>splitting</Styled>"
@@ -427,6 +428,16 @@
     "invitedBy": "By <Styled>{{name}}</Styled>",
     "alreadyAMember": "You are already a member of this group",
     "openGroup": "Open group"
+  },
+
+  "claimGhost": {
+    "header": "Claim local account",
+    "youHaveBeenInvited": "You've been invited to claim a local account in the group",
+    "claim": "Claim account",
+    "openGroup": "Open group",
+    "invalidCode": "This claim link is invalid or has expired",
+    "noSplits": "No splits found for this local account",
+    "balance": "Balance:"
   },
 
   "groupSettings": {

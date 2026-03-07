@@ -1,4 +1,9 @@
-import { clearJoinRedirect, getJoinRedirect } from '@utils/startNavigationHelper'
+import {
+  clearClaimRedirect,
+  clearJoinRedirect,
+  getClaimRedirect,
+  getJoinRedirect,
+} from '@utils/startNavigationHelper'
 import { Redirect, useRouter } from 'expo-router'
 
 export default function Screen() {
@@ -9,6 +14,15 @@ export default function Screen() {
     router.replace(`/group/none`)
     router.push(`/join/${join}`)
     clearJoinRedirect()
+    return null
+  }
+
+  const claim = getClaimRedirect()
+
+  if (claim) {
+    router.replace(`/group/none`)
+    router.push(`/claim/${claim}`)
+    clearClaimRedirect()
     return null
   }
 

@@ -27,10 +27,12 @@ export async function getGroupInviteByClaimCode(
         users.deleted as inviter_deleted,
         users.picture_id as inviter_picture_id,
         ghost_users.id as ghost_id,
-        groups.created_at as created_at
+        groups.created_at as created_at,
+        group_members.balance as ghost_balance
       FROM ghost_users
       JOIN groups ON groups.id = ghost_users.group_id
       JOIN users ON users.id = ghost_users.created_by
+      JOIN group_members ON group_members.user_id = ghost_users.id AND group_members.group_id = ghost_users.group_id
       WHERE ghost_users.claim_code = $1
         AND groups.deleted = false
     `,
@@ -102,5 +104,5 @@ export async function getGroupInviteByClaimCode(
     },
   })
 
-  return { invite, splits }
+  return { invite, splits, balance: rows[0].ghost_balance as string }
 }

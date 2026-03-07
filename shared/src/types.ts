@@ -218,6 +218,7 @@ export interface GroupInviteWithInvitee extends GroupInvite {
 export interface GroupInviteByClaimCodeResponse {
   invite: GroupInviteWithGroupInfoAndMemberIds
   splits: SplitInfo[]
+  balance: string
 }
 
 export function isUser(obj: any): obj is User {
