@@ -1,5 +1,6 @@
 import { ConflictException } from '../../errors/ConflictException'
 import { NotFoundException } from '../../errors/NotFoundException'
+import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { Pool } from 'pg'
 import { ClaimGhostUserArguments } from 'shared'
@@ -31,6 +32,10 @@ export async function claimGhostUser(
 
     const ghostId = ghostRes.rows[0].id
     const groupId = ghostRes.rows[0].group_id
+
+    if (await isGroupDeleted(client, groupId)) {
+      throw new NotFoundException('api.notFound.group')
+    }
 
     // 2. Prevent claiming if the caller is already a member of this group
     if (await isUserMemberOfGroup(client, groupId, callerId)) {
