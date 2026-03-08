@@ -1,6 +1,5 @@
 import { Icon } from '@components/Icon'
-import { SignInWithAppleButton } from '@components/SignInWithAppleButton'
-import { SignInWithGoogleButton } from '@components/SignInWithGoogleButton'
+import { SignInButton, SignInMethod } from '@components/SignInButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { signInWithApple, signInWithGoogle, useAuth } from '@utils/auth'
@@ -172,20 +171,26 @@ export default function Screen() {
                   style={{ marginBottom: 16 }}
                 />
               )}
-              <SignInWithGoogleButton
-                onPress={async () => {
-                  setSigningIn(true)
-                  await signInWithGoogle()
-                  setSigningIn(false)
-                }}
-              />
-              <SignInWithAppleButton
-                onPress={async () => {
-                  setSigningIn(true)
-                  await signInWithApple()
-                  setSigningIn(false)
-                }}
-              />
+              <View style={{ gap: 16 }}>
+                <SignInButton
+                  method={SignInMethod.Google}
+                  disabled={signingIn}
+                  onPress={async () => {
+                    setSigningIn(true)
+                    await signInWithGoogle()
+                    setSigningIn(false)
+                  }}
+                />
+                <SignInButton
+                  method={SignInMethod.Apple}
+                  disabled={signingIn}
+                  onPress={async () => {
+                    setSigningIn(true)
+                    await signInWithApple()
+                    setSigningIn(false)
+                  }}
+                />
+              </View>
             </View>
           </View>
         )}

@@ -14,7 +14,9 @@
   "cancel": "Cancel",
 
   "login": {
-    "youMustSignIn": "Sign in to start <Styled>splitting</Styled>"
+    "youMustSignIn": "Sign in to start <Styled>splitting</Styled>",
+    "signInWithGoogle": "Sign in with Google",
+    "signInWithApple": "Sign in with Apple"
   },
 
   "home": {

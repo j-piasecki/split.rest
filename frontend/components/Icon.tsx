@@ -52,6 +52,7 @@ export type IconName =
   | 'exactAmount'
   | 'filter'
   | 'group'
+  | 'googleLogo'
   | 'home'
   | 'hourglass'
   | 'incoming'
@@ -165,6 +166,7 @@ const iconMap: Record<IconName, unknown> = {
   exactAmount: require('@assets/icons/exact_amount.svg'),
   filter: require('@assets/icons/filter.svg'),
   group: require('@assets/icons/group.svg'),
+  googleLogo: require('@assets/icons/google_logo.svg'),
   home: require('@assets/icons/home.svg'),
   hourglass: require('@assets/icons/hourglass.svg'),
   info: require('@assets/icons/info.svg'),
