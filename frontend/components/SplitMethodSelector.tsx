@@ -25,6 +25,7 @@ const SplitTypeCard = ({
   selected,
   onSelect,
   startExpanded,
+  disabled,
 }: {
   title: string
   description: string
@@ -32,6 +33,7 @@ const SplitTypeCard = ({
   selected: boolean
   startExpanded: boolean
   onSelect: () => void
+  disabled: boolean
 }) => {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
@@ -68,6 +70,10 @@ const SplitTypeCard = ({
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       onPress={onSelect}
+      style={{
+        opacity: disabled ? 0.5 : 1,
+      }}
+      disabled={disabled}
     >
       <Animated.View
         style={[
@@ -142,11 +148,13 @@ function ConcreteSplitTypeCard({
   selectedMethods,
   onSelect,
   startExpanded = true,
+  disabledMethods,
 }: {
   method: SplitMethod
   selectedMethods: SplitMethod[]
   onSelect: (method: SplitMethod) => void
   startExpanded?: boolean
+  disabledMethods?: SplitMethod[]
 }) {
   const { t } = useTranslation()
 
@@ -160,6 +168,7 @@ function ConcreteSplitTypeCard({
           selected={selectedMethods.includes(SplitMethod.Equal)}
           onSelect={() => onSelect(SplitMethod.Equal)}
           startExpanded={startExpanded}
+          disabled={disabledMethods?.includes(SplitMethod.Equal) ?? false}
         />
       )
     case SplitMethod.BalanceChanges:
@@ -171,6 +180,7 @@ function ConcreteSplitTypeCard({
           selected={selectedMethods.includes(SplitMethod.BalanceChanges)}
           onSelect={() => onSelect(SplitMethod.BalanceChanges)}
           startExpanded={startExpanded}
+          disabled={disabledMethods?.includes(SplitMethod.BalanceChanges) ?? false}
         />
       )
     case SplitMethod.ExactAmounts:
@@ -182,6 +192,7 @@ function ConcreteSplitTypeCard({
           selected={selectedMethods.includes(SplitMethod.ExactAmounts)}
           onSelect={() => onSelect(SplitMethod.ExactAmounts)}
           startExpanded={startExpanded}
+          disabled={disabledMethods?.includes(SplitMethod.ExactAmounts) ?? false}
         />
       )
     case SplitMethod.Shares:
@@ -193,6 +204,7 @@ function ConcreteSplitTypeCard({
           selected={selectedMethods.includes(SplitMethod.Shares)}
           onSelect={() => onSelect(SplitMethod.Shares)}
           startExpanded={startExpanded}
+          disabled={disabledMethods?.includes(SplitMethod.Shares) ?? false}
         />
       )
     case SplitMethod.Lend:
@@ -204,6 +216,7 @@ function ConcreteSplitTypeCard({
           selected={selectedMethods.includes(SplitMethod.Lend)}
           onSelect={() => onSelect(SplitMethod.Lend)}
           startExpanded={startExpanded}
+          disabled={disabledMethods?.includes(SplitMethod.Lend) ?? false}
         />
       )
     case SplitMethod.Delayed:
@@ -215,6 +228,7 @@ function ConcreteSplitTypeCard({
           selected={selectedMethods.includes(SplitMethod.Delayed)}
           onSelect={() => onSelect(SplitMethod.Delayed)}
           startExpanded={startExpanded}
+          disabled={disabledMethods?.includes(SplitMethod.Delayed) ?? false}
         />
       )
     default:
@@ -225,12 +239,13 @@ function ConcreteSplitTypeCard({
 interface BaseSplitMethodSelectorProps {
   displayedMethods: SplitMethod[]
   allowedMethods: SplitMethod[]
+  disabledMethods?: SplitMethod[]
   startExpanded?: boolean
 }
 
 interface SingleSplitMethodSelectorProps extends BaseSplitMethodSelectorProps {
   multiple: false
-  selectedMethod: SplitMethod
+  selectedMethod?: SplitMethod
   onSelect: (method: SplitMethod) => void
 }
 
@@ -245,7 +260,11 @@ export type SplitMethodSelectorProps =
   | MultipleSplitMethodSelectorProps
 
 export function SplitMethodSelector(props: SplitMethodSelectorProps) {
-  const selectedMethods = props.multiple ? props.selectedMethods : [props.selectedMethod]
+  const selectedMethods = props.multiple
+    ? props.selectedMethods
+    : props.selectedMethod === undefined
+      ? []
+      : [props.selectedMethod]
   const methodsToDisplay = OrderedSplitMethods.filter(
     (method) => props.displayedMethods.includes(method) && props.allowedMethods.includes(method)
   )
@@ -271,6 +290,7 @@ export function SplitMethodSelector(props: SplitMethodSelectorProps) {
           selectedMethods={selectedMethods}
           onSelect={onSelect}
           startExpanded={startExpanded}
+          disabledMethods={props.disabledMethods}
         />
       ))}
     </View>

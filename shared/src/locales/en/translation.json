@@ -401,7 +401,8 @@
     "shares": "By shares",
     "balanceChanges": "By balance changes",
     "lend": "Lend",
-    "delayed": "Delayed"
+    "delayed": "Delayed",
+    "someSplitMethodsAreDisabled": "Some split methods require more group members to be available."
   },
 
   "splitTypeDescription": {

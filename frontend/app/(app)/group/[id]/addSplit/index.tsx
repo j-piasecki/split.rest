@@ -1,4 +1,5 @@
 import { Button } from '@components/Button'
+import { ErrorText } from '@components/ErrorText'
 import ModalScreen from '@components/ModalScreen'
 import { SplitMethodSelector } from '@components/SplitMethodSelector'
 import { Text } from '@components/Text'
@@ -7,7 +8,7 @@ import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { navigateToSplitSpecificFlow } from '@utils/navigateToSplitSpecificFlow'
-import { SplitCreationContext } from '@utils/splitCreationContext'
+import { AllSplitMethods, SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,17 +21,27 @@ function Selector({ groupInfo }: { groupInfo: GroupUserInfo }) {
   const allowedSplitMethods = allowedInGroup.filter((method) => allowedInContext.includes(method))
   const canSplit = allowedSplitMethods.length > 0
 
+  const disabledSplitMethods: SplitMethod[] =
+    groupInfo.memberCount > 1
+      ? []
+      : AllSplitMethods.filter((method) => method !== SplitMethod.Delayed)
+
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
   const router = useRouter()
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
-  const [selectedSplitType, setSelectedSplitType] = useState<SplitMethod>(
-    allowedSplitMethods[0] ?? groupInfo.allowedSplitMethods[0]
+  const [selectedSplitType, setSelectedSplitType] = useState<SplitMethod | undefined>(
+    allowedSplitMethods.filter((allowed) => !disabledSplitMethods.includes(allowed))[0] ??
+      groupInfo.allowedSplitMethods.filter((allowed) => !disabledSplitMethods.includes(allowed))[0]
   )
 
   const confirmSelectedMethod = useCallback(
     (replace?: boolean) => {
+      if (selectedSplitType === undefined) {
+        return
+      }
+
       SplitCreationContext.current.setSplitMethod(selectedSplitType)
 
       if (SplitCreationContext.current.shouldSkipDetailsStep()) {
@@ -101,12 +112,18 @@ function Selector({ groupInfo }: { groupInfo: GroupUserInfo }) {
           multiple={false}
           selectedMethod={selectedSplitType}
           onSelect={setSelectedSplitType}
+          disabledMethods={disabledSplitMethods}
         />
       </ScrollView>
 
       {canSplit && (
-        <View style={{ paddingLeft: insets.left + 12, paddingRight: insets.right + 12 }}>
+        <View style={{ paddingLeft: insets.left + 12, paddingRight: insets.right + 12, gap: 8 }}>
+          {disabledSplitMethods.length > 0 && (
+            <ErrorText translationKey='splitType.someSplitMethodsAreDisabled' />
+          )}
+
           <Button
+            disabled={selectedSplitType === undefined}
             title={t('form.buttonNext')}
             rightIcon='chevronForward'
             onPress={() => {
