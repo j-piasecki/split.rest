@@ -5,7 +5,7 @@ import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useFocusEffect } from 'expo-router'
 import React, { createContext, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   SlideInDown,
@@ -75,86 +75,98 @@ function Snack({
         exiting={SlideOutDown.duration(500)}
         key={data.index}
         style={{
-          flex: displayClass <= DisplayClass.Expanded ? 1 : undefined,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          paddingHorizontal: 24,
           flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          backgroundColor: theme.colors.inverseSurface,
-          maxWidth: 768,
-          minWidth: 350,
-          paddingLeft: 16,
-          borderRadius: 4,
+          justifyContent: 'center',
         }}
       >
-        <Text
+        <View
           style={{
-            color: theme.colors.inverseOnSurface,
-            fontSize: 18,
-            flex: 1,
-            paddingVertical: 12,
+            flex: displayClass <= DisplayClass.Expanded ? 1 : undefined,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: theme.colors.inverseSurface,
+            maxWidth: 768,
+            minWidth: 350,
+            paddingLeft: 16,
+            borderRadius: 4,
           }}
-          numberOfLines={numberOfLines}
         >
-          {data.message}
-        </Text>
-
-        {data.action && data.actionText && (
-          <Pressable
-            disabled={actionRunning}
-            style={({ pressed }) => ({
-              height: '100%',
-              paddingHorizontal: 8,
-              justifyContent: 'center',
-              opacity: pressed || actionRunning ? 0.5 : 1,
-            })}
-            onPress={() => {
-              clearScheduledDismiss()
-              setActionRunning(true)
-
-              data.action!()
-                .then(() => {
-                  setActionRunning(false)
-                  dismiss()
-                })
-                .catch((error) => {
-                  setActionRunning(false)
-                  // TODO: handle this gracefully
-                  // don't dismiss in case of an error, retrying might be necessary
-                  alert(
-                    isTranslatableError(error)
-                      ? t(error.message, error.args)
-                      : error instanceof Error
-                        ? error.message
-                        : error
-                  )
-                })
+          <Text
+            style={{
+              color: theme.colors.inverseOnSurface,
+              fontSize: 18,
+              flex: 1,
+              paddingVertical: 12,
             }}
+            numberOfLines={numberOfLines}
           >
-            <Text
-              style={{ color: theme.colors.inversePrimary, fontSize: 18, fontWeight: 600 }}
-              numberOfLines={numberOfLines}
-            >
-              {data.actionText}
-            </Text>
-          </Pressable>
-        )}
+            {data.message}
+          </Text>
 
-        <RoundIconButton
-          icon='close'
-          onPress={dismiss}
-          color={theme.colors.inverseOnSurface}
-          style={({ pressed }) => ({
-            backgroundColor: 'transparent',
-            borderRadius: 0,
-            height: '100%',
-            paddingVertical: 0,
-            paddingRight: 16,
-            paddingLeft: 4,
-            marginLeft: 8,
-            justifyContent: 'center',
-            opacity: pressed ? 0.5 : 1,
-          })}
-        />
+          {data.action && data.actionText && (
+            <Pressable
+              disabled={actionRunning}
+              style={({ pressed }) => ({
+                height: '100%',
+                paddingHorizontal: 8,
+                justifyContent: 'center',
+                opacity: pressed || actionRunning ? 0.5 : 1,
+              })}
+              onPress={() => {
+                clearScheduledDismiss()
+                setActionRunning(true)
+
+                data.action!()
+                  .then(() => {
+                    setActionRunning(false)
+                    dismiss()
+                  })
+                  .catch((error) => {
+                    setActionRunning(false)
+                    // TODO: handle this gracefully
+                    // don't dismiss in case of an error, retrying might be necessary
+                    alert(
+                      isTranslatableError(error)
+                        ? t(error.message, error.args)
+                        : error instanceof Error
+                          ? error.message
+                          : error
+                    )
+                  })
+              }}
+            >
+              <Text
+                style={{ color: theme.colors.inversePrimary, fontSize: 18, fontWeight: 600 }}
+                numberOfLines={numberOfLines}
+              >
+                {data.actionText}
+              </Text>
+            </Pressable>
+          )}
+
+          <RoundIconButton
+            icon='close'
+            onPress={dismiss}
+            color={theme.colors.inverseOnSurface}
+            style={({ pressed }) => ({
+              backgroundColor: 'transparent',
+              borderRadius: 0,
+              height: '100%',
+              paddingVertical: 0,
+              paddingRight: 16,
+              paddingLeft: 4,
+              marginLeft: 8,
+              justifyContent: 'center',
+              opacity: pressed ? 0.5 : 1,
+            })}
+          />
+        </View>
       </Animated.View>
     </GestureDetector>
   )
@@ -244,9 +256,8 @@ export function SnackBarProvider({ children }: { children: React.ReactNode }) {
             bottom: 0,
             left: 0,
             right: 0,
-            paddingHorizontal: 24,
-            justifyContent: 'center',
-            flexDirection: 'row',
+            height: 0,
+            overflow: 'visible',
           },
           animatedStyle,
         ]}
@@ -276,16 +287,18 @@ export function useSnackFABInset(fabVisible?: boolean) {
   const context = React.useContext(SnackBarContext)
   const displayClass = useDisplayClass()
 
+  const setBottomInset = context?.setBottomInset
+
   useEffect(() => {
     if (displayClass > DisplayClass.Medium || fabVisible === false) {
       return
     }
 
-    context?.setBottomInset(84)
+    setBottomInset?.(84)
     return () => {
-      context?.setBottomInset(0)
+      setBottomInset?.(0)
     }
-  }, [context, displayClass, fabVisible])
+  }, [setBottomInset, displayClass, fabVisible])
 
   // TODO: this will break on multiple insets at once
   useFocusEffect(() => {
@@ -293,9 +306,9 @@ export function useSnackFABInset(fabVisible?: boolean) {
       return
     }
 
-    context?.setBottomInset(84)
+    setBottomInset?.(84)
     return () => {
-      context?.setBottomInset(0)
+      setBottomInset?.(0)
     }
   })
 }
