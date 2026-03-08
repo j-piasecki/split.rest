@@ -43,7 +43,7 @@ export async function createGhost(
         INSERT INTO users (id, name, created_at, photo_url, is_ghost, picture_id)
         VALUES ($1, $2, $3, NULL, TRUE, $4)
       `,
-      [ghostId, name, now, `local_${getGhostProfilePicture()}`]
+      [ghostId, name, now, `ghost_${getGhostProfilePicture()}`]
     )
 
     // Create the ghost_users record
