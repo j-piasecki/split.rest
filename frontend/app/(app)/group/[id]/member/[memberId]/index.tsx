@@ -278,6 +278,7 @@ function RemoveMemberButton({
   horizontal?: boolean
 }) {
   const router = useRouter()
+  const snack = useSnack()
   const { t } = useTranslation()
   const { mutateAsync: removeMember } = useRemoveUserFromGroupMutation(groupInfo.id)
   const [modalVisible, setModalVisible] = useState(false)
@@ -297,6 +298,11 @@ function RemoveMemberButton({
       } else {
         router.dismissTo(`/group/${groupInfo.id}`)
       }
+      snack.show({
+        message: isSelf
+          ? t('memberInfo.leaveGroupSuccessfully', { group: groupInfo.name })
+          : t('memberInfo.removedFromGroupSuccessfully', { user: memberInfo.name }),
+      })
     })
   }
 

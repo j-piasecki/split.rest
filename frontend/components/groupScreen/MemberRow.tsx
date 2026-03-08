@@ -3,6 +3,7 @@ import { ContextMenu, ContextMenuRef } from '@components/ContextMenu'
 import { Icon, IconName } from '@components/Icon'
 import { ProfilePicture } from '@components/ProfilePicture'
 import { RoundIconButton } from '@components/RoundIconButton'
+import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
 import { useSetGroupAccessMutation } from '@hooks/database/useGroupAccessMutation'
 import { useSetGroupAdminMutation } from '@hooks/database/useGroupAdminMutation'
@@ -59,6 +60,8 @@ function ConfirmRemoveMemberModal({
   visible: boolean
   onClose: () => void
 }) {
+  const snack = useSnack()
+  const { t } = useTranslation()
   const { mutateAsync: removeMember } = useRemoveUserFromGroupMutation(info.id)
 
   return (
@@ -77,6 +80,10 @@ function ConfirmRemoveMemberModal({
         }
 
         await removeMember(member.id)
+        snack.show({
+          message: t('memberInfo.removedFromGroupSuccessfully', { user: member.name }),
+        })
+
         onClose()
       }}
     />
