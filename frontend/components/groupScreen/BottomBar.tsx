@@ -84,7 +84,7 @@ export function BottomBar({ info, ref, disableSettleUp, disableSplit }: BottomBa
       width: withSpring(isExpanded.value ? 72 : 56, buttonPaddingSpringConfig),
       height: withSpring(isExpanded.value ? 72 : 56, buttonPaddingSpringConfig),
       borderRadius: withSpring(splitPressed ? 28 : 16, buttonCornerSpringConfig),
-      transform: [{ scale: withSpring(splitPressed ? 1.15 : 1, buttonPaddingSpringConfig) }],
+      transform: [{ scale: withSpring(splitPressed ? 1.1 : 1, buttonPaddingSpringConfig) }],
     }
   })
 
