@@ -303,7 +303,8 @@
     "youAreAParticipantInSomeSplits": "You are a participant in some splits in this group",
     "generateClaimCode": "Generate claim link",
     "copyClaimCode": "Copy claim link",
-    "claimCodeCopied": "Claim link copied to clipboard"
+    "claimCodeCopied": "Claim link copied to clipboard",
+    "claimCodeDescription": "Share the claim link with someone outside the group. They can use it to join and claim this local profile, taking over its balance and splits history."
   },
 
   "settleUpExactAmount": {

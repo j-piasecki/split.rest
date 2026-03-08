@@ -425,6 +425,7 @@ function ClaimCodeManagement({
   memberInfo: MemberWithClaimCode
 }) {
   const { t } = useTranslation()
+  const theme = useTheme()
   const { mutateAsync: createClaimCode, isPending: isCreating } = useCreateGhostClaimCode()
   const { mutateAsync: deleteClaimCode, isPending: isDeleting } = useDeleteGhostClaimCode()
   const snack = useSnack()
@@ -441,47 +442,59 @@ function ClaimCodeManagement({
   }
 
   return (
-    <ButtonShimmer argument={groupInfo && memberInfo}>
-      {() => {
-        if (!memberInfo.claimCode) {
-          return (
-            <Button
-              leftIcon='addLink'
-              title={t('memberInfo.generateClaimCode')}
-              isLoading={isCreating}
-              onPress={async () => {
-                const code = await createClaimCode({
-                  groupId: groupInfo.id,
-                  memberId: memberInfo.id,
-                })
-                await setClipboard(code)
-              }}
-            />
-          )
-        } else {
-          return (
-            <View style={{ flexDirection: 'row', gap: 8 }}>
+    <View style={{ gap: 8 }}>
+      <Text
+        style={{
+          fontSize: 14,
+          fontWeight: 500,
+          color: theme.colors.onSurfaceVariant,
+          paddingHorizontal: 4,
+        }}
+      >
+        {t('memberInfo.claimCodeDescription')}
+      </Text>
+      <ButtonShimmer argument={groupInfo && memberInfo}>
+        {() => {
+          if (!memberInfo.claimCode) {
+            return (
               <Button
-                style={{ flex: 1 }}
-                leftIcon='copy'
-                title={t('memberInfo.copyClaimCode')}
+                leftIcon='addLink'
+                title={t('memberInfo.generateClaimCode')}
+                isLoading={isCreating}
                 onPress={async () => {
-                  await setClipboard(memberInfo.claimCode!)
+                  const code = await createClaimCode({
+                    groupId: groupInfo.id,
+                    memberId: memberInfo.id,
+                  })
+                  await setClipboard(code)
                 }}
               />
-              <Button
-                destructive
-                leftIcon='deleteLink'
-                isLoading={isDeleting}
-                onPress={async () => {
-                  await deleteClaimCode({ groupId: groupInfo.id, memberId: memberInfo.id })
-                }}
-              />
-            </View>
-          )
-        }
-      }}
-    </ButtonShimmer>
+            )
+          } else {
+            return (
+              <View style={{ flexDirection: 'row', gap: 8 }}>
+                <Button
+                  style={{ flex: 1 }}
+                  leftIcon='copy'
+                  title={t('memberInfo.copyClaimCode')}
+                  onPress={async () => {
+                    await setClipboard(memberInfo.claimCode!)
+                  }}
+                />
+                <Button
+                  destructive
+                  leftIcon='deleteLink'
+                  isLoading={isDeleting}
+                  onPress={async () => {
+                    await deleteClaimCode({ groupId: groupInfo.id, memberId: memberInfo.id })
+                  }}
+                />
+              </View>
+            )
+          }
+        }}
+      </ButtonShimmer>
+    </View>
   )
 }
 
@@ -647,7 +660,7 @@ export function MemberInfo({
         </View>
       </Pane>
 
-      {groupInfo && memberInfo && (
+      {groupInfo && memberInfo && memberInfo.isGhost && (
         <ClaimCodeManagement groupInfo={groupInfo} memberInfo={memberInfo} />
       )}
 
