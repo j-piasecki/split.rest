@@ -15,7 +15,9 @@ export async function setProfilePicture(
     await client.query('BEGIN')
 
     await imageService.saveImageToFile(buffer, `public/${newPictureId}.jpg`)
-    await imageService.uploadProfilePictureToR2(newPictureId)
+    if (process.env.DEV !== '1') {
+      await imageService.uploadProfilePictureToR2(newPictureId)
+    }
 
     const oldPictureId = await client
       .query<{
@@ -31,7 +33,9 @@ export async function setProfilePicture(
     if (oldPictureId) {
       // fail silently when profile picture deletion fails
       imageService.deleteProfilePicture(oldPictureId).catch(() => {})
-      imageService.deleteProfilePictureFromR2(oldPictureId).catch(() => {})
+      if (process.env.DEV !== '1') {
+        imageService.deleteProfilePictureFromR2(oldPictureId).catch(() => {})
+      }
     }
   } catch (error) {
     await client.query('ROLLBACK')
