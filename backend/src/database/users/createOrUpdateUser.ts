@@ -1,3 +1,4 @@
+import { getGhostProfilePicture } from '../utils/getGhostProfilePicture'
 import crypto from 'crypto'
 import { Pool } from 'pg'
 import { CreateOrUpdateUserArguments } from 'shared'
@@ -46,8 +47,13 @@ export async function createOrUpdateUser(
       await imageService.downloadProfilePicture(user.photoUrl, pictureId)
       await imageService.uploadProfilePictureToR2(pictureId)
     } catch (error) {
+      pictureId = null
       console.error(`Failed to download profile picture for ${user.id}`, error)
     }
+  }
+
+  if (pictureId === null) {
+    pictureId = getGhostProfilePicture()
   }
 
   try {

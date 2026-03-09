@@ -1,15 +1,10 @@
 import { BadRequestException } from '../../errors/BadRequestException'
 import { NotFoundException } from '../../errors/NotFoundException'
+import { getGhostProfilePicture } from '../utils/getGhostProfilePicture'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import * as crypto from 'crypto'
 import { Pool } from 'pg'
 import { CreateGhostArguments, Member } from 'shared'
-
-function getGhostProfilePicture() {
-  const NUMBER_OF_PICTURES = 27
-
-  return Math.floor(Math.random() * NUMBER_OF_PICTURES) + 1
-}
 
 export async function createGhost(
   pool: Pool,
@@ -43,7 +38,7 @@ export async function createGhost(
         INSERT INTO users (id, name, created_at, photo_url, is_ghost, picture_id)
         VALUES ($1, $2, $3, NULL, TRUE, $4)
       `,
-      [ghostId, name, now, `ghost_${getGhostProfilePicture()}`]
+      [ghostId, name, now, getGhostProfilePicture()]
     )
 
     // Create the ghost_users record
