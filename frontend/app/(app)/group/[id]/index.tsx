@@ -226,7 +226,7 @@ function LoadingError() {
           paddingBottom: 128,
         }}
       >
-        <Text style={{ color: theme.colors.onSurface, fontSize: 64, opacity: 0.5 }}>{'😞'}</Text>
+        <Text style={{ color: theme.colors.onSurface, fontSize: 64, opacity: 0.5 }}>{':('}</Text>
         <Text style={{ color: theme.colors.onSurface, fontSize: 20, fontWeight: 600 }}>
           {t('groupInfo.couldNotLoad')}
         </Text>
