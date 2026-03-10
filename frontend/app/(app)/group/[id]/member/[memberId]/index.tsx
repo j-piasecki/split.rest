@@ -2,12 +2,11 @@ import { Button } from '@components/Button'
 import { ButtonShimmer } from '@components/ButtonShimmer'
 import { ButtonWithSecondaryActions } from '@components/ButtonWithSecondaryActions'
 import { ConfirmationModal } from '@components/ConfirmationModal'
+import { DisplayNameSetter as GenericDisplayNameSetter } from '@components/DisplayNameSetter'
 import { Icon, IconName } from '@components/Icon'
-import { LargeTextInput } from '@components/LargeTextInput'
 import ModalScreen from '@components/ModalScreen'
 import { FullPaneHeader, Pane } from '@components/Pane'
 import { ProfilePicture } from '@components/ProfilePicture'
-import { RoundIconButton } from '@components/RoundIconButton'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
@@ -51,72 +50,36 @@ function DisplayNameSetter({
   groupInfo: GroupUserInfo
   memberInfo: Member
 }) {
-  const theme = useTheme()
   const { user } = useAuth()
   const { t } = useTranslation()
   const { mutateAsync: setDisplayName, isPending: isChangingDisplayName } =
     useSetUserDisplayNameMutation(groupInfo.id, memberInfo.id)
-  const [value, setValue] = useState(memberInfo.displayName)
 
   const canEditDisplayName =
     groupInfo?.permissions?.canChangeEveryoneDisplayName?.() ||
     (groupInfo?.permissions?.canChangeDisplayName?.() && user?.id === memberInfo.id)
 
-  function saveDisplayName() {
-    if (value === null || value === memberInfo.displayName) {
-      return
-    }
-
-    if (value.length > 128) {
+  async function saveDisplayName(newName: string) {
+    if (newName.length > 128) {
       alert(t('api.user.nameTooLong'))
       return
     }
-
-    setDisplayName(value)
+    await setDisplayName(newName)
   }
 
   async function deleteDisplayName() {
     await setDisplayName(null)
-    setValue(null)
   }
 
-  const showSaveButton =
-    canEditDisplayName && value !== null && value !== (memberInfo.displayName ?? '')
-  const showDeleteButton = !showSaveButton && memberInfo.displayName !== null
-
   return (
-    <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
-      <LargeTextInput
-        placeholder={t('memberInfo.displayNamePlaceholder')}
-        disabled={!canEditDisplayName || isChangingDisplayName}
-        value={value ?? ''}
-        onChangeText={setValue}
-        containerStyle={{ flex: 1, paddingRight: 56 }}
-        onSubmit={saveDisplayName}
-        autoCorrect={false}
-      />
-      <View
-        style={{
-          position: 'absolute',
-          right: 8,
-          top: 0,
-          bottom: 0,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        {(showSaveButton || showDeleteButton) && (
-          <RoundIconButton
-            opaque
-            color={theme.colors.secondary}
-            icon={showSaveButton ? 'saveAlt' : 'close'}
-            onPress={showSaveButton ? saveDisplayName : deleteDisplayName}
-            size={32}
-            isLoading={isChangingDisplayName}
-          />
-        )}
-      </View>
-    </View>
+    <GenericDisplayNameSetter
+      initialValue={memberInfo.displayName}
+      placeholder={t('memberInfo.displayNamePlaceholder')}
+      isLoading={isChangingDisplayName}
+      canEdit={canEditDisplayName ?? false}
+      onSave={saveDisplayName}
+      onDelete={deleteDisplayName}
+    />
   )
 }
 

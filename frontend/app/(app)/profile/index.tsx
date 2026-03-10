@@ -1,9 +1,8 @@
+import { DisplayNameSetter as GenericDisplayNameSetter } from '@components/DisplayNameSetter'
 import { Icon } from '@components/Icon'
-import { LargeTextInput } from '@components/LargeTextInput'
 import ModalScreen from '@components/ModalScreen'
 import { PaneButton } from '@components/PaneButton'
 import { ProfilePicture } from '@components/ProfilePicture'
-import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useSetUserNameMutation } from '@hooks/database/useSetUserName'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
@@ -24,15 +23,13 @@ import { FileUploadArguments, TranslatableError, User, isTranslatableError } fro
 const icon = require('@assets/icon.svg')
 
 function DisplayNameSetter() {
-  const theme = useTheme()
   const { user } = useAuth()
   const { t } = useTranslation()
-  const [value, setValue] = useState(user?.name ?? '')
 
   const { mutateAsync: setUserName, isPending: isChangingName } = useSetUserNameMutation()
 
-  function saveDisplayName() {
-    const newName = value.trim()
+  async function saveDisplayName(newValue: string) {
+    const newName = newValue.trim()
 
     if (newName.length === 0) {
       alert(t('api.user.nameCannotBeEmpty'))
@@ -44,7 +41,7 @@ function DisplayNameSetter() {
       return
     }
 
-    setUserName(newName).catch((e) => {
+    await setUserName(newName).catch((e) => {
       if (e instanceof TranslatableError) {
         alert(t(e.message, e.args))
       } else {
@@ -54,38 +51,13 @@ function DisplayNameSetter() {
   }
 
   return (
-    <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
-      <LargeTextInput
-        placeholder={t('settings.username')}
-        disabled={isChangingName}
-        value={value ?? ''}
-        onChangeText={setValue}
-        containerStyle={{ flex: 1, paddingRight: 56 }}
-        onSubmit={saveDisplayName}
-        autoCorrect={false}
-      />
-      <View
-        style={{
-          position: 'absolute',
-          right: 8,
-          top: 0,
-          bottom: 0,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        {value !== null && value !== (user?.name ?? '') && (
-          <RoundIconButton
-            opaque
-            color={theme.colors.secondary}
-            icon='saveAlt'
-            onPress={saveDisplayName}
-            size={32}
-            isLoading={isChangingName}
-          />
-        )}
-      </View>
-    </View>
+    <GenericDisplayNameSetter
+      initialValue={user?.name ?? ''}
+      placeholder={t('settings.username')}
+      isLoading={isChangingName}
+      canEdit={true}
+      onSave={saveDisplayName}
+    />
   )
 }
 
