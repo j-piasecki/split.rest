@@ -177,8 +177,13 @@ export default function Screen() {
                   disabled={signingIn}
                   onPress={async () => {
                     setSigningIn(true)
-                    await signInWithGoogle()
-                    setSigningIn(false)
+                    try {
+                      await signInWithGoogle()
+                    } catch (error) {
+                      console.error('Failed to sign in with Google', error)
+                    } finally {
+                      setSigningIn(false)
+                    }
                   }}
                 />
                 <SignInButton
@@ -186,8 +191,13 @@ export default function Screen() {
                   disabled={signingIn}
                   onPress={async () => {
                     setSigningIn(true)
-                    await signInWithApple()
-                    setSigningIn(false)
+                    try {
+                      await signInWithApple()
+                    } catch (error) {
+                      console.error('Failed to sign in with Apple', error)
+                    } finally {
+                      setSigningIn(false)
+                    }
                   }}
                 />
               </View>
