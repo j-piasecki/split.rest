@@ -16,7 +16,7 @@ import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { TranslatableError, User } from 'shared'
@@ -107,7 +107,7 @@ function UserPreview({
   )
 }
 
-function AddByEmailPane() {
+function AddByEmailPane({ onFocus }: { onFocus?: () => void }) {
   const router = useRouter()
   const snack = useSnack()
   const theme = useTheme()
@@ -179,6 +179,7 @@ function AddByEmailPane() {
               setAddingError('')
             }}
             editable={!isAddingToGroup}
+            onFocus={onFocus}
           />
         </Form>
 
@@ -199,7 +200,7 @@ function AddByEmailPane() {
   )
 }
 
-export function AddByNamePane() {
+export function AddByNamePane({ onFocus }: { onFocus?: () => void }) {
   const router = useRouter()
   const snack = useSnack()
   const { id: groupId } = useLocalSearchParams()
@@ -254,6 +255,7 @@ export function AddByNamePane() {
               setAddingError('')
             }}
             editable={!isCreating}
+            onFocus={onFocus}
           />
         </Form>
       </View>
@@ -277,6 +279,7 @@ export default function Modal() {
   const { t } = useTranslation()
   const insets = useModalScreenInsets()
   const { data: groupInfo } = useGroupInfo(Number(id))
+  const scrollViewRef = useRef<ScrollView>(null)
 
   const canInviteByEmail = groupInfo?.permissions?.canInviteMembers?.() ?? false
   const canCreateGhosts = groupInfo?.permissions?.canCreateGhosts?.() ?? false
@@ -289,6 +292,7 @@ export default function Modal() {
       maxHeight={650}
     >
       <ScrollView
+        ref={scrollViewRef}
         contentContainerStyle={{
           flexGrow: 1,
           paddingLeft: insets.left + 16,
@@ -307,7 +311,11 @@ export default function Modal() {
             textLocation='start'
             style={{ overflow: 'hidden' }}
           >
-            <AddByEmailPane />
+            <AddByEmailPane
+              onFocus={() =>
+                setTimeout(() => scrollViewRef.current?.scrollTo({ y: 0, animated: true }), 150)
+              }
+            />
           </Pane>
         )}
         {canCreateGhosts && (
@@ -318,7 +326,11 @@ export default function Modal() {
             textLocation='start'
             style={{ overflow: 'hidden' }}
           >
-            <AddByNamePane />
+            <AddByNamePane
+              onFocus={() =>
+                setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 150)
+              }
+            />
           </Pane>
         )}
       </ScrollView>
