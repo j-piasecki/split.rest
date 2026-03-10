@@ -34,8 +34,6 @@ GoogleSignin.configure({
   webClientId: '461804772528-ci5dbjajrcrlv2lsgdap364ki2r2nnkb.apps.googleusercontent.com',
 })
 
-let authReady = false
-
 async function tryToCreateUser(createUserRetries = 5) {
   try {
     await createOrUpdateUser()
@@ -59,14 +57,13 @@ async function unregisterNotifications() {
 
 export function useAuth() {
   const [firebaseUser, setFirebaseUser] = useState<FirebaseAuthTypes.User | null | undefined>(
-    authReady ? auth.currentUser : undefined
+    auth.currentUser
   )
   const { user: remoteUser, serverDown } = useUserById(firebaseUser?.uid)
   const user = remoteUser
 
   useEffect(() => {
     const subscriber = onAuthStateChanged(auth, (user) => {
-      authReady = true
       setFirebaseUser(user)
     })
     return subscriber

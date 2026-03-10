@@ -50,6 +50,7 @@ export default function Screen() {
   const { joinUuid, claimCode } = useLocalSearchParams()
   const { width, height } = useWindowDimensions()
   const [signingIn, setSigningIn] = useState(false)
+  const [wasSignedOut, setWasSignedOut] = useState(false)
 
   useEffect(() => {
     if (joinUuid) {
@@ -62,6 +63,12 @@ export default function Screen() {
       setClaimRedirect(claimCode as string)
     }
   }, [claimCode])
+
+  useEffect(() => {
+    if (user === null) {
+      setWasSignedOut(true)
+    }
+  }, [user])
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
@@ -105,7 +112,7 @@ export default function Screen() {
           paddingBottom: insets.bottom,
         }}
       >
-        {user === undefined && !serverDown && (
+        {user === undefined && !wasSignedOut && !serverDown && (
           <View style={{ padding: 16, alignItems: 'center', gap: 8 }}>
             <ActivityIndicator size='small' color={theme.colors.onSurface} />
             <Text style={{ fontSize: 18, textAlign: 'center', color: theme.colors.onSurface }}>
@@ -114,7 +121,7 @@ export default function Screen() {
           </View>
         )}
         {serverDown && <ServerDown />}
-        {user === null && (
+        {(user === null || (user === undefined && wasSignedOut)) && (
           <View style={{ flex: 1, justifyContent: 'space-between' }}>
             <View
               style={{
@@ -164,7 +171,7 @@ export default function Screen() {
                 pointerEvents: signingIn ? 'none' : 'auto',
               }}
             >
-              {signingIn && (
+              {(signingIn || user === undefined) && (
                 <ActivityIndicator
                   size='small'
                   color={theme.colors.onSurface}

@@ -59,7 +59,15 @@ function Content() {
   const [loadingVisible, setLoadingVisible] = useState(Platform.OS === 'web')
   const loadingOpacity = useSharedValue(1)
 
-  const isLoading = (user === undefined && !serverDown) || !fontsLoaded || !theme.ready
+  const [hasLoaded, setHasLoaded] = useState(false)
+  const isDependenciesLoading = (user === undefined && !serverDown) || !fontsLoaded || !theme.ready
+  const isLoading = hasLoaded ? false : isDependenciesLoading
+
+  useEffect(() => {
+    if (!isLoading) {
+      setHasLoaded(true)
+    }
+  }, [isLoading])
 
   const loadingStyle = useAnimatedStyle(() => {
     return {
