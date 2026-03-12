@@ -75,22 +75,20 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
       >
         <TitleWithBalance info={info} />
 
-        {threeBarLayout && (
-          <ButtonShimmer argument={info}>
-            {(info) =>
-              Number(info?.balance) !== 0 &&
-              info.permissions.canSettleUp?.() && (
-                <Button
-                  onPress={() => {
-                    router.navigate(`/group/${info!.id}/settleUp`)
-                  }}
-                  title={t('groupInfo.settleUp.settleUp')}
-                  leftIcon='balance'
-                />
-              )
-            }
-          </ButtonShimmer>
-        )}
+        <ButtonShimmer argument={info}>
+          {(info) =>
+            Number(info?.balance) !== 0 &&
+            info.permissions.canSettleUp?.() && (
+              <Button
+                onPress={() => {
+                  router.navigate(`/group/${info!.id}/settleUp`)
+                }}
+                title={t('groupInfo.settleUp.settleUp')}
+                leftIcon='balance'
+              />
+            )
+          }
+        </ButtonShimmer>
       </View>
 
       {info?.locked && (
