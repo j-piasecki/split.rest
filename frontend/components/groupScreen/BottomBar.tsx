@@ -48,7 +48,6 @@ export function BottomBar({ info, ref, disableSplit }: BottomBarProps) {
 
   const containerAnimatedStyle = useAnimatedStyle(() => {
     return {
-      pointerEvents: isExpanded.value ? 'auto' : 'none',
       transform: [
         {
           translateY: withTiming(isExpanded.value || Platform.OS === 'web' ? 0 : 16, {
@@ -87,65 +86,49 @@ export function BottomBar({ info, ref, disableSplit }: BottomBarProps) {
   }
 
   return (
-    <Pressable
-      onPress={() => {
-        if (!isExpanded.value) {
-          isExpanded.value = true
-        }
-      }}
-      style={{
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end',
-        /* @ts-expect-error userSelect does not exist on StyleSheet */
-        userSelect: 'none',
-        // catch touches on Android
-        backgroundColor: '#00000001',
-      }}
+    <Animated.View
+      style={[
+        {
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          flexDirection: 'row',
+        },
+        containerAnimatedStyle,
+      ]}
     >
       <Animated.View
         style={[
           {
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            flexDirection: 'row',
+            backgroundColor: theme.colors.primaryContainer,
+            zIndex: 1000,
+            overflow: 'hidden',
           },
-          containerAnimatedStyle,
+          styles.bottomBarShadow,
+          splitAnimatedStyle,
         ]}
       >
-        <Animated.View
-          style={[
-            {
-              backgroundColor: theme.colors.primaryContainer,
-              zIndex: 1000,
-              overflow: 'hidden',
-            },
-            styles.bottomBarShadow,
-            splitAnimatedStyle,
-          ]}
-        >
-          <Animated.View style={[StyleSheet.absoluteFillObject, splitBackgroundAnimatedStyle]}>
-            <Pressable
-              disabled={!splitEnabled}
-              onPress={() => {
-                SplitCreationContext.create().begin()
-                router.navigate(`/group/${info?.id}/addSplit`)
-              }}
-              onPressIn={() => setSplitPressed(true)}
-              onPressOut={() => setSplitPressed(false)}
-              style={{
-                ...StyleSheet.absoluteFillObject,
-                justifyContent: 'center',
-                alignItems: 'center',
-                opacity: splitEnabled ? 1 : 0.4,
-              }}
-            >
-              <Animated.View style={iconAnimatedStyle}>
-                <Icon name='split' color={theme.colors.onPrimaryContainer} size={28} />
-              </Animated.View>
-            </Pressable>
-          </Animated.View>
+        <Animated.View style={[StyleSheet.absoluteFillObject, splitBackgroundAnimatedStyle]}>
+          <Pressable
+            disabled={!splitEnabled}
+            onPress={() => {
+              SplitCreationContext.create().begin()
+              router.navigate(`/group/${info?.id}/addSplit`)
+            }}
+            onPressIn={() => setSplitPressed(true)}
+            onPressOut={() => setSplitPressed(false)}
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              justifyContent: 'center',
+              alignItems: 'center',
+              opacity: splitEnabled ? 1 : 0.4,
+            }}
+          >
+            <Animated.View style={iconAnimatedStyle}>
+              <Icon name='split' color={theme.colors.onPrimaryContainer} size={28} />
+            </Animated.View>
+          </Pressable>
         </Animated.View>
       </Animated.View>
-    </Pressable>
+    </Animated.View>
   )
 }
