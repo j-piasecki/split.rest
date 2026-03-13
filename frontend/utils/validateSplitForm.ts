@@ -66,8 +66,8 @@ export async function validateSplitForm(
     throw new TranslatableError('splitValidation.thePayerDataMustBeFilledIn')
   }
 
-  const emails = entriesWithUsers.map((entry) => entry.user.email)
-  if (new Set(emails).size !== emails.length) {
+  const ids = entriesWithUsers.map((entry) => entry.user.id)
+  if (new Set(ids).size !== ids.length) {
     throw new TranslatableError('splitValidation.entriesMustBeUnique')
   }
 
