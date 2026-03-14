@@ -1,12 +1,5 @@
-import { Icon, IconName } from '@components/Icon'
-import { RoundIconButton } from '@components/RoundIconButton'
-import { Text } from '@components/Text'
-import { useTheme } from '@styling/theme'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
-import { useState } from 'react'
+import { Selector } from '@components/Selector'
 import { useTranslation } from 'react-i18next'
-import { Pressable, StyleSheet, View } from 'react-native'
-import Animated, { useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated'
 import { SplitMethod } from 'shared'
 
 const OrderedSplitMethods = [
@@ -18,129 +11,10 @@ const OrderedSplitMethods = [
   SplitMethod.Delayed,
 ]
 
-const SplitTypeCard = ({
-  title,
-  description,
-  icon,
-  selected,
-  onSelect,
-  startExpanded,
-  disabled,
-}: {
+interface SplitMethodContent {
   title: string
   description: string
-  icon: IconName
-  selected: boolean
-  startExpanded: boolean
-  onSelect: () => void
-  disabled: boolean
-}) => {
-  const theme = useTheme()
-  const threeBarLayout = useThreeBarLayout()
-  const [pressed, setPressed] = useState(false)
-  const [hovered, setHovered] = useState(false)
-  const [expanded, setExpanded] = useState(startExpanded)
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: withTiming(selected ? 0.9 : pressed ? 0.65 : hovered ? 0.3 : 0, {
-        duration: 200,
-      }),
-    }
-  })
-
-  const animatedContainerStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          scale: withSpring(pressed ? 1.025 : 1, {
-            damping: 40,
-            stiffness: 500,
-            energyThreshold: 0.0001,
-          }),
-        },
-      ],
-    }
-  })
-
-  return (
-    <Pressable
-      onPressIn={() => setPressed(true)}
-      onPressOut={() => setPressed(false)}
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-      onPress={onSelect}
-      style={{
-        opacity: disabled ? 0.5 : 1,
-      }}
-      disabled={disabled}
-    >
-      <Animated.View
-        style={[
-          animatedContainerStyle,
-          {
-            gap: 8,
-            paddingVertical: 16,
-            paddingHorizontal: 12,
-            borderRadius: 16,
-            borderWidth: 1,
-            borderColor: theme.colors.outline,
-            overflow: 'hidden',
-            // @ts-expect-error - userSelect is not a valid style property
-            userSelect: 'none',
-          },
-        ]}
-      >
-        <Animated.View
-          style={[
-            StyleSheet.absoluteFill,
-            animatedStyle,
-            {
-              backgroundColor: theme.colors.secondaryContainer,
-            },
-          ]}
-        />
-
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1 }}>
-          <Icon
-            name={icon}
-            size={threeBarLayout ? 20 : 24}
-            color={theme.colors.onSecondaryContainer}
-          />
-          <Text
-            style={{
-              fontSize: threeBarLayout ? 18 : 20,
-              fontWeight: 800,
-              color: theme.colors.onSecondaryContainer,
-            }}
-          >
-            {title}
-          </Text>
-
-          <View style={{ position: 'absolute', right: 0 }}>
-            <RoundIconButton
-              icon={expanded ? 'arrowUp' : 'arrowDown'}
-              size={threeBarLayout ? 20 : 24}
-              color={theme.colors.onSecondaryContainer}
-              onPress={() => setExpanded(!expanded)}
-            />
-          </View>
-        </View>
-        {expanded && (
-          <Text
-            style={{
-              marginLeft: 32,
-              fontSize: threeBarLayout ? 14 : 16,
-              fontWeight: 600,
-              color: theme.colors.onSurface,
-            }}
-          >
-            {description}
-          </Text>
-        )}
-      </Animated.View>
-    </Pressable>
-  )
+  icon: 'equal' | 'barChart' | 'exactAmount' | 'pieChart' | 'payment' | 'schedule'
 }
 
 function ConcreteSplitTypeCard({
@@ -158,82 +32,55 @@ function ConcreteSplitTypeCard({
 }) {
   const { t } = useTranslation()
 
-  switch (method) {
-    case SplitMethod.Equal:
-      return (
-        <SplitTypeCard
-          title={t('splitType.equalAmounts')}
-          description={t('splitTypeDescription.equalAmounts')}
-          icon='equal'
-          selected={selectedMethods.includes(SplitMethod.Equal)}
-          onSelect={() => onSelect(SplitMethod.Equal)}
-          startExpanded={startExpanded}
-          disabled={disabledMethods?.includes(SplitMethod.Equal) ?? false}
-        />
-      )
-    case SplitMethod.BalanceChanges:
-      return (
-        <SplitTypeCard
-          title={t('splitType.balanceChanges')}
-          description={t('splitTypeDescription.balanceChanges')}
-          icon='barChart'
-          selected={selectedMethods.includes(SplitMethod.BalanceChanges)}
-          onSelect={() => onSelect(SplitMethod.BalanceChanges)}
-          startExpanded={startExpanded}
-          disabled={disabledMethods?.includes(SplitMethod.BalanceChanges) ?? false}
-        />
-      )
-    case SplitMethod.ExactAmounts:
-      return (
-        <SplitTypeCard
-          title={t('splitType.exactAmounts')}
-          description={t('splitTypeDescription.exactAmounts')}
-          icon='exactAmount'
-          selected={selectedMethods.includes(SplitMethod.ExactAmounts)}
-          onSelect={() => onSelect(SplitMethod.ExactAmounts)}
-          startExpanded={startExpanded}
-          disabled={disabledMethods?.includes(SplitMethod.ExactAmounts) ?? false}
-        />
-      )
-    case SplitMethod.Shares:
-      return (
-        <SplitTypeCard
-          title={t('splitType.shares')}
-          description={t('splitTypeDescription.shares')}
-          icon='pieChart'
-          selected={selectedMethods.includes(SplitMethod.Shares)}
-          onSelect={() => onSelect(SplitMethod.Shares)}
-          startExpanded={startExpanded}
-          disabled={disabledMethods?.includes(SplitMethod.Shares) ?? false}
-        />
-      )
-    case SplitMethod.Lend:
-      return (
-        <SplitTypeCard
-          title={t('splitType.lend')}
-          description={t('splitTypeDescription.lend')}
-          icon='payment'
-          selected={selectedMethods.includes(SplitMethod.Lend)}
-          onSelect={() => onSelect(SplitMethod.Lend)}
-          startExpanded={startExpanded}
-          disabled={disabledMethods?.includes(SplitMethod.Lend) ?? false}
-        />
-      )
-    case SplitMethod.Delayed:
-      return (
-        <SplitTypeCard
-          title={t('splitType.delayed')}
-          description={t('splitTypeDescription.delayed')}
-          icon='schedule'
-          selected={selectedMethods.includes(SplitMethod.Delayed)}
-          onSelect={() => onSelect(SplitMethod.Delayed)}
-          startExpanded={startExpanded}
-          disabled={disabledMethods?.includes(SplitMethod.Delayed) ?? false}
-        />
-      )
-    default:
-      return null
+  const methodConfigs: Record<SplitMethod, SplitMethodContent> = {
+    [SplitMethod.Equal]: {
+      title: t('splitType.equalAmounts'),
+      description: t('splitTypeDescription.equalAmounts'),
+      icon: 'equal',
+    },
+    [SplitMethod.BalanceChanges]: {
+      title: t('splitType.balanceChanges'),
+      description: t('splitTypeDescription.balanceChanges'),
+      icon: 'barChart',
+    },
+    [SplitMethod.ExactAmounts]: {
+      title: t('splitType.exactAmounts'),
+      description: t('splitTypeDescription.exactAmounts'),
+      icon: 'exactAmount',
+    },
+    [SplitMethod.Shares]: {
+      title: t('splitType.shares'),
+      description: t('splitTypeDescription.shares'),
+      icon: 'pieChart',
+    },
+    [SplitMethod.Lend]: {
+      title: t('splitType.lend'),
+      description: t('splitTypeDescription.lend'),
+      icon: 'payment',
+    },
+    [SplitMethod.Delayed]: {
+      title: t('splitType.delayed'),
+      description: t('splitTypeDescription.delayed'),
+      icon: 'schedule',
+    },
   }
+
+  const config = methodConfigs[method]
+  if (!config) {
+    return null
+  }
+
+  return (
+    <Selector.Item
+      title={config.title}
+      description={config.description}
+      icon={config.icon}
+      selected={selectedMethods.includes(method)}
+      onSelect={() => onSelect(method)}
+      startExpanded={startExpanded}
+      disabled={disabledMethods?.includes(method) ?? false}
+    />
+  )
 }
 
 interface BaseSplitMethodSelectorProps {
@@ -282,7 +129,7 @@ export function SplitMethodSelector(props: SplitMethodSelectorProps) {
   }
 
   return (
-    <View style={{ gap: 16 }}>
+    <Selector>
       {methodsToDisplay.map((method) => (
         <ConcreteSplitTypeCard
           key={method}
@@ -293,6 +140,6 @@ export function SplitMethodSelector(props: SplitMethodSelectorProps) {
           disabledMethods={props.disabledMethods}
         />
       ))}
-    </View>
+    </Selector>
   )
 }
