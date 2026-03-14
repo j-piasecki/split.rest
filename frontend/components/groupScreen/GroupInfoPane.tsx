@@ -73,7 +73,7 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
             backgroundColor: theme.colors.surfaceContainer,
             paddingHorizontal: 16,
             paddingVertical: 8,
-            paddingBottom: !info?.locked || Platform.OS === 'web' ? 16 : undefined,
+            paddingBottom: 16,
             borderRadius: 4,
             gap: 12,
           },
