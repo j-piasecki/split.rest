@@ -29,6 +29,10 @@ export default function GroupFlow() {
         options={{ title: t('screenName.settleUp'), ...modalOptions }}
       />
       <Stack.Screen
+        name='settleUpMethod'
+        options={{ title: t('screenName.settleUpMethod'), ...modalOptions }}
+      />
+      <Stack.Screen
         name='member/[memberId]/index'
         options={{ title: t('screenName.memberInfo'), ...modalOptions }}
       />

@@ -114,11 +114,7 @@ export default function SettleUp() {
   const theme = useTheme()
 
   const goBack = useCallback(() => {
-    if (router.canGoBack()) {
-      router.back()
-    } else {
-      router.replace(`/group/${id}`)
-    }
+    router.dismissTo(`/group/${id}`)
   }, [router, id])
 
   useEffect(() => {

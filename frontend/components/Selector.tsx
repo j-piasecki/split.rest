@@ -14,6 +14,7 @@ export interface SelectorItemProps {
   selected: boolean
   onSelect: () => void
   disabled?: boolean
+  collapsible?: boolean
   startExpanded?: boolean
   children?: ReactNode
   style?: ViewStyle
@@ -26,6 +27,7 @@ export function SelectorItem({
   selected,
   onSelect,
   disabled,
+  collapsible = true,
   startExpanded = false,
   children,
   style,
@@ -34,7 +36,7 @@ export function SelectorItem({
   const threeBarLayout = useThreeBarLayout()
   const [pressed, setPressed] = useState(false)
   const [hovered, setHovered] = useState(false)
-  const [expanded, setExpanded] = useState(startExpanded)
+  const [expanded, setExpanded] = useState(startExpanded && collapsible)
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -115,7 +117,7 @@ export function SelectorItem({
             {title}
           </Text>
 
-          {description && (
+          {description && collapsible && (
             <View style={{ position: 'absolute', right: 0 }}>
               <RoundIconButton
                 icon={expanded ? 'arrowUp' : 'arrowDown'}
@@ -126,7 +128,7 @@ export function SelectorItem({
             </View>
           )}
         </View>
-        {expanded && description && (
+        {(expanded || !collapsible) && description && (
           <Text
             style={{
               marginLeft: icon ? 32 : 0,

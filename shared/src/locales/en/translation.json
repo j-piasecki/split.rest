@@ -335,6 +335,7 @@
     "settleUpExactAmount": "Settle up for an exact amount",
     "addSplit":"Add split",
     "settleUp": "Settle up",
+    "settleUpMethod": "Settle up method",
     "filter": "Filter splits",
     "groupStats": "Group trends",
 
@@ -472,7 +473,7 @@
     "unlockGroup": "Unlock group",
     "settleUpGroup": "Settle all balances",
     "settleUpGroupSuccess": "All balances in the group settled",
-    "settleUpGroupConfirmationText": "Are you sure you want to settle up the group?",
+    "settleUpGroupConfirmationText": "Are you sure you want to settle all balances in the group?",
     "settleUpGroupConfirmationMessage": "This action will create multiple settle-up splits and notify all members.",
     "settleUpGroupConfirm": "Yes",
     "settleUpGroupCancel": "No",
@@ -639,7 +640,19 @@
       "confirm": "Confirm",
       "cancel": "Cancel",
       "settleUpSuccess": "Settled up",
-      "openSettleUp": "Show"
+      "openSettleUp": "Show",
+      "options": {
+        "title": "How would you like to settle up?",
+        "personal": {
+          "title": "Settle my balance",
+          "description": "Create a transaction to settle what you owe or are owed by others."
+        },
+        "group": {
+          "title": "Settle all balances",
+          "description": "Automatically create transactions to bring everyone's balance to zero."
+        },
+        "continue": "Continue"
+      }
     },
     "groupLocked": "This group is locked",
     "groupLockedDescription": "You can't add new splits, edit or delete existing ones. You can still settle up and complete existing settle-ups.",

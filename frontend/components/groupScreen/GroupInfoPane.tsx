@@ -81,7 +81,11 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
             info.permissions.canSettleUp?.() && (
               <Button
                 onPress={() => {
-                  router.navigate(`/group/${info!.id}/settleUp`)
+                  if (info.permissions.canSettleUpGroup()) {
+                    router.navigate(`/group/${info!.id}/settleUpMethod`)
+                  } else {
+                    router.navigate(`/group/${info!.id}/settleUp`)
+                  }
                 }}
                 title={t('groupInfo.settleUp.settleUp')}
                 leftIcon='balance'
