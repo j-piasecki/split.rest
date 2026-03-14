@@ -1,4 +1,5 @@
 /* eslint-disable react-compiler/react-compiler */
+import { styles } from '@styling/styles'
 import { Icon, IconName } from './Icon'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
@@ -146,7 +147,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, closeModal }: Context
       entering={Platform.OS !== 'web' ? FadeInUp.duration(250) : undefined}
       exiting={Platform.OS !== 'web' ? FadeOutUp.duration(250) : undefined}
       ref={contentRef}
-      style={{
+      style={[{
         transformOrigin: isBelow ? 'top' : 'bottom',
         position: 'absolute',
         top: contentY,
@@ -160,7 +161,7 @@ function ContextMenuItems({ anchorRect, touchPoint, items, closeModal }: Context
         overflow: 'hidden',
         // @ts-expect-error - userSelect doesn't exist?
         userSelect: 'none',
-      }}
+      }, styles.contextMenuShadow]}
     >
       {items.map((item, index) => (
         <React.Fragment key={index}>

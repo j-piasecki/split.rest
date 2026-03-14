@@ -7,4 +7,7 @@ export const styles = StyleSheet.create({
   bottomBarShadow: {
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
   },
+  contextMenuShadow: {
+    boxShadow: '4px 4px 8px rgba(0, 0, 0, 0.1)',
+  },
 })
