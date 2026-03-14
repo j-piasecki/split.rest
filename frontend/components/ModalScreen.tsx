@@ -80,7 +80,6 @@ function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalP
 export interface ModalScreenProps {
   goBack: () => void
   title: string
-  opaque: boolean
   children: React.ReactNode
   slideAnimation?: boolean
   maxWidth?: number
@@ -90,7 +89,6 @@ export interface ModalScreenProps {
 function ModalScreen({
   goBack,
   title,
-  opaque,
   children,
   onLayout,
   slideAnimation = true,
@@ -100,15 +98,11 @@ function ModalScreen({
   const [showContent, setShowContent] = useState(true)
 
   function close() {
-    if (opaque) {
-      setShowContent(false)
-      setTimeout(() => {
-        setShowContent(true)
-        goBack()
-      }, 150)
-    } else {
+    setShowContent(false)
+    setTimeout(() => {
+      setShowContent(true)
       goBack()
-    }
+    }, 150)
   }
 
   if (!showContent) {
@@ -117,15 +111,15 @@ function ModalScreen({
 
   return (
     <Animated.View
-      entering={opaque ? FadeIn.duration(100) : undefined}
-      exiting={opaque ? FadeOut.duration(100) : undefined}
+      entering={FadeIn.duration(100)}
+      exiting={FadeOut.duration(100)}
       style={{
         flex: 1,
         alignItems: 'flex-end',
       }}
     >
       <Pressable
-        style={[StyleSheet.absoluteFill, { backgroundColor: opaque ? '#000000a0' : 'transparent' }]}
+        style={[StyleSheet.absoluteFill, { backgroundColor: '#000000a0' }]}
         onPress={close}
       />
       <Animated.View
@@ -169,11 +163,10 @@ export interface ModalProps {
   children: React.ReactNode
   maxWidth?: number
   onLayout?: (event: LayoutChangeEvent) => void
-  opaque?: boolean
   slideAnimation?: boolean
 }
 
-export default function Modal({ returnPath, opaque = true, ...props }: ModalProps) {
+export default function Modal({ returnPath, ...props }: ModalProps) {
   const router = useRouter()
   const isSmallScreen = useDisplayClass() <= DisplayClass.Expanded
 
@@ -192,6 +185,6 @@ export default function Modal({ returnPath, opaque = true, ...props }: ModalProp
       </FullscreenModal>
     )
   } else {
-    return <ModalScreen {...props} goBack={goBack} opaque={opaque} />
+    return <ModalScreen {...props} goBack={goBack} />
   }
 }

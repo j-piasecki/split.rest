@@ -234,7 +234,6 @@ export default function Management() {
     <ModalScreen
       returnPath={`/group/${id}/settings`}
       title={t('screenName.groupSettings.management')}
-      opaque={false}
     >
       {info && <Content info={info} />}
     </ModalScreen>

@@ -94,7 +94,6 @@ export default function Settings() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.groupSettings.joinQrCode')}
-      opaque={false}
       slideAnimation={false}
     >
       {info && <QRCodeWrapper info={info} />}

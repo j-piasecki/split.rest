@@ -118,7 +118,6 @@ export default function Modal() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.splitSummary')}
-      opaque={false}
       slideAnimation={false}
     >
       {error && (

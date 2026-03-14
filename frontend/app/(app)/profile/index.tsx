@@ -217,7 +217,7 @@ export default function ProfileScreen() {
   const { user } = useAuth()
   const theme = useTheme()
   return (
-    <ModalScreen returnPath='/group/none' title={t('screenName.profile.index')} opaque={false}>
+    <ModalScreen returnPath='/group/none' title={t('screenName.profile.index')}>
       {!user && <ActivityIndicator size='small' color={theme.colors.onSurface} />}
       {user && <Form user={user} />}
     </ModalScreen>

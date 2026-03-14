@@ -263,11 +263,7 @@ export default function Settings() {
   const { data: info } = useGroupInfo(Number(id))
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.groupSettings.index')}
-      opaque={false}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.groupSettings.index')}>
       {info && <Form info={info} />}
     </ModalScreen>
   )
