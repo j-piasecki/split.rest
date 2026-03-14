@@ -15,8 +15,6 @@ export default function AppearanceScreen() {
     <ModalScreen
       returnPath='/profile'
       title={t('screenName.profile.appearance')}
-      maxWidth={500}
-      maxHeight={650}
       opaque={false}
       slideAnimation={false}
     >

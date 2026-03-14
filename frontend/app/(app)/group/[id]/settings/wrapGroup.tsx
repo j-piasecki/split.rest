@@ -531,8 +531,6 @@ export default function WrapGroup() {
     <ModalScreen
       returnPath={`/group/${id}/settings`}
       title={t('groupSettings.wrapItUp')}
-      maxWidth={500}
-      maxHeight={700}
       opaque={false}
     >
       {groupInfo && <WrapGroupContent groupInfo={groupInfo} />}

@@ -266,8 +266,6 @@ export default function Settings() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.groupSettings.index')}
-      maxWidth={500}
-      maxHeight={650}
       opaque={false}
     >
       {info && <Form info={info} />}

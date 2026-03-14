@@ -646,12 +646,7 @@ export default function Modal() {
   const { t } = useTranslation()
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.filter')}
-      maxWidth={550}
-      maxHeight={700}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.filter')}>
       <FilterSelector />
     </ModalScreen>
   )

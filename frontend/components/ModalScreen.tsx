@@ -6,7 +6,7 @@ import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React, { useCallback, useState } from 'react'
 import { LayoutChangeEvent, Platform, Pressable, StyleSheet, View } from 'react-native'
-import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from 'react-native-reanimated'
+import Animated, { FadeIn, FadeInRight, FadeOut, FadeOutRight } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface FullscreenModalProps {
@@ -84,7 +84,6 @@ export interface ModalScreenProps {
   children: React.ReactNode
   slideAnimation?: boolean
   maxWidth?: number
-  maxHeight?: number
   onLayout?: (event: LayoutChangeEvent) => void
 }
 
@@ -95,8 +94,7 @@ function ModalScreen({
   children,
   onLayout,
   slideAnimation = true,
-  maxWidth = 768,
-  maxHeight = 800,
+  maxWidth = 540,
 }: ModalScreenProps) {
   const theme = useTheme()
   const [showContent, setShowContent] = useState(true)
@@ -123,8 +121,7 @@ function ModalScreen({
       exiting={opaque ? FadeOut.duration(100) : undefined}
       style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-end',
       }}
     >
       <Pressable
@@ -132,16 +129,14 @@ function ModalScreen({
         onPress={close}
       />
       <Animated.View
-        entering={slideAnimation ? FadeInDown.duration(200) : undefined}
-        exiting={slideAnimation ? FadeOutDown.duration(100) : undefined}
+        entering={slideAnimation ? FadeInRight.duration(200) : undefined}
+        exiting={slideAnimation ? FadeOutRight.duration(100) : undefined}
         style={{
-          width: '90%',
-          height: '80%',
+          width: '80%',
+          height: '100%',
           maxWidth: maxWidth,
-          maxHeight: maxHeight,
           backgroundColor: theme.colors.surface,
           overflow: 'hidden',
-          borderRadius: 16,
           paddingBottom: 16,
         }}
       >
@@ -173,7 +168,6 @@ export interface ModalProps {
   title: string
   children: React.ReactNode
   maxWidth?: number
-  maxHeight?: number
   onLayout?: (event: LayoutChangeEvent) => void
   opaque?: boolean
   slideAnimation?: boolean

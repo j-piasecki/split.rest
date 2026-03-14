@@ -128,7 +128,6 @@ export default function Modal() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.shares')}
-      maxWidth={500}
       opaque={false}
       slideAnimation={false}
     >

@@ -234,8 +234,6 @@ export default function Management() {
     <ModalScreen
       returnPath={`/group/${id}/settings`}
       title={t('screenName.groupSettings.management')}
-      maxWidth={500}
-      maxHeight={650}
       opaque={false}
     >
       {info && <Content info={info} />}

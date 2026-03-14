@@ -285,12 +285,7 @@ export default function Modal() {
   const canCreateGhosts = groupInfo?.permissions?.canCreateGhosts?.() ?? false
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.addMember')}
-      maxWidth={500}
-      maxHeight={650}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.addMember')}>
       <ScrollView
         ref={scrollViewRef}
         contentContainerStyle={{

@@ -129,7 +129,7 @@ export default function SettleUp() {
   }, [settleUpError, t, goBack])
 
   return (
-    <Modal title={t('screenName.settleUp')} returnPath={`/group/${id}`} maxWidth={600}>
+    <Modal title={t('screenName.settleUp')} returnPath={`/group/${id}`}>
       {settleUpPreview && groupInfo ? (
         <SettleUpPreview
           preview={settleUpPreview}

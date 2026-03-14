@@ -61,8 +61,6 @@ export default function AccountScreen() {
     <ModalScreen
       returnPath='/profile'
       title={t('screenName.profile.account')}
-      maxWidth={500}
-      maxHeight={650}
       opaque={false}
       slideAnimation={false}
     >

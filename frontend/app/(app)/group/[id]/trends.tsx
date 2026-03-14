@@ -1072,12 +1072,7 @@ export default function Settings() {
   const statistics = useGroupStatistics(Number(id))
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.groupStats')}
-      maxWidth={700}
-      maxHeight={850}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.groupStats')}>
       {info && statistics && info.permissions.canSeeGroupTrends() && (
         <Stats info={info} statistics={statistics} />
       )}

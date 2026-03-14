@@ -322,8 +322,6 @@ export default function Settings() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.groupSettings.invitations')}
-      maxWidth={500}
-      maxHeight={650}
       opaque={false}
       slideAnimation={false}
     >
