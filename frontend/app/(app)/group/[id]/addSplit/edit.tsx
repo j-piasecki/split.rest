@@ -86,7 +86,6 @@ export default function Modal() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.editSplit')}
-      slideAnimation={false}
     >
       {groupInfo && <Content groupInfo={groupInfo} split={split} />}
     </ModalScreen>

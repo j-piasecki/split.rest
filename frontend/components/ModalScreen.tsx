@@ -133,7 +133,6 @@ export interface ModalScreenProps {
   goBack: () => void
   title: string
   children: React.ReactNode
-  slideAnimation?: boolean
   maxWidth?: number
   onLayout?: (event: LayoutChangeEvent) => void
 }
@@ -143,7 +142,6 @@ function ModalScreen({
   title,
   children,
   onLayout,
-  slideAnimation = true,
   maxWidth = 540,
 }: ModalScreenProps) {
   const theme = useTheme()
@@ -176,8 +174,8 @@ function ModalScreen({
         onPress={close}
       />
       <Animated.View
-        entering={slideAnimation ? FadeInRight.duration(200) : undefined}
-        exiting={slideAnimation ? FadeOutRight.duration(100) : undefined}
+        entering={FadeInRight.duration(200)}
+        exiting={FadeOutRight.duration(100)}
         style={{
           width: '80%',
           height: '100%',
@@ -216,7 +214,6 @@ export interface ModalProps {
   children: React.ReactNode
   maxWidth?: number
   onLayout?: (event: LayoutChangeEvent) => void
-  slideAnimation?: boolean
 }
 
 export default function Modal({ returnPath, ...props }: ModalProps) {

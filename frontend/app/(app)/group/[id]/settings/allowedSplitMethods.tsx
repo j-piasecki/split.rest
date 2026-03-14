@@ -103,7 +103,6 @@ export default function Settings() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.groupSettings.splitMethods')}
-      slideAnimation={false}
     >
       {info && groupInfo && <Form info={info} groupInfo={groupInfo} />}
 

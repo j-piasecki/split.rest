@@ -187,7 +187,6 @@ export default function Modal() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.payerStep')}
-      slideAnimation={false}
     >
       <View
         style={{

@@ -91,7 +91,6 @@ export default function Settings() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.groupSettings.resolveDelayed')}
-      slideAnimation={false}
     >
       {info && memberInfo && <Form info={info} memberInfo={memberInfo} />}
     </ModalScreen>

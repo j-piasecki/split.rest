@@ -19,7 +19,6 @@ export default function Modal() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.splitParticipants')}
-      slideAnimation={false}
     >
       {memberInfo && groupInfo && (
         <ParticipantsPicker

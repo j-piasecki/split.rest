@@ -61,7 +61,6 @@ export default function AccountScreen() {
     <ModalScreen
       returnPath='/profile'
       title={t('screenName.profile.account')}
-      slideAnimation={false}
     >
       <>
         <ScrollView

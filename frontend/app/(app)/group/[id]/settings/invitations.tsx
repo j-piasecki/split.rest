@@ -322,7 +322,6 @@ export default function Settings() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.groupSettings.invitations')}
-      slideAnimation={false}
     >
       {info && <Form info={info} />}
     </ModalScreen>

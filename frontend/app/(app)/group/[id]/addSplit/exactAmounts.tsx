@@ -107,7 +107,6 @@ export default function Modal() {
     <ModalScreen
       returnPath={`/group/${id}`}
       title={t('screenName.exactAmounts')}
-      slideAnimation={false}
     >
       {(!memberInfo || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

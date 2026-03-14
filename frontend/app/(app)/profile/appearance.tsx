@@ -15,7 +15,6 @@ export default function AppearanceScreen() {
     <ModalScreen
       returnPath='/profile'
       title={t('screenName.profile.appearance')}
-      slideAnimation={false}
     >
       <ScrollView
         style={{ flex: 1 }}
