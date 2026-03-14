@@ -4,10 +4,62 @@ import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { LayoutChangeEvent, Platform, Pressable, StyleSheet, View } from 'react-native'
 import Animated, { FadeIn, FadeInRight, FadeOut, FadeOutRight } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
+interface ModalScreenOpaqueContextType {
+  registerModal: (opaqueStatusListener: (opaque: boolean) => void) => () => void
+}
+
+const ModalScreenOpaqueContext = React.createContext<ModalScreenOpaqueContextType>({
+  registerModal: () => () => {},
+})
+
+export function ModalScreenOpaqueContextProvider({ children }: { children: React.ReactNode }) {
+  const modalListeners = React.useRef<{ listener: (opaque: boolean) => void; id: number }[]>([])
+
+  function registerModal(opaqueStatusListener: (opaque: boolean) => void) {
+    const id = modalListeners.current.reduce((max, listener) => Math.max(max, listener.id), 0) + 1
+    modalListeners.current.push({ listener: opaqueStatusListener, id })
+
+    opaqueStatusListener(modalListeners.current.length === 1)
+
+    return () => {
+      const wasFirst = modalListeners.current[0]?.id === id
+      modalListeners.current = modalListeners.current.filter((listener) => listener.id !== id)
+
+      if (wasFirst && modalListeners.current.length > 0) {
+        modalListeners.current[0].listener(true)
+      }
+    }
+  }
+
+  return (
+    <ModalScreenOpaqueContext.Provider
+      value={{
+        registerModal,
+      }}
+    >
+      {children}
+    </ModalScreenOpaqueContext.Provider>
+  )
+}
+
+function useModalScreenOpaque() {
+  const [opaque, setOpaque] = React.useState(false)
+  const { registerModal } = React.useContext(ModalScreenOpaqueContext)
+
+  useEffect(() => {
+    const removeListener = registerModal((opaque) => {
+      setOpaque(opaque)
+    })
+    return removeListener
+  }, [registerModal])
+
+  return opaque
+}
 
 export interface FullscreenModalProps {
   goBack: () => void
@@ -96,6 +148,7 @@ function ModalScreen({
 }: ModalScreenProps) {
   const theme = useTheme()
   const [showContent, setShowContent] = useState(true)
+  const opaque = useModalScreenOpaque()
 
   function close() {
     setShowContent(false)
@@ -119,7 +172,7 @@ function ModalScreen({
       }}
     >
       <Pressable
-        style={[StyleSheet.absoluteFill, { backgroundColor: '#000000a0' }]}
+        style={[StyleSheet.absoluteFill, { backgroundColor: opaque ? '#000000a0' : 'transparent' }]}
         onPress={close}
       />
       <Animated.View
