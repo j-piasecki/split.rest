@@ -47,6 +47,10 @@ export default function AddFlow() {
             options={{ title: t('screenName.groupSettings.wrapItUp') }}
           />
           <Stack.Screen
+            name='management'
+            options={{ title: t('screenName.groupSettings.management') }}
+          />
+          <Stack.Screen
             name='joinQrCode'
             options={{ title: t('screenName.groupSettings.joinQrCode') }}
           />

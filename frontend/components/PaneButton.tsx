@@ -10,6 +10,7 @@ export interface PaneButtonProps {
   title: string
   adjustsFontSizeToFit?: boolean
   rightComponent?: React.ReactNode
+  color?: string
 }
 
 export function PaneButton({
@@ -18,6 +19,7 @@ export function PaneButton({
   title,
   adjustsFontSizeToFit = true,
   rightComponent,
+  color,
 }: PaneButtonProps) {
   const theme = useTheme()
 
@@ -36,6 +38,7 @@ export function PaneButton({
       onPress={onPress}
     >
       <PaneHeader
+        color={color}
         icon={icon}
         title={title}
         textLocation='start'
@@ -43,7 +46,7 @@ export function PaneButton({
         rightComponent={
           <>
             {rightComponent}
-            <Icon size={24} name={'chevronForward'} color={theme.colors.secondary} />
+            <Icon size={24} name={'chevronForward'} color={color ?? theme.colors.secondary} />
           </>
         }
       />

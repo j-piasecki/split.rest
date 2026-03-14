@@ -344,6 +344,7 @@
       "resolveDelayed": "Finalize delayed splits",
       "splitMethods": "Allowed split methods",
       "wrapItUp": "Wrap it up",
+      "management": "Settle & Close",
       "joinQrCode": "QR code"
     },
   
@@ -466,6 +467,7 @@
     "deleteGroupConfirm": "Yes",
     "deleteGroupCancel": "No",
     "deleteGroupSuccess": "Group {{name}} deleted",
+    "deleteGroupExplanation": "Deleting the group is permanent. This will delete all group data, including split history and member information.",
     "lockGroup": "Lock group",
     "unlockGroup": "Unlock group",
     "settleUpGroup": "Settle all balances",
@@ -484,6 +486,7 @@
       "success": "All delayed splits have been finalized"
     },
     "wrapItUp": "Wrap it up",
+    "wrapItUpExplanation": "Wrap it up to finalize all balances and lock the group. This is the final step when the group's activity is complete.",
     "wrapItUpConfirmationText": "Are you sure you want to wrap up the group?",
     "wrapItUpConfirmationMessage": "This action will lock the group, finalize all delayed splits, and create multiple settle-up splits. All members will be notified.",
     "wrapItUpConfirm": "Yes",
