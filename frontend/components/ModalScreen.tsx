@@ -165,10 +165,6 @@ function ModalScreen({ goBack, title, children, onLayout, maxWidth = 540 }: Moda
     }
   })
 
-  useEffect(() => {
-    slideProgress.value = withTiming(1, { duration: 250, easing: Easing.out(Easing.sin) })
-  }, [slideProgress])
-
   function close() {
     slideProgress.value = withTiming(0, { duration: 150, easing: Easing.in(Easing.sin) }, () => {
       runOnJS(goBack)()
@@ -193,6 +189,7 @@ function ModalScreen({ goBack, title, children, onLayout, maxWidth = 540 }: Moda
       <Animated.View
         onLayout={(e) => {
           measuredWidth.value = e.nativeEvent.layout.width
+          slideProgress.value = withTiming(1, { duration: 250, easing: Easing.out(Easing.sin) })
         }}
         style={[
           {
