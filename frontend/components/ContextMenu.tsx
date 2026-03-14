@@ -1,7 +1,7 @@
 /* eslint-disable react-compiler/react-compiler */
-import { styles } from '@styling/styles'
 import { Icon, IconName } from './Icon'
 import { Text } from '@components/Text'
+import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { HapticFeedback } from '@utils/hapticFeedback'
@@ -147,21 +147,24 @@ function ContextMenuItems({ anchorRect, touchPoint, items, closeModal }: Context
       entering={Platform.OS !== 'web' ? FadeInUp.duration(250) : undefined}
       exiting={Platform.OS !== 'web' ? FadeOutUp.duration(250) : undefined}
       ref={contentRef}
-      style={[{
-        transformOrigin: isBelow ? 'top' : 'bottom',
-        position: 'absolute',
-        top: contentY,
-        left: contentX,
-        width: Math.min(anchorRect.width - 16, 320, width - 32),
-        backgroundColor: theme.colors.surfaceContainerHigh,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: theme.colors.outlineVariant,
-        paddingVertical: 8,
-        overflow: 'hidden',
-        // @ts-expect-error - userSelect doesn't exist?
-        userSelect: 'none',
-      }, styles.contextMenuShadow]}
+      style={[
+        {
+          transformOrigin: isBelow ? 'top' : 'bottom',
+          position: 'absolute',
+          top: contentY,
+          left: contentX,
+          width: Math.min(anchorRect.width - 16, 320, width - 32),
+          backgroundColor: theme.colors.surfaceContainerHigh,
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: theme.colors.outlineVariant,
+          paddingVertical: 8,
+          overflow: 'hidden',
+          // @ts-expect-error - userSelect doesn't exist?
+          userSelect: 'none',
+        },
+        styles.contextMenuShadow,
+      ]}
     >
       {items.map((item, index) => (
         <React.Fragment key={index}>

@@ -17,8 +17,12 @@ import React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Platform, Pressable, ScrollView, View } from 'react-native'
-import { GroupUserInfo, SetGroupIconArguments, TranslatableError, isTranslatableError } from 'shared'
-
+import {
+  GroupUserInfo,
+  SetGroupIconArguments,
+  TranslatableError,
+  isTranslatableError,
+} from 'shared'
 
 function GroupNameInput({ info }: { info: GroupUserInfo }) {
   const theme = useTheme()
@@ -195,7 +199,11 @@ function Form({ info }: { info: GroupUserInfo }) {
   const { t } = useTranslation()
   const insets = useModalScreenInsets()
 
-  const managementButtonVisible = info.permissions.canResolveAllDelayedSplitsAtOnce() || info.permissions.canSettleUpGroup() || info.permissions.canLockGroup() || info.permissions.canDeleteGroup()
+  const managementButtonVisible =
+    info.permissions.canResolveAllDelayedSplitsAtOnce() ||
+    info.permissions.canSettleUpGroup() ||
+    info.permissions.canLockGroup() ||
+    info.permissions.canDeleteGroup()
 
   return (
     <ScrollView
