@@ -100,10 +100,7 @@ export default function Settings() {
   const { data: groupInfo } = useGroupInfo(Number(id))
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.groupSettings.splitMethods')}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.groupSettings.splitMethods')}>
       {info && groupInfo && <Form info={info} groupInfo={groupInfo} />}
 
       {(!info || !groupInfo) && (

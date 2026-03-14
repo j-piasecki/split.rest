@@ -16,10 +16,7 @@ export default function Modal() {
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.splitParticipants')}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.splitParticipants')}>
       {memberInfo && groupInfo && (
         <ParticipantsPicker
           user={memberInfo}

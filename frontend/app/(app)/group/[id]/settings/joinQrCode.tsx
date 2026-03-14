@@ -91,10 +91,7 @@ export default function Settings() {
   const { data: info } = useGroupInfo(Number(id))
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.groupSettings.joinQrCode')}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.groupSettings.joinQrCode')}>
       {info && <QRCodeWrapper info={info} />}
     </ModalScreen>
   )

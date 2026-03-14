@@ -12,10 +12,7 @@ export default function AppearanceScreen() {
   const insets = useModalScreenInsets()
 
   return (
-    <ModalScreen
-      returnPath='/profile'
-      title={t('screenName.profile.appearance')}
-    >
+    <ModalScreen returnPath='/profile' title={t('screenName.profile.appearance')}>
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{

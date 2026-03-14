@@ -112,10 +112,7 @@ export default function Modal() {
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.balanceChanges')}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.balanceChanges')}>
       {(!memberInfo || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={theme.colors.onSurface} />

@@ -319,10 +319,7 @@ export default function Settings() {
   const { data: info } = useGroupInfo(Number(id))
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.groupSettings.invitations')}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.groupSettings.invitations')}>
       {info && <Form info={info} />}
     </ModalScreen>
   )

@@ -58,10 +58,7 @@ export default function AccountScreen() {
   const [isSigningOut, setIsSigningOut] = useState(false)
 
   return (
-    <ModalScreen
-      returnPath='/profile'
-      title={t('screenName.profile.account')}
-    >
+    <ModalScreen returnPath='/profile' title={t('screenName.profile.account')}>
       <>
         <ScrollView
           style={{ flex: 1 }}

@@ -88,10 +88,7 @@ export default function Settings() {
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.groupSettings.resolveDelayed')}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.groupSettings.resolveDelayed')}>
       {info && memberInfo && <Form info={info} memberInfo={memberInfo} />}
     </ModalScreen>
   )

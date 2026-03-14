@@ -83,10 +83,7 @@ export default function Modal() {
   const [split] = useState<SplitWithUsers>(SplitCreationContext.current.buildSplitPreview())
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.editSplit')}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.editSplit')}>
       {groupInfo && <Content groupInfo={groupInfo} split={split} />}
     </ModalScreen>
   )
