@@ -70,7 +70,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
           alignItems: 'center',
           flexDirection: 'row',
           paddingHorizontal: 16,
-          paddingBottom: 12 + insets.bottom,
+          paddingBottom: insets.bottom ? insets.bottom : 12,
           paddingTop: HEADER_HEIGHT + insets.top,
           gap: 8,
         }}
