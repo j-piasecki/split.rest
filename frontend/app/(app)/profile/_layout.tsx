@@ -22,6 +22,7 @@ export default function ProfileFlow() {
           headerShown: false,
           fullScreenGestureEnabled: true,
           animation: isSmallScreen ? 'default' : 'none',
+          presentation: isSmallScreen ? 'card' : 'transparentModal',
         }}
       >
         <Stack.Screen name='index' options={{ title: t('screenName.profile.index') }} />
