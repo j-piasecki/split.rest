@@ -164,7 +164,6 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
                 right: 16,
                 position: 'absolute',
                 borderRadius: 16,
-                overflow: 'hidden',
               }}
             >
               <Pane
@@ -192,7 +191,7 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
                     />
                   </View>
                 }
-                style={{ height: '100%', overflow: 'hidden' }}
+                style={{ height: '100%' }}
                 containerStyle={{ flex: 1 }}
               >
                 <MembersList info={groupInfo} lowToHigh={membersLowToHigh} />

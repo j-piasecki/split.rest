@@ -32,7 +32,6 @@ export function CalendarPane({
       startCollapsed={startCollapsed}
       expandIcon='arrowDown'
       collapseIcon='arrowUp'
-      style={{ overflow: 'hidden' }}
       containerStyle={{ padding: 16 }}
     >
       <Calendar

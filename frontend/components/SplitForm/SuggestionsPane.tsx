@@ -122,7 +122,6 @@ export function SuggestionsPane({ groupInfo, hiddenIds, onSelect }: SuggestionsP
       collapsible
       collapsed={collapsed}
       onCollapseChange={setCollapsed}
-      containerStyle={{ overflow: 'hidden' }}
     >
       {!collapsed && (
         <ScrollView

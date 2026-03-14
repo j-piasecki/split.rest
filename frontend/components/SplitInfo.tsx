@@ -488,7 +488,6 @@ function EditHistory({
       title={t('splitInfo.editHistory')}
       textLocation='start'
       containerStyle={{ paddingVertical: 16 }}
-      style={{ overflow: 'hidden' }}
       collapsible
       startCollapsed
     >
@@ -590,7 +589,7 @@ function ParticipantsWithNoAccessWarning({ splitHistory }: { splitHistory: Split
       icon='warning'
       title={t('splitInfo.participantsWithNoAccess')}
       textLocation='start'
-      style={{ overflow: 'hidden', backgroundColor: theme.colors.tertiaryContainer }}
+      style={{ backgroundColor: theme.colors.tertiaryContainer }}
       color={theme.colors.onTertiaryContainer}
       expanded={false}
       adjustsFontSizeToFit
@@ -677,7 +676,6 @@ export function SplitInfo({
           title={t('splitInfo.details')}
           textLocation='start'
           containerStyle={{ padding: 16, paddingTop: 12 }}
-          style={{ overflow: 'hidden' }}
           collapsible
         >
           <Text style={{ color: theme.colors.onSurface, fontSize: 24, marginBottom: 8 }}>
@@ -734,7 +732,7 @@ export function SplitInfo({
             icon='schedule'
             title={t('splitInfo.splitIsDelayed')}
             textLocation='start'
-            style={{ overflow: 'hidden', backgroundColor: theme.colors.tertiaryContainer }}
+            style={{ backgroundColor: theme.colors.tertiaryContainer }}
             color={theme.colors.onTertiaryContainer}
             expanded={false}
           />
@@ -746,7 +744,6 @@ export function SplitInfo({
             title={t('splitInfo.participants')}
             textLocation='start'
             containerStyle={{ paddingBottom: 8, backgroundColor: 'transparent', gap: 2 }}
-            style={{ overflow: 'hidden' }}
             collapsible
           >
             {usersToShow.map((user, index) => (

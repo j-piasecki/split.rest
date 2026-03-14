@@ -165,6 +165,7 @@ export function Pane({
             : { height: 54 }
           : {},
         style,
+        { overflow: 'hidden' },
       ]}
     >
       {!headerHidden && (

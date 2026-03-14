@@ -309,7 +309,6 @@ export default function Modal() {
             icon='stackedEmail'
             collapsible
             textLocation='start'
-            style={{ overflow: 'hidden' }}
           >
             <AddByEmailPane
               onFocus={() =>
@@ -324,7 +323,6 @@ export default function Modal() {
             icon='user'
             collapsible
             textLocation='start'
-            style={{ overflow: 'hidden' }}
           >
             <AddByNamePane
               onFocus={() =>

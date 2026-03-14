@@ -64,7 +64,6 @@ export function EntriesPane({
       }}
       containerStyle={{
         // paddingBottom: 16,
-        overflow: 'visible',
         backgroundColor: 'transparent',
       }}
       collapsible={showAddAllMembers}
