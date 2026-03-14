@@ -175,7 +175,7 @@ function Content({ info }: { info: GroupUserInfo }) {
         paddingLeft: insets.left + 12,
         paddingRight: insets.right + 12,
         paddingTop: insets.top + 16,
-        paddingBottom: insets.bottom + 16,
+        paddingBottom: insets.bottom,
       }}
     >
       {info.permissions.canDeleteGroup() && (

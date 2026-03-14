@@ -150,6 +150,7 @@ function ModalScreen({ goBack, title, children, onLayout, maxWidth = 540 }: Moda
   const opaque = useModalScreenOpaque()
   const slideProgress = useSharedValue(0)
   const measuredWidth = useSharedValue(0)
+  const insets = useSafeAreaInsets()
 
   const underlayStyle = useAnimatedStyle(() => {
     return {
@@ -200,7 +201,8 @@ function ModalScreen({ goBack, title, children, onLayout, maxWidth = 540 }: Moda
             maxWidth: maxWidth,
             backgroundColor: theme.colors.surface,
             overflow: 'hidden',
-            paddingBottom: 16,
+            paddingTop: insets.top,
+            paddingRight: insets.right,
           },
           slideStyle,
         ]}
