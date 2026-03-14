@@ -1,22 +1,18 @@
 import { ActionableSplitsPane } from './ActionableSplitsPane'
+import { Button } from '@components/Button'
 import { ButtonShimmer } from '@components/ButtonShimmer'
-import { ButtonWithSecondaryActions } from '@components/ButtonWithSecondaryActions'
-import { ConfirmationModal } from '@components/ConfirmationModal'
 import { GroupIcon } from '@components/GroupIcon'
 import { Icon } from '@components/Icon'
 import { FullPaneHeader } from '@components/Pane'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
-import { useSnack } from '@components/SnackBar'
 import { Text } from '@components/Text'
-import { useSettleUpGroup } from '@hooks/database/useSettleUpGroup'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { useThreeBarLayout } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
-import { HapticFeedback } from '@utils/hapticFeedback'
 import { useRouter } from 'expo-router'
-import React, { useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, View } from 'react-native'
 import { CurrencyUtils } from 'shared'
@@ -30,12 +26,9 @@ function useHasSettingsAccess(info: GroupUserInfo | undefined) {
 export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const router = useRouter()
-  const snack = useSnack()
   const hasSettingsAccess = useHasSettingsAccess(info)
   const threeBarLayout = useThreeBarLayout()
-  const { mutateAsync: settleUpGroup } = useSettleUpGroup(info?.id)
   const { t } = useTranslation()
-  const [settleUpModalVisible, setSettleUpModalVisible] = useState(false)
 
   return (
     <View style={[{ gap: 2 }, threeBarLayout && { height: '100%' }]}>
@@ -73,7 +66,7 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
             backgroundColor: theme.colors.surfaceContainer,
             paddingHorizontal: 16,
             paddingVertical: 8,
-            paddingBottom: 16,
+            paddingBottom: !info?.locked || Platform.OS === 'web' ? 16 : undefined,
             borderRadius: 4,
             gap: 12,
           },
@@ -86,30 +79,12 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
           {(info) =>
             Number(info?.balance) !== 0 &&
             info.permissions.canSettleUp?.() && (
-              <ButtonWithSecondaryActions
+              <Button
                 onPress={() => {
                   router.navigate(`/group/${info!.id}/settleUp`)
                 }}
                 title={t('groupInfo.settleUp.settleUp')}
                 leftIcon='balance'
-                secondaryActions={
-                  info.permissions.canSettleUpGroup()
-                    ? [
-                        {
-                          label: t('groupSettings.settleUpGroup'),
-                          icon: 'balance',
-                          onPress: () => {
-                            setTimeout(
-                              () => {
-                                setSettleUpModalVisible(true)
-                              },
-                              Platform.OS === 'ios' ? 400 : 0
-                            )
-                          },
-                        },
-                      ]
-                    : []
-                }
               />
             )
           }
@@ -151,28 +126,6 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
       )}
 
       {threeBarLayout && <ActionableSplitsPane info={info} style={{ flex: 1, marginTop: 6 }} />}
-
-      <ConfirmationModal
-        visible={settleUpModalVisible}
-        onClose={() => setSettleUpModalVisible(false)}
-        onConfirm={async () => {
-          await settleUpGroup()
-            .then(() => {
-              snack.show({ message: t('groupSettings.settleUpGroupSuccess') })
-              HapticFeedback.confirm()
-            })
-            .catch((e) => {
-              HapticFeedback.reject()
-              throw e
-            })
-        }}
-        title='groupSettings.settleUpGroupConfirmationText'
-        message='groupSettings.settleUpGroupConfirmationMessage'
-        cancelText='groupSettings.settleUpGroupCancel'
-        cancelIcon='close'
-        confirmText='groupSettings.settleUpGroupConfirm'
-        confirmIcon='check'
-      />
     </View>
   )
 }
