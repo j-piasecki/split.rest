@@ -12,7 +12,7 @@ export default function GroupFlow() {
 
   const modalOptions: Record<string, unknown> = {
     presentation: isSmallScreen ? 'card' : 'transparentModal',
-    animation: isSmallScreen ? undefined : 'fade',
+    animation: isSmallScreen ? undefined : 'none',
   }
 
   return (

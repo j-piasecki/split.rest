@@ -73,7 +73,7 @@ export function Form({ autofocus, children, onSubmit }: FormProps) {
       Platform.select({
         android: 500,
         ios: 700,
-        default: 100,
+        default: 400,
       })
     )
   }, [autofocus])

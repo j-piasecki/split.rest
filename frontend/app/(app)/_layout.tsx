@@ -9,7 +9,7 @@ export default function AppLayout() {
   const isSmallScreen = useDisplayClass() === DisplayClass.Small
   const modalOptions: Record<string, unknown> = {
     presentation: isSmallScreen ? 'card' : 'transparentModal',
-    animation: isSmallScreen ? undefined : 'fade',
+    animation: isSmallScreen ? undefined : 'none',
   }
 
   // This renders the navigation stack for all authenticated app routes.

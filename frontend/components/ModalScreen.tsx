@@ -4,10 +4,16 @@ import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { LayoutChangeEvent, Platform, Pressable, StyleSheet, View } from 'react-native'
-import Animated, { FadeIn, FadeInRight, FadeOut, FadeOutRight } from 'react-native-reanimated'
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { runOnJS } from 'react-native-worklets'
 
 interface ModalScreenOpaqueContextType {
   registerModal: (opaqueStatusListener: (opaque: boolean) => void) => () => void
@@ -67,6 +73,8 @@ export interface FullscreenModalProps {
   children: React.ReactNode
   onLayout?: (event: LayoutChangeEvent) => void
 }
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
 function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalProps) {
   const theme = useTheme()
@@ -137,53 +145,65 @@ export interface ModalScreenProps {
   onLayout?: (event: LayoutChangeEvent) => void
 }
 
-function ModalScreen({
-  goBack,
-  title,
-  children,
-  onLayout,
-  maxWidth = 540,
-}: ModalScreenProps) {
+function ModalScreen({ goBack, title, children, onLayout, maxWidth = 540 }: ModalScreenProps) {
   const theme = useTheme()
-  const [showContent, setShowContent] = useState(true)
   const opaque = useModalScreenOpaque()
+  const slideProgress = useSharedValue(0)
+  const measuredWidth = useSharedValue(0)
+
+  const underlayStyle = useAnimatedStyle(() => {
+    return {
+      opacity: slideProgress.value,
+    }
+  })
+
+  const slideStyle = useAnimatedStyle(() => {
+    return {
+      opacity: measuredWidth.value > 0 ? 1 : 0,
+      transform: [{ translateX: (1 - slideProgress.value) * measuredWidth.value }],
+    }
+  })
+
+  useEffect(() => {
+    slideProgress.value = withTiming(1, { duration: 250, easing: Easing.out(Easing.sin) })
+  }, [slideProgress])
 
   function close() {
-    setShowContent(false)
-    setTimeout(() => {
-      setShowContent(true)
-      goBack()
-    }, 150)
-  }
-
-  if (!showContent) {
-    return null
+    slideProgress.value = withTiming(0, { duration: 150, easing: Easing.in(Easing.sin) }, () => {
+      runOnJS(goBack)()
+    })
   }
 
   return (
     <Animated.View
-      entering={FadeIn.duration(100)}
-      exiting={FadeOut.duration(100)}
       style={{
         flex: 1,
         alignItems: 'flex-end',
       }}
     >
-      <Pressable
-        style={[StyleSheet.absoluteFill, { backgroundColor: opaque ? '#000000a0' : 'transparent' }]}
+      <AnimatedPressable
+        style={[
+          StyleSheet.absoluteFill,
+          { backgroundColor: opaque ? '#000000a0' : 'transparent' },
+          underlayStyle,
+        ]}
         onPress={close}
       />
       <Animated.View
-        entering={FadeInRight.duration(200)}
-        exiting={FadeOutRight.duration(100)}
-        style={{
-          width: '80%',
-          height: '100%',
-          maxWidth: maxWidth,
-          backgroundColor: theme.colors.surface,
-          overflow: 'hidden',
-          paddingBottom: 16,
+        onLayout={(e) => {
+          measuredWidth.value = e.nativeEvent.layout.width
         }}
+        style={[
+          {
+            width: '80%',
+            height: '100%',
+            maxWidth: maxWidth,
+            backgroundColor: theme.colors.surface,
+            overflow: 'hidden',
+            paddingBottom: 16,
+          },
+          slideStyle,
+        ]}
       >
         <View
           style={{
