@@ -764,12 +764,7 @@ export default function MemberInfoScreenWrapper() {
   }
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.memberInfo')}
-      maxWidth={550}
-      maxHeight={650}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.memberInfo')}>
       {error || groupInfo?.permissions?.canReadMembers?.() === false ? (
         <MemberInfoError groupInfo={groupInfo} />
       ) : (

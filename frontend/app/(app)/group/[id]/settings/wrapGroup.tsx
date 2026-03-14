@@ -528,13 +528,7 @@ export default function WrapGroup() {
   const { data: groupInfo } = useGroupInfo(Number(id))
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}/settings`}
-      title={t('groupSettings.wrapItUp')}
-      maxWidth={500}
-      maxHeight={700}
-      opaque={false}
-    >
+    <ModalScreen returnPath={`/group/${id}/settings`} title={t('groupSettings.wrapItUp')}>
       {groupInfo && <WrapGroupContent groupInfo={groupInfo} />}
       {!groupInfo && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

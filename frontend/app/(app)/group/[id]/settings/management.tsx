@@ -175,7 +175,7 @@ function Content({ info }: { info: GroupUserInfo }) {
         paddingLeft: insets.left + 12,
         paddingRight: insets.right + 12,
         paddingTop: insets.top + 16,
-        paddingBottom: insets.bottom + 16,
+        paddingBottom: insets.bottom,
       }}
     >
       {info.permissions.canDeleteGroup() && (
@@ -234,9 +234,6 @@ export default function Management() {
     <ModalScreen
       returnPath={`/group/${id}/settings`}
       title={t('screenName.groupSettings.management')}
-      maxWidth={500}
-      maxHeight={650}
-      opaque={false}
     >
       {info && <Content info={info} />}
     </ModalScreen>

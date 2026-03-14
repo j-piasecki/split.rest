@@ -137,13 +137,7 @@ export default function Modal() {
   }
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.splitType')}
-      maxWidth={500}
-      opaque={false}
-      slideAnimation={false}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.splitType')}>
       <View
         style={{
           flex: 1,

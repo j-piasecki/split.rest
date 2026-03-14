@@ -58,14 +58,7 @@ export default function AccountScreen() {
   const [isSigningOut, setIsSigningOut] = useState(false)
 
   return (
-    <ModalScreen
-      returnPath='/profile'
-      title={t('screenName.profile.account')}
-      maxWidth={500}
-      maxHeight={650}
-      opaque={false}
-      slideAnimation={false}
-    >
+    <ModalScreen returnPath='/profile' title={t('screenName.profile.account')}>
       <>
         <ScrollView
           style={{ flex: 1 }}
@@ -73,7 +66,7 @@ export default function AccountScreen() {
             flexGrow: 1,
             paddingLeft: insets.left + 16,
             paddingRight: insets.right + 16,
-            paddingBottom: insets.bottom + 16,
+            paddingBottom: insets.bottom,
             paddingTop: insets.top + 16,
             gap: 24,
           }}

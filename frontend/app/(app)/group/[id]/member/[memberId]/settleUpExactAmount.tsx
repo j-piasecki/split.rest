@@ -149,12 +149,7 @@ export default function MemberInfoScreenWrapper() {
   }
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.settleUpExactAmount')}
-      maxWidth={500}
-      maxHeight={600}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.settleUpExactAmount')}>
       {groupInfo && <MemberScreen groupInfo={groupInfo} />}
     </ModalScreen>
   )

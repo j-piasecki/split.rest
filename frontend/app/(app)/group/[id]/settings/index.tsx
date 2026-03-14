@@ -215,7 +215,7 @@ function Form({ info }: { info: GroupUserInfo }) {
         paddingLeft: insets.left + 12,
         paddingRight: insets.right + 12,
         paddingTop: insets.top + 16,
-        paddingBottom: insets.bottom + 16,
+        paddingBottom: insets.bottom,
       }}
     >
       <GroupIconInput info={info} />
@@ -263,13 +263,7 @@ export default function Settings() {
   const { data: info } = useGroupInfo(Number(id))
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.groupSettings.index')}
-      maxWidth={500}
-      maxHeight={650}
-      opaque={false}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.groupSettings.index')}>
       {info && <Form info={info} />}
     </ModalScreen>
   )

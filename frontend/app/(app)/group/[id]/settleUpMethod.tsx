@@ -136,7 +136,7 @@ export default function SettleUpMethod() {
   const theme = useTheme()
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.settleUpMethod')} maxWidth={500}>
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.settleUpMethod')}>
       {!groupInfo && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size='large' color={theme.colors.primary} />

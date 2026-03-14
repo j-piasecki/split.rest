@@ -319,14 +319,7 @@ export default function Settings() {
   const { data: info } = useGroupInfo(Number(id))
 
   return (
-    <ModalScreen
-      returnPath={`/group/${id}`}
-      title={t('screenName.groupSettings.invitations')}
-      maxWidth={500}
-      maxHeight={650}
-      opaque={false}
-      slideAnimation={false}
-    >
+    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.groupSettings.invitations')}>
       {info && <Form info={info} />}
     </ModalScreen>
   )
