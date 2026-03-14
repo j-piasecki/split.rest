@@ -92,6 +92,7 @@ export function BottomBar({ info, ref, disableSplit }: BottomBarProps) {
           justifyContent: 'flex-end',
           alignItems: 'center',
           flexDirection: 'row',
+          pointerEvents: 'box-none',
         },
         containerAnimatedStyle,
       ]}
