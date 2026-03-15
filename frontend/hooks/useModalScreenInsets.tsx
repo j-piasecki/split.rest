@@ -1,4 +1,5 @@
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { Platform } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export function useModalScreenInsets() {
@@ -7,7 +8,7 @@ export function useModalScreenInsets() {
 
   return {
     top: 0,
-    bottom: insets.bottom + 16,
+    bottom: insets.bottom + (Platform.OS !== 'ios' || !insets.bottom ? 16 : 0),
     left: isSmallScreen ? insets.left : 0,
     right: isSmallScreen ? insets.right : 0,
   }
