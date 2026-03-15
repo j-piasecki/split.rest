@@ -125,6 +125,7 @@ export interface PaneProps {
   headerHidden?: boolean
   onLayout?: (event: LayoutChangeEvent) => void
   color?: string
+  backgroundColor?: string
 }
 
 export function Pane({
@@ -147,6 +148,7 @@ export function Pane({
   headerHidden = false,
   onLayout,
   color,
+  backgroundColor,
 }: PaneProps) {
   const theme = useTheme()
   const threeBarLayout = useThreeBarLayout()
@@ -177,7 +179,7 @@ export function Pane({
           }}
           style={[
             {
-              backgroundColor: theme.colors.surfaceContainer,
+              backgroundColor: backgroundColor ?? theme.colors.surfaceContainer,
               borderRadius: 16,
             },
             (!isCollapsed || orientation === 'vertical') && {
@@ -225,7 +227,7 @@ export function Pane({
         disabled={!isCollapsed || !collapsible}
         style={[
           {
-            backgroundColor: theme.colors.surfaceContainer,
+            backgroundColor: backgroundColor ?? theme.colors.surfaceContainer,
             borderRadius: 16,
             borderTopLeftRadius: 4,
             borderTopRightRadius: 4,
