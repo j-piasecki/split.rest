@@ -1,3 +1,4 @@
+import { IconName } from './Icon'
 import { KeyboardAvoidingView } from './KeyboardAvoidingView'
 import { RoundIconButton } from './RoundIconButton'
 import { Text } from '@components/Text'
@@ -5,7 +6,7 @@ import { useNavigationState, useRoute } from '@react-navigation/native'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { LayoutChangeEvent, Platform, Pressable, StyleSheet, View } from 'react-native'
 import Animated, {
   Easing,
@@ -68,18 +69,47 @@ function useModalScreenOpaque() {
   return opaque
 }
 
+export interface ModalScreenActionProps {
+  icon: IconName
+  onPress: () => Promise<void>
+  title: string
+}
+
+function ModalScreenAction({ icon, onPress }: ModalScreenActionProps) {
+  const theme = useTheme()
+  const isSmallScreen = useDisplayClass() <= DisplayClass.Expanded
+  const [isLoading, setIsLoading] = useState(false)
+
+  return (
+    <RoundIconButton
+      icon={icon}
+      isLoading={isLoading}
+      color={isSmallScreen ? theme.colors.onSurface : undefined}
+      onPress={() => {
+        setIsLoading(true)
+        onPress().finally(() => {
+          setIsLoading(false)
+        })
+      }}
+    />
+  )
+}
+
 export interface FullscreenModalProps {
   goBack: () => void
   title: string
   children: React.ReactNode
   onLayout?: (event: LayoutChangeEvent) => void
+  actions?: (ModalScreenActionProps | undefined)[]
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
-function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalProps) {
+function FullscreenModal({ children, title, goBack, onLayout, actions }: FullscreenModalProps) {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
+
+  const availableActions = actions?.filter((action) => action !== undefined) ?? []
 
   return (
     <View
@@ -119,15 +149,18 @@ function FullscreenModal({ children, title, goBack, onLayout }: FullscreenModalP
         <Text
           style={{
             flex: 1,
-            paddingRight: Platform.OS !== 'ios' ? 0 : 48,
+            paddingRight: Platform.OS !== 'ios' || availableActions?.length ? 0 : 48,
             textAlign: Platform.OS !== 'ios' ? 'left' : 'center',
             fontSize: Platform.OS !== 'ios' ? 22 : 20,
             color: theme.colors.onSurface,
             fontWeight: 600,
           }}
         >
-          {title}
+          {(Platform.OS !== 'ios' || (availableActions?.length ?? 0) <= 1) && title}
         </Text>
+        {availableActions.map((action, index) => (
+          <ModalScreenAction key={index} {...action} />
+        ))}
       </View>
       <KeyboardAvoidingView style={{ flex: 1 }} reduceInset={16}>
         <View onLayout={onLayout} style={{ flex: 1 }}>
@@ -144,9 +177,17 @@ export interface ModalScreenProps {
   children: React.ReactNode
   maxWidth?: number
   onLayout?: (event: LayoutChangeEvent) => void
+  actions?: (ModalScreenActionProps | undefined)[]
 }
 
-function ModalScreen({ goBack, title, children, onLayout, maxWidth = 540 }: ModalScreenProps) {
+function ModalScreen({
+  goBack,
+  title,
+  children,
+  onLayout,
+  maxWidth = 540,
+  actions,
+}: ModalScreenProps) {
   const theme = useTheme()
   const opaque = useModalScreenOpaque()
   const slideProgress = useSharedValue(0)
@@ -165,6 +206,8 @@ function ModalScreen({ goBack, title, children, onLayout, maxWidth = 540 }: Moda
       transform: [{ translateX: (1 - slideProgress.value) * measuredWidth.value }],
     }
   })
+
+  const availableActions = actions?.filter((action) => action !== undefined) ?? []
 
   function close() {
     slideProgress.value = withTiming(0, { duration: 150, easing: Easing.in(Easing.sin) }, () => {
@@ -235,7 +278,12 @@ function ModalScreen({ goBack, title, children, onLayout, maxWidth = 540 }: Moda
           <Text style={{ fontSize: 20, fontWeight: 800, color: theme.colors.onSurface }}>
             {title}
           </Text>
-          <RoundIconButton icon='close' onPress={close} />
+          <View style={{ flexDirection: 'row', gap: 4 }}>
+            {availableActions.map((action, index) => (
+              <ModalScreenAction key={index} {...action} />
+            ))}
+            <RoundIconButton icon='close' onPress={close} />
+          </View>
         </View>
         <View onLayout={onLayout} style={{ flex: 1 }}>
           {children}
@@ -251,6 +299,7 @@ export interface ModalProps {
   children: React.ReactNode
   maxWidth?: number
   onLayout?: (event: LayoutChangeEvent) => void
+  actions?: (ModalScreenActionProps | undefined)[]
 }
 
 export default function Modal({ returnPath, ...props }: ModalProps) {
@@ -267,7 +316,12 @@ export default function Modal({ returnPath, ...props }: ModalProps) {
 
   if (isSmallScreen) {
     return (
-      <FullscreenModal title={props.title} goBack={goBack} onLayout={props.onLayout}>
+      <FullscreenModal
+        title={props.title}
+        goBack={goBack}
+        onLayout={props.onLayout}
+        actions={props.actions}
+      >
         {props.children}
       </FullscreenModal>
     )
