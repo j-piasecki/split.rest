@@ -38,7 +38,7 @@ function SelectorContent({ groupInfo }: { groupInfo: GroupUserInfo }) {
 
   const handleNext = () => {
     if (selectedOption === SettleUpOption.Personal) {
-      router.navigate(`/group/${groupInfo.id}/settleUp`)
+      router.navigate(`/group/${groupInfo.id}/settleUp/confirm`)
     } else {
       setSettleUpGroupModalVisible(true)
     }

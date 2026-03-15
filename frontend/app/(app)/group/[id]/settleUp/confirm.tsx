@@ -19,6 +19,7 @@ interface SettleUpPreviewProps {
   preview: SplitWithHashedChanges
   groupInfo: GroupUserInfo
   goBack: () => void
+  dismissToGroup: () => void
   withMembers?: string[]
   amounts?: string[]
 }
@@ -73,7 +74,7 @@ function SettleUpPreview(props: SettleUpPreviewProps) {
                   router.navigate(`/group/${props.groupInfo.id}/split/${split!.id}`)
                 },
               })
-              props.goBack()
+              props.dismissToGroup()
             })
         }}
         isLoading={isCompleting}
@@ -89,7 +90,7 @@ function SettleUpPreview(props: SettleUpPreviewProps) {
   )
 }
 
-export default function SettleUp() {
+export default function SettleUpConfirm() {
   const { t } = useTranslation()
   const {
     id,
@@ -113,9 +114,17 @@ export default function SettleUp() {
   const router = useRouter()
   const theme = useTheme()
 
-  const goBack = useCallback(() => {
+  const dismissToGroup = useCallback(() => {
     router.dismissTo(`/group/${id}`)
   }, [router, id])
+
+  const goBack = useCallback(() => {
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      dismissToGroup()
+    }
+  }, [router, dismissToGroup])
 
   useEffect(() => {
     if (settleUpError) {
@@ -135,6 +144,7 @@ export default function SettleUp() {
           preview={settleUpPreview}
           groupInfo={groupInfo}
           goBack={goBack}
+          dismissToGroup={dismissToGroup}
           withMembers={withMembers}
           amounts={amounts}
         />

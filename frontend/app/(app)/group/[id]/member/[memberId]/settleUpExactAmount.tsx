@@ -68,7 +68,9 @@ function MemberScreen({ groupInfo }: { groupInfo: GroupUserInfo }) {
       const amountToPass = outgoing
         ? `-${currency(amount).toString()}`
         : currency(amount).toString()
-      router.replace(`/group/${groupId}/settleUp?withMembers=${memberId}&amounts=${amountToPass}`)
+      router.replace(
+        `/group/${groupId}/settleUp/confirm?withMembers=${memberId}&amounts=${amountToPass}`
+      )
     } catch {
       setError('unknownError')
     }

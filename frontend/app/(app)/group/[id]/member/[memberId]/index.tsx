@@ -647,7 +647,7 @@ export function MemberInfo({
                 leftIcon='balance'
                 title={t('memberInfo.settleUpWithMember')}
                 onPress={() => {
-                  router.navigate(`/group/${groupId}/settleUp?withMembers=${memberId}`)
+                  router.navigate(`/group/${groupId}/settleUp/confirm?withMembers=${memberId}`)
                 }}
                 secondaryActions={[
                   {
