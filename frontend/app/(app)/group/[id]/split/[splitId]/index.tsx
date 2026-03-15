@@ -115,7 +115,41 @@ export default function SplitInfoScreen() {
   }
 
   return (
-    <Modal title={t('screenName.splitInfo')} returnPath={`/group/${id}`}>
+    <Modal
+      title={t('screenName.splitInfo')}
+      returnPath={`/group/${id}`}
+      actions={[
+        groupInfo &&
+        !isLoadingHistory &&
+        history.length > 0 &&
+        groupInfo.permissions.canDeleteSplit(user?.id, history[0]) &&
+        !groupInfo.locked
+          ? {
+              icon: 'delete',
+              onPress: async () => {
+                try {
+                  await deleteSplit(Number(splitId))
+                  router.dismissTo(`/group/${groupInfo.id}`)
+                  snack.show({
+                    message: t('split.deletedToast', {
+                      title: getSplitDisplayName(history[0]),
+                    }),
+                    actionText: t('undo'),
+                    action: async () => {
+                      await restoreSplit(Number(splitId), groupInfo.id)
+                    },
+                  })
+                } catch (e) {
+                  snack.show({
+                    message: isTranslatableError(e) ? t(e.message, e.args) : t('unknownError'),
+                  })
+                }
+              },
+              title: t('split.delete'),
+            }
+          : undefined,
+      ]}
+    >
       {(isLoadingHistory || groupInfo === undefined) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size='small' color={theme.colors.onSurface} />
@@ -210,39 +244,6 @@ export default function SplitInfoScreen() {
                 leftIcon='edit'
                 onPress={() =>
                   router.navigate(`/group/${groupInfo?.id}/split/${history[0].id}/edit`)
-                }
-              />
-            )}
-
-            {groupInfo.permissions.canDeleteSplit(user?.id, history[0]) && !groupInfo.locked && (
-              <Button
-                destructive
-                title={t('split.delete')}
-                style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
-                disabled={interactionDisabled}
-                leftIcon='delete'
-                isLoading={isDeleting}
-                onPress={() =>
-                  deleteSplit(Number(splitId))
-                    .then(() => {
-                      router.dismissTo(`/group/${groupInfo.id}`)
-                      snack.show({
-                        message: t('split.deletedToast', {
-                          title: getSplitDisplayName(history[0]),
-                        }),
-                        actionText: t('undo'),
-                        action: async () => {
-                          await restoreSplit(Number(splitId), groupInfo.id)
-                        },
-                      })
-                    })
-                    .catch((e) => {
-                      if (isTranslatableError(e)) {
-                        alert(t(e.message, e.args))
-                      } else {
-                        alert(t('unknownError'))
-                      }
-                    })
                 }
               />
             )}

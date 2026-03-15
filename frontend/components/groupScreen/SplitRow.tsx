@@ -175,12 +175,10 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
                   },
                 })
               })
-              .catch((error) => {
-                if (isTranslatableError(error)) {
-                  snack.show({
-                    message: t(error.message),
-                  })
-                }
+              .catch((e) => {
+                snack.show({
+                  message: isTranslatableError(e) ? t(e.message, e.args) : t('unknownError'),
+                })
               })
           },
         },
