@@ -6,7 +6,6 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMonthlyStats } from '@hooks/database/useGroupMonthlyStats'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { measure } from '@utils/measure'
 import dayjs from 'dayjs'
 import { useLocalSearchParams } from 'expo-router'
@@ -795,7 +794,6 @@ function MonthSummary({
 }) {
   const theme = useTheme()
   const { t } = useTranslation()
-  const isSmallScreen = useDisplayClass() <= DisplayClass.Small
 
   const currentYear = monthNumber > dayjs().month() ? dayjs().year() - 1 : dayjs().year()
   const current12MonthPeriod = stat.years.get(currentYear) ?? { totalValue: 0, transactionCount: 0 }
@@ -894,22 +892,14 @@ function MonthSummary({
       </View>
 
       <View style={{ gap: 12 }}>
-        <View
-          style={
-            !isSmallScreen && {
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }
-          }
-        >
+        <View>
           <Text style={{ color: theme.colors.onSurface, fontSize: 20, fontWeight: 700 }}>
             {t('groupStats.expensesThisYear', {
               value: CurrencyUtils.format(current12MonthPeriod.totalValue, info.currency),
             })}
           </Text>
 
-          {(changeMonthOverMonth !== 0 || !isSmallScreen) && (
+          {changeMonthOverMonth !== 0 && (
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text
                 style={{
@@ -939,15 +929,7 @@ function MonthSummary({
           )}
         </View>
 
-        <View
-          style={
-            !isSmallScreen && {
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }
-          }
-        >
+        <View>
           <Text style={{ color: theme.colors.outline, fontSize: 16, fontWeight: 700 }}>
             {t('groupStats.expensesInYear', {
               year: currentYear - 1,
@@ -955,7 +937,7 @@ function MonthSummary({
             })}
           </Text>
 
-          {(changeYearOverYear !== 0 || !isSmallScreen) && (
+          {changeYearOverYear !== 0 && (
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text
                 style={{
