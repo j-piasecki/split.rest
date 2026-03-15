@@ -1,6 +1,7 @@
 import { KeyboardAvoidingView } from './KeyboardAvoidingView'
 import { RoundIconButton } from './RoundIconButton'
 import { Text } from '@components/Text'
+import { useNavigationState, useRoute } from '@react-navigation/native'
 import { useTheme } from '@styling/theme'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
@@ -152,7 +153,7 @@ function ModalScreen({ goBack, title, children, onLayout, maxWidth = 540 }: Moda
   const measuredWidth = useSharedValue(0)
   const insets = useSafeAreaInsets()
 
-  const underlayStyle = useAnimatedStyle(() => {
+  const backdropStyle = useAnimatedStyle(() => {
     return {
       opacity: slideProgress.value,
     }
@@ -171,6 +172,30 @@ function ModalScreen({ goBack, title, children, onLayout, maxWidth = 540 }: Moda
     })
   }
 
+  const navigationState = useNavigationState((state) => state)
+  const route = useRoute()
+
+  const routes = navigationState?.routes ?? []
+  const currentIndex = routes.findIndex((r) => r.key === route.key)
+  const stackSize = routes.length
+
+  const isMounted = navigationState ? currentIndex >= stackSize - 2 : true
+
+  const backdrop = (
+    <AnimatedPressable
+      style={[
+        StyleSheet.absoluteFill,
+        { backgroundColor: opaque ? '#000000a0' : 'transparent' },
+        backdropStyle,
+      ]}
+      onPress={close}
+    />
+  )
+
+  if (!isMounted) {
+    return opaque ? backdrop : null
+  }
+
   return (
     <Animated.View
       style={{
@@ -178,14 +203,7 @@ function ModalScreen({ goBack, title, children, onLayout, maxWidth = 540 }: Moda
         alignItems: 'flex-end',
       }}
     >
-      <AnimatedPressable
-        style={[
-          StyleSheet.absoluteFill,
-          { backgroundColor: opaque ? '#000000a0' : 'transparent' },
-          underlayStyle,
-        ]}
-        onPress={close}
-      />
+      {backdrop}
       <Animated.View
         onLayout={(e) => {
           measuredWidth.value = e.nativeEvent.layout.width
