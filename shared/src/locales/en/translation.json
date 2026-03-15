@@ -685,7 +685,8 @@
     "markCompleted": "Mark as complete",
     "settleUpTitle": "Settle up split",
     "loadMoreHistory": "Load more history",
-    "splitIsDelayed": "This split will be finalized later",
+    "splitIsDelayed": "This split is not finalized",
+    "delayedSplitDescription": "This is a placeholder split with no participants. Finalize it to add participants and distribute the cost.",
     "participantsWithNoAccess": "Participants with no group access"
   },
 

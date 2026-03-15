@@ -114,6 +114,30 @@ export default function SplitInfoScreen() {
     }
   }
 
+  function finalizeSplit() {
+    SplitCreationContext.create()
+      .resolveDelayedSplit(Number(splitId))
+      .setAllowedSplitMethods(DelayedSplitResolutionAllowedSplitMethods)
+      .setParticipants(
+        history[0].users.map((user) => ({
+          user: {
+            ...user,
+            balance: user.balance ?? DEFAULT_BALANCE_WHEN_NOT_SET,
+            isAdmin: user.isAdmin ?? DEFAULT_IS_ADMIN_WHEN_NOT_SET,
+            hasAccess: user.hasAccess ?? DEFAULT_HAS_ACCESS_WHEN_NOT_SET,
+            isGhost: user.isGhost ?? DEFAULT_IS_GHOST_WHEN_NOT_SET,
+          },
+          value: user.change,
+        }))
+      )
+      .setPaidById(history[0].paidBy?.id ?? null)
+      .setTitle(history[0].title)
+      .setTotalAmount(history[0].total)
+      .setTimestamp(history[0].timestamp)
+      .begin()
+    router.navigate(`/group/${groupInfo?.id}/addSplit`)
+  }
+
   return (
     <Modal
       title={t('screenName.splitInfo')}
@@ -197,45 +221,18 @@ export default function SplitInfoScreen() {
                   : undefined
               }
               isRestoringVersion={isRestoring}
+              finalizeSplit={
+                isDelayedSplit(history[0].type) &&
+                groupInfo.permissions.canResolveDelayedSplit(user?.id, history[0]) &&
+                !groupInfo?.locked &&
+                canResolveDelayedSplit
+                  ? finalizeSplit
+                  : undefined
+              }
             />
           </View>
 
           <View style={{ gap: 12 }}>
-            {isDelayedSplit(history[0].type) &&
-              groupInfo.permissions.canResolveDelayedSplit(user?.id, history[0]) &&
-              !groupInfo?.locked &&
-              canResolveDelayedSplit && (
-                <Button
-                  title={t('split.resolveDelayed')}
-                  style={{ marginLeft: insets.left + 12, marginRight: insets.right + 12 }}
-                  disabled={interactionDisabled}
-                  leftIcon='chronic'
-                  onPress={() => {
-                    SplitCreationContext.create()
-                      .resolveDelayedSplit(Number(splitId))
-                      .setAllowedSplitMethods(DelayedSplitResolutionAllowedSplitMethods)
-                      .setParticipants(
-                        history[0].users.map((user) => ({
-                          user: {
-                            ...user,
-                            balance: user.balance ?? DEFAULT_BALANCE_WHEN_NOT_SET,
-                            isAdmin: user.isAdmin ?? DEFAULT_IS_ADMIN_WHEN_NOT_SET,
-                            hasAccess: user.hasAccess ?? DEFAULT_HAS_ACCESS_WHEN_NOT_SET,
-                            isGhost: user.isGhost ?? DEFAULT_IS_GHOST_WHEN_NOT_SET,
-                          },
-                          value: user.change,
-                        }))
-                      )
-                      .setPaidById(history[0].paidBy?.id ?? null)
-                      .setTitle(history[0].title)
-                      .setTotalAmount(history[0].total)
-                      .setTimestamp(history[0].timestamp)
-                      .begin()
-                    router.navigate(`/group/${groupInfo?.id}/addSplit`)
-                  }}
-                />
-              )}
-
             {groupInfo.permissions.canUpdateSplit(user?.id, history[0]) && !groupInfo.locked && (
               <Button
                 title={t('split.edit')}

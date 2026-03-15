@@ -602,6 +602,7 @@ export function SplitInfo({
   groupInfo,
   style,
   showCompleteButton = true,
+  finalizeSplit,
   isRefreshing = false,
   onRefresh,
   hasMoreHistory = false,
@@ -615,6 +616,7 @@ export function SplitInfo({
   groupInfo: GroupUserInfo
   style?: StyleProp<ViewStyle>
   showCompleteButton?: boolean
+  finalizeSplit?: () => void
   isRefreshing?: boolean
   onRefresh?: () => void
   hasMoreHistory?: boolean
@@ -727,7 +729,37 @@ export function SplitInfo({
 
         {showNoAccessWarning && <ParticipantsWithNoAccessWarning splitHistory={splitHistory} />}
 
-        {splitInfo.type === SplitType.Delayed && (
+        {splitInfo.type === SplitType.Delayed && finalizeSplit && (
+          <Pane
+            icon='schedule'
+            title={t('splitInfo.splitIsDelayed')}
+            textLocation='start'
+            backgroundColor={theme.colors.tertiaryContainer}
+            color={theme.colors.onTertiaryContainer}
+            containerStyle={{ padding: 12, gap: 8 }}
+          >
+            <Text
+              style={{
+                color: theme.colors.onTertiaryContainer,
+                fontSize: 16,
+                fontWeight: 500,
+              }}
+            >
+              {t('splitInfo.delayedSplitDescription')}
+            </Text>
+
+            <View style={{ alignSelf: 'flex-end' }}>
+              <RoundIconButton
+                icon='chronic'
+                color={theme.colors.onSurface}
+                text={t('split.resolveDelayed')}
+                onPress={finalizeSplit}
+              />
+            </View>
+          </Pane>
+        )}
+
+        {splitInfo.type === SplitType.Delayed && !finalizeSplit && (
           <FullPaneHeader
             icon='schedule'
             title={t('splitInfo.splitIsDelayed')}
