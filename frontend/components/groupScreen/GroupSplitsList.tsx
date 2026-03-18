@@ -2,7 +2,7 @@ import { SplitsList, SplitsListProps } from './SplitsList'
 import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
 import { useSplitQueryConfig } from '@hooks/useSplitQueryConfig'
 import { buildQuery } from '@hooks/useSplitQueryConfigBuilder'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import { defaultQueryConfig } from '@utils/splitQueryConfig'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +19,7 @@ export function GroupSplitsList(props: GroupSplitsListProps) {
 }
 
 function InnerGroupSplitsList(props: GroupSplitsListProps) {
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
   const query = useSplitQueryConfig(props.info?.id)
   const { t } = useTranslation()
 

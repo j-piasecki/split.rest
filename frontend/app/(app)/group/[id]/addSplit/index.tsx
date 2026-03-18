@@ -6,7 +6,7 @@ import { Text } from '@components/Text'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTheme } from '@styling/theme'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import { navigateToSplitSpecificFlow } from '@utils/navigateToSplitSpecificFlow'
 import { AllSplitMethods, SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -27,7 +27,7 @@ function Selector({ groupInfo }: { groupInfo: GroupUserInfo }) {
       : AllSplitMethods.filter((method) => method !== SplitMethod.Delayed)
 
   const theme = useTheme()
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
   const router = useRouter()
   const insets = useModalScreenInsets()
   const { t } = useTranslation()

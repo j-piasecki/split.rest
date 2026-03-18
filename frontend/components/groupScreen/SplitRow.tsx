@@ -9,7 +9,7 @@ import { useDeleteSplit } from '@hooks/database/useDeleteSplit'
 import { styles } from '@styling/styles'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
+import { DisplayClass, useAppLayout, useDisplayClass } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { getSplitDisplayName } from '@utils/getSplitDisplayName'
 import { useRouter } from 'expo-router'
@@ -100,7 +100,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
   const snack = useSnack()
   const { t } = useTranslation()
   const displayClass = useDisplayClass()
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
   const contextMenuRef = useRef<ContextMenuRef>(null)
   const [width, setWidth] = useState(-1)
   const { mutateAsync: deleteSplit, isPending } = useDeleteSplit(info.id)

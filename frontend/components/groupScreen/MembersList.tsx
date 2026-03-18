@@ -6,7 +6,7 @@ import { ListEmptyComponent } from '@components/ListEmptyComponent'
 import { Shimmer } from '@components/Shimmer'
 import { useGroupMembers } from '@hooks/database/useGroupMembers'
 import { useTheme } from '@styling/theme'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import { queryClient } from '@utils/queryClient'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -110,7 +110,7 @@ export function MembersList({
   onRefresh,
 }: MembersListProps) {
   const insets = useSafeAreaInsets()
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
   const [fabRef, scrollHandler] = useFABScrollHandler()
   const { t } = useTranslation()
   const { members, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =

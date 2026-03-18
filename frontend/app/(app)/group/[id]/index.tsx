@@ -12,7 +12,7 @@ import { MembersOrderFilter } from '@components/groupScreen/MembersOrderFilter'
 import { SplitQueryButton } from '@components/groupScreen/SplitQueryButton'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTheme } from '@styling/theme'
-import { DisplayClass, useDisplayClass, useThreeBarLayout } from '@utils/dimensionUtils'
+import { DisplayClass, useAppLayout, useDisplayClass } from '@utils/dimensionUtils'
 import { useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
@@ -268,7 +268,7 @@ function NoGroupSelected() {
 export default function GroupScreen() {
   const theme = useTheme()
   const { id } = useLocalSearchParams()
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
   const groupId = Number(id as string)
   const noGroupSelected = !id || id === 'none' || isNaN(groupId)
   const { data: groupInfo, error } = useGroupInfo(noGroupSelected ? 0 : groupId, !noGroupSelected)

@@ -9,7 +9,7 @@ import { ShimmerPlaceholder } from '@components/ShimmerPlaceholder'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import { getBalanceColor } from '@utils/getBalanceColor'
 import { useRouter } from 'expo-router'
 import React from 'react'
@@ -27,7 +27,7 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const router = useRouter()
   const hasSettingsAccess = useHasSettingsAccess(info)
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
   const { t } = useTranslation()
 
   return (

@@ -2,7 +2,7 @@ import { Icon, IconName } from '@components/Icon'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import React, { ReactNode, useState } from 'react'
 import { Pressable, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated'
@@ -33,7 +33,7 @@ export function SelectorItem({
   style,
 }: SelectorItemProps) {
   const theme = useTheme()
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
   const [pressed, setPressed] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [expanded, setExpanded] = useState(startExpanded && collapsible)

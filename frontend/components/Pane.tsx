@@ -2,7 +2,7 @@ import { Icon, IconName } from '@components/Icon'
 import { RoundIconButton } from '@components/RoundIconButton'
 import { Text } from '@components/Text'
 import { useTheme } from '@styling/theme'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import { useState } from 'react'
 import { LayoutChangeEvent, Pressable, StyleProp, View, ViewStyle } from 'react-native'
 
@@ -30,7 +30,7 @@ export function PaneHeader({
   color,
 }: PaneHeaderProps) {
   const theme = useTheme()
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
 
   const foregroundColor = color ?? theme.colors.secondary
 
@@ -151,7 +151,7 @@ export function Pane({
   backgroundColor,
 }: PaneProps) {
   const theme = useTheme()
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
   const [innerCollapsed, setInnerCollapsed] = useState(startCollapsed ?? false)
 
   const foregroundColor = color ?? theme.colors.secondary

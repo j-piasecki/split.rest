@@ -1,7 +1,7 @@
 import { Icon, IconName } from './Icon'
 import { TextInput, TextInputRef } from './TextInput'
 import { useTheme } from '@styling/theme'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import { useRef } from 'react'
 import { KeyboardTypeOptions, Pressable, StyleProp, ViewStyle } from 'react-native'
 
@@ -33,7 +33,7 @@ export function LargeTextInput({
   autoCorrect,
 }: LargeTextInputProps) {
   const theme = useTheme()
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
   const textInputRef = useRef<TextInputRef>(null)
 
   return (

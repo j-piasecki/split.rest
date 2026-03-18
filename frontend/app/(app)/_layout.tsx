@@ -12,28 +12,28 @@ export default function AppLayout() {
 
   // This renders the navigation stack for all authenticated app routes.
   return (
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          fullScreenGestureEnabled: true,
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        fullScreenGestureEnabled: true,
+      }}
+    >
+      <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
+      <Stack.Screen
+        name='groupInvites'
+        options={{ title: t('screenName.groupInvites'), ...modalOptions }}
+      />
+      <Stack.Screen
+        name='createGroup'
+        options={{
+          title: t('screenName.createGroup'),
+          ...modalOptions,
         }}
-      >
-        <Stack.Screen name='index' options={{ title: t('appName'), animation: 'none' }} />
-        <Stack.Screen
-          name='groupInvites'
-          options={{ title: t('screenName.groupInvites'), ...modalOptions }}
-        />
-        <Stack.Screen
-          name='createGroup'
-          options={{
-            title: t('screenName.createGroup'),
-            ...modalOptions,
-          }}
-        />
-        <Stack.Screen
-          name='profile'
-          options={{ title: t('screenName.profile.index'), ...modalOptions }}
-        />
-      </Stack>
+      />
+      <Stack.Screen
+        name='profile'
+        options={{ title: t('screenName.profile.index'), ...modalOptions }}
+      />
+    </Stack>
   )
 }

@@ -5,7 +5,7 @@ import { Text } from '@components/Text'
 import { useGroupSplitsQuery } from '@hooks/database/useGroupSplitsQuery'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import currency from 'currency.js'
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
@@ -131,7 +131,7 @@ export function ActionableSplitsPane({
 }) {
   const theme = useTheme()
   const { user } = useAuth()
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
   const { t } = useTranslation()
 
   // Let's assume that showing at most 20 pending splits is enough

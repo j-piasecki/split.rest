@@ -30,6 +30,6 @@ export function useDisplayClass() {
   return getDisplayClass(useWindowDimensions().width)
 }
 
-export function useThreeBarLayout() {
+export function useAppLayout() {
   return useDisplayClass() > DisplayClass.Medium
 }

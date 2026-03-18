@@ -1,7 +1,7 @@
 import { Icon, IconName } from './Icon'
 import { Text } from './Text'
 import { useTheme } from '@styling/theme'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import React, { useEffect, useState } from 'react'
 import { Pressable, StyleProp, View, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated'
@@ -115,7 +115,7 @@ export interface TabViewProps {
 
 export function TabView(props: TabViewProps) {
   const theme = useTheme()
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
   const [selectedItem, setSelectedItem] = useState(props.openedTab)
 
   useEffect(() => {

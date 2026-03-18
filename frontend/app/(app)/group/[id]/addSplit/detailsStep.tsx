@@ -10,7 +10,7 @@ import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useAuth } from '@utils/auth'
-import { useThreeBarLayout } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import { navigateToSplitSpecificFlow } from '@utils/navigateToSplitSpecificFlow'
 import { SplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitTitle } from '@utils/validateSplitForm'
@@ -31,7 +31,7 @@ export default function Modal() {
   const { user } = useAuth()
   const router = useRouter()
   const insets = useModalScreenInsets()
-  const threeBarLayout = useThreeBarLayout()
+  const threeBarLayout = useAppLayout()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
   const { data: groupInfo } = useGroupInfo(Number(id))
