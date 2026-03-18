@@ -1,3 +1,5 @@
+import { DrawerLayout } from '@components/DrawerLayout'
+import { HomeDrawerContent } from '@components/HomeDrawerContent'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { Stack } from 'expo-router'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +18,7 @@ export default function GroupFlow() {
   }
 
   return (
+    <DrawerLayout renderDrawerContent={() => <HomeDrawerContent />}>
     <Stack
       screenOptions={{
         headerShown: false,
@@ -62,5 +65,6 @@ export default function GroupFlow() {
         options={{ title: t('screenName.editSplit'), ...modalOptions }}
       />
     </Stack>
+    </DrawerLayout>
   )
 }

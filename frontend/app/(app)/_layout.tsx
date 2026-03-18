@@ -1,5 +1,3 @@
-import { DrawerLayout } from '@components/DrawerLayout'
-import { HomeDrawerContent } from '@components/HomeDrawerContent'
 import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
 import { Stack } from 'expo-router'
 import { useTranslation } from 'react-i18next'
@@ -14,7 +12,6 @@ export default function AppLayout() {
 
   // This renders the navigation stack for all authenticated app routes.
   return (
-    <DrawerLayout renderDrawerContent={() => <HomeDrawerContent />}>
       <Stack
         screenOptions={{
           headerShown: false,
@@ -38,6 +35,5 @@ export default function AppLayout() {
           options={{ title: t('screenName.profile.index'), ...modalOptions }}
         />
       </Stack>
-    </DrawerLayout>
   )
 }
