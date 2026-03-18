@@ -27,11 +27,11 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const router = useRouter()
   const hasSettingsAccess = useHasSettingsAccess(info)
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
   const { t } = useTranslation()
 
   return (
-    <View style={[{ gap: 2 }, threeBarLayout && { height: '100%' }]}>
+    <View style={[{ gap: 2 }, threePaneLayout.enabled && { height: '100%' }]}>
       <FullPaneHeader
         icon='group'
         title={t('tabs.group')}
@@ -129,7 +129,7 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
         </View>
       )}
 
-      {threeBarLayout && <ActionableSplitsPane info={info} style={{ flex: 1, marginTop: 6 }} />}
+      {threePaneLayout.enabled && <ActionableSplitsPane info={info} style={{ flex: 1, marginTop: 6 }} />}
     </View>
   )
 }

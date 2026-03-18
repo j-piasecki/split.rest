@@ -19,7 +19,7 @@ export function GroupSplitsList(props: GroupSplitsListProps) {
 }
 
 function InnerGroupSplitsList(props: GroupSplitsListProps) {
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
   const query = useSplitQueryConfig(props.info?.id)
   const { t } = useTranslation()
 
@@ -35,7 +35,7 @@ function InnerGroupSplitsList(props: GroupSplitsListProps) {
       isFetchingNextPage={isFetchingNextPage}
       fetchNextPage={fetchNextPage}
       hasNextPage={hasNextPage}
-      applyHorizontalPadding={!threeBarLayout}
+      applyHorizontalPadding={!threePaneLayout.enabled}
       emptyMessage={
         props.info?.permissions?.canQuerySplits?.() === false
           ? t('api.insufficientPermissions.group.querySplits')

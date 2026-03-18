@@ -100,7 +100,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
   const snack = useSnack()
   const { t } = useTranslation()
   const displayClass = useDisplayClass()
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
   const contextMenuRef = useRef<ContextMenuRef>(null)
   const [width, setWidth] = useState(-1)
   const { mutateAsync: deleteSplit, isPending } = useDeleteSplit(info.id)
@@ -194,8 +194,8 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
         style={[
           {
             paddingVertical: 8,
-            paddingLeft: (shouldUseStackedInfo ? 12 : 16) + (threeBarLayout ? 12 : 0),
-            paddingRight: 4 + (threeBarLayout ? 12 : 0),
+            paddingLeft: (shouldUseStackedInfo ? 12 : 16) + (threePaneLayout.enabled ? 12 : 0),
+            paddingRight: 4 + (threePaneLayout.enabled ? 12 : 0),
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',

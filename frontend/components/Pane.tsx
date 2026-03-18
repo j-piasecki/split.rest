@@ -30,7 +30,7 @@ export function PaneHeader({
   color,
 }: PaneHeaderProps) {
   const theme = useTheme()
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
 
   const foregroundColor = color ?? theme.colors.secondary
 
@@ -38,7 +38,7 @@ export function PaneHeader({
     <View
       style={{
         width: '100%',
-        paddingHorizontal: threeBarLayout ? 16 : 24,
+        paddingHorizontal: threePaneLayout.enabled ? 16 : 24,
         borderBottomColor: theme.colors.outlineVariant,
         height: 54,
         flexDirection: 'row',
@@ -57,14 +57,14 @@ export function PaneHeader({
             adjustsFontSizeToFit ? { flex: 1 } : { flexGrow: 1, flexShrink: 0 },
           ]}
         >
-          <Icon name={icon} size={threeBarLayout ? 20 : 22} color={foregroundColor} />
+          <Icon name={icon} size={threePaneLayout.enabled ? 20 : 22} color={foregroundColor} />
           <Text
             numberOfLines={1}
             adjustsFontSizeToFit={adjustsFontSizeToFit}
             style={{
               flexShrink: 1,
               color: foregroundColor,
-              fontSize: threeBarLayout ? 16 : 20,
+              fontSize: threePaneLayout.enabled ? 16 : 20,
               fontWeight: 700,
             }}
           >
@@ -151,7 +151,7 @@ export function Pane({
   backgroundColor,
 }: PaneProps) {
   const theme = useTheme()
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
   const [innerCollapsed, setInnerCollapsed] = useState(startCollapsed ?? false)
 
   const foregroundColor = color ?? theme.colors.secondary
@@ -193,7 +193,7 @@ export function Pane({
             icon={icon}
             title={title}
             rightComponent={
-              <View style={{ position: 'absolute', right: threeBarLayout ? 16 : 24 }}>
+              <View style={{ position: 'absolute', right: threePaneLayout.enabled ? 16 : 24 }}>
                 {rightComponent ? (
                   rightComponent
                 ) : (

@@ -27,7 +27,7 @@ function Selector({ groupInfo }: { groupInfo: GroupUserInfo }) {
       : AllSplitMethods.filter((method) => method !== SplitMethod.Delayed)
 
   const theme = useTheme()
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
   const router = useRouter()
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
@@ -83,7 +83,7 @@ function Selector({ groupInfo }: { groupInfo: GroupUserInfo }) {
             style={{
               paddingHorizontal: 12,
               color: theme.colors.onSurface,
-              fontSize: threeBarLayout ? 24 : 26,
+              fontSize: threePaneLayout.enabled ? 24 : 26,
               fontWeight: 600,
               textAlign: 'center',
             }}
@@ -97,7 +97,7 @@ function Selector({ groupInfo }: { groupInfo: GroupUserInfo }) {
             style={{
               paddingHorizontal: 12,
               color: theme.colors.onSurface,
-              fontSize: threeBarLayout ? 24 : 28,
+              fontSize: threePaneLayout.enabled ? 24 : 28,
               fontWeight: 600,
               textAlign: 'center',
             }}

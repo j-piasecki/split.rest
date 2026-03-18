@@ -115,7 +115,7 @@ export interface TabViewProps {
 
 export function TabView(props: TabViewProps) {
   const theme = useTheme()
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
   const [selectedItem, setSelectedItem] = useState(props.openedTab)
 
   useEffect(() => {
@@ -139,7 +139,7 @@ export function TabView(props: TabViewProps) {
       <View
         style={{
           width: '100%',
-          height: threeBarLayout ? 40 : 48,
+          height: threePaneLayout.enabled ? 40 : 48,
           flexDirection: 'row',
         }}
       >

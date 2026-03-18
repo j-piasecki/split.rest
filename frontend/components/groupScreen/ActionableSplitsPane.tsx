@@ -131,7 +131,7 @@ export function ActionableSplitsPane({
 }) {
   const theme = useTheme()
   const { user } = useAuth()
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
   const { t } = useTranslation()
 
   // Let's assume that showing at most 20 pending splits is enough
@@ -151,7 +151,7 @@ export function ActionableSplitsPane({
 
   if (actionableSplits.length === 0) {
     // TODO: Figure out what to do with this place
-    return threeBarLayout ? (
+    return threePaneLayout.enabled ? (
       <View
         style={[
           {

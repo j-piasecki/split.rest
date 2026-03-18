@@ -33,7 +33,7 @@ export function SelectorItem({
   style,
 }: SelectorItemProps) {
   const theme = useTheme()
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
   const [pressed, setPressed] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [expanded, setExpanded] = useState(startExpanded && collapsible)
@@ -103,13 +103,13 @@ export function SelectorItem({
           {icon && (
             <Icon
               name={icon}
-              size={threeBarLayout ? 20 : 24}
+              size={threePaneLayout.enabled ? 20 : 24}
               color={theme.colors.onSecondaryContainer}
             />
           )}
           <Text
             style={{
-              fontSize: threeBarLayout ? 18 : 20,
+              fontSize: threePaneLayout.enabled ? 18 : 20,
               fontWeight: 800,
               color: theme.colors.onSecondaryContainer,
             }}
@@ -121,7 +121,7 @@ export function SelectorItem({
             <View style={{ position: 'absolute', right: 0 }}>
               <RoundIconButton
                 icon={expanded ? 'arrowUp' : 'arrowDown'}
-                size={threeBarLayout ? 20 : 24}
+                size={threePaneLayout.enabled ? 20 : 24}
                 color={theme.colors.onSecondaryContainer}
                 onPress={() => setExpanded(!expanded)}
               />
@@ -132,7 +132,7 @@ export function SelectorItem({
           <Text
             style={{
               marginLeft: icon ? 32 : 0,
-              fontSize: threeBarLayout ? 14 : 16,
+              fontSize: threePaneLayout.enabled ? 14 : 16,
               fontWeight: 600,
               color: theme.colors.onSurface,
             }}

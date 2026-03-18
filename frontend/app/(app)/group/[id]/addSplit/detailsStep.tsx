@@ -31,7 +31,7 @@ export default function Modal() {
   const { user } = useAuth()
   const router = useRouter()
   const insets = useModalScreenInsets()
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
   const { data: groupInfo } = useGroupInfo(Number(id))
@@ -193,7 +193,7 @@ export default function Modal() {
                 openedTab={splittingByTotal ? 0 : 1}
                 onTabChange={(index) => setSplittingByTotal(index === 0)}
                 contentContainerStyle={{
-                  padding: threeBarLayout ? 8 : 12,
+                  padding: threePaneLayout.enabled ? 8 : 12,
                 }}
                 tabs={[
                   {
@@ -208,7 +208,7 @@ export default function Modal() {
                           setTotal(value.replace(',', '.'))
                           setError(null)
                         }}
-                        inputStyle={{ fontSize: threeBarLayout ? 14 : 16 }}
+                        inputStyle={{ fontSize: threePaneLayout.enabled ? 14 : 16 }}
                         style={{ marginBottom: 8 }}
                         onBlur={() => {
                           const amountNum = Number(total)
@@ -232,7 +232,7 @@ export default function Modal() {
                           setError(null)
                         }}
                         style={{ marginBottom: 8 }}
-                        inputStyle={{ fontSize: threeBarLayout ? 14 : 16 }}
+                        inputStyle={{ fontSize: threePaneLayout.enabled ? 14 : 16 }}
                         onBlur={() => {
                           const amountNum = Number(amountPerUser)
                           if (!Number.isNaN(amountNum) && total.length > 0) {

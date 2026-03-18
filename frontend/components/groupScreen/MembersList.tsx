@@ -110,7 +110,7 @@ export function MembersList({
   onRefresh,
 }: MembersListProps) {
   const insets = useSafeAreaInsets()
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
   const [fabRef, scrollHandler] = useFABScrollHandler()
   const { t } = useTranslation()
   const { members, isLoading, fetchNextPage, isFetchingNextPage, isRefetching, hasNextPage } =
@@ -183,7 +183,7 @@ export function MembersList({
         info={info}
         iconOnly={iconOnly}
         applyBottomInset={applyBottomInset}
-        threeBarLayout={threeBarLayout}
+        threeBarLayout={threePaneLayout.enabled}
         fabRef={fabRef}
       />
     </View>

@@ -268,7 +268,7 @@ function NoGroupSelected() {
 export default function GroupScreen() {
   const theme = useTheme()
   const { id } = useLocalSearchParams()
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
   const groupId = Number(id as string)
   const noGroupSelected = !id || id === 'none' || isNaN(groupId)
   const { data: groupInfo, error } = useGroupInfo(noGroupSelected ? 0 : groupId, !noGroupSelected)
@@ -283,7 +283,7 @@ export default function GroupScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.surface }}>
-      {threeBarLayout ? (
+      {threePaneLayout.enabled ? (
         <TripleColumnLayout groupInfo={groupInfo} />
       ) : (
         <SingleColumnLayout info={groupInfo} />

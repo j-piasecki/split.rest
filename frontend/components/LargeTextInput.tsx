@@ -33,7 +33,7 @@ export function LargeTextInput({
   autoCorrect,
 }: LargeTextInputProps) {
   const theme = useTheme()
-  const threeBarLayout = useAppLayout()
+  const { threePaneLayout } = useAppLayout()
   const textInputRef = useRef<TextInputRef>(null)
 
   return (
@@ -41,8 +41,8 @@ export function LargeTextInput({
       disabled={disabled}
       style={[
         {
-          padding: threeBarLayout ? 8 : 12,
-          paddingLeft: threeBarLayout ? 16 : 24,
+          padding: threePaneLayout.enabled ? 8 : 12,
+          paddingLeft: threePaneLayout.enabled ? 16 : 24,
           borderRadius: 16,
           backgroundColor: theme.colors.surfaceContainer,
           flexDirection: 'row',
@@ -56,7 +56,7 @@ export function LargeTextInput({
       {icon && (
         <Icon
           name={icon}
-          size={threeBarLayout ? 20 : 24}
+          size={threePaneLayout.enabled ? 20 : 24}
           color={theme.colors.secondary}
           style={{ opacity: disabled ? 0.7 : 1 }}
         />
@@ -67,7 +67,7 @@ export function LargeTextInput({
         value={value}
         onChangeText={onChangeText}
         style={{ flex: 1, opacity: disabled ? 0.7 : 1 }}
-        inputStyle={{ fontSize: threeBarLayout ? 16 : 18 }}
+        inputStyle={{ fontSize: threePaneLayout.enabled ? 16 : 18 }}
         showUnderline={false}
         keyboardType={keyboardType}
         onFocus={onFocus}

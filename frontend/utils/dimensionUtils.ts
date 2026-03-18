@@ -31,5 +31,9 @@ export function useDisplayClass() {
 }
 
 export function useAppLayout() {
-  return useDisplayClass() > DisplayClass.Medium
+  return {
+    threePaneLayout: {
+      enabled: useDisplayClass() > DisplayClass.Medium
+    }
+  }
 }
