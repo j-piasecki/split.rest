@@ -129,7 +129,9 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
         </View>
       )}
 
-      {threePaneLayout.enabled && <ActionableSplitsPane info={info} style={{ flex: 1, marginTop: 6 }} />}
+      {threePaneLayout.enabled && (
+        <ActionableSplitsPane info={info} style={{ flex: 1, marginTop: 6 }} />
+      )}
     </View>
   )
 }

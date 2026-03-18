@@ -1,6 +1,6 @@
 import { DrawerLayout } from '@components/DrawerLayout'
 import { HomeDrawerContent } from '@components/HomeDrawerContent'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import { Stack } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 
@@ -10,11 +10,11 @@ export const unstable_settings = {
 
 export default function GroupFlow() {
   const { t } = useTranslation()
-  const isSmallScreen = useDisplayClass() === DisplayClass.Small
+  const { modalsInRightPanel } = useAppLayout()
 
   const modalOptions: Record<string, unknown> = {
-    presentation: isSmallScreen ? 'card' : 'transparentModal',
-    animation: isSmallScreen ? undefined : 'none',
+    presentation: modalsInRightPanel ? 'transparentModal' : 'card',
+    animation: modalsInRightPanel ? 'none' : undefined,
   }
 
   return (

@@ -34,9 +34,10 @@ export function useAppLayout() {
   const displayClass = useDisplayClass()
 
   return {
+    modalsInRightPanel: displayClass >= DisplayClass.Medium,
     threePaneLayout: {
       enabled: displayClass > DisplayClass.Medium,
       membersPaneExpanded: displayClass > DisplayClass.Large,
-    }
+    },
   }
 }

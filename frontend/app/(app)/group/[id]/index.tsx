@@ -12,7 +12,7 @@ import { MembersOrderFilter } from '@components/groupScreen/MembersOrderFilter'
 import { SplitQueryButton } from '@components/groupScreen/SplitQueryButton'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useTheme } from '@styling/theme'
-import { DisplayClass, useAppLayout, useDisplayClass } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import { useLocalSearchParams } from 'expo-router'
 import React from 'react'
 import { useState } from 'react'
@@ -55,11 +55,11 @@ function TripleColumnLayout({ groupInfo }: { groupInfo: GroupUserInfo | undefine
   const theme = useTheme()
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
-  const displayClass = useDisplayClass()
+  const { threePaneLayout } = useAppLayout()
   const [membersLowToHigh, setMembersLowToHigh] = useState<boolean | undefined>(true)
 
   const [membersExpanded, setMembersExpanded] = useState(false)
-  const membersAlwaysExpanded = displayClass > DisplayClass.Large
+  const membersAlwaysExpanded = threePaneLayout.membersPaneExpanded
 
   return (
     <>

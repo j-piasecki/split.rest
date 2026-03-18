@@ -4,7 +4,7 @@ import { RoundIconButton } from './RoundIconButton'
 import { Text } from '@components/Text'
 import { useNavigationState, useRoute } from '@react-navigation/native'
 import { useTheme } from '@styling/theme'
-import { DisplayClass, useDisplayClass } from '@utils/dimensionUtils'
+import { useAppLayout } from '@utils/dimensionUtils'
 import { useRouter } from 'expo-router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { LayoutChangeEvent, Platform, Pressable, StyleSheet, View } from 'react-native'
@@ -77,14 +77,14 @@ export interface ModalScreenActionProps {
 
 function ModalScreenAction({ icon, onPress }: ModalScreenActionProps) {
   const theme = useTheme()
-  const isSmallScreen = useDisplayClass() <= DisplayClass.Expanded
+  const { modalsInRightPanel } = useAppLayout()
   const [isLoading, setIsLoading] = useState(false)
 
   return (
     <RoundIconButton
       icon={icon}
       isLoading={isLoading}
-      color={isSmallScreen ? theme.colors.onSurface : undefined}
+      color={modalsInRightPanel ? undefined : theme.colors.onSurface}
       onPress={() => {
         setIsLoading(true)
         onPress().finally(() => {
@@ -304,7 +304,7 @@ export interface ModalProps {
 
 export default function Modal({ returnPath, ...props }: ModalProps) {
   const router = useRouter()
-  const isSmallScreen = useDisplayClass() <= DisplayClass.Expanded
+  const { modalsInRightPanel } = useAppLayout()
 
   const goBack = useCallback(() => {
     if (router.canGoBack()) {
@@ -314,7 +314,9 @@ export default function Modal({ returnPath, ...props }: ModalProps) {
     }
   }, [router, returnPath])
 
-  if (isSmallScreen) {
+  if (modalsInRightPanel) {
+    return <ModalScreen {...props} goBack={goBack} />
+  } else {
     return (
       <FullscreenModal
         title={props.title}
@@ -325,7 +327,5 @@ export default function Modal({ returnPath, ...props }: ModalProps) {
         {props.children}
       </FullscreenModal>
     )
-  } else {
-    return <ModalScreen {...props} goBack={goBack} />
   }
 }
