@@ -31,9 +31,12 @@ export function useDisplayClass() {
 }
 
 export function useAppLayout() {
+  const displayClass = useDisplayClass()
+
   return {
     threePaneLayout: {
-      enabled: useDisplayClass() > DisplayClass.Medium
+      enabled: displayClass > DisplayClass.Medium,
+      membersPaneExpanded: displayClass > DisplayClass.Large,
     }
   }
 }
