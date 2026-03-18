@@ -112,6 +112,7 @@ export default function Screen() {
           paddingBottom: insets.bottom,
         }}
       >
+        {serverDown && <ServerDown />}
         {user === undefined && !wasSignedOut && !serverDown && (
           <View style={{ padding: 16, alignItems: 'center', gap: 8 }}>
             <ActivityIndicator size='small' color={theme.colors.onSurface} />
@@ -120,8 +121,7 @@ export default function Screen() {
             </Text>
           </View>
         )}
-        {serverDown && <ServerDown />}
-        {(user === null || (user === undefined && wasSignedOut)) && (
+        {!serverDown && (user === null || (user === undefined && wasSignedOut)) && (
           <View style={{ flex: 1, justifyContent: 'space-between' }}>
             <View
               style={{
