@@ -152,10 +152,8 @@ export function DrawerLayout({
       } else {
         openDrawer()
       }
-    } else {
-      closeDrawer()
     }
-  }, [isOnGroupScreen, isNoGroupSelected, openDrawer, closeDrawer, progress, isOpen])
+  }, [isOnGroupScreen, isNoGroupSelected, openDrawer, progress, isOpen])
 
   const pan = Gesture.Pan()
     .enabled(enabled && isOnGroupScreen)
