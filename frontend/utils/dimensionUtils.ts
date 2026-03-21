@@ -39,5 +39,6 @@ export function useAppLayout() {
       enabled: displayClass > DisplayClass.Medium,
       membersPaneExpanded: displayClass > DisplayClass.Large,
     },
+    narrowGroupPane: displayClass > DisplayClass.Medium || displayClass === DisplayClass.Small,
   }
 }

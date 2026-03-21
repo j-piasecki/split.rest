@@ -26,9 +26,11 @@ function useHasSettingsAccess(info: GroupUserInfo | undefined) {
 export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const router = useRouter()
+  const appLayout = useAppLayout()
   const hasSettingsAccess = useHasSettingsAccess(info)
   const { threePaneLayout } = useAppLayout()
   const { t } = useTranslation()
+  const isNarrow = appLayout.narrowGroupPane
 
   return (
     <View style={[{ gap: 2 }, threePaneLayout.enabled && { height: '100%' }]}>
@@ -64,35 +66,52 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
         style={[
           {
             backgroundColor: theme.colors.surfaceContainer,
-            paddingHorizontal: 16,
-            paddingVertical: 8,
-            paddingBottom: !info?.locked || Platform.OS === 'web' ? 16 : undefined,
+            paddingHorizontal: 8,
+            paddingTop: 8,
+            paddingBottom: !info?.locked ? 12 : undefined,
             borderRadius: 4,
-            gap: 12,
+            justifyContent: 'flex-end',
           },
           !info?.locked && { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
         ]}
       >
-        <TitleWithBalance info={info} />
+        {!isNarrow ? (
+          <View
+            style={{ flexDirection: 'row', gap: 16, alignItems: 'center', paddingHorizontal: 8 }}
+          >
+            <View style={{ flex: 1 }}>
+              <GroupHeader info={info} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <GroupBalance info={info} />
+            </View>
+          </View>
+        ) : (
+          <GroupHeader info={info} />
+        )}
 
-        <ButtonShimmer argument={info}>
-          {(info) =>
-            Number(info?.balance) !== 0 &&
-            info.permissions.canSettleUp?.() && (
-              <Button
-                onPress={() => {
-                  if (info.permissions.canSettleUpGroup()) {
-                    router.navigate(`/group/${info!.id}/settleUp`)
-                  } else {
-                    router.navigate(`/group/${info!.id}/settleUp/confirm`)
-                  }
-                }}
-                title={t('groupInfo.settleUp.settleUp')}
-                leftIcon='balance'
-              />
-            )
-          }
-        </ButtonShimmer>
+        <View style={{ paddingHorizontal: 4 }}>
+          {isNarrow && <GroupBalance info={info} />}
+
+          <ButtonShimmer argument={info}>
+            {(info) =>
+              Number(info?.balance) !== 0 &&
+              info.permissions.canSettleUp?.() && (
+                <Button
+                  onPress={() => {
+                    if (info.permissions.canSettleUpGroup()) {
+                      router.navigate(`/group/${info!.id}/settleUp`)
+                    } else {
+                      router.navigate(`/group/${info!.id}/settleUp/confirm`)
+                    }
+                  }}
+                  title={t('groupInfo.settleUp.settleUp')}
+                  leftIcon='balance'
+                />
+              )
+            }
+          </ButtonShimmer>
+        </View>
       </View>
 
       {info?.locked && (
@@ -100,7 +119,7 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
           style={[
             {
               backgroundColor: theme.colors.errorContainer,
-              paddingHorizontal: 16,
+              paddingHorizontal: 12,
               paddingVertical: 12,
               borderRadius: 4,
               borderBottomLeftRadius: 16,
@@ -136,47 +155,48 @@ export function GroupInfoPane({ info }: { info: GroupUserInfo | undefined }) {
   )
 }
 
-function TitleWithBalance({ info }: { info: GroupUserInfo | undefined }) {
+function GroupHeader({ info }: { info: GroupUserInfo | undefined }) {
+  const theme = useTheme()
+
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+      <GroupIcon info={info} size={48} />
+      <View style={{ flex: 1 }}>
+        <ShimmerPlaceholder argument={info} shimmerStyle={{ height: 36 }}>
+          {(info) => (
+            <Text
+              style={{ fontSize: 32, color: theme.colors.primary, fontWeight: '600' }}
+              numberOfLines={2}
+              adjustsFontSizeToFit
+            >
+              {info.name}
+            </Text>
+          )}
+        </ShimmerPlaceholder>
+      </View>
+    </View>
+  )
+}
+
+function GroupBalance({ info }: { info: GroupUserInfo | undefined }) {
   const theme = useTheme()
   const { t } = useTranslation()
 
   return (
-    <>
-      <ShimmerPlaceholder argument={info} shimmerStyle={{ height: 44 }}>
-        {(info) => (
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <GroupIcon info={info} size={44} />
-            <View style={{ flex: 1 }}>
-              <Text
-                style={{ fontSize: 32, color: theme.colors.primary, fontWeight: '600' }}
-                numberOfLines={3}
-                adjustsFontSizeToFit
-              >
-                {info.name}
-              </Text>
-            </View>
-          </View>
-        )}
-      </ShimmerPlaceholder>
-
-      <View style={{ flexDirection: 'row', gap: 16, marginTop: 4, alignItems: 'center' }}>
-        <Text style={{ fontSize: 24, color: theme.colors.onSurface }}>
-          {t('groupInfo.yourBalance')}
-        </Text>
+    <View style={{ flexDirection: 'row', gap: 32, alignItems: 'baseline' }}>
+      <View style={{ flex: 2, flexDirection: 'column-reverse' }}>
         <ShimmerPlaceholder
           argument={info}
-          style={{ flex: 1, paddingLeft: 32 }}
-          shimmerStyle={{ height: 32 }}
+          shimmerStyle={{ height: 64, marginBottom: 14, marginTop: 8 }}
         >
           {(info) => (
             <Text
               adjustsFontSizeToFit
               numberOfLines={1}
               style={{
-                flex: 1,
-                textAlign: 'right',
-                fontSize: 30,
-                fontWeight: '700',
+                fontSize: 64,
+                fontWeight: 700,
+                paddingLeft: Number(info.balance) === 0 ? 12 : 0,
                 color: getBalanceColor(Number(info.balance), theme),
               }}
             >
@@ -184,7 +204,46 @@ function TitleWithBalance({ info }: { info: GroupUserInfo | undefined }) {
             </Text>
           )}
         </ShimmerPlaceholder>
+        <Text
+          style={{
+            fontSize: 16,
+            color: theme.colors.onSurfaceVariant,
+            fontWeight: 700,
+            transform: [{ translateY: 4 }],
+          }}
+        >
+          {t('groupInfo.yourBalance')}
+        </Text>
       </View>
-    </>
+
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'column-reverse',
+          justifyContent: 'flex-start',
+          alignSelf: Platform.OS === 'web' ? 'flex-end' : undefined,
+          paddingBottom: Platform.OS === 'web' ? 8 : undefined,
+        }}
+      >
+        <ShimmerPlaceholder argument={info} shimmerStyle={{ height: 30 }}>
+          {(info) => (
+            <Text
+              adjustsFontSizeToFit
+              numberOfLines={1}
+              style={{
+                fontSize: 22,
+                fontWeight: 700,
+                color: theme.colors.onSurfaceVariant,
+              }}
+            >
+              {CurrencyUtils.format(info.total, info.currency)}
+            </Text>
+          )}
+        </ShimmerPlaceholder>
+        <Text style={{ flexGrow: 0, fontSize: 12, color: theme.colors.outline, fontWeight: 700 }}>
+          {t('groupInfo.groupTotal')}
+        </Text>
+      </View>
+    </View>
   )
 }
