@@ -155,7 +155,7 @@ function UserRow({
     user.pending &&
     (appUser?.id === splitInfo.paidBy?.id || appUser?.id === user.id)
 
-  const showBadge = (user.pending && showCompleteButton) || !user.hasAccess
+  const showBadge = (user.pending && showCompleteButton) || !user.hasAccess || paidByThis
 
   return (
     <Pressable
@@ -216,8 +216,8 @@ function UserRow({
               ]}
             >
               <Icon
-                name={user.hasAccess ? 'hourglass' : 'lock'}
-                size={18}
+                name={paidByThis ? 'payments' : user.hasAccess ? 'hourglass' : 'lock'}
+                size={16}
                 color={theme.colors.tertiary}
               />
             </View>
