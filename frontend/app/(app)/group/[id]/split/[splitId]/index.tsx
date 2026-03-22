@@ -1,5 +1,7 @@
 import { Button } from '@components/Button'
+import { ButtonShimmer } from '@components/ButtonShimmer'
 import Modal from '@components/ModalScreen'
+import { Shimmer } from '@components/Shimmer'
 import { useSnack } from '@components/SnackBar'
 import { SplitInfo } from '@components/SplitInfo'
 import { Text } from '@components/Text'
@@ -17,7 +19,7 @@ import { SplitCreationContext } from '@utils/splitCreationContext'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, FlatList, ScrollView, View } from 'react-native'
+import { FlatList, ScrollView, View } from 'react-native'
 import {
   DEFAULT_BALANCE_WHEN_NOT_SET,
   DEFAULT_HAS_ACCESS_WHEN_NOT_SET,
@@ -175,8 +177,57 @@ export default function SplitInfoScreen() {
       ]}
     >
       {(isLoadingHistory || groupInfo === undefined) && (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size='small' color={theme.colors.onSurface} />
+        <View style={{ flex: 1, paddingBottom: insets.bottom }}>
+          <View
+            style={{
+              paddingTop: insets.top + 16,
+              paddingBottom: 16,
+              paddingLeft: insets.left + 12,
+              paddingRight: insets.right + 12,
+              gap: 12,
+            }}
+          >
+            <View style={{ padding: 16, paddingTop: 0, alignItems: 'center', gap: 8 }}>
+              <Shimmer style={{ width: 180, height: 20, borderRadius: 10 }} />
+              <Shimmer style={{ width: '80%', height: 56, borderRadius: 16 }} offset={0.6} />
+              <Shimmer style={{ width: 140, height: 22, borderRadius: 11 }} offset={0.5} />
+              <Shimmer style={{ width: 120, height: 28, borderRadius: 14 }} offset={0.4} />
+            </View>
+
+            <View style={{ gap: 2 }}>
+              <Shimmer
+                style={{
+                  width: '100%',
+                  height: 48,
+                  borderRadius: 4,
+                  borderTopLeftRadius: 16,
+                  borderTopRightRadius: 16,
+                }}
+                offset={0.55}
+              />
+              {[0.45, 0.35, 0.25].map((offset, index) => (
+                <Shimmer
+                  key={offset}
+                  style={{
+                    width: '100%',
+                    height: 64,
+                    borderRadius: 4,
+                    borderBottomLeftRadius: index === 2 ? 16 : 4,
+                    borderBottomRightRadius: index === 2 ? 16 : 4,
+                  }}
+                  offset={offset}
+                />
+              ))}
+            </View>
+          </View>
+
+          <View style={{ flex: 1 }} />
+
+          <View style={{ gap: 12, marginLeft: insets.left + 12, marginRight: insets.right + 12 }}>
+            <ButtonShimmer argument={undefined} offset={0}>
+              {() => null}
+            </ButtonShimmer>
+          </View>
         </View>
       )}
 

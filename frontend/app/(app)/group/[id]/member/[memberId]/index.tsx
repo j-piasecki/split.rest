@@ -496,7 +496,10 @@ export function MemberInfo({
 
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
               <View>
-                <ShimmerPlaceholder argument={memberInfo} shimmerStyle={{ width: 240, height: 26, marginBottom: 4 }}>
+                <ShimmerPlaceholder
+                  argument={memberInfo}
+                  shimmerStyle={{ width: 240, height: 26, marginBottom: 4 }}
+                >
                   {(memberInfo) => (
                     <Text
                       numberOfLines={2}
