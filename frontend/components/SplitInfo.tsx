@@ -228,7 +228,7 @@ function UserRow({
             style={{
               color: paidByThis ? theme.colors.primary : theme.colors.onSurface,
               fontSize: 20,
-              fontWeight: paidByThis ? 700 : 400,
+              fontWeight: paidByThis ? 700 : 500,
             }}
           >
             {user.displayName ?? user.name}
@@ -673,61 +673,123 @@ export function SplitInfo({
       }
     >
       <View style={{ gap: 12 }}>
-        <Pane
-          icon='receipt'
-          title={t('splitInfo.details')}
-          textLocation='start'
-          containerStyle={{ padding: 16, paddingTop: 12 }}
-          collapsible
-        >
-          <Text style={{ color: theme.colors.onSurface, fontSize: 24, marginBottom: 8 }}>
-            {getSplitDisplayName(splitInfo)}
+        <View style={{ padding: 16, paddingTop: 0 }}>
+          {paidBy && (
+            <Text
+              style={{
+                color: theme.colors.onSurface,
+                fontSize: 18,
+                textAlign: 'center',
+                fontWeight: 500,
+              }}
+            >
+              <Trans
+                i18nKey={
+                  (isSettleUpSplit(splitInfo.type)
+                    ? isInversedSplit(splitInfo.type)
+                      ? splitInfo.pending
+                        ? 'splitInfo.settledUpWillGetBack'
+                        : 'splitInfo.settledUpGetsBack'
+                      : splitInfo.pending
+                        ? 'splitInfo.settledUpWillGiveBack'
+                        : 'splitInfo.settledUpGaveBack'
+                    : isLendSplit(splitInfo.type)
+                      ? 'splitInfo.lentBy'
+                      : 'splitInfo.paidBy') as never
+                }
+                values={{ payer: paidBy.displayName ?? paidBy.name }}
+                components={{
+                  Styled: <Text style={{ color: theme.colors.tertiary, fontWeight: 600 }} />,
+                }}
+              />
+            </Text>
+          )}
+
+          <Text
+            style={{
+              color: theme.colors.onSurfaceVariant,
+              fontSize: 56,
+              fontWeight: 700,
+              textAlign: 'center',
+              transform: [{ translateY: -4 }],
+            }}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+          >
+            {CurrencyUtils.format(splitInfo.total, groupInfo.currency)}
           </Text>
 
-          {/* TODO: Update text for inverse splits? */}
-          {paidBy && (
-            <IconInfoText
-              icon={isLendSplit(splitInfo.type) ? 'payment' : 'payments'}
-              translationKey={
-                isSettleUpSplit(splitInfo.type)
-                  ? isInversedSplit(splitInfo.type)
-                    ? splitInfo.pending
-                      ? 'splitInfo.hasSettledUpWillGetBack'
-                      : 'splitInfo.hasSettledUpGetsBack'
-                    : splitInfo.pending
-                      ? 'splitInfo.hasSettledUpWillGiveBack'
-                      : 'splitInfo.hasSettledUpGaveBack'
-                  : isLendSplit(splitInfo.type)
-                    ? 'splitInfo.hasLentText'
-                    : 'splitInfo.hasPaidText'
-              }
-              values={{
-                payer: paidBy.displayName ?? paidBy.name,
-                amount: CurrencyUtils.format(splitInfo.total, groupInfo.currency),
+          {!isSettleUp && (
+            <Text
+              style={{
+                color: theme.colors.onSurface,
+                fontSize: 20,
+                fontWeight: 600,
+                textAlign: 'center',
+                transform: [{ translateY: -4 }],
               }}
-              user={paidBy}
-            />
+            >
+              {getSplitDisplayName(splitInfo)}
+            </Text>
           )}
-          <IconInfoText
-            icon='calendar'
-            translationKey='splitInfo.splitTimeText'
-            values={{ date: new Date(splitInfo.timestamp).toLocaleDateString() }}
-          />
-        </Pane>
 
-        <EditHistory
-          groupInfo={groupInfo}
-          splitHistory={splitHistory}
-          hasMoreHistory={hasMoreHistory}
-          isLoadingHistory={isLoadingHistory}
-          onLoadMoreHistory={onLoadMoreHistory}
-          onRestoreVersion={onRestoreVersion}
-          isRestoringVersion={isRestoringVersion}
-          selectedVersion={selectedVersion}
-          setSelectedVersion={setSelectedVersion}
-        />
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 6,
+                backgroundColor: theme.colors.surfaceContainerHigh,
+                borderRadius: 20,
+                paddingVertical: 6,
+                paddingHorizontal: 12,
+              }}
+            >
+              <Icon name='calendar' size={16} color={theme.colors.tertiary} />
+              <Text style={{ color: theme.colors.tertiary, fontSize: 14, fontWeight: 500 }}>
+                {new Date(splitInfo.timestamp).toLocaleDateString()}
+              </Text>
+            </View>
+          </View>
+        </View>
 
         {showNoAccessWarning && <ParticipantsWithNoAccessWarning splitHistory={splitHistory} />}
+
+        {splitInfo.type !== SplitType.Delayed && (
+          <Pane
+            icon='group'
+            title={t('splitInfo.participants')}
+            textLocation='start'
+            containerStyle={{ backgroundColor: 'transparent', gap: 2 }}
+            collapsible
+          >
+            {usersToShow.map((user, index) => (
+              <UserRow
+                key={user.id}
+                user={user}
+                groupInfo={groupInfo}
+                splitInfo={splitInfo}
+                isNameUnique={nameCounts[getNameKey(user)] === 1}
+                last={index === usersToShow.length - 1}
+                showCompleteButton={showCompleteButton}
+              />
+            ))}
+          </Pane>
+        )}
+
+        {!isSettleUp && (
+          <EditHistory
+            groupInfo={groupInfo}
+            splitHistory={splitHistory}
+            hasMoreHistory={hasMoreHistory}
+            isLoadingHistory={isLoadingHistory}
+            onLoadMoreHistory={onLoadMoreHistory}
+            onRestoreVersion={onRestoreVersion}
+            isRestoringVersion={isRestoringVersion}
+            selectedVersion={selectedVersion}
+            setSelectedVersion={setSelectedVersion}
+          />
+        )}
 
         {splitInfo.type === SplitType.Delayed && finalizeSplit && (
           <Pane
@@ -768,28 +830,6 @@ export function SplitInfo({
             color={theme.colors.onTertiaryContainer}
             expanded={false}
           />
-        )}
-
-        {splitInfo.type !== SplitType.Delayed && (
-          <Pane
-            icon='group'
-            title={t('splitInfo.participants')}
-            textLocation='start'
-            containerStyle={{ paddingBottom: 8, backgroundColor: 'transparent', gap: 2 }}
-            collapsible
-          >
-            {usersToShow.map((user, index) => (
-              <UserRow
-                key={user.id}
-                user={user}
-                groupInfo={groupInfo}
-                splitInfo={splitInfo}
-                isNameUnique={nameCounts[getNameKey(user)] === 1}
-                last={index === usersToShow.length - 1}
-                showCompleteButton={showCompleteButton}
-              />
-            ))}
-          </Pane>
         )}
       </View>
     </ScrollView>
