@@ -62,7 +62,7 @@ export function Text({ style, adjustsFontSizeToFit, numberOfLines, ...props }: T
       }
 
       // Apply the final calculated size
-      element.style.fontSize = `${bestFit - 1}px`
+      element.style.fontSize = `${bestFit - 2}px`
     }
 
     const observer = new ResizeObserver(() => {
