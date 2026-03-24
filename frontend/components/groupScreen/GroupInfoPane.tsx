@@ -187,14 +187,14 @@ function GroupBalance({ info }: { info: GroupUserInfo | undefined }) {
       <View style={{ flex: 2, flexDirection: 'column-reverse' }}>
         <ShimmerPlaceholder
           argument={info}
-          shimmerStyle={{ height: 64, marginBottom: 14, marginTop: 8 }}
+          shimmerStyle={{ height: 54, marginBottom: 14, marginTop: 8 }}
         >
           {(info) => (
             <Text
               adjustsFontSizeToFit
               numberOfLines={1}
               style={{
-                fontSize: 64,
+                fontSize: 56,
                 fontWeight: 700,
                 paddingLeft: Number(info.balance) === 0 ? 12 : 0,
                 color: getBalanceColor(Number(info.balance), theme),
