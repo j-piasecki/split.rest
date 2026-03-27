@@ -9,7 +9,7 @@ export async function createDatabase(pool: Pool) {
       created_at BIGINT NOT NULL,
       photo_url VARCHAR(512) NULL,
       deleted BOOLEAN NOT NULL DEFAULT FALSE,
-      picture_id VARCHAR(36) NULL UNIQUE DEFAULT NULL,
+      picture_id VARCHAR(36) NULL DEFAULT NULL,
       is_ghost BOOLEAN NOT NULL DEFAULT FALSE,
 
       CONSTRAINT users_id_is_ghost_unique UNIQUE (id, is_ghost)

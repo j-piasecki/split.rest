@@ -9,10 +9,15 @@ export async function setProfilePicture(
   buffer: Buffer
 ) {
   const client = await pool.connect()
-  const newPictureId = crypto.randomUUID()
+  let newPictureId = crypto.randomUUID()
 
   try {
     await client.query('BEGIN')
+
+    // Make sure the new picture id is unique (extremely unlikely that it won't be)
+    while ((await client.query('SELECT 1 FROM users WHERE picture_id = $1', [newPictureId])).rowCount) {
+      newPictureId = crypto.randomUUID()
+    }
 
     await imageService.saveImageToFile(buffer, `public/${newPictureId}.jpg`)
     if (process.env.DEV !== '1') {
