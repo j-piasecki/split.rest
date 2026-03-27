@@ -58,8 +58,10 @@ interface GroupStatistics {
   monthlyStatistics: MonthStats[]
   this12MonthPeriodTotal: number
   this12MonthPeriodAverage: number
+  this12MonthPeriodMonthCount: number
   last12MonthPeriodTotal: number
   last12MonthPeriodAverage: number
+  last12MonthPeriodMonthCount: number
 }
 
 interface BarBadge {
@@ -70,6 +72,15 @@ interface BarBadge {
   text: string
   foregroundColor: string
   backgroundColor: string
+}
+
+function trimLeadingEmptyMonths<T extends { transactionCount: number }>(months: T[]): T[] {
+  let start = 0
+  while (start < months.length && months[start].transactionCount === 0) {
+    start++
+  }
+
+  return months.slice(start)
 }
 
 const BarChartContext = React.createContext<{
@@ -127,12 +138,16 @@ function useGroupStatistics(id: number): GroupStatistics | null {
       return year === currentYear
     })
     .reduce((acc, stat) => acc + Number(stat.totalValue), 0)
-  const monthsWithStats = monthlyStats.stats.filter((stat) => {
-    const month = dayjs(stat.startTimestamp).month()
-    const year = dayjs(stat.startTimestamp).year()
-    const currentYear = month > dayjs().month() ? dayjs().year() - 1 : dayjs().year()
-    return year === currentYear
-  })
+  const monthsWithStats = trimLeadingEmptyMonths(
+    monthlyStats.stats
+      .filter((stat) => {
+        const month = dayjs(stat.startTimestamp).month()
+        const year = dayjs(stat.startTimestamp).year()
+        const currentYear = month > dayjs().month() ? dayjs().year() - 1 : dayjs().year()
+        return year === currentYear
+      })
+      .sort((a, b) => dayjs(a.startTimestamp).valueOf() - dayjs(b.startTimestamp).valueOf())
+  )
   const this12MonthPeriodAverage =
     monthsWithStats.length > 0 ? this12MonthPeriodTotal / monthsWithStats.length : 0
 
@@ -144,12 +159,16 @@ function useGroupStatistics(id: number): GroupStatistics | null {
       return year === lastYear
     })
     .reduce((acc, stat) => acc + Number(stat.totalValue), 0)
-  const last12MonthPeriodMonthsWithStats = monthlyStats.stats.filter((stat) => {
-    const month = dayjs(stat.startTimestamp).month()
-    const year = dayjs(stat.startTimestamp).year()
-    const lastYear = month > dayjs().month() ? dayjs().year() - 2 : dayjs().year() - 1
-    return year === lastYear
-  })
+  const last12MonthPeriodMonthsWithStats = trimLeadingEmptyMonths(
+    monthlyStats.stats
+      .filter((stat) => {
+        const month = dayjs(stat.startTimestamp).month()
+        const year = dayjs(stat.startTimestamp).year()
+        const lastYear = month > dayjs().month() ? dayjs().year() - 2 : dayjs().year() - 1
+        return year === lastYear
+      })
+      .sort((a, b) => dayjs(a.startTimestamp).valueOf() - dayjs(b.startTimestamp).valueOf())
+  )
   const last12MonthPeriodAverage =
     last12MonthPeriodMonthsWithStats.length > 0
       ? last12MonthPeriodTotal / last12MonthPeriodMonthsWithStats.length
@@ -164,8 +183,10 @@ function useGroupStatistics(id: number): GroupStatistics | null {
     monthlyStatistics: stats,
     this12MonthPeriodTotal,
     this12MonthPeriodAverage,
+    this12MonthPeriodMonthCount: monthsWithStats.length,
     last12MonthPeriodTotal,
     last12MonthPeriodAverage,
+    last12MonthPeriodMonthCount: last12MonthPeriodMonthsWithStats.length,
   }
 }
 
@@ -233,6 +254,7 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
             <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
               {t('groupStats.this12MonthPeriodAverage', {
                 value: CurrencyUtils.format(statistics.this12MonthPeriodAverage, info.currency),
+                count: statistics.this12MonthPeriodMonthCount,
               })}
             </Text>
 
@@ -240,6 +262,7 @@ function GroupDetails({ info, statistics }: { info: GroupUserInfo; statistics: G
               <Text style={{ color: theme.colors.onSurface, fontSize: 18 }}>
                 {t('groupStats.last12MonthPeriodAverage', {
                   value: CurrencyUtils.format(statistics.last12MonthPeriodAverage, info.currency),
+                  count: statistics.last12MonthPeriodMonthCount,
                 })}
               </Text>
             )}
