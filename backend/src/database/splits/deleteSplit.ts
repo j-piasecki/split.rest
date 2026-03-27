@@ -58,11 +58,13 @@ export async function deleteSplit(pool: Pool, callerId: string, args: DeleteSpli
       args.groupId,
     ])
 
-    await unsafeUpdateMonthlyStats(client, args.groupId, {
-      type: 'deleteSplit',
-      total: splitInfo.total,
-      timestamp: Number(splitInfo.timestamp),
-    })
+    if (!isSettleUpSplit(splitInfo.type)) {
+      await unsafeUpdateMonthlyStats(client, args.groupId, {
+        type: 'deleteSplit',
+        total: splitInfo.total,
+        timestamp: Number(splitInfo.timestamp),
+      })
+    }
 
     await client.query(
       'UPDATE splits SET deleted = TRUE, deleted_by = $1, deleted_at = $2 WHERE group_id = $3 AND id = $4',

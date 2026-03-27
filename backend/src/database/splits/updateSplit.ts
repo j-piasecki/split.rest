@@ -310,13 +310,15 @@ export async function updateSplitNoTransaction(
     args.groupId,
   ])
 
-  await unsafeUpdateMonthlyStats(client, args.groupId, {
-    type: 'updateSplit',
-    total: args.total,
-    timestamp: args.timestamp,
-    previousTotal: splitInfo.total,
-    previousTimestamp: Number(splitInfo.timestamp),
-  })
+  if (!isSettleUpSplit(splitInfo.type)) {
+    await unsafeUpdateMonthlyStats(client, args.groupId, {
+      type: 'updateSplit',
+      total: args.total,
+      timestamp: args.timestamp,
+      previousTotal: splitInfo.total,
+      previousTimestamp: Number(splitInfo.timestamp),
+    })
+  }
 
   return {
     splitInfo: {
