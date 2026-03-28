@@ -166,7 +166,7 @@ export function Pane({
             ? { width: 72 }
             : { height: 54 }
           : {},
-        { overflow: 'hidden' },
+        { overflow: isCollapsed ? 'hidden' : 'visible' },
         style,
       ]}
     >
