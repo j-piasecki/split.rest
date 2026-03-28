@@ -7,6 +7,8 @@ import { CalendarPane } from '@components/CalendarPane'
 import { ErrorText } from '@components/ErrorText'
 import { IconName } from '@components/Icon'
 import { LargeTextInput } from '@components/LargeTextInput'
+import { FullPaneHeader } from '@components/Pane'
+import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -58,6 +60,7 @@ export function SplitForm({
   showPayerSelector = true,
   style,
 }: SplitFormProps) {
+  const theme = useTheme()
   const { user } = useAuth()
   const scrollRef = useRef<ScrollView>(null)
   const { t } = useTranslation()
@@ -73,7 +76,10 @@ export function SplitForm({
     cleanError
   )
 
-  const showPaidByHint = splitMethod !== SplitMethod.BalanceChanges
+  const showPaidByHint =
+    splitMethod !== SplitMethod.BalanceChanges && splitMethod !== SplitMethod.Delayed
+  const showTotal =
+    splitMethod !== SplitMethod.BalanceChanges && splitMethod !== SplitMethod.Delayed
   const showPayerEntry = splitMethod !== SplitMethod.Lend
   const showEntries = splitMethod !== SplitMethod.Delayed
   const showTotalInput = splitMethod === SplitMethod.Delayed
@@ -154,7 +160,9 @@ export function SplitForm({
             formState={formState}
             groupInfo={groupInfo}
             updateForm={updateForm}
+            splitMethod={splitMethod}
             showPaidByHint={showPaidByHint}
+            showTotal={showTotal}
           />
         )}
 
@@ -209,6 +217,17 @@ export function SplitForm({
             balanceKeyboardType={balanceKeyboardType}
             amountPlaceholder={amountPlaceholder}
             integersOnly={integersOnly}
+          />
+        )}
+
+        {splitMethod === SplitMethod.Delayed && (
+          <FullPaneHeader
+            icon='schedule'
+            title={t('splitInfo.splitIsDelayed')}
+            textLocation='start'
+            style={{ backgroundColor: theme.colors.tertiaryContainer }}
+            color={theme.colors.onTertiaryContainer}
+            expanded={false}
           />
         )}
       </ScrollView>

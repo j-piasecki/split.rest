@@ -1,28 +1,31 @@
 import { FormActionType, FormData, SplitEntryData } from './formData'
-import { Pane } from '@components/Pane'
+import { LargeTextInput } from '@components/LargeTextInput'
 import { Text } from '@components/Text'
-import { TextInput } from '@components/TextInput'
 import { useTheme } from '@styling/theme'
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { CurrencyUtils } from 'shared'
+import { CurrencyUtils, SplitMethod } from 'shared'
 import { GroupUserInfo } from 'shared'
 
 export interface DetailsPaneProps {
   groupInfo: GroupUserInfo
   formState: FormData
   updateForm: React.Dispatch<FormActionType>
+  splitMethod: SplitMethod
   titleEditable?: boolean
   showPaidByHint?: boolean
+  showTotal?: boolean
 }
 
 export function DetailsPane({
   groupInfo,
   formState,
   updateForm,
+  splitMethod,
   titleEditable = true,
   showPaidByHint = true,
+  showTotal = true,
 }: DetailsPaneProps) {
   const theme = useTheme()
   const { t } = useTranslation()
@@ -45,56 +48,65 @@ export function DetailsPane({
     : t('form.unknownPayer')
 
   return (
-    <Pane
-      icon='receipt'
-      title={t('splitInfo.details')}
-      textLocation='start'
-      containerStyle={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 8, gap: 16 }}
-    >
-      {titleEditable && (
-        <TextInput
-          placeholder={t('form.title')}
-          value={formState.title}
-          onChangeText={(value) => updateForm({ type: 'setTitle', title: value })}
-          style={{ marginBottom: 8 }}
-        />
-      )}
-
-      {!titleEditable && (
-        <Text style={{ color: theme.colors.onSurface, fontSize: 24, fontWeight: 500 }}>
-          {formState.title}
+    <View>
+      {showPaidByHint && (
+        <Text
+          style={{
+            color: theme.colors.onSurface,
+            fontSize: 18,
+            textAlign: 'center',
+            fontWeight: 500,
+          }}
+        >
+          <Trans
+            i18nKey={splitMethod === SplitMethod.Lend ? 'splitInfo.lentBy' : 'splitInfo.paidBy'}
+            values={{ payer: payerName }}
+            components={{
+              Styled: <Text style={{ color: theme.colors.tertiary, fontWeight: 600 }} />,
+            }}
+          />
         </Text>
       )}
 
-      {showPaidByHint && (
-        <View
+      {showTotal && (
+        <Text
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginHorizontal: 4,
+            color: theme.colors.onSurfaceVariant,
+            fontSize: 56,
+            fontWeight: 700,
+            textAlign: 'center',
+            transform: [{ translateY: -4 }],
+          }}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+        >
+          {/* eslint-disable-next-line react-compiler/react-compiler */}
+          {CurrencyUtils.format(toBePaid.current, groupInfo.currency)}
+        </Text>
+      )}
+
+      {titleEditable && (
+        <LargeTextInput
+          placeholder={t('form.title')}
+          value={formState.title}
+          onChangeText={(value) => updateForm({ type: 'setTitle', title: value })}
+          icon='receipt'
+        />
+      )}
+
+      {!titleEditable && formState.title !== '' && (
+        <Text
+          style={{
+            color: theme.colors.onSurface,
+            fontSize: 20,
+            fontWeight: 600,
+            textAlign: 'center',
+            transform: [{ translateY: -4 }],
           }}
         >
-          <Text
-            style={{
-              flex: 1,
-              color: theme.colors.outline,
-              fontSize: 20,
-              opacity: 0.7,
-            }}
-          >
-            <Trans
-              i18nKey='splitInfo.hasPaidText'
-              values={{
-                payer: payerName,
-                // eslint-disable-next-line react-compiler/react-compiler
-                amount: CurrencyUtils.format(toBePaid.current, groupInfo.currency),
-              }}
-              components={{ Styled: <Text style={{ color: theme.colors.primary }} /> }}
-            />
-          </Text>
-        </View>
+          {formState.title}
+        </Text>
       )}
-    </Pane>
+    </View>
   )
 }
