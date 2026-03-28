@@ -30,6 +30,7 @@ function Suggestion({ user, hovered, pressed }: SuggestionProps) {
             : theme.colors.surfaceContainerHigh,
         flexDirection: 'row',
         padding: 8,
+        paddingVertical: user.isGhost ? 12 : 8,
         alignItems: 'center',
         gap: 8,
       }}
@@ -44,9 +45,11 @@ function Suggestion({ user, hovered, pressed }: SuggestionProps) {
             {user.name}
           </Text>
         )}
-        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}>
-          {user.deleted ? t('deletedUser') : user.email}
-        </Text>
+        {!user.isGhost && (
+          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 10 }}>
+            {user.deleted ? t('deletedUser') : user.email}
+          </Text>
+        )}
       </View>
     </View>
   )
