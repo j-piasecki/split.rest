@@ -102,7 +102,9 @@ function PersonRow({
                 suggestion.email === entry.entry ||
                 entries.find(
                   (e) => e.entry === suggestion.email || e.user?.email === suggestion.email
-                ) === undefined
+                ) === undefined ||
+                (suggestion.isGhost &&
+                  entries.find((e) => e.user?.id === suggestion.id) === undefined)
             )
           }
           onChangeText={(val) => {

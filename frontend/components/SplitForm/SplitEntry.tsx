@@ -132,7 +132,8 @@ export function SplitEntry({
             const filteredDefault = users.filter(
               (u) =>
                 u.email === entry.entry ||
-                formState.entries.every((e) => e.user === undefined || e.user.email !== u.email)
+                formState.entries.every((e) => e.user === undefined || e.user.email !== u.email) ||
+                (u.isGhost && formState.entries.every((e) => e.user?.id !== u.id))
             )
             return filterSuggestions?.(filteredDefault) ?? filteredDefault
           }}
