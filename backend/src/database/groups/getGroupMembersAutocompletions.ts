@@ -57,7 +57,7 @@ export async function getGroupMembersAutocompletions(
               group_members.is_admin,
               group_members.display_name
             FROM users JOIN group_members ON users.id = group_members.user_id
-            WHERE group_members.group_id = $1 AND users.email = $2
+            WHERE group_members.group_id = $1 AND (users.email = $2 OR group_members.display_name = $2 OR users.name = $2)
           `,
           [args.groupId, args.query]
         )
