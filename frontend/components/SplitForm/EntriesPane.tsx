@@ -50,10 +50,6 @@ export function EntriesPane({
   const { t } = useTranslation()
   const layout = useRef<LayoutRectangle | null>(null)
 
-  // const entries = formState.entries.filter(
-  //   (entry) => showPayerEntry || !isPaidByUser(formState, entry)
-  // )
-
   return (
     <Pane
       icon='group'
@@ -62,8 +58,9 @@ export function EntriesPane({
       onLayout={(event) => {
         layout.current = event.nativeEvent.layout
       }}
+      style={{ overflow: 'visible' }}
       containerStyle={{
-        // paddingBottom: 16,
+        overflow: 'visible',
         backgroundColor: 'transparent',
       }}
       collapsible={showAddAllMembers}

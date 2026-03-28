@@ -183,6 +183,7 @@ export function ParticipantsPicker({
           onLayout={(e) => {
             paneLayout.current = e.nativeEvent.layout
           }}
+          style={{ overflow: 'visible' }}
           collapsible={groupInfo.permissions.canReadMembers()}
           collapsed={false}
           collapseIcon='addAllMembers'
