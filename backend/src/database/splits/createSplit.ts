@@ -18,6 +18,7 @@ import {
   AndroidNotificationChannel,
   CreateSplitArguments,
   CurrencyUtils,
+  isBorrowSplit,
   isDelayedSplit,
   isLendSplit,
   isNormalSplit,
@@ -169,8 +170,8 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
     validateNormalSplitArgs(args)
   }
 
-  if (isLendSplit(args.type)) {
-    validateLendSplitArgs(args)
+  if (isLendSplit(args.type) || isBorrowSplit(args.type)) {
+    validateLendSplitArgs(args, args.type)
   }
 
   if (isDelayedSplit(args.type)) {

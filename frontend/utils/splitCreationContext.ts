@@ -10,6 +10,7 @@ import {
   SplitType,
   SplitWithUsers,
   TranslatableError,
+  isBorrowSplit,
 } from 'shared'
 
 export interface UserWithValue {
@@ -57,6 +58,7 @@ export class SplitCreationContext {
   private _timestamp: number | null = null
   private _splitType: number | null = null
   private _resolveSplitId: number | null = null
+  private _isBorrow: boolean = false
 
   private flowMode: FlowMode = FlowMode.Create
   private started: boolean = false
@@ -178,10 +180,16 @@ export class SplitCreationContext {
       })
     }
 
+    const invert = this._splitType !== null && isBorrowSplit(this._splitType)
+
     return users.map((user, index) => {
       const amount = this._participants![index].value!
-      const change =
+      let change =
         user.id === this._paidById ? Number(this._totalAmount) - Number(amount) : -Number(amount)
+
+      if (invert) {
+        change = -change
+      }
 
       return {
         ...user,
@@ -256,6 +264,7 @@ export class SplitCreationContext {
       this._splitType !== SplitType.Normal &&
       this._splitType !== SplitType.BalanceChange &&
       this._splitType !== SplitType.Lend &&
+      this._splitType !== (SplitType.Lend | SplitType.Inversed) &&
       this._splitType !== SplitType.Delayed
     ) {
       throw new TranslatableError('splitValidation.invalidType')
@@ -320,11 +329,19 @@ export class SplitCreationContext {
       splitMethod === SplitMethod.BalanceChanges
         ? SplitType.BalanceChange
         : splitMethod === SplitMethod.Lend
-          ? SplitType.Lend
+          ? this._isBorrow
+            ? SplitType.Lend | SplitType.Inversed
+            : SplitType.Lend
           : splitMethod === SplitMethod.Delayed
             ? SplitType.Delayed
             : SplitType.Normal
 
+    return this
+  }
+
+  setBorrow(isBorrow: boolean) {
+    this._isBorrow = isBorrow
+    this._splitType = isBorrow ? SplitType.Lend | SplitType.Inversed : SplitType.Lend
     return this
   }
 

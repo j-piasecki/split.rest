@@ -31,6 +31,7 @@ export const defaultQueryConfig: SplitQueryConfig = {
     SplitType.SettleUp | SplitType.Inversed,
     SplitType.BalanceChange,
     SplitType.Lend,
+    SplitType.Lend | SplitType.Inversed,
     SplitType.Delayed,
   ],
 }

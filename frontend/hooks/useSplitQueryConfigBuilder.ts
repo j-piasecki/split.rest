@@ -147,6 +147,12 @@ function queryReducer(query: SplitQueryConfig, action: SplitQueryActionType): Sp
             (t) => t !== (SplitType.SettleUp | SplitType.Inversed)
           )
         }
+
+        if (action.splitType === SplitType.Lend) {
+          newQuery.splitTypes = newQuery.splitTypes?.filter(
+            (t) => t !== (SplitType.Lend | SplitType.Inversed)
+          )
+        }
       } else {
         newQuery.splitTypes = [...(newQuery.splitTypes || []), action.splitType]
 
@@ -154,6 +160,13 @@ function queryReducer(query: SplitQueryConfig, action: SplitQueryActionType): Sp
           newQuery.splitTypes = [
             ...(newQuery.splitTypes || []),
             SplitType.SettleUp | SplitType.Inversed,
+          ]
+        }
+
+        if (action.splitType === SplitType.Lend) {
+          newQuery.splitTypes = [
+            ...(newQuery.splitTypes || []),
+            SplitType.Lend | SplitType.Inversed,
           ]
         }
       }

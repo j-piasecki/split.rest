@@ -4,6 +4,7 @@ import { ErrorText } from '@components/ErrorText'
 import { Form } from '@components/Form'
 import { LargeTextInput } from '@components/LargeTextInput'
 import ModalScreen from '@components/ModalScreen'
+import { SegmentedButton } from '@components/SegmentedButton'
 import { TabView } from '@components/TabView'
 import { TextInput } from '@components/TextInput'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
@@ -49,9 +50,12 @@ export default function Modal() {
     SplitCreationContext.current.amountPerUser === null
   )
 
+  const [isBorrow, setIsBorrow] = useState(false)
+
   const splitEqually = SplitCreationContext.current.splitMethod === SplitMethod.Equal
   const splitDelayed = SplitCreationContext.current.splitMethod === SplitMethod.Delayed
   const splitByShares = SplitCreationContext.current.splitMethod === SplitMethod.Shares
+  const splitLend = SplitCreationContext.current.splitMethod === SplitMethod.Lend
 
   function submit() {
     try {
@@ -133,6 +137,11 @@ export default function Modal() {
 
     SplitCreationContext.current.setTitle(title)
     SplitCreationContext.current.setTimestamp(timestamp)
+
+    if (splitLend) {
+      SplitCreationContext.current.setBorrow(isBorrow)
+    }
+
     navigateToSplitSpecificFlow(Number(id), router)
   }
 
@@ -253,6 +262,25 @@ export default function Modal() {
             showDateOnHeader
             startCollapsed
           />
+
+          {splitLend && (
+            <SegmentedButton
+              items={[
+                {
+                  title: t('form.lendMode'),
+                  icon: 'outgoing',
+                  selected: !isBorrow,
+                  onPress: () => setIsBorrow(false),
+                },
+                {
+                  title: t('form.borrowMode'),
+                  icon: 'incoming',
+                  selected: isBorrow,
+                  onPress: () => setIsBorrow(true),
+                },
+              ]}
+            />
+          )}
         </ScrollView>
 
         <View style={{ gap: 16 }}>

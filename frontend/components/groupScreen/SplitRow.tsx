@@ -19,6 +19,7 @@ import { StyleProp, View, ViewStyle } from 'react-native'
 import {
   CurrencyUtils,
   isBalanceChangeSplit,
+  isBorrowSplit,
   isDelayedSplit,
   isLendSplit,
   isSettleUpSplit,
@@ -107,7 +108,7 @@ function LoadedSplitRow({ split, info, style }: LoadedSplitRowProps) {
 
   const isSettleUp = isSettleUpSplit(split.type)
   const isBalanceChange = isBalanceChangeSplit(split.type)
-  const isLend = isLendSplit(split.type)
+  const isLend = isLendSplit(split.type) || isBorrowSplit(split.type)
   const isDelayed = isDelayedSplit(split.type)
   const shouldUseStackedInfo = displayClass === DisplayClass.Small || (width < 660 && width > 0)
 
