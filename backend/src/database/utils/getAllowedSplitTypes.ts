@@ -49,6 +49,7 @@ export async function getAllowedSplitTypes(
 
   if (allowedMethods.split_lend_enabled) {
     allowedTypes.push(SplitType.Lend)
+    allowedTypes.push(SplitType.Lend | SplitType.Inversed)
   }
 
   if (allowedMethods.split_delayed_enabled) {

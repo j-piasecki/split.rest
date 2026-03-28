@@ -14,7 +14,15 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
-import { BalanceChange, GroupUserInfo, SplitMethod, SplitType, SplitWithUsers } from 'shared'
+import {
+  BalanceChange,
+  GroupUserInfo,
+  SplitMethod,
+  SplitType,
+  SplitWithUsers,
+  isBorrowSplit,
+  isLendSplit,
+} from 'shared'
 
 function splitTypeToSplitMethod(splitType: SplitType): SplitMethod {
   switch (splitType) {
@@ -23,6 +31,7 @@ function splitTypeToSplitMethod(splitType: SplitType): SplitMethod {
     case SplitType.BalanceChange:
       return SplitMethod.BalanceChanges
     case SplitType.Lend:
+    case SplitType.Lend | SplitType.Inversed:
       return SplitMethod.Lend
   }
 
@@ -77,9 +86,17 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
         const { payerId, sumToSave, balanceChange, timestamp } = await (splitInfo.type ===
         SplitType.BalanceChange
           ? validateSplitForm(form, false, false)
-          : splitInfo.type === SplitType.Lend
+          : isLendSplit(splitInfo.type) || isBorrowSplit(splitInfo.type)
             ? validateSplitForm(form, true, true, true)
             : validateSplitForm(form))
+
+        // For borrow splits, negate balance changes back to the DB convention
+        const balances = isBorrowSplit(splitInfo.type)
+          ? (balanceChange as BalanceChange[]).map((b) => ({
+              ...b,
+              change: (-Number(b.change)).toFixed(2),
+            }))
+          : (balanceChange as BalanceChange[])
 
         await updateSplit({
           splitId: splitInfo.id,
@@ -88,7 +105,7 @@ function Form({ groupInfo, splitInfo }: { groupInfo: GroupUserInfo; splitInfo: S
           title: form.title,
           total: sumToSave.toFixed(2),
           timestamp: timestamp,
-          balances: balanceChange as BalanceChange[],
+          balances: balances,
           currency: groupInfo.currency,
         })
       }

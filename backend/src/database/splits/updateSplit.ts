@@ -18,6 +18,7 @@ import {
   LanguageTranslationKey,
   SplitType,
   UpdateSplitArguments,
+  isBorrowSplit,
   isDelayedSplit,
   isLendSplit,
   isNormalSplit,
@@ -192,8 +193,8 @@ export async function updateSplitNoTransaction(
       validateNormalSplitArgs(args)
     }
 
-    if (isLendSplit(splitInfo.type)) {
-      validateLendSplitArgs(args)
+    if (isLendSplit(splitInfo.type) || isBorrowSplit(splitInfo.type)) {
+      validateLendSplitArgs(args, splitInfo.type)
     }
 
     if (isDelayedSplit(splitInfo.type)) {

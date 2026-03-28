@@ -1,5 +1,5 @@
 import { BadRequestException } from '../../errors/BadRequestException'
-import { CreateSplitArguments, UpdateSplitArguments } from 'shared'
+import { CreateSplitArguments, UpdateSplitArguments, isBorrowSplit } from 'shared'
 
 export function validateNormalSplitArgs(args: CreateSplitArguments | UpdateSplitArguments) {
   if (args.balances.findIndex(({ id }) => id === args.paidBy) === -1) {
@@ -17,14 +17,27 @@ export function validateNormalSplitArgs(args: CreateSplitArguments | UpdateSplit
   }
 }
 
-export function validateLendSplitArgs(args: CreateSplitArguments | UpdateSplitArguments) {
-  validateNormalSplitArgs(args)
+export function validateLendSplitArgs(
+  args: CreateSplitArguments | UpdateSplitArguments,
+  type: number
+) {
+  if (args.balances.findIndex(({ id }) => id === args.paidBy) === -1) {
+    throw new BadRequestException('api.split.payerNotInTransaction')
+  }
 
-  const payerGetsBack = args.balances.find(({ id }) => id === args.paidBy)?.change
-  const total = args.total
+  const payerChange = Number(args.balances.find(({ id }) => id === args.paidBy)?.change)
+  const total = Number(args.total)
 
-  if (Math.abs(Number(payerGetsBack) - Number(total)) >= 0.01) {
-    throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
+  if (isBorrowSplit(type)) {
+    // Borrow: paidBy is the borrower/recipient, their change should be -total
+    if (Math.abs(payerChange + total) >= 0.01) {
+      throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
+    }
+  } else {
+    // Lend: paidBy is the lender, their change should be +total
+    if (Math.abs(payerChange - total) >= 0.01) {
+      throw new BadRequestException('api.split.payerMustGetBackSumOthersLose')
+    }
   }
 }
 

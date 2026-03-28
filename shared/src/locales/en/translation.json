@@ -355,7 +355,7 @@
     "exactAmounts": "Exact amounts",
     "shares": "Shares",
     "balanceChanges": "Balance changes",
-    "lend": "Lend",
+    "lend": "Lend or borrow",
     "splitParticipants": "Participants",
     "payerStep": "Who paid?"
   },
@@ -402,7 +402,7 @@
     "equalAmounts": "Equally",
     "shares": "By shares",
     "balanceChanges": "By balance changes",
-    "lend": "Lend",
+    "lend": "Lend or borrow",
     "delayed": "Delayed",
     "someSplitMethodsAreDisabled": "Some split methods require more group members to be available."
   },
@@ -412,7 +412,7 @@
     "equalAmounts": "Select participants, choose who paid, and split the total equally or assign everyone the same amount. You can adjust values manually afterward.",
     "shares": "Select participants, choose who paid, and split the total by shares. You can adjust values manually afterward.",
     "balanceChanges": "Select participants and update their balances. Multiple people can have negative balances as long as the total equals zero. Perfect for poker games!",
-    "lend": "Lend money to other people. You can use this to transfer debts from outside of the group.",
+    "lend": "Lend or borrow money. You can use this to transfer debts from outside of the group.",
     "delayed": "Submit only the paid amount without setting participants. You can finalize the split later."
   },
 
@@ -596,7 +596,9 @@
     "buttonNext": "Next",
     "unknownPayer": "Unknown",
     "suggestions": "Suggested participants",
-    "noSuggestions": "There are no more suggestions"
+    "noSuggestions": "There are no more suggestions",
+    "lendMode": "Lend",
+    "borrowMode": "Borrow"
   },
 
   "member": {
@@ -682,6 +684,7 @@
     "hasSettledUpWillGetBack": "<Styled>{{payer}}</Styled> has settled up and will get back <Styled>{{amount}}</Styled>",
     "paidBy": "<Styled>{{payer}}</Styled> has paid",
     "lentBy": "<Styled>{{payer}}</Styled> has lent",
+    "borrowedFrom": "Borrowed from <Styled>{{payer}}</Styled>",
     "settledUpGaveBack": "<Styled>{{payer}}</Styled> has settled up and given back",
     "settledUpWillGiveBack": "<Styled>{{payer}}</Styled> has settled up and will give back",
     "settledUpGetsBack": "<Styled>{{payer}}</Styled> has settled up and got back",
