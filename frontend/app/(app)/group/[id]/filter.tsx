@@ -156,6 +156,11 @@ function ChipPeoplePicker({
           }}
           value={currentValue}
           onChangeText={setCurrentValue}
+          onKeyPress={(e) => {
+            if (e.nativeEvent.key === 'Backspace' && !currentValue) {
+              onRemove(selected[selected.length - 1].id)
+            }
+          }}
         />
       </Animated.View>
     </Animated.View>
