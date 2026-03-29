@@ -684,7 +684,7 @@
     "hasSettledUpWillGetBack": "<Styled>{{payer}}</Styled> has settled up and will get back <Styled>{{amount}}</Styled>",
     "paidBy": "<Styled>{{payer}}</Styled> has paid",
     "lentBy": "<Styled>{{payer}}</Styled> has lent",
-    "borrowedFrom": "Borrowed from <Styled>{{payer}}</Styled>",
+    "borrowedBy": "<Styled>{{payer}}</Styled> has borrowed",
     "settledUpGaveBack": "<Styled>{{payer}}</Styled> has settled up and given back",
     "settledUpWillGiveBack": "<Styled>{{payer}}</Styled> has settled up and will give back",
     "settledUpGetsBack": "<Styled>{{payer}}</Styled> has settled up and got back",

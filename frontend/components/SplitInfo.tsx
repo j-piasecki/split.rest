@@ -697,7 +697,7 @@ export function SplitInfo({
                     : isLendSplit(splitInfo.type)
                       ? 'splitInfo.lentBy'
                       : isBorrowSplit(splitInfo.type)
-                        ? 'splitInfo.borrowedFrom'
+                        ? 'splitInfo.borrowedBy'
                         : 'splitInfo.paidBy') as never
                 }
                 values={{ payer: paidBy.displayName ?? paidBy.name }}

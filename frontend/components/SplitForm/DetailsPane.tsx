@@ -64,7 +64,7 @@ export function DetailsPane({
             i18nKey={
               splitMethod === SplitMethod.Lend
                 ? isBorrowSplit
-                  ? 'splitInfo.borrowedFrom'
+                  ? 'splitInfo.borrowedBy'
                   : 'splitInfo.lentBy'
                 : 'splitInfo.paidBy'
             }
