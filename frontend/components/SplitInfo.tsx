@@ -23,6 +23,7 @@ import {
   SplitType,
   User,
   isBalanceChangeSplit,
+  isBorrowSplit,
   isInversedSplit,
   isLendSplit,
   isSettleUpSplit,
@@ -695,7 +696,9 @@ export function SplitInfo({
                         : 'splitInfo.settledUpGaveBack'
                     : isLendSplit(splitInfo.type)
                       ? 'splitInfo.lentBy'
-                      : 'splitInfo.paidBy') as never
+                      : isBorrowSplit(splitInfo.type)
+                        ? 'splitInfo.borrowedBy'
+                        : 'splitInfo.paidBy') as never
                 }
                 values={{ payer: paidBy.displayName ?? paidBy.name }}
                 components={{

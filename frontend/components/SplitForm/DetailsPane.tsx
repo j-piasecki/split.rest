@@ -16,6 +16,7 @@ export interface DetailsPaneProps {
   titleEditable?: boolean
   showPaidByHint?: boolean
   showTotal?: boolean
+  isBorrowSplit?: boolean
 }
 
 export function DetailsPane({
@@ -26,6 +27,7 @@ export function DetailsPane({
   titleEditable = true,
   showPaidByHint = true,
   showTotal = true,
+  isBorrowSplit = false,
 }: DetailsPaneProps) {
   const theme = useTheme()
   const { t } = useTranslation()
@@ -59,7 +61,13 @@ export function DetailsPane({
           }}
         >
           <Trans
-            i18nKey={splitMethod === SplitMethod.Lend ? 'splitInfo.lentBy' : 'splitInfo.paidBy'}
+            i18nKey={
+              splitMethod === SplitMethod.Lend
+                ? isBorrowSplit
+                  ? 'splitInfo.borrowedBy'
+                  : 'splitInfo.lentBy'
+                : 'splitInfo.paidBy'
+            }
             values={{ payer: payerName }}
             components={{
               Styled: <Text style={{ color: theme.colors.tertiary, fontWeight: 600 }} />,

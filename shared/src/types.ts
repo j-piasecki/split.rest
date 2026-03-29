@@ -120,6 +120,10 @@ export function isLendSplit(type: SplitType) {
   return type === SplitType.Lend
 }
 
+export function isBorrowSplit(type: SplitType) {
+  return type === (SplitType.Lend | SplitType.Inversed)
+}
+
 export function isDelayedSplit(type: SplitType) {
   return type === SplitType.Delayed
 }

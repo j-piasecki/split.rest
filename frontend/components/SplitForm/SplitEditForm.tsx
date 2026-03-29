@@ -6,6 +6,7 @@ import {
   DEFAULT_IS_ADMIN_WHEN_NOT_SET,
   DEFAULT_IS_GHOST_WHEN_NOT_SET,
   Member,
+  isBorrowSplit,
 } from 'shared'
 import { SplitType, SplitWithUsers } from 'shared'
 
@@ -18,6 +19,8 @@ export interface SplitEditFormProps
 }
 
 export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
+  const isBorrow = isBorrowSplit(splitInfo.type)
+
   const initialEntries = [
     ...splitInfo.users.map((user) => {
       const backfilledMember: Member = {
@@ -44,17 +47,20 @@ export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
         }
       }
 
+      // For borrow splits, negate changes to match the lend form convention
+      const change = isBorrow ? -Number(user.change) : Number(user.change)
+
       if (user.id === splitInfo.paidBy?.id) {
         return {
           user: backfilledMember,
           entry: user.email ?? '',
-          amount: CurrencyUtils.format(Number(splitInfo.total) - Number(user.change)),
+          amount: CurrencyUtils.format(Number(splitInfo.total) - change),
         }
       }
       return {
         user: backfilledMember,
         entry: user.email ?? '',
-        amount: CurrencyUtils.format(-Number(user.change)),
+        amount: CurrencyUtils.format(-change),
       }
     }),
     { entry: '', amount: '' },
@@ -68,6 +74,7 @@ export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
       initialEntries={initialEntries}
       initialPaidByIndex={initialPaidByIndex}
       initialTimestamp={splitInfo.timestamp}
+      isBorrowSplit={isBorrow}
       {...rest}
     />
   )
