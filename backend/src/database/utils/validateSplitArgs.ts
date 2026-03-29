@@ -1,5 +1,5 @@
 import { BadRequestException } from '../../errors/BadRequestException'
-import { CreateSplitArguments, UpdateSplitArguments, isBorrowSplit } from 'shared'
+import { CreateSplitArguments, SplitType, UpdateSplitArguments, isBorrowSplit } from 'shared'
 
 export function validateNormalSplitArgs(args: CreateSplitArguments | UpdateSplitArguments) {
   if (args.balances.findIndex(({ id }) => id === args.paidBy) === -1) {
@@ -19,7 +19,7 @@ export function validateNormalSplitArgs(args: CreateSplitArguments | UpdateSplit
 
 export function validateLendSplitArgs(
   args: CreateSplitArguments | UpdateSplitArguments,
-  type: number
+  type: SplitType
 ) {
   if (args.balances.findIndex(({ id }) => id === args.paidBy) === -1) {
     throw new BadRequestException('api.split.payerNotInTransaction')
