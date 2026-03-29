@@ -24,6 +24,7 @@ export interface SplitFormProps {
   initialTimestamp?: number
   initialTotal?: string
   waiting?: boolean
+  isBorrowSplit?: boolean
   cleanError: () => void
   onSubmit: (data: FormData) => void
   error?: string | null
@@ -53,6 +54,7 @@ export function SplitForm({
   showDetails = true,
   showCalendar = true,
   showSuggestions = true,
+  isBorrowSplit = false,
   buttonIcon = 'save',
   buttonTitle = 'form.save',
   buttonIconLocation = 'left',
@@ -163,6 +165,7 @@ export function SplitForm({
             splitMethod={splitMethod}
             showPaidByHint={showPaidByHint}
             showTotal={showTotal}
+            isBorrowSplit={isBorrowSplit}
           />
         )}
 

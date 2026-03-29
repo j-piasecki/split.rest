@@ -74,6 +74,7 @@ export function SplitEditForm({ splitInfo, ...rest }: SplitEditFormProps) {
       initialEntries={initialEntries}
       initialPaidByIndex={initialPaidByIndex}
       initialTimestamp={splitInfo.timestamp}
+      isBorrowSplit={isBorrow}
       {...rest}
     />
   )
