@@ -322,6 +322,10 @@ export class SplitCreationContext {
     return this._timestamp
   }
 
+  get isBorrow(): boolean {
+    return this._isBorrow
+  }
+
   setSplitMethod(splitMethod: SplitMethod) {
     this._splitMethod = splitMethod
 

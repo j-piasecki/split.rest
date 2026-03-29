@@ -50,7 +50,7 @@ export default function Modal() {
     SplitCreationContext.current.amountPerUser === null
   )
 
-  const [isBorrow, setIsBorrow] = useState(false)
+  const [isBorrow, setIsBorrow] = useState(SplitCreationContext.current.isBorrow)
 
   const splitEqually = SplitCreationContext.current.splitMethod === SplitMethod.Equal
   const splitDelayed = SplitCreationContext.current.splitMethod === SplitMethod.Delayed
