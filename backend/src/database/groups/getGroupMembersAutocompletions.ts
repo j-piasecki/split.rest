@@ -36,10 +36,12 @@ export async function getGroupMembersAutocompletions(
               group_members.display_name
             FROM users JOIN group_members ON users.id = group_members.user_id
             WHERE group_members.group_id = $1 AND (users.name ILIKE $2 OR users.email ILIKE $2 OR group_members.display_name ILIKE $2)
-            ORDER BY users.name
+            ORDER BY
+              CASE WHEN users.name ILIKE $3 OR users.email ILIKE $3 OR group_members.display_name ILIKE $3 THEN 0 ELSE 1 END,
+              users.name
             LIMIT 5
           `,
-          [args.groupId, `%${args.query}%`]
+          [args.groupId, `%${args.query}%`, `${args.query}%`]
         )
       ).rows
     : (
