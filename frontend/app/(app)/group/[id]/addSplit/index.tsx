@@ -5,11 +5,11 @@ import { SplitMethodSelector } from '@components/SplitMethodSelector'
 import { Text } from '@components/Text'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import { useSplitCreationFlow } from '@hooks/useSplitCreationFlow'
 import { useTheme } from '@styling/theme'
 import { useAppLayout } from '@utils/dimensionUtils'
-import { navigateToSplitSpecificFlow } from '@utils/navigateToSplitSpecificFlow'
 import { AllSplitMethods, SplitCreationContext } from '@utils/splitCreationContext'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
@@ -28,7 +28,7 @@ function Selector({ groupInfo }: { groupInfo: GroupUserInfo }) {
 
   const theme = useTheme()
   const { threePaneLayout } = useAppLayout()
-  const router = useRouter()
+  const { navigateToNextScreen } = useSplitCreationFlow()
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const [selectedSplitType, setSelectedSplitType] = useState<SplitMethod | undefined>(
@@ -43,18 +43,9 @@ function Selector({ groupInfo }: { groupInfo: GroupUserInfo }) {
       }
 
       SplitCreationContext.current.setSplitMethod(selectedSplitType)
-
-      if (SplitCreationContext.current.shouldSkipDetailsStep()) {
-        navigateToSplitSpecificFlow(groupInfo.id, router, replace)
-      } else {
-        if (replace) {
-          router.replace(`/group/${groupInfo.id}/addSplit/detailsStep`)
-        } else {
-          router.navigate(`/group/${groupInfo.id}/addSplit/detailsStep`)
-        }
-      }
+      navigateToNextScreen({ replace })
     },
-    [selectedSplitType, groupInfo.id, router]
+    [selectedSplitType, navigateToNextScreen]
   )
 
   useEffect(() => {

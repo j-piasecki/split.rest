@@ -9,6 +9,7 @@ import { Text } from '@components/Text'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
 import { useRouletteQuery } from '@hooks/useRouletteQuery'
+import { useSplitCreationFlow } from '@hooks/useSplitCreationFlow'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { SplitCreationContext } from '@utils/splitCreationContext'
@@ -113,6 +114,7 @@ function PayerRow({ user, isLast, isSelected, onSelect }: PayerRowProps) {
 export default function Modal() {
   const theme = useTheme()
   const router = useRouter()
+  const { navigateToNextScreen } = useSplitCreationFlow()
   const insets = useModalScreenInsets()
   const { t } = useTranslation()
   const { id } = useLocalSearchParams()
@@ -180,7 +182,7 @@ export default function Modal() {
     }
 
     SplitCreationContext.current.setPaidById(selectedPayerId)
-    router.navigate(`/group/${id}/addSplit/summary`)
+    navigateToNextScreen()
   }
 
   return (

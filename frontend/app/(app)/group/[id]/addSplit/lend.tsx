@@ -3,12 +3,13 @@ import { FormData, SplitEntryData, SplitForm } from '@components/SplitForm'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useGroupMemberInfo } from '@hooks/database/useGroupMemberInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import { useSplitCreationFlow } from '@hooks/useSplitCreationFlow'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
 import { SplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitForm } from '@utils/validateSplitForm'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, View } from 'react-native'
@@ -34,7 +35,7 @@ function initialEntriesFromContext(user: Member): SplitEntryData[] {
 }
 
 function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Member }) {
-  const router = useRouter()
+  const { navigateToNextScreen } = useSplitCreationFlow()
   const insets = useModalScreenInsets()
   const [error, setError] = useTranslatedError()
   const [waiting, setWaiting] = useState(false)
@@ -69,7 +70,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Member }) {
       SplitCreationContext.current.setTitle(form.title)
       SplitCreationContext.current.setTotalAmount(sumToSave.toFixed(2))
 
-      router.navigate(`/group/${groupInfo.id}/addSplit/summary`)
+      navigateToNextScreen()
     } catch (error) {
       setError(error)
     } finally {
