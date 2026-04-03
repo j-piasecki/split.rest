@@ -9,13 +9,13 @@ import { TabView } from '@components/TabView'
 import { TextInput } from '@components/TextInput'
 import { useGroupInfo } from '@hooks/database/useGroupInfo'
 import { useModalScreenInsets } from '@hooks/useModalScreenInsets'
+import { useSplitCreationFlow } from '@hooks/useSplitCreationFlow'
 import { useTranslatedError } from '@hooks/useTranslatedError'
 import { useAuth } from '@utils/auth'
 import { useAppLayout } from '@utils/dimensionUtils'
-import { navigateToSplitSpecificFlow } from '@utils/navigateToSplitSpecificFlow'
 import { SplitCreationContext } from '@utils/splitCreationContext'
 import { validateSplitTitle } from '@utils/validateSplitForm'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
@@ -30,7 +30,7 @@ import {
 
 export default function Modal() {
   const { user } = useAuth()
-  const router = useRouter()
+  const { navigateToNextScreen } = useSplitCreationFlow()
   const insets = useModalScreenInsets()
   const { threePaneLayout } = useAppLayout()
   const { t } = useTranslation()
@@ -142,7 +142,7 @@ export default function Modal() {
       SplitCreationContext.current.setBorrow(isBorrow)
     }
 
-    navigateToSplitSpecificFlow(Number(id), router)
+    navigateToNextScreen()
   }
 
   return (
