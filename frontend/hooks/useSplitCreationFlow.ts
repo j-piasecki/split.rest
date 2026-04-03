@@ -24,7 +24,8 @@ const flows: Record<SplitMethod, Screen[]> = {
 }
 
 function getScreenFromPathname(pathname: string): Screen {
-  const lastSegment = pathname.split('/').pop()
+  const withoutTrailingSlash = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname
+  const lastSegment = withoutTrailingSlash.split('/').pop()
   return lastSegment === 'addSplit' ? 'index' : (lastSegment as Screen)
 }
 
@@ -38,10 +39,6 @@ export function useSplitCreationFlow() {
       const context = SplitCreationContext.current
       let flow = flows[context.splitMethod]
 
-      if (context.shouldSkipDetailsStep()) {
-        flow = flow.filter((screen) => screen !== 'detailsStep')
-      }
-
       const currentScreen = getScreenFromPathname(pathname)
       const currentIndex = flow.indexOf(currentScreen)
 
@@ -49,7 +46,16 @@ export function useSplitCreationFlow() {
         return
       }
 
-      const nextScreen = flow[currentIndex + 1]
+      let nextScreen = flow[currentIndex + 1]
+
+      if (context.shouldSkipDetailsStep() && nextScreen === 'detailsStep') {
+        nextScreen = flow[currentIndex + 2]
+      }
+
+      if (!nextScreen) {
+        throw new Error('No next screen found in split creation flow')
+      }
+
       const path = `/group/${id}/addSplit/${nextScreen}`
 
       if (options?.replace) {
