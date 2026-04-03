@@ -37,7 +37,7 @@ export function useSplitCreationFlow() {
   const navigateToNextScreen = useCallback(
     (options?: { replace?: boolean }) => {
       const context = SplitCreationContext.current
-      let flow = flows[context.splitMethod]
+      const flow = flows[context.splitMethod]
 
       const currentScreen = getScreenFromPathname(pathname)
       const currentIndex = flow.indexOf(currentScreen)
