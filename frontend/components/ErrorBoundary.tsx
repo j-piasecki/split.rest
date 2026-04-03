@@ -3,6 +3,7 @@ import { Icon } from './Icon'
 import { Text } from './Text'
 import { useTheme } from '@styling/theme'
 import { crashlytics } from '@utils/firebase'
+import { useRouter } from 'expo-router'
 import { useEffect } from 'react'
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +19,7 @@ function ErrorFallback({
 }) {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
+  const router = useRouter()
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -41,7 +43,10 @@ function ErrorFallback({
           {t('errorBoundary.error')}
         </Text>
         <Button
-          onPress={resetErrorBoundary}
+          onPress={() => {
+            router.replace('/group/none')
+            resetErrorBoundary()
+          }}
           style={{ marginTop: 16, backgroundColor: theme.colors.onPrimaryContainer }}
           foregroundColor={theme.colors.primaryContainer}
           leftIcon='chevronBack'
