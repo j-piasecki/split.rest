@@ -23,12 +23,14 @@ import { LoggerModule } from 'nestjs-pino'
       pinoHttp: {
         autoLogging: false,
         redact: ['req.headers.authorization'],
-        ...(process.env.DEV === '1' && {
-          transport: {
-            target: 'pino-pretty',
-            options: { colorize: true, singleLine: true },
-          },
-        }),
+        ...(process.env.DEV === '1'
+          ? {
+              transport: {
+                target: 'pino-pretty',
+                options: { colorize: true, singleLine: true },
+              },
+            }
+          : {}),
       },
     }),
   ],
