@@ -37,6 +37,7 @@ export interface SplitFormProps {
   style?: StyleProp<ViewStyle>
   showAddAllMembers?: boolean
   showPayerSelector?: boolean
+  entriesTitle?: LanguageTranslationKey
 }
 
 export function SplitForm({
@@ -60,6 +61,7 @@ export function SplitForm({
   buttonIconLocation = 'left',
   showAddAllMembers = true,
   showPayerSelector = true,
+  entriesTitle,
   style,
 }: SplitFormProps) {
   const theme = useTheme()
@@ -220,6 +222,7 @@ export function SplitForm({
             balanceKeyboardType={balanceKeyboardType}
             amountPlaceholder={amountPlaceholder}
             integersOnly={integersOnly}
+            title={entriesTitle}
           />
         )}
 

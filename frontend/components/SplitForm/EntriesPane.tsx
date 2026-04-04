@@ -21,6 +21,7 @@ interface SplitEntriesPaneProps {
   balanceKeyboardType?: KeyboardTypeOptions
   amountPlaceholder: LanguageTranslationKey
   integersOnly?: boolean
+  title?: LanguageTranslationKey
 }
 
 function isPaidByUser(formState: FormData, entry: SplitEntryData) {
@@ -46,6 +47,7 @@ export function EntriesPane({
   balanceKeyboardType,
   amountPlaceholder,
   integersOnly,
+  title = 'splitInfo.participants',
 }: SplitEntriesPaneProps) {
   const { t } = useTranslation()
   const layout = useRef<LayoutRectangle | null>(null)
@@ -53,7 +55,7 @@ export function EntriesPane({
   return (
     <Pane
       icon='group'
-      title={t('splitInfo.participants')}
+      title={t(title)}
       textLocation='start'
       onLayout={(event) => {
         layout.current = event.nativeEvent.layout

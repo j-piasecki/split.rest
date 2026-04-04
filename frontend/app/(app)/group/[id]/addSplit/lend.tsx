@@ -16,20 +16,23 @@ import { ActivityIndicator, View } from 'react-native'
 import { GroupUserInfo, Member, SplitMethod, TranslatableError } from 'shared'
 
 function initialEntriesFromContext(user: Member): SplitEntryData[] {
+  const participants = SplitCreationContext.current.participants
+  const lender = participants?.[0]?.user ?? user
+
   let initialEntries: SplitEntryData[] =
-    SplitCreationContext.current.participants === null
+    participants === null
       ? []
-      : SplitCreationContext.current.participants.map(
+      : participants.map(
           (participant): SplitEntryData => ({
             user: participant.user,
             entry: participant.user.email ?? '',
-            amount: '',
+            amount: participant.value ?? '',
           })
         )
 
   initialEntries.push({ entry: '', amount: '' })
-  initialEntries = initialEntries.filter((entry) => entry.user?.id !== user.id)
-  initialEntries.unshift({ entry: user.email ?? '', amount: '0.00', user: user })
+  initialEntries = initialEntries.filter((entry) => entry.user?.id !== lender.id)
+  initialEntries.unshift({ entry: lender.email ?? '', amount: '0.00', user: lender })
 
   return initialEntries
 }
@@ -107,6 +110,7 @@ function Form({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Member }) {
         buttonIconLocation='right'
         showAddAllMembers={false}
         showPayerSelector={false}
+        entriesTitle={SplitCreationContext.current.isBorrow ? 'form.lenders' : 'form.borrowers'}
       />
     </View>
   )
