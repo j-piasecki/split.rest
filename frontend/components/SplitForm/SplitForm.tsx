@@ -9,7 +9,6 @@ import { IconName } from '@components/Icon'
 import { LargeTextInput } from '@components/LargeTextInput'
 import { FullPaneHeader } from '@components/Pane'
 import { useTheme } from '@styling/theme'
-import { useAuth } from '@utils/auth'
 import { SplitCreationContext } from '@utils/splitCreationContext'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -66,7 +65,6 @@ export function SplitForm({
   style,
 }: SplitFormProps) {
   const theme = useTheme()
-  const { user } = useAuth()
   const scrollRef = useRef<ScrollView>(null)
   const { t } = useTranslation()
   const [fetchingMembers, setFetchingMembers] = useState(false)
