@@ -355,8 +355,11 @@
     "exactAmounts": "Exact amounts",
     "shares": "Shares",
     "balanceChanges": "Balance changes",
-    "lend": "Lend or borrow",
+    "lend": "Lend",
+    "borrow": "Borrow",
     "splitParticipants": "Participants",
+    "lenderStep": "Who is the lender?",
+    "borrowerStep": "Who is the borrower?",
     "payerStep": "Who paid?"
   },
 
@@ -557,6 +560,7 @@
     "titleIsTooLong": "Title is too long",
     "thePayerMustBeSelected": "The payer must be selected",
     "thePayerDataMustBeFilledIn": "The payer data must be filled in",
+    "someoneMustBeSelected": "Someone must be selected",
     "entriesMustBeUnique": "All users must be unique",
     "amountsMustBePositive": "Amounts must be positive",
     "tooLittleToDivide": "The amount is too small to divide between participants",
@@ -595,10 +599,14 @@
     "nameOrEmail": "Name or e-mail",
     "buttonNext": "Next",
     "unknownPayer": "Unknown",
-    "suggestions": "Suggested participants",
+    "suggestions": "Suggestions",
     "noSuggestions": "There are no more suggestions",
     "lendMode": "Lend",
-    "borrowMode": "Borrow"
+    "borrowMode": "Borrow",
+    "selectLender": "Select who lent the money",
+    "selectBorrower": "Select who borrowed the money",
+    "lenders": "Lenders",
+    "borrowers": "Borrowers"
   },
 
   "member": {

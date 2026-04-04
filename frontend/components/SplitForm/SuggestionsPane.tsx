@@ -3,7 +3,7 @@ import { ProfilePicture } from '@components/ProfilePicture'
 import { Text } from '@components/Text'
 import { useSplitParticipantsSuggestions } from '@hooks/database/useSplitParticipantsSuggestions'
 import { useTheme } from '@styling/theme'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import Animated, {
@@ -97,11 +97,8 @@ export function SuggestionsPane({ groupInfo, hiddenIds, onSelect }: SuggestionsP
   const { data: participantsSuggestions, isLoading } = useSplitParticipantsSuggestions(groupInfo.id)
   const [collapsed, setCollapsed] = useState(false)
 
-  const filteredSuggestions = useMemo(
-    () => participantsSuggestions?.filter((suggestion) => !hiddenIds.includes(suggestion.id)),
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [participantsSuggestions, hiddenIds.length]
+  const filteredSuggestions = participantsSuggestions?.filter(
+    (suggestion) => !hiddenIds.includes(suggestion.id)
   )
 
   useEffect(() => {

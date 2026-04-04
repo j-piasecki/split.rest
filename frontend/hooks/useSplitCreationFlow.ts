@@ -11,6 +11,7 @@ type Screen =
   | 'exactAmounts'
   | 'shares'
   | 'balanceChanges'
+  | 'lenderStep'
   | 'lend'
   | 'summary'
 
@@ -19,7 +20,7 @@ const flows: Record<SplitMethod, Screen[]> = {
   [SplitMethod.Shares]: ['index', 'detailsStep', 'shares', 'payerStep', 'summary'],
   [SplitMethod.ExactAmounts]: ['index', 'detailsStep', 'exactAmounts', 'payerStep', 'summary'],
   [SplitMethod.BalanceChanges]: ['index', 'detailsStep', 'balanceChanges', 'summary'],
-  [SplitMethod.Lend]: ['index', 'detailsStep', 'lend', 'summary'],
+  [SplitMethod.Lend]: ['index', 'detailsStep', 'lenderStep', 'lend', 'summary'],
   [SplitMethod.Delayed]: ['index', 'detailsStep', 'summary'],
 }
 

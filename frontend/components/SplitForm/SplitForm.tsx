@@ -9,7 +9,7 @@ import { IconName } from '@components/Icon'
 import { LargeTextInput } from '@components/LargeTextInput'
 import { FullPaneHeader } from '@components/Pane'
 import { useTheme } from '@styling/theme'
-import { useAuth } from '@utils/auth'
+import { SplitCreationContext } from '@utils/splitCreationContext'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
@@ -37,6 +37,7 @@ export interface SplitFormProps {
   style?: StyleProp<ViewStyle>
   showAddAllMembers?: boolean
   showPayerSelector?: boolean
+  entriesTitle?: LanguageTranslationKey
 }
 
 export function SplitForm({
@@ -60,10 +61,10 @@ export function SplitForm({
   buttonIconLocation = 'left',
   showAddAllMembers = true,
   showPayerSelector = true,
+  entriesTitle,
   style,
 }: SplitFormProps) {
   const theme = useTheme()
-  const { user } = useAuth()
   const scrollRef = useRef<ScrollView>(null)
   const { t } = useTranslation()
   const [fetchingMembers, setFetchingMembers] = useState(false)
@@ -102,7 +103,9 @@ export function SplitForm({
         : 'form.amount'
   const filterSuggestions = (suggestions: Member[]) => {
     if (splitMethod === SplitMethod.Lend) {
-      return suggestions.filter((suggestion) => suggestion.id !== user?.id)
+      return suggestions.filter(
+        (suggestion) => suggestion.id !== SplitCreationContext.current.paidById
+      ) // In lend split, borrower is already selected in previous step, so we don't want to suggest them
     }
 
     return suggestions
@@ -220,6 +223,7 @@ export function SplitForm({
             balanceKeyboardType={balanceKeyboardType}
             amountPlaceholder={amountPlaceholder}
             integersOnly={integersOnly}
+            title={entriesTitle}
           />
         )}
 
