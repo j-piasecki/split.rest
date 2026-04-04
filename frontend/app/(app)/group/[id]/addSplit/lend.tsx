@@ -125,7 +125,7 @@ export default function Modal() {
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title={t('screenName.lend')}>
+    <ModalScreen returnPath={`/group/${id}`} title={t(SplitCreationContext.current.isBorrow ? 'screenName.borrow' : 'screenName.lend')}>
       {(!memberInfo || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={theme.colors.onSurface} />
