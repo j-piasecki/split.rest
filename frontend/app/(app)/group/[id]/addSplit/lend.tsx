@@ -34,6 +34,10 @@ function initialEntriesFromContext(user: Member): SplitEntryData[] {
   initialEntries = initialEntries.filter((entry) => entry.user?.id !== lender.id)
   initialEntries.unshift({ entry: lender.email ?? '', amount: '0.00', user: lender })
 
+  if (lender.id !== user.id && !initialEntries.some((entry) => entry.user?.id === user.id)) {
+    initialEntries.splice(1, 0, { entry: user.email ?? '', amount: '', user })
+  }
+
   return initialEntries
 }
 
@@ -125,7 +129,10 @@ export default function Modal() {
   const { data: memberInfo } = useGroupMemberInfo(Number(id), user?.id)
 
   return (
-    <ModalScreen returnPath={`/group/${id}`} title={t(SplitCreationContext.current.isBorrow ? 'screenName.borrow' : 'screenName.lend')}>
+    <ModalScreen
+      returnPath={`/group/${id}`}
+      title={t(SplitCreationContext.current.isBorrow ? 'screenName.borrow' : 'screenName.lend')}
+    >
       {(!memberInfo || !groupInfo) && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator color={theme.colors.onSurface} />
