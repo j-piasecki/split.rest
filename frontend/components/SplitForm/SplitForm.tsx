@@ -10,6 +10,7 @@ import { LargeTextInput } from '@components/LargeTextInput'
 import { FullPaneHeader } from '@components/Pane'
 import { useTheme } from '@styling/theme'
 import { useAuth } from '@utils/auth'
+import { SplitCreationContext } from '@utils/splitCreationContext'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
@@ -104,7 +105,9 @@ export function SplitForm({
         : 'form.amount'
   const filterSuggestions = (suggestions: Member[]) => {
     if (splitMethod === SplitMethod.Lend) {
-      return suggestions.filter((suggestion) => suggestion.id !== user?.id)
+      return suggestions.filter(
+        (suggestion) => suggestion.id !== SplitCreationContext.current.paidById
+      ) // In lend split, borrower is already selected in previous step, so we don't want to suggest them
     }
 
     return suggestions

@@ -326,6 +326,10 @@ export class SplitCreationContext {
     return this._isBorrow
   }
 
+  get paidById(): string | null {
+    return this._paidById
+  }
+
   setSplitMethod(splitMethod: SplitMethod) {
     this._splitMethod = splitMethod
 
