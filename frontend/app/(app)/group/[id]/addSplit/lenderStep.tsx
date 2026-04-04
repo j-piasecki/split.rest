@@ -39,7 +39,7 @@ function LenderPicker({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Mem
     const selectedUser = useSelectablePicker ? selected : textPickerUser
 
     if (!selectedUser) {
-      setError(new TranslatableError('splitValidation.thePayerDataMustBeFilledIn'))
+      setError(new TranslatableError('splitValidation.someoneMustBeSelected'))
       return
     }
 
