@@ -4,7 +4,10 @@ import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { userExists } from '../utils/userExists'
+import { Logger } from '@nestjs/common'
 import { Pool, PoolClient } from 'pg'
+
+const logger = new Logger('InviteUser')
 import { AndroidNotificationChannel, InviteUserToGroupArguments } from 'shared'
 import NotificationUtils from 'src/notifications/NotificationUtils'
 
@@ -83,6 +86,8 @@ export async function inviteUser(pool: Pool, callerId: string, args: InviteUserT
     )
 
     await client.query('COMMIT')
+
+    logger.log({ msg: 'User invited', groupId: args.groupId, callerId, userId: args.userId })
 
     // send max notification per hour
     if (!latestInvite || Date.now() - latestInvite.created_at > 1000 * 60 * 60) {

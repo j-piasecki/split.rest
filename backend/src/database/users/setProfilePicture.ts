@@ -1,6 +1,9 @@
+import { Logger } from '@nestjs/common'
 import crypto from 'crypto'
 import { Pool } from 'pg'
 import { ImageService } from 'src/image.service'
+
+const logger = new Logger('SetProfilePicture')
 
 export async function setProfilePicture(
   pool: Pool,
@@ -36,10 +39,13 @@ export async function setProfilePicture(
     await client.query('COMMIT')
 
     if (oldPictureId) {
-      // fail silently when profile picture deletion fails
-      imageService.deleteProfilePicture(oldPictureId).catch(() => {})
+      imageService.deleteProfilePicture(oldPictureId).catch((err) => {
+        logger.warn({ msg: 'Failed to delete old profile picture', oldPictureId, error: err.message })
+      })
       if (process.env.DEV !== '1') {
-        imageService.deleteProfilePictureFromR2(oldPictureId).catch(() => {})
+        imageService.deleteProfilePictureFromR2(oldPictureId).catch((err) => {
+          logger.warn({ msg: 'Failed to delete old profile picture from R2', oldPictureId, error: err.message })
+        })
       }
     }
   } catch (error) {

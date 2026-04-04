@@ -2,10 +2,12 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { DatabaseService } from './database.service'
 import { ImageService } from './image.service'
+import { LoggingInterceptor } from './logging.interceptor'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { APP_GUARD } from '@nestjs/core'
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
+import { LoggerModule } from 'nestjs-pino'
 
 @Module({
   imports: [
@@ -17,6 +19,20 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
         getTracker: (req) => req.headers.authorization,
       },
     ]),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        autoLogging: false,
+        redact: ['req.headers.authorization'],
+        ...(process.env.DEV === '1'
+          ? {
+              transport: {
+                target: 'pino-pretty',
+                options: { colorize: true, singleLine: true },
+              },
+            }
+          : {}),
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [
@@ -26,6 +42,10 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard, // Applying global throttle guard
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
     },
   ],
 })

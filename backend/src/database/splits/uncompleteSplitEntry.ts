@@ -1,6 +1,7 @@
 import { NotFoundException } from '../../errors/NotFoundException'
 import { NotificationToken, getNotificationTokens } from '../utils/getNotificationTokens'
 import { splitExists } from '../utils/splitExists'
+import { Logger } from '@nestjs/common'
 import { Pool } from 'pg'
 import {
   AndroidNotificationChannel,
@@ -8,6 +9,8 @@ import {
   LanguageTranslationKey,
 } from 'shared'
 import NotificationUtils from 'src/notifications/NotificationUtils'
+
+const logger = new Logger('UncompleteSplitEntry')
 
 export async function uncompleteSplitEntry(
   pool: Pool,
@@ -62,6 +65,8 @@ export async function uncompleteSplitEntry(
     )
 
     await client.query('COMMIT')
+
+    logger.log({ msg: 'Split entry uncompleted', splitId: args.splitId, groupId: args.groupId, callerId, userId: args.userId, change: targetUserChange })
 
     const groupName =
       (await client.query(`SELECT name from groups WHERE id = $1`, [args.groupId])).rows[0]?.name ??

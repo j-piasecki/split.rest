@@ -5,8 +5,11 @@ import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { loadSettleUpData, prepareSettleUp } from '../utils/settleUp'
 import { createSplitNoTransaction } from './createSplit'
+import { Logger } from '@nestjs/common'
 import hash from 'object-hash'
 import { Pool, PoolClient } from 'pg'
+
+const logger = new Logger('ConfirmSettleUp')
 import {
   AndroidNotificationChannel,
   BalanceChange,
@@ -163,6 +166,8 @@ export async function confirmSettleUp(
     )
 
     await client.query('COMMIT')
+
+    logger.log({ msg: 'Settle up confirmed', splitId: split.id, groupId: args.groupId, callerId, total: split.total, entries: entries.length })
 
     return split
   } catch (e) {

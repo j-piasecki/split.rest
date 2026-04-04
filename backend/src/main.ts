@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { json } from 'express'
 import * as fs from 'fs'
+import { Logger } from 'nestjs-pino'
 import { join } from 'path'
 
 if (!fs.existsSync('./public')) {
@@ -10,7 +11,8 @@ if (!fs.existsSync('./public')) {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: true })
+  app.useLogger(app.get(Logger))
   app.useStaticAssets(join(__dirname, '..', 'public'), {
     prefix: '/public',
   })

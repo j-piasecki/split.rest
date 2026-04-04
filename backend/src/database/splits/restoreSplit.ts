@@ -4,8 +4,11 @@ import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isGroupLocked } from '../utils/isGroupLocked'
 import { splitExists } from '../utils/splitExists'
 import { unsafeUpdateMonthlyStats } from '../utils/unsafeUpdateMonthlyStats'
+import { Logger } from '@nestjs/common'
 import { Pool } from 'pg'
 import { RestoreSplitArguments, isSettleUpSplit } from 'shared'
+
+const logger = new Logger('RestoreSplit')
 
 export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSplitArguments) {
   const client = await pool.connect()
@@ -91,6 +94,8 @@ export async function restoreSplit(pool: Pool, callerId: string, args: RestoreSp
     )
 
     await client.query('COMMIT')
+
+    logger.log({ msg: 'Split restored', splitId: args.splitId, groupId: args.groupId, callerId, total: splitInfo.total, participants: splitParticipants.length })
   } catch (e) {
     await client.query('ROLLBACK')
     throw e

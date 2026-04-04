@@ -5,7 +5,10 @@ import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserGroupOwner } from '../utils/isUserGroupOwner'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
+import { Logger } from '@nestjs/common'
 import { Pool, PoolClient } from 'pg'
+
+const logger = new Logger('RemoveMember')
 import { AndroidNotificationChannel, RemoveMemberFromGroupArguments } from 'shared'
 import NotificationUtils from 'src/notifications/NotificationUtils'
 
@@ -90,6 +93,8 @@ export async function removeMember(
     )
 
     await client.query('COMMIT')
+
+    logger.log({ msg: 'Member removed', groupId: args.groupId, callerId, userId: args.userId, selfRemoval: callerId === args.userId })
 
     if (callerId !== args.userId) {
       await dispatchNotification(client, args)

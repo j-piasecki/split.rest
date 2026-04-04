@@ -1,8 +1,11 @@
 import { NotFoundException } from '../../errors/NotFoundException'
 import { ImageService } from '../../image.service'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
+import { Logger } from '@nestjs/common'
 import crypto from 'crypto'
 import { Pool } from 'pg'
+
+const logger = new Logger('SetGroupIcon')
 
 export async function setGroupIcon(
   pool: Pool,
@@ -39,9 +42,13 @@ export async function setGroupIcon(
     await client.query('COMMIT')
 
     if (oldIconId) {
-      imageService.deleteGroupIcon(oldIconId).catch(() => {})
+      imageService.deleteGroupIcon(oldIconId).catch((err) => {
+        logger.warn({ msg: 'Failed to delete old group icon', groupId, oldIconId, error: err.message })
+      })
       if (process.env.DEV !== '1') {
-        imageService.deleteGroupIconFromR2(oldIconId).catch(() => {})
+        imageService.deleteGroupIconFromR2(oldIconId).catch((err) => {
+          logger.warn({ msg: 'Failed to delete old group icon from R2', groupId, oldIconId, error: err.message })
+        })
       }
     }
   } catch (error) {
