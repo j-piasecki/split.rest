@@ -20,14 +20,26 @@ export interface SelectablePeoplePickerRef {
   selectAll: () => void
 }
 
-export interface SelectablePeoplePickerProps {
+interface CommonPickerProps {
   groupId: number
   shimmerCount?: number
-  onEntriesChange: (entries: PersonEntry[]) => void
+}
+
+interface MultiSelectProps extends CommonPickerProps {
+  multiselect?: true
   entries: PersonEntry[]
+  onEntriesChange: (entries: PersonEntry[]) => void
   pickablePayer?: boolean
   ref?: React.RefObject<SelectablePeoplePickerRef | null>
 }
+
+interface SingleSelectProps extends CommonPickerProps {
+  multiselect: false
+  selected?: Member
+  onSelectedChange: (selected: Member | undefined) => void
+}
+
+export type SelectablePeoplePickerProps = MultiSelectProps | SingleSelectProps
 
 interface ListPersonRowProps {
   toggleSelect: () => void
@@ -133,33 +145,40 @@ function Placeholder({ shimmerCount = 5 }: { shimmerCount?: number }) {
   )
 }
 
-export function SelectablePeoplePicker({
-  groupId,
-  onEntriesChange,
-  ref,
-  entries,
-  pickablePayer = false,
-  shimmerCount,
-}: SelectablePeoplePickerProps) {
+export function SelectablePeoplePicker(props: SelectablePeoplePickerProps) {
+  const { groupId, shimmerCount } = props
+  const multiselect = props.multiselect !== false
+  const pickablePayer = multiselect ? ((props as MultiSelectProps).pickablePayer ?? false) : false
   const theme = useTheme()
   const [localEntries, setLocalEntries] = useState<PersonEntry[]>([])
   const { members, hasNextPage, fetchNextPage, isFetchingNextPage } = useGroupMembers(groupId)
 
   useEffect(() => {
     if (members.length !== 0) {
-      const newEntries = members.map((member) => ({
-        entry: member.email ?? '',
-        user: member,
-        selected:
-          localEntries.some((e) => e.user?.id === member.id && e.selected) ||
-          entries.some((e) => e.user?.id === member.id) ||
-          members.length <= 3,
-        picked: entries.some((e) => e.user?.id === member.id && e.selected),
-      }))
-      setLocalEntries(newEntries)
-      onEntriesChange(
-        newEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked }))
-      )
+      if (multiselect) {
+        const { entries, onEntriesChange } = props as MultiSelectProps
+        const newEntries = members.map((member) => ({
+          entry: member.email ?? '',
+          user: member,
+          selected:
+            localEntries.some((e) => e.user?.id === member.id && e.selected) ||
+            entries.some((e) => e.user?.id === member.id) ||
+            members.length <= 3,
+          picked: entries.some((e) => e.user?.id === member.id && e.selected),
+        }))
+        setLocalEntries(newEntries)
+        onEntriesChange(
+          newEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked }))
+        )
+      } else {
+        const { selected } = props as SingleSelectProps
+        const newEntries = members.map((member) => ({
+          entry: member.email ?? '',
+          user: member,
+          selected: selected?.id === member.id,
+        }))
+        setLocalEntries(newEntries)
+      }
     }
 
     if (hasNextPage && !isFetchingNextPage) {
@@ -169,34 +188,61 @@ export function SelectablePeoplePicker({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [members.length])
 
-  useImperativeHandle(ref, () => ({
+  useImperativeHandle(multiselect ? (props as MultiSelectProps).ref : undefined, () => ({
     selectAll: () => {
       const newEntries = [...localEntries]
       newEntries.forEach((entry) => {
         entry.selected = true
       })
       setLocalEntries(newEntries)
-      onEntriesChange(
-        newEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked }))
-      )
+      if (multiselect) {
+        const multiSelectProps = props as MultiSelectProps
+        multiSelectProps.onEntriesChange(
+          newEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked }))
+        )
+      }
     },
   }))
 
   function toggleSelect(index: number) {
-    const newEntries = [...localEntries]
-    newEntries[index].selected = !newEntries[index].selected
-    if (!newEntries[index].selected) {
-      newEntries[index].picked = false
+    if (multiselect) {
+      const multiSelectProps = props as MultiSelectProps
+      const newEntries = [...localEntries]
+      newEntries[index].selected = !newEntries[index].selected
+      if (!newEntries[index].selected) {
+        newEntries[index].picked = false
+      }
+      setLocalEntries(newEntries)
+      multiSelectProps.onEntriesChange(
+        newEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked }))
+      )
+    } else {
+      const singleSelectProps = props as SingleSelectProps
+      const entry = localEntries[index]
+      if (entry.selected) {
+        const newEntries = localEntries.map((e) => ({ ...e, selected: false }))
+        setLocalEntries(newEntries)
+        singleSelectProps.onSelectedChange(undefined)
+      } else {
+        const newEntries = localEntries.map((e, i) => ({ ...e, selected: i === index }))
+        setLocalEntries(newEntries)
+        singleSelectProps.onSelectedChange(entry.user)
+      }
     }
-    setLocalEntries(newEntries)
-    onEntriesChange(newEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked })))
   }
 
   function pick(index: number) {
+    if (!multiselect) {
+      return
+    }
+
+    const multiSelectProps = props as MultiSelectProps
     const newEntries = localEntries.map((e) => ({ ...e, picked: false }))
     newEntries[index].picked = true
     setLocalEntries(newEntries)
-    onEntriesChange(newEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked })))
+    multiSelectProps.onEntriesChange(
+      newEntries.filter((e) => e.selected).map((e) => ({ ...e, selected: e.picked }))
+    )
   }
 
   if (localEntries.length === 0) {
