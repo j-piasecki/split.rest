@@ -32,7 +32,7 @@ export class LoggingInterceptor implements NestInterceptor {
         const status = error instanceof HttpException ? error.getStatus() : 500
 
         if (status >= 500) {
-          this.logger.error({ userId, handler, method, url, args, duration, status, error: error.message })
+          this.logger.error({ userId, handler, method, url, args, duration, status, error: error.message, stack: error.stack })
         } else {
           this.logger.warn({ userId, handler, method, url, args, duration, status, error: error.message })
         }
