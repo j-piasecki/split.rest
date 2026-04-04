@@ -1,9 +1,12 @@
 import { getGhostProfilePicture } from '../utils/getGhostProfilePicture'
+import { Logger } from '@nestjs/common'
 import crypto from 'crypto'
 import { Pool } from 'pg'
 import { CreateOrUpdateUserArguments } from 'shared'
 import { BadRequestException } from 'src/errors/BadRequestException'
 import { ImageService } from 'src/image.service'
+
+const logger = new Logger('CreateOrUpdateUser')
 
 export async function createOrUpdateUser(
   pool: Pool,
@@ -34,7 +37,9 @@ export async function createOrUpdateUser(
       previousEmail = result.rows[0].email
       pictureId = result.rows[0].picture_id
     }
-  } catch {}
+  } catch (err) {
+    logger.warn({ msg: 'Failed to fetch existing user data', userId: user.id, error: err.message })
+  }
 
   if (previousEmail === null && (user.email.length < 3 || !user.email.includes('@'))) {
     throw new BadRequestException('api.invalidArguments')
@@ -48,7 +53,7 @@ export async function createOrUpdateUser(
       await imageService.uploadProfilePictureToR2(pictureId)
     } catch (error) {
       pictureId = null
-      console.error(`Failed to download profile picture for ${user.id}`, error)
+      logger.error(`Failed to download profile picture for ${user.id}`, error)
     }
   }
 
@@ -67,7 +72,7 @@ export async function createOrUpdateUser(
       [user.id, name, user.email, Date.now(), photoUrl, pictureId]
     )
   } catch (error) {
-    console.error(`Failed to create or update user ${user.id} (${user.name}, ${user.email})`, error)
+    logger.error(`Failed to create or update user ${user.id} (${user.name}, ${user.email})`, error)
     throw error
   }
 

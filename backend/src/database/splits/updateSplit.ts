@@ -11,7 +11,10 @@ import {
   validateLendSplitArgs,
   validateNormalSplitArgs,
 } from '../utils/validateSplitArgs'
+import { Logger } from '@nestjs/common'
 import { Pool, PoolClient } from 'pg'
+
+const logger = new Logger('UpdateSplit')
 import {
   AndroidNotificationChannel,
   CurrencyUtils,
@@ -359,6 +362,8 @@ export async function updateSplit(pool: Pool, callerId: string, args: UpdateSpli
     const { splitInfo, participants } = await updateSplitNoTransaction(client, callerId, args)
 
     await client.query('COMMIT')
+
+    logger.log({ msg: 'Split updated', splitId: args.splitId, groupId: args.groupId, callerId, total: args.total, participants: args.balances.length })
 
     await dispatchNotifications(client, callerId, splitInfo.title, args, participants)
   } catch (e) {

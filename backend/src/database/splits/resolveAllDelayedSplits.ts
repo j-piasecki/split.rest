@@ -3,9 +3,12 @@ import { ForbiddenException } from '../../errors/ForbiddenException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { updateSplitNoTransaction } from './updateSplit'
+import { Logger } from '@nestjs/common'
 import { assert } from 'console'
 import currencyJs from 'currency.js'
 import { Pool, PoolClient } from 'pg'
+
+const logger = new Logger('ResolveAllDelayedSplits')
 import {
   DelayedSplitResolutionMethod,
   ResolveAllDelayedSplitsAtOnceArguments,
@@ -135,6 +138,8 @@ export async function resolveAllDelayedSplits(
     }
 
     await client.query('COMMIT')
+
+    logger.log({ msg: 'All delayed splits resolved', groupId: args.groupId, callerId, count: splitsToFinalize.rows.length })
 
     // TODO: should this dispatch notifications?
   } catch (e) {

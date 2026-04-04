@@ -7,8 +7,11 @@ import { getMemberPermissions } from '../utils/getMemberPermissions'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
 import { isUserMemberOfSplit } from '../utils/isUserMemberOfSplit'
 import { PermissionArguments, PermissionToFieldMap } from './utils'
+import { Logger } from '@nestjs/common'
 import { Pool } from 'pg'
 import { LanguageTranslationKey, SplitPermissionType } from 'shared'
+
+const logger = new Logger('PermissionCheck')
 
 export async function checkPermissions<TPermissions extends (keyof PermissionToFieldMap)[]>(
   pool: Pool,
@@ -350,7 +353,7 @@ export async function checkPermissions<TPermissions extends (keyof PermissionToF
         }
 
         default:
-          console.log('Unknown permission required:', permission)
+          logger.warn('Unknown permission required: ' + permission)
           return 'unknownError'
       }
     }

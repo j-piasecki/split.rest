@@ -6,7 +6,10 @@ import { getNotificationTokens } from '../utils/getNotificationTokens'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { loadSettleUpData } from '../utils/settleUp/loadSettleUpData'
 import { prepareGroupSettleUp } from '../utils/settleUp/prepareGroupSettleUp'
+import { Logger } from '@nestjs/common'
 import { Pool, PoolClient } from 'pg'
+
+const logger = new Logger('SettleUpGroup')
 import { AndroidNotificationChannel, SettleUpGroupArguments, SplitType } from 'shared'
 
 async function dispatchNotifications(
@@ -133,6 +136,8 @@ export async function settleUpGroup(pool: Pool, callerId: string, args: SettleUp
     await dispatchNotifications(client, callerId, args.groupId, creditors, debtors)
 
     await client.query('COMMIT')
+
+    logger.log({ msg: 'Group settled up', groupId: args.groupId, callerId, splits: entries.length, creditors: creditors.size, debtors: debtors.size })
   } catch (e) {
     await client.query('ROLLBACK')
     throw e

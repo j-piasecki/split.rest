@@ -9,7 +9,10 @@ import { isGroupLocked } from '../utils/isGroupLocked'
 import { splitExists } from '../utils/splitExists'
 import { validateNormalSplitArgs } from '../utils/validateSplitArgs'
 import { updateSplitNoTransaction } from './updateSplit'
+import { Logger } from '@nestjs/common'
 import { Pool, PoolClient } from 'pg'
+
+const logger = new Logger('ResolveDelayedSplit')
 import {
   AndroidNotificationChannel,
   CurrencyUtils,
@@ -110,6 +113,9 @@ export async function resolveDelayedSplit(
     ])
 
     await client.query('COMMIT')
+
+    logger.log({ msg: 'Delayed split resolved', splitId: args.splitId, groupId: args.groupId, callerId, resolvedType: args.type })
+
     await dispatchNotifications(client, callerId, args.splitId, args)
   } catch (e) {
     await client.query('ROLLBACK')

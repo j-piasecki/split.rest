@@ -1,6 +1,6 @@
 import { DatabaseService } from './database.service'
 import { ImageService } from './image.service'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import {
   AcceptGroupInviteArguments,
   ClaimGhostUserArguments,
@@ -60,6 +60,8 @@ import {
 
 @Injectable()
 export class AppService {
+  private readonly logger = new Logger('AppService')
+
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly imageService: ImageService
@@ -212,8 +214,8 @@ export class AppService {
     try {
       await this.imageService.deleteProfilePicture(callerId)
       await this.imageService.deleteProfilePictureFromR2(callerId)
-    } catch {
-      // fail silently when profile picture deletion fails
+    } catch (err) {
+      this.logger.warn({ msg: 'Failed to delete profile picture during user deletion', callerId, error: err.message })
     }
 
     return await this.databaseService.deleteUser(callerId)

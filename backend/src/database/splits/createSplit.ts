@@ -13,7 +13,10 @@ import {
   validateLendSplitArgs,
   validateNormalSplitArgs,
 } from '../utils/validateSplitArgs'
+import { Logger } from '@nestjs/common'
 import { Pool, PoolClient } from 'pg'
+
+const logger = new Logger('CreateSplit')
 import {
   AndroidNotificationChannel,
   CreateSplitArguments,
@@ -199,6 +202,9 @@ export async function createSplit(pool: Pool, callerId: string, args: CreateSpli
     const splitId = await createSplitNoTransaction(client, callerId, args)
 
     await client.query('COMMIT')
+
+    logger.log({ msg: 'Split created', splitId, groupId: args.groupId, callerId, total: args.total, type: args.type, participants: args.balances.length })
+
     await dispatchNotifications(client, callerId, splitId, args)
 
     return splitId

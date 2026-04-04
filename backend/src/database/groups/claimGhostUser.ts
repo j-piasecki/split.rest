@@ -2,8 +2,11 @@ import { ConflictException } from '../../errors/ConflictException'
 import { NotFoundException } from '../../errors/NotFoundException'
 import { isGroupDeleted } from '../utils/isGroupDeleted'
 import { isUserMemberOfGroup } from '../utils/isUserMemberOfGroup'
+import { Logger } from '@nestjs/common'
 import { Pool } from 'pg'
 import { ClaimGhostUserArguments } from 'shared'
+
+const logger = new Logger('ClaimGhostUser')
 
 export async function claimGhostUser(
   pool: Pool,
@@ -162,6 +165,8 @@ export async function claimGhostUser(
     )
 
     await client.query('COMMIT')
+
+    logger.log({ msg: 'Ghost user claimed', ghostId, groupId, callerId })
   } catch (e) {
     await client.query('ROLLBACK')
     throw e
