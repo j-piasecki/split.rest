@@ -36,15 +36,15 @@ function LenderPicker({ groupInfo, user }: { groupInfo: GroupUserInfo; user: Mem
   function submit() {
     setError(null)
 
-    const lender = useSelectablePicker ? selected : textPickerUser
+    const selectedUser = useSelectablePicker ? selected : textPickerUser
 
-    if (!lender) {
+    if (!selectedUser) {
       setError(new TranslatableError('splitValidation.thePayerDataMustBeFilledIn'))
       return
     }
 
-    SplitCreationContext.current.setPaidById(lender.id)
-    SplitCreationContext.current.setParticipants([{ user: lender }])
+    SplitCreationContext.current.setPaidById(selectedUser.id)
+    SplitCreationContext.current.setParticipants([{ user: selectedUser }])
     navigateToNextScreen()
   }
 
